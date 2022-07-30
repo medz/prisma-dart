@@ -521,7 +521,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "prisma-format"
+name = "prisma-fmt-c-api"
 version = "0.1.0"
 dependencies = [
  "libc",
