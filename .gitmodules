@@ -1,3 +1,0 @@
-[submodule "prisma-engines"]
-	path = prisma-engines
-	url = https://github.com/prisma/prisma-engines
