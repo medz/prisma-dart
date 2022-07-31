@@ -16,7 +16,7 @@ packages:
     source: hosted
     version: "4.3.1"
   args:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: args
       url: "https://pub.dartlang.org"
@@ -163,7 +163,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       url: "https://pub.dartlang.org"
@@ -176,6 +176,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.1"
+  prisma_config:
+    dependency: "direct main"
+    description:
+      path: "../prisma_config"
+      relative: true
+    source: path
+    version: "1.0.0"
+  prisma_engines_version:
+    dependency: "direct main"
+    description:
+      path: "../prisma_engines_version"
+      relative: true
+    source: path
+    version: "1.0.0"
   pub_semver:
     dependency: transitive
     description:
