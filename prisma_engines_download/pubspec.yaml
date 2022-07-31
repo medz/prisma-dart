@@ -1,4 +1,4 @@
-name: prisma_engines_downloader
+name: prisma_engines_download
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
 # homepage: https://www.example.com
@@ -10,12 +10,15 @@ dependencies:
   path: ^1.8.2
   prisma_config: ^1.0.0
   prisma_engines_platform: ^1.0.0
+  prisma_engines_version: ^1.0.0
 
 dependency_overrides:
   prisma_config:
     path: ../prisma_config
   prisma_engines_platform:
     path: ../prisma_engines_platform
+  prisma_engines_version:
+    path: ../prisma_engines_version
 
 dev_dependencies:
   lints: ^2.0.0

@@ -183,6 +183,20 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  prisma_engines_download:
+    dependency: "direct main"
+    description:
+      path: "../prisma_engines_download"
+      relative: true
+    source: path
+    version: "1.0.0"
+  prisma_engines_platform:
+    dependency: "direct main"
+    description:
+      path: "../prisma_engines_platform"
+      relative: true
+    source: path
+    version: "1.0.0"
   prisma_engines_version:
     dependency: "direct main"
     description:

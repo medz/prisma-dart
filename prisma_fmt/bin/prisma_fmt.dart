@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:args/args.dart';
+import 'package:prisma_engines_download/prisma_engines_download.dart';
+import 'package:prisma_engines_platform/prisma_engines_platform.dart';
 
 final ArgParser _argParser = ArgParser()
   ..addOption('schema', help: 'Custom path to your Prisma schema')
@@ -13,5 +13,11 @@ void main(List<String> arguments) {
     return print(_argParser.usage);
   }
 
-  Process;
+  final path = getCachedBinaryPath(
+    version: 'latest',
+    platform: PrismaEnginesPlatform.darwin,
+    binary: PrismaBinaryType.prismaFmt,
+  );
+
+  print(path);
 }

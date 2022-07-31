@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:path/path.dart' show join;
 import 'package:prisma_config/prisma_config.dart';
+import 'package:prisma_engines_platform/prisma_engines_platform.dart';
 
-Directory getCacheRootDirectory() {
+/// Get root cache directory.
+Directory getRootCacheDirectory() {
   /// Find the cache directory for config.
   final String? configredCacheDirectoryPath = PrismaConfig.find('cache');
 
@@ -14,4 +16,24 @@ Directory getCacheRootDirectory() {
   }
 
   return Directory(join(Directory.current.path, configredCacheDirectoryPath));
+}
+
+///cache directory.
+Directory getCacheDirectory({
+  required String channel,
+  required String version,
+  required PrismaEnginesPlatform platform,
+}) {
+  final Directory directory = Directory(join(
+    getRootCacheDirectory().path,
+    channel,
+    version,
+    platform.value,
+  ));
+
+  if (!directory.existsSync()) {
+    directory.createSync(recursive: true);
+  }
+
+  return directory;
 }

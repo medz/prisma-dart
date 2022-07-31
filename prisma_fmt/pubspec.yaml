@@ -11,12 +11,18 @@ dependencies:
   path: ^1.8.2
   prisma_config: ^1.0.0
   prisma_engines_version: ^1.0.0
+  prisma_engines_platform: ^1.0.0
+  prisma_engines_download: ^1.0.0
 
 dependency_overrides:
   prisma_config:
     path: ../prisma_config
   prisma_engines_version:
     path: ../prisma_engines_version
+  prisma_engines_platform:
+    path: ../prisma_engines_platform
+  prisma_engines_download:
+    path: ../prisma_engines_download
 
 dev_dependencies:
   lints: ^2.0.0

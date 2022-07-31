@@ -1,4 +1,4 @@
-enum BinaryType {
+enum PrismaBinaryType {
   queryEngine('query-engine'),
   migrationEngine('migration-engine'),
   introspectionEngine('introspection-engine'),
@@ -7,5 +7,5 @@ enum BinaryType {
 
   final String value;
 
-  const BinaryType(this.value);
+  const PrismaBinaryType(this.value);
 }
