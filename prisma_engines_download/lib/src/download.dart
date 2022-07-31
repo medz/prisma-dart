@@ -5,7 +5,6 @@ import 'package:prisma_engines_platform/prisma_engines_platform.dart';
 
 import 'cache.dart';
 import 'prisma_binary_type.dart';
-import 'prisma_engines_channel.dart';
 
 /// Get cached binary path.
 String? getCachedBinaryPath({
@@ -15,7 +14,6 @@ String? getCachedBinaryPath({
 }) {
   // Get cache directory.
   final Directory cacheDirectory = getCacheDirectory(
-    channel: prismaEnginesChannel,
     version: version,
     platform: platform,
   );

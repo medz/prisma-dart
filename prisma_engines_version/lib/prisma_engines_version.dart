@@ -1,4 +1,4 @@
 library prisma_engines_version;
 
 /// Prisma engine version.
-const String prismaEngineVersion = r'ae7c377d84048fc7fc2e1a1f97780b1f2f3c41dd';
+const String prismaEngineVersion = r'1b996e940dc3998d2003ab429f3ac9a3f98a1fbd';

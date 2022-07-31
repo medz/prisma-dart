@@ -8,7 +8,6 @@ const String _defaultBinariesMirror = r'https://binaries.prisma.sh';
 
 /// Get download url.
 Uri getDownloadUrl({
-  required String channel,
   required String version,
   required PrismaEnginesPlatform platform,
   required PrismaBinaryType binary,
@@ -23,7 +22,7 @@ Uri getDownloadUrl({
       platform == PrismaEnginesPlatform.windows ? '.exe$extension' : extension;
 
   return Uri.parse(binariesMirror).replace(pathSegments: [
-    channel,
+    'all_commits',
     version,
     platform.value,
     '${binary.value}$resolvedExtension',

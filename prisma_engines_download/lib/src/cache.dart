@@ -20,13 +20,11 @@ Directory getRootCacheDirectory() {
 
 ///cache directory.
 Directory getCacheDirectory({
-  required String channel,
   required String version,
   required PrismaEnginesPlatform platform,
 }) {
   final Directory directory = Directory(join(
     getRootCacheDirectory().path,
-    channel,
     version,
     platform.value,
   ));
