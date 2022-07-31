@@ -7,6 +7,8 @@ environment:
   sdk: '>=2.17.6 <3.0.0'
 
 dependencies:
+  archive: ^3.3.1
+  http: ^0.13.4
   path: ^1.8.2
   prisma_common: ^1.0.0
   prisma_engines_platform: ^1.0.0

@@ -4,3 +4,6 @@
 
 # Conventional directory for build output.
 build/
+
+# Prisma cache directory.
+prisma/.cache

@@ -11,20 +11,19 @@ Uri getDownloadUrl({
   required String version,
   required PrismaEnginesPlatform platform,
   required PrismaBinaryType binary,
-  String extension = '.gz',
 }) {
   // Resolve binaries mirror.
   final String binariesMirror =
       prismaConfig('binaries_mirror') ?? _defaultBinariesMirror;
 
-  // Resolve extension.
-  final String resolvedExtension =
-      platform == PrismaEnginesPlatform.windows ? '.exe$extension' : extension;
+  // extension.
+  final String extension =
+      platform == PrismaEnginesPlatform.windows ? '.exe.gz' : '.gz';
 
   return Uri.parse(binariesMirror).replace(pathSegments: [
     'all_commits',
     version,
     platform.value,
-    '${binary.value}$resolvedExtension',
+    '${binary.value}$extension',
   ]);
 }
