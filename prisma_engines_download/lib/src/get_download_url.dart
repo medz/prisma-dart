@@ -1,4 +1,4 @@
-import 'package:prisma_config/prisma_config.dart';
+import 'package:prisma_common/prisma_common.dart';
 import 'package:prisma_engines_platform/prisma_engines_platform.dart';
 
 import 'prisma_binary_type.dart';
@@ -15,7 +15,7 @@ Uri getDownloadUrl({
 }) {
   // Resolve binaries mirror.
   final String binariesMirror =
-      PrismaConfig.find('binaries_mirror') ?? _defaultBinariesMirror;
+      prismaConfig('binaries_mirror') ?? _defaultBinariesMirror;
 
   // Resolve extension.
   final String resolvedExtension =

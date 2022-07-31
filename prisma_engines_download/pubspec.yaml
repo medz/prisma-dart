@@ -8,13 +8,13 @@ environment:
 
 dependencies:
   path: ^1.8.2
-  prisma_config: ^1.0.0
+  prisma_common: ^1.0.0
   prisma_engines_platform: ^1.0.0
   prisma_engines_version: ^1.0.0
 
 dependency_overrides:
-  prisma_config:
-    path: ../prisma_config
+  prisma_common:
+    path: ../prisma_common
   prisma_engines_platform:
     path: ../prisma_engines_platform
   prisma_engines_version:

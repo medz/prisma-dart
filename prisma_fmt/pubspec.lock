@@ -183,10 +183,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.1"
-  prisma_config:
+  prisma_common:
     dependency: "direct main"
     description:
-      path: "../prisma_config"
+      path: "../prisma_common"
       relative: true
     source: path
     version: "1.0.0"

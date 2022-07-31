@@ -1,12 +1,24 @@
 import 'dart:io';
 
+import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
-import 'package:path/path.dart' show join;
 
-import 'find_project_directory.dart';
+import 'get_project_directory.dart';
+
+/// Prisma Config.
+class PrismaConfig {
+  const PrismaConfig._(this._document);
+  final Map _document;
+
+  /// Get a value from the config.
+  dynamic call(String key) => _document[key.toLowerCase()];
+}
+
+/// Prisma config helper.
+PrismaConfig get prismaConfig => PrismaConfig._(_loadPrismaConfig());
 
 /// Load Prisma config.
-Map loadPrismaConfig([String? configFilePath]) {
+Map _loadPrismaConfig([String? configFilePath]) {
   // Resolve config file path.
   final String? path = _resolveConfigFilePath(configFilePath);
 
@@ -27,7 +39,7 @@ Map loadPrismaConfig([String? configFilePath]) {
 String? _resolveConfigFilePath(String? configFilePath) {
   // If config file path is null, using project directory.
   if (configFilePath == null || configFilePath.isEmpty) {
-    return join(findProjectDirectory().path, 'prisma.yaml');
+    return join(getProjectDirectory(), 'prisma.yaml');
   }
 
   return configFilePath;
