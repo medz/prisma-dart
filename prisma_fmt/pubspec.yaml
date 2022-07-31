@@ -13,6 +13,7 @@ dependencies:
   prisma_engines_version: ^1.0.0
   prisma_engines_platform: ^1.0.0
   prisma_engines_download: ^1.0.0
+  cli_util: ^0.3.5
 
 dependency_overrides:
   prisma_config:
