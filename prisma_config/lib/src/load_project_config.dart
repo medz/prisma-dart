@@ -6,16 +6,21 @@ import 'package:path/path.dart' show join;
 import 'find_project_directory.dart';
 
 /// Load Prisma config.
-YamlMap loadPrismaConfig([String? configFilePath]) {
+Map loadPrismaConfig([String? configFilePath]) {
   // Resolve config file path.
   final String? path = _resolveConfigFilePath(configFilePath);
 
   // Load config file.
   if (path != null && File(path).existsSync()) {
-    return loadYaml(File(path).readAsStringSync());
+    return _mapConvert(
+      loadYaml(
+        File(path).readAsStringSync(),
+        sourceUrl: Uri.file(path),
+      ),
+    );
   }
 
-  return YamlMap();
+  return {};
 }
 
 /// Resolve config file path.
@@ -27,3 +32,10 @@ String? _resolveConfigFilePath(String? configFilePath) {
 
   return configFilePath;
 }
+
+/// Map convertor.
+Map _mapConvert(Map source) =>
+    source.map<String, dynamic>((dynamic key, dynamic value) => MapEntry(
+          key is String ? key.toLowerCase() : key,
+          (value is YamlMap || value is Map) ? _mapConvert(value) : value,
+        ));

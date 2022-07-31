@@ -1,11 +1,10 @@
-import 'dart:io';
-
+import 'package:prisma_config/prisma_config.dart';
 import 'package:prisma_engines_platform/prisma_engines_platform.dart';
 
 import 'binary_type.dart';
 
 /// Default download binaries mirror.
-const String defaultDownloadBinariesMirror = r'https://binaries.prisma.sh';
+const String _defaultBinariesMirror = r'https://binaries.prisma.sh';
 
 /// Get download url.
 Uri getDownloadUrl({
@@ -17,9 +16,7 @@ Uri getDownloadUrl({
 }) {
   // Resolve binaries mirror.
   final String binariesMirror =
-      Platform.environment['PRISMA_BINARIES_MIRROR'] ??
-          Platform.environment['PRISMA_ENGINES_MIRROR'] ??
-          defaultDownloadBinariesMirror;
+      PrismaConfig.find('binaries_mirror') ?? _defaultBinariesMirror;
 
   // Resolve extension.
   final String resolvedExtension =
