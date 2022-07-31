@@ -1,5 +1,5 @@
 name: prisma_engines_platform
-description: A starting point for Dart libraries or applications.
+description: Prisma ORM engines platform library.
 version: 1.0.0
 repository: https://github.com/odroe/prismaorm
 

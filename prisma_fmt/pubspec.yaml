@@ -1,5 +1,5 @@
 name: prisma_fmt
-description: A sample command-line application.
+description: Prisma ORM format CLI.
 version: 1.0.0
 repository: https://github.com/odroe/prismaorm
 

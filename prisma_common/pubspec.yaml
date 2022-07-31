@@ -1,5 +1,5 @@
 name: prisma_common
-description: A starting point for Dart libraries or applications.
+description: Prisma ORM common library.
 version: 1.0.0
 repository: https://github.com/odroe/prismaorm
 
