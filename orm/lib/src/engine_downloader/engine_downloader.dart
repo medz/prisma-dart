@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:http/http.dart' as http;
 
 import '../configure.dart';
 import '../engine_cache.dart';
 import '../engine_options.dart';
 import '../engine_platform.dart';
+import '../utils/chmod.dart';
 import 'download_engine_lookfile.dart';
 import 'download_event.dart';
 
@@ -40,23 +42,37 @@ class EngineDownloader {
       // Override files.
       _override();
 
-      handler?.call(DownloadEvent.progress);
+      handler?.call(DownloadEvent.startDownload);
       final http.Request request = http.Request('GET', downloadUrl);
       final http.Client client = http.Client();
       final http.StreamedResponse response = await client.send(request);
 
-      return '';
+      // If status code is not 200
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Failed to download ${cache.options.binary.value} from ${downloadUrl.toString()}.',
+        );
+      }
+
+      // Write to file.
+      final IOSink sink = _gzip.openWrite();
+      await response.stream.pipe(sink);
+      handler?.call(DownloadEvent.doneDownload);
+
+      // Unpack.
+      final OutputFileStream output = OutputFileStream(cache.cachedBinaryPath);
+      final InputFileStream input = InputFileStream(_gzip.path);
+
+      handler?.call(DownloadEvent.startUnpack);
+      GZipDecoder().decodeStream(input, output);
+      handler?.call(DownloadEvent.startUnpack);
+
+      await chmod(cache.cachedBinaryPath);
+
+      return cache.cachedBinaryPath;
     } finally {
       // Done lookfile.
       lookfile.done();
-    }
-  }
-
-  /// Start lookup.
-  Future<void> _startLookup(
-      DownloadEngineLookfile lookfile, DownloadEventHandler? handler) async {
-    if (lookfile.exists) {
-      handler?.call(DownloadEvent.lookfile);
     }
   }
 

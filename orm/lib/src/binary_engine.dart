@@ -1,12 +1,22 @@
+import 'dart:io';
+
+import 'configure.dart';
 import 'engine_cache.dart';
+import 'engine_downloader/download_event.dart';
 import 'engine_downloader/engine_downloader.dart';
 import 'engine_options.dart';
 
 class BinaryEngine {
-  const BinaryEngine(this.options);
+  const BinaryEngine(
+    this.options, {
+    this.onDownloadEvent,
+  });
 
   /// Engine options.
   final EngineOptions options;
+
+  /// Download event handler.
+  final DownloadEventHandler? onDownloadEvent;
 
   /// Cache instance.
   EngineCache get cache => EngineCache(options);
@@ -18,6 +28,16 @@ class BinaryEngine {
       return cache.cachedBinaryPath;
     }
 
-    return EngineDownloader(cache).download();
+    return EngineDownloader(cache).download(onDownloadEvent);
+  }
+
+  /// Run binary.
+  Future<ProcessResult> run(List<String> arguments) async {
+    return Process.run(
+      await load(),
+      arguments,
+      includeParentEnvironment: false,
+      environment: configured('environment'),
+    );
   }
 }

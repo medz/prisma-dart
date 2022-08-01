@@ -1,7 +1,8 @@
 enum DownloadEvent {
-  progress,
-  done,
-  unpack,
+  startDownload,
+  doneDownload,
+  startUnpack,
+  doneUnpack,
   lookfile,
 }
 

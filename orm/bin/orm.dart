@@ -12,4 +12,5 @@ Future<void> main(List<String> args) async {
   runner.addCommand(FormatCommand());
 
   exitCode = await runner.run(args) ?? 0;
+  exit(exitCode);
 }
