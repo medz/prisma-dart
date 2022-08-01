@@ -1,5 +1,5 @@
-/// Prisma engines supported platform.
-enum EnginesPlatform {
+/// Prisma engine supported platform.
+enum EnginePlatform {
   darwin('darwin'),
   darwinArm64('darwin-arm64'),
   debianOpenssl10('debian-openssl-1.0.x'),
@@ -23,5 +23,5 @@ enum EnginesPlatform {
   ;
 
   final String value;
-  const EnginesPlatform(this.value);
+  const EnginePlatform(this.value);
 }

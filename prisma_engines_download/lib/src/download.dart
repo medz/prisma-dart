@@ -9,7 +9,7 @@ import 'package:prisma_engines_platform/prisma_engines_platform.dart';
 import 'cache.dart';
 import 'chmod.dart';
 import 'get_download_url.dart';
-import 'prisma_binary_type.dart';
+import '../../../orm/lib/src/engine_downloader/prisma_binary_type.dart';
 
 /// Get cached binary path.
 String? getCachedBinaryPath({
@@ -118,13 +118,4 @@ String _resolveBinarySavePath({
       binary.value,
     ),
   );
-}
-
-/// Resolve platform binary extension.
-String _resolvePlatformBinaryExtension(String path) {
-  if (Platform.isWindows && !path.endsWith('.exe')) {
-    return '$path.exe';
-  }
-
-  return path;
 }
