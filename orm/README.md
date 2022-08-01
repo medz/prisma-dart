@@ -1,7 +1,9 @@
-Dart ORM.
+Next-generation ORM for Dart Navtive & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB
 
 ## Install
 
-```
-dart pub add orm
+```bash
+dart pub add orm -d
+# or
+flutter pub add orm -d
 ```
