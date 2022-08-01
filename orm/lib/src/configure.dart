@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-import 'get_project_directory.dart';
+import 'utils/get_project_directory.dart';
 
-/// Prisma Config.
-class PrismaConfig {
-  const PrismaConfig._(this._document);
+/// Prisma ORM configure.
+class Configure {
+  const Configure._(this._document);
   final Map _document;
 
   /// Get a value from the config.
@@ -15,7 +15,7 @@ class PrismaConfig {
 }
 
 /// Prisma config helper.
-PrismaConfig get prismaConfig => PrismaConfig._(_loadPrismaConfig());
+Configure get configured => Configure._(_loadPrismaConfig());
 
 /// Load Prisma config.
 Map _loadPrismaConfig([String? configFilePath]) {

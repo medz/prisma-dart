@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
+import '../configure.dart';
 import 'get_project_directory.dart';
-import 'prisma_config.dart';
 
 /// Get `schema.prisma` file path.
 getSchemaPath([String? path]) {
@@ -11,7 +11,7 @@ getSchemaPath([String? path]) {
 
   // Get configred schema path.
   final String configredSchemaPath =
-      join(getProjectDirectory(), prismaConfig('schema'));
+      join(getProjectDirectory(), configured('schema'));
   if (File(configredSchemaPath).existsSync()) {
     return configredSchemaPath;
   }
