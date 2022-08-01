@@ -6,11 +6,11 @@ import 'package:io/ansi.dart';
 import 'package:orm/orm.dart';
 import 'package:path/path.dart';
 
-import '../logger_mixin.dart';
+import '../logger.dart';
 import 'init/orm_template.dart';
 import 'init/schema_template.dart';
 
-class InitCommand extends Command<int> with LoggerMixin {
+class InitCommand extends Command<int> {
   InitCommand() {
     argParser.addOption(
       'url',

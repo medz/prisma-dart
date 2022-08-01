@@ -1,15 +1,10 @@
 import 'package:cli_util/cli_logging.dart';
 import 'package:orm/orm.dart';
 
-mixin LoggerMixin {
-  EngineOptions get options;
-
-  Logger get logger => Logger.standard(ansi: Ansi(true));
-
-  Progress? _progress;
-
-  /// Download progress callback.
-  void onDownloadProgress(DownloadEvent event) async {
+Progress? _progress;
+Logger get logger => Logger.standard(ansi: Ansi(true));
+DownloadEventHandler createOnDownloadProgress(EngineOptions options) {
+  return (DownloadEvent event) {
     switch (event) {
       case DownloadEvent.startDownload:
         _progress = logger.progress('Downloading ${options.binary.value}');
@@ -27,5 +22,5 @@ mixin LoggerMixin {
         _progress = logger.progress('Looking for ${options.binary.value}');
         break;
     }
-  }
+  };
 }

@@ -1,9 +1,9 @@
 import 'package:args/command_runner.dart';
 import 'package:orm/orm.dart';
 
-import '../../logger_mixin.dart';
+import '../../logger.dart';
 
-class PushSubCommand extends Command<int> with LoggerMixin {
+class PushSubCommand extends Command<int> {
   PushSubCommand(this.engine) {
     argParser.addFlag(
       'force-reset',
@@ -31,6 +31,7 @@ class PushSubCommand extends Command<int> with LoggerMixin {
       engine,
       schema: getSchemaFile(argResults?['schema']),
     );
+    await engine.load();
 
     final progress = logger.progress('Pushing schema...');
     final result = await migrate.push(force: argResults?['force-reset']);

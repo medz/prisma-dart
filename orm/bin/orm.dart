@@ -6,6 +6,7 @@ import 'package:orm/orm.dart';
 
 import 'src/commands/db_command.dart';
 import 'src/commands/format_command.dart';
+import 'src/commands/generate_command.dart';
 import 'src/commands/init_command.dart';
 
 Future<void> main(List<String> args) async {
@@ -16,7 +17,8 @@ Future<void> main(List<String> args) async {
   runner
     ..addCommand(FormatCommand())
     ..addCommand(InitCommand())
-    ..addCommand(DbComment());
+    ..addCommand(DbComment())
+    ..addCommand(GenerateCommand());
 
   try {
     exitCode = await runner.run(args) ?? 0;

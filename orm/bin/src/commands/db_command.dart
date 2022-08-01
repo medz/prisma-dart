@@ -1,10 +1,10 @@
 import 'package:args/command_runner.dart';
 import 'package:orm/orm.dart';
 
-import '../logger_mixin.dart';
+import '../logger.dart';
 import 'db/push_sub_command.dart';
 
-class DbComment extends Command<int> with LoggerMixin {
+class DbComment extends Command<int> {
   DbComment() {
     addSubcommand(PushSubCommand(_binaryEngine));
   }
@@ -16,7 +16,6 @@ class DbComment extends Command<int> with LoggerMixin {
   String get name => 'db';
 
   /// Engine options.
-  @override
   EngineOptions get options => EngineOptions(
         version: engineVersion,
         platform: EnginePlatform.darwin,
@@ -26,12 +25,11 @@ class DbComment extends Command<int> with LoggerMixin {
   /// Binary engine.
   BinaryEngine get _binaryEngine => BinaryEngine(
         options,
-        onDownloadEvent: onDownloadProgress,
+        onDownloadEvent: createOnDownloadProgress(options),
       );
 
   @override
   Future<int> run() async {
-    await _binaryEngine.load();
     printUsage();
     return 0;
   }
