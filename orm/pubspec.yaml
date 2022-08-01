@@ -1,6 +1,6 @@
 name: orm
 description: Next-generation ORM for Dart Navtive & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
-version: 1.0.3
+version: 1.0.4
 repository: https://github.com/odroe/orm.dart
 
 environment:

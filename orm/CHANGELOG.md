@@ -1,3 +1,7 @@
+## 1.0.4
+
+- add `db push` command
+
 ## 1.0.3
 
 - Add `init` command.

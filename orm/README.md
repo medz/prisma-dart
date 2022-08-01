@@ -11,8 +11,8 @@ Prisma is a **next-generation ORM** that consists of these tools:
 
 - [x] `format` command.
 - [ ] `generate` command.
-- [ ] `init` command.
-- [ ] `db push` command.
+- [x] `init` command.
+- [x] `db push` command.
 - [ ] `db pull` command.
 
 ## Getting started
