@@ -1,22 +1,20 @@
 name: orm
 description: Next-generation ORM for Dart Navtive & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
-version: 1.0.1
+version: 1.0.2-dev.0
 repository: https://github.com/odroe/orm.dart
 
 environment:
   sdk: '>=2.17.6 <3.0.0'
 
+executables:
+  prisma: orm
+
 dependencies:
   args: ^2.3.1
   io: ^1.0.3
   path: ^1.8.2
-  prisma_engines_version: ^1.0.0
   yaml: ^3.1.1
 
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.16.0
-
-dependency_overrides:
-  prisma_engines_version:
-    path: ../prisma_engines_version
