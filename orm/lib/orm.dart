@@ -1,6 +1,7 @@
 library orm;
 
 export 'src/configure.dart';
+export 'src/engines_platform.dart';
 export 'src/engines_version.dart';
 export 'src/executable_name.dart';
 
