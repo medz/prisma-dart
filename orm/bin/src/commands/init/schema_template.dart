@@ -10,5 +10,4 @@ datasource db {
   provider = "{datasource-provider}"
   url      = env("DATABASE_URL")
 }
-
 ''';
