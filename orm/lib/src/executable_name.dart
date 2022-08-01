@@ -11,8 +11,11 @@ String get executableName {
   if (Directory(
           joinAll([getProjectDirectory(), '.dart_tool', 'pub', 'bin', 'orm']))
       .existsSync()) {
-    return green.wrap('dart run orm')!;
+    return 'dart run orm';
   }
 
-  return green.wrap('prisma')!;
+  return 'prisma';
 }
+
+/// ORM executable name with color.
+String get executableNameWithColor => green.wrap(executableName)!;

@@ -37,12 +37,12 @@ class Configure {
 Configure get configured => Configure._(_loadOrmConfig()).._mergeEnvironment();
 
 /// Load ORM config.
-Map _loadOrmConfig([String? configFilePath]) {
+Map _loadOrmConfig() {
   // Resolve config file path.
-  final String? path = _resolveConfigFilePath(configFilePath);
+  final String path = getConfigFilePath();
 
   // Load config file.
-  if (path != null && File(path).existsSync()) {
+  if (File(path).existsSync()) {
     return _mapConvert(
       loadYaml(
         File(path).readAsStringSync(),
@@ -54,15 +54,8 @@ Map _loadOrmConfig([String? configFilePath]) {
   return {};
 }
 
-/// Resolve config file path.
-String? _resolveConfigFilePath(String? configFilePath) {
-  // If config file path is null, using project directory.
-  if (configFilePath == null || configFilePath.isEmpty) {
-    return join(getProjectDirectory(), 'orm.yaml');
-  }
-
-  return configFilePath;
-}
+/// get config file path.
+String getConfigFilePath() => join(getProjectDirectory(), 'orm.yaml');
 
 /// Map convertor.
 Map _mapConvert(Map source) => source.map<String, dynamic>(

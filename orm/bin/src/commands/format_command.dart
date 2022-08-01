@@ -36,11 +36,11 @@ class FormatCommand extends Command<int> {
 
   @override
   Future<int> run() async {
-    final String schemaPath = getSchemaPath(argResults?['schema']);
+    final File schema = getSchemaFile(argResults?['schema']);
     final ProcessResult result = await engine.run([
       'format',
       '-i',
-      schemaPath,
+      schema.path,
     ]);
 
     if (result.exitCode != 0) {
@@ -48,13 +48,13 @@ class FormatCommand extends Command<int> {
       return result.exitCode;
     }
 
-    File(schemaPath).writeAsStringSync(result.stdout);
+    schema.writeAsStringSync(result.stdout);
 
     _progress?.finish(showTiming: true);
     _progress?.cancel();
 
     logger.write(
-        '${relative(schemaPath)} ${green.wrap('formatted successfully.')!}');
+        '${relative(schema.path)} ${green.wrap('formatted successfully.')!}');
 
     return result.exitCode;
   }

@@ -5,31 +5,26 @@ import 'package:path/path.dart';
 import '../configure.dart';
 import 'get_project_directory.dart';
 
-/// Get `schema.prisma` file path.
-getSchemaPath([String? path]) {
+/// Get `schema.prisma` file.
+File getSchemaFile([String? path]) {
+  final String schemaPath = getSchemaPath(path);
+  final File schema = File(schemaPath);
+
+  if (!schema.existsSync()) {
+    throw Exception('Schema file does not exist: ${relative(schemaPath)}');
+  }
+
+  return schema;
+}
+
+/// Get schema path.
+String getSchemaPath([String? path]) {
   if (path != null && path.isNotEmpty) return path;
 
-  // Get configred schema path.
-  final String configredSchemaPath =
-      join(getProjectDirectory(), configured('schema'));
-  if (File(configredSchemaPath).existsSync()) {
-    return configredSchemaPath;
+  final String? configedSchemaPath = configured('schema');
+  if (configedSchemaPath != null && configedSchemaPath.isNotEmpty) {
+    return join(getProjectDirectory(), configedSchemaPath);
   }
 
-  // Get path from current 'prisma/schema.prisma'.
-  final String currentPrismaDirectorySchemaPath =
-      join(Directory.current.path, 'prisma', 'schema.prisma');
-  if (File(currentPrismaDirectorySchemaPath).existsSync()) {
-    return currentPrismaDirectorySchemaPath;
-  }
-
-  // Get path from current 'schema.prisma'.
-  final String currentDirectorySchemaPath =
-      join(Directory.current.path, 'schema.prisma');
-  if (File(currentDirectorySchemaPath).existsSync()) {
-    return currentDirectorySchemaPath;
-  }
-
-  // Otherwise, throw an exception.
-  throw Exception('Not found a schema file.');
+  return join(getProjectDirectory(), 'prisma', 'schema.prisma');
 }
