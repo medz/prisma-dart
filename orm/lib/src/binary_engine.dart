@@ -32,12 +32,12 @@ class BinaryEngine {
   }
 
   /// Run binary.
-  Future<ProcessResult> run(List<String> arguments) async {
-    return Process.run(
+  Future<Process> run(List<String> arguments) async {
+    return Process.start(
       await load(),
       arguments,
       includeParentEnvironment: false,
-      environment: configured('environment'),
+      environment: configured.environment,
     );
   }
 }

@@ -9,6 +9,16 @@ export 'src/engine_platform.dart';
 export 'src/engine_version.dart';
 export 'src/executable_name.dart';
 
+// JSON RPC messages
+export 'src/json_rpc/base_json_rpc_message.dart';
+export 'src/json_rpc/json_rpc_payload.dart';
+export 'src/json_rpc/json_rpc_serializable.dart';
+export 'src/json_rpc/schema_push.dart';
+
+// Migrate
+export 'src/migrate/migrate_engine.dart';
+export 'src/migrate/migrate.dart';
+
 // Engine downloader.
 export 'src/engine_downloader/download_engine_lookfile.dart';
 export 'src/engine_downloader/download_event.dart';

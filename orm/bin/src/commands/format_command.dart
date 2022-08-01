@@ -6,7 +6,9 @@ import 'package:io/ansi.dart';
 import 'package:orm/orm.dart';
 import 'package:path/path.dart';
 
-class FormatCommand extends Command<int> {
+import '../logger_mixin.dart';
+
+class FormatCommand extends Command<int> with LoggerMixin {
   FormatCommand() {
     argParser.addOption(
       'schema',
@@ -15,18 +17,17 @@ class FormatCommand extends Command<int> {
     );
   }
 
-  EngineOptions get _engineOptions => EngineOptions(
+  @override
+  EngineOptions get options => EngineOptions(
         version: engineVersion,
         platform: EnginePlatform.darwin,
         binary: BinaryType.prismaFmt,
       );
 
   BinaryEngine get engine => BinaryEngine(
-        _engineOptions,
-        onDownloadEvent: _onDownloadProgress,
+        options,
+        onDownloadEvent: onDownloadProgress,
       );
-
-  Logger get logger => Logger.standard(ansi: Ansi(true));
 
   @override
   String get description => 'Format a Prisma schema.';
@@ -37,48 +38,22 @@ class FormatCommand extends Command<int> {
   @override
   Future<int> run() async {
     final File schema = getSchemaFile(argResults?['schema']);
-    final ProcessResult result = await engine.run([
+
+    final Process process = await engine.run([
       'format',
       '-i',
       schema.path,
     ]);
+    final IOSink sink = schema.openWrite();
 
-    if (result.exitCode != 0) {
-      logger.stderr(result.stderr);
-      return result.exitCode;
-    }
+    await process.stdout.pipe(sink);
+    await process.stderr.pipe(stderr);
 
-    schema.writeAsStringSync(result.stdout);
-
-    _progress?.finish(showTiming: true);
-    _progress?.cancel();
+    process.kill();
 
     logger.write(
         '${relative(schema.path)} ${green.wrap('formatted successfully.')!}');
 
-    return result.exitCode;
-  }
-
-  Progress? _progress;
-
-  /// Download progress callback.
-  void _onDownloadProgress(DownloadEvent event) async {
-    switch (event) {
-      case DownloadEvent.startDownload:
-        _progress =
-            logger.progress('Downloading ${_engineOptions.binary.value}');
-        break;
-      case DownloadEvent.startUnpack:
-        _progress = logger.progress('Unpacking ${_engineOptions.binary.value}');
-        break;
-      case DownloadEvent.doneUnpack:
-      case DownloadEvent.doneDownload:
-        _progress?.finish(showTiming: true);
-        break;
-      case DownloadEvent.lookfile:
-        _progress =
-            logger.progress('Looking for ${_engineOptions.binary.value}');
-        break;
-    }
+    return process.exitCode;
   }
 }

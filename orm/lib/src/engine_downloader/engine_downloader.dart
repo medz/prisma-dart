@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
@@ -65,7 +66,7 @@ class EngineDownloader {
 
       handler?.call(DownloadEvent.startUnpack);
       GZipDecoder().decodeStream(input, output);
-      handler?.call(DownloadEvent.startUnpack);
+      handler?.call(DownloadEvent.doneUnpack);
 
       await chmod(cache.cachedBinaryPath);
 

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -66,8 +65,7 @@ Map _mapConvert(Map source) => source.map<String, dynamic>(
             value is! Map
                 ? <String, String>{}
                 : value.map(
-                    (key, value) =>
-                        MapEntry(key.toString(), json.encode(value)),
+                    (key, value) => MapEntry(key.toString(), value.toString()),
                   ),
           );
         }

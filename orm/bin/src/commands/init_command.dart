@@ -90,4 +90,7 @@ class InitCommand extends Command<int> with LoggerMixin {
 
     await config.writeAsString(ormTemplate.replaceAll('{url}', url));
   }
+
+  @override
+  EngineOptions get options => throw UnimplementedError();
 }
