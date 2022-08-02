@@ -1,5 +1,5 @@
 import 'package:cli_util/cli_logging.dart';
-import 'package:orm/orm.dart';
+import 'package:prisma_cli/prisma_cli.dart';
 
 Progress? _progress;
 Logger get logger => Logger.standard(ansi: Ansi(true));

@@ -1,5 +1,5 @@
 import 'package:args/command_runner.dart';
-import 'package:orm/orm.dart';
+import 'package:prisma_cli/prisma_cli.dart';
 
 import '../logger.dart';
 import 'db/push_sub_command.dart';

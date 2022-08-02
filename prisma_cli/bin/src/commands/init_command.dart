@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:cli_util/cli_logging.dart';
 import 'package:io/ansi.dart';
-import 'package:orm/orm.dart';
 import 'package:path/path.dart';
+import 'package:prisma_cli/prisma_cli.dart';
 
 import '../logger.dart';
 import 'init/orm_template.dart';
@@ -90,7 +90,4 @@ class InitCommand extends Command<int> {
 
     await config.writeAsString(ormTemplate.replaceAll('{url}', url));
   }
-
-  @override
-  EngineOptions get options => throw UnimplementedError();
 }

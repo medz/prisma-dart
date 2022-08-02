@@ -1,5 +1,5 @@
 import 'package:args/command_runner.dart';
-import 'package:orm/orm.dart';
+import 'package:prisma_cli/prisma_cli.dart';
 
 import '../../logger.dart';
 
@@ -48,7 +48,4 @@ class PushSubCommand extends Command<int> {
 
     return 0;
   }
-
-  @override
-  EngineOptions get options => engine.options;
 }

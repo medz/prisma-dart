@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
-import 'package:orm/orm.dart';
 import 'package:path/path.dart';
+import 'package:prisma_cli/prisma_cli.dart';
 
 import '../logger.dart';
 

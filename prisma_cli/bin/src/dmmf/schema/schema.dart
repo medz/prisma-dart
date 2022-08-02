@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'enum_types.dart';
 import 'input_object_types.dart';
-import 'output_object_types.dart';
 
 part 'schema.g.dart';
 

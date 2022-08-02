@@ -6,16 +6,6 @@ import 'engine_downloader/download_event.dart';
 import 'engine_downloader/engine_downloader.dart';
 import 'engine_options.dart';
 
-typedef _ProcessHandler<T> = T Function(
-  String executable,
-  List<String> arguments, {
-  String? workingDirectory,
-  Map<String, String>? environment,
-  bool includeParentEnvironment,
-  bool runInShell,
-  ProcessStartMode mode,
-});
-
 class BinaryEngine {
   const BinaryEngine(
     this.options, {
