@@ -155,13 +155,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  orm:
-    dependency: "direct dev"
-    description:
-      path: "../orm"
-      relative: true
-    source: path
-    version: "1.0.2-dev.0"
   package_config:
     dependency: transitive
     description:
@@ -170,7 +163,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       url: "https://pub.dartlang.org"

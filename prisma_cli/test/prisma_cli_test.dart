@@ -1,4 +1,4 @@
-import 'package:orm_example/orm_example.dart';
+import 'package:prisma_cli/prisma_cli.dart';
 import 'package:test/test.dart';
 
 void main() {
