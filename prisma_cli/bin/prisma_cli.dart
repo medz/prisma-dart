@@ -10,8 +10,11 @@ import 'src/commands/generate_command.dart';
 import 'src/commands/init_command.dart';
 
 Future<void> main(List<String> args) async {
-  final CommandRunner<int> runner = CommandRunner<int>(executableNameWithColor,
-      '${cyan.wrap('◭')} Prisma is a modern DB toolkit to query, migrate and model your database (https://github.com/odroe/orm.dart)');
+  final CommandRunner<int> runner = CommandRunner<int>(
+    executableNameWithColor,
+    '${cyan.wrap('◭')} Prisma CLI 🚀\nPrisma is a modern DB toolkit to query, migrate and model your database (https://github.com/odroe/orm.dart)',
+  );
+  runner.executableName;
 
   // Add commands.
   runner
