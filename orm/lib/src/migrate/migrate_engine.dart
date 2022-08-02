@@ -53,7 +53,7 @@ class MigrateEngine {
       arguments.add(enabledPreviewFeatures!.join(','));
     }
 
-    process = await binaryEngine.run(arguments);
+    process = await binaryEngine.start(arguments);
     process?.stdout.listen(
       (List<int> data) {
         final Map<String, dynamic> json = jsonDecode(utf8.decode(data));

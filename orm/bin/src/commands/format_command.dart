@@ -37,22 +37,18 @@ class FormatCommand extends Command<int> {
     );
     final File schema = getSchemaFile(argResults?['schema']);
 
-    final Process process = await engine.run([
-      'format',
-      '-i',
-      schema.path,
-    ]);
+    final ProcessResult result =
+        await engine.run(['format', '-i', schema.path]);
 
-    final IOSink sink = schema.openWrite();
-    await process.stdout.pipe(sink);
-    await process.stderr.pipe(stderr);
-    await sink.flush();
-    await sink.close();
-    process.kill();
+    if (result.exitCode != 0) {
+      logger.write(result.stderr ?? result.stdout);
+      return result.exitCode;
+    }
 
+    await schema.writeAsString(result.stdout);
     logger.write(
         '${relative(schema.path)} ${green.wrap('formatted successfully.')!}');
 
-    return await process.exitCode;
+    return result.exitCode;
   }
 }

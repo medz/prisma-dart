@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:args/command_runner.dart';
 import 'package:orm/orm.dart';
-import 'package:orm/src/engine_options.dart';
 
+import '../dmmf/dmmf.dart';
 import '../logger.dart';
 
 class GenerateCommand extends Command<int> {
@@ -34,7 +37,15 @@ class GenerateCommand extends Command<int> {
     );
     final BinaryEngine engine = BinaryEngine(
       options,
+      onDownloadEvent: createOnDownloadProgress(options),
     );
+
+    final ProcessResult result =
+        await engine.run(['--datamodel-path', getSchemaPath(), 'cli', 'dmmf']);
+
+    final DMMF dmmf = DMMF.fromJson(json.decode(result.stdout));
+
+    print(dmmf.mappings.modelOperations);
 
     return 0;
   }
