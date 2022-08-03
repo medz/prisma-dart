@@ -1,6 +1,6 @@
 name: prisma_cli
 description: ◭ Prisma is a modern DB toolkit to query, migrate and model your database
-version: 1.0.0
+version: 1.0.5
 repository: https://github.com/odroe/orm.dart
 
 environment:
