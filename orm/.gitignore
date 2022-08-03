@@ -8,4 +8,4 @@ pubspec.lock
 
 # Prisma ORM
 prisma/
-orm.yaml
+.env*

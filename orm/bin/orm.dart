@@ -1,10 +1,3 @@
-import 'dart:io';
+import 'src/executable.dart';
 
-// ignore: depend_on_referenced_packages
-import 'package:prisma_cli/prisma_cli.dart';
-
-void main(List<String> args) async {
-  final PrismaCLI cli = PrismaCLI();
-
-  exitCode = await cli.run(args);
-}
+void main(List<String> args) => Executable(args).run();
