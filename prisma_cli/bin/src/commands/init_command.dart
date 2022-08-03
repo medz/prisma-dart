@@ -73,10 +73,8 @@ class InitCommand extends Command<int> {
       schema.createSync(recursive: true);
     }
 
-    await schema.writeAsString(schemaTemplate
-        .replaceAll('{executableName}', executableName)
-        .replaceAll(
-            '{datasource-provider}', argResults!['datasource-provider']));
+    await schema.writeAsString(schemaTemplate.replaceAll(
+        '{datasource-provider}', argResults!['datasource-provider']));
   }
 
   Future<void> _createConfigFile() async {

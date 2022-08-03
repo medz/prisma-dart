@@ -3,7 +3,7 @@ const String schemaTemplate = r'''
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "{executableName} generate"
+  provider = "prisma-dart-client"
 }
 
 datasource db {
