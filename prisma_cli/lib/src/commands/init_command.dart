@@ -54,22 +54,25 @@ class InitCommand extends Command<int> {
       dotEnv.createSync(recursive: true);
     }
 
-    if (argResults?.wasParsed('url') == true) {
+    if (argResults?['url'] != null) {
       final DataSourceUrl dataSourceUrl =
           DataSourceUrl.lookup(argResults!['url']);
       dotEnv.writeAsStringSync('DATABASE_URL=${dataSourceUrl.url}');
       return;
     }
 
-    final DataSourceProvider provider =
-        DataSourceProvider.lookup(argResults!['datasource-provider']);
-    dotEnv.writeAsStringSync('DATABASE_URL=${provider.defaultUrl}');
+    dotEnv.writeAsStringSync('DATABASE_URL=${datasourceProvider.defaultUrl}');
   }
 
   /// Create the schema.prisma file.
   void _createPrismaSchemaFile(File schema) {
+    // If schema file does not exist, create it.
+    if (!schema.existsSync()) {
+      schema.createSync(recursive: true);
+    }
+
     // Schema template
-    String template = r'''
+    final String template = r'''
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -82,42 +85,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 ''';
-    if (argResults?.wasParsed('url') == true) {
+    if (argResults?['url'] != null) {
       final DataSourceUrl dataSourceUrl =
           DataSourceUrl.lookup(argResults!['url']);
-      template = template.replaceAll(
+
+      return schema.writeAsStringSync(template.replaceAll(
         '{datasource-provider}',
         dataSourceUrl.provider.name,
-      );
-    } else if (argResults?.wasParsed('datasource-provider') == true) {
-      final DataSourceProvider provider = _getProvider();
-      template = template.replaceAll(
-        '{datasource-provider}',
-        provider.name,
-      );
+      ));
     }
 
-    // If schema file does not exist, create it.
-    if (!schema.existsSync()) {
-      schema.createSync(recursive: true);
-    }
-
-    // Write the schema file
-    schema.writeAsStringSync(template);
+    schema.writeAsStringSync(template.replaceAll(
+      '{datasource-provider}',
+      datasourceProvider.name,
+    ));
   }
 
   /// Get and validate the datasource provider.
-  DataSourceProvider _getProvider() {
-    final String providerName = argResults!['datasource-provider'];
-    final DataSourceProvider? provider =
-        DataSourceProvider.lookup(providerName);
-    if (provider == null) {
-      stderr.writeln(' ERROR Unknown datasource provider: $providerName');
-      stderr.writeln('Please try again with one of the following:');
-      stderr.writeln(
-          '  ${DataSourceProvider.values.map((e) => e.name).join(', ')}');
-      exit(1);
-    }
-    return provider;
-  }
+  DataSourceProvider get datasourceProvider =>
+      DataSourceProvider.lookup(argResults?['datasource-provider']);
 }

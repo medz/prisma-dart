@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 
+import 'commands/format_command.dart';
 import 'commands/init_command.dart';
 import 'version.dart';
 
@@ -20,7 +21,8 @@ class PrismaCLI {
   /// Create a new Prisma CLI instance.
   PrismaCLI() {
     _runner = CommandRunner<int>(_executableName, _description)
-      ..addCommand(InitCommand());
+      ..addCommand(InitCommand())
+      ..addCommand(FormatCommand());
 
     _runner.argParser.addFlag('version',
         abbr: 'v', negatable: false, help: 'Print CLI and engines version.');
