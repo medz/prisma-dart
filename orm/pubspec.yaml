@@ -6,6 +6,10 @@ repository: https://github.com/odroe/orm.dart
 environment:
   sdk: '>=2.17.6 <3.0.0'
 
+executables:
+  prisma: orm
+  orm: orm
+
 dev_dependencies:
   lints: ^2.0.0
   prisma_cli: any

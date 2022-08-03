@@ -1,5 +1,7 @@
 import 'package:args/command_runner.dart';
 
+import 'commands/init_command.dart';
+
 /// The Prisma CLI executable name.
 const String _executableName = r'dart run orm';
 
@@ -13,7 +15,8 @@ class PrismaCLI {
 
   /// Create a new Prisma CLI instance.
   PrismaCLI() {
-    _runner = CommandRunner<int>(_executableName, _description);
+    _runner = CommandRunner<int>(_executableName, _description)
+      ..addCommand(InitCommand());
   }
 
   /// Run Prisma CLI.
