@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 
 import 'commands/init_command.dart';
+import 'version.dart';
 
 /// The Prisma CLI executable name.
 const String _executableName = r'dart run orm';
@@ -17,8 +21,30 @@ class PrismaCLI {
   PrismaCLI() {
     _runner = CommandRunner<int>(_executableName, _description)
       ..addCommand(InitCommand());
+
+    _runner.argParser.addFlag('version',
+        abbr: 'v', negatable: false, help: 'Print CLI and engines version.');
   }
 
   /// Run Prisma CLI.
-  Future<int> run(List<String> args) async => (await _runner.run(args)) ?? 0;
+  Future<int> run(List<String> args) async {
+    final ArgResults results = _runner.parse(args);
+
+    if (results.wasParsed('version')) {
+      return _printVersion();
+    }
+
+    final int? code = await _runner.runCommand(results);
+    return code ?? 0;
+  }
+
+  /// Print CLI and engines version.
+  Future<int> _printVersion() async {
+    stdout.write('◭ Prisma CLI'.padRight(40));
+    stdout.writeln(version);
+
+    stdout.write('◭ Prisma Engines'.padRight(40));
+    stdout.writeln(engineVersion);
+    return 0;
+  }
 }
