@@ -36,7 +36,8 @@ class FormatCommand extends Command<int> {
     }
 
     // Format engine binary file.
-    final File formatEngineBinary = File('prisma/engines/prisma-format');
+    final File formatEngineBinary =
+        File('prisma/engines/${BinaryEngineType.format.value}');
 
     // If format engine binary file does not exist, download it.
     if (!formatEngineBinary.existsSync()) {

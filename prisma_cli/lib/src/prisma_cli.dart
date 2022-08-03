@@ -38,8 +38,13 @@ class PrismaCLI {
       return _printVersion();
     }
 
-    final int? code = await _runner.runCommand(results);
-    return code ?? 0;
+    try {
+      final int? code = await _runner.runCommand(results);
+      return code ?? 0;
+    } catch (e) {
+      stderr.writeln(e);
+      return 1;
+    }
   }
 
   /// Print CLI and engines version.

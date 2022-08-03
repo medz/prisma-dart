@@ -2,22 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import '../binary_engine.dart';
 import '../json_rpc/json_rpc_payload.dart';
 import '../json_rpc/schema_push.dart';
 
 class MigrateEngine {
   MigrateEngine({
-    required this.binaryEngine,
-    required this.schema,
+    required this.enginePath,
+    required this.schemaPath,
     this.enabledPreviewFeatures,
   });
 
-  /// Binary engine.
-  final BinaryEngine binaryEngine;
+  /// Migrate engine binary path.
+  final String enginePath;
 
   /// Schema File.
-  final File schema;
+  final String schemaPath;
 
   /// Enabled preview features.
   final List<String>? enabledPreviewFeatures;
@@ -45,7 +44,7 @@ class MigrateEngine {
 
   /// Internal initialize engine.
   Future<void> _initializeInternal() async {
-    final List<String> arguments = ['-d', schema.path];
+    final List<String> arguments = ['-d', schemaPath];
 
     // Add enabled preview features.
     if (enabledPreviewFeatures != null && enabledPreviewFeatures!.isNotEmpty) {
@@ -53,7 +52,7 @@ class MigrateEngine {
       arguments.add(enabledPreviewFeatures!.join(','));
     }
 
-    process = await binaryEngine.start(arguments);
+    process = await Process.start(enginePath, arguments);
     process?.stdout.listen(
       (List<int> data) {
         final Map<String, dynamic> json = jsonDecode(utf8.decode(data));
@@ -71,6 +70,7 @@ class MigrateEngine {
   void stop() {
     process?.kill();
     process = null;
+    listeners.clear();
   }
 
   /// Run command.

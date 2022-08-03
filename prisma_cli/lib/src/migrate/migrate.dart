@@ -2,21 +2,20 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
-import '../binary_engine.dart';
 import '../json_rpc/schema_push.dart';
 import 'migrate_engine.dart';
 
 class Migrate {
-  Migrate(
-    BinaryEngine binaryEngine, {
+  Migrate({
     required this.schema,
+    required String path,
     List<String>? enabledPreviewFeatures,
   }) {
     final String prismaDir = dirname(schema.path);
     migrationsPath = join(prismaDir, 'migrations');
     engine = MigrateEngine(
-      binaryEngine: binaryEngine,
-      schema: schema,
+      enginePath: path,
+      schemaPath: schema.path,
       enabledPreviewFeatures: enabledPreviewFeatures,
     );
   }
