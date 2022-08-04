@@ -44,7 +44,7 @@ class FormatCommand extends Command<int> {
       final BinaryEngineDownloader downloader = BinaryEngineDownloader(
         binaryPath: formatEngineBinary.path,
         engineType: BinaryEngineType.format,
-        platform: BinaryEnginePlatform.darwin,
+        platform: BinaryEnginePlatform.current,
         version: engineVersion,
       );
 

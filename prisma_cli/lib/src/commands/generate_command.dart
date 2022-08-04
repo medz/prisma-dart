@@ -52,7 +52,7 @@ class GenerateCommand extends Command<int> {
       final BinaryEngineDownloader downloader = BinaryEngineDownloader(
         binaryPath: queryEngineBinary.path,
         engineType: BinaryEngineType.query,
-        platform: BinaryEnginePlatform.darwin,
+        platform: BinaryEnginePlatform.current,
         version: engineVersion,
       );
 

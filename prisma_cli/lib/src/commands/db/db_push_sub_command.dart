@@ -50,7 +50,7 @@ class DbPushSubCommand extends Command<int> {
       final BinaryEngineDownloader downloader = BinaryEngineDownloader(
         binaryPath: migrateEngineBinary.path,
         engineType: BinaryEngineType.migration,
-        platform: BinaryEnginePlatform.darwin,
+        platform: BinaryEnginePlatform.current,
         version: engineVersion,
       );
 
