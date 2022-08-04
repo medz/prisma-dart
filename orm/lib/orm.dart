@@ -1,3 +1,3 @@
 library orm;
 
-export 'src/utils/enum_lookup.dart';
+export 'src/prisma_enum.dart';

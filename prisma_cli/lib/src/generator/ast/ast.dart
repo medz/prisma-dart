@@ -1,3 +1,5 @@
+import 'package:prisma_cli/src/utils/string_camel_case.dart';
+
 import '../../dmmf/dmmf.dart';
 
 abstract class Ast {
@@ -15,11 +17,24 @@ abstract class CodeableAst {
   String scalar(String value) {
     switch (value.toLowerCase()) {
       case 'decimal':
+      case 'float':
         return 'double';
       case 'int':
         return 'int';
+      case 'boolean':
+        return 'bool';
     }
 
     return value;
+  }
+
+  /// Field name resolver.
+  String field(String name) {
+    if (name.isEmpty) return name;
+    if (name[0] == '_') return field('\$${name.substring(1)}');
+    if (['in', 'default', 'is'].contains(name.toLowerCase())) {
+      return '$name\$';
+    }
+    return name;
   }
 }

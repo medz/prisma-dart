@@ -19,9 +19,14 @@ InputObjectType _$InputObjectTypeFromJson(Map<String, dynamic> json) =>
 InputObjectTypesNamespace _$InputObjectTypesNamespaceFromJson(
         Map<String, dynamic> json) =>
     InputObjectTypesNamespace(
-      (json['prisma'] as List<dynamic>)
-          .map((e) => InputObjectType.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      prisma: (json['prisma'] as List<dynamic>?)
+              ?.map((e) => InputObjectType.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      model: (json['model'] as List<dynamic>?)
+              ?.map((e) => InputObjectType.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 InputObjectTypeConstraints _$InputObjectTypeConstraintsFromJson(

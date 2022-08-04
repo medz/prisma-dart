@@ -1,14 +1,13 @@
 import 'ast/ast.dart';
-import 'ast/datamodel/datamode_ast.dart';
+import 'ast/schema/schema_builder.dart';
 
 class Generator extends Ast {
   Generator(super.dmmf);
 
-  CodeableAst get datamodel => DatamodelAst(this);
-
   String generate() {
     final StringBuffer code = StringBuffer();
     code.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND');
+    code.writeln('// ignore_for_file: non_constant_identifier_names');
     code.writeln();
     code.writeln('import \'package:orm/orm.dart\';');
     code.writeln('import \'package:json_annotation/json_annotation.dart\';');
@@ -20,7 +19,7 @@ class Generator extends Ast {
     code.writeln('// GitHub: https://github.com/odroe/prisma');
     code.writeln('//'.padRight(80, '*'));
     code.writeln();
-    code.writeln(datamodel.codeString);
+    code.writeln(SchemaBuilder(this).codeString);
 
     return code.toString();
   }

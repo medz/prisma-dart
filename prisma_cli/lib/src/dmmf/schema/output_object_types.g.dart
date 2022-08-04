@@ -12,19 +12,19 @@ OutputObjectType _$OutputObjectTypeFromJson(Map<String, dynamic> json) =>
       fields: (json['fields'] as List<dynamic>)
           .map((e) => OutputObjectTypeField.fromJson(e as Map<String, dynamic>))
           .toList(),
-      args: (json['args'] as List<dynamic>)
-          .map((e) => InputObjectTypeField.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      outputType:
-          InputOutputType.fromJson(json['outputType'] as Map<String, dynamic>),
     );
 
 OutputObjectTypesNamespace _$OutputObjectTypesNamespaceFromJson(
         Map<String, dynamic> json) =>
     OutputObjectTypesNamespace(
-      (json['prisma'] as List<dynamic>)
-          .map((e) => OutputObjectType.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      prisma: (json['prisma'] as List<dynamic>?)
+              ?.map((e) => OutputObjectType.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      model: (json['model'] as List<dynamic>?)
+              ?.map((e) => OutputObjectType.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 OutputObjectTypeField _$OutputObjectTypeFieldFromJson(
@@ -32,4 +32,9 @@ OutputObjectTypeField _$OutputObjectTypeFieldFromJson(
     OutputObjectTypeField(
       name: json['name'] as String,
       isNullable: json['isNullable'] as bool,
+      outputType:
+          InputOutputType.fromJson(json['outputType'] as Map<String, dynamic>),
+      args: (json['args'] as List<dynamic>)
+          .map((e) => InputObjectTypeField.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );

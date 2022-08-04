@@ -23,8 +23,12 @@ class InputObjectType extends BaseNamedObject {
 @JsonSerializable(createToJson: false)
 class InputObjectTypesNamespace {
   final List<InputObjectType> prisma;
+  final List<InputObjectType> model;
 
-  const InputObjectTypesNamespace(this.prisma);
+  const InputObjectTypesNamespace({
+    this.prisma = const [],
+    this.model = const [],
+  });
 
   factory InputObjectTypesNamespace.fromJson(Map<String, dynamic> json) =>
       _$InputObjectTypesNamespaceFromJson(json);

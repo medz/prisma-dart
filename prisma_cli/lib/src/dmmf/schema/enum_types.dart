@@ -20,8 +20,12 @@ class EnumType extends BaseNamedObject {
 @JsonSerializable(createToJson: false)
 class EnumTypesNamespace {
   final List<EnumType> prisma;
+  final List<EnumType> model;
 
-  const EnumTypesNamespace(this.prisma);
+  const EnumTypesNamespace({
+    this.prisma = const [],
+    this.model = const [],
+  });
 
   factory EnumTypesNamespace.fromJson(Map<String, dynamic> json) =>
       _$EnumTypesNamespaceFromJson(json);

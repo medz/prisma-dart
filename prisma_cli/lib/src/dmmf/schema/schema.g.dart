@@ -11,4 +11,6 @@ Schema _$SchemaFromJson(Map<String, dynamic> json) => Schema(
           json['enumTypes'] as Map<String, dynamic>),
       inputObjectTypes: InputObjectTypesNamespace.fromJson(
           json['inputObjectTypes'] as Map<String, dynamic>),
+      outputObjectTypes: OutputObjectTypesNamespace.fromJson(
+          json['outputObjectTypes'] as Map<String, dynamic>),
     );

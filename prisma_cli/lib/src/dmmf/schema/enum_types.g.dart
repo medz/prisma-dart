@@ -14,7 +14,12 @@ EnumType _$EnumTypeFromJson(Map<String, dynamic> json) => EnumType(
 
 EnumTypesNamespace _$EnumTypesNamespaceFromJson(Map<String, dynamic> json) =>
     EnumTypesNamespace(
-      (json['prisma'] as List<dynamic>)
-          .map((e) => EnumType.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      prisma: (json['prisma'] as List<dynamic>?)
+              ?.map((e) => EnumType.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      model: (json['model'] as List<dynamic>?)
+              ?.map((e) => EnumType.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
