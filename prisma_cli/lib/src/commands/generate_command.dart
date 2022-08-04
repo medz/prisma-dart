@@ -2,10 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:path/path.dart';
+import 'package:prisma_cli/src/generator/messages/get_config_response.dart';
 
+import '../configure.dart';
+import '../dmmf/dmmf.dart';
 import '../engine_downloader/binary_engine_downloader.dart';
 import '../engine_downloader/binary_engine_platform.dart';
 import '../engine_downloader/binary_engine_type.dart';
+import '../generator/generator.dart';
 import '../json_rpc/json_rpc_response_error.dart';
 import '../utils/ansi_progress.dart';
 import '../version.dart';
@@ -18,11 +23,11 @@ class GenerateCommand extends Command<int> {
       valueHelp: 'path',
       defaultsTo: 'prisma/schema.prisma',
     );
-    argParser.addFlag(
-      'watch',
-      help: 'Watch the Prisma schema and rerun after a change',
-      defaultsTo: false,
-    );
+    // argParser.addFlag(
+    //   'watch',
+    //   help: 'Watch the Prisma schema and rerun after a change',
+    //   defaultsTo: false,
+    // );
   }
 
   @override
@@ -59,10 +64,13 @@ class GenerateCommand extends Command<int> {
       await downloader.download(_onDownload);
     }
 
+    final AnsiProgress progress = AnsiProgress('Generating...');
+
     // Run query engine binary, request config.
     final ProcessResult configResult = await Process.run(
       queryEngineBinary.path,
       ['--datamodel-path', schema.path, 'cli', 'get-config'],
+      environment: configure.environment,
     );
 
     // If exit code is not 0, exit.
@@ -73,12 +81,54 @@ class GenerateCommand extends Command<int> {
       return 1;
     }
 
-    Platform.environment;
+    final GetConfigResponse config = GetConfigResponse.fromJson(
+      json.decode(configResult.stdout),
+    );
+    final bool dartClientGeneratorHasSet = config.generators
+        .where((element) => element.provider.value == 'prisma-dart-client')
+        .isNotEmpty;
+    if (!dartClientGeneratorHasSet) {
+      stderr.writeln('Dart client generator is not set.');
+      stderr.writeln('Please set it in your ${relative(schema.path)} \n');
+      stderr.writeln('''
+generator client {
+  provider = "prisma-dart-client"
+}
+''');
+      return 1;
+    }
 
-    print(configResult.stdout);
-    print(configResult.stderr);
-    print(configResult.exitCode);
-    Platform.executable;
+    // Request dmmf.
+    final ProcessResult dmmfResult = await Process.run(
+      queryEngineBinary.path,
+      ['--datamodel-path', schema.path, 'cli', 'dmmf'],
+      environment: configure.environment,
+    );
+
+    // If exit code is not 0, exit.
+    if (dmmfResult.exitCode != 0) {
+      final JsonRpcResponseError error = JsonRpcResponseError()
+        ..fromJson(json.decode(dmmfResult.stderr));
+      stderr.writeln(error.message);
+      return 1;
+    }
+
+    File('dmmf.json').writeAsStringSync(dmmfResult.stdout);
+
+    final DMMF dmmf = DMMF.fromJson(json.decode(dmmfResult.stdout));
+    final Generator genertaor = Generator(dmmf);
+    final String code = genertaor.generate();
+
+    File('lib/src/prisma_generated.dart').writeAsStringSync(code);
+
+    // Run build_runner build
+    Process.runSync(Platform.resolvedExecutable, [
+      'run',
+      'build_runner',
+      'build',
+      '--delete-conflicting-outputs',
+    ]);
+    progress.cancel(showTime: true);
 
     return 0;
   }

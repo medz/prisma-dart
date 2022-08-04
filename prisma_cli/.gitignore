@@ -5,3 +5,4 @@
 # Prisma ORM
 prisma/
 prisma.yaml
+lib/src/prisma_generated.*
