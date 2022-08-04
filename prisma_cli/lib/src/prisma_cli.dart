@@ -5,6 +5,7 @@ import 'package:args/command_runner.dart';
 
 import 'commands/db/db_command.dart';
 import 'commands/format_command.dart';
+import 'commands/generate_command.dart';
 import 'commands/init_command.dart';
 import 'version.dart';
 
@@ -24,7 +25,8 @@ class PrismaCLI {
     _runner = CommandRunner<int>(_executableName, _description)
       ..addCommand(InitCommand())
       ..addCommand(FormatCommand())
-      ..addCommand(DbCommand());
+      ..addCommand(DbCommand())
+      ..addCommand(GenerateCommand());
 
     _runner.argParser.addFlag('version',
         abbr: 'v', negatable: false, help: 'Print CLI and engines version.');
