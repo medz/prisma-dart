@@ -38,7 +38,8 @@ class InputObjectTypesBuilder extends CodeableAst {
     final StringBuffer code = StringBuffer();
     code.writeln('  const ${type.name}({');
     for (final field in type.fields) {
-      code.writeln('    this.${this.field(field.name)},');
+      code.writeln(
+          '    ${field.isRequired ? 'required ' : ''}this.${this.field(field.name)},');
     }
     code.writeln('  });');
     return code.toString();
@@ -49,7 +50,7 @@ class InputObjectTypesBuilder extends CodeableAst {
     final StringBuffer code = StringBuffer();
     for (final InputObjectTypeField field in type.fields) {
       code.writeln(
-          '  final ${_fieldTypeBuilder(field)}? ${this.field(field.name)};');
+          '  final ${_fieldTypeBuilder(field)}${!field.isRequired ? '?' : ''} ${this.field(field.name)};');
     }
 
     return code.toString();
