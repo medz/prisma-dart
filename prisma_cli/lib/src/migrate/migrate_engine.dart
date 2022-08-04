@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import '../configure.dart';
 import '../json_rpc/json_rpc_payload.dart';
 import '../json_rpc/schema_push.dart';
 
@@ -52,7 +53,11 @@ class MigrateEngine {
       arguments.add(enabledPreviewFeatures!.join(','));
     }
 
-    process = await Process.start(enginePath, arguments);
+    process = await Process.start(
+      enginePath,
+      arguments,
+      environment: configure.environment,
+    );
     process?.stdout.listen(
       (List<int> data) {
         final Map<String, dynamic> json = jsonDecode(utf8.decode(data));

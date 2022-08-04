@@ -4,4 +4,4 @@
 
 # Prisma ORM
 prisma/
-.env*
+prisma.yaml

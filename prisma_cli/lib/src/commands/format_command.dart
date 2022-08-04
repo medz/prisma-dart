@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart';
 
+import '../configure.dart';
 import '../engine_downloader/binary_engine_downloader.dart';
 import '../engine_downloader/binary_engine_platform.dart';
 import '../engine_downloader/binary_engine_type.dart';
@@ -59,6 +60,7 @@ class FormatCommand extends Command<int> {
     final ProcessResult result = await Process.run(
       formatEngineBinary.path,
       ['format', '-i', schema.path],
+      environment: configure.environment,
     );
 
     // If format engine binary failed, print error message.

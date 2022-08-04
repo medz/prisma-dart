@@ -22,7 +22,7 @@ enum DataSourceProvider {
   String get defaultUrl {
     switch (this) {
       case DataSourceProvider.postgresql:
-        return 'postgres://postgres:postgres@localhost:5432/postgres';
+        return 'postgres://postgres:postgres@localhost:5432/postgres?schema=public';
       case DataSourceProvider.mysql:
         return 'mysql://root:root@localhost:3306/mysql';
       case DataSourceProvider.sqlite:

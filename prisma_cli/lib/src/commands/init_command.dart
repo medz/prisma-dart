@@ -38,7 +38,7 @@ class InitCommand extends Command<int> {
 
     final AnsiProgress process = AnsiProgress('Initializing Prisma...');
     _createPrismaSchemaFile(schema);
-    _createDotEnvFile();
+    _createPrismaConfigFile();
     process.cancel(
       overrideMessage: 'Initialization completed successfully.',
       showTime: true,
@@ -47,21 +47,28 @@ class InitCommand extends Command<int> {
     return 0;
   }
 
-  /// Create dot env file.
-  void _createDotEnvFile() {
-    final File dotEnv = File('.env');
-    if (!dotEnv.existsSync()) {
-      dotEnv.createSync(recursive: true);
+  /// Create prisma config file.
+  void _createPrismaConfigFile() {
+    final File configFile = File('prisma.yaml');
+    if (!configFile.existsSync()) {
+      configFile.createSync(recursive: true);
     }
+
+    final String template = r'''
+environment:
+  DATABASE_URL: {url}
+''';
 
     if (argResults?['url'] != null) {
       final DataSourceUrl dataSourceUrl =
           DataSourceUrl.lookup(argResults!['url']);
-      dotEnv.writeAsStringSync('DATABASE_URL=${dataSourceUrl.url}');
+      configFile
+          .writeAsStringSync(template.replaceAll('{url}', dataSourceUrl.url));
       return;
     }
 
-    dotEnv.writeAsStringSync('DATABASE_URL=${datasourceProvider.defaultUrl}');
+    configFile.writeAsStringSync(
+        template.replaceAll('{url}', datasourceProvider.defaultUrl));
   }
 
   /// Create the schema.prisma file.

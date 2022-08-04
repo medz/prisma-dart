@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
@@ -67,9 +68,27 @@ class DbPushSubCommand extends Command<int> {
     final AnsiProgress progress = AnsiProgress('Pushing schema...');
 
     // Push schema.
-    final SchemaPushResponse result = await migrate.push(
+    SchemaPushResponse result = await migrate.push(
       force: argResults?['force-reset'],
     );
+
+    if (result.warnings.isNotEmpty) {
+      stderr.writeln('Warnings:');
+      for (final String warning in result.warnings) {
+        stderr.writeln('  - $warning');
+      }
+
+      stderr.write('Press enter to continue...[y/n]: ');
+      final String? value = stdin.readLineSync()?.trim().toLowerCase();
+      if (value != 'y') {
+        migrate.stop();
+        progress.cancel();
+        stdout.writeln('Aborted.');
+        return 1;
+      }
+
+      result = await migrate.push(force: true);
+    }
 
     // Stop migrate engine.
     migrate.stop();
