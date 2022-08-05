@@ -15,7 +15,7 @@ Prisma is a **next-generation ORM** that consists of these tools:
 - [x] `db push` command.
 - [ ] `db pull` command.
 - [ ] Binary query engine
-- [ ] dylib query engine
+- [ ] dylib query engine - In Progressing (https://github.com/odroe/prisma/issues/1)
 - [ ] Prisma data proxy
 
 ## Getting started
