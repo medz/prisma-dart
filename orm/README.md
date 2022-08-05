@@ -4,8 +4,8 @@ Next-generation ORM for Dart Navtive & Flutter | PostgreSQL, MySQL, MariaDB, SQL
 
 Prisma is a **next-generation ORM** that consists of these tools:
 
-- **[Prisma Dart CLI](orm)** - A command line tool that allows you to create and manage your Prisma projects.
-- **Prisma Dart Runtime** - A Dart package, that allows you to use the ORM in your Dart code.
+- **[Prisma CLI](https://pub.dev/packages/prisma_cli)** - A command line tool that allows you to create and manage your Prisma projects.
+- **[Prisma Dart Runtime](https://pub.dev/packages/orm)** - A Dart package, that allows you to use the ORM in your Dart code.
 
 ## TODO:
 
@@ -14,6 +14,9 @@ Prisma is a **next-generation ORM** that consists of these tools:
 - [x] `init` command.
 - [x] `db push` command.
 - [ ] `db pull` command.
+- [ ] Binary query engine
+- [ ] dylib query engine
+- [ ] Prisma data proxy
 
 ## Getting started
 

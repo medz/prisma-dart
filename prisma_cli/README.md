@@ -1,5 +1,12 @@
 ◭ Prisma is a modern DB toolkit to query, migrate and model your database.
 
+## What is it?
+
+Prisma is a **next-generation ORM** that consists of these tools:
+
+- **[Prisma CLI](https://pub.dev/packages/prisma_cli)** - A command line tool that allows you to create and manage your Prisma projects.
+- **[Prisma Dart Runtime](https://pub.dev/packages/orm)** - A Dart package, that allows you to use the ORM in your Dart code.
+
 ## Commands
 
 - `init`: Initialize a new Prisma project.
