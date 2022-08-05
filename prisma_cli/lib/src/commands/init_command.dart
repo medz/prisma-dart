@@ -84,7 +84,7 @@ environment:
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-dart-client"
+  provider = "prisma-client-dart"
 }
 
 datasource db {

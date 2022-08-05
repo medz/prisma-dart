@@ -85,14 +85,14 @@ class GenerateCommand extends Command<int> {
       json.decode(configResult.stdout),
     );
     final bool dartClientGeneratorHasSet = config.generators
-        .where((element) => element.provider.value == 'prisma-dart-client')
+        .where((element) => element.provider.value == 'prisma-client-dart')
         .isNotEmpty;
     if (!dartClientGeneratorHasSet) {
       stderr.writeln('Dart client generator is not set.');
       stderr.writeln('Please set it in your ${relative(schema.path)} \n');
       stderr.writeln('''
 generator client {
-  provider = "prisma-dart-client"
+  provider = "prisma-client-dart"
 }
 ''');
       return 1;

@@ -8,7 +8,7 @@ environment:
 
 executables:
   prisma-cli: prisma_cli
-  prisma-dart-client: prisma_client_generator
+  prisma-client-dart: prisma_client_generator
 
 dependencies:
   archive: ^3.3.1
