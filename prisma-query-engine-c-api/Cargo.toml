@@ -12,6 +12,16 @@ edition = "2021"
 crate-type = ["cdylib"]
 name= "query_engine"
 
+[features]
+vendored-openssl = ["sql-connector/vendored-openssl"]
+
 [dependencies]
 libc = "0.2.127"
+serde = "1.0.142"
+serde_json = "1.0.83"
+
 sql-connector = { git = "https://github.com/prisma/prisma-engines", package = "sql-query-connector" }
+datamodel = { git = "https://github.com/prisma/prisma-engines" }
+prisma-models = { git = "https://github.com/prisma/prisma-engines" }
+query-core = { git = "https://github.com/prisma/prisma-engines" }
+request-handlers = { git = "https://github.com/prisma/prisma-engines" }
