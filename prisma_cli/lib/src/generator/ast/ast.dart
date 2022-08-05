@@ -1,5 +1,3 @@
-import 'package:prisma_cli/src/utils/string_camel_case.dart';
-
 import '../../dmmf/dmmf.dart';
 
 abstract class Ast {
