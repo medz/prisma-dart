@@ -10,6 +10,13 @@ use crate::json_response::JsonResponse;
 pub extern "C" fn dmmf(datamodel_string: *mut CString) -> *mut JsonResponse {
   let datamodel_string = unsafe { datamodel_string.as_ref().unwrap().to_str().unwrap() };
   let datamodel = datamodel::parse_datamodel(datamodel_string).unwrap();
+  // If datamodel is empty, or is not valid, return an error.
+  if datamodel.subject.is_empty() {
+    return Box::into_raw(Box::new(JsonResponse::fail(
+      "Datamodel is empty or invalid",
+    )));
+  }
+
   let config = datamodel::parse_configuration(&datamodel_string).unwrap();
   let datasource = config.subject.datasources.first();
   let capabilities = datasource
