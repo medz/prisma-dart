@@ -1,4 +1,4 @@
-// ignore_for_file:
+// ignore_for_file: camel_case_types, constant_identifier_names
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 //
