@@ -1,0 +1,14 @@
+name: PrismaQueryDynamicLibrary
+description: "Generated dynamic library for Prisma query engine"
+output: "lib/src/native/dylib/prisma_query_engine_dynamic_library.dart"
+language: c
+headers:
+  entry-points:
+    - "lib/src/native/dylib/prisma_query_engine_dynamic_library.h"
+preamble: |
+  // ignore_for_file: 
+globals:
+structs:
+  rename:
+    '(.*)': 'PrismaQueryDynamicLibrary$1'
+
