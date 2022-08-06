@@ -18,6 +18,7 @@ impl Serialize for Version {
 }
 
 /// Get the version of the library.
+#[no_mangle]
 pub extern "C" fn version() -> *mut JsonResponse {
   let version = Version {
     commit: env!("GIT_HASH"),
@@ -38,9 +39,9 @@ mod tests {
       JsonResponse::Ok(version) => version,
       _ => panic!("Expected Ok"),
     };
-    let version = *unsafe { Box::from_raw(version) };
-    let version = version.to_str().unwrap();
+    // let version = *unsafe { Box::from_raw(version) };
+    // let version = version.to_str().unwrap();
 
-    println!("{}", version);
+    println!("{:?}", version);
   }
 }

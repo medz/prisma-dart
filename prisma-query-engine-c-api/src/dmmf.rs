@@ -67,9 +67,9 @@ mod tests {
       JsonResponse::Ok(response) => response,
       _ => panic!("Expected Ok"),
     };
-    let response = *unsafe { Box::from_raw(response) };
-    let response = response.to_str().unwrap();
+    // let response = *unsafe { Box::from_raw(response) };
+    // let response = response.to_str().unwrap();
 
-    println!("{}", response);
+    println!("{:?}", response);
   }
 }
