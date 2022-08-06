@@ -6,6 +6,11 @@ Prisma is a **next-generation ORM** that consists of these tools:
 
 - **[Prisma CLI](https://pub.dev/packages/prisma_cli)** - A command line tool that allows you to create and manage your Prisma projects.
 - **[Prisma Dart Runtime](https://pub.dev/packages/orm)** - A Dart package, that allows you to use the ORM in your Dart code.
+- **[Prisma Query Engine](https://pub.dev/packages/prisma_query_engine)** - Prisma query engines wrapper:
+  1. **Binary Engine** - Only for Dart Native. **❌ [@Ali Ammar](https://github.com/Ali1Ammar) Developing.**
+  2. **Dynamic Library Engine** - Supported for Dart Native and Flutter. **❌ [@Seven Du](https://github.com/medz) Developing.**
+  3. **Prisma Data Proxy Engint** - Supported all platforms. `❌ Waiting`
+
 
 ## TODO:
 
@@ -34,7 +39,7 @@ cd hello
 Next, add `orm` package to your project.
 
 ```bash
-dart pub add orm -d
+dart pub add orm
 ```
 
 Then, initialize ORM.
