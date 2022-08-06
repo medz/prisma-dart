@@ -18,6 +18,7 @@ dependencies:
   build_runner: ^2.2.0
   path: any
   yaml: any
+  prisma_shared:
 
 dev_dependencies:
   json_serializable: ^6.3.1
@@ -28,3 +29,5 @@ dev_dependencies:
 dependency_overrides:
   orm:
     path: ../orm
+  prisma_shared:
+    path: ../prisma_shared

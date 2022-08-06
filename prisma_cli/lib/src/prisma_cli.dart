@@ -7,7 +7,7 @@ import 'commands/db/db_command.dart';
 import 'commands/format_command.dart';
 import 'commands/generate_command.dart';
 import 'commands/init_command.dart';
-import 'version.dart';
+import 'package:prisma_shared/prisma_shared.dart';
 
 /// The Prisma CLI executable name.
 const String _executableName = r'dart run orm';

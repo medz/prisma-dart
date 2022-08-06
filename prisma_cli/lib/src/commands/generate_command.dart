@@ -5,7 +5,7 @@ import 'package:args/command_runner.dart';
 import 'package:path/path.dart';
 import 'package:prisma_cli/src/generator/messages/get_config_response.dart';
 
-import '../configure.dart';
+import 'package:prisma_shared/prisma_shared.dart';
 import '../dmmf/dmmf.dart';
 import '../engine_downloader/binary_engine_downloader.dart';
 import '../engine_downloader/binary_engine_platform.dart';
@@ -13,7 +13,6 @@ import '../engine_downloader/binary_engine_type.dart';
 import '../generator/generator.dart';
 import '../json_rpc/json_rpc_response_error.dart';
 import '../utils/ansi_progress.dart';
-import '../version.dart';
 
 class GenerateCommand extends Command<int> {
   GenerateCommand() {
