@@ -16,7 +16,10 @@ name= "query_engine_dylib"
 # vendored-openssl = ["sql-connector/vendored-openssl"]
 
 [dependencies]
+datamodel = { git = "https://github.com/prisma/prisma-engines" }
+
 libc = "0.2.127"
+thiserror = "1.0.32"
 
 [dev-dependencies]
 
