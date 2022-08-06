@@ -3,13 +3,22 @@ import '../shared/shared.dart' as shared;
 class DataProxyEngine implements shared.Engine {
   @override
   Future<void> start() {
-    // TODO: implement start
     throw UnimplementedError();
   }
 
   @override
   Future<void> stop() {
-    // TODO: implement stop
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<Map<String, dynamic>> batch(Map<String, dynamic> payload) {
+
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<Map<String, dynamic>> request(Map<String, dynamic> payload) {
     throw UnimplementedError();
   }
 }
