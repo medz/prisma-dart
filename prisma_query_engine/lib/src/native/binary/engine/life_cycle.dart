@@ -76,15 +76,13 @@ Future<void> spawn(BinaryEngine engine, String file) async {
   }
 }
 
-ensure(
+String ensure(
   BinaryEngine engine,
 ) {
   var forceVersion = true;
-  final fileQuery = File('prisma/engines/query-engine');
-  if (!fileQuery.existsSync()) throw "no binary found";
-  var file = fileQuery.path;
-  var out = Process.runSync(file, ["--version"]).stdout as String;
-  out = out.replaceFirst("query-engine", "").trim();
+
+  String file;
+
   final prismaQueryEngineBinary = configure["PRISMA_QUERY_ENGINE_BINARY"];
 
   if (prismaQueryEngineBinary.isNotEmpty) {
@@ -95,7 +93,14 @@ ensure(
     }
     file = prismaQueryEngineBinary;
     forceVersion = false;
+  } else {
+    final fileQuery = File('prisma/engines/query-engine');
+    if (!fileQuery.existsSync()) throw "no binary found";
+    file = fileQuery.path;
   }
+
+  var out = Process.runSync(file, ["--version"]).stdout as String;
+  out = out.replaceFirst("query-engine", "").trim();
 
   if (engineVersion != out) {
     final note =
@@ -105,6 +110,5 @@ ensure(
     }
     print("$note, ignoring since custom query engine was provided");
   }
-  print("using query engine at ");
-  print("ensure query engine took ");
+  return file;
 }
