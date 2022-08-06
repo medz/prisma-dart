@@ -6,35 +6,35 @@
 import 'dart:ffi' as ffi;
 
 /// Generated dynamic library for Prisma query engine
-class PrismaQueryDynamicLibrary {
+class EngineDynamicLibrary {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  PrismaQueryDynamicLibrary(ffi.DynamicLibrary dynamicLibrary)
+  EngineDynamicLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
-  PrismaQueryDynamicLibrary.fromLookup(
+  EngineDynamicLibrary.fromLookup(
       ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
 
   /// Get current version of the library.
-  PrismaQueryDynamicLibraryVersion version() {
+  EngineDynamicLibraryVersion version() {
     return _version();
   }
 
   late final _versionPtr =
-      _lookup<ffi.NativeFunction<PrismaQueryDynamicLibraryVersion Function()>>(
+      _lookup<ffi.NativeFunction<EngineDynamicLibraryVersion Function()>>(
           'version');
   late final _version =
-      _versionPtr.asFunction<PrismaQueryDynamicLibraryVersion Function()>();
+      _versionPtr.asFunction<EngineDynamicLibraryVersion Function()>();
 }
 
 /// The Prisma query engine dynamid liobrary version info.
-class PrismaQueryDynamicLibraryVersion extends ffi.Struct {
+class EngineDynamicLibraryVersion extends ffi.Struct {
   /// The commit hash of https://github.com/odroe/prisma repository.
   external ffi.Pointer<ffi.Char> commit;
 

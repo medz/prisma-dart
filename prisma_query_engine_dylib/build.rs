@@ -7,7 +7,7 @@ fn store_git_commit_hash() {
 }
 
 fn generate_c_header() {
-  let output_path = "../prisma_query_engine/lib/src/native/dylib/prisma_query_engine_dynamic_library.h";
+  let output_path = "../prisma_query_engine/lib/src/native/dylib/engine_dynamic_library.h";
   let crate_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
   let mut config = cbindgen::Config::default();
   config.language = cbindgen::Language::C;
