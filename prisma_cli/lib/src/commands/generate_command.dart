@@ -115,10 +115,10 @@ generator client {
     File('dmmf.json').writeAsStringSync(dmmfResult.stdout);
 
     final DMMF dmmf = DMMF.fromJson(json.decode(dmmfResult.stdout));
-    final Generator genertaor = Generator(dmmf);
+    final Generator genertaor = Generator(dmmf,schema.readAsStringSync());
     final String code = genertaor.generate();
 
-    File('lib/src/prisma_generated.dart').writeAsStringSync(code);
+    File('lib/src/prisma_generated.dart')..createSync(recursive: true)..writeAsStringSync(code);
 
     // Run build_runner build
     Process.runSync(Platform.resolvedExecutable, [
