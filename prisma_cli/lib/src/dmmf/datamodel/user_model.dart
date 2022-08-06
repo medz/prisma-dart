@@ -7,7 +7,7 @@ part 'user_model.g.dart';
 
 @JsonSerializable(createToJson: false)
 class UserModel extends BaseDbNameObject {
-  final String? primaryKey;
+  final PrimaryKey? primaryKey;
   final List<List<String>> uniqueFields;
   final List<UniqueIndexe> uniqueIndexes;
   final bool isGenerated;
@@ -25,6 +25,15 @@ class UserModel extends BaseDbNameObject {
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
+}
+
+@JsonSerializable(createToJson: false)
+class PrimaryKey extends BaseNameNullableObject {
+  final List<String> fields;
+
+  const PrimaryKey({required super.name, required this.fields});
+  factory PrimaryKey.fromJson(Map<String, dynamic> json) =>
+      _$PrimaryKeyFromJson(json);
 }
 
 @JsonSerializable(createToJson: false)
