@@ -127,13 +127,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  orm:
-    dependency: "direct dev"
-    description:
-      name: orm
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
   package_config:
     dependency: transitive
     description:
