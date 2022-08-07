@@ -1,8 +1,11 @@
+import 'package:prisma_cli/src/generator/ast/client/client.dart';
+
 import 'ast/ast.dart';
 import 'ast/schema/schema_builder.dart';
 
 class Generator extends Ast {
-  Generator(super.dmmf);
+  final String schema;
+  Generator(super.dmmf,this.schema);
 
   String generate() {
     final StringBuffer code = StringBuffer();
@@ -19,7 +22,10 @@ class Generator extends Ast {
     code.writeln('// GitHub: https://github.com/odroe/prisma');
     code.writeln('//'.padRight(80, '*'));
     code.writeln();
+    code.writeln(PrismaClientBuilder(this).codeString);
     code.writeln(SchemaBuilder(this).codeString);
+    code.writeln("const schema='''$schema''';");
+
 
     return code.toString();
   }

@@ -1,0 +1,5061 @@
+{
+  "datamodel": {
+    "enums": [],
+    "models": [
+      {
+        "name": "User",
+        "dbName": null,
+        "fields": [
+          {
+            "name": "id",
+            "kind": "scalar",
+            "isList": false,
+            "isRequired": true,
+            "isUnique": false,
+            "isId": true,
+            "isReadOnly": false,
+            "hasDefaultValue": true,
+            "type": "Int",
+            "default": {
+              "name": "autoincrement",
+              "args": []
+            },
+            "isGenerated": false,
+            "isUpdatedAt": false
+          },
+          {
+            "name": "userName",
+            "kind": "scalar",
+            "isList": false,
+            "isRequired": true,
+            "isUnique": true,
+            "isId": false,
+            "isReadOnly": false,
+            "hasDefaultValue": false,
+            "type": "String",
+            "isGenerated": false,
+            "isUpdatedAt": false
+          },
+          {
+            "name": "name",
+            "kind": "scalar",
+            "isList": false,
+            "isRequired": true,
+            "isUnique": false,
+            "isId": false,
+            "isReadOnly": false,
+            "hasDefaultValue": false,
+            "type": "String",
+            "isGenerated": false,
+            "isUpdatedAt": false
+          },
+          {
+            "name": "password",
+            "kind": "scalar",
+            "isList": false,
+            "isRequired": true,
+            "isUnique": false,
+            "isId": false,
+            "isReadOnly": false,
+            "hasDefaultValue": false,
+            "type": "String",
+            "isGenerated": false,
+            "isUpdatedAt": false
+          },
+          {
+            "name": "resturantId",
+            "kind": "scalar",
+            "isList": false,
+            "isRequired": false,
+            "isUnique": false,
+            "isId": false,
+            "isReadOnly": false,
+            "hasDefaultValue": false,
+            "type": "Int",
+            "isGenerated": false,
+            "isUpdatedAt": false
+          }
+        ],
+        "primaryKey": null,
+        "uniqueFields": [],
+        "uniqueIndexes": [],
+        "isGenerated": false
+      }
+    ],
+    "types": []
+  },
+  "schema": {
+    "inputObjectTypes": {
+      "prisma": [
+        {
+          "name": "UserWhereInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "AND",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserWhereInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "UserWhereInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "OR",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserWhereInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "NOT",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserWhereInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "UserWhereInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "IntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "StringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "StringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "StringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "IntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserOrderByWithRelationInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 0
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserWhereUniqueInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserOrderByWithAggregationInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 0
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_count",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserCountOrderByAggregateInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_avg",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserAvgOrderByAggregateInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_max",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserMaxOrderByAggregateInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_min",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserMinOrderByAggregateInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_sum",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserSumOrderByAggregateInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserScalarWhereWithAggregatesInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "AND",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserScalarWhereWithAggregatesInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "UserScalarWhereWithAggregatesInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "OR",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserScalarWhereWithAggregatesInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "NOT",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "UserScalarWhereWithAggregatesInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "UserScalarWhereWithAggregatesInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "IntWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "StringWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "StringWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "StringWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "IntNullableWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserCreateInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "userName",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserUncheckedCreateInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserUpdateInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NullableIntFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserUncheckedUpdateInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "IntFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NullableIntFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserCreateManyInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": true,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserUpdateManyMutationInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NullableIntFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserUncheckedUpdateManyInput",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "IntFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "StringFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NullableIntFieldUpdateOperationsInput",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IntFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "StringFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "contains",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "startsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "endsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "mode",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "QueryMode",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedStringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IntNullableFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserCountOrderByAggregateInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserAvgOrderByAggregateInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserMaxOrderByAggregateInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserMinOrderByAggregateInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "userName",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "name",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "password",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "UserSumOrderByAggregateInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "id",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "resturantId",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "SortOrder",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IntWithAggregatesFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_count",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_avg",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedFloatFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_sum",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_min",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_max",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "StringWithAggregatesFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "contains",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "startsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "endsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "mode",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "QueryMode",
+                  "namespace": "prisma",
+                  "location": "enumTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedStringWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_count",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_min",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedStringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_max",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedStringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IntNullableWithAggregatesFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntNullableWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_count",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_avg",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedFloatNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_sum",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_min",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_max",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "StringFieldUpdateOperationsInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "set",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NullableIntFieldUpdateOperationsInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "set",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "increment",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "decrement",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "multiply",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "divide",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "IntFieldUpdateOperationsInput",
+          "constraints": {
+            "maxNumFields": 1,
+            "minNumFields": 1
+          },
+          "fields": [
+            {
+              "name": "set",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "increment",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "decrement",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "multiply",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "divide",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedIntFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedStringFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "contains",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "startsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "endsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedStringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedIntNullableFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedIntWithAggregatesFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_count",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_avg",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedFloatFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_sum",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_min",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_max",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedFloatFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedFloatFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedStringWithAggregatesFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": true
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "contains",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "startsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "endsWith",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "String",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedStringWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_count",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_min",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedStringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_max",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedStringFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedIntNullableWithAggregatesFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Int",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedIntNullableWithAggregatesFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_count",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_avg",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedFloatNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_sum",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_min",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "_max",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "NestedIntNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NestedFloatNullableFilter",
+          "constraints": {
+            "maxNumFields": null,
+            "minNumFields": null
+          },
+          "fields": [
+            {
+              "name": "equals",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "in",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "notIn",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": true
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "lte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gt",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "gte",
+              "isRequired": false,
+              "isNullable": false,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            },
+            {
+              "name": "not",
+              "isRequired": false,
+              "isNullable": true,
+              "inputTypes": [
+                {
+                  "type": "Float",
+                  "location": "scalar",
+                  "isList": false
+                },
+                {
+                  "type": "NestedFloatNullableFilter",
+                  "namespace": "prisma",
+                  "location": "inputObjectTypes",
+                  "isList": false
+                },
+                {
+                  "type": "Null",
+                  "location": "scalar",
+                  "isList": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "outputObjectTypes": {
+      "prisma": [
+        {
+          "name": "Query",
+          "fields": [
+            {
+              "name": "findFirstUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "orderBy",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserOrderByWithRelationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": true
+                    },
+                    {
+                      "type": "UserOrderByWithRelationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "cursor",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereUniqueInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "take",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "skip",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "distinct",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserScalarFieldEnum",
+                      "namespace": "prisma",
+                      "location": "enumTypes",
+                      "isList": true
+                    }
+                  ]
+                }
+              ],
+              "isNullable": true,
+              "outputType": {
+                "type": "User",
+                "namespace": "model",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "findManyUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "orderBy",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserOrderByWithRelationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": true
+                    },
+                    {
+                      "type": "UserOrderByWithRelationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "cursor",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereUniqueInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "take",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "skip",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "distinct",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserScalarFieldEnum",
+                      "namespace": "prisma",
+                      "location": "enumTypes",
+                      "isList": true
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "User",
+                "namespace": "model",
+                "location": "outputObjectTypes",
+                "isList": true
+              }
+            },
+            {
+              "name": "aggregateUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "orderBy",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserOrderByWithRelationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": true
+                    },
+                    {
+                      "type": "UserOrderByWithRelationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "cursor",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereUniqueInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "take",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "skip",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "AggregateUser",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "groupByUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "orderBy",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserOrderByWithAggregationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": true
+                    },
+                    {
+                      "type": "UserOrderByWithAggregationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "by",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserScalarFieldEnum",
+                      "namespace": "prisma",
+                      "location": "enumTypes",
+                      "isList": true
+                    },
+                    {
+                      "type": "UserScalarFieldEnum",
+                      "namespace": "prisma",
+                      "location": "enumTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "having",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserScalarWhereWithAggregatesInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "take",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "skip",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Int",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "UserGroupByOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": true
+              }
+            },
+            {
+              "name": "findUniqueUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereUniqueInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": true,
+              "outputType": {
+                "type": "User",
+                "namespace": "model",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mutation",
+          "fields": [
+            {
+              "name": "createOneUser",
+              "args": [
+                {
+                  "name": "data",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserCreateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    },
+                    {
+                      "type": "UserUncheckedCreateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "User",
+                "namespace": "model",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "upsertOneUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereUniqueInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "create",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserCreateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    },
+                    {
+                      "type": "UserUncheckedCreateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserUpdateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    },
+                    {
+                      "type": "UserUncheckedUpdateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "User",
+                "namespace": "model",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "createManyUser",
+              "args": [
+                {
+                  "name": "data",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserCreateManyInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": true
+                    }
+                  ]
+                },
+                {
+                  "name": "skipDuplicates",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "Boolean",
+                      "location": "scalar",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "AffectedRowsOutput",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "deleteOneUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereUniqueInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": true,
+              "outputType": {
+                "type": "User",
+                "namespace": "model",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "updateOneUser",
+              "args": [
+                {
+                  "name": "data",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserUpdateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    },
+                    {
+                      "type": "UserUncheckedUpdateInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "where",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereUniqueInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": true,
+              "outputType": {
+                "type": "User",
+                "namespace": "model",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "updateManyUser",
+              "args": [
+                {
+                  "name": "data",
+                  "isRequired": true,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserUpdateManyMutationInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    },
+                    {
+                      "type": "UserUncheckedUpdateManyInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                },
+                {
+                  "name": "where",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "AffectedRowsOutput",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "deleteManyUser",
+              "args": [
+                {
+                  "name": "where",
+                  "isRequired": false,
+                  "isNullable": false,
+                  "inputTypes": [
+                    {
+                      "type": "UserWhereInput",
+                      "namespace": "prisma",
+                      "location": "inputObjectTypes",
+                      "isList": false
+                    }
+                  ]
+                }
+              ],
+              "isNullable": false,
+              "outputType": {
+                "type": "AffectedRowsOutput",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "AggregateUser",
+          "fields": [
+            {
+              "name": "_count",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserCountAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_avg",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserAvgAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_sum",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserSumAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_min",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserMinAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_max",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserMaxAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "UserGroupByOutputType",
+          "fields": [
+            {
+              "name": "id",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "userName",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "name",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "password",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "resturantId",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "_count",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserCountAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_avg",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserAvgAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_sum",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserSumAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_min",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserMinAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            },
+            {
+              "name": "_max",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "UserMaxAggregateOutputType",
+                "namespace": "prisma",
+                "location": "outputObjectTypes",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "AffectedRowsOutput",
+          "fields": [
+            {
+              "name": "count",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "UserCountAggregateOutputType",
+          "fields": [
+            {
+              "name": "id",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "userName",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "name",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "password",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "resturantId",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "_all",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "UserAvgAggregateOutputType",
+          "fields": [
+            {
+              "name": "id",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Float",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "resturantId",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Float",
+                "location": "scalar",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "UserSumAggregateOutputType",
+          "fields": [
+            {
+              "name": "id",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "resturantId",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "UserMinAggregateOutputType",
+          "fields": [
+            {
+              "name": "id",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "userName",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "name",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "password",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "resturantId",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "UserMaxAggregateOutputType",
+          "fields": [
+            {
+              "name": "id",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "userName",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "name",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "password",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "resturantId",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            }
+          ]
+        }
+      ],
+      "model": [
+        {
+          "name": "User",
+          "fields": [
+            {
+              "name": "id",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "userName",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "name",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "password",
+              "args": [],
+              "isNullable": false,
+              "outputType": {
+                "type": "String",
+                "location": "scalar",
+                "isList": false
+              }
+            },
+            {
+              "name": "resturantId",
+              "args": [],
+              "isNullable": true,
+              "outputType": {
+                "type": "Int",
+                "location": "scalar",
+                "isList": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "enumTypes": {
+      "prisma": [
+        {
+          "name": "QueryMode",
+          "values": [
+            "default",
+            "insensitive"
+          ]
+        },
+        {
+          "name": "SortOrder",
+          "values": [
+            "asc",
+            "desc"
+          ]
+        },
+        {
+          "name": "TransactionIsolationLevel",
+          "values": [
+            "ReadUncommitted",
+            "ReadCommitted",
+            "RepeatableRead",
+            "Serializable"
+          ]
+        },
+        {
+          "name": "UserScalarFieldEnum",
+          "values": [
+            "id",
+            "userName",
+            "name",
+            "password",
+            "resturantId"
+          ]
+        }
+      ]
+    }
+  },
+  "mappings": {
+    "modelOperations": [
+      {
+        "model": "User",
+        "aggregate": "aggregateUser",
+        "createMany": "createManyUser",
+        "createOne": "createOneUser",
+        "deleteMany": "deleteManyUser",
+        "deleteOne": "deleteOneUser",
+        "findFirst": "findFirstUser",
+        "findMany": "findManyUser",
+        "findUnique": "findUniqueUser",
+        "groupBy": "groupByUser",
+        "updateMany": "updateManyUser",
+        "updateOne": "updateOneUser",
+        "upsertOne": "upsertOneUser"
+      }
+    ],
+    "otherOperations": {
+      "read": [],
+      "write": []
+    }
+  }
+}

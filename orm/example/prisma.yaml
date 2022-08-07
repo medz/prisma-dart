@@ -1,0 +1,3 @@
+environment:
+  DATABASE_URL: postgresql://postgres:admin@localhost:5432/emenu?schema=public
+

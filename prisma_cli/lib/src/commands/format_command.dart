@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart';
 
-import '../configure.dart';
+import 'package:prisma_shared/prisma_shared.dart';
 import '../engine_downloader/binary_engine_downloader.dart';
 import '../engine_downloader/binary_engine_platform.dart';
 import '../engine_downloader/binary_engine_type.dart';
 import '../utils/ansi_progress.dart';
-import '../version.dart';
 
 class FormatCommand extends Command<int> {
   FormatCommand() {

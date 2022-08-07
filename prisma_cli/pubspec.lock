@@ -302,6 +302,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.1"
+  prisma_query_engine:
+    dependency: transitive
+    description:
+      path: "../prisma_query_engine"
+      relative: true
+    source: path
+    version: "1.0.0"
+  prisma_shared:
+    dependency: "direct main"
+    description:
+      path: "../prisma_shared"
+      relative: true
+    source: path
+    version: "1.0.5"
   pub_semver:
     dependency: transitive
     description:

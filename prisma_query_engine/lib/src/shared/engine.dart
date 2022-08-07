@@ -3,4 +3,6 @@ abstract class Engine {
   const Engine();
   Future<void> start();
   Future<void> stop();
+  Future<Map<String, dynamic>> batch(Map<String, dynamic> payload) ;
+  Future<Map<String, dynamic>> request(Map<String, dynamic> payload) ;
 }

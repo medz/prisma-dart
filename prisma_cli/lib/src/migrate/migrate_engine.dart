@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import '../configure.dart';
+import 'package:prisma_shared/prisma_shared.dart';
 import '../json_rpc/json_rpc_payload.dart';
 import '../json_rpc/schema_push.dart';
 

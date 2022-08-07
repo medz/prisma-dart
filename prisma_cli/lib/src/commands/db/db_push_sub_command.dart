@@ -9,7 +9,7 @@ import '../../engine_downloader/binary_engine_type.dart';
 import '../../json_rpc/schema_push.dart';
 import '../../migrate/migrate.dart';
 import '../../utils/ansi_progress.dart';
-import '../../version.dart';
+import 'package:prisma_shared/prisma_shared.dart';
 
 class DbPushSubCommand extends Command<int> {
   @override

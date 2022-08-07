@@ -10,6 +10,9 @@ executables:
   prisma: orm
   orm: orm
 
+dependencies:
+  prisma_query_engine:
+  
 dev_dependencies:
   lints: ^2.0.0
   prisma_cli: any
@@ -17,3 +20,5 @@ dev_dependencies:
 dependency_overrides:
   prisma_cli:
     path: ../prisma_cli
+  prisma_query_engine:
+    path: ../prisma_query_engine

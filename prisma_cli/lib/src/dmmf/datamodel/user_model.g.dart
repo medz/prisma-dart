@@ -9,7 +9,9 @@ part of 'user_model.dart';
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       name: json['name'] as String,
       dbName: json['dbName'] as String?,
-      primaryKey: json['primaryKey'] as String?,
+      primaryKey: json['primaryKey'] == null
+          ? null
+          : PrimaryKey.fromJson(json['primaryKey'] as Map<String, dynamic>),
       uniqueFields: (json['uniqueFields'] as List<dynamic>?)
               ?.map(
                   (e) => (e as List<dynamic>).map((e) => e as String).toList())
@@ -23,6 +25,12 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       fields: (json['fields'] as List<dynamic>)
           .map((e) => UserModelField.fromJson(e as Map<String, dynamic>))
           .toList(),
+    );
+
+PrimaryKey _$PrimaryKeyFromJson(Map<String, dynamic> json) => PrimaryKey(
+      name: json['name'] as String?,
+      fields:
+          (json['fields'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 UniqueIndexe _$UniqueIndexeFromJson(Map<String, dynamic> json) => UniqueIndexe(
