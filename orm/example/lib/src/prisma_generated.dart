@@ -966,12 +966,233 @@ class NestedFloatNullableFilter {
 
 
 
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class Query {
+  const Query({
+    this.findFirstUser,
+    required this.findManyUser,
+    required this.aggregateUser,
+    required this.groupByUser,
+    this.findUniqueUser,
+  });
+
+  final User? findFirstUser;
+  final List<User> findManyUser;
+  final AggregateUser aggregateUser;
+  final List<UserGroupByOutputType> groupByUser;
+  final User? findUniqueUser;
+
+  factory Query.fromJson(Map<String, dynamic> json) =>
+    _$QueryFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class Mutation {
+  const Mutation({
+    required this.createOneUser,
+    required this.upsertOneUser,
+    required this.createManyUser,
+    this.deleteOneUser,
+    this.updateOneUser,
+    required this.updateManyUser,
+    required this.deleteManyUser,
+  });
+
+  final User createOneUser;
+  final User upsertOneUser;
+  final AffectedRowsOutput createManyUser;
+  final User? deleteOneUser;
+  final User? updateOneUser;
+  final AffectedRowsOutput updateManyUser;
+  final AffectedRowsOutput deleteManyUser;
+
+  factory Mutation.fromJson(Map<String, dynamic> json) =>
+    _$MutationFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class AggregateUser {
+  const AggregateUser({
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
+
+  final UserCountAggregateOutputType? $count;
+  final UserAvgAggregateOutputType? $avg;
+  final UserSumAggregateOutputType? $sum;
+  final UserMinAggregateOutputType? $min;
+  final UserMaxAggregateOutputType? $max;
+
+  factory AggregateUser.fromJson(Map<String, dynamic> json) =>
+    _$AggregateUserFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class UserGroupByOutputType {
+  const UserGroupByOutputType({
+    required this.id,
+    required this.userName,
+    required this.name,
+    required this.password,
+    this.resturantId,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
+
+  final int id;
+  final String userName;
+  final String name;
+  final String password;
+  final int? resturantId;
+  final UserCountAggregateOutputType? $count;
+  final UserAvgAggregateOutputType? $avg;
+  final UserSumAggregateOutputType? $sum;
+  final UserMinAggregateOutputType? $min;
+  final UserMaxAggregateOutputType? $max;
+
+  factory UserGroupByOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserGroupByOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class AffectedRowsOutput {
+  const AffectedRowsOutput({
+    required this.count,
+  });
+
+  final int count;
+
+  factory AffectedRowsOutput.fromJson(Map<String, dynamic> json) =>
+    _$AffectedRowsOutputFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class UserCountAggregateOutputType {
+  const UserCountAggregateOutputType({
+    required this.id,
+    required this.userName,
+    required this.name,
+    required this.password,
+    required this.resturantId,
+    required this.$all,
+  });
+
+  final int id;
+  final int userName;
+  final int name;
+  final int password;
+  final int resturantId;
+  final int $all;
+
+  factory UserCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserCountAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class UserAvgAggregateOutputType {
+  const UserAvgAggregateOutputType({
+    this.id,
+    this.resturantId,
+  });
+
+  final double? id;
+  final double? resturantId;
+
+  factory UserAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserAvgAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class UserSumAggregateOutputType {
+  const UserSumAggregateOutputType({
+    this.id,
+    this.resturantId,
+  });
+
+  final int? id;
+  final int? resturantId;
+
+  factory UserSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserSumAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class UserMinAggregateOutputType {
+  const UserMinAggregateOutputType({
+    this.id,
+    this.userName,
+    this.name,
+    this.password,
+    this.resturantId,
+  });
+
+  final int? id;
+  final String? userName;
+  final String? name;
+  final String? password;
+  final int? resturantId;
+
+  factory UserMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserMinAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class UserMaxAggregateOutputType {
+  const UserMaxAggregateOutputType({
+    this.id,
+    this.userName,
+    this.name,
+    this.password,
+    this.resturantId,
+  });
+
+  final int? id;
+  final String? userName;
+  final String? name;
+  final String? password;
+  final int? resturantId;
+
+  factory UserMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserMaxAggregateOutputTypeFromJson(json);
+
+}
+
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class User {
+  const User({
+    required this.id,
+    required this.userName,
+    required this.name,
+    required this.password,
+    this.resturantId,
+  });
+
+  final int id;
+  final String userName;
+  final String name;
+  final String password;
+  final int? resturantId;
+
+  factory User.fromJson(Map<String, dynamic> json) =>
+    _$UserFromJson(json);
+
+}
+
+
 
 const schema='''// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-dart"
+  binaryTargets = ["dsd"]
+  engineType = "library"
 }
 
 datasource db {

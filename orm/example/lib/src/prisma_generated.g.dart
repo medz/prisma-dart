@@ -422,3 +422,151 @@ Map<String, dynamic> _$NestedFloatNullableFilterToJson(
       'gte': instance.gte,
       'not': instance.not,
     };
+
+Query _$QueryFromJson(Map<String, dynamic> json) => Query(
+      findFirstUser: json['findFirstUser'] == null
+          ? null
+          : User.fromJson(json['findFirstUser'] as Map<String, dynamic>),
+      findManyUser: (json['findManyUser'] as List<dynamic>)
+          .map((e) => User.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      aggregateUser:
+          AggregateUser.fromJson(json['aggregateUser'] as Map<String, dynamic>),
+      groupByUser: (json['groupByUser'] as List<dynamic>)
+          .map((e) => UserGroupByOutputType.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      findUniqueUser: json['findUniqueUser'] == null
+          ? null
+          : User.fromJson(json['findUniqueUser'] as Map<String, dynamic>),
+    );
+
+Mutation _$MutationFromJson(Map<String, dynamic> json) => Mutation(
+      createOneUser:
+          User.fromJson(json['createOneUser'] as Map<String, dynamic>),
+      upsertOneUser:
+          User.fromJson(json['upsertOneUser'] as Map<String, dynamic>),
+      createManyUser: AffectedRowsOutput.fromJson(
+          json['createManyUser'] as Map<String, dynamic>),
+      deleteOneUser: json['deleteOneUser'] == null
+          ? null
+          : User.fromJson(json['deleteOneUser'] as Map<String, dynamic>),
+      updateOneUser: json['updateOneUser'] == null
+          ? null
+          : User.fromJson(json['updateOneUser'] as Map<String, dynamic>),
+      updateManyUser: AffectedRowsOutput.fromJson(
+          json['updateManyUser'] as Map<String, dynamic>),
+      deleteManyUser: AffectedRowsOutput.fromJson(
+          json['deleteManyUser'] as Map<String, dynamic>),
+    );
+
+AggregateUser _$AggregateUserFromJson(Map<String, dynamic> json) =>
+    AggregateUser(
+      $count: json[r'$count'] == null
+          ? null
+          : UserCountAggregateOutputType.fromJson(
+              json[r'$count'] as Map<String, dynamic>),
+      $avg: json[r'$avg'] == null
+          ? null
+          : UserAvgAggregateOutputType.fromJson(
+              json[r'$avg'] as Map<String, dynamic>),
+      $sum: json[r'$sum'] == null
+          ? null
+          : UserSumAggregateOutputType.fromJson(
+              json[r'$sum'] as Map<String, dynamic>),
+      $min: json[r'$min'] == null
+          ? null
+          : UserMinAggregateOutputType.fromJson(
+              json[r'$min'] as Map<String, dynamic>),
+      $max: json[r'$max'] == null
+          ? null
+          : UserMaxAggregateOutputType.fromJson(
+              json[r'$max'] as Map<String, dynamic>),
+    );
+
+UserGroupByOutputType _$UserGroupByOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    UserGroupByOutputType(
+      id: json['id'] as int,
+      userName: json['userName'] as String,
+      name: json['name'] as String,
+      password: json['password'] as String,
+      resturantId: json['resturantId'] as int?,
+      $count: json[r'$count'] == null
+          ? null
+          : UserCountAggregateOutputType.fromJson(
+              json[r'$count'] as Map<String, dynamic>),
+      $avg: json[r'$avg'] == null
+          ? null
+          : UserAvgAggregateOutputType.fromJson(
+              json[r'$avg'] as Map<String, dynamic>),
+      $sum: json[r'$sum'] == null
+          ? null
+          : UserSumAggregateOutputType.fromJson(
+              json[r'$sum'] as Map<String, dynamic>),
+      $min: json[r'$min'] == null
+          ? null
+          : UserMinAggregateOutputType.fromJson(
+              json[r'$min'] as Map<String, dynamic>),
+      $max: json[r'$max'] == null
+          ? null
+          : UserMaxAggregateOutputType.fromJson(
+              json[r'$max'] as Map<String, dynamic>),
+    );
+
+AffectedRowsOutput _$AffectedRowsOutputFromJson(Map<String, dynamic> json) =>
+    AffectedRowsOutput(
+      count: json['count'] as int,
+    );
+
+UserCountAggregateOutputType _$UserCountAggregateOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    UserCountAggregateOutputType(
+      id: json['id'] as int,
+      userName: json['userName'] as int,
+      name: json['name'] as int,
+      password: json['password'] as int,
+      resturantId: json['resturantId'] as int,
+      $all: json[r'$all'] as int,
+    );
+
+UserAvgAggregateOutputType _$UserAvgAggregateOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    UserAvgAggregateOutputType(
+      id: (json['id'] as num?)?.toDouble(),
+      resturantId: (json['resturantId'] as num?)?.toDouble(),
+    );
+
+UserSumAggregateOutputType _$UserSumAggregateOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    UserSumAggregateOutputType(
+      id: json['id'] as int?,
+      resturantId: json['resturantId'] as int?,
+    );
+
+UserMinAggregateOutputType _$UserMinAggregateOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    UserMinAggregateOutputType(
+      id: json['id'] as int?,
+      userName: json['userName'] as String?,
+      name: json['name'] as String?,
+      password: json['password'] as String?,
+      resturantId: json['resturantId'] as int?,
+    );
+
+UserMaxAggregateOutputType _$UserMaxAggregateOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    UserMaxAggregateOutputType(
+      id: json['id'] as int?,
+      userName: json['userName'] as String?,
+      name: json['name'] as String?,
+      password: json['password'] as String?,
+      resturantId: json['resturantId'] as int?,
+    );
+
+User _$UserFromJson(Map<String, dynamic> json) => User(
+      id: json['id'] as int,
+      userName: json['userName'] as String,
+      name: json['name'] as String,
+      password: json['password'] as String,
+      resturantId: json['resturantId'] as int?,
+    );
