@@ -83,10 +83,9 @@ class GenerateCommand extends Command<int> {
     final GetConfigResponse config = GetConfigResponse.fromJson(
       json.decode(configResult.stdout),
     );
-    final bool dartClientGeneratorHasSet = config.generators
-        .where((element) => element.provider.value == 'prisma-client-dart')
-        .isNotEmpty;
-    if (!dartClientGeneratorHasSet) {
+    final dartClientGeneratorIterable = config.generators
+        .where((element) => element.provider.value == 'prisma-client-dart');
+    if (dartClientGeneratorIterable.isEmpty) {
       stderr.writeln('Dart client generator is not set.');
       stderr.writeln('Please set it in your ${relative(schema.path)} \n');
       stderr.writeln('''
@@ -96,6 +95,7 @@ generator client {
 ''');
       return 1;
     }
+    final dartClientGenerator = dartClientGeneratorIterable.first;
 
     // Request dmmf.
     final ProcessResult dmmfResult = await Process.run(
@@ -115,10 +115,12 @@ generator client {
     File('dmmf.json').writeAsStringSync(dmmfResult.stdout);
 
     final DMMF dmmf = DMMF.fromJson(json.decode(dmmfResult.stdout));
-    final Generator genertaor = Generator(dmmf,schema.readAsStringSync());
+    final Generator genertaor = Generator(dmmf, schema.readAsStringSync());
     final String code = genertaor.generate();
-
-    File('lib/src/prisma_generated.dart')..createSync(recursive: true)..writeAsStringSync(code);
+    final outputPath = dartClientGenerator.output?.value ?? 'lib/src';
+    File(join(outputPath, 'prisma_generated.dart'))
+      ..createSync(recursive: true)
+      ..writeAsStringSync(code);
 
     // Run build_runner build
     Process.runSync(Platform.resolvedExecutable, [
