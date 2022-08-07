@@ -7,7 +7,7 @@ environment:
   sdk: '>=2.17.6 <3.0.0'
 
 executables:
-  prisma-cli: prisma_cli
+  prisma: prisma_cli
   prisma-client-dart: prisma_client_generator
 
 dependencies:
@@ -16,14 +16,13 @@ dependencies:
   http: ^0.13.4
   json_annotation: ^4.6.0
   build_runner: ^2.2.0
-  path: any
-  yaml: any
-  prisma_shared:
+  path: ^1.8.0
+  prisma_shared: ^1.0.0
 
 dev_dependencies:
   json_serializable: ^6.3.1
   lints: ^2.0.0
-  orm: ^1.0.4
+  orm: ^1.0.5
   test: ^1.16.0
 
 dependency_overrides:
