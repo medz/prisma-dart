@@ -1,8 +1,8 @@
-import '../../dmmf/dmmf.dart';
+import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 abstract class Ast {
   Ast(this.dmmf);
-  final DMMF dmmf;
+  final Document dmmf;
 }
 
 abstract class CodeableAst {

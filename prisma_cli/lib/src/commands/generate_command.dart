@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart';
 import 'package:prisma_cli/src/generator/messages/get_config_response.dart';
+import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 import 'package:prisma_shared/prisma_shared.dart';
-import '../dmmf/dmmf.dart';
 import '../engine_downloader/binary_engine_downloader.dart';
 import '../engine_downloader/binary_engine_platform.dart';
 import '../engine_downloader/binary_engine_type.dart';
@@ -114,7 +114,7 @@ generator client {
 
     File('dmmf.json').writeAsStringSync(dmmfResult.stdout);
 
-    final DMMF dmmf = DMMF.fromJson(json.decode(dmmfResult.stdout));
+    final Document dmmf = Document.fromJson(json.decode(dmmfResult.stdout));
     final Generator genertaor = Generator(dmmf, schema.readAsStringSync());
     final String code = genertaor.generate();
     final outputPath = dartClientGenerator.output?.value ?? 'lib/src';

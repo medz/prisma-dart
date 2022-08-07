@@ -1,6 +1,5 @@
 import 'package:prisma_cli/src/generator/ast/ast.dart';
-
-import '../../../dmmf/schema/enum_types.dart';
+import 'package:prisma_dmmf/prisma_dmmf.dart';
 import '../../../utils/string_camel_case.dart';
 
 class SchemaEnumTypesBuilder extends CodeableAst {
@@ -10,13 +9,13 @@ class SchemaEnumTypesBuilder extends CodeableAst {
   String get codeString {
     final StringBuffer enumCodes = StringBuffer();
     enumCodes.writeln(_enumBuilder(ast.dmmf.schema.enumTypes.prisma));
-    enumCodes.writeln(_enumBuilder(ast.dmmf.schema.enumTypes.model));
+    enumCodes.writeln(_enumBuilder(ast.dmmf.schema.enumTypes.model ?? []));
 
     return enumCodes.toString();
   }
 
   /// Enum builder.
-  String _enumBuilder(List<EnumType> enumTypes) {
+  String _enumBuilder(List<SchemaEnum> enumTypes) {
     final StringBuffer enumCodes = StringBuffer();
     for (final element in enumTypes) {
       enumCodes.writeln('enum ${element.name} implements PrismaEnum {');

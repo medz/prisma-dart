@@ -98,7 +98,7 @@ class ModelMapping {
   final String model;
 
   /// Plural name
-  final String plural;
+  final String? plural;
 
   /// Find unique operation
   final String? findUnique;
@@ -148,7 +148,7 @@ class ModelMapping {
   /// Create a new model operation mapping.
   const ModelMapping({
     required this.model,
-    required this.plural,
+    this.plural,
     this.findUnique,
     this.findFirst,
     this.findMany,

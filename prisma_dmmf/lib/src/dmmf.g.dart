@@ -48,7 +48,7 @@ Map<String, dynamic> _$OtherOperationMappingsToJson(
 
 ModelMapping _$ModelMappingFromJson(Map<String, dynamic> json) => ModelMapping(
       model: json['model'] as String,
-      plural: json['plural'] as String,
+      plural: json['plural'] as String?,
       findUnique: json['findUnique'] as String?,
       findFirst: json['findFirst'] as String?,
       findMany: json['findMany'] as String?,

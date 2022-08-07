@@ -18,6 +18,7 @@ dependencies:
   build_runner: ^2.2.0
   path: ^1.8.0
   prisma_shared: ^1.0.0
+  prisma_dmmf: ^1.0.0
 
 dev_dependencies:
   json_serializable: ^6.3.1
