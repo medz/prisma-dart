@@ -1,0 +1,19 @@
+name: workspace
+description: |
+ ◭ Next-generation ORM for Dart Navtive & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
+
+publish_to: none
+version: 1.0.5
+
+environment:
+  sdk: '>=2.17.6 <3.0.0'
+
+dependencies:
+  yaml: ^3.1.1
+
+workspaces:
+  - orm
+  - prisma_cli
+  - prisma_shared
+  - prisma_query_engine
+  - prisma_query_engine_dylib
