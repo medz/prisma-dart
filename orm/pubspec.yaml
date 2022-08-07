@@ -12,6 +12,8 @@ executables:
 
 dependencies:
   prisma_query_engine:
+    path: ../prisma_query_engine
+
   
 dev_dependencies:
   lints: ^2.0.0

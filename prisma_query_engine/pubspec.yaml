@@ -10,6 +10,7 @@ dependencies:
   path: ^1.8.0
   http:
   prisma_shared:
+    path: ../prisma_shared
 
 dev_dependencies:
   ffigen: ^6.0.1
