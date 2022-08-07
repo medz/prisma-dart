@@ -30,12 +30,6 @@ typedef struct ApiError {
       char *connector;
     };
     struct {
-      char *already_connected;
-    };
-    struct {
-      char *not_connected;
-    };
-    struct {
       char *json_decode;
     };
   };

@@ -21,10 +21,10 @@ pub enum ApiError {
   Connector(*mut c_char),
 
   #[error("Can't modify an already connected engine.")]
-  AlreadyConnected(*mut c_char),
+  AlreadyConnected,
 
   #[error("Engine is not yet connected.")]
-  NotConnected(*mut c_char),
+  NotConnected,
 
   #[error("{:?}", _0)]
   JsonDecode(*mut c_char),
