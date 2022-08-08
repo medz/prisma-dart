@@ -22,6 +22,12 @@ abstract class CodeableAst {
         return 'int';
       case 'boolean':
         return 'bool';
+      case "json":
+        return 'Map<String,dynamic>';
+
+      case "unsupported":
+      case "bytes":
+        return "dynamic"; //TODO
     }
 
     return value;
