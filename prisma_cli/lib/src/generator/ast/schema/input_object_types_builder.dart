@@ -23,7 +23,7 @@ class InputObjectTypesBuilder extends CodeableAst {
     for (final InputType element in inputObjectTypes) {
       inputObjectTypesCode.writeln(
           '@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)');
-      inputObjectTypesCode.writeln('class ${element.name} {');
+      inputObjectTypesCode.writeln('class ${className(element.name)} {');
       inputObjectTypesCode.writeln(_buildConstructor(element));
       inputObjectTypesCode.writeln(_buildFields(element));
       inputObjectTypesCode.writeln(_buildToJson(element));
@@ -39,7 +39,7 @@ class InputObjectTypesBuilder extends CodeableAst {
     code.writeln('  const ${type.name}({');
     for (final field in type.fields) {
       code.writeln(
-          '    ${field.isRequired ? 'required ' : ''}this.${this.field(field.name)},');
+          '    ${field.isRequired ? 'required ' : ''}this.${fieldName(field.name)},');
     }
     code.writeln('  });');
     return code.toString();
@@ -49,8 +49,9 @@ class InputObjectTypesBuilder extends CodeableAst {
   String _buildFields(InputType type) {
     final StringBuffer code = StringBuffer();
     for (final SchemaArg field in type.fields) {
+      code.writeln('  @JsonKey(name: \'${field.name}\' )');
       code.writeln(
-          '  final ${_fieldTypeBuilder(field)}${!field.isRequired ? '?' : ''} ${this.field(field.name)};');
+          '  final ${_fieldTypeBuilder(field)}${!field.isRequired ? '?' : ''} ${fieldName(field.name)};');
     }
 
     return code.toString();

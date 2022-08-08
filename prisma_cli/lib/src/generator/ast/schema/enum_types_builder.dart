@@ -1,6 +1,5 @@
 import 'package:prisma_cli/src/generator/ast/ast.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart';
-import '../../../utils/string_camel_case.dart';
 
 class SchemaEnumTypesBuilder extends CodeableAst {
   SchemaEnumTypesBuilder(super.ast);
@@ -21,12 +20,12 @@ class SchemaEnumTypesBuilder extends CodeableAst {
       enumCodes.writeln('enum ${element.name} implements PrismaEnum {');
       for (final String value in element.values) {
         enumCodes
-            .writeln('  ${firstLowerCamelCase(field(value))}(\'$value\'),');
+            .writeln('  ${fieldName(value)}(\'$value\'),');
       }
       enumCodes.writeln(';');
       enumCodes.writeln('  @override');
       enumCodes.writeln('  final String value;');
-      enumCodes.writeln('  const ${element.name}(this.value);');
+      enumCodes.writeln('  const ${className(element.name)}(this.value);');
 
       enumCodes.writeln('}');
     }

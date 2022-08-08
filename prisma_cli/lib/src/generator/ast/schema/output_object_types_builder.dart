@@ -23,7 +23,7 @@ class OutputObjectTypesBuilder extends CodeableAst {
     for (final OutputType element in outputObjectTypes) {
       outputObjectTypesCode.writeln(
           '@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)');
-      outputObjectTypesCode.writeln('class ${element.name} {');
+      outputObjectTypesCode.writeln('class ${className(element.name)} {');
       outputObjectTypesCode.writeln(_buildConstructor(element));
       outputObjectTypesCode.writeln(_buildFields(element));
       outputObjectTypesCode.writeln(_buildFromJson(element));
@@ -39,7 +39,7 @@ class OutputObjectTypesBuilder extends CodeableAst {
     code.writeln('  const ${type.name}({');
     for (final field in type.fields) {
       code.writeln(
-          '    ${!(field.isNullable ?? false) ? 'required ' : ''}this.${this.field(field.name)},');
+          '    ${!(field.isNullable ?? false) ? 'required ' : ''}this.${fieldName(field.name)},');
     }
     code.writeln('  });');
     return code.toString();
@@ -48,9 +48,10 @@ class OutputObjectTypesBuilder extends CodeableAst {
   /// Build model fields.
   String _buildFields(OutputType type) {
     final StringBuffer code = StringBuffer();
-    for (final field in type.fields) {
+    for (final field in type.fields) {     
+      code.writeln('  @JsonKey(name: \'${field.name}\' )');
       code.writeln(
-          '  final ${_fieldTypeBuilder(field)}${(field.isNullable ?? false) ? '?' : ''} ${this.field(field.name)};');
+          '  final ${_fieldTypeBuilder(field)}${(field.isNullable ?? false) ? '?' : ''} ${fieldName(field.name)};');
     }
 
     return code.toString();
@@ -71,8 +72,8 @@ class OutputObjectTypesBuilder extends CodeableAst {
   String _buildFromJson(OutputType type) {
     final StringBuffer code = StringBuffer();
     code.writeln(
-        '  factory ${type.name}.fromJson(Map<String, dynamic> json) =>');
-    code.writeln('    _\$${type.name}FromJson(json);');
+        '  factory ${className(type.name)}.fromJson(Map<String, dynamic> json) =>');
+    code.writeln('    _\$${className(type.name)}FromJson(json);');
     return code.toString();
   }
 }

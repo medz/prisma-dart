@@ -1,3 +1,4 @@
+import 'package:prisma_cli/src/utils/naming_fix.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 abstract class Ast {
@@ -27,12 +28,12 @@ abstract class CodeableAst {
   }
 
   /// Field name resolver.
-  String field(String name) {
-    if (name.isEmpty) return name;
-    if (name[0] == '_') return field('\$${name.substring(1)}');
-    if (['in', 'default', 'is'].contains(name.toLowerCase())) {
-      return '$name\$';
-    }
-    return name;
+  String fieldName(String name) {
+    return name.dartCase;
+  }
+
+  /// Class name resolver.
+  String className(String name) {
+    return name.dartClassCase;
   }
 }
