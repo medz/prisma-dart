@@ -21,12 +21,12 @@ class OutputObjectTypesBuilder extends CodeableAst {
   String _outputObjectTypesBuilder(List<OutputType> outputObjectTypes) {
     final StringBuffer outputObjectTypesCode = StringBuffer();
     for (final OutputType element in outputObjectTypes) {
-      outputObjectTypesCode.writeln(
-          '@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)');
+      // outputObjectTypesCode.writeln(
+      //     '@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)');
       outputObjectTypesCode.writeln('class ${className(element.name)} {');
       outputObjectTypesCode.writeln(_buildConstructor(element));
       outputObjectTypesCode.writeln(_buildFields(element));
-      outputObjectTypesCode.writeln(_buildFromJson(element));
+      // outputObjectTypesCode.writeln(_buildFromJson(element));//TODO
       outputObjectTypesCode.writeln('}');
     }
 
@@ -39,7 +39,7 @@ class OutputObjectTypesBuilder extends CodeableAst {
     code.writeln('  const ${type.name}({');
     for (final field in type.fields) {
       code.writeln(
-          '    ${!(field.isNullable ?? false) ? 'required ' : ''}this.${fieldName(field.name)},');
+          '   ${addRequired(!(field.isNullable ?? false))} this.${fieldName(field.name)},');
     }
     code.writeln('  });');
     return code.toString();
@@ -48,32 +48,41 @@ class OutputObjectTypesBuilder extends CodeableAst {
   /// Build model fields.
   String _buildFields(OutputType type) {
     final StringBuffer code = StringBuffer();
-    for (final field in type.fields) {     
-      code.writeln('  @JsonKey(name: \'${field.name}\' )');
+    for (final field in type.fields) {
       code.writeln(
-          '  final ${_fieldTypeBuilder(field)}${(field.isNullable ?? false) ? '?' : ''} ${fieldName(field.name)};');
+          'final ${_fieldTypeBuilder(field.outputType.type)} Function('); //TODO handle return type nullable
+      if (field.args.isNotEmpty) code.write("{");
+      for (var arg in field.args) {
+        code.writeln(
+            '    ${addRequired(!arg.isNullable)} ${resolveInputType(arg.inputTypes)} ${fieldName(arg.name)},');
+      }
+      if (field.args.isNotEmpty) code.write("}");
+
+      code.writeln(
+          ') ${addNullable(field.isNullable ?? false)} ${fieldName(field.name)}  ;');
     }
 
     return code.toString();
   }
 
   /// Class field type builder.
-  String _fieldTypeBuilder(SchemaField field) {
-    final String type = scalar(field.outputType.type);
-    final bool isList = field.outputType.isList;
-    if (isList) {
-      return 'List<$type>';
+  String _fieldTypeBuilder(dynamic object) {
+    if (object is String) {
+      return scalar(object);
+    } else if (object is InputType) {
+      return className(object.name);
+    } else if (object is SchemaEnum) {
+      return className(object.name);
     }
-
-    return type;
+    throw ArgumentError('Unknown type $object');
   }
 
-  /// Build fromJson factory .
-  String _buildFromJson(OutputType type) {
-    final StringBuffer code = StringBuffer();
-    code.writeln(
-        '  factory ${className(type.name)}.fromJson(Map<String, dynamic> json) =>');
-    code.writeln('    _\$${className(type.name)}FromJson(json);');
-    return code.toString();
-  }
+  // /// Build fromJson factory .
+  // String _buildFromJson(OutputType type) {
+  //   final StringBuffer code = StringBuffer();
+  //   code.writeln(
+  //       '  factory ${className(type.name)}.fromJson(Map<String, dynamic> json) =>');
+  //   code.writeln('    _\$${className(type.name)}FromJson(json);');
+  //   return code.toString();
+  // }
 }

@@ -39,7 +39,7 @@ class InputObjectTypesBuilder extends CodeableAst {
     code.writeln('  const ${type.name}({');
     for (final field in type.fields) {
       code.writeln(
-          '    ${field.isRequired ? 'required ' : ''}this.${fieldName(field.name)},');
+          ' ${addRequired(field.isRequired)}this.${fieldName(field.name)},');
     }
     code.writeln('  });');
     return code.toString();
@@ -51,7 +51,7 @@ class InputObjectTypesBuilder extends CodeableAst {
     for (final SchemaArg field in type.fields) {
       code.writeln('  @JsonKey(name: \'${field.name}\' )');
       code.writeln(
-          '  final ${_fieldTypeBuilder(field)}${!field.isRequired ? '?' : ''} ${fieldName(field.name)};');
+          '  final ${_fieldTypeBuilder(field)}${addNullable(!field.isRequired)} ${fieldName(field.name)};');
     }
 
     return code.toString();
@@ -59,7 +59,7 @@ class InputObjectTypesBuilder extends CodeableAst {
 
   /// Class field type builder.
   String _fieldTypeBuilder(SchemaArg field) {
-    final String inputType = _resolveInputType(field.inputTypes);
+    final String inputType = resolveInputType(field.inputTypes);
     final bool isList =
         field.inputTypes.where((element) => element.isList).isNotEmpty;
     if (isList) {
@@ -67,28 +67,6 @@ class InputObjectTypesBuilder extends CodeableAst {
     }
 
     return inputType;
-  }
-
-  /// Resolves the input type.
-  String _resolveInputType(List<SchemaType> inputTypes) {
-    if (inputTypes.length == 1) {
-      return scalar(inputTypes.first.type);
-    }
-
-    // remove duplicates
-    final List<SchemaType> uniqueInputTypes = inputTypes.toSet().toList();
-    if (uniqueInputTypes.length == 1) {
-      return scalar(uniqueInputTypes.first.type);
-    }
-
-    // remove scalar
-    final List<SchemaType> nonScalarInputTypes =
-        uniqueInputTypes.where((element) => element.type != 'scalar').toList();
-    if (nonScalarInputTypes.length == 1) {
-      return scalar(nonScalarInputTypes.first.type);
-    }
-
-    return scalar(inputTypes.first.type);
   }
 
   /// Build toJson method.

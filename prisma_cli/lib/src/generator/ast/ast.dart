@@ -33,6 +33,16 @@ abstract class CodeableAst {
     return value;
   }
 
+  String addNullable( bool isNullable) {
+    if (isNullable) return "? ";
+    return " ";
+  }
+
+  String addRequired(bool isRequired) {
+    if (isRequired) return "required ";
+    return " ";
+  }
+
   /// Field name resolver.
   String fieldName(String name) {
     return name.dartCase;
@@ -41,5 +51,27 @@ abstract class CodeableAst {
   /// Class name resolver.
   String className(String name) {
     return name.dartClassCase;
+  }
+
+  /// Resolves the input type.
+  String resolveInputType(List<SchemaType> inputTypes) {
+    if (inputTypes.length == 1) {
+      return scalar(inputTypes.first.type);
+    }
+
+    // remove duplicates
+    final List<SchemaType> uniqueInputTypes = inputTypes.toSet().toList();
+    if (uniqueInputTypes.length == 1) {
+      return scalar(uniqueInputTypes.first.type);
+    }
+
+    // remove scalar
+    final List<SchemaType> nonScalarInputTypes =
+        uniqueInputTypes.where((element) => element.type != 'scalar').toList();
+    if (nonScalarInputTypes.length == 1) {
+      return scalar(nonScalarInputTypes.first.type);
+    }
+
+    return scalar(inputTypes.first.type);
   }
 }
