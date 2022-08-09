@@ -2262,147 +2262,7 @@ class PostUncheckedUpdateManyWithoutPostInput {
 
 
 
-class Query {
-  const Query({
-     this.findFirstUser,
-   required  this.findManyUser,
-   required  this.aggregateUser,
-   required  this.groupByUser,
-     this.findUniqueUser,
-     this.findFirstPost,
-   required  this.findManyPost,
-   required  this.aggregatePost,
-   required  this.groupByPost,
-     this.findUniquePost,
-  });
-
-final User Function(
-{    required  UserWhereInput where,
-    required  UserOrderByWithRelationInput orderBy,
-    required  UserWhereUniqueInput cursor,
-    required  int take,
-    required  int skip,
-    required  UserScalarFieldEnum distinct,
-}) ?  findFirstUser  ;
-final List<User> Function(
-{    required  UserWhereInput where,
-    required  UserOrderByWithRelationInput orderBy,
-    required  UserWhereUniqueInput cursor,
-    required  int take,
-    required  int skip,
-    required  UserScalarFieldEnum distinct,
-})   findManyUser  ;
-final AggregateUser Function(
-{    required  UserWhereInput where,
-    required  UserOrderByWithRelationInput orderBy,
-    required  UserWhereUniqueInput cursor,
-    required  int take,
-    required  int skip,
-})   aggregateUser  ;
-final List<UserGroupByOutputType> Function(
-{    required  UserWhereInput where,
-    required  UserOrderByWithAggregationInput orderBy,
-    required  UserScalarFieldEnum by,
-    required  UserScalarWhereWithAggregatesInput having,
-    required  int take,
-    required  int skip,
-})   groupByUser  ;
-final User Function(
-{    required  UserWhereUniqueInput where,
-}) ?  findUniqueUser  ;
-final Post Function(
-{    required  PostWhereInput where,
-    required  PostOrderByWithRelationInput orderBy,
-    required  PostWhereUniqueInput cursor,
-    required  int take,
-    required  int skip,
-    required  PostScalarFieldEnum distinct,
-}) ?  findFirstPost  ;
-final List<Post> Function(
-{    required  PostWhereInput where,
-    required  PostOrderByWithRelationInput orderBy,
-    required  PostWhereUniqueInput cursor,
-    required  int take,
-    required  int skip,
-    required  PostScalarFieldEnum distinct,
-})   findManyPost  ;
-final AggregatePost Function(
-{    required  PostWhereInput where,
-    required  PostOrderByWithRelationInput orderBy,
-    required  PostWhereUniqueInput cursor,
-    required  int take,
-    required  int skip,
-})   aggregatePost  ;
-final List<PostGroupByOutputType> Function(
-{    required  PostWhereInput where,
-    required  PostOrderByWithAggregationInput orderBy,
-    required  PostScalarFieldEnum by,
-    required  PostScalarWhereWithAggregatesInput having,
-    required  int take,
-    required  int skip,
-})   groupByPost  ;
-final Post Function(
-{    required  PostWhereUniqueInput where,
-}) ?  findUniquePost  ;
-
-}
-class Mutation {
-  const Mutation({
-     this.deleteOneUser,
-     this.updateOneUser,
-   required  this.updateManyUser,
-   required  this.deleteManyUser,
-   required  this.createOnePost,
-   required  this.upsertOnePost,
-   required  this.createManyPost,
-     this.deleteOnePost,
-     this.updateOnePost,
-   required  this.updateManyPost,
-   required  this.deleteManyPost,
-  });
-
-final User Function(
-{    required  UserWhereUniqueInput where,
-}) ?  deleteOneUser  ;
-final User Function(
-{    required  UserUpdateInput data,
-    required  UserWhereUniqueInput where,
-}) ?  updateOneUser  ;
-final AffectedRowsOutput Function(
-{    required  UserUpdateManyMutationInput data,
-    required  UserWhereInput where,
-})   updateManyUser  ;
-final AffectedRowsOutput Function(
-{    required  UserWhereInput where,
-})   deleteManyUser  ;
-final Post Function(
-{    required  PostCreateInput data,
-})   createOnePost  ;
-final Post Function(
-{    required  PostWhereUniqueInput where,
-    required  PostCreateInput create,
-    required  PostUpdateInput update,
-})   upsertOnePost  ;
-final AffectedRowsOutput Function(
-{    required  PostCreateManyInput data,
-    required  bool skipDuplicates,
-})   createManyPost  ;
-final Post Function(
-{    required  PostWhereUniqueInput where,
-}) ?  deleteOnePost  ;
-final Post Function(
-{    required  PostUpdateInput data,
-    required  PostWhereUniqueInput where,
-}) ?  updateOnePost  ;
-final AffectedRowsOutput Function(
-{    required  PostUpdateManyMutationInput data,
-    required  PostWhereInput where,
-})   updateManyPost  ;
-final AffectedRowsOutput Function(
-{    required  PostWhereInput where,
-})   deleteManyPost  ;
-
-}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class AggregateUser {
   const AggregateUser({
      this.$count,
@@ -2412,18 +2272,22 @@ class AggregateUser {
      this.$max,
   });
 
-final UserCountAggregateOutputType Function(
-) ?  $count  ;
-final UserAvgAggregateOutputType Function(
-) ?  $avg  ;
-final UserSumAggregateOutputType Function(
-) ?  $sum  ;
-final UserMinAggregateOutputType Function(
-) ?  $min  ;
-final UserMaxAggregateOutputType Function(
-) ?  $max  ;
+  @JsonKey(name: '_count' )
+  final UserCountAggregateOutputType?  $count;
+  @JsonKey(name: '_avg' )
+  final UserAvgAggregateOutputType?  $avg;
+  @JsonKey(name: '_sum' )
+  final UserSumAggregateOutputType?  $sum;
+  @JsonKey(name: '_min' )
+  final UserMinAggregateOutputType?  $min;
+  @JsonKey(name: '_max' )
+  final UserMaxAggregateOutputType?  $max;
+
+  factory AggregateUser.fromJson(Map<String, dynamic> json) =>
+    _$AggregateUserFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class UserGroupByOutputType {
   const UserGroupByOutputType({
    required  this.id,
@@ -2439,30 +2303,34 @@ class UserGroupByOutputType {
      this.$max,
   });
 
-final int Function(
-)   id  ;
-final String Function(
-)   userName  ;
-final String Function(
-)   name  ;
-final String Function(
-)   password  ;
-final int Function(
-) ?  resturantId  ;
-final Map<String,dynamic> Function(
-)   extra  ;
-final UserCountAggregateOutputType Function(
-) ?  $count  ;
-final UserAvgAggregateOutputType Function(
-) ?  $avg  ;
-final UserSumAggregateOutputType Function(
-) ?  $sum  ;
-final UserMinAggregateOutputType Function(
-) ?  $min  ;
-final UserMaxAggregateOutputType Function(
-) ?  $max  ;
+  @JsonKey(name: 'id' )
+  final int  id;
+  @JsonKey(name: 'userName' )
+  final String  userName;
+  @JsonKey(name: 'name' )
+  final String  name;
+  @JsonKey(name: 'password' )
+  final String  password;
+  @JsonKey(name: 'resturantId' )
+  final int?  resturantId;
+  @JsonKey(name: 'extra' )
+  final Map<String,dynamic>  extra;
+  @JsonKey(name: '_count' )
+  final UserCountAggregateOutputType?  $count;
+  @JsonKey(name: '_avg' )
+  final UserAvgAggregateOutputType?  $avg;
+  @JsonKey(name: '_sum' )
+  final UserSumAggregateOutputType?  $sum;
+  @JsonKey(name: '_min' )
+  final UserMinAggregateOutputType?  $min;
+  @JsonKey(name: '_max' )
+  final UserMaxAggregateOutputType?  $max;
+
+  factory UserGroupByOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserGroupByOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class AggregatePost {
   const AggregatePost({
      this.$count,
@@ -2472,18 +2340,22 @@ class AggregatePost {
      this.$max,
   });
 
-final PostCountAggregateOutputType Function(
-) ?  $count  ;
-final PostAvgAggregateOutputType Function(
-) ?  $avg  ;
-final PostSumAggregateOutputType Function(
-) ?  $sum  ;
-final PostMinAggregateOutputType Function(
-) ?  $min  ;
-final PostMaxAggregateOutputType Function(
-) ?  $max  ;
+  @JsonKey(name: '_count' )
+  final PostCountAggregateOutputType?  $count;
+  @JsonKey(name: '_avg' )
+  final PostAvgAggregateOutputType?  $avg;
+  @JsonKey(name: '_sum' )
+  final PostSumAggregateOutputType?  $sum;
+  @JsonKey(name: '_min' )
+  final PostMinAggregateOutputType?  $min;
+  @JsonKey(name: '_max' )
+  final PostMaxAggregateOutputType?  $max;
+
+  factory AggregatePost.fromJson(Map<String, dynamic> json) =>
+    _$AggregatePostFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class PostGroupByOutputType {
   const PostGroupByOutputType({
    required  this.id,
@@ -2497,44 +2369,56 @@ class PostGroupByOutputType {
      this.$max,
   });
 
-final int Function(
-)   id  ;
-final String Function(
-)   name  ;
-final String Function(
-)   desc  ;
-final int Function(
-)   userId  ;
-final PostCountAggregateOutputType Function(
-) ?  $count  ;
-final PostAvgAggregateOutputType Function(
-) ?  $avg  ;
-final PostSumAggregateOutputType Function(
-) ?  $sum  ;
-final PostMinAggregateOutputType Function(
-) ?  $min  ;
-final PostMaxAggregateOutputType Function(
-) ?  $max  ;
+  @JsonKey(name: 'id' )
+  final int  id;
+  @JsonKey(name: 'name' )
+  final String  name;
+  @JsonKey(name: 'desc' )
+  final String  desc;
+  @JsonKey(name: 'userId' )
+  final int  userId;
+  @JsonKey(name: '_count' )
+  final PostCountAggregateOutputType?  $count;
+  @JsonKey(name: '_avg' )
+  final PostAvgAggregateOutputType?  $avg;
+  @JsonKey(name: '_sum' )
+  final PostSumAggregateOutputType?  $sum;
+  @JsonKey(name: '_min' )
+  final PostMinAggregateOutputType?  $min;
+  @JsonKey(name: '_max' )
+  final PostMaxAggregateOutputType?  $max;
+
+  factory PostGroupByOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostGroupByOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class AffectedRowsOutput {
   const AffectedRowsOutput({
    required  this.count,
   });
 
-final int Function(
-)   count  ;
+  @JsonKey(name: 'count' )
+  final int  count;
+
+  factory AffectedRowsOutput.fromJson(Map<String, dynamic> json) =>
+    _$AffectedRowsOutputFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class UserCountOutputType {
   const UserCountOutputType({
    required  this.post,
   });
 
-final int Function(
-)   post  ;
+  @JsonKey(name: 'Post' )
+  final int  post;
+
+  factory UserCountOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserCountOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class UserCountAggregateOutputType {
   const UserCountAggregateOutputType({
    required  this.id,
@@ -2546,46 +2430,58 @@ class UserCountAggregateOutputType {
    required  this.$all,
   });
 
-final int Function(
-)   id  ;
-final int Function(
-)   userName  ;
-final int Function(
-)   name  ;
-final int Function(
-)   password  ;
-final int Function(
-)   resturantId  ;
-final int Function(
-)   extra  ;
-final int Function(
-)   $all  ;
+  @JsonKey(name: 'id' )
+  final int  id;
+  @JsonKey(name: 'userName' )
+  final int  userName;
+  @JsonKey(name: 'name' )
+  final int  name;
+  @JsonKey(name: 'password' )
+  final int  password;
+  @JsonKey(name: 'resturantId' )
+  final int  resturantId;
+  @JsonKey(name: 'extra' )
+  final int  extra;
+  @JsonKey(name: '_all' )
+  final int  $all;
+
+  factory UserCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserCountAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class UserAvgAggregateOutputType {
   const UserAvgAggregateOutputType({
      this.id,
      this.resturantId,
   });
 
-final double Function(
-) ?  id  ;
-final double Function(
-) ?  resturantId  ;
+  @JsonKey(name: 'id' )
+  final double?  id;
+  @JsonKey(name: 'resturantId' )
+  final double?  resturantId;
+
+  factory UserAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserAvgAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class UserSumAggregateOutputType {
   const UserSumAggregateOutputType({
      this.id,
      this.resturantId,
   });
 
-final int Function(
-) ?  id  ;
-final int Function(
-) ?  resturantId  ;
+  @JsonKey(name: 'id' )
+  final int?  id;
+  @JsonKey(name: 'resturantId' )
+  final int?  resturantId;
+
+  factory UserSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserSumAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class UserMinAggregateOutputType {
   const UserMinAggregateOutputType({
      this.id,
@@ -2595,18 +2491,22 @@ class UserMinAggregateOutputType {
      this.resturantId,
   });
 
-final int Function(
-) ?  id  ;
-final String Function(
-) ?  userName  ;
-final String Function(
-) ?  name  ;
-final String Function(
-) ?  password  ;
-final int Function(
-) ?  resturantId  ;
+  @JsonKey(name: 'id' )
+  final int?  id;
+  @JsonKey(name: 'userName' )
+  final String?  userName;
+  @JsonKey(name: 'name' )
+  final String?  name;
+  @JsonKey(name: 'password' )
+  final String?  password;
+  @JsonKey(name: 'resturantId' )
+  final int?  resturantId;
+
+  factory UserMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserMinAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class UserMaxAggregateOutputType {
   const UserMaxAggregateOutputType({
      this.id,
@@ -2616,18 +2516,22 @@ class UserMaxAggregateOutputType {
      this.resturantId,
   });
 
-final int Function(
-) ?  id  ;
-final String Function(
-) ?  userName  ;
-final String Function(
-) ?  name  ;
-final String Function(
-) ?  password  ;
-final int Function(
-) ?  resturantId  ;
+  @JsonKey(name: 'id' )
+  final int?  id;
+  @JsonKey(name: 'userName' )
+  final String?  userName;
+  @JsonKey(name: 'name' )
+  final String?  name;
+  @JsonKey(name: 'password' )
+  final String?  password;
+  @JsonKey(name: 'resturantId' )
+  final int?  resturantId;
+
+  factory UserMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$UserMaxAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class PostCountAggregateOutputType {
   const PostCountAggregateOutputType({
    required  this.id,
@@ -2637,42 +2541,54 @@ class PostCountAggregateOutputType {
    required  this.$all,
   });
 
-final int Function(
-)   id  ;
-final int Function(
-)   name  ;
-final int Function(
-)   desc  ;
-final int Function(
-)   userId  ;
-final int Function(
-)   $all  ;
+  @JsonKey(name: 'id' )
+  final int  id;
+  @JsonKey(name: 'name' )
+  final int  name;
+  @JsonKey(name: 'desc' )
+  final int  desc;
+  @JsonKey(name: 'userId' )
+  final int  userId;
+  @JsonKey(name: '_all' )
+  final int  $all;
+
+  factory PostCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostCountAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class PostAvgAggregateOutputType {
   const PostAvgAggregateOutputType({
      this.id,
      this.userId,
   });
 
-final double Function(
-) ?  id  ;
-final double Function(
-) ?  userId  ;
+  @JsonKey(name: 'id' )
+  final double?  id;
+  @JsonKey(name: 'userId' )
+  final double?  userId;
+
+  factory PostAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostAvgAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class PostSumAggregateOutputType {
   const PostSumAggregateOutputType({
      this.id,
      this.userId,
   });
 
-final int Function(
-) ?  id  ;
-final int Function(
-) ?  userId  ;
+  @JsonKey(name: 'id' )
+  final int?  id;
+  @JsonKey(name: 'userId' )
+  final int?  userId;
+
+  factory PostSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostSumAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class PostMinAggregateOutputType {
   const PostMinAggregateOutputType({
      this.id,
@@ -2681,16 +2597,20 @@ class PostMinAggregateOutputType {
      this.userId,
   });
 
-final int Function(
-) ?  id  ;
-final String Function(
-) ?  name  ;
-final String Function(
-) ?  desc  ;
-final int Function(
-) ?  userId  ;
+  @JsonKey(name: 'id' )
+  final int?  id;
+  @JsonKey(name: 'name' )
+  final String?  name;
+  @JsonKey(name: 'desc' )
+  final String?  desc;
+  @JsonKey(name: 'userId' )
+  final int?  userId;
+
+  factory PostMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostMinAggregateOutputTypeFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class PostMaxAggregateOutputType {
   const PostMaxAggregateOutputType({
      this.id,
@@ -2699,17 +2619,21 @@ class PostMaxAggregateOutputType {
      this.userId,
   });
 
-final int Function(
-) ?  id  ;
-final String Function(
-) ?  name  ;
-final String Function(
-) ?  desc  ;
-final int Function(
-) ?  userId  ;
+  @JsonKey(name: 'id' )
+  final int?  id;
+  @JsonKey(name: 'name' )
+  final String?  name;
+  @JsonKey(name: 'desc' )
+  final String?  desc;
+  @JsonKey(name: 'userId' )
+  final int?  userId;
+
+  factory PostMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostMaxAggregateOutputTypeFromJson(json);
 
 }
 
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class User {
   const User({
    required  this.id,
@@ -2722,30 +2646,28 @@ class User {
    required  this.$count,
   });
 
-final int Function(
-)   id  ;
-final String Function(
-)   userName  ;
-final String Function(
-)   name  ;
-final String Function(
-)   password  ;
-final int Function(
-) ?  resturantId  ;
-final List<Post> Function(
-{    required  PostWhereInput where,
-    required  PostOrderByWithRelationInput orderBy,
-    required  PostWhereUniqueInput cursor,
-    required  int take,
-    required  int skip,
-    required  PostScalarFieldEnum distinct,
-}) ?  post  ;
-final Map<String,dynamic> Function(
-)   extra  ;
-final UserCountOutputType Function(
-)   $count  ;
+  @JsonKey(name: 'id' )
+  final int  id;
+  @JsonKey(name: 'userName' )
+  final String  userName;
+  @JsonKey(name: 'name' )
+  final String  name;
+  @JsonKey(name: 'password' )
+  final String  password;
+  @JsonKey(name: 'resturantId' )
+  final int?  resturantId;
+  @JsonKey(name: 'Post' )
+  final List<Post>?  post;
+  @JsonKey(name: 'extra' )
+  final Map<String,dynamic>  extra;
+  @JsonKey(name: '_count' )
+  final UserCountOutputType  $count;
+
+  factory User.fromJson(Map<String, dynamic> json) =>
+    _$UserFromJson(json);
 
 }
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class Post {
   const Post({
    required  this.id,
@@ -2755,16 +2677,19 @@ class Post {
    required  this.user,
   });
 
-final int Function(
-)   id  ;
-final String Function(
-)   name  ;
-final String Function(
-)   desc  ;
-final int Function(
-)   userId  ;
-final User Function(
-)   user  ;
+  @JsonKey(name: 'id' )
+  final int  id;
+  @JsonKey(name: 'name' )
+  final String  name;
+  @JsonKey(name: 'desc' )
+  final String  desc;
+  @JsonKey(name: 'userId' )
+  final int  userId;
+  @JsonKey(name: 'user' )
+  final User  user;
+
+  factory Post.fromJson(Map<String, dynamic> json) =>
+    _$PostFromJson(json);
 
 }
 
