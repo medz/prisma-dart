@@ -958,3 +958,21 @@ class _ArgTypeConverter<T> implements JsonConverter<T, dynamic> {
     throw ArgumentError('Unknown type $object');
   }
 }
+
+enum ModelAction {
+  findUnique,
+  findFirst,
+  findMany,
+  create,
+  createMany,
+  update,
+  updateMany,
+  upsert,
+  delete,
+  deleteMany,
+  groupBy,
+  count, // TODO: count does not actually exist, why?
+  aggregate,
+  findRaw,
+  aggregateRaw,
+}

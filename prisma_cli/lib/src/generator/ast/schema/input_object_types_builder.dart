@@ -51,23 +51,13 @@ class InputObjectTypesBuilder extends CodeableAst {
     for (final SchemaArg field in type.fields) {
       code.writeln('  @JsonKey(name: \'${field.name}\' )');
       code.writeln(
-          '  final ${_fieldTypeBuilder(field)}${addNullable(!field.isRequired)} ${fieldName(field.name)};');
+          '  final ${fieldSchemaArgTypeBuilder(field)}${addNullable(!field.isRequired)} ${fieldName(field.name)};');
     }
 
     return code.toString();
   }
 
-  /// Class field type builder.
-  String _fieldTypeBuilder(SchemaArg field) {
-    final String inputType = resolveInputType(field.inputTypes);
-    final bool isList =
-        field.inputTypes.where((element) => element.isList).isNotEmpty;
-    if (isList) {
-      return 'List<$inputType>';
-    }
 
-    return inputType;
-  }
 
   /// Build toJson method.
   String _buildToJson(InputType type) {

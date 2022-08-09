@@ -50,7 +50,7 @@ class OutputObjectTypesBuilder extends CodeableAst {
     final StringBuffer code = StringBuffer();
     for (final field in type.fields) {
       code.writeln(
-          'final ${_fieldTypeBuilder(field.outputType.type)} Function('); //TODO handle return type nullable
+          'final ${schemaTypeTypeBuilder(field.outputType)} Function('); //TODO handle return type nullable
       if (field.args.isNotEmpty) code.write("{");
       for (var arg in field.args) {
         code.writeln(
@@ -63,18 +63,6 @@ class OutputObjectTypesBuilder extends CodeableAst {
     }
 
     return code.toString();
-  }
-
-  /// Class field type builder.
-  String _fieldTypeBuilder(dynamic object) {
-    if (object is String) {
-      return scalar(object);
-    } else if (object is InputType) {
-      return className(object.name);
-    } else if (object is SchemaEnum) {
-      return className(object.name);
-    }
-    throw ArgumentError('Unknown type $object');
   }
 
   // /// Build fromJson factory .

@@ -19,6 +19,8 @@ class PrismaClient {
   PrismaClient._(this.engine);
   factory PrismaClient()=>PrismaClient._(BinaryEngine(schema));
 
+final user = UserModel() ;
+final post = PostModel() ;
 }
 
 enum JsonNullValueFilter implements PrismaEnum {
@@ -2282,7 +2284,7 @@ final User Function(
     required  int skip,
     required  UserScalarFieldEnum distinct,
 }) ?  findFirstUser  ;
-final User Function(
+final List<User> Function(
 {    required  UserWhereInput where,
     required  UserOrderByWithRelationInput orderBy,
     required  UserWhereUniqueInput cursor,
@@ -2297,7 +2299,7 @@ final AggregateUser Function(
     required  int take,
     required  int skip,
 })   aggregateUser  ;
-final UserGroupByOutputType Function(
+final List<UserGroupByOutputType> Function(
 {    required  UserWhereInput where,
     required  UserOrderByWithAggregationInput orderBy,
     required  UserScalarFieldEnum by,
@@ -2316,7 +2318,7 @@ final Post Function(
     required  int skip,
     required  PostScalarFieldEnum distinct,
 }) ?  findFirstPost  ;
-final Post Function(
+final List<Post> Function(
 {    required  PostWhereInput where,
     required  PostOrderByWithRelationInput orderBy,
     required  PostWhereUniqueInput cursor,
@@ -2331,7 +2333,7 @@ final AggregatePost Function(
     required  int take,
     required  int skip,
 })   aggregatePost  ;
-final PostGroupByOutputType Function(
+final List<PostGroupByOutputType> Function(
 {    required  PostWhereInput where,
     required  PostOrderByWithAggregationInput orderBy,
     required  PostScalarFieldEnum by,
@@ -2730,7 +2732,7 @@ final String Function(
 )   password  ;
 final int Function(
 ) ?  resturantId  ;
-final Post Function(
+final List<Post> Function(
 {    required  PostWhereInput where,
     required  PostOrderByWithRelationInput orderBy,
     required  PostWhereUniqueInput cursor,
@@ -2768,6 +2770,128 @@ final User Function(
 
 
 
+class UserModel {
+ User findUnique({
+    required  UserWhereUniqueInput  where,
+}
+){
+throw UnimplementedError();
+} User findFirst({
+      UserWhereInput?  where,
+      List<UserOrderByWithRelationInput>?  orderBy,
+      UserWhereUniqueInput?  cursor,
+      int?  take,
+      int?  skip,
+      List<UserScalarFieldEnum>?  distinct,
+}
+){
+throw UnimplementedError();
+} List<User> findMany({
+      UserWhereInput?  where,
+      List<UserOrderByWithRelationInput>?  orderBy,
+      UserWhereUniqueInput?  cursor,
+      int?  take,
+      int?  skip,
+      List<UserScalarFieldEnum>?  distinct,
+}
+){
+throw UnimplementedError();
+} AffectedRowsOutput updateMany({
+    required  UserUpdateManyMutationInput  data,
+      UserWhereInput?  where,
+}
+){
+throw UnimplementedError();
+} AffectedRowsOutput deleteMany({
+      UserWhereInput?  where,
+}
+){
+throw UnimplementedError();
+} List<UserGroupByOutputType> groupBy({
+      UserWhereInput?  where,
+      List<UserOrderByWithAggregationInput>?  orderBy,
+    required  List<UserScalarFieldEnum>  by,
+      UserScalarWhereWithAggregatesInput?  having,
+      int?  take,
+      int?  skip,
+}
+){
+throw UnimplementedError();
+} AggregateUser aggregate({
+      UserWhereInput?  where,
+      List<UserOrderByWithRelationInput>?  orderBy,
+      UserWhereUniqueInput?  cursor,
+      int?  take,
+      int?  skip,
+}
+){
+throw UnimplementedError();
+}
+}
+class PostModel {
+ Post findUnique({
+    required  PostWhereUniqueInput  where,
+}
+){
+throw UnimplementedError();
+} Post findFirst({
+      PostWhereInput?  where,
+      List<PostOrderByWithRelationInput>?  orderBy,
+      PostWhereUniqueInput?  cursor,
+      int?  take,
+      int?  skip,
+      List<PostScalarFieldEnum>?  distinct,
+}
+){
+throw UnimplementedError();
+} List<Post> findMany({
+      PostWhereInput?  where,
+      List<PostOrderByWithRelationInput>?  orderBy,
+      PostWhereUniqueInput?  cursor,
+      int?  take,
+      int?  skip,
+      List<PostScalarFieldEnum>?  distinct,
+}
+){
+throw UnimplementedError();
+} AffectedRowsOutput createMany({
+    required  List<PostCreateManyInput>  data,
+      bool?  skipDuplicates,
+}
+){
+throw UnimplementedError();
+} AffectedRowsOutput updateMany({
+    required  PostUpdateManyMutationInput  data,
+      PostWhereInput?  where,
+}
+){
+throw UnimplementedError();
+} AffectedRowsOutput deleteMany({
+      PostWhereInput?  where,
+}
+){
+throw UnimplementedError();
+} List<PostGroupByOutputType> groupBy({
+      PostWhereInput?  where,
+      List<PostOrderByWithAggregationInput>?  orderBy,
+    required  List<PostScalarFieldEnum>  by,
+      PostScalarWhereWithAggregatesInput?  having,
+      int?  take,
+      int?  skip,
+}
+){
+throw UnimplementedError();
+} AggregatePost aggregate({
+      PostWhereInput?  where,
+      List<PostOrderByWithRelationInput>?  orderBy,
+      PostWhereUniqueInput?  cursor,
+      int?  take,
+      int?  skip,
+}
+){
+throw UnimplementedError();
+}
+}
 const schema='''// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 

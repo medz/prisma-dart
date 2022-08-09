@@ -1,3 +1,4 @@
+import 'package:prisma_cli/src/generator/ast/helper/dmmf_schema_helper.dart';
 import 'package:prisma_cli/src/utils/naming_fix.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart';
 
@@ -6,9 +7,10 @@ abstract class Ast {
   final Document dmmf;
 }
 
-abstract class CodeableAst {
+abstract class CodeableAst extends DMMFSchemaHelper {
+  @override
   final Ast ast;
-  const CodeableAst(this.ast);
+  CodeableAst(this.ast);
 
   String get codeString;
 
@@ -33,7 +35,7 @@ abstract class CodeableAst {
     return value;
   }
 
-  String addNullable( bool isNullable) {
+  String addNullable(bool isNullable) {
     if (isNullable) return "? ";
     return " ";
   }
@@ -74,4 +76,37 @@ abstract class CodeableAst {
 
     return scalar(inputTypes.first.type);
   }
+
+    String fieldSchemaArgTypeBuilder(SchemaArg field) {
+    final String inputType = resolveInputType(field.inputTypes);
+    final bool isList =
+        field.inputTypes.where((element) => element.isList).isNotEmpty;
+    if (isList) {
+      return 'List<$inputType>';
+    }
+
+    return inputType;
+  }
+
+    /// Class field type builder.
+  String schemaTypeTypeBuilder(SchemaType schemaType) {
+    final object = schemaType.type;
+    String type;
+    if (object is String) {
+      type = scalar(object);
+    } else if (object is InputType) {
+      type = className(object.name);
+    } else if (object is SchemaEnum) {
+      type = className(object.name);
+    } else {
+      throw ArgumentError('Unknown type $object');
+    }
+    if (schemaType.isList) {
+      return 'List<$type>';
+    }
+
+    return type;
+  }
+
+
 }

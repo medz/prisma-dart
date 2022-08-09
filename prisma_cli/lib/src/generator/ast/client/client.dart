@@ -19,7 +19,7 @@ class PrismaClient {
 """);
 
     for (final model in ast.dmmf.datamodel.models) {
-      //TODO write model here
+      code.writeln("final ${fieldName(model.name)} = ${className(model.name)}Model() ;");
     }
 
     code.writeln("}");
