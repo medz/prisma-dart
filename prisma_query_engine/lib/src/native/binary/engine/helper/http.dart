@@ -1,12 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart';
-
-
-Future<String> requestHttp(Client client ,String method,String url,String payload, void Function(Request req) apply ) async {
-  final req = Request(method, Uri.parse(url));
-  apply(req);
-
-  final res = await client.send(req);
-  final strRes = await res.stream.bytesToString();
-  return strRes;
+Future<String> requestHttp(
+    HttpClient client, String method, String url, String payload) async {
+  final request = await HttpClient().openUrl(method, Uri.parse(url));
+  request.headers.contentLength = payload.length;
+  request.headers.contentType = ContentType.json;
+  request.write(payload);
+  final res = await request.close();
+  final body = await res.transform(const Utf8Decoder()).join();
+  if (res.statusCode != 200) {
+    throw "error at requestHttp: statusCode=${res.statusCode} body=$body";
+  }
+  return body;
 }

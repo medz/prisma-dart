@@ -4,11 +4,11 @@ part "protocol.g.dart";
 
 @JsonSerializable()
 class GQLResponse {
-  final Data data;
-  final List<GQLError> errors;
-  final Map<String, dynamic> extensions;
+  final Data? data;
+  final List<GQLError>? errors;
+  final Map<String, dynamic>? extensions;
 
-  Map<String, dynamic> toJson() => _$GQLResponseToJson(this);
+  // Map<String, dynamic> toJson() => _$GQLResponseToJson(this);
   factory GQLResponse.fromJson(Map<String, dynamic> json) =>
       _$GQLResponseFromJson(json);
   GQLResponse(this.data, this.errors, this.extensions);
@@ -16,10 +16,10 @@ class GQLResponse {
 
 @JsonSerializable()
 class Data {
-  final Map<String, dynamic> result;
+  final Object? result;
 
   Data(this.result);
-  Map<String, dynamic> toJson() => _$DataToJson(this);
+  // Map<String, dynamic> toJson() => _$DataToJson(this);
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 }
 
@@ -57,15 +57,15 @@ class GQLBatchRequest {
 
 @JsonSerializable()
 class GQLError {
-  final String message;
-  final List<String> path;
-  final Map<String, dynamic> query;
+  final String error;
+  final List<String>? path;
+  final Map<String, dynamic>? query;
   Map<String, dynamic> toJson() => _$GQLErrorToJson(this);
   factory GQLError.fromJson(Map<String, dynamic> json) =>
       _$GQLErrorFromJson(json);
-  GQLError(this.message, this.path, this.query);
+  GQLError(this.error, this.path, this.query);
 
-  String rawMessage() => message.replaceAll("\n", " ") ;
+  String? rawMessage() => error.replaceAll("\n", " ") ;
 }
 
 

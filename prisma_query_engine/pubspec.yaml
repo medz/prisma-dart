@@ -7,14 +7,17 @@ environment:
   sdk: '>=2.17.6 <3.0.0'
 
 dependencies:
-  http: ^0.13.5
   path: ^1.8.0
   prisma_shared: ^1.0.0
+  json_annotation: ^4.6.0
 
 dev_dependencies:
   ffigen: ^6.0.1
   lints: ^2.0.0
   test: ^1.16.0
+  build_runner: ^2.2.0
+  json_serializable: ^6.3.1
+
 
 dependency_overrides:
   prisma_shared:

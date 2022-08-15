@@ -1,3 +1,5 @@
+import 'package:prisma_query_engine/prisma_query_engine.dart';
+
 import '../shared/shared.dart' as shared;
 
 class DataProxyEngine implements shared.Engine {
@@ -12,13 +14,12 @@ class DataProxyEngine implements shared.Engine {
   }
   
   @override
-  Future<Map<String, dynamic>> batch(Map<String, dynamic> payload) {
-
+  Future<GQLBatchResponse> batch(GQLBatchRequest payload) {
     throw UnimplementedError();
   }
   
   @override
-  Future<Map<String, dynamic>> request(Map<String, dynamic> payload) {
+  Future<GQLResponse> request(GQLRequest payload) {
     throw UnimplementedError();
   }
 }

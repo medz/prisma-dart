@@ -1,3 +1,5 @@
+import 'package:prisma_query_engine/src/shared/protocol.dart';
+
 import '../../shared/shared.dart' as shared;
 
 /// The engine that is dynamic library engine.
@@ -13,12 +15,12 @@ class DynamicLibraryEngine implements shared.Engine {
   }
   
   @override
-  Future<Map<String, dynamic>> batch(Map<String, dynamic> payload) {
+  Future<GQLBatchResponse> batch(GQLBatchRequest payload) {
     throw UnimplementedError();
   }
   
   @override
-  Future<Map<String, dynamic>> request(Map<String, dynamic> payload) {
+  Future<GQLResponse> request(GQLRequest payload) {
     throw UnimplementedError();
   }
 }

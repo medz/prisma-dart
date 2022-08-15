@@ -7,22 +7,24 @@ part of 'protocol.dart';
 // **************************************************************************
 
 GQLResponse _$GQLResponseFromJson(Map<String, dynamic> json) => GQLResponse(
-      Data.fromJson(json['data'] as Map<String, dynamic>),
-      (json['errors'] as List<dynamic>)
-          .map((e) => GQLError.fromJson(e as Map<String, dynamic>))
+      json['data'] == null
+          ? null
+          : Data.fromJson(json['data'] as Map<String, dynamic>),
+      (json['errors'] as List<dynamic>?)
+          ?.map((e) => GQLError.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['extensions'] as Map<String, dynamic>,
+      json['extensions'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$GQLResponseToJson(GQLResponse instance) =>
     <String, dynamic>{
-      'data': instance.data.toJson(),
-      'errors': instance.errors.map((e) => e.toJson()).toList(),
+      'data': instance.data,
+      'errors': instance.errors,
       'extensions': instance.extensions,
     };
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-      json['result'] as Map<String, dynamic>,
+      json['result'],
     );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -41,8 +43,8 @@ GQLBatchResponse _$GQLBatchResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$GQLBatchResponseToJson(GQLBatchResponse instance) =>
     <String, dynamic>{
-      'errors': instance.errors.map((e) => e.toJson()).toList(),
-      'batchResult': instance.batchResult.map((e) => e.toJson()).toList(),
+      'errors': instance.errors,
+      'batchResult': instance.batchResult,
     };
 
 GQLRequest _$GQLRequestFromJson(Map<String, dynamic> json) => GQLRequest(
@@ -66,18 +68,18 @@ GQLBatchRequest _$GQLBatchRequestFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$GQLBatchRequestToJson(GQLBatchRequest instance) =>
     <String, dynamic>{
-      'batch': instance.batch.map((e) => e.toJson()).toList(),
+      'batch': instance.batch,
       'transaction': instance.transaction,
     };
 
 GQLError _$GQLErrorFromJson(Map<String, dynamic> json) => GQLError(
-      json['message'] as String,
-      (json['path'] as List<dynamic>).map((e) => e as String).toList(),
-      json['query'] as Map<String, dynamic>,
+      json['error'] as String,
+      (json['path'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      json['query'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$GQLErrorToJson(GQLError instance) => <String, dynamic>{
-      'message': instance.message,
+      'error': instance.error,
       'path': instance.path,
       'query': instance.query,
     };

@@ -1,14 +1,15 @@
 import 'dart:io';
+
 import 'package:prisma_query_engine/src/native/binary/engine/life_cycle.dart';
+import 'package:prisma_query_engine/src/shared/protocol.dart';
 
 import '../../shared/shared.dart' as shared;
 import 'engine/helper/command.dart';
-import 'package:http/http.dart';
 import 'engine/request.dart' as req;
 
 /// Binary engine.
 class BinaryEngine implements shared.Engine {
-  final Client client = Client();
+  final HttpClient client = HttpClient();
   late Command cmd;
   late String url;
   final String schema;
@@ -24,14 +25,14 @@ class BinaryEngine implements shared.Engine {
   @override
   Future<void> stop() async {
     disconnected = true;
+    client.close();
     await cmd.kill();
   }
 
   @override
-  Future<Map<String, dynamic>> batch(Map<String, dynamic> payload) =>
+  Future<GQLBatchResponse> batch(GQLBatchRequest payload) =>
       req.batch(this, payload);
 
   @override
-  Future<Map<String, dynamic>> request(Map<String, dynamic> payload) =>
-      req.execute(this, payload);
+  Future<GQLResponse> request(GQLRequest payload) => req.execute(this, payload);
 }
