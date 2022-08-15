@@ -24,15 +24,16 @@ class ModelBuilder extends CodeableAst {
     modelCode.writeln(
         'static const  _outputField = [${model.fields.where((element) => element.relationName == null).map((e) => 'Output("${e.name}",[],[])').join(',')}];');
     final fields = <SchemaFieldWithAction>[];
-    for (var e in ModelAction.values) {
-      final name = mapping[e.name];
+    for (var e in mapping.keys) {
+      if(e=="model") continue;
+      final name = mapping[e];
       if (name == null) continue;
       final queryField = queryFieldMap[name];
       final mutationField = mutationFieldMap[name];
       final field = mutationField ?? queryField;
       if (field == null) {
         throw Exception(
-            "Oops this must not happen. Could not find field $fieldName on either Query or Mutation");
+            "Oops this must not happen. Could not find field ${fieldName(name)} on either Query or Mutation");
       }
       fields.add(SchemaFieldWithAction(
           e, field, mutationField == null ? "query" : "mutation"));
@@ -49,7 +50,7 @@ class ModelBuilder extends CodeableAst {
       final field = item.field;
       final returnType = dynamicTypeBuilder(field.outputType);
       code.write(
-          'Future<${addList(returnType, field.outputType.isList)}${addNullable(field.isNullable ?? false)}> ${item.action.name}('); //TODO handle return type nullable
+          'Future<${addList(returnType, field.outputType.isList)}${addNullable(field.isNullable ?? false)}> ${item.action}('); //TODO handle return type nullable
       if (field.args.isNotEmpty) code.writeln("{");
       for (var arg in field.args) {
         code.writeln(
@@ -61,7 +62,7 @@ class ModelBuilder extends CodeableAst {
       code.writeln("{");
       code.writeln(_buildEntity(item.field.args));
 
-      code.writeln(_buildQuertBuilder(item.action.name, item.operation,
+      code.writeln(_buildQuertBuilder(item.action, item.operation,
           returnType, field.outputType.isList, field.isNullable ?? false));
       code.write("}");
     }
@@ -150,7 +151,7 @@ class ModelBuilder extends CodeableAst {
 
 class SchemaFieldWithAction {
   final SchemaField field;
-  final ModelAction action;
+  final String action;
   final String operation;
 
   SchemaFieldWithAction(this.action, this.field, this.operation);

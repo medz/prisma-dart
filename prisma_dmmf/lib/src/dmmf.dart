@@ -110,22 +110,22 @@ class ModelMapping {
   final String? findMany;
 
   /// Create operation
-  final String? create;
+  final String? createOne;
 
   /// Create many operation
   final String? createMany;
 
   /// Update operation
-  final String? update;
+  final String? updateOne;
 
   /// Update many operation
   final String? updateMany;
 
   /// Upsert operation
-  final String? upsert;
+  final String? upsertOne;
 
   /// Delete operation
-  final String? delete;
+  final String? deleteOne;
 
   /// Delete many operation
   final String? deleteMany;
@@ -135,9 +135,6 @@ class ModelMapping {
 
   /// Group by operation
   final String? groupBy;
-
-  /// Count operation
-  final String? count;
 
   /// Find raw operation
   final String? findRaw;
@@ -152,23 +149,21 @@ class ModelMapping {
     this.findUnique,
     this.findFirst,
     this.findMany,
-    this.create,
+    this.createOne,
     this.createMany,
-    this.update,
+    this.updateOne,
     this.updateMany,
-    this.upsert,
-    this.delete,
+    this.upsertOne,
+    this.deleteOne,
     this.deleteMany,
     this.aggregate,
     this.groupBy,
-    this.count,
     this.findRaw,
     this.aggregateRaw,
   });
 
   /// Model operation mapping from JSON factory constructor.
   factory ModelMapping.fromJson(Map<String, dynamic> json) {
-    print(json);
     return _$ModelMappingFromJson(json);
   }
 
@@ -957,22 +952,4 @@ class _ArgTypeConverter<T> implements JsonConverter<T, dynamic> {
 
     throw ArgumentError('Unknown type $object');
   }
-}
-
-enum ModelAction {
-  findUnique,
-  findFirst,
-  findMany,
-  create,
-  createMany,
-  update,
-  updateMany,
-  upsert,
-  delete,
-  deleteMany,
-  groupBy,
-  count, // TODO: count does not actually exist, why?
-  aggregate,
-  findRaw,
-  aggregateRaw,
 }

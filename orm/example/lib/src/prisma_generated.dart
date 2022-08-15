@@ -70,7 +70,7 @@ Entity toEntity(){ return Entity("UserScalarFieldEnum",true,value,null) ;}
 
 
 
-class PostWhereInput   {
+class PostWhereInput {
   const PostWhereInput({
   this.aND,
   this.oR,
@@ -110,7 +110,7 @@ class PostWhereInput   {
 
 List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(createdAt !=null)Entity("createdAt",false,null,createdAt!.toEntity(),),if(updatedAt !=null)Entity("updatedAt",false,null,updatedAt!.toEntity(),),if(title !=null)Entity("title",false,null,title!.toEntity(),),if(published !=null)Entity("published",false,null,published!.toEntity(),),if(desc !=null)Entity("desc",false,null,desc!.toEntity(),),if(user !=null)Entity("User",false,null,user!.toEntity(),),if(userId !=null)Entity("userId",false,null,userId!.toEntity(),),];
 }
-class PostOrderByWithRelationInput   {
+class PostOrderByWithRelationInput {
   const PostOrderByWithRelationInput({
   this.id,
   this.createdAt,
@@ -141,7 +141,7 @@ class PostOrderByWithRelationInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(user !=null)Entity("User",false,null,user!.toEntity(),),if(userId !=null)userId!.toEntity(),];
 }
-class PostWhereUniqueInput   {
+class PostWhereUniqueInput {
   const PostWhereUniqueInput({
   this.id,
   });
@@ -151,7 +151,7 @@ class PostWhereUniqueInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),];
 }
-class PostOrderByWithAggregationInput   {
+class PostOrderByWithAggregationInput {
   const PostOrderByWithAggregationInput({
   this.id,
   this.createdAt,
@@ -194,7 +194,7 @@ class PostOrderByWithAggregationInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),];
 }
-class PostScalarWhereWithAggregatesInput   {
+class PostScalarWhereWithAggregatesInput {
   const PostScalarWhereWithAggregatesInput({
   this.aND,
   this.oR,
@@ -231,7 +231,7 @@ class PostScalarWhereWithAggregatesInput   {
 
 List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(createdAt !=null)Entity("createdAt",false,null,createdAt!.toEntity(),),if(updatedAt !=null)Entity("updatedAt",false,null,updatedAt!.toEntity(),),if(title !=null)Entity("title",false,null,title!.toEntity(),),if(published !=null)Entity("published",false,null,published!.toEntity(),),if(desc !=null)Entity("desc",false,null,desc!.toEntity(),),if(userId !=null)Entity("userId",false,null,userId!.toEntity(),),];
 }
-class UserWhereInput   {
+class UserWhereInput {
   const UserWhereInput({
   this.aND,
   this.oR,
@@ -265,7 +265,7 @@ class UserWhereInput   {
 
 List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(userName !=null)Entity("userName",false,null,userName!.toEntity(),),if(name !=null)Entity("name",false,null,name!.toEntity(),),if(password !=null)Entity("password",false,null,password!.toEntity(),),if(resturantId !=null)Entity("resturantId",false,null,resturantId!.toEntity(),),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-class UserOrderByWithRelationInput   {
+class UserOrderByWithRelationInput {
   const UserOrderByWithRelationInput({
   this.id,
   this.userName,
@@ -290,7 +290,7 @@ class UserOrderByWithRelationInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-class UserWhereUniqueInput   {
+class UserWhereUniqueInput {
   const UserWhereUniqueInput({
   this.id,
   this.userName,
@@ -303,7 +303,7 @@ class UserWhereUniqueInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),];
 }
-class UserOrderByWithAggregationInput   {
+class UserOrderByWithAggregationInput {
   const UserOrderByWithAggregationInput({
   this.id,
   this.userName,
@@ -340,7 +340,7 @@ class UserOrderByWithAggregationInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),];
 }
-class UserScalarWhereWithAggregatesInput   {
+class UserScalarWhereWithAggregatesInput {
   const UserScalarWhereWithAggregatesInput({
   this.aND,
   this.oR,
@@ -371,7 +371,7 @@ class UserScalarWhereWithAggregatesInput   {
 
 List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(userName !=null)Entity("userName",false,null,userName!.toEntity(),),if(name !=null)Entity("name",false,null,name!.toEntity(),),if(password !=null)Entity("password",false,null,password!.toEntity(),),if(resturantId !=null)Entity("resturantId",false,null,resturantId!.toEntity(),),];
 }
-class PostCreateInput   {
+class PostCreateInput {
   const PostCreateInput({
   this.id,
   this.createdAt,
@@ -399,7 +399,7 @@ class PostCreateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(user !=null)Entity("User",false,null,user!.toEntity(),),];
 }
-class PostUncheckedCreateInput   {
+class PostUncheckedCreateInput {
   const PostUncheckedCreateInput({
   this.id,
   this.createdAt,
@@ -427,7 +427,7 @@ class PostUncheckedCreateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(userId !=null)Entity("userId",true,userId!,null,),];
 }
-class PostUpdateInput   {
+class PostUpdateInput {
   const PostUpdateInput({
   this.id,
   this.createdAt,
@@ -455,7 +455,7 @@ class PostUpdateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(user !=null)Entity("User",false,null,user!.toEntity(),),];
 }
-class PostUncheckedUpdateInput   {
+class PostUncheckedUpdateInput {
   const PostUncheckedUpdateInput({
   this.id,
   this.createdAt,
@@ -483,7 +483,7 @@ class PostUncheckedUpdateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(userId !=null)Entity("userId",true,userId!,null,),];
 }
-class PostUpdateManyMutationInput   {
+class PostUpdateManyMutationInput {
   const PostUpdateManyMutationInput({
   this.id,
   this.createdAt,
@@ -508,7 +508,7 @@ class PostUpdateManyMutationInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
-class PostUncheckedUpdateManyInput   {
+class PostUncheckedUpdateManyInput {
   const PostUncheckedUpdateManyInput({
   this.id,
   this.createdAt,
@@ -536,7 +536,7 @@ class PostUncheckedUpdateManyInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(userId !=null)Entity("userId",true,userId!,null,),];
 }
-class UserCreateInput   {
+class UserCreateInput {
   const UserCreateInput({
  required this.userName,
  required this.name,
@@ -558,7 +558,7 @@ class UserCreateInput   {
 
 List<Entity> toEntity()=>[Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-class UserUncheckedCreateInput   {
+class UserUncheckedCreateInput {
   const UserUncheckedCreateInput({
   this.id,
  required this.userName,
@@ -583,7 +583,7 @@ class UserUncheckedCreateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-class UserUpdateInput   {
+class UserUpdateInput {
   const UserUpdateInput({
   this.userName,
   this.name,
@@ -605,7 +605,7 @@ class UserUpdateInput   {
 
 List<Entity> toEntity()=>[if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-class UserUncheckedUpdateInput   {
+class UserUncheckedUpdateInput {
   const UserUncheckedUpdateInput({
   this.id,
   this.userName,
@@ -630,7 +630,7 @@ class UserUncheckedUpdateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-class UserUpdateManyMutationInput   {
+class UserUpdateManyMutationInput {
   const UserUpdateManyMutationInput({
   this.userName,
   this.name,
@@ -649,7 +649,7 @@ class UserUpdateManyMutationInput   {
 
 List<Entity> toEntity()=>[if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-class UserUncheckedUpdateManyInput   {
+class UserUncheckedUpdateManyInput {
   const UserUncheckedUpdateManyInput({
   this.id,
   this.userName,
@@ -671,7 +671,7 @@ class UserUncheckedUpdateManyInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-class StringFilter   {
+class StringFilter {
   const StringFilter({
   this.equals,
   this.in$,
@@ -711,7 +711,7 @@ class StringFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class DateTimeFilter   {
+class DateTimeFilter {
   const DateTimeFilter({
   this.equals,
   this.in$,
@@ -742,7 +742,7 @@ class DateTimeFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class BoolFilter   {
+class BoolFilter {
   const BoolFilter({
   this.equals,
   this.not,
@@ -755,7 +755,7 @@ class BoolFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class StringNullableFilter   {
+class StringNullableFilter {
   const StringNullableFilter({
   this.equals,
   this.in$,
@@ -795,7 +795,7 @@ class StringNullableFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class UserRelationFilter   {
+class UserRelationFilter {
   const UserRelationFilter({
   this.is$,
   this.isNot,
@@ -808,7 +808,7 @@ class UserRelationFilter   {
 
 List<Entity> toEntity()=>[if(is$ !=null)Entity("is",false,null,is$!.toEntity(),),if(isNot !=null)Entity("isNot",false,null,isNot!.toEntity(),),];
 }
-class IntNullableFilter   {
+class IntNullableFilter {
   const IntNullableFilter({
   this.equals,
   this.in$,
@@ -839,7 +839,7 @@ class IntNullableFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class PostCountOrderByAggregateInput   {
+class PostCountOrderByAggregateInput {
   const PostCountOrderByAggregateInput({
   this.id,
   this.createdAt,
@@ -867,7 +867,7 @@ class PostCountOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),];
 }
-class PostAvgOrderByAggregateInput   {
+class PostAvgOrderByAggregateInput {
   const PostAvgOrderByAggregateInput({
   this.userId,
   });
@@ -877,7 +877,7 @@ class PostAvgOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(userId !=null)userId!.toEntity(),];
 }
-class PostMaxOrderByAggregateInput   {
+class PostMaxOrderByAggregateInput {
   const PostMaxOrderByAggregateInput({
   this.id,
   this.createdAt,
@@ -905,7 +905,7 @@ class PostMaxOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),];
 }
-class PostMinOrderByAggregateInput   {
+class PostMinOrderByAggregateInput {
   const PostMinOrderByAggregateInput({
   this.id,
   this.createdAt,
@@ -933,7 +933,7 @@ class PostMinOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),];
 }
-class PostSumOrderByAggregateInput   {
+class PostSumOrderByAggregateInput {
   const PostSumOrderByAggregateInput({
   this.userId,
   });
@@ -943,7 +943,7 @@ class PostSumOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(userId !=null)userId!.toEntity(),];
 }
-class StringWithAggregatesFilter   {
+class StringWithAggregatesFilter {
   const StringWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -992,7 +992,7 @@ class StringWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class DateTimeWithAggregatesFilter   {
+class DateTimeWithAggregatesFilter {
   const DateTimeWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1032,7 +1032,7 @@ class DateTimeWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class BoolWithAggregatesFilter   {
+class BoolWithAggregatesFilter {
   const BoolWithAggregatesFilter({
   this.equals,
   this.not,
@@ -1054,7 +1054,7 @@ class BoolWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class StringNullableWithAggregatesFilter   {
+class StringNullableWithAggregatesFilter {
   const StringNullableWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1103,7 +1103,7 @@ class StringNullableWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class IntNullableWithAggregatesFilter   {
+class IntNullableWithAggregatesFilter {
   const IntNullableWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1149,7 +1149,7 @@ class IntNullableWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class IntFilter   {
+class IntFilter {
   const IntFilter({
   this.equals,
   this.in$,
@@ -1180,7 +1180,7 @@ class IntFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class PostListRelationFilter   {
+class PostListRelationFilter {
   const PostListRelationFilter({
   this.every,
   this.some,
@@ -1196,7 +1196,7 @@ class PostListRelationFilter   {
 
 List<Entity> toEntity()=>[if(every !=null)Entity("every",false,null,every!.toEntity(),),if(some !=null)Entity("some",false,null,some!.toEntity(),),if(none !=null)Entity("none",false,null,none!.toEntity(),),];
 }
-class PostOrderByRelationAggregateInput   {
+class PostOrderByRelationAggregateInput {
   const PostOrderByRelationAggregateInput({
   this.$count,
   });
@@ -1206,7 +1206,7 @@ class PostOrderByRelationAggregateInput   {
 
 List<Entity> toEntity()=>[if($count !=null)$count!.toEntity(),];
 }
-class UserCountOrderByAggregateInput   {
+class UserCountOrderByAggregateInput {
   const UserCountOrderByAggregateInput({
   this.id,
   this.userName,
@@ -1228,7 +1228,7 @@ class UserCountOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-class UserAvgOrderByAggregateInput   {
+class UserAvgOrderByAggregateInput {
   const UserAvgOrderByAggregateInput({
   this.id,
   this.resturantId,
@@ -1241,7 +1241,7 @@ class UserAvgOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-class UserMaxOrderByAggregateInput   {
+class UserMaxOrderByAggregateInput {
   const UserMaxOrderByAggregateInput({
   this.id,
   this.userName,
@@ -1263,7 +1263,7 @@ class UserMaxOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-class UserMinOrderByAggregateInput   {
+class UserMinOrderByAggregateInput {
   const UserMinOrderByAggregateInput({
   this.id,
   this.userName,
@@ -1285,7 +1285,7 @@ class UserMinOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-class UserSumOrderByAggregateInput   {
+class UserSumOrderByAggregateInput {
   const UserSumOrderByAggregateInput({
   this.id,
   this.resturantId,
@@ -1298,7 +1298,7 @@ class UserSumOrderByAggregateInput   {
 
 List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-class IntWithAggregatesFilter   {
+class IntWithAggregatesFilter {
   const IntWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1344,7 +1344,7 @@ class IntWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class UserCreateNestedOneWithoutPostsInput   {
+class UserCreateNestedOneWithoutPostsInput {
   const UserCreateNestedOneWithoutPostsInput({
   this.create,
   this.connectOrCreate,
@@ -1360,7 +1360,7 @@ class UserCreateNestedOneWithoutPostsInput   {
 
 List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.toEntity(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.toEntity(),),if(connect !=null)Entity("connect",false,null,connect!.toEntity(),),];
 }
-class StringFieldUpdateOperationsInput   {
+class StringFieldUpdateOperationsInput {
   const StringFieldUpdateOperationsInput({
   this.set$,
   });
@@ -1370,7 +1370,7 @@ class StringFieldUpdateOperationsInput   {
 
 List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
 }
-class DateTimeFieldUpdateOperationsInput   {
+class DateTimeFieldUpdateOperationsInput {
   const DateTimeFieldUpdateOperationsInput({
   this.set$,
   });
@@ -1380,7 +1380,7 @@ class DateTimeFieldUpdateOperationsInput   {
 
 List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
 }
-class BoolFieldUpdateOperationsInput   {
+class BoolFieldUpdateOperationsInput {
   const BoolFieldUpdateOperationsInput({
   this.set$,
   });
@@ -1390,7 +1390,7 @@ class BoolFieldUpdateOperationsInput   {
 
 List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
 }
-class NullableStringFieldUpdateOperationsInput   {
+class NullableStringFieldUpdateOperationsInput {
   const NullableStringFieldUpdateOperationsInput({
   this.set$,
   });
@@ -1400,7 +1400,7 @@ class NullableStringFieldUpdateOperationsInput   {
 
 List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
 }
-class UserUpdateOneWithoutPostsNestedInput   {
+class UserUpdateOneWithoutPostsNestedInput {
   const UserUpdateOneWithoutPostsNestedInput({
   this.create,
   this.connectOrCreate,
@@ -1428,7 +1428,7 @@ class UserUpdateOneWithoutPostsNestedInput   {
 
 List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.toEntity(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.toEntity(),),if(upsert !=null)Entity("upsert",false,null,upsert!.toEntity(),),if(disconnect !=null)Entity("disconnect",true,disconnect!,null,),if(delete !=null)Entity("delete",true,delete!,null,),if(connect !=null)Entity("connect",false,null,connect!.toEntity(),),if(update !=null)Entity("update",false,null,update!.toEntity(),),];
 }
-class NullableIntFieldUpdateOperationsInput   {
+class NullableIntFieldUpdateOperationsInput {
   const NullableIntFieldUpdateOperationsInput({
   this.set$,
   this.increment,
@@ -1450,7 +1450,7 @@ class NullableIntFieldUpdateOperationsInput   {
 
 List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),if(increment !=null)Entity("increment",true,increment!,null,),if(decrement !=null)Entity("decrement",true,decrement!,null,),if(multiply !=null)Entity("multiply",true,multiply!,null,),if(divide !=null)Entity("divide",true,divide!,null,),];
 }
-class PostCreateNestedManyWithoutUserInput   {
+class PostCreateNestedManyWithoutUserInput {
   const PostCreateNestedManyWithoutUserInput({
   this.create,
   this.connectOrCreate,
@@ -1466,7 +1466,7 @@ class PostCreateNestedManyWithoutUserInput   {
 
 List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),];
 }
-class PostUncheckedCreateNestedManyWithoutUserInput   {
+class PostUncheckedCreateNestedManyWithoutUserInput {
   const PostUncheckedCreateNestedManyWithoutUserInput({
   this.create,
   this.connectOrCreate,
@@ -1482,7 +1482,7 @@ class PostUncheckedCreateNestedManyWithoutUserInput   {
 
 List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),];
 }
-class PostUpdateManyWithoutUserNestedInput   {
+class PostUpdateManyWithoutUserNestedInput {
   const PostUpdateManyWithoutUserNestedInput({
   this.create,
   this.connectOrCreate,
@@ -1519,7 +1519,7 @@ class PostUpdateManyWithoutUserNestedInput   {
 
 List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(upsert !=null)Entity("upsert",false,null,upsert!.map((e) => Entity("upsert", false, null, e.toEntity())).toList(),),if(set$ !=null)Entity("set",false,null,set$!.map((e) => Entity("set", false, null, e.toEntity())).toList(),),if(disconnect !=null)Entity("disconnect",false,null,disconnect!.map((e) => Entity("disconnect", false, null, e.toEntity())).toList(),),if(delete !=null)Entity("delete",false,null,delete!.map((e) => Entity("delete", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),if(update !=null)Entity("update",false,null,update!.map((e) => Entity("update", false, null, e.toEntity())).toList(),),if(updateMany !=null)Entity("updateMany",false,null,updateMany!.map((e) => Entity("updateMany", false, null, e.toEntity())).toList(),),if(deleteMany !=null)Entity("deleteMany",false,null,deleteMany!.map((e) => Entity("deleteMany", false, null, e.toEntity())).toList(),),];
 }
-class IntFieldUpdateOperationsInput   {
+class IntFieldUpdateOperationsInput {
   const IntFieldUpdateOperationsInput({
   this.set$,
   this.increment,
@@ -1541,7 +1541,7 @@ class IntFieldUpdateOperationsInput   {
 
 List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),if(increment !=null)Entity("increment",true,increment!,null,),if(decrement !=null)Entity("decrement",true,decrement!,null,),if(multiply !=null)Entity("multiply",true,multiply!,null,),if(divide !=null)Entity("divide",true,divide!,null,),];
 }
-class PostUncheckedUpdateManyWithoutUserNestedInput   {
+class PostUncheckedUpdateManyWithoutUserNestedInput {
   const PostUncheckedUpdateManyWithoutUserNestedInput({
   this.create,
   this.connectOrCreate,
@@ -1578,7 +1578,7 @@ class PostUncheckedUpdateManyWithoutUserNestedInput   {
 
 List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(upsert !=null)Entity("upsert",false,null,upsert!.map((e) => Entity("upsert", false, null, e.toEntity())).toList(),),if(set$ !=null)Entity("set",false,null,set$!.map((e) => Entity("set", false, null, e.toEntity())).toList(),),if(disconnect !=null)Entity("disconnect",false,null,disconnect!.map((e) => Entity("disconnect", false, null, e.toEntity())).toList(),),if(delete !=null)Entity("delete",false,null,delete!.map((e) => Entity("delete", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),if(update !=null)Entity("update",false,null,update!.map((e) => Entity("update", false, null, e.toEntity())).toList(),),if(updateMany !=null)Entity("updateMany",false,null,updateMany!.map((e) => Entity("updateMany", false, null, e.toEntity())).toList(),),if(deleteMany !=null)Entity("deleteMany",false,null,deleteMany!.map((e) => Entity("deleteMany", false, null, e.toEntity())).toList(),),];
 }
-class NestedStringFilter   {
+class NestedStringFilter {
   const NestedStringFilter({
   this.equals,
   this.in$,
@@ -1618,7 +1618,7 @@ class NestedStringFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class NestedDateTimeFilter   {
+class NestedDateTimeFilter {
   const NestedDateTimeFilter({
   this.equals,
   this.in$,
@@ -1649,7 +1649,7 @@ class NestedDateTimeFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class NestedBoolFilter   {
+class NestedBoolFilter {
   const NestedBoolFilter({
   this.equals,
   this.not,
@@ -1662,7 +1662,7 @@ class NestedBoolFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class NestedStringNullableFilter   {
+class NestedStringNullableFilter {
   const NestedStringNullableFilter({
   this.equals,
   this.in$,
@@ -1702,7 +1702,7 @@ class NestedStringNullableFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class NestedIntNullableFilter   {
+class NestedIntNullableFilter {
   const NestedIntNullableFilter({
   this.equals,
   this.in$,
@@ -1733,7 +1733,7 @@ class NestedIntNullableFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class NestedStringWithAggregatesFilter   {
+class NestedStringWithAggregatesFilter {
   const NestedStringWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1782,7 +1782,7 @@ class NestedStringWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class NestedIntFilter   {
+class NestedIntFilter {
   const NestedIntFilter({
   this.equals,
   this.in$,
@@ -1813,7 +1813,7 @@ class NestedIntFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class NestedDateTimeWithAggregatesFilter   {
+class NestedDateTimeWithAggregatesFilter {
   const NestedDateTimeWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1853,7 +1853,7 @@ class NestedDateTimeWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class NestedBoolWithAggregatesFilter   {
+class NestedBoolWithAggregatesFilter {
   const NestedBoolWithAggregatesFilter({
   this.equals,
   this.not,
@@ -1875,7 +1875,7 @@ class NestedBoolWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class NestedStringNullableWithAggregatesFilter   {
+class NestedStringNullableWithAggregatesFilter {
   const NestedStringNullableWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1924,7 +1924,7 @@ class NestedStringNullableWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class NestedIntNullableWithAggregatesFilter   {
+class NestedIntNullableWithAggregatesFilter {
   const NestedIntNullableWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1970,7 +1970,7 @@ class NestedIntNullableWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class NestedFloatNullableFilter   {
+class NestedFloatNullableFilter {
   const NestedFloatNullableFilter({
   this.equals,
   this.in$,
@@ -2001,7 +2001,7 @@ class NestedFloatNullableFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class NestedIntWithAggregatesFilter   {
+class NestedIntWithAggregatesFilter {
   const NestedIntWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -2047,7 +2047,7 @@ class NestedIntWithAggregatesFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-class NestedFloatFilter   {
+class NestedFloatFilter {
   const NestedFloatFilter({
   this.equals,
   this.in$,
@@ -2078,7 +2078,7 @@ class NestedFloatFilter   {
 
 List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-class UserCreateWithoutPostsInput   {
+class UserCreateWithoutPostsInput {
   const UserCreateWithoutPostsInput({
  required this.userName,
  required this.name,
@@ -2097,7 +2097,7 @@ class UserCreateWithoutPostsInput   {
 
 List<Entity> toEntity()=>[Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-class UserUncheckedCreateWithoutPostsInput   {
+class UserUncheckedCreateWithoutPostsInput {
   const UserUncheckedCreateWithoutPostsInput({
   this.id,
  required this.userName,
@@ -2119,7 +2119,7 @@ class UserUncheckedCreateWithoutPostsInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-class UserCreateOrConnectWithoutPostsInput   {
+class UserCreateOrConnectWithoutPostsInput {
   const UserCreateOrConnectWithoutPostsInput({
  required this.where,
  required this.create,
@@ -2132,7 +2132,7 @@ class UserCreateOrConnectWithoutPostsInput   {
 
 List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("create",false,null,create.toEntity(),),];
 }
-class UserUpsertWithoutPostsInput   {
+class UserUpsertWithoutPostsInput {
   const UserUpsertWithoutPostsInput({
  required this.update,
  required this.create,
@@ -2145,7 +2145,7 @@ class UserUpsertWithoutPostsInput   {
 
 List<Entity> toEntity()=>[Entity("update",false,null,update.toEntity(),),Entity("create",false,null,create.toEntity(),),];
 }
-class UserUpdateWithoutPostsInput   {
+class UserUpdateWithoutPostsInput {
   const UserUpdateWithoutPostsInput({
   this.userName,
   this.name,
@@ -2164,7 +2164,7 @@ class UserUpdateWithoutPostsInput   {
 
 List<Entity> toEntity()=>[if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-class UserUncheckedUpdateWithoutPostsInput   {
+class UserUncheckedUpdateWithoutPostsInput {
   const UserUncheckedUpdateWithoutPostsInput({
   this.id,
   this.userName,
@@ -2186,7 +2186,7 @@ class UserUncheckedUpdateWithoutPostsInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-class PostCreateWithoutUserInput   {
+class PostCreateWithoutUserInput {
   const PostCreateWithoutUserInput({
   this.id,
   this.createdAt,
@@ -2211,7 +2211,7 @@ class PostCreateWithoutUserInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
-class PostUncheckedCreateWithoutUserInput   {
+class PostUncheckedCreateWithoutUserInput {
   const PostUncheckedCreateWithoutUserInput({
   this.id,
   this.createdAt,
@@ -2236,7 +2236,7 @@ class PostUncheckedCreateWithoutUserInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
-class PostCreateOrConnectWithoutUserInput   {
+class PostCreateOrConnectWithoutUserInput {
   const PostCreateOrConnectWithoutUserInput({
  required this.where,
  required this.create,
@@ -2249,7 +2249,7 @@ class PostCreateOrConnectWithoutUserInput   {
 
 List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("create",false,null,create.toEntity(),),];
 }
-class PostUpsertWithWhereUniqueWithoutUserInput   {
+class PostUpsertWithWhereUniqueWithoutUserInput {
   const PostUpsertWithWhereUniqueWithoutUserInput({
  required this.where,
  required this.update,
@@ -2265,7 +2265,7 @@ class PostUpsertWithWhereUniqueWithoutUserInput   {
 
 List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("update",false,null,update.toEntity(),),Entity("create",false,null,create.toEntity(),),];
 }
-class PostUpdateWithWhereUniqueWithoutUserInput   {
+class PostUpdateWithWhereUniqueWithoutUserInput {
   const PostUpdateWithWhereUniqueWithoutUserInput({
  required this.where,
  required this.data,
@@ -2278,7 +2278,7 @@ class PostUpdateWithWhereUniqueWithoutUserInput   {
 
 List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("data",false,null,data.toEntity(),),];
 }
-class PostUpdateManyWithWhereWithoutUserInput   {
+class PostUpdateManyWithWhereWithoutUserInput {
   const PostUpdateManyWithWhereWithoutUserInput({
  required this.where,
  required this.data,
@@ -2291,7 +2291,7 @@ class PostUpdateManyWithWhereWithoutUserInput   {
 
 List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("data",false,null,data.toEntity(),),];
 }
-class PostScalarWhereInput   {
+class PostScalarWhereInput {
   const PostScalarWhereInput({
   this.aND,
   this.oR,
@@ -2328,7 +2328,7 @@ class PostScalarWhereInput   {
 
 List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(createdAt !=null)Entity("createdAt",false,null,createdAt!.toEntity(),),if(updatedAt !=null)Entity("updatedAt",false,null,updatedAt!.toEntity(),),if(title !=null)Entity("title",false,null,title!.toEntity(),),if(published !=null)Entity("published",false,null,published!.toEntity(),),if(desc !=null)Entity("desc",false,null,desc!.toEntity(),),if(userId !=null)Entity("userId",false,null,userId!.toEntity(),),];
 }
-class PostUpdateWithoutUserInput   {
+class PostUpdateWithoutUserInput {
   const PostUpdateWithoutUserInput({
   this.id,
   this.createdAt,
@@ -2353,7 +2353,7 @@ class PostUpdateWithoutUserInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
-class PostUncheckedUpdateWithoutUserInput   {
+class PostUncheckedUpdateWithoutUserInput {
   const PostUncheckedUpdateWithoutUserInput({
   this.id,
   this.createdAt,
@@ -2378,7 +2378,7 @@ class PostUncheckedUpdateWithoutUserInput   {
 
 List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
-class PostUncheckedUpdateManyWithoutPostsInput   {
+class PostUncheckedUpdateManyWithoutPostsInput {
   const PostUncheckedUpdateManyWithoutPostsInput({
   this.id,
   this.createdAt,
@@ -2941,6 +2941,45 @@ final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(or
    }
      );     
 
+}Future<Post> createOne({
+    required  PostCreateInput data,
+}
+){
+final entity=[Entity("data",false,null,data.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "createOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return Post.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<Post?> updateOne({
+    required  PostUpdateInput data,
+    required  PostWhereUniqueInput where,
+}
+){
+final entity=[Entity("data",false,null,data.toEntity(),),Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "updateOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return Post.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
 }Future<AffectedRowsOutput> updateMany({
     required  PostUpdateManyMutationInput data,
       PostWhereInput? where,
@@ -2961,6 +3000,46 @@ final entity=[Entity("data",false,null,data.toEntity(),),if(where !=null)Entity(
    }
      );     
 
+}Future<Post> upsertOne({
+    required  PostWhereUniqueInput where,
+    required  PostCreateInput create,
+    required  PostUpdateInput update,
+}
+){
+final entity=[Entity("where",false,null,where.toEntity(),),Entity("create",false,null,create.toEntity(),),Entity("update",false,null,update.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "upsertOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return Post.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<Post?> deleteOne({
+    required  PostWhereUniqueInput where,
+}
+){
+final entity=[Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "deleteOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return Post.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
 }Future<AffectedRowsOutput> deleteMany({
       PostWhereInput? where,
 }
@@ -2977,6 +3056,29 @@ final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),];
     );
     return query.exec().then((value) {
       return AffectedRowsOutput.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<AggregatePost> aggregate({
+      PostWhereInput? where,
+      List<PostOrderByWithRelationInput>? orderBy,
+      PostWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
+}
+){
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "aggregate",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AggregatePost.fromJson(value.data!.result! as Map<String,dynamic>);
    }
      );     
 
@@ -3001,29 +3103,6 @@ final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(or
     );
     return query.exec().then((value) {
       if(value.data?.result==null) return []; return (value.data!.result! as List).map((e) {return PostGroupByOutputType.fromJson(value.data!.result! as Map<String,dynamic>);} ).toList();
-   }
-     );     
-
-}Future<AggregatePost> aggregate({
-      PostWhereInput? where,
-      List<PostOrderByWithRelationInput>? orderBy,
-      PostWhereUniqueInput? cursor,
-      int? take,
-      int? skip,
-}
-){
-final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
-    final Query query = Query(
-      engine: engine,
-      model: model,
-      method: "aggregate",
-      operation: "query",
-      entity:entity,
-      output: _outputField,
-      name: ""
-    );
-    return query.exec().then((value) {
-      return AggregatePost.fromJson(value.data!.result! as Map<String,dynamic>);
    }
      );     
 
@@ -3101,6 +3180,45 @@ final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(or
    }
      );     
 
+}Future<User> createOne({
+    required  UserCreateInput data,
+}
+){
+final entity=[Entity("data",false,null,data.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "createOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return User.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<User?> updateOne({
+    required  UserUpdateInput data,
+    required  UserWhereUniqueInput where,
+}
+){
+final entity=[Entity("data",false,null,data.toEntity(),),Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "updateOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return User.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
 }Future<AffectedRowsOutput> updateMany({
     required  UserUpdateManyMutationInput data,
       UserWhereInput? where,
@@ -3121,6 +3239,46 @@ final entity=[Entity("data",false,null,data.toEntity(),),if(where !=null)Entity(
    }
      );     
 
+}Future<User> upsertOne({
+    required  UserWhereUniqueInput where,
+    required  UserCreateInput create,
+    required  UserUpdateInput update,
+}
+){
+final entity=[Entity("where",false,null,where.toEntity(),),Entity("create",false,null,create.toEntity(),),Entity("update",false,null,update.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "upsertOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return User.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<User?> deleteOne({
+    required  UserWhereUniqueInput where,
+}
+){
+final entity=[Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "deleteOne",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return User.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
 }Future<AffectedRowsOutput> deleteMany({
       UserWhereInput? where,
 }
@@ -3137,6 +3295,29 @@ final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),];
     );
     return query.exec().then((value) {
       return AffectedRowsOutput.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<AggregateUser> aggregate({
+      UserWhereInput? where,
+      List<UserOrderByWithRelationInput>? orderBy,
+      UserWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
+}
+){
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "aggregate",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AggregateUser.fromJson(value.data!.result! as Map<String,dynamic>);
    }
      );     
 
@@ -3161,29 +3342,6 @@ final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(or
     );
     return query.exec().then((value) {
       if(value.data?.result==null) return []; return (value.data!.result! as List).map((e) {return UserGroupByOutputType.fromJson(value.data!.result! as Map<String,dynamic>);} ).toList();
-   }
-     );     
-
-}Future<AggregateUser> aggregate({
-      UserWhereInput? where,
-      List<UserOrderByWithRelationInput>? orderBy,
-      UserWhereUniqueInput? cursor,
-      int? take,
-      int? skip,
-}
-){
-final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
-    final Query query = Query(
-      engine: engine,
-      model: model,
-      method: "aggregate",
-      operation: "query",
-      entity:entity,
-      output: _outputField,
-      name: ""
-    );
-    return query.exec().then((value) {
-      return AggregateUser.fromJson(value.data!.result! as Map<String,dynamic>);
    }
      );     
 
