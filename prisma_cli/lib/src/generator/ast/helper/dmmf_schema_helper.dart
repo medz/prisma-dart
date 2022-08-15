@@ -6,18 +6,22 @@ typedef Dictionary<T> = Map<String, T>;
 
 abstract class DMMFSchemaHelper {
   Ast get ast;
-  Schema get schema=>ast.dmmf.schema;
+  Schema get schema => ast.dmmf.schema;
   late final OutputType queryType;
   late final OutputType mutationType;
   late final Dictionary<OutputType> outputTypeMap;
   late final Dictionary<InputType> inputTypeMap;
   late final Dictionary<SchemaEnum> enumMap;
+  late final Dictionary<SchemaField> queryFieldMap;
+  late final Dictionary<SchemaField> mutationFieldMap;
   late final Dictionary<SchemaField> rootFieldMap;
   DMMFSchemaHelper() {
     outputTypeMap = _getOutputTypeMap();
 
     queryType = outputTypeMap["Query"]!;
     mutationType = outputTypeMap["Mutation"]!;
+    queryFieldMap=_getQueryFieldMap();
+    mutationFieldMap=_getMutationFieldMap();
     rootFieldMap = _getRootFieldMap();
     enumMap = _getEnumMap();
     inputTypeMap = _getInputTypeMap();
@@ -46,7 +50,18 @@ abstract class DMMFSchemaHelper {
   }
 
   Map<String, SchemaField> _getRootFieldMap() {
-    return Map.fromEntries(keyBy<SchemaField>(queryType.fields, (_) => _.name)
-        .followedBy(keyBy<SchemaField>(mutationType.fields, (_) => _.name)));
+    return {
+      ...queryFieldMap,
+      ...mutationFieldMap
+    };
+  }
+
+  Map<String, SchemaField> _getQueryFieldMap() {
+    return Map.fromEntries(keyBy<SchemaField>(queryType.fields, (_) => _.name));
+  }
+
+  Map<String, SchemaField> _getMutationFieldMap() {
+    return Map.fromEntries(
+        keyBy<SchemaField>(mutationType.fields, (_) => _.name));
   }
 }

@@ -3,6 +3,7 @@
 
 import 'package:orm/orm.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'dart:convert';
 
 part 'prisma_generated.g.dart';
 
@@ -19,43 +20,23 @@ class PrismaClient {
   PrismaClient._(this.engine);
   factory PrismaClient()=>PrismaClient._(BinaryEngine(schema));
 
-final user = UserModel() ;
-final post = PostModel() ;
+late final post = PostModel(engine) ;
+late final user = UserModel(engine) ;
 }
 
-enum JsonNullValueFilter implements PrismaEnum {
-  dbNull('DbNull'),
-  jsonNull('JsonNull'),
-  anyNull('AnyNull'),
-;
-  @override
-  final String value;
-  const JsonNullValueFilter(this.value);
-}
-enum JsonNullValueInput implements PrismaEnum {
-  jsonNull('JsonNull'),
-;
-  @override
-  final String value;
-  const JsonNullValueInput(this.value);
-}
 enum PostScalarFieldEnum implements PrismaEnum {
   id('id'),
-  name('name'),
+  createdAt('createdAt'),
+  updatedAt('updatedAt'),
+  title('title'),
+  published('published'),
   desc('desc'),
   userId('userId'),
 ;
   @override
   final String value;
   const PostScalarFieldEnum(this.value);
-}
-enum QueryMode implements PrismaEnum {
-  default$('default'),
-  insensitive('insensitive'),
-;
-  @override
-  final String value;
-  const QueryMode(this.value);
+Entity toEntity(){ return Entity("PostScalarFieldEnum",true,value,null) ;}
 }
 enum SortOrder implements PrismaEnum {
   asc('asc'),
@@ -64,16 +45,15 @@ enum SortOrder implements PrismaEnum {
   @override
   final String value;
   const SortOrder(this.value);
+Entity toEntity(){ return Entity("SortOrder",true,value,null) ;}
 }
 enum TransactionIsolationLevel implements PrismaEnum {
-  readUncommitted('ReadUncommitted'),
-  readCommitted('ReadCommitted'),
-  repeatableRead('RepeatableRead'),
   serializable('Serializable'),
 ;
   @override
   final String value;
   const TransactionIsolationLevel(this.value);
+Entity toEntity(){ return Entity("TransactionIsolationLevel",true,value,null) ;}
 }
 enum UserScalarFieldEnum implements PrismaEnum {
   id('id'),
@@ -81,17 +61,177 @@ enum UserScalarFieldEnum implements PrismaEnum {
   name('name'),
   password('password'),
   resturantId('resturantId'),
-  extra('extra'),
 ;
   @override
   final String value;
   const UserScalarFieldEnum(this.value);
+Entity toEntity(){ return Entity("UserScalarFieldEnum",true,value,null) ;}
 }
 
 
 
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserWhereInput {
+class PostWhereInput   {
+  const PostWhereInput({
+  this.aND,
+  this.oR,
+  this.nOT,
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.user,
+  this.userId,
+  });
+
+  @JsonKey(name: 'AND' )
+  final List<PostWhereInput>? aND;
+  @JsonKey(name: 'OR' )
+  final List<PostWhereInput>? oR;
+  @JsonKey(name: 'NOT' )
+  final List<PostWhereInput>? nOT;
+  @JsonKey(name: 'id' )
+  final StringFilter? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTimeFilter? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTimeFilter? updatedAt;
+  @JsonKey(name: 'title' )
+  final StringFilter? title;
+  @JsonKey(name: 'published' )
+  final BoolFilter? published;
+  @JsonKey(name: 'desc' )
+  final StringNullableFilter? desc;
+  @JsonKey(name: 'User' )
+  final UserRelationFilter? user;
+  @JsonKey(name: 'userId' )
+  final IntNullableFilter? userId;
+
+List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(createdAt !=null)Entity("createdAt",false,null,createdAt!.toEntity(),),if(updatedAt !=null)Entity("updatedAt",false,null,updatedAt!.toEntity(),),if(title !=null)Entity("title",false,null,title!.toEntity(),),if(published !=null)Entity("published",false,null,published!.toEntity(),),if(desc !=null)Entity("desc",false,null,desc!.toEntity(),),if(user !=null)Entity("User",false,null,user!.toEntity(),),if(userId !=null)Entity("userId",false,null,userId!.toEntity(),),];
+}
+class PostOrderByWithRelationInput   {
+  const PostOrderByWithRelationInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.user,
+  this.userId,
+  });
+
+  @JsonKey(name: 'id' )
+  final SortOrder? id;
+  @JsonKey(name: 'createdAt' )
+  final SortOrder? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final SortOrder? updatedAt;
+  @JsonKey(name: 'title' )
+  final SortOrder? title;
+  @JsonKey(name: 'published' )
+  final SortOrder? published;
+  @JsonKey(name: 'desc' )
+  final SortOrder? desc;
+  @JsonKey(name: 'User' )
+  final UserOrderByWithRelationInput? user;
+  @JsonKey(name: 'userId' )
+  final SortOrder? userId;
+
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(user !=null)Entity("User",false,null,user!.toEntity(),),if(userId !=null)userId!.toEntity(),];
+}
+class PostWhereUniqueInput   {
+  const PostWhereUniqueInput({
+  this.id,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),];
+}
+class PostOrderByWithAggregationInput   {
+  const PostOrderByWithAggregationInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.userId,
+  this.$count,
+  this.$avg,
+  this.$max,
+  this.$min,
+  this.$sum,
+  });
+
+  @JsonKey(name: 'id' )
+  final SortOrder? id;
+  @JsonKey(name: 'createdAt' )
+  final SortOrder? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final SortOrder? updatedAt;
+  @JsonKey(name: 'title' )
+  final SortOrder? title;
+  @JsonKey(name: 'published' )
+  final SortOrder? published;
+  @JsonKey(name: 'desc' )
+  final SortOrder? desc;
+  @JsonKey(name: 'userId' )
+  final SortOrder? userId;
+  @JsonKey(name: '_count' )
+  final PostCountOrderByAggregateInput? $count;
+  @JsonKey(name: '_avg' )
+  final PostAvgOrderByAggregateInput? $avg;
+  @JsonKey(name: '_max' )
+  final PostMaxOrderByAggregateInput? $max;
+  @JsonKey(name: '_min' )
+  final PostMinOrderByAggregateInput? $min;
+  @JsonKey(name: '_sum' )
+  final PostSumOrderByAggregateInput? $sum;
+
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),];
+}
+class PostScalarWhereWithAggregatesInput   {
+  const PostScalarWhereWithAggregatesInput({
+  this.aND,
+  this.oR,
+  this.nOT,
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.userId,
+  });
+
+  @JsonKey(name: 'AND' )
+  final List<PostScalarWhereWithAggregatesInput>? aND;
+  @JsonKey(name: 'OR' )
+  final List<PostScalarWhereWithAggregatesInput>? oR;
+  @JsonKey(name: 'NOT' )
+  final List<PostScalarWhereWithAggregatesInput>? nOT;
+  @JsonKey(name: 'id' )
+  final StringWithAggregatesFilter? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTimeWithAggregatesFilter? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTimeWithAggregatesFilter? updatedAt;
+  @JsonKey(name: 'title' )
+  final StringWithAggregatesFilter? title;
+  @JsonKey(name: 'published' )
+  final BoolWithAggregatesFilter? published;
+  @JsonKey(name: 'desc' )
+  final StringNullableWithAggregatesFilter? desc;
+  @JsonKey(name: 'userId' )
+  final IntNullableWithAggregatesFilter? userId;
+
+List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(createdAt !=null)Entity("createdAt",false,null,createdAt!.toEntity(),),if(updatedAt !=null)Entity("updatedAt",false,null,updatedAt!.toEntity(),),if(title !=null)Entity("title",false,null,title!.toEntity(),),if(published !=null)Entity("published",false,null,published!.toEntity(),),if(desc !=null)Entity("desc",false,null,desc!.toEntity(),),if(userId !=null)Entity("userId",false,null,userId!.toEntity(),),];
+}
+class UserWhereInput   {
   const UserWhereInput({
   this.aND,
   this.oR,
@@ -101,97 +241,75 @@ class UserWhereInput {
   this.name,
   this.password,
   this.resturantId,
-  this.post,
-  this.extra,
+  this.posts,
   });
 
   @JsonKey(name: 'AND' )
-  final List<UserWhereInput>?  aND;
+  final List<UserWhereInput>? aND;
   @JsonKey(name: 'OR' )
-  final List<UserWhereInput>?  oR;
+  final List<UserWhereInput>? oR;
   @JsonKey(name: 'NOT' )
-  final List<UserWhereInput>?  nOT;
+  final List<UserWhereInput>? nOT;
   @JsonKey(name: 'id' )
-  final IntFilter?  id;
+  final IntFilter? id;
   @JsonKey(name: 'userName' )
-  final StringFilter?  userName;
+  final StringFilter? userName;
   @JsonKey(name: 'name' )
-  final StringFilter?  name;
+  final StringFilter? name;
   @JsonKey(name: 'password' )
-  final StringFilter?  password;
+  final StringFilter? password;
   @JsonKey(name: 'resturantId' )
-  final IntNullableFilter?  resturantId;
-  @JsonKey(name: 'Post' )
-  final PostListRelationFilter?  post;
-  @JsonKey(name: 'extra' )
-  final JsonFilter?  extra;
+  final IntNullableFilter? resturantId;
+  @JsonKey(name: 'posts' )
+  final PostListRelationFilter? posts;
 
-  Map<String, dynamic> toJson() => _$UserWhereInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(userName !=null)Entity("userName",false,null,userName!.toEntity(),),if(name !=null)Entity("name",false,null,name!.toEntity(),),if(password !=null)Entity("password",false,null,password!.toEntity(),),if(resturantId !=null)Entity("resturantId",false,null,resturantId!.toEntity(),),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserOrderByWithRelationInput {
+class UserOrderByWithRelationInput   {
   const UserOrderByWithRelationInput({
   this.id,
   this.userName,
   this.name,
   this.password,
   this.resturantId,
-  this.post,
-  this.extra,
+  this.posts,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
+  final SortOrder? id;
   @JsonKey(name: 'userName' )
-  final SortOrder?  userName;
+  final SortOrder? userName;
   @JsonKey(name: 'name' )
-  final SortOrder?  name;
+  final SortOrder? name;
   @JsonKey(name: 'password' )
-  final SortOrder?  password;
+  final SortOrder? password;
   @JsonKey(name: 'resturantId' )
-  final SortOrder?  resturantId;
-  @JsonKey(name: 'Post' )
-  final PostOrderByRelationAggregateInput?  post;
-  @JsonKey(name: 'extra' )
-  final SortOrder?  extra;
+  final SortOrder? resturantId;
+  @JsonKey(name: 'posts' )
+  final PostOrderByRelationAggregateInput? posts;
 
-  Map<String, dynamic> toJson() => _$UserOrderByWithRelationInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 0,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserWhereUniqueInput {
+class UserWhereUniqueInput   {
   const UserWhereUniqueInput({
   this.id,
   this.userName,
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
+  final int? id;
   @JsonKey(name: 'userName' )
-  final String?  userName;
+  final String? userName;
 
-  Map<String, dynamic> toJson() => _$UserWhereUniqueInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserOrderByWithAggregationInput {
+class UserOrderByWithAggregationInput   {
   const UserOrderByWithAggregationInput({
   this.id,
   this.userName,
   this.name,
   this.password,
   this.resturantId,
-  this.extra,
   this.$count,
   this.$avg,
   this.$max,
@@ -200,36 +318,29 @@ class UserOrderByWithAggregationInput {
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
+  final SortOrder? id;
   @JsonKey(name: 'userName' )
-  final SortOrder?  userName;
+  final SortOrder? userName;
   @JsonKey(name: 'name' )
-  final SortOrder?  name;
+  final SortOrder? name;
   @JsonKey(name: 'password' )
-  final SortOrder?  password;
+  final SortOrder? password;
   @JsonKey(name: 'resturantId' )
-  final SortOrder?  resturantId;
-  @JsonKey(name: 'extra' )
-  final SortOrder?  extra;
+  final SortOrder? resturantId;
   @JsonKey(name: '_count' )
-  final UserCountOrderByAggregateInput?  $count;
+  final UserCountOrderByAggregateInput? $count;
   @JsonKey(name: '_avg' )
-  final UserAvgOrderByAggregateInput?  $avg;
+  final UserAvgOrderByAggregateInput? $avg;
   @JsonKey(name: '_max' )
-  final UserMaxOrderByAggregateInput?  $max;
+  final UserMaxOrderByAggregateInput? $max;
   @JsonKey(name: '_min' )
-  final UserMinOrderByAggregateInput?  $min;
+  final UserMinOrderByAggregateInput? $min;
   @JsonKey(name: '_sum' )
-  final UserSumOrderByAggregateInput?  $sum;
+  final UserSumOrderByAggregateInput? $sum;
 
-  Map<String, dynamic> toJson() => _$UserOrderByWithAggregationInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 0,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserScalarWhereWithAggregatesInput {
+class UserScalarWhereWithAggregatesInput   {
   const UserScalarWhereWithAggregatesInput({
   this.aND,
   this.oR,
@@ -239,501 +350,328 @@ class UserScalarWhereWithAggregatesInput {
   this.name,
   this.password,
   this.resturantId,
-  this.extra,
   });
 
   @JsonKey(name: 'AND' )
-  final List<UserScalarWhereWithAggregatesInput>?  aND;
+  final List<UserScalarWhereWithAggregatesInput>? aND;
   @JsonKey(name: 'OR' )
-  final List<UserScalarWhereWithAggregatesInput>?  oR;
+  final List<UserScalarWhereWithAggregatesInput>? oR;
   @JsonKey(name: 'NOT' )
-  final List<UserScalarWhereWithAggregatesInput>?  nOT;
+  final List<UserScalarWhereWithAggregatesInput>? nOT;
   @JsonKey(name: 'id' )
-  final IntWithAggregatesFilter?  id;
+  final IntWithAggregatesFilter? id;
   @JsonKey(name: 'userName' )
-  final StringWithAggregatesFilter?  userName;
+  final StringWithAggregatesFilter? userName;
   @JsonKey(name: 'name' )
-  final StringWithAggregatesFilter?  name;
+  final StringWithAggregatesFilter? name;
   @JsonKey(name: 'password' )
-  final StringWithAggregatesFilter?  password;
+  final StringWithAggregatesFilter? password;
   @JsonKey(name: 'resturantId' )
-  final IntNullableWithAggregatesFilter?  resturantId;
-  @JsonKey(name: 'extra' )
-  final JsonWithAggregatesFilter?  extra;
+  final IntNullableWithAggregatesFilter? resturantId;
 
-  Map<String, dynamic> toJson() => _$UserScalarWhereWithAggregatesInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(userName !=null)Entity("userName",false,null,userName!.toEntity(),),if(name !=null)Entity("name",false,null,name!.toEntity(),),if(password !=null)Entity("password",false,null,password!.toEntity(),),if(resturantId !=null)Entity("resturantId",false,null,resturantId!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostWhereInput {
-  const PostWhereInput({
-  this.aND,
-  this.oR,
-  this.nOT,
+class PostCreateInput   {
+  const PostCreateInput({
   this.id,
-  this.name,
+  this.createdAt,
+  this.updatedAt,
+ required this.title,
+ required this.published,
   this.desc,
-  this.userId,
-  this.user,
-  });
-
-  @JsonKey(name: 'AND' )
-  final List<PostWhereInput>?  aND;
-  @JsonKey(name: 'OR' )
-  final List<PostWhereInput>?  oR;
-  @JsonKey(name: 'NOT' )
-  final List<PostWhereInput>?  nOT;
-  @JsonKey(name: 'id' )
-  final IntFilter?  id;
-  @JsonKey(name: 'name' )
-  final StringFilter?  name;
-  @JsonKey(name: 'desc' )
-  final StringFilter?  desc;
-  @JsonKey(name: 'userId' )
-  final IntFilter?  userId;
-  @JsonKey(name: 'user' )
-  final UserRelationFilter?  user;
-
-  Map<String, dynamic> toJson() => _$PostWhereInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostOrderByWithRelationInput {
-  const PostOrderByWithRelationInput({
-  this.id,
-  this.name,
-  this.desc,
-  this.userId,
   this.user,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'name' )
-  final SortOrder?  name;
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String title;
+  @JsonKey(name: 'published' )
+  final bool published;
   @JsonKey(name: 'desc' )
-  final SortOrder?  desc;
-  @JsonKey(name: 'userId' )
-  final SortOrder?  userId;
-  @JsonKey(name: 'user' )
-  final UserOrderByWithRelationInput?  user;
+  final String? desc;
+  @JsonKey(name: 'User' )
+  final UserCreateNestedOneWithoutPostsInput? user;
 
-  Map<String, dynamic> toJson() => _$PostOrderByWithRelationInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 0,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(user !=null)Entity("User",false,null,user!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostWhereUniqueInput {
-  const PostWhereUniqueInput({
+class PostUncheckedCreateInput   {
+  const PostUncheckedCreateInput({
   this.id,
-  this.name,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String?  name;
-
-  Map<String, dynamic> toJson() => _$PostWhereUniqueInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostOrderByWithAggregationInput {
-  const PostOrderByWithAggregationInput({
-  this.id,
-  this.name,
-  this.desc,
-  this.userId,
-  this.$count,
-  this.$avg,
-  this.$max,
-  this.$min,
-  this.$sum,
-  });
-
-  @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'name' )
-  final SortOrder?  name;
-  @JsonKey(name: 'desc' )
-  final SortOrder?  desc;
-  @JsonKey(name: 'userId' )
-  final SortOrder?  userId;
-  @JsonKey(name: '_count' )
-  final PostCountOrderByAggregateInput?  $count;
-  @JsonKey(name: '_avg' )
-  final PostAvgOrderByAggregateInput?  $avg;
-  @JsonKey(name: '_max' )
-  final PostMaxOrderByAggregateInput?  $max;
-  @JsonKey(name: '_min' )
-  final PostMinOrderByAggregateInput?  $min;
-  @JsonKey(name: '_sum' )
-  final PostSumOrderByAggregateInput?  $sum;
-
-  Map<String, dynamic> toJson() => _$PostOrderByWithAggregationInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 0,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostScalarWhereWithAggregatesInput {
-  const PostScalarWhereWithAggregatesInput({
-  this.aND,
-  this.oR,
-  this.nOT,
-  this.id,
-  this.name,
+  this.createdAt,
+  this.updatedAt,
+ required this.title,
+ required this.published,
   this.desc,
   this.userId,
   });
 
-  @JsonKey(name: 'AND' )
-  final List<PostScalarWhereWithAggregatesInput>?  aND;
-  @JsonKey(name: 'OR' )
-  final List<PostScalarWhereWithAggregatesInput>?  oR;
-  @JsonKey(name: 'NOT' )
-  final List<PostScalarWhereWithAggregatesInput>?  nOT;
   @JsonKey(name: 'id' )
-  final IntWithAggregatesFilter?  id;
-  @JsonKey(name: 'name' )
-  final StringWithAggregatesFilter?  name;
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String title;
+  @JsonKey(name: 'published' )
+  final bool published;
   @JsonKey(name: 'desc' )
-  final StringWithAggregatesFilter?  desc;
+  final String? desc;
   @JsonKey(name: 'userId' )
-  final IntWithAggregatesFilter?  userId;
+  final int? userId;
 
-  Map<String, dynamic> toJson() => _$PostScalarWhereWithAggregatesInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(userId !=null)Entity("userId",true,userId!,null,),];
+}
+class PostUpdateInput   {
+  const PostUpdateInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.user,
   });
 
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+  @JsonKey(name: 'User' )
+  final UserUpdateOneWithoutPostsNestedInput? user;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(user !=null)Entity("User",false,null,user!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserUpdateInput {
+class PostUncheckedUpdateInput   {
+  const PostUncheckedUpdateInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.userId,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+  @JsonKey(name: 'userId' )
+  final int? userId;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(userId !=null)Entity("userId",true,userId!,null,),];
+}
+class PostUpdateManyMutationInput   {
+  const PostUpdateManyMutationInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
+}
+class PostUncheckedUpdateManyInput   {
+  const PostUncheckedUpdateManyInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.userId,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+  @JsonKey(name: 'userId' )
+  final int? userId;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),if(userId !=null)Entity("userId",true,userId!,null,),];
+}
+class UserCreateInput   {
+  const UserCreateInput({
+ required this.userName,
+ required this.name,
+ required this.password,
+  this.resturantId,
+  this.posts,
+  });
+
+  @JsonKey(name: 'userName' )
+  final String userName;
+  @JsonKey(name: 'name' )
+  final String name;
+  @JsonKey(name: 'password' )
+  final String password;
+  @JsonKey(name: 'resturantId' )
+  final int? resturantId;
+  @JsonKey(name: 'posts' )
+  final PostCreateNestedManyWithoutUserInput? posts;
+
+List<Entity> toEntity()=>[Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
+}
+class UserUncheckedCreateInput   {
+  const UserUncheckedCreateInput({
+  this.id,
+ required this.userName,
+ required this.name,
+ required this.password,
+  this.resturantId,
+  this.posts,
+  });
+
+  @JsonKey(name: 'id' )
+  final int? id;
+  @JsonKey(name: 'userName' )
+  final String userName;
+  @JsonKey(name: 'name' )
+  final String name;
+  @JsonKey(name: 'password' )
+  final String password;
+  @JsonKey(name: 'resturantId' )
+  final int? resturantId;
+  @JsonKey(name: 'posts' )
+  final PostUncheckedCreateNestedManyWithoutUserInput? posts;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
+}
+class UserUpdateInput   {
   const UserUpdateInput({
   this.userName,
   this.name,
   this.password,
   this.resturantId,
-  this.post,
-  this.extra,
+  this.posts,
   });
 
   @JsonKey(name: 'userName' )
-  final String?  userName;
+  final String? userName;
   @JsonKey(name: 'name' )
-  final String?  name;
+  final String? name;
   @JsonKey(name: 'password' )
-  final String?  password;
+  final String? password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'Post' )
-  final PostUpdateManyWithoutUserNestedInput?  post;
-  @JsonKey(name: 'extra' )
-  final JsonNullValueInput?  extra;
+  final int? resturantId;
+  @JsonKey(name: 'posts' )
+  final PostUpdateManyWithoutUserNestedInput? posts;
 
-  Map<String, dynamic> toJson() => _$UserUpdateInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserUncheckedUpdateInput {
+class UserUncheckedUpdateInput   {
   const UserUncheckedUpdateInput({
   this.id,
   this.userName,
   this.name,
   this.password,
   this.resturantId,
-  this.post,
-  this.extra,
+  this.posts,
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
+  final int? id;
   @JsonKey(name: 'userName' )
-  final String?  userName;
+  final String? userName;
   @JsonKey(name: 'name' )
-  final String?  name;
+  final String? name;
   @JsonKey(name: 'password' )
-  final String?  password;
+  final String? password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'Post' )
-  final PostUncheckedUpdateManyWithoutUserNestedInput?  post;
-  @JsonKey(name: 'extra' )
-  final JsonNullValueInput?  extra;
+  final int? resturantId;
+  @JsonKey(name: 'posts' )
+  final PostUncheckedUpdateManyWithoutUserNestedInput? posts;
 
-  Map<String, dynamic> toJson() => _$UserUncheckedUpdateInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),if(posts !=null)Entity("posts",false,null,posts!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserUpdateManyMutationInput {
+class UserUpdateManyMutationInput   {
   const UserUpdateManyMutationInput({
   this.userName,
   this.name,
   this.password,
   this.resturantId,
-  this.extra,
   });
 
   @JsonKey(name: 'userName' )
-  final String?  userName;
+  final String? userName;
   @JsonKey(name: 'name' )
-  final String?  name;
+  final String? name;
   @JsonKey(name: 'password' )
-  final String?  password;
+  final String? password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'extra' )
-  final JsonNullValueInput?  extra;
+  final int? resturantId;
 
-  Map<String, dynamic> toJson() => _$UserUpdateManyMutationInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserUncheckedUpdateManyInput {
+class UserUncheckedUpdateManyInput   {
   const UserUncheckedUpdateManyInput({
   this.id,
   this.userName,
   this.name,
   this.password,
   this.resturantId,
-  this.extra,
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
+  final int? id;
   @JsonKey(name: 'userName' )
-  final String?  userName;
+  final String? userName;
   @JsonKey(name: 'name' )
-  final String?  name;
+  final String? name;
   @JsonKey(name: 'password' )
-  final String?  password;
+  final String? password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'extra' )
-  final JsonNullValueInput?  extra;
+  final int? resturantId;
 
-  Map<String, dynamic> toJson() => _$UserUncheckedUpdateManyInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostCreateInput {
-  const PostCreateInput({
- required this.name,
- required this.desc,
- required this.user,
-  });
-
-  @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
-  @JsonKey(name: 'user' )
-  final UserCreateNestedOneWithoutPostInput  user;
-
-  Map<String, dynamic> toJson() => _$PostCreateInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUncheckedCreateInput {
-  const PostUncheckedCreateInput({
-  this.id,
- required this.name,
- required this.desc,
- required this.userId,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
-  @JsonKey(name: 'userId' )
-  final int  userId;
-
-  Map<String, dynamic> toJson() => _$PostUncheckedCreateInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUpdateInput {
-  const PostUpdateInput({
-  this.name,
-  this.desc,
-  this.user,
-  });
-
-  @JsonKey(name: 'name' )
-  final String?  name;
-  @JsonKey(name: 'desc' )
-  final String?  desc;
-  @JsonKey(name: 'user' )
-  final UserUpdateOneRequiredWithoutPostNestedInput?  user;
-
-  Map<String, dynamic> toJson() => _$PostUpdateInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUncheckedUpdateInput {
-  const PostUncheckedUpdateInput({
-  this.id,
-  this.name,
-  this.desc,
-  this.userId,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String?  name;
-  @JsonKey(name: 'desc' )
-  final String?  desc;
-  @JsonKey(name: 'userId' )
-  final int?  userId;
-
-  Map<String, dynamic> toJson() => _$PostUncheckedUpdateInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostCreateManyInput {
-  const PostCreateManyInput({
-  this.id,
- required this.name,
- required this.desc,
- required this.userId,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
-  @JsonKey(name: 'userId' )
-  final int  userId;
-
-  Map<String, dynamic> toJson() => _$PostCreateManyInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUpdateManyMutationInput {
-  const PostUpdateManyMutationInput({
-  this.name,
-  this.desc,
-  });
-
-  @JsonKey(name: 'name' )
-  final String?  name;
-  @JsonKey(name: 'desc' )
-  final String?  desc;
-
-  Map<String, dynamic> toJson() => _$PostUpdateManyMutationInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUncheckedUpdateManyInput {
-  const PostUncheckedUpdateManyInput({
-  this.id,
-  this.name,
-  this.desc,
-  this.userId,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String?  name;
-  @JsonKey(name: 'desc' )
-  final String?  desc;
-  @JsonKey(name: 'userId' )
-  final int?  userId;
-
-  Map<String, dynamic> toJson() => _$PostUncheckedUpdateManyInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class IntFilter {
-  const IntFilter({
-  this.equals,
-  this.in$,
-  this.notIn,
-  this.lt,
-  this.lte,
-  this.gt,
-  this.gte,
-  this.not,
-  });
-
-  @JsonKey(name: 'equals' )
-  final int?  equals;
-  @JsonKey(name: 'in' )
-  final List<int>?  in$;
-  @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
-  @JsonKey(name: 'lt' )
-  final int?  lt;
-  @JsonKey(name: 'lte' )
-  final int?  lte;
-  @JsonKey(name: 'gt' )
-  final int?  gt;
-  @JsonKey(name: 'gte' )
-  final int?  gte;
-  @JsonKey(name: 'not' )
-  final int?  not;
-
-  Map<String, dynamic> toJson() => _$IntFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class StringFilter {
+class StringFilter   {
   const StringFilter({
   this.equals,
   this.in$,
@@ -745,43 +683,132 @@ class StringFilter {
   this.contains,
   this.startsWith,
   this.endsWith,
-  this.mode,
   this.not,
   });
 
   @JsonKey(name: 'equals' )
-  final String?  equals;
+  final String? equals;
   @JsonKey(name: 'in' )
-  final List<String>?  in$;
+  final List<String>? in$;
   @JsonKey(name: 'notIn' )
-  final List<String>?  notIn;
+  final List<String>? notIn;
   @JsonKey(name: 'lt' )
-  final String?  lt;
+  final String? lt;
   @JsonKey(name: 'lte' )
-  final String?  lte;
+  final String? lte;
   @JsonKey(name: 'gt' )
-  final String?  gt;
+  final String? gt;
   @JsonKey(name: 'gte' )
-  final String?  gte;
+  final String? gte;
   @JsonKey(name: 'contains' )
-  final String?  contains;
+  final String? contains;
   @JsonKey(name: 'startsWith' )
-  final String?  startsWith;
+  final String? startsWith;
   @JsonKey(name: 'endsWith' )
-  final String?  endsWith;
-  @JsonKey(name: 'mode' )
-  final QueryMode?  mode;
+  final String? endsWith;
   @JsonKey(name: 'not' )
-  final String?  not;
+  final String? not;
 
-  Map<String, dynamic> toJson() => _$StringFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class DateTimeFilter   {
+  const DateTimeFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.not,
   });
 
+  @JsonKey(name: 'equals' )
+  final DateTime? equals;
+  @JsonKey(name: 'in' )
+  final List<DateTime>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<DateTime>? notIn;
+  @JsonKey(name: 'lt' )
+  final DateTime? lt;
+  @JsonKey(name: 'lte' )
+  final DateTime? lte;
+  @JsonKey(name: 'gt' )
+  final DateTime? gt;
+  @JsonKey(name: 'gte' )
+  final DateTime? gte;
+  @JsonKey(name: 'not' )
+  final DateTime? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class IntNullableFilter {
+class BoolFilter   {
+  const BoolFilter({
+  this.equals,
+  this.not,
+  });
+
+  @JsonKey(name: 'equals' )
+  final bool? equals;
+  @JsonKey(name: 'not' )
+  final bool? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class StringNullableFilter   {
+  const StringNullableFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.contains,
+  this.startsWith,
+  this.endsWith,
+  this.not,
+  });
+
+  @JsonKey(name: 'equals' )
+  final String? equals;
+  @JsonKey(name: 'in' )
+  final List<String>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<String>? notIn;
+  @JsonKey(name: 'lt' )
+  final String? lt;
+  @JsonKey(name: 'lte' )
+  final String? lte;
+  @JsonKey(name: 'gt' )
+  final String? gt;
+  @JsonKey(name: 'gte' )
+  final String? gte;
+  @JsonKey(name: 'contains' )
+  final String? contains;
+  @JsonKey(name: 'startsWith' )
+  final String? startsWith;
+  @JsonKey(name: 'endsWith' )
+  final String? endsWith;
+  @JsonKey(name: 'not' )
+  final String? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class UserRelationFilter   {
+  const UserRelationFilter({
+  this.is$,
+  this.isNot,
+  });
+
+  @JsonKey(name: 'is' )
+  final UserWhereInput? is$;
+  @JsonKey(name: 'isNot' )
+  final UserWhereInput? isNot;
+
+List<Entity> toEntity()=>[if(is$ !=null)Entity("is",false,null,is$!.toEntity(),),if(isNot !=null)Entity("isNot",false,null,isNot!.toEntity(),),];
+}
+class IntNullableFilter   {
   const IntNullableFilter({
   this.equals,
   this.in$,
@@ -794,288 +821,129 @@ class IntNullableFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final int?  equals;
+  final int? equals;
   @JsonKey(name: 'in' )
-  final List<int>?  in$;
+  final List<int>? in$;
   @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
+  final List<int>? notIn;
   @JsonKey(name: 'lt' )
-  final int?  lt;
+  final int? lt;
   @JsonKey(name: 'lte' )
-  final int?  lte;
+  final int? lte;
   @JsonKey(name: 'gt' )
-  final int?  gt;
+  final int? gt;
   @JsonKey(name: 'gte' )
-  final int?  gte;
+  final int? gte;
   @JsonKey(name: 'not' )
-  final int?  not;
+  final int? not;
 
-  Map<String, dynamic> toJson() => _$IntNullableFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostListRelationFilter {
-  const PostListRelationFilter({
-  this.every,
-  this.some,
-  this.none,
-  });
-
-  @JsonKey(name: 'every' )
-  final PostWhereInput?  every;
-  @JsonKey(name: 'some' )
-  final PostWhereInput?  some;
-  @JsonKey(name: 'none' )
-  final PostWhereInput?  none;
-
-  Map<String, dynamic> toJson() => _$PostListRelationFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class JsonFilter {
-  const JsonFilter({
-  this.equals,
-  this.path,
-  this.string_contains,
-  this.string_starts_with,
-  this.string_ends_with,
-  this.array_contains,
-  this.array_starts_with,
-  this.array_ends_with,
-  this.lt,
-  this.lte,
-  this.gt,
-  this.gte,
-  this.not,
-  });
-
-  @JsonKey(name: 'equals' )
-  final JsonNullValueFilter?  equals;
-  @JsonKey(name: 'path' )
-  final List<String>?  path;
-  @JsonKey(name: 'string_contains' )
-  final String?  string_contains;
-  @JsonKey(name: 'string_starts_with' )
-  final String?  string_starts_with;
-  @JsonKey(name: 'string_ends_with' )
-  final String?  string_ends_with;
-  @JsonKey(name: 'array_contains' )
-  final Map<String,dynamic>?  array_contains;
-  @JsonKey(name: 'array_starts_with' )
-  final Map<String,dynamic>?  array_starts_with;
-  @JsonKey(name: 'array_ends_with' )
-  final Map<String,dynamic>?  array_ends_with;
-  @JsonKey(name: 'lt' )
-  final Map<String,dynamic>?  lt;
-  @JsonKey(name: 'lte' )
-  final Map<String,dynamic>?  lte;
-  @JsonKey(name: 'gt' )
-  final Map<String,dynamic>?  gt;
-  @JsonKey(name: 'gte' )
-  final Map<String,dynamic>?  gte;
-  @JsonKey(name: 'not' )
-  final JsonNullValueFilter?  not;
-
-  Map<String, dynamic> toJson() => _$JsonFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostOrderByRelationAggregateInput {
-  const PostOrderByRelationAggregateInput({
-  this.$count,
-  });
-
-  @JsonKey(name: '_count' )
-  final SortOrder?  $count;
-
-  Map<String, dynamic> toJson() => _$PostOrderByRelationAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserCountOrderByAggregateInput {
-  const UserCountOrderByAggregateInput({
+class PostCountOrderByAggregateInput   {
+  const PostCountOrderByAggregateInput({
   this.id,
-  this.userName,
-  this.name,
-  this.password,
-  this.resturantId,
-  this.extra,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.userId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'userName' )
-  final SortOrder?  userName;
-  @JsonKey(name: 'name' )
-  final SortOrder?  name;
-  @JsonKey(name: 'password' )
-  final SortOrder?  password;
-  @JsonKey(name: 'resturantId' )
-  final SortOrder?  resturantId;
-  @JsonKey(name: 'extra' )
-  final SortOrder?  extra;
+  final SortOrder? id;
+  @JsonKey(name: 'createdAt' )
+  final SortOrder? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final SortOrder? updatedAt;
+  @JsonKey(name: 'title' )
+  final SortOrder? title;
+  @JsonKey(name: 'published' )
+  final SortOrder? published;
+  @JsonKey(name: 'desc' )
+  final SortOrder? desc;
+  @JsonKey(name: 'userId' )
+  final SortOrder? userId;
 
-  Map<String, dynamic> toJson() => _$UserCountOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),];
+}
+class PostAvgOrderByAggregateInput   {
+  const PostAvgOrderByAggregateInput({
+  this.userId,
   });
 
+  @JsonKey(name: 'userId' )
+  final SortOrder? userId;
+
+List<Entity> toEntity()=>[if(userId !=null)userId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserAvgOrderByAggregateInput {
-  const UserAvgOrderByAggregateInput({
+class PostMaxOrderByAggregateInput   {
+  const PostMaxOrderByAggregateInput({
   this.id,
-  this.resturantId,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.userId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'resturantId' )
-  final SortOrder?  resturantId;
+  final SortOrder? id;
+  @JsonKey(name: 'createdAt' )
+  final SortOrder? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final SortOrder? updatedAt;
+  @JsonKey(name: 'title' )
+  final SortOrder? title;
+  @JsonKey(name: 'published' )
+  final SortOrder? published;
+  @JsonKey(name: 'desc' )
+  final SortOrder? desc;
+  @JsonKey(name: 'userId' )
+  final SortOrder? userId;
 
-  Map<String, dynamic> toJson() => _$UserAvgOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserMaxOrderByAggregateInput {
-  const UserMaxOrderByAggregateInput({
+class PostMinOrderByAggregateInput   {
+  const PostMinOrderByAggregateInput({
   this.id,
-  this.userName,
-  this.name,
-  this.password,
-  this.resturantId,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
+  this.desc,
+  this.userId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'userName' )
-  final SortOrder?  userName;
-  @JsonKey(name: 'name' )
-  final SortOrder?  name;
-  @JsonKey(name: 'password' )
-  final SortOrder?  password;
-  @JsonKey(name: 'resturantId' )
-  final SortOrder?  resturantId;
+  final SortOrder? id;
+  @JsonKey(name: 'createdAt' )
+  final SortOrder? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final SortOrder? updatedAt;
+  @JsonKey(name: 'title' )
+  final SortOrder? title;
+  @JsonKey(name: 'published' )
+  final SortOrder? published;
+  @JsonKey(name: 'desc' )
+  final SortOrder? desc;
+  @JsonKey(name: 'userId' )
+  final SortOrder? userId;
 
-  Map<String, dynamic> toJson() => _$UserMaxOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(createdAt !=null)createdAt!.toEntity(),if(updatedAt !=null)updatedAt!.toEntity(),if(title !=null)title!.toEntity(),if(published !=null)published!.toEntity(),if(desc !=null)desc!.toEntity(),if(userId !=null)userId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserMinOrderByAggregateInput {
-  const UserMinOrderByAggregateInput({
-  this.id,
-  this.userName,
-  this.name,
-  this.password,
-  this.resturantId,
+class PostSumOrderByAggregateInput   {
+  const PostSumOrderByAggregateInput({
+  this.userId,
   });
 
-  @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'userName' )
-  final SortOrder?  userName;
-  @JsonKey(name: 'name' )
-  final SortOrder?  name;
-  @JsonKey(name: 'password' )
-  final SortOrder?  password;
-  @JsonKey(name: 'resturantId' )
-  final SortOrder?  resturantId;
+  @JsonKey(name: 'userId' )
+  final SortOrder? userId;
 
-  Map<String, dynamic> toJson() => _$UserMinOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(userId !=null)userId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserSumOrderByAggregateInput {
-  const UserSumOrderByAggregateInput({
-  this.id,
-  this.resturantId,
-  });
-
-  @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'resturantId' )
-  final SortOrder?  resturantId;
-
-  Map<String, dynamic> toJson() => _$UserSumOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class IntWithAggregatesFilter {
-  const IntWithAggregatesFilter({
-  this.equals,
-  this.in$,
-  this.notIn,
-  this.lt,
-  this.lte,
-  this.gt,
-  this.gte,
-  this.not,
-  this.$count,
-  this.$avg,
-  this.$sum,
-  this.$min,
-  this.$max,
-  });
-
-  @JsonKey(name: 'equals' )
-  final int?  equals;
-  @JsonKey(name: 'in' )
-  final List<int>?  in$;
-  @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
-  @JsonKey(name: 'lt' )
-  final int?  lt;
-  @JsonKey(name: 'lte' )
-  final int?  lte;
-  @JsonKey(name: 'gt' )
-  final int?  gt;
-  @JsonKey(name: 'gte' )
-  final int?  gte;
-  @JsonKey(name: 'not' )
-  final int?  not;
-  @JsonKey(name: '_count' )
-  final NestedIntFilter?  $count;
-  @JsonKey(name: '_avg' )
-  final NestedFloatFilter?  $avg;
-  @JsonKey(name: '_sum' )
-  final NestedIntFilter?  $sum;
-  @JsonKey(name: '_min' )
-  final NestedIntFilter?  $min;
-  @JsonKey(name: '_max' )
-  final NestedIntFilter?  $max;
-
-  Map<String, dynamic> toJson() => _$IntWithAggregatesFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class StringWithAggregatesFilter {
+class StringWithAggregatesFilter   {
   const StringWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1087,7 +955,6 @@ class StringWithAggregatesFilter {
   this.contains,
   this.startsWith,
   this.endsWith,
-  this.mode,
   this.not,
   this.$count,
   this.$min,
@@ -1095,44 +962,148 @@ class StringWithAggregatesFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final String?  equals;
+  final String? equals;
   @JsonKey(name: 'in' )
-  final List<String>?  in$;
+  final List<String>? in$;
   @JsonKey(name: 'notIn' )
-  final List<String>?  notIn;
+  final List<String>? notIn;
   @JsonKey(name: 'lt' )
-  final String?  lt;
+  final String? lt;
   @JsonKey(name: 'lte' )
-  final String?  lte;
+  final String? lte;
   @JsonKey(name: 'gt' )
-  final String?  gt;
+  final String? gt;
   @JsonKey(name: 'gte' )
-  final String?  gte;
+  final String? gte;
   @JsonKey(name: 'contains' )
-  final String?  contains;
+  final String? contains;
   @JsonKey(name: 'startsWith' )
-  final String?  startsWith;
+  final String? startsWith;
   @JsonKey(name: 'endsWith' )
-  final String?  endsWith;
-  @JsonKey(name: 'mode' )
-  final QueryMode?  mode;
+  final String? endsWith;
   @JsonKey(name: 'not' )
-  final String?  not;
+  final String? not;
   @JsonKey(name: '_count' )
-  final NestedIntFilter?  $count;
+  final NestedIntFilter? $count;
   @JsonKey(name: '_min' )
-  final NestedStringFilter?  $min;
+  final NestedStringFilter? $min;
   @JsonKey(name: '_max' )
-  final NestedStringFilter?  $max;
+  final NestedStringFilter? $max;
 
-  Map<String, dynamic> toJson() => _$StringWithAggregatesFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class DateTimeWithAggregatesFilter   {
+  const DateTimeWithAggregatesFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.not,
+  this.$count,
+  this.$min,
+  this.$max,
   });
 
+  @JsonKey(name: 'equals' )
+  final DateTime? equals;
+  @JsonKey(name: 'in' )
+  final List<DateTime>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<DateTime>? notIn;
+  @JsonKey(name: 'lt' )
+  final DateTime? lt;
+  @JsonKey(name: 'lte' )
+  final DateTime? lte;
+  @JsonKey(name: 'gt' )
+  final DateTime? gt;
+  @JsonKey(name: 'gte' )
+  final DateTime? gte;
+  @JsonKey(name: 'not' )
+  final DateTime? not;
+  @JsonKey(name: '_count' )
+  final NestedIntFilter? $count;
+  @JsonKey(name: '_min' )
+  final NestedDateTimeFilter? $min;
+  @JsonKey(name: '_max' )
+  final NestedDateTimeFilter? $max;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class IntNullableWithAggregatesFilter {
+class BoolWithAggregatesFilter   {
+  const BoolWithAggregatesFilter({
+  this.equals,
+  this.not,
+  this.$count,
+  this.$min,
+  this.$max,
+  });
+
+  @JsonKey(name: 'equals' )
+  final bool? equals;
+  @JsonKey(name: 'not' )
+  final bool? not;
+  @JsonKey(name: '_count' )
+  final NestedIntFilter? $count;
+  @JsonKey(name: '_min' )
+  final NestedBoolFilter? $min;
+  @JsonKey(name: '_max' )
+  final NestedBoolFilter? $max;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class StringNullableWithAggregatesFilter   {
+  const StringNullableWithAggregatesFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.contains,
+  this.startsWith,
+  this.endsWith,
+  this.not,
+  this.$count,
+  this.$min,
+  this.$max,
+  });
+
+  @JsonKey(name: 'equals' )
+  final String? equals;
+  @JsonKey(name: 'in' )
+  final List<String>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<String>? notIn;
+  @JsonKey(name: 'lt' )
+  final String? lt;
+  @JsonKey(name: 'lte' )
+  final String? lte;
+  @JsonKey(name: 'gt' )
+  final String? gt;
+  @JsonKey(name: 'gte' )
+  final String? gte;
+  @JsonKey(name: 'contains' )
+  final String? contains;
+  @JsonKey(name: 'startsWith' )
+  final String? startsWith;
+  @JsonKey(name: 'endsWith' )
+  final String? endsWith;
+  @JsonKey(name: 'not' )
+  final String? not;
+  @JsonKey(name: '_count' )
+  final NestedIntNullableFilter? $count;
+  @JsonKey(name: '_min' )
+  final NestedStringNullableFilter? $min;
+  @JsonKey(name: '_max' )
+  final NestedStringNullableFilter? $max;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class IntNullableWithAggregatesFilter   {
   const IntNullableWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1150,536 +1121,185 @@ class IntNullableWithAggregatesFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final int?  equals;
+  final int? equals;
   @JsonKey(name: 'in' )
-  final List<int>?  in$;
+  final List<int>? in$;
   @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
+  final List<int>? notIn;
   @JsonKey(name: 'lt' )
-  final int?  lt;
+  final int? lt;
   @JsonKey(name: 'lte' )
-  final int?  lte;
+  final int? lte;
   @JsonKey(name: 'gt' )
-  final int?  gt;
+  final int? gt;
   @JsonKey(name: 'gte' )
-  final int?  gte;
+  final int? gte;
   @JsonKey(name: 'not' )
-  final int?  not;
+  final int? not;
   @JsonKey(name: '_count' )
-  final NestedIntNullableFilter?  $count;
+  final NestedIntNullableFilter? $count;
   @JsonKey(name: '_avg' )
-  final NestedFloatNullableFilter?  $avg;
+  final NestedFloatNullableFilter? $avg;
   @JsonKey(name: '_sum' )
-  final NestedIntNullableFilter?  $sum;
+  final NestedIntNullableFilter? $sum;
   @JsonKey(name: '_min' )
-  final NestedIntNullableFilter?  $min;
+  final NestedIntNullableFilter? $min;
   @JsonKey(name: '_max' )
-  final NestedIntNullableFilter?  $max;
+  final NestedIntNullableFilter? $max;
 
-  Map<String, dynamic> toJson() => _$IntNullableWithAggregatesFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class JsonWithAggregatesFilter {
-  const JsonWithAggregatesFilter({
+class IntFilter   {
+  const IntFilter({
   this.equals,
-  this.path,
-  this.string_contains,
-  this.string_starts_with,
-  this.string_ends_with,
-  this.array_contains,
-  this.array_starts_with,
-  this.array_ends_with,
+  this.in$,
+  this.notIn,
   this.lt,
   this.lte,
   this.gt,
   this.gte,
   this.not,
+  });
+
+  @JsonKey(name: 'equals' )
+  final int? equals;
+  @JsonKey(name: 'in' )
+  final List<int>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<int>? notIn;
+  @JsonKey(name: 'lt' )
+  final int? lt;
+  @JsonKey(name: 'lte' )
+  final int? lte;
+  @JsonKey(name: 'gt' )
+  final int? gt;
+  @JsonKey(name: 'gte' )
+  final int? gte;
+  @JsonKey(name: 'not' )
+  final int? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class PostListRelationFilter   {
+  const PostListRelationFilter({
+  this.every,
+  this.some,
+  this.none,
+  });
+
+  @JsonKey(name: 'every' )
+  final PostWhereInput? every;
+  @JsonKey(name: 'some' )
+  final PostWhereInput? some;
+  @JsonKey(name: 'none' )
+  final PostWhereInput? none;
+
+List<Entity> toEntity()=>[if(every !=null)Entity("every",false,null,every!.toEntity(),),if(some !=null)Entity("some",false,null,some!.toEntity(),),if(none !=null)Entity("none",false,null,none!.toEntity(),),];
+}
+class PostOrderByRelationAggregateInput   {
+  const PostOrderByRelationAggregateInput({
   this.$count,
-  this.$min,
-  this.$max,
   });
 
-  @JsonKey(name: 'equals' )
-  final JsonNullValueFilter?  equals;
-  @JsonKey(name: 'path' )
-  final List<String>?  path;
-  @JsonKey(name: 'string_contains' )
-  final String?  string_contains;
-  @JsonKey(name: 'string_starts_with' )
-  final String?  string_starts_with;
-  @JsonKey(name: 'string_ends_with' )
-  final String?  string_ends_with;
-  @JsonKey(name: 'array_contains' )
-  final Map<String,dynamic>?  array_contains;
-  @JsonKey(name: 'array_starts_with' )
-  final Map<String,dynamic>?  array_starts_with;
-  @JsonKey(name: 'array_ends_with' )
-  final Map<String,dynamic>?  array_ends_with;
-  @JsonKey(name: 'lt' )
-  final Map<String,dynamic>?  lt;
-  @JsonKey(name: 'lte' )
-  final Map<String,dynamic>?  lte;
-  @JsonKey(name: 'gt' )
-  final Map<String,dynamic>?  gt;
-  @JsonKey(name: 'gte' )
-  final Map<String,dynamic>?  gte;
-  @JsonKey(name: 'not' )
-  final JsonNullValueFilter?  not;
   @JsonKey(name: '_count' )
-  final NestedIntFilter?  $count;
-  @JsonKey(name: '_min' )
-  final NestedJsonFilter?  $min;
-  @JsonKey(name: '_max' )
-  final NestedJsonFilter?  $max;
+  final SortOrder? $count;
 
-  Map<String, dynamic> toJson() => _$JsonWithAggregatesFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if($count !=null)$count!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserRelationFilter {
-  const UserRelationFilter({
-  this.is$,
-  this.isNot,
-  });
-
-  @JsonKey(name: 'is' )
-  final UserWhereInput?  is$;
-  @JsonKey(name: 'isNot' )
-  final UserWhereInput?  isNot;
-
-  Map<String, dynamic> toJson() => _$UserRelationFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostCountOrderByAggregateInput {
-  const PostCountOrderByAggregateInput({
+class UserCountOrderByAggregateInput   {
+  const UserCountOrderByAggregateInput({
   this.id,
+  this.userName,
   this.name,
-  this.desc,
-  this.userId,
+  this.password,
+  this.resturantId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
+  final SortOrder? id;
+  @JsonKey(name: 'userName' )
+  final SortOrder? userName;
   @JsonKey(name: 'name' )
-  final SortOrder?  name;
-  @JsonKey(name: 'desc' )
-  final SortOrder?  desc;
-  @JsonKey(name: 'userId' )
-  final SortOrder?  userId;
+  final SortOrder? name;
+  @JsonKey(name: 'password' )
+  final SortOrder? password;
+  @JsonKey(name: 'resturantId' )
+  final SortOrder? resturantId;
 
-  Map<String, dynamic> toJson() => _$PostCountOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostAvgOrderByAggregateInput {
-  const PostAvgOrderByAggregateInput({
+class UserAvgOrderByAggregateInput   {
+  const UserAvgOrderByAggregateInput({
   this.id,
-  this.userId,
+  this.resturantId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'userId' )
-  final SortOrder?  userId;
+  final SortOrder? id;
+  @JsonKey(name: 'resturantId' )
+  final SortOrder? resturantId;
 
-  Map<String, dynamic> toJson() => _$PostAvgOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostMaxOrderByAggregateInput {
-  const PostMaxOrderByAggregateInput({
+class UserMaxOrderByAggregateInput   {
+  const UserMaxOrderByAggregateInput({
   this.id,
+  this.userName,
   this.name,
-  this.desc,
-  this.userId,
+  this.password,
+  this.resturantId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
+  final SortOrder? id;
+  @JsonKey(name: 'userName' )
+  final SortOrder? userName;
   @JsonKey(name: 'name' )
-  final SortOrder?  name;
-  @JsonKey(name: 'desc' )
-  final SortOrder?  desc;
-  @JsonKey(name: 'userId' )
-  final SortOrder?  userId;
+  final SortOrder? name;
+  @JsonKey(name: 'password' )
+  final SortOrder? password;
+  @JsonKey(name: 'resturantId' )
+  final SortOrder? resturantId;
 
-  Map<String, dynamic> toJson() => _$PostMaxOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostMinOrderByAggregateInput {
-  const PostMinOrderByAggregateInput({
+class UserMinOrderByAggregateInput   {
+  const UserMinOrderByAggregateInput({
   this.id,
+  this.userName,
   this.name,
-  this.desc,
-  this.userId,
+  this.password,
+  this.resturantId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
+  final SortOrder? id;
+  @JsonKey(name: 'userName' )
+  final SortOrder? userName;
   @JsonKey(name: 'name' )
-  final SortOrder?  name;
-  @JsonKey(name: 'desc' )
-  final SortOrder?  desc;
-  @JsonKey(name: 'userId' )
-  final SortOrder?  userId;
+  final SortOrder? name;
+  @JsonKey(name: 'password' )
+  final SortOrder? password;
+  @JsonKey(name: 'resturantId' )
+  final SortOrder? resturantId;
 
-  Map<String, dynamic> toJson() => _$PostMinOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(userName !=null)userName!.toEntity(),if(name !=null)name!.toEntity(),if(password !=null)password!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostSumOrderByAggregateInput {
-  const PostSumOrderByAggregateInput({
+class UserSumOrderByAggregateInput   {
+  const UserSumOrderByAggregateInput({
   this.id,
-  this.userId,
+  this.resturantId,
   });
 
   @JsonKey(name: 'id' )
-  final SortOrder?  id;
-  @JsonKey(name: 'userId' )
-  final SortOrder?  userId;
+  final SortOrder? id;
+  @JsonKey(name: 'resturantId' )
+  final SortOrder? resturantId;
 
-  Map<String, dynamic> toJson() => _$PostSumOrderByAggregateInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)id!.toEntity(),if(resturantId !=null)resturantId!.toEntity(),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class StringFieldUpdateOperationsInput {
-  const StringFieldUpdateOperationsInput({
-  this.set$,
-  });
-
-  @JsonKey(name: 'set' )
-  final String?  set$;
-
-  Map<String, dynamic> toJson() => _$StringFieldUpdateOperationsInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NullableIntFieldUpdateOperationsInput {
-  const NullableIntFieldUpdateOperationsInput({
-  this.set$,
-  this.increment,
-  this.decrement,
-  this.multiply,
-  this.divide,
-  });
-
-  @JsonKey(name: 'set' )
-  final int?  set$;
-  @JsonKey(name: 'increment' )
-  final int?  increment;
-  @JsonKey(name: 'decrement' )
-  final int?  decrement;
-  @JsonKey(name: 'multiply' )
-  final int?  multiply;
-  @JsonKey(name: 'divide' )
-  final int?  divide;
-
-  Map<String, dynamic> toJson() => _$NullableIntFieldUpdateOperationsInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUpdateManyWithoutUserNestedInput {
-  const PostUpdateManyWithoutUserNestedInput({
-  this.create,
-  this.connectOrCreate,
-  this.upsert,
-  this.createMany,
-  this.set$,
-  this.disconnect,
-  this.delete,
-  this.connect,
-  this.update,
-  this.updateMany,
-  this.deleteMany,
-  });
-
-  @JsonKey(name: 'create' )
-  final List<PostCreateWithoutUserInput>?  create;
-  @JsonKey(name: 'connectOrCreate' )
-  final List<PostCreateOrConnectWithoutUserInput>?  connectOrCreate;
-  @JsonKey(name: 'upsert' )
-  final List<PostUpsertWithWhereUniqueWithoutUserInput>?  upsert;
-  @JsonKey(name: 'createMany' )
-  final PostCreateManyUserInputEnvelope?  createMany;
-  @JsonKey(name: 'set' )
-  final List<PostWhereUniqueInput>?  set$;
-  @JsonKey(name: 'disconnect' )
-  final List<PostWhereUniqueInput>?  disconnect;
-  @JsonKey(name: 'delete' )
-  final List<PostWhereUniqueInput>?  delete;
-  @JsonKey(name: 'connect' )
-  final List<PostWhereUniqueInput>?  connect;
-  @JsonKey(name: 'update' )
-  final List<PostUpdateWithWhereUniqueWithoutUserInput>?  update;
-  @JsonKey(name: 'updateMany' )
-  final List<PostUpdateManyWithWhereWithoutUserInput>?  updateMany;
-  @JsonKey(name: 'deleteMany' )
-  final List<PostScalarWhereInput>?  deleteMany;
-
-  Map<String, dynamic> toJson() => _$PostUpdateManyWithoutUserNestedInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class IntFieldUpdateOperationsInput {
-  const IntFieldUpdateOperationsInput({
-  this.set$,
-  this.increment,
-  this.decrement,
-  this.multiply,
-  this.divide,
-  });
-
-  @JsonKey(name: 'set' )
-  final int?  set$;
-  @JsonKey(name: 'increment' )
-  final int?  increment;
-  @JsonKey(name: 'decrement' )
-  final int?  decrement;
-  @JsonKey(name: 'multiply' )
-  final int?  multiply;
-  @JsonKey(name: 'divide' )
-  final int?  divide;
-
-  Map<String, dynamic> toJson() => _$IntFieldUpdateOperationsInputToJson(this)..addAll({
-    '_\$maxNumFields': 1,
-    '_\$minNumFields': 1,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUncheckedUpdateManyWithoutUserNestedInput {
-  const PostUncheckedUpdateManyWithoutUserNestedInput({
-  this.create,
-  this.connectOrCreate,
-  this.upsert,
-  this.createMany,
-  this.set$,
-  this.disconnect,
-  this.delete,
-  this.connect,
-  this.update,
-  this.updateMany,
-  this.deleteMany,
-  });
-
-  @JsonKey(name: 'create' )
-  final List<PostCreateWithoutUserInput>?  create;
-  @JsonKey(name: 'connectOrCreate' )
-  final List<PostCreateOrConnectWithoutUserInput>?  connectOrCreate;
-  @JsonKey(name: 'upsert' )
-  final List<PostUpsertWithWhereUniqueWithoutUserInput>?  upsert;
-  @JsonKey(name: 'createMany' )
-  final PostCreateManyUserInputEnvelope?  createMany;
-  @JsonKey(name: 'set' )
-  final List<PostWhereUniqueInput>?  set$;
-  @JsonKey(name: 'disconnect' )
-  final List<PostWhereUniqueInput>?  disconnect;
-  @JsonKey(name: 'delete' )
-  final List<PostWhereUniqueInput>?  delete;
-  @JsonKey(name: 'connect' )
-  final List<PostWhereUniqueInput>?  connect;
-  @JsonKey(name: 'update' )
-  final List<PostUpdateWithWhereUniqueWithoutUserInput>?  update;
-  @JsonKey(name: 'updateMany' )
-  final List<PostUpdateManyWithWhereWithoutUserInput>?  updateMany;
-  @JsonKey(name: 'deleteMany' )
-  final List<PostScalarWhereInput>?  deleteMany;
-
-  Map<String, dynamic> toJson() => _$PostUncheckedUpdateManyWithoutUserNestedInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserCreateNestedOneWithoutPostInput {
-  const UserCreateNestedOneWithoutPostInput({
-  this.connect,
-  });
-
-  @JsonKey(name: 'connect' )
-  final UserWhereUniqueInput?  connect;
-
-  Map<String, dynamic> toJson() => _$UserCreateNestedOneWithoutPostInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserUpdateOneRequiredWithoutPostNestedInput {
-  const UserUpdateOneRequiredWithoutPostNestedInput({
-  this.connect,
-  this.update,
-  });
-
-  @JsonKey(name: 'connect' )
-  final UserWhereUniqueInput?  connect;
-  @JsonKey(name: 'update' )
-  final UserUpdateWithoutPostInput?  update;
-
-  Map<String, dynamic> toJson() => _$UserUpdateOneRequiredWithoutPostNestedInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedIntFilter {
-  const NestedIntFilter({
-  this.equals,
-  this.in$,
-  this.notIn,
-  this.lt,
-  this.lte,
-  this.gt,
-  this.gte,
-  this.not,
-  });
-
-  @JsonKey(name: 'equals' )
-  final int?  equals;
-  @JsonKey(name: 'in' )
-  final List<int>?  in$;
-  @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
-  @JsonKey(name: 'lt' )
-  final int?  lt;
-  @JsonKey(name: 'lte' )
-  final int?  lte;
-  @JsonKey(name: 'gt' )
-  final int?  gt;
-  @JsonKey(name: 'gte' )
-  final int?  gte;
-  @JsonKey(name: 'not' )
-  final int?  not;
-
-  Map<String, dynamic> toJson() => _$NestedIntFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedStringFilter {
-  const NestedStringFilter({
-  this.equals,
-  this.in$,
-  this.notIn,
-  this.lt,
-  this.lte,
-  this.gt,
-  this.gte,
-  this.contains,
-  this.startsWith,
-  this.endsWith,
-  this.not,
-  });
-
-  @JsonKey(name: 'equals' )
-  final String?  equals;
-  @JsonKey(name: 'in' )
-  final List<String>?  in$;
-  @JsonKey(name: 'notIn' )
-  final List<String>?  notIn;
-  @JsonKey(name: 'lt' )
-  final String?  lt;
-  @JsonKey(name: 'lte' )
-  final String?  lte;
-  @JsonKey(name: 'gt' )
-  final String?  gt;
-  @JsonKey(name: 'gte' )
-  final String?  gte;
-  @JsonKey(name: 'contains' )
-  final String?  contains;
-  @JsonKey(name: 'startsWith' )
-  final String?  startsWith;
-  @JsonKey(name: 'endsWith' )
-  final String?  endsWith;
-  @JsonKey(name: 'not' )
-  final String?  not;
-
-  Map<String, dynamic> toJson() => _$NestedStringFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedIntNullableFilter {
-  const NestedIntNullableFilter({
-  this.equals,
-  this.in$,
-  this.notIn,
-  this.lt,
-  this.lte,
-  this.gt,
-  this.gte,
-  this.not,
-  });
-
-  @JsonKey(name: 'equals' )
-  final int?  equals;
-  @JsonKey(name: 'in' )
-  final List<int>?  in$;
-  @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
-  @JsonKey(name: 'lt' )
-  final int?  lt;
-  @JsonKey(name: 'lte' )
-  final int?  lte;
-  @JsonKey(name: 'gt' )
-  final int?  gt;
-  @JsonKey(name: 'gte' )
-  final int?  gte;
-  @JsonKey(name: 'not' )
-  final int?  not;
-
-  Map<String, dynamic> toJson() => _$NestedIntNullableFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedIntWithAggregatesFilter {
-  const NestedIntWithAggregatesFilter({
+class IntWithAggregatesFilter   {
+  const IntWithAggregatesFilter({
   this.equals,
   this.in$,
   this.notIn,
@@ -1696,41 +1316,310 @@ class NestedIntWithAggregatesFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final int?  equals;
+  final int? equals;
   @JsonKey(name: 'in' )
-  final List<int>?  in$;
+  final List<int>? in$;
   @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
+  final List<int>? notIn;
   @JsonKey(name: 'lt' )
-  final int?  lt;
+  final int? lt;
   @JsonKey(name: 'lte' )
-  final int?  lte;
+  final int? lte;
   @JsonKey(name: 'gt' )
-  final int?  gt;
+  final int? gt;
   @JsonKey(name: 'gte' )
-  final int?  gte;
+  final int? gte;
   @JsonKey(name: 'not' )
-  final int?  not;
+  final int? not;
   @JsonKey(name: '_count' )
-  final NestedIntFilter?  $count;
+  final NestedIntFilter? $count;
   @JsonKey(name: '_avg' )
-  final NestedFloatFilter?  $avg;
+  final NestedFloatFilter? $avg;
   @JsonKey(name: '_sum' )
-  final NestedIntFilter?  $sum;
+  final NestedIntFilter? $sum;
   @JsonKey(name: '_min' )
-  final NestedIntFilter?  $min;
+  final NestedIntFilter? $min;
   @JsonKey(name: '_max' )
-  final NestedIntFilter?  $max;
+  final NestedIntFilter? $max;
 
-  Map<String, dynamic> toJson() => _$NestedIntWithAggregatesFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class UserCreateNestedOneWithoutPostsInput   {
+  const UserCreateNestedOneWithoutPostsInput({
+  this.create,
+  this.connectOrCreate,
+  this.connect,
   });
 
+  @JsonKey(name: 'create' )
+  final UserCreateWithoutPostsInput? create;
+  @JsonKey(name: 'connectOrCreate' )
+  final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
+  @JsonKey(name: 'connect' )
+  final UserWhereUniqueInput? connect;
+
+List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.toEntity(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.toEntity(),),if(connect !=null)Entity("connect",false,null,connect!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedFloatFilter {
-  const NestedFloatFilter({
+class StringFieldUpdateOperationsInput   {
+  const StringFieldUpdateOperationsInput({
+  this.set$,
+  });
+
+  @JsonKey(name: 'set' )
+  final String? set$;
+
+List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
+}
+class DateTimeFieldUpdateOperationsInput   {
+  const DateTimeFieldUpdateOperationsInput({
+  this.set$,
+  });
+
+  @JsonKey(name: 'set' )
+  final DateTime? set$;
+
+List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
+}
+class BoolFieldUpdateOperationsInput   {
+  const BoolFieldUpdateOperationsInput({
+  this.set$,
+  });
+
+  @JsonKey(name: 'set' )
+  final bool? set$;
+
+List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
+}
+class NullableStringFieldUpdateOperationsInput   {
+  const NullableStringFieldUpdateOperationsInput({
+  this.set$,
+  });
+
+  @JsonKey(name: 'set' )
+  final String? set$;
+
+List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),];
+}
+class UserUpdateOneWithoutPostsNestedInput   {
+  const UserUpdateOneWithoutPostsNestedInput({
+  this.create,
+  this.connectOrCreate,
+  this.upsert,
+  this.disconnect,
+  this.delete,
+  this.connect,
+  this.update,
+  });
+
+  @JsonKey(name: 'create' )
+  final UserCreateWithoutPostsInput? create;
+  @JsonKey(name: 'connectOrCreate' )
+  final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
+  @JsonKey(name: 'upsert' )
+  final UserUpsertWithoutPostsInput? upsert;
+  @JsonKey(name: 'disconnect' )
+  final bool? disconnect;
+  @JsonKey(name: 'delete' )
+  final bool? delete;
+  @JsonKey(name: 'connect' )
+  final UserWhereUniqueInput? connect;
+  @JsonKey(name: 'update' )
+  final UserUpdateWithoutPostsInput? update;
+
+List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.toEntity(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.toEntity(),),if(upsert !=null)Entity("upsert",false,null,upsert!.toEntity(),),if(disconnect !=null)Entity("disconnect",true,disconnect!,null,),if(delete !=null)Entity("delete",true,delete!,null,),if(connect !=null)Entity("connect",false,null,connect!.toEntity(),),if(update !=null)Entity("update",false,null,update!.toEntity(),),];
+}
+class NullableIntFieldUpdateOperationsInput   {
+  const NullableIntFieldUpdateOperationsInput({
+  this.set$,
+  this.increment,
+  this.decrement,
+  this.multiply,
+  this.divide,
+  });
+
+  @JsonKey(name: 'set' )
+  final int? set$;
+  @JsonKey(name: 'increment' )
+  final int? increment;
+  @JsonKey(name: 'decrement' )
+  final int? decrement;
+  @JsonKey(name: 'multiply' )
+  final int? multiply;
+  @JsonKey(name: 'divide' )
+  final int? divide;
+
+List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),if(increment !=null)Entity("increment",true,increment!,null,),if(decrement !=null)Entity("decrement",true,decrement!,null,),if(multiply !=null)Entity("multiply",true,multiply!,null,),if(divide !=null)Entity("divide",true,divide!,null,),];
+}
+class PostCreateNestedManyWithoutUserInput   {
+  const PostCreateNestedManyWithoutUserInput({
+  this.create,
+  this.connectOrCreate,
+  this.connect,
+  });
+
+  @JsonKey(name: 'create' )
+  final List<PostCreateWithoutUserInput>? create;
+  @JsonKey(name: 'connectOrCreate' )
+  final List<PostCreateOrConnectWithoutUserInput>? connectOrCreate;
+  @JsonKey(name: 'connect' )
+  final List<PostWhereUniqueInput>? connect;
+
+List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),];
+}
+class PostUncheckedCreateNestedManyWithoutUserInput   {
+  const PostUncheckedCreateNestedManyWithoutUserInput({
+  this.create,
+  this.connectOrCreate,
+  this.connect,
+  });
+
+  @JsonKey(name: 'create' )
+  final List<PostCreateWithoutUserInput>? create;
+  @JsonKey(name: 'connectOrCreate' )
+  final List<PostCreateOrConnectWithoutUserInput>? connectOrCreate;
+  @JsonKey(name: 'connect' )
+  final List<PostWhereUniqueInput>? connect;
+
+List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),];
+}
+class PostUpdateManyWithoutUserNestedInput   {
+  const PostUpdateManyWithoutUserNestedInput({
+  this.create,
+  this.connectOrCreate,
+  this.upsert,
+  this.set$,
+  this.disconnect,
+  this.delete,
+  this.connect,
+  this.update,
+  this.updateMany,
+  this.deleteMany,
+  });
+
+  @JsonKey(name: 'create' )
+  final List<PostCreateWithoutUserInput>? create;
+  @JsonKey(name: 'connectOrCreate' )
+  final List<PostCreateOrConnectWithoutUserInput>? connectOrCreate;
+  @JsonKey(name: 'upsert' )
+  final List<PostUpsertWithWhereUniqueWithoutUserInput>? upsert;
+  @JsonKey(name: 'set' )
+  final List<PostWhereUniqueInput>? set$;
+  @JsonKey(name: 'disconnect' )
+  final List<PostWhereUniqueInput>? disconnect;
+  @JsonKey(name: 'delete' )
+  final List<PostWhereUniqueInput>? delete;
+  @JsonKey(name: 'connect' )
+  final List<PostWhereUniqueInput>? connect;
+  @JsonKey(name: 'update' )
+  final List<PostUpdateWithWhereUniqueWithoutUserInput>? update;
+  @JsonKey(name: 'updateMany' )
+  final List<PostUpdateManyWithWhereWithoutUserInput>? updateMany;
+  @JsonKey(name: 'deleteMany' )
+  final List<PostScalarWhereInput>? deleteMany;
+
+List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(upsert !=null)Entity("upsert",false,null,upsert!.map((e) => Entity("upsert", false, null, e.toEntity())).toList(),),if(set$ !=null)Entity("set",false,null,set$!.map((e) => Entity("set", false, null, e.toEntity())).toList(),),if(disconnect !=null)Entity("disconnect",false,null,disconnect!.map((e) => Entity("disconnect", false, null, e.toEntity())).toList(),),if(delete !=null)Entity("delete",false,null,delete!.map((e) => Entity("delete", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),if(update !=null)Entity("update",false,null,update!.map((e) => Entity("update", false, null, e.toEntity())).toList(),),if(updateMany !=null)Entity("updateMany",false,null,updateMany!.map((e) => Entity("updateMany", false, null, e.toEntity())).toList(),),if(deleteMany !=null)Entity("deleteMany",false,null,deleteMany!.map((e) => Entity("deleteMany", false, null, e.toEntity())).toList(),),];
+}
+class IntFieldUpdateOperationsInput   {
+  const IntFieldUpdateOperationsInput({
+  this.set$,
+  this.increment,
+  this.decrement,
+  this.multiply,
+  this.divide,
+  });
+
+  @JsonKey(name: 'set' )
+  final int? set$;
+  @JsonKey(name: 'increment' )
+  final int? increment;
+  @JsonKey(name: 'decrement' )
+  final int? decrement;
+  @JsonKey(name: 'multiply' )
+  final int? multiply;
+  @JsonKey(name: 'divide' )
+  final int? divide;
+
+List<Entity> toEntity()=>[if(set$ !=null)Entity("set",true,set$!,null,),if(increment !=null)Entity("increment",true,increment!,null,),if(decrement !=null)Entity("decrement",true,decrement!,null,),if(multiply !=null)Entity("multiply",true,multiply!,null,),if(divide !=null)Entity("divide",true,divide!,null,),];
+}
+class PostUncheckedUpdateManyWithoutUserNestedInput   {
+  const PostUncheckedUpdateManyWithoutUserNestedInput({
+  this.create,
+  this.connectOrCreate,
+  this.upsert,
+  this.set$,
+  this.disconnect,
+  this.delete,
+  this.connect,
+  this.update,
+  this.updateMany,
+  this.deleteMany,
+  });
+
+  @JsonKey(name: 'create' )
+  final List<PostCreateWithoutUserInput>? create;
+  @JsonKey(name: 'connectOrCreate' )
+  final List<PostCreateOrConnectWithoutUserInput>? connectOrCreate;
+  @JsonKey(name: 'upsert' )
+  final List<PostUpsertWithWhereUniqueWithoutUserInput>? upsert;
+  @JsonKey(name: 'set' )
+  final List<PostWhereUniqueInput>? set$;
+  @JsonKey(name: 'disconnect' )
+  final List<PostWhereUniqueInput>? disconnect;
+  @JsonKey(name: 'delete' )
+  final List<PostWhereUniqueInput>? delete;
+  @JsonKey(name: 'connect' )
+  final List<PostWhereUniqueInput>? connect;
+  @JsonKey(name: 'update' )
+  final List<PostUpdateWithWhereUniqueWithoutUserInput>? update;
+  @JsonKey(name: 'updateMany' )
+  final List<PostUpdateManyWithWhereWithoutUserInput>? updateMany;
+  @JsonKey(name: 'deleteMany' )
+  final List<PostScalarWhereInput>? deleteMany;
+
+List<Entity> toEntity()=>[if(create !=null)Entity("create",false,null,create!.map((e) => Entity("create", false, null, e.toEntity())).toList(),),if(connectOrCreate !=null)Entity("connectOrCreate",false,null,connectOrCreate!.map((e) => Entity("connectOrCreate", false, null, e.toEntity())).toList(),),if(upsert !=null)Entity("upsert",false,null,upsert!.map((e) => Entity("upsert", false, null, e.toEntity())).toList(),),if(set$ !=null)Entity("set",false,null,set$!.map((e) => Entity("set", false, null, e.toEntity())).toList(),),if(disconnect !=null)Entity("disconnect",false,null,disconnect!.map((e) => Entity("disconnect", false, null, e.toEntity())).toList(),),if(delete !=null)Entity("delete",false,null,delete!.map((e) => Entity("delete", false, null, e.toEntity())).toList(),),if(connect !=null)Entity("connect",false,null,connect!.map((e) => Entity("connect", false, null, e.toEntity())).toList(),),if(update !=null)Entity("update",false,null,update!.map((e) => Entity("update", false, null, e.toEntity())).toList(),),if(updateMany !=null)Entity("updateMany",false,null,updateMany!.map((e) => Entity("updateMany", false, null, e.toEntity())).toList(),),if(deleteMany !=null)Entity("deleteMany",false,null,deleteMany!.map((e) => Entity("deleteMany", false, null, e.toEntity())).toList(),),];
+}
+class NestedStringFilter   {
+  const NestedStringFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.contains,
+  this.startsWith,
+  this.endsWith,
+  this.not,
+  });
+
+  @JsonKey(name: 'equals' )
+  final String? equals;
+  @JsonKey(name: 'in' )
+  final List<String>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<String>? notIn;
+  @JsonKey(name: 'lt' )
+  final String? lt;
+  @JsonKey(name: 'lte' )
+  final String? lte;
+  @JsonKey(name: 'gt' )
+  final String? gt;
+  @JsonKey(name: 'gte' )
+  final String? gte;
+  @JsonKey(name: 'contains' )
+  final String? contains;
+  @JsonKey(name: 'startsWith' )
+  final String? startsWith;
+  @JsonKey(name: 'endsWith' )
+  final String? endsWith;
+  @JsonKey(name: 'not' )
+  final String? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class NestedDateTimeFilter   {
+  const NestedDateTimeFilter({
   this.equals,
   this.in$,
   this.notIn,
@@ -1742,30 +1631,109 @@ class NestedFloatFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final double?  equals;
+  final DateTime? equals;
   @JsonKey(name: 'in' )
-  final List<double>?  in$;
+  final List<DateTime>? in$;
   @JsonKey(name: 'notIn' )
-  final List<double>?  notIn;
+  final List<DateTime>? notIn;
   @JsonKey(name: 'lt' )
-  final double?  lt;
+  final DateTime? lt;
   @JsonKey(name: 'lte' )
-  final double?  lte;
+  final DateTime? lte;
   @JsonKey(name: 'gt' )
-  final double?  gt;
+  final DateTime? gt;
   @JsonKey(name: 'gte' )
-  final double?  gte;
+  final DateTime? gte;
   @JsonKey(name: 'not' )
-  final double?  not;
+  final DateTime? not;
 
-  Map<String, dynamic> toJson() => _$NestedFloatFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class NestedBoolFilter   {
+  const NestedBoolFilter({
+  this.equals,
+  this.not,
   });
 
+  @JsonKey(name: 'equals' )
+  final bool? equals;
+  @JsonKey(name: 'not' )
+  final bool? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedStringWithAggregatesFilter {
+class NestedStringNullableFilter   {
+  const NestedStringNullableFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.contains,
+  this.startsWith,
+  this.endsWith,
+  this.not,
+  });
+
+  @JsonKey(name: 'equals' )
+  final String? equals;
+  @JsonKey(name: 'in' )
+  final List<String>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<String>? notIn;
+  @JsonKey(name: 'lt' )
+  final String? lt;
+  @JsonKey(name: 'lte' )
+  final String? lte;
+  @JsonKey(name: 'gt' )
+  final String? gt;
+  @JsonKey(name: 'gte' )
+  final String? gte;
+  @JsonKey(name: 'contains' )
+  final String? contains;
+  @JsonKey(name: 'startsWith' )
+  final String? startsWith;
+  @JsonKey(name: 'endsWith' )
+  final String? endsWith;
+  @JsonKey(name: 'not' )
+  final String? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class NestedIntNullableFilter   {
+  const NestedIntNullableFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.not,
+  });
+
+  @JsonKey(name: 'equals' )
+  final int? equals;
+  @JsonKey(name: 'in' )
+  final List<int>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<int>? notIn;
+  @JsonKey(name: 'lt' )
+  final int? lt;
+  @JsonKey(name: 'lte' )
+  final int? lte;
+  @JsonKey(name: 'gt' )
+  final int? gt;
+  @JsonKey(name: 'gte' )
+  final int? gte;
+  @JsonKey(name: 'not' )
+  final int? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class NestedStringWithAggregatesFilter   {
   const NestedStringWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1784,42 +1752,179 @@ class NestedStringWithAggregatesFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final String?  equals;
+  final String? equals;
   @JsonKey(name: 'in' )
-  final List<String>?  in$;
+  final List<String>? in$;
   @JsonKey(name: 'notIn' )
-  final List<String>?  notIn;
+  final List<String>? notIn;
   @JsonKey(name: 'lt' )
-  final String?  lt;
+  final String? lt;
   @JsonKey(name: 'lte' )
-  final String?  lte;
+  final String? lte;
   @JsonKey(name: 'gt' )
-  final String?  gt;
+  final String? gt;
   @JsonKey(name: 'gte' )
-  final String?  gte;
+  final String? gte;
   @JsonKey(name: 'contains' )
-  final String?  contains;
+  final String? contains;
   @JsonKey(name: 'startsWith' )
-  final String?  startsWith;
+  final String? startsWith;
   @JsonKey(name: 'endsWith' )
-  final String?  endsWith;
+  final String? endsWith;
   @JsonKey(name: 'not' )
-  final String?  not;
+  final String? not;
   @JsonKey(name: '_count' )
-  final NestedIntFilter?  $count;
+  final NestedIntFilter? $count;
   @JsonKey(name: '_min' )
-  final NestedStringFilter?  $min;
+  final NestedStringFilter? $min;
   @JsonKey(name: '_max' )
-  final NestedStringFilter?  $max;
+  final NestedStringFilter? $max;
 
-  Map<String, dynamic> toJson() => _$NestedStringWithAggregatesFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class NestedIntFilter   {
+  const NestedIntFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.not,
   });
 
+  @JsonKey(name: 'equals' )
+  final int? equals;
+  @JsonKey(name: 'in' )
+  final List<int>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<int>? notIn;
+  @JsonKey(name: 'lt' )
+  final int? lt;
+  @JsonKey(name: 'lte' )
+  final int? lte;
+  @JsonKey(name: 'gt' )
+  final int? gt;
+  @JsonKey(name: 'gte' )
+  final int? gte;
+  @JsonKey(name: 'not' )
+  final int? not;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedIntNullableWithAggregatesFilter {
+class NestedDateTimeWithAggregatesFilter   {
+  const NestedDateTimeWithAggregatesFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.not,
+  this.$count,
+  this.$min,
+  this.$max,
+  });
+
+  @JsonKey(name: 'equals' )
+  final DateTime? equals;
+  @JsonKey(name: 'in' )
+  final List<DateTime>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<DateTime>? notIn;
+  @JsonKey(name: 'lt' )
+  final DateTime? lt;
+  @JsonKey(name: 'lte' )
+  final DateTime? lte;
+  @JsonKey(name: 'gt' )
+  final DateTime? gt;
+  @JsonKey(name: 'gte' )
+  final DateTime? gte;
+  @JsonKey(name: 'not' )
+  final DateTime? not;
+  @JsonKey(name: '_count' )
+  final NestedIntFilter? $count;
+  @JsonKey(name: '_min' )
+  final NestedDateTimeFilter? $min;
+  @JsonKey(name: '_max' )
+  final NestedDateTimeFilter? $max;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class NestedBoolWithAggregatesFilter   {
+  const NestedBoolWithAggregatesFilter({
+  this.equals,
+  this.not,
+  this.$count,
+  this.$min,
+  this.$max,
+  });
+
+  @JsonKey(name: 'equals' )
+  final bool? equals;
+  @JsonKey(name: 'not' )
+  final bool? not;
+  @JsonKey(name: '_count' )
+  final NestedIntFilter? $count;
+  @JsonKey(name: '_min' )
+  final NestedBoolFilter? $min;
+  @JsonKey(name: '_max' )
+  final NestedBoolFilter? $max;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class NestedStringNullableWithAggregatesFilter   {
+  const NestedStringNullableWithAggregatesFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.contains,
+  this.startsWith,
+  this.endsWith,
+  this.not,
+  this.$count,
+  this.$min,
+  this.$max,
+  });
+
+  @JsonKey(name: 'equals' )
+  final String? equals;
+  @JsonKey(name: 'in' )
+  final List<String>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<String>? notIn;
+  @JsonKey(name: 'lt' )
+  final String? lt;
+  @JsonKey(name: 'lte' )
+  final String? lte;
+  @JsonKey(name: 'gt' )
+  final String? gt;
+  @JsonKey(name: 'gte' )
+  final String? gte;
+  @JsonKey(name: 'contains' )
+  final String? contains;
+  @JsonKey(name: 'startsWith' )
+  final String? startsWith;
+  @JsonKey(name: 'endsWith' )
+  final String? endsWith;
+  @JsonKey(name: 'not' )
+  final String? not;
+  @JsonKey(name: '_count' )
+  final NestedIntNullableFilter? $count;
+  @JsonKey(name: '_min' )
+  final NestedStringNullableFilter? $min;
+  @JsonKey(name: '_max' )
+  final NestedStringNullableFilter? $max;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(contains !=null)Entity("contains",true,contains!,null,),if(startsWith !=null)Entity("startsWith",true,startsWith!,null,),if(endsWith !=null)Entity("endsWith",true,endsWith!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
+}
+class NestedIntNullableWithAggregatesFilter   {
   const NestedIntNullableWithAggregatesFilter({
   this.equals,
   this.in$,
@@ -1837,40 +1942,35 @@ class NestedIntNullableWithAggregatesFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final int?  equals;
+  final int? equals;
   @JsonKey(name: 'in' )
-  final List<int>?  in$;
+  final List<int>? in$;
   @JsonKey(name: 'notIn' )
-  final List<int>?  notIn;
+  final List<int>? notIn;
   @JsonKey(name: 'lt' )
-  final int?  lt;
+  final int? lt;
   @JsonKey(name: 'lte' )
-  final int?  lte;
+  final int? lte;
   @JsonKey(name: 'gt' )
-  final int?  gt;
+  final int? gt;
   @JsonKey(name: 'gte' )
-  final int?  gte;
+  final int? gte;
   @JsonKey(name: 'not' )
-  final int?  not;
+  final int? not;
   @JsonKey(name: '_count' )
-  final NestedIntNullableFilter?  $count;
+  final NestedIntNullableFilter? $count;
   @JsonKey(name: '_avg' )
-  final NestedFloatNullableFilter?  $avg;
+  final NestedFloatNullableFilter? $avg;
   @JsonKey(name: '_sum' )
-  final NestedIntNullableFilter?  $sum;
+  final NestedIntNullableFilter? $sum;
   @JsonKey(name: '_min' )
-  final NestedIntNullableFilter?  $min;
+  final NestedIntNullableFilter? $min;
   @JsonKey(name: '_max' )
-  final NestedIntNullableFilter?  $max;
+  final NestedIntNullableFilter? $max;
 
-  Map<String, dynamic> toJson() => _$NestedIntNullableWithAggregatesFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedFloatNullableFilter {
+class NestedFloatNullableFilter   {
   const NestedFloatNullableFilter({
   this.equals,
   this.in$,
@@ -1883,39 +1983,75 @@ class NestedFloatNullableFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final double?  equals;
+  final double? equals;
   @JsonKey(name: 'in' )
-  final List<double>?  in$;
+  final List<double>? in$;
   @JsonKey(name: 'notIn' )
-  final List<double>?  notIn;
+  final List<double>? notIn;
   @JsonKey(name: 'lt' )
-  final double?  lt;
+  final double? lt;
   @JsonKey(name: 'lte' )
-  final double?  lte;
+  final double? lte;
   @JsonKey(name: 'gt' )
-  final double?  gt;
+  final double? gt;
   @JsonKey(name: 'gte' )
-  final double?  gte;
+  final double? gte;
   @JsonKey(name: 'not' )
-  final double?  not;
+  final double? not;
 
-  Map<String, dynamic> toJson() => _$NestedFloatNullableFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
+}
+class NestedIntWithAggregatesFilter   {
+  const NestedIntWithAggregatesFilter({
+  this.equals,
+  this.in$,
+  this.notIn,
+  this.lt,
+  this.lte,
+  this.gt,
+  this.gte,
+  this.not,
+  this.$count,
+  this.$avg,
+  this.$sum,
+  this.$min,
+  this.$max,
   });
 
+  @JsonKey(name: 'equals' )
+  final int? equals;
+  @JsonKey(name: 'in' )
+  final List<int>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<int>? notIn;
+  @JsonKey(name: 'lt' )
+  final int? lt;
+  @JsonKey(name: 'lte' )
+  final int? lte;
+  @JsonKey(name: 'gt' )
+  final int? gt;
+  @JsonKey(name: 'gte' )
+  final int? gte;
+  @JsonKey(name: 'not' )
+  final int? not;
+  @JsonKey(name: '_count' )
+  final NestedIntFilter? $count;
+  @JsonKey(name: '_avg' )
+  final NestedFloatFilter? $avg;
+  @JsonKey(name: '_sum' )
+  final NestedIntFilter? $sum;
+  @JsonKey(name: '_min' )
+  final NestedIntFilter? $min;
+  @JsonKey(name: '_max' )
+  final NestedIntFilter? $max;
+
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),if($count !=null)Entity("_count",false,null,$count!.toEntity(),),if($avg !=null)Entity("_avg",false,null,$avg!.toEntity(),),if($sum !=null)Entity("_sum",false,null,$sum!.toEntity(),),if($min !=null)Entity("_min",false,null,$min!.toEntity(),),if($max !=null)Entity("_max",false,null,$max!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class NestedJsonFilter {
-  const NestedJsonFilter({
+class NestedFloatFilter   {
+  const NestedFloatFilter({
   this.equals,
-  this.path,
-  this.string_contains,
-  this.string_starts_with,
-  this.string_ends_with,
-  this.array_contains,
-  this.array_starts_with,
-  this.array_ends_with,
+  this.in$,
+  this.notIn,
   this.lt,
   this.lte,
   this.gt,
@@ -1924,97 +2060,196 @@ class NestedJsonFilter {
   });
 
   @JsonKey(name: 'equals' )
-  final JsonNullValueFilter?  equals;
-  @JsonKey(name: 'path' )
-  final List<String>?  path;
-  @JsonKey(name: 'string_contains' )
-  final String?  string_contains;
-  @JsonKey(name: 'string_starts_with' )
-  final String?  string_starts_with;
-  @JsonKey(name: 'string_ends_with' )
-  final String?  string_ends_with;
-  @JsonKey(name: 'array_contains' )
-  final Map<String,dynamic>?  array_contains;
-  @JsonKey(name: 'array_starts_with' )
-  final Map<String,dynamic>?  array_starts_with;
-  @JsonKey(name: 'array_ends_with' )
-  final Map<String,dynamic>?  array_ends_with;
+  final double? equals;
+  @JsonKey(name: 'in' )
+  final List<double>? in$;
+  @JsonKey(name: 'notIn' )
+  final List<double>? notIn;
   @JsonKey(name: 'lt' )
-  final Map<String,dynamic>?  lt;
+  final double? lt;
   @JsonKey(name: 'lte' )
-  final Map<String,dynamic>?  lte;
+  final double? lte;
   @JsonKey(name: 'gt' )
-  final Map<String,dynamic>?  gt;
+  final double? gt;
   @JsonKey(name: 'gte' )
-  final Map<String,dynamic>?  gte;
+  final double? gte;
   @JsonKey(name: 'not' )
-  final JsonNullValueFilter?  not;
+  final double? not;
 
-  Map<String, dynamic> toJson() => _$NestedJsonFilterToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(equals !=null)Entity("equals",true,equals!,null,),if(in$ !=null)Entity("in",true,in$!,null,),if(notIn !=null)Entity("notIn",true,notIn!,null,),if(lt !=null)Entity("lt",true,lt!,null,),if(lte !=null)Entity("lte",true,lte!,null,),if(gt !=null)Entity("gt",true,gt!,null,),if(gte !=null)Entity("gte",true,gte!,null,),if(not !=null)Entity("not",true,not!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostCreateWithoutUserInput {
-  const PostCreateWithoutUserInput({
+class UserCreateWithoutPostsInput   {
+  const UserCreateWithoutPostsInput({
+ required this.userName,
  required this.name,
- required this.desc,
+ required this.password,
+  this.resturantId,
   });
 
+  @JsonKey(name: 'userName' )
+  final String userName;
   @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
+  final String name;
+  @JsonKey(name: 'password' )
+  final String password;
+  @JsonKey(name: 'resturantId' )
+  final int? resturantId;
 
-  Map<String, dynamic> toJson() => _$PostCreateWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUncheckedCreateWithoutUserInput {
-  const PostUncheckedCreateWithoutUserInput({
+class UserUncheckedCreateWithoutPostsInput   {
+  const UserUncheckedCreateWithoutPostsInput({
   this.id,
+ required this.userName,
  required this.name,
- required this.desc,
+ required this.password,
+  this.resturantId,
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
+  final int? id;
+  @JsonKey(name: 'userName' )
+  final String userName;
   @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
+  final String name;
+  @JsonKey(name: 'password' )
+  final String password;
+  @JsonKey(name: 'resturantId' )
+  final int? resturantId;
 
-  Map<String, dynamic> toJson() => _$PostUncheckedCreateWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),Entity("userName",true,userName,null,),Entity("name",true,name,null,),Entity("password",true,password,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
+}
+class UserCreateOrConnectWithoutPostsInput   {
+  const UserCreateOrConnectWithoutPostsInput({
+ required this.where,
+ required this.create,
   });
 
+  @JsonKey(name: 'where' )
+  final UserWhereUniqueInput where;
+  @JsonKey(name: 'create' )
+  final UserCreateWithoutPostsInput create;
+
+List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("create",false,null,create.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostCreateOrConnectWithoutUserInput {
+class UserUpsertWithoutPostsInput   {
+  const UserUpsertWithoutPostsInput({
+ required this.update,
+ required this.create,
+  });
+
+  @JsonKey(name: 'update' )
+  final UserUpdateWithoutPostsInput update;
+  @JsonKey(name: 'create' )
+  final UserCreateWithoutPostsInput create;
+
+List<Entity> toEntity()=>[Entity("update",false,null,update.toEntity(),),Entity("create",false,null,create.toEntity(),),];
+}
+class UserUpdateWithoutPostsInput   {
+  const UserUpdateWithoutPostsInput({
+  this.userName,
+  this.name,
+  this.password,
+  this.resturantId,
+  });
+
+  @JsonKey(name: 'userName' )
+  final String? userName;
+  @JsonKey(name: 'name' )
+  final String? name;
+  @JsonKey(name: 'password' )
+  final String? password;
+  @JsonKey(name: 'resturantId' )
+  final int? resturantId;
+
+List<Entity> toEntity()=>[if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
+}
+class UserUncheckedUpdateWithoutPostsInput   {
+  const UserUncheckedUpdateWithoutPostsInput({
+  this.id,
+  this.userName,
+  this.name,
+  this.password,
+  this.resturantId,
+  });
+
+  @JsonKey(name: 'id' )
+  final int? id;
+  @JsonKey(name: 'userName' )
+  final String? userName;
+  @JsonKey(name: 'name' )
+  final String? name;
+  @JsonKey(name: 'password' )
+  final String? password;
+  @JsonKey(name: 'resturantId' )
+  final int? resturantId;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(userName !=null)Entity("userName",true,userName!,null,),if(name !=null)Entity("name",true,name!,null,),if(password !=null)Entity("password",true,password!,null,),if(resturantId !=null)Entity("resturantId",true,resturantId!,null,),];
+}
+class PostCreateWithoutUserInput   {
+  const PostCreateWithoutUserInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+ required this.title,
+ required this.published,
+  this.desc,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String title;
+  @JsonKey(name: 'published' )
+  final bool published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
+}
+class PostUncheckedCreateWithoutUserInput   {
+  const PostUncheckedCreateWithoutUserInput({
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+ required this.title,
+ required this.published,
+  this.desc,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String title;
+  @JsonKey(name: 'published' )
+  final bool published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),Entity("title",true,title,null,),Entity("published",true,published,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
+}
+class PostCreateOrConnectWithoutUserInput   {
   const PostCreateOrConnectWithoutUserInput({
  required this.where,
  required this.create,
   });
 
   @JsonKey(name: 'where' )
-  final PostWhereUniqueInput  where;
+  final PostWhereUniqueInput where;
   @JsonKey(name: 'create' )
-  final PostCreateWithoutUserInput  create;
+  final PostCreateWithoutUserInput create;
 
-  Map<String, dynamic> toJson() => _$PostCreateOrConnectWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("create",false,null,create.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUpsertWithWhereUniqueWithoutUserInput {
+class PostUpsertWithWhereUniqueWithoutUserInput   {
   const PostUpsertWithWhereUniqueWithoutUserInput({
  required this.where,
  required this.update,
@@ -2022,246 +2257,226 @@ class PostUpsertWithWhereUniqueWithoutUserInput {
   });
 
   @JsonKey(name: 'where' )
-  final PostWhereUniqueInput  where;
+  final PostWhereUniqueInput where;
   @JsonKey(name: 'update' )
-  final PostUpdateWithoutUserInput  update;
+  final PostUpdateWithoutUserInput update;
   @JsonKey(name: 'create' )
-  final PostCreateWithoutUserInput  create;
+  final PostCreateWithoutUserInput create;
 
-  Map<String, dynamic> toJson() => _$PostUpsertWithWhereUniqueWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("update",false,null,update.toEntity(),),Entity("create",false,null,create.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostCreateManyUserInputEnvelope {
-  const PostCreateManyUserInputEnvelope({
- required this.data,
-  this.skipDuplicates,
-  });
-
-  @JsonKey(name: 'data' )
-  final List<PostCreateManyUserInput>  data;
-  @JsonKey(name: 'skipDuplicates' )
-  final bool?  skipDuplicates;
-
-  Map<String, dynamic> toJson() => _$PostCreateManyUserInputEnvelopeToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUpdateWithWhereUniqueWithoutUserInput {
+class PostUpdateWithWhereUniqueWithoutUserInput   {
   const PostUpdateWithWhereUniqueWithoutUserInput({
  required this.where,
  required this.data,
   });
 
   @JsonKey(name: 'where' )
-  final PostWhereUniqueInput  where;
+  final PostWhereUniqueInput where;
   @JsonKey(name: 'data' )
-  final PostUpdateWithoutUserInput  data;
+  final PostUpdateWithoutUserInput data;
 
-  Map<String, dynamic> toJson() => _$PostUpdateWithWhereUniqueWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("data",false,null,data.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUpdateManyWithWhereWithoutUserInput {
+class PostUpdateManyWithWhereWithoutUserInput   {
   const PostUpdateManyWithWhereWithoutUserInput({
  required this.where,
  required this.data,
   });
 
   @JsonKey(name: 'where' )
-  final PostScalarWhereInput  where;
+  final PostScalarWhereInput where;
   @JsonKey(name: 'data' )
-  final PostUpdateManyMutationInput  data;
+  final PostUpdateManyMutationInput data;
 
-  Map<String, dynamic> toJson() => _$PostUpdateManyWithWhereWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[Entity("where",false,null,where.toEntity(),),Entity("data",false,null,data.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostScalarWhereInput {
+class PostScalarWhereInput   {
   const PostScalarWhereInput({
   this.aND,
   this.oR,
   this.nOT,
   this.id,
-  this.name,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
   this.desc,
   this.userId,
   });
 
   @JsonKey(name: 'AND' )
-  final List<PostScalarWhereInput>?  aND;
+  final List<PostScalarWhereInput>? aND;
   @JsonKey(name: 'OR' )
-  final List<PostScalarWhereInput>?  oR;
+  final List<PostScalarWhereInput>? oR;
   @JsonKey(name: 'NOT' )
-  final List<PostScalarWhereInput>?  nOT;
+  final List<PostScalarWhereInput>? nOT;
   @JsonKey(name: 'id' )
-  final IntFilter?  id;
-  @JsonKey(name: 'name' )
-  final StringFilter?  name;
+  final StringFilter? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTimeFilter? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTimeFilter? updatedAt;
+  @JsonKey(name: 'title' )
+  final StringFilter? title;
+  @JsonKey(name: 'published' )
+  final BoolFilter? published;
   @JsonKey(name: 'desc' )
-  final StringFilter?  desc;
+  final StringNullableFilter? desc;
   @JsonKey(name: 'userId' )
-  final IntFilter?  userId;
+  final IntNullableFilter? userId;
 
-  Map<String, dynamic> toJson() => _$PostScalarWhereInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(aND !=null)Entity("AND",false,null,aND!.map((e) => Entity("AND", false, null, e.toEntity())).toList(),),if(oR !=null)Entity("OR",false,null,oR!.map((e) => Entity("OR", false, null, e.toEntity())).toList(),),if(nOT !=null)Entity("NOT",false,null,nOT!.map((e) => Entity("NOT", false, null, e.toEntity())).toList(),),if(id !=null)Entity("id",false,null,id!.toEntity(),),if(createdAt !=null)Entity("createdAt",false,null,createdAt!.toEntity(),),if(updatedAt !=null)Entity("updatedAt",false,null,updatedAt!.toEntity(),),if(title !=null)Entity("title",false,null,title!.toEntity(),),if(published !=null)Entity("published",false,null,published!.toEntity(),),if(desc !=null)Entity("desc",false,null,desc!.toEntity(),),if(userId !=null)Entity("userId",false,null,userId!.toEntity(),),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserUpdateWithoutPostInput {
-  const UserUpdateWithoutPostInput({
-  this.userName,
-  this.name,
-  this.password,
-  this.resturantId,
-  this.extra,
-  });
-
-  @JsonKey(name: 'userName' )
-  final String?  userName;
-  @JsonKey(name: 'name' )
-  final String?  name;
-  @JsonKey(name: 'password' )
-  final String?  password;
-  @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'extra' )
-  final JsonNullValueInput?  extra;
-
-  Map<String, dynamic> toJson() => _$UserUpdateWithoutPostInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class UserUncheckedUpdateWithoutPostInput {
-  const UserUncheckedUpdateWithoutPostInput({
-  this.id,
-  this.userName,
-  this.name,
-  this.password,
-  this.resturantId,
-  this.extra,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'userName' )
-  final String?  userName;
-  @JsonKey(name: 'name' )
-  final String?  name;
-  @JsonKey(name: 'password' )
-  final String?  password;
-  @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'extra' )
-  final JsonNullValueInput?  extra;
-
-  Map<String, dynamic> toJson() => _$UserUncheckedUpdateWithoutPostInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUpdateWithoutUserInput {
+class PostUpdateWithoutUserInput   {
   const PostUpdateWithoutUserInput({
-  this.name,
+  this.id,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
   this.desc,
   });
 
-  @JsonKey(name: 'name' )
-  final String?  name;
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
   @JsonKey(name: 'desc' )
-  final String?  desc;
+  final String? desc;
 
-  Map<String, dynamic> toJson() => _$PostUpdateWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUncheckedUpdateWithoutUserInput {
+class PostUncheckedUpdateWithoutUserInput   {
   const PostUncheckedUpdateWithoutUserInput({
   this.id,
-  this.name,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
   this.desc,
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String?  name;
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
   @JsonKey(name: 'desc' )
-  final String?  desc;
+  final String? desc;
 
-  Map<String, dynamic> toJson() => _$PostUncheckedUpdateWithoutUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostCreateManyUserInput {
-  const PostCreateManyUserInput({
+class PostUncheckedUpdateManyWithoutPostsInput   {
+  const PostUncheckedUpdateManyWithoutPostsInput({
   this.id,
- required this.name,
- required this.desc,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
-
-  Map<String, dynamic> toJson() => _$PostCreateManyUserInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)
-class PostUncheckedUpdateManyWithoutPostInput {
-  const PostUncheckedUpdateManyWithoutPostInput({
-  this.id,
-  this.name,
+  this.createdAt,
+  this.updatedAt,
+  this.title,
+  this.published,
   this.desc,
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String?  name;
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
   @JsonKey(name: 'desc' )
-  final String?  desc;
+  final String? desc;
 
-  Map<String, dynamic> toJson() => _$PostUncheckedUpdateManyWithoutPostInputToJson(this)..addAll({
-    '_\$maxNumFields': null,
-    '_\$minNumFields': null,
-  });
-
+List<Entity> toEntity()=>[if(id !=null)Entity("id",true,id!,null,),if(createdAt !=null)Entity("createdAt",true,createdAt!,null,),if(updatedAt !=null)Entity("updatedAt",true,updatedAt!,null,),if(title !=null)Entity("title",true,title!,null,),if(published !=null)Entity("published",true,published!,null,),if(desc !=null)Entity("desc",true,desc!,null,),];
 }
 
 
 
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class AggregatePost {
+  const AggregatePost({
+     this.$count,
+     this.$avg,
+     this.$sum,
+     this.$min,
+     this.$max,
+  });
+
+  @JsonKey(name: '_count' )
+  final PostCountAggregateOutputType? $count;
+  @JsonKey(name: '_avg' )
+  final PostAvgAggregateOutputType? $avg;
+  @JsonKey(name: '_sum' )
+  final PostSumAggregateOutputType? $sum;
+  @JsonKey(name: '_min' )
+  final PostMinAggregateOutputType? $min;
+  @JsonKey(name: '_max' )
+  final PostMaxAggregateOutputType? $max;
+
+  factory AggregatePost.fromJson(Map<String, dynamic> json) =>
+    _$AggregatePostFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class PostGroupByOutputType {
+  const PostGroupByOutputType({
+   required  this.id,
+   required  this.createdAt,
+   required  this.updatedAt,
+   required  this.title,
+   required  this.published,
+     this.desc,
+     this.userId,
+     this.$count,
+     this.$avg,
+     this.$sum,
+     this.$min,
+     this.$max,
+  });
+
+  @JsonKey(name: 'id' )
+  final String id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime updatedAt;
+  @JsonKey(name: 'title' )
+  final String title;
+  @JsonKey(name: 'published' )
+  final bool published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+  @JsonKey(name: 'userId' )
+  final int? userId;
+  @JsonKey(name: '_count' )
+  final PostCountAggregateOutputType? $count;
+  @JsonKey(name: '_avg' )
+  final PostAvgAggregateOutputType? $avg;
+  @JsonKey(name: '_sum' )
+  final PostSumAggregateOutputType? $sum;
+  @JsonKey(name: '_min' )
+  final PostMinAggregateOutputType? $min;
+  @JsonKey(name: '_max' )
+  final PostMaxAggregateOutputType? $max;
+
+  factory PostGroupByOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostGroupByOutputTypeFromJson(json);
+
+}
 @JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class AggregateUser {
   const AggregateUser({
@@ -2273,15 +2488,15 @@ class AggregateUser {
   });
 
   @JsonKey(name: '_count' )
-  final UserCountAggregateOutputType?  $count;
+  final UserCountAggregateOutputType? $count;
   @JsonKey(name: '_avg' )
-  final UserAvgAggregateOutputType?  $avg;
+  final UserAvgAggregateOutputType? $avg;
   @JsonKey(name: '_sum' )
-  final UserSumAggregateOutputType?  $sum;
+  final UserSumAggregateOutputType? $sum;
   @JsonKey(name: '_min' )
-  final UserMinAggregateOutputType?  $min;
+  final UserMinAggregateOutputType? $min;
   @JsonKey(name: '_max' )
-  final UserMaxAggregateOutputType?  $max;
+  final UserMaxAggregateOutputType? $max;
 
   factory AggregateUser.fromJson(Map<String, dynamic> json) =>
     _$AggregateUserFromJson(json);
@@ -2295,7 +2510,6 @@ class UserGroupByOutputType {
    required  this.name,
    required  this.password,
      this.resturantId,
-   required  this.extra,
      this.$count,
      this.$avg,
      this.$sum,
@@ -2304,92 +2518,28 @@ class UserGroupByOutputType {
   });
 
   @JsonKey(name: 'id' )
-  final int  id;
+  final int id;
   @JsonKey(name: 'userName' )
-  final String  userName;
+  final String userName;
   @JsonKey(name: 'name' )
-  final String  name;
+  final String name;
   @JsonKey(name: 'password' )
-  final String  password;
+  final String password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'extra' )
-  final Map<String,dynamic>  extra;
+  final int? resturantId;
   @JsonKey(name: '_count' )
-  final UserCountAggregateOutputType?  $count;
+  final UserCountAggregateOutputType? $count;
   @JsonKey(name: '_avg' )
-  final UserAvgAggregateOutputType?  $avg;
+  final UserAvgAggregateOutputType? $avg;
   @JsonKey(name: '_sum' )
-  final UserSumAggregateOutputType?  $sum;
+  final UserSumAggregateOutputType? $sum;
   @JsonKey(name: '_min' )
-  final UserMinAggregateOutputType?  $min;
+  final UserMinAggregateOutputType? $min;
   @JsonKey(name: '_max' )
-  final UserMaxAggregateOutputType?  $max;
+  final UserMaxAggregateOutputType? $max;
 
   factory UserGroupByOutputType.fromJson(Map<String, dynamic> json) =>
     _$UserGroupByOutputTypeFromJson(json);
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class AggregatePost {
-  const AggregatePost({
-     this.$count,
-     this.$avg,
-     this.$sum,
-     this.$min,
-     this.$max,
-  });
-
-  @JsonKey(name: '_count' )
-  final PostCountAggregateOutputType?  $count;
-  @JsonKey(name: '_avg' )
-  final PostAvgAggregateOutputType?  $avg;
-  @JsonKey(name: '_sum' )
-  final PostSumAggregateOutputType?  $sum;
-  @JsonKey(name: '_min' )
-  final PostMinAggregateOutputType?  $min;
-  @JsonKey(name: '_max' )
-  final PostMaxAggregateOutputType?  $max;
-
-  factory AggregatePost.fromJson(Map<String, dynamic> json) =>
-    _$AggregatePostFromJson(json);
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class PostGroupByOutputType {
-  const PostGroupByOutputType({
-   required  this.id,
-   required  this.name,
-   required  this.desc,
-   required  this.userId,
-     this.$count,
-     this.$avg,
-     this.$sum,
-     this.$min,
-     this.$max,
-  });
-
-  @JsonKey(name: 'id' )
-  final int  id;
-  @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
-  @JsonKey(name: 'userId' )
-  final int  userId;
-  @JsonKey(name: '_count' )
-  final PostCountAggregateOutputType?  $count;
-  @JsonKey(name: '_avg' )
-  final PostAvgAggregateOutputType?  $avg;
-  @JsonKey(name: '_sum' )
-  final PostSumAggregateOutputType?  $sum;
-  @JsonKey(name: '_min' )
-  final PostMinAggregateOutputType?  $min;
-  @JsonKey(name: '_max' )
-  final PostMaxAggregateOutputType?  $max;
-
-  factory PostGroupByOutputType.fromJson(Map<String, dynamic> json) =>
-    _$PostGroupByOutputTypeFromJson(json);
 
 }
 @JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
@@ -2399,20 +2549,142 @@ class AffectedRowsOutput {
   });
 
   @JsonKey(name: 'count' )
-  final int  count;
+  final int count;
 
   factory AffectedRowsOutput.fromJson(Map<String, dynamic> json) =>
     _$AffectedRowsOutputFromJson(json);
 
 }
 @JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class UserCountOutputType {
-  const UserCountOutputType({
-   required  this.post,
+class PostCountAggregateOutputType {
+  const PostCountAggregateOutputType({
+   required  this.id,
+   required  this.createdAt,
+   required  this.updatedAt,
+   required  this.title,
+   required  this.published,
+   required  this.desc,
+   required  this.userId,
+   required  this.$all,
   });
 
-  @JsonKey(name: 'Post' )
-  final int  post;
+  @JsonKey(name: 'id' )
+  final int id;
+  @JsonKey(name: 'createdAt' )
+  final int createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final int updatedAt;
+  @JsonKey(name: 'title' )
+  final int title;
+  @JsonKey(name: 'published' )
+  final int published;
+  @JsonKey(name: 'desc' )
+  final int desc;
+  @JsonKey(name: 'userId' )
+  final int userId;
+  @JsonKey(name: '_all' )
+  final int $all;
+
+  factory PostCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostCountAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class PostAvgAggregateOutputType {
+  const PostAvgAggregateOutputType({
+     this.userId,
+  });
+
+  @JsonKey(name: 'userId' )
+  final double? userId;
+
+  factory PostAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostAvgAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class PostSumAggregateOutputType {
+  const PostSumAggregateOutputType({
+     this.userId,
+  });
+
+  @JsonKey(name: 'userId' )
+  final int? userId;
+
+  factory PostSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostSumAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class PostMinAggregateOutputType {
+  const PostMinAggregateOutputType({
+     this.id,
+     this.createdAt,
+     this.updatedAt,
+     this.title,
+     this.published,
+     this.desc,
+     this.userId,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+  @JsonKey(name: 'userId' )
+  final int? userId;
+
+  factory PostMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostMinAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class PostMaxAggregateOutputType {
+  const PostMaxAggregateOutputType({
+     this.id,
+     this.createdAt,
+     this.updatedAt,
+     this.title,
+     this.published,
+     this.desc,
+     this.userId,
+  });
+
+  @JsonKey(name: 'id' )
+  final String? id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime? updatedAt;
+  @JsonKey(name: 'title' )
+  final String? title;
+  @JsonKey(name: 'published' )
+  final bool? published;
+  @JsonKey(name: 'desc' )
+  final String? desc;
+  @JsonKey(name: 'userId' )
+  final int? userId;
+
+  factory PostMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+    _$PostMaxAggregateOutputTypeFromJson(json);
+
+}
+@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
+class UserCountOutputType {
+  const UserCountOutputType({
+   required  this.posts,
+  });
+
+  @JsonKey(name: 'posts' )
+  final int posts;
 
   factory UserCountOutputType.fromJson(Map<String, dynamic> json) =>
     _$UserCountOutputTypeFromJson(json);
@@ -2426,24 +2698,21 @@ class UserCountAggregateOutputType {
    required  this.name,
    required  this.password,
    required  this.resturantId,
-   required  this.extra,
    required  this.$all,
   });
 
   @JsonKey(name: 'id' )
-  final int  id;
+  final int id;
   @JsonKey(name: 'userName' )
-  final int  userName;
+  final int userName;
   @JsonKey(name: 'name' )
-  final int  name;
+  final int name;
   @JsonKey(name: 'password' )
-  final int  password;
+  final int password;
   @JsonKey(name: 'resturantId' )
-  final int  resturantId;
-  @JsonKey(name: 'extra' )
-  final int  extra;
+  final int resturantId;
   @JsonKey(name: '_all' )
-  final int  $all;
+  final int $all;
 
   factory UserCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
     _$UserCountAggregateOutputTypeFromJson(json);
@@ -2457,9 +2726,9 @@ class UserAvgAggregateOutputType {
   });
 
   @JsonKey(name: 'id' )
-  final double?  id;
+  final double? id;
   @JsonKey(name: 'resturantId' )
-  final double?  resturantId;
+  final double? resturantId;
 
   factory UserAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
     _$UserAvgAggregateOutputTypeFromJson(json);
@@ -2473,9 +2742,9 @@ class UserSumAggregateOutputType {
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
+  final int? id;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
+  final int? resturantId;
 
   factory UserSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
     _$UserSumAggregateOutputTypeFromJson(json);
@@ -2492,15 +2761,15 @@ class UserMinAggregateOutputType {
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
+  final int? id;
   @JsonKey(name: 'userName' )
-  final String?  userName;
+  final String? userName;
   @JsonKey(name: 'name' )
-  final String?  name;
+  final String? name;
   @JsonKey(name: 'password' )
-  final String?  password;
+  final String? password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
+  final int? resturantId;
 
   factory UserMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
     _$UserMinAggregateOutputTypeFromJson(json);
@@ -2517,122 +2786,55 @@ class UserMaxAggregateOutputType {
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
+  final int? id;
   @JsonKey(name: 'userName' )
-  final String?  userName;
+  final String? userName;
   @JsonKey(name: 'name' )
-  final String?  name;
+  final String? name;
   @JsonKey(name: 'password' )
-  final String?  password;
+  final String? password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
+  final int? resturantId;
 
   factory UserMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
     _$UserMaxAggregateOutputTypeFromJson(json);
 
 }
+
 @JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class PostCountAggregateOutputType {
-  const PostCountAggregateOutputType({
+class Post {
+  const Post({
    required  this.id,
-   required  this.name,
-   required  this.desc,
-   required  this.userId,
-   required  this.$all,
-  });
-
-  @JsonKey(name: 'id' )
-  final int  id;
-  @JsonKey(name: 'name' )
-  final int  name;
-  @JsonKey(name: 'desc' )
-  final int  desc;
-  @JsonKey(name: 'userId' )
-  final int  userId;
-  @JsonKey(name: '_all' )
-  final int  $all;
-
-  factory PostCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-    _$PostCountAggregateOutputTypeFromJson(json);
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class PostAvgAggregateOutputType {
-  const PostAvgAggregateOutputType({
-     this.id,
-     this.userId,
-  });
-
-  @JsonKey(name: 'id' )
-  final double?  id;
-  @JsonKey(name: 'userId' )
-  final double?  userId;
-
-  factory PostAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-    _$PostAvgAggregateOutputTypeFromJson(json);
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class PostSumAggregateOutputType {
-  const PostSumAggregateOutputType({
-     this.id,
-     this.userId,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'userId' )
-  final int?  userId;
-
-  factory PostSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-    _$PostSumAggregateOutputTypeFromJson(json);
-
-}
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class PostMinAggregateOutputType {
-  const PostMinAggregateOutputType({
-     this.id,
-     this.name,
+   required  this.createdAt,
+   required  this.updatedAt,
+   required  this.title,
+   required  this.published,
      this.desc,
+     this.user,
      this.userId,
   });
 
   @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String?  name;
+  final String id;
+  @JsonKey(name: 'createdAt' )
+  final DateTime createdAt;
+  @JsonKey(name: 'updatedAt' )
+  final DateTime updatedAt;
+  @JsonKey(name: 'title' )
+  final String title;
+  @JsonKey(name: 'published' )
+  final bool published;
   @JsonKey(name: 'desc' )
-  final String?  desc;
+  final String? desc;
+  @JsonKey(name: 'User' )
+  final User? user;
   @JsonKey(name: 'userId' )
-  final int?  userId;
+  final int? userId;
 
-  factory PostMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-    _$PostMinAggregateOutputTypeFromJson(json);
+  factory Post.fromJson(Map<String, dynamic> json) =>
+    _$PostFromJson(json);
 
 }
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class PostMaxAggregateOutputType {
-  const PostMaxAggregateOutputType({
-     this.id,
-     this.name,
-     this.desc,
-     this.userId,
-  });
-
-  @JsonKey(name: 'id' )
-  final int?  id;
-  @JsonKey(name: 'name' )
-  final String?  name;
-  @JsonKey(name: 'desc' )
-  final String?  desc;
-  @JsonKey(name: 'userId' )
-  final int?  userId;
-
-  factory PostMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-    _$PostMaxAggregateOutputTypeFromJson(json);
-
-}
-
 @JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
 class User {
   const User({
@@ -2641,180 +2843,350 @@ class User {
    required  this.name,
    required  this.password,
      this.resturantId,
-     this.post,
-   required  this.extra,
+     this.posts,
    required  this.$count,
   });
 
   @JsonKey(name: 'id' )
-  final int  id;
+  final int id;
   @JsonKey(name: 'userName' )
-  final String  userName;
+  final String userName;
   @JsonKey(name: 'name' )
-  final String  name;
+  final String name;
   @JsonKey(name: 'password' )
-  final String  password;
+  final String password;
   @JsonKey(name: 'resturantId' )
-  final int?  resturantId;
-  @JsonKey(name: 'Post' )
-  final List<Post>?  post;
-  @JsonKey(name: 'extra' )
-  final Map<String,dynamic>  extra;
+  final int? resturantId;
+  @JsonKey(name: 'posts' )
+  final List<Post>? posts;
   @JsonKey(name: '_count' )
-  final UserCountOutputType  $count;
+  final UserCountOutputType $count;
 
   factory User.fromJson(Map<String, dynamic> json) =>
     _$UserFromJson(json);
 
 }
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)
-class Post {
-  const Post({
-   required  this.id,
-   required  this.name,
-   required  this.desc,
-   required  this.userId,
-   required  this.user,
-  });
-
-  @JsonKey(name: 'id' )
-  final int  id;
-  @JsonKey(name: 'name' )
-  final String  name;
-  @JsonKey(name: 'desc' )
-  final String  desc;
-  @JsonKey(name: 'userId' )
-  final int  userId;
-  @JsonKey(name: 'user' )
-  final User  user;
-
-  factory Post.fromJson(Map<String, dynamic> json) =>
-    _$PostFromJson(json);
-
-}
 
 
 
-class UserModel {
- User findUnique({
-    required  UserWhereUniqueInput  where,
-}
-){
-throw UnimplementedError();
-} User findFirst({
-      UserWhereInput?  where,
-      List<UserOrderByWithRelationInput>?  orderBy,
-      UserWhereUniqueInput?  cursor,
-      int?  take,
-      int?  skip,
-      List<UserScalarFieldEnum>?  distinct,
-}
-){
-throw UnimplementedError();
-} List<User> findMany({
-      UserWhereInput?  where,
-      List<UserOrderByWithRelationInput>?  orderBy,
-      UserWhereUniqueInput?  cursor,
-      int?  take,
-      int?  skip,
-      List<UserScalarFieldEnum>?  distinct,
-}
-){
-throw UnimplementedError();
-} AffectedRowsOutput updateMany({
-    required  UserUpdateManyMutationInput  data,
-      UserWhereInput?  where,
-}
-){
-throw UnimplementedError();
-} AffectedRowsOutput deleteMany({
-      UserWhereInput?  where,
-}
-){
-throw UnimplementedError();
-} List<UserGroupByOutputType> groupBy({
-      UserWhereInput?  where,
-      List<UserOrderByWithAggregationInput>?  orderBy,
-    required  List<UserScalarFieldEnum>  by,
-      UserScalarWhereWithAggregatesInput?  having,
-      int?  take,
-      int?  skip,
-}
-){
-throw UnimplementedError();
-} AggregateUser aggregate({
-      UserWhereInput?  where,
-      List<UserOrderByWithRelationInput>?  orderBy,
-      UserWhereUniqueInput?  cursor,
-      int?  take,
-      int?  skip,
-}
-){
-throw UnimplementedError();
-}
-}
 class PostModel {
- Post findUnique({
-    required  PostWhereUniqueInput  where,
+  static const String model = "Post";
+final Engine engine;
+PostModel(this.engine);
+static const  _outputField = [Output("id",[],[]),Output("createdAt",[],[]),Output("updatedAt",[],[]),Output("title",[],[]),Output("published",[],[]),Output("desc",[],[]),Output("userId",[],[])];
+Future<Post?> findUnique({
+    required  PostWhereUniqueInput where,
 }
 ){
-throw UnimplementedError();
-} Post findFirst({
-      PostWhereInput?  where,
-      List<PostOrderByWithRelationInput>?  orderBy,
-      PostWhereUniqueInput?  cursor,
-      int?  take,
-      int?  skip,
-      List<PostScalarFieldEnum>?  distinct,
+final entity=[Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "findUnique",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return Post.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<Post?> findFirst({
+      PostWhereInput? where,
+      List<PostOrderByWithRelationInput>? orderBy,
+      PostWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
+      List<PostScalarFieldEnum>? distinct,
 }
 ){
-throw UnimplementedError();
-} List<Post> findMany({
-      PostWhereInput?  where,
-      List<PostOrderByWithRelationInput>?  orderBy,
-      PostWhereUniqueInput?  cursor,
-      int?  take,
-      int?  skip,
-      List<PostScalarFieldEnum>?  distinct,
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),if(distinct !=null)Entity("distinct",false,distinct.map((e) =>e.value).toList(),null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "findFirst",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return Post.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<List<Post>> findMany({
+      PostWhereInput? where,
+      List<PostOrderByWithRelationInput>? orderBy,
+      PostWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
+      List<PostScalarFieldEnum>? distinct,
 }
 ){
-throw UnimplementedError();
-} AffectedRowsOutput createMany({
-    required  List<PostCreateManyInput>  data,
-      bool?  skipDuplicates,
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),if(distinct !=null)Entity("distinct",false,distinct.map((e) =>e.value).toList(),null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "findMany",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null) return []; return (value.data!.result! as List).map((e) {return Post.fromJson(value.data!.result! as Map<String,dynamic>);} ).toList();
+   }
+     );     
+
+}Future<AffectedRowsOutput> updateMany({
+    required  PostUpdateManyMutationInput data,
+      PostWhereInput? where,
 }
 ){
-throw UnimplementedError();
-} AffectedRowsOutput updateMany({
-    required  PostUpdateManyMutationInput  data,
-      PostWhereInput?  where,
+final entity=[Entity("data",false,null,data.toEntity(),),if(where !=null)Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "updateMany",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AffectedRowsOutput.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<AffectedRowsOutput> deleteMany({
+      PostWhereInput? where,
 }
 ){
-throw UnimplementedError();
-} AffectedRowsOutput deleteMany({
-      PostWhereInput?  where,
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "deleteMany",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AffectedRowsOutput.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<List<PostGroupByOutputType>> groupBy({
+      PostWhereInput? where,
+      List<PostOrderByWithAggregationInput>? orderBy,
+    required  List<PostScalarFieldEnum> by,
+      PostScalarWhereWithAggregatesInput? having,
+      int? take,
+      int? skip,
 }
 ){
-throw UnimplementedError();
-} List<PostGroupByOutputType> groupBy({
-      PostWhereInput?  where,
-      List<PostOrderByWithAggregationInput>?  orderBy,
-    required  List<PostScalarFieldEnum>  by,
-      PostScalarWhereWithAggregatesInput?  having,
-      int?  take,
-      int?  skip,
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),Entity("by",false,by.map((e) =>e.value).toList(),null,),if(having !=null)Entity("having",false,null,having.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "groupBy",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null) return []; return (value.data!.result! as List).map((e) {return PostGroupByOutputType.fromJson(value.data!.result! as Map<String,dynamic>);} ).toList();
+   }
+     );     
+
+}Future<AggregatePost> aggregate({
+      PostWhereInput? where,
+      List<PostOrderByWithRelationInput>? orderBy,
+      PostWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
 }
 ){
-throw UnimplementedError();
-} AggregatePost aggregate({
-      PostWhereInput?  where,
-      List<PostOrderByWithRelationInput>?  orderBy,
-      PostWhereUniqueInput?  cursor,
-      int?  take,
-      int?  skip,
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "aggregate",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AggregatePost.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}
+}
+class UserModel {
+  static const String model = "User";
+final Engine engine;
+UserModel(this.engine);
+static const  _outputField = [Output("id",[],[]),Output("userName",[],[]),Output("name",[],[]),Output("password",[],[]),Output("resturantId",[],[])];
+Future<User?> findUnique({
+    required  UserWhereUniqueInput where,
 }
 ){
-throw UnimplementedError();
+final entity=[Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "findUnique",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return User.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<User?> findFirst({
+      UserWhereInput? where,
+      List<UserOrderByWithRelationInput>? orderBy,
+      UserWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
+      List<UserScalarFieldEnum>? distinct,
+}
+){
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),if(distinct !=null)Entity("distinct",false,distinct.map((e) =>e.value).toList(),null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "findFirst",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null){return null;}return User.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<List<User>> findMany({
+      UserWhereInput? where,
+      List<UserOrderByWithRelationInput>? orderBy,
+      UserWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
+      List<UserScalarFieldEnum>? distinct,
+}
+){
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),if(distinct !=null)Entity("distinct",false,distinct.map((e) =>e.value).toList(),null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "findMany",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null) return []; return (value.data!.result! as List).map((e) {return User.fromJson(value.data!.result! as Map<String,dynamic>);} ).toList();
+   }
+     );     
+
+}Future<AffectedRowsOutput> updateMany({
+    required  UserUpdateManyMutationInput data,
+      UserWhereInput? where,
+}
+){
+final entity=[Entity("data",false,null,data.toEntity(),),if(where !=null)Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "updateMany",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AffectedRowsOutput.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<AffectedRowsOutput> deleteMany({
+      UserWhereInput? where,
+}
+){
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "deleteMany",
+      operation: "mutation",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AffectedRowsOutput.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
+}Future<List<UserGroupByOutputType>> groupBy({
+      UserWhereInput? where,
+      List<UserOrderByWithAggregationInput>? orderBy,
+    required  List<UserScalarFieldEnum> by,
+      UserScalarWhereWithAggregatesInput? having,
+      int? take,
+      int? skip,
+}
+){
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),Entity("by",false,by.map((e) =>e.value).toList(),null,),if(having !=null)Entity("having",false,null,having.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "groupBy",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      if(value.data?.result==null) return []; return (value.data!.result! as List).map((e) {return UserGroupByOutputType.fromJson(value.data!.result! as Map<String,dynamic>);} ).toList();
+   }
+     );     
+
+}Future<AggregateUser> aggregate({
+      UserWhereInput? where,
+      List<UserOrderByWithRelationInput>? orderBy,
+      UserWhereUniqueInput? cursor,
+      int? take,
+      int? skip,
+}
+){
+final entity=[if(where !=null)Entity("where",false,null,where.toEntity(),),if(orderBy !=null)Entity("orderBy",false,null,orderBy.map((e) => Entity("orderBy", false, null, e.toEntity())).toList(),),if(cursor !=null)Entity("cursor",false,null,cursor.toEntity(),),if(take !=null)Entity("take",true,take,null,),if(skip !=null)Entity("skip",true,skip,null,),];
+    final Query query = Query(
+      engine: engine,
+      model: model,
+      method: "aggregate",
+      operation: "query",
+      entity:entity,
+      output: _outputField,
+      name: ""
+    );
+    return query.exec().then((value) {
+      return AggregateUser.fromJson(value.data!.result! as Map<String,dynamic>);
+   }
+     );     
+
 }
 }
 const schema='''// This is your Prisma schema file,
@@ -2822,31 +3194,35 @@ const schema='''// This is your Prisma schema file,
 
 generator client {
   provider      = "prisma-client-dart"
-  binaryTargets = ["dsd"]
-  engineType    = "library"
 }
 
+
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    // could be postgresql or mysql
+    provider = "sqlite"
+    url      = "file:dev.db"
+}
+
+
+
+model Post {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    title     String
+    published Boolean
+    desc      String?
+
+    User   User? @relation(fields: [userId], references: [id])
+    userId Int?
 }
 
 model User {
-  id          Int    @id @default(autoincrement())
-  userName    String @unique
-  name        String
-  password    String
-  resturantId Int?
-  Post        Post[]
-  extra Json
-  ddd Unsupported("")
-}
-
-model Post {
-  id     Int    @id @default(autoincrement())
-  name   String @unique
-  desc   String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
+    id          Int    @id @default(autoincrement())
+    userName    String @unique
+    name        String
+    password    String
+    resturantId Int?
+    posts       Post[]
 }
 ''';

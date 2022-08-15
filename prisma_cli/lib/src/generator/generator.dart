@@ -15,6 +15,7 @@ class Generator extends Ast {
     code.writeln();
     code.writeln('import \'package:orm/orm.dart\';');
     code.writeln('import \'package:json_annotation/json_annotation.dart\';');
+    code.writeln('import \'dart:convert\';');
     code.writeln();
     code.writeln('part \'prisma_generated.g.dart\';');
     code.writeln();

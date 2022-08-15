@@ -26,10 +26,15 @@ class SchemaEnumTypesBuilder extends CodeableAst {
       enumCodes.writeln('  @override');
       enumCodes.writeln('  final String value;');
       enumCodes.writeln('  const ${className(element.name)}(this.value);');
-
+      enumCodes.writeln(_buildToEntity(element.name));
       enumCodes.writeln('}');
     }
 
     return enumCodes.toString();
   }
+
+   String _buildToEntity(String enumName){
+        return '''Entity toEntity(){ return Entity("$enumName",true,value,null) ;}''';
+  }
+  
 }

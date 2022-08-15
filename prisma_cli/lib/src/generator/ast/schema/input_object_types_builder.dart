@@ -21,12 +21,10 @@ class InputObjectTypesBuilder extends CodeableAst {
   String _inputObjectTypesBuilder(List<InputType> inputObjectTypes) {
     final StringBuffer inputObjectTypesCode = StringBuffer();
     for (final InputType element in inputObjectTypes) {
-      inputObjectTypesCode.writeln(
-          '@JsonSerializable(explicitToJson: true, createFactory: false, createToJson: true)');
       inputObjectTypesCode.writeln('class ${className(element.name)} {');
       inputObjectTypesCode.writeln(_buildConstructor(element));
       inputObjectTypesCode.writeln(_buildFields(element));
-      inputObjectTypesCode.writeln(_buildToJson(element));
+      inputObjectTypesCode.writeln(_buildEntity(element.fields));
       inputObjectTypesCode.writeln('}');
     }
 
@@ -57,19 +55,57 @@ class InputObjectTypesBuilder extends CodeableAst {
     return code.toString();
   }
 
-
-
   /// Build toJson method.
-  String _buildToJson(InputType type) {
+  String addListAtNull(bool isNullable) {
+    return isNullable ? "??[]" : "";
+  }
+
+  String _buildEntity(List<SchemaArg> fields) {
     final StringBuffer code = StringBuffer();
-    code.write(
-        '  Map<String, dynamic> toJson() => _\$${type.name}ToJson(this)');
-    code.writeln('..addAll({');
-    code.writeln(
-        '    \'_\\\$maxNumFields\': ${type.constraints?.maxNumFields},');
-    code.writeln(
-        '    \'_\\\$minNumFields\': ${type.constraints?.minNumFields},');
-    code.writeln('  });');
+
+    code.write("List<Entity> toEntity()=>[");
+    for (var field in fields) {
+      final name = fieldName(field.name);
+
+      final inputType = resolveSchemaType(field.inputTypes);
+      final isList =
+          field.inputTypes.where((element) => element.isList).isNotEmpty;
+      if (!field.isRequired) {
+        code.write("if($name !=null)");
+      }
+      final usedName = "$name${addNoNull(field.isRequired)}";
+      if (inputType.location.name == "enumTypes") {
+        code.write("$usedName.toEntity(),");
+        continue;
+      }
+      code.write("Entity(");
+      code.write(""""${field.name}",""");
+      if (inputType.location.name == "scalar") {
+        code.write("true,");
+        code.write(usedName);
+        code.write(',null');
+      } else if (inputType.location.name == "enumTypes") {
+        code.write("false,");
+        if (isList) {
+          code.write('''$usedName.map((e) =>e.value).toList()''');
+          code.write(',null');
+        } else {
+          code.write("$usedName.value");
+          code.write(',[]');
+        }
+      } else {
+        code.write("false,null,");
+        if (isList) {
+          code.write(
+              '''$usedName.map((e) => Entity("${field.name}", false, null, e.toEntity())).toList()''');
+        } else {
+          code.write("$usedName.toEntity()");
+        }
+      }
+      code.write(",");
+      code.write("),");
+    }
+    code.write("];");
     return code.toString();
   }
 }
