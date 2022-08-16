@@ -21,10 +21,10 @@ class InputObjectTypesBuilder extends CodeableAst {
   String _inputObjectTypesBuilder(List<InputType> inputObjectTypes) {
     final StringBuffer inputObjectTypesCode = StringBuffer();
     for (final InputType element in inputObjectTypes) {
-      inputObjectTypesCode.writeln('class ${className(element.name)} {');
+      inputObjectTypesCode.writeln('class ${className(element.name)} implements ToField  {');
       inputObjectTypesCode.writeln(_buildConstructor(element));
       inputObjectTypesCode.writeln(_buildFields(element));
-      inputObjectTypesCode.writeln(_buildEntity(element.fields));
+      inputObjectTypesCode.writeln(_buildInput(element.fields));
       inputObjectTypesCode.writeln('}');
     }
 
@@ -60,10 +60,10 @@ class InputObjectTypesBuilder extends CodeableAst {
     return isNullable ? "??[]" : "";
   }
 
-  String _buildEntity(List<SchemaArg> fields) {
+  String _buildInput(List<SchemaArg> fields) {
     final StringBuffer code = StringBuffer();
-
-    code.write("List<Entity> toEntity()=>[");
+    code.writeln("@override");
+    code.write("List<Field> toFields()=>[");
     for (var field in fields) {
       final name = fieldName(field.name);
 
@@ -74,32 +74,31 @@ class InputObjectTypesBuilder extends CodeableAst {
         code.write("if($name !=null)");
       }
       final usedName = "$name${addNoNull(field.isRequired)}";
-      if (inputType.location.name == "enumTypes") {
-        code.write("$usedName.toEntity(),");
-        continue;
-      }
-      code.write("Entity(");
+      code.write("Field(");
       code.write(""""${field.name}",""");
-      if (inputType.location.name == "scalar") {
-        code.write("true,");
-        code.write(usedName);
-        code.write(',null');
-      } else if (inputType.location.name == "enumTypes") {
-        code.write("false,");
-        if (isList) {
-          code.write('''$usedName.map((e) =>e.value).toList()''');
+      code.write(isList);
+      code.write(",false,");
+      if (!isList) {
+        if (inputType.location == FieldLocation.scalar) {
+          code.write(usedName);
+          code.write(',null');
+        } else if (inputType.location == FieldLocation.enumTypes ) {
+          code.write("$usedName.value");
           code.write(',null');
         } else {
-          code.write("$usedName.value");
-          code.write(',[]');
+          code.write("null,");
+          code.writeln("$usedName.toFields()");
         }
       } else {
-        code.write("false,null,");
-        if (isList) {
-          code.write(
-              '''$usedName.map((e) => Entity("${field.name}", false, null, e.toEntity())).toList()''');
+        if (inputType.location == FieldLocation.scalar) {
+          code.write("toScalerField($usedName)");
+          code.write(',null');
+        } else if (inputType.location == FieldLocation.enumTypes) {
+          code.write("toEnumsField($usedName)");
+          code.write(',null');
         } else {
-          code.write("$usedName.toEntity()");
+          code.write("null,");
+          code.write('''toObjectField($usedName)''');
         }
       }
       code.write(",");

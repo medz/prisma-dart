@@ -22,10 +22,10 @@ class ModelBuilder extends CodeableAst {
     modelCode.writeln("final Engine engine;");
     modelCode.writeln('$classModelName(this.engine);');
     modelCode.writeln(
-        'static const  _outputField = [${model.fields.where((element) => element.relationName == null).map((e) => 'Output("${e.name}",[],[])').join(',')}];');
+        'static const  _outputField = [${model.fields.where((element) => element.relationName == null).map((e) => 'Output("${e.name}")').join(',')}];');
     final fields = <SchemaFieldWithAction>[];
     for (var e in mapping.keys) {
-      if(e=="model") continue;
+      if (e == "model") continue;
       final name = mapping[e];
       if (name == null) continue;
       final queryField = queryFieldMap[name];
@@ -60,10 +60,10 @@ class ModelBuilder extends CodeableAst {
 
       code.write(')');
       code.writeln("{");
-      code.writeln(_buildEntity(item.field.args));
+      code.writeln(_buildInput(item.field.args));
 
-      code.writeln(_buildQuertBuilder(item.action, item.operation,
-          returnType, field.outputType.isList, field.isNullable ?? false));
+      code.writeln(_buildQuertBuilder(item.action, item.operation, returnType,
+          field.outputType.isList, field.isNullable ?? false));
       code.write("}");
     }
 
@@ -78,7 +78,7 @@ class ModelBuilder extends CodeableAst {
       model: model,
       method: "$method",
       operation: "$operation",
-      entity:entity,
+      input:input,
       output: _outputField,
       name: ""
     );
@@ -89,43 +89,46 @@ class ModelBuilder extends CodeableAst {
 ''';
   }
 
-  String _buildEntity(List<SchemaArg> fields) {
+  String _buildInput(List<SchemaArg> fields) {
     final StringBuffer code = StringBuffer();
-
-    code.write("final entity=[");
+    code.write("final input=[");
     for (var field in fields) {
       final name = fieldName(field.name);
-
       final inputType = resolveSchemaType(field.inputTypes);
       final isList =
           field.inputTypes.where((element) => element.isList).isNotEmpty;
       if (!field.isRequired) {
         code.write("if($name !=null)");
       }
-      code.write("Entity(");
+      code.write("Input(");
       code.write(""""${field.name}",""");
-      if (inputType.location.name == "scalar") {
-        code.write("true,");
-        code.write(name);
-        code.write(',null');
-      } else if (inputType.location.name == "enumTypes") {
-        code.write("false,");
-        if (isList) {
-          code.write('''$name.map((e) =>e.value).toList()''');
+      code.write(isList);
+      code.write(",");
+
+      if (!isList) {
+        if (inputType.location == FieldLocation.scalar) {
+          code.write(name);
+          code.write(',null');
+        } else if (inputType.location == FieldLocation.enumTypes) {
+          code.write("$name.value");
           code.write(',null');
         } else {
-          code.write("$name.value");
-          code.write(',[]');
+          code.write("null,");
+          code.writeln("$name.toFields()");
         }
       } else {
-        code.write("false,null,");
-        if (isList) {
-          code.write(
-              '''$name.map((e) => Entity("${field.name}", false, null, e.toEntity())).toList()''');
+        if (inputType.location == FieldLocation.scalar) {
+          code.write("toScalerField($name)");
+          code.write(',null');
+        } else if (inputType.location == FieldLocation.enumTypes) {
+          code.write("toEnumsField($name)");
+          code.write(',null');
         } else {
-          code.write("$name.toEntity()");
+          code.write("null,");
+          code.write('''toObjectField($name)''');
         }
       }
+
       code.write(",");
       code.write("),");
     }
