@@ -11,11 +11,11 @@ class PrismaClientBuilder extends CodeableAst {
     code.writeln("""
 class PrismaClient {
 
-  final Engine engine;
+  late final Engine engine;
 
-  // final PrismaActions action;
-  PrismaClient._(this.engine);
-  factory PrismaClient()=>PrismaClient._(BinaryEngine(schema));
+  PrismaClient(){
+    engine = BinaryEngine(schema);
+  }
 """);
 
     for (final model in ast.dmmf.datamodel.models) {
