@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:prisma_query_engine/src/native/binary/engine/life_cycle.dart';
 import 'package:prisma_query_engine/src/shared/protocol.dart';
@@ -13,26 +14,33 @@ class BinaryEngine implements shared.Engine {
   late Command cmd;
   late String url;
   final String schema;
-  bool disconnected = false;
+  bool get disconnected => starting == null;
+  Future<void>? starting;
   BinaryEngine(this.schema);
 
   @override
   Future<void> start() async {
+    if (starting != null) return starting;
     final file = ensure(this);
-    await spawn(this, file);
+    return starting = spawn(this, file);
   }
 
   @override
   Future<void> stop() async {
-    disconnected = true;
+    starting = null;
     client.close();
     await cmd.kill();
   }
 
   @override
-  Future<GQLBatchResponse> batch(GQLBatchRequest payload) =>
-      req.batch(this, payload);
+  Future<GQLBatchResponse> batch(GQLBatchRequest payload) async {
+    await start();
+    return req.batch(this, payload);
+  }
 
   @override
-  Future<GQLResponse> request(GQLRequest payload) => req.execute(this, payload);
+  Future<GQLResponse> request(GQLRequest payload) async {
+    await start();
+    return req.execute(this, payload);
+  }
 }
