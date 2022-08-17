@@ -76,10 +76,16 @@ abstract class CodeableAst extends DMMFSchemaHelper {
     if (uniqueInputTypes.length == 1) {
       return uniqueInputTypes.first;
     }
+  
 
+    // return json if exist
+    final jsonInputType = uniqueInputTypes.where((element) =>  element.type == 'Json');
+    if(jsonInputType.isNotEmpty) {
+      return jsonInputType.first;
+    }
     // remove scalar
     final List<SchemaType> nonScalarInputTypes =
-        uniqueInputTypes.where((element) => element.type != 'scalar').toList();
+        uniqueInputTypes.where((element) => element.location != FieldLocation.scalar).toList();
     if (nonScalarInputTypes.length == 1) {
       return nonScalarInputTypes.first;
     }
