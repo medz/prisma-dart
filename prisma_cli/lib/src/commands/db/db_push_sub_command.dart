@@ -71,6 +71,13 @@ class DbPushSubCommand extends Command<int> {
     SchemaPushResponse result = await migrate.push(
       force: argResults?['force-reset'],
     );
+    if (result.error != null) {
+      throw Exception('''
+error code : ${result.error!.errorCode};
+error messege : ${result.error!.message};
+error : ${result.error!.meta};
+''');
+    }
 
     if (result.warnings.isNotEmpty) {
       stderr.writeln('Warnings:');
