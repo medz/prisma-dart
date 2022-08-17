@@ -97,9 +97,6 @@ class ModelMapping {
   /// Model name
   final String model;
 
-  /// Plural name
-  final String? plural;
-
   /// Find unique operation
   final String? findUnique;
 
@@ -145,7 +142,6 @@ class ModelMapping {
   /// Create a new model operation mapping.
   const ModelMapping({
     required this.model,
-    this.plural,
     this.findUnique,
     this.findFirst,
     this.findMany,
@@ -170,7 +166,26 @@ class ModelMapping {
   /// Model operation mapping as JSON map.
   Map<String, dynamic> toJson() => _$ModelMappingToJson(this);
 
-  /// Model operation mapping as JSON string.
+  /// Model operation mapping as JSON map.
+  Map<String, dynamic> toActionMap() {
+    return {
+      'findUnique': findUnique,
+      'findFirst': findFirst,
+      'findMany': findMany,
+      'create': createOne,
+      'createMany': createMany,
+      'update': updateOne,
+      'updateMany': updateMany,
+      'upsert': upsertOne,
+      'delete': deleteOne,
+      'deleteMany': deleteMany,
+      'aggregate': aggregate,
+      'groupBy': groupBy,
+      'findRaw': findRaw,
+      'aggregateRaw': aggregateRaw,
+    };
+  }
+
   @override
   String toString() => jsonEncode(toJson());
 }

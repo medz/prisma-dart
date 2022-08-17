@@ -8,7 +8,7 @@ class ModelBuilder extends CodeableAst {
   ModelBuilder(this.model, super.ast) {
     mapping = ast.dmmf.mappings.modelOperations
         .firstWhere((element) => element.model == model.name)
-        .toJson()
+        .toActionMap()
         .cast<String, String>();
     outputType = outputTypeMap[model.name]!;
   }
@@ -25,7 +25,6 @@ class ModelBuilder extends CodeableAst {
         'static const  _outputField = [${model.fields.where((element) => element.relationName == null).map((e) => 'Output("${e.name}")').join(',')}];');
     final fields = <SchemaFieldWithAction>[];
     for (var e in mapping.keys) {
-      if (e == "model") continue;
       final name = mapping[e];
       if (name == null) continue;
       final queryField = queryFieldMap[name];
@@ -73,7 +72,7 @@ class ModelBuilder extends CodeableAst {
   String _buildQuertBuilder(String method, String operation, String returnType,
       bool isOutputList, bool isNullable) {
     return '''
-    final Query query = Query(
+    final query = Query(
       engine: engine,
       model: model,
       method: "$method",
