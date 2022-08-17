@@ -26,11 +26,12 @@ class OutputObjectTypesBuilder extends CodeableAst {
     final StringBuffer outputObjectTypesCode = StringBuffer();
     for (final OutputType element in outputObjectTypes) {
       outputObjectTypesCode.writeln(
-          '@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: false)');
+          '@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: true)');
       outputObjectTypesCode.writeln('class ${className(element.name)} {');
       outputObjectTypesCode.writeln(_buildConstructor(element));
       outputObjectTypesCode.writeln(_buildFields(element));
       outputObjectTypesCode.writeln(_buildFromJson(element));
+      outputObjectTypesCode.writeln(_buildToJson(element));
       outputObjectTypesCode.writeln('}');
     }
 
@@ -55,7 +56,7 @@ class OutputObjectTypesBuilder extends CodeableAst {
     for (final field in type.fields) {
       code.writeln('  @JsonKey(name: \'${field.name}\' )');
       code.writeln(
-          '  final ${schemaTypeTypeBuilder(field.outputType)}${addNullable(field.isNullable??false)} ${fieldName(field.name)};');
+          '  final ${schemaTypeTypeBuilder(field.outputType)}${addNullable(field.isNullable ?? false)} ${fieldName(field.name)};');
     }
 
     return code.toString();
@@ -67,6 +68,14 @@ class OutputObjectTypesBuilder extends CodeableAst {
     code.writeln(
         '  factory ${className(type.name)}.fromJson(Map<String, dynamic> json) =>');
     code.writeln('    _\$${className(type.name)}FromJson(json);');
+    return code.toString();
+  }
+
+  /// Build fromJson factory .
+  String _buildToJson(OutputType type) {
+    final StringBuffer code = StringBuffer();
+    code.writeln(
+        '      Map<String, dynamic> toJson() => _\$${className(type.name)}ToJson(this);');
     return code.toString();
   }
 }
