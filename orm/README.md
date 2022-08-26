@@ -1,4 +1,4 @@
-Next-generation ORM for Dart Navtive & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB
+Next-generation ORM for Dart Native & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB
 
 ## What is it?
 
