@@ -2,4 +2,4 @@
 const String version = '1.0.0';
 
 /// Prisma engines version.
-const String engineVersion = 'bcc34eccb8bd811bcf624288e5e05b7abda86699';
+const String engineVersion = '2920a97877e12e055c1333079b8d19cee7f33826';

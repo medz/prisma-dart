@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:prisma_cli/src/engine_downloader/binary_engine_manger.dart';
 
-import '../../engine_downloader/binary_engine_downloader.dart';
 import '../../engine_downloader/binary_engine_platform.dart';
 import '../../engine_downloader/binary_engine_type.dart';
 import '../../json_rpc/schema_push.dart';
@@ -42,25 +42,18 @@ class DbPushSubCommand extends Command<int> {
       return 1;
     }
 
-    // Prisma migrate engine binary file.
-    final File migrateEngineBinary =
-        File('prisma/engines/${BinaryEngineType.migration.value}');
-
-    // If migrate engine binary file does not exist, download it.
-    if (!migrateEngineBinary.existsSync()) {
-      final BinaryEngineDownloader downloader = BinaryEngineDownloader(
-        binaryPath: migrateEngineBinary.path,
-        engineType: BinaryEngineType.migration,
-        platform: BinaryEnginePlatform.current,
-        version: engineVersion,
-      );
-
-      await downloader.download(_onDownload);
-    }
+    final manger = BinaryEngineManger(
+      engineType: BinaryEngineType.migration,
+      platform: BinaryEnginePlatform.current,
+      version: engineVersion,
+    );
+    
+    // ensure exist (get a copy from cache if exist or downloading it)
+    final path = await manger.ensure(_onDownload);
 
     // Create migrate
     final Migrate migrate = Migrate(
-      path: migrateEngineBinary.path,
+      path: path,
       schema: schema,
     );
 

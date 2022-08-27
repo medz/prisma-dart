@@ -7,7 +7,7 @@ import 'package:prisma_cli/src/generator/messages/get_config_response.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 import 'package:prisma_shared/prisma_shared.dart';
-import '../engine_downloader/binary_engine_downloader.dart';
+import '../engine_downloader/binary_engine_manger.dart';
 import '../engine_downloader/binary_engine_platform.dart';
 import '../engine_downloader/binary_engine_type.dart';
 import '../generator/generator.dart';
@@ -47,27 +47,20 @@ class GenerateCommand extends Command<int> {
       return 1;
     }
 
-    // Create query engine binary file.
-    final File queryEngineBinary =
-        File('prisma/engines/${BinaryEngineType.query.value}');
+    final manger = BinaryEngineManger(
+      engineType: BinaryEngineType.query,
+      platform: BinaryEnginePlatform.current,
+      version: engineVersion,
+      moveToProject: true,
+    );
 
-    // If query engine binary file does not exist, download it.
-    if (!queryEngineBinary.existsSync()) {
-      final BinaryEngineDownloader downloader = BinaryEngineDownloader(
-        binaryPath: queryEngineBinary.path,
-        engineType: BinaryEngineType.query,
-        platform: BinaryEnginePlatform.current,
-        version: engineVersion,
-      );
-
-      await downloader.download(_onDownload);
-    }
-
+    // ensure exist (get a copy from cache if exist or downloading it)
+    final path = await manger.ensure(_onDownload);
     final AnsiProgress progress = AnsiProgress('Generating...');
 
     // Run query engine binary, request config.
     final ProcessResult configResult = await Process.run(
-      queryEngineBinary.path,
+      path,
       ['--datamodel-path', schema.path, 'cli', 'get-config'],
       environment: configure.environment,
     );
@@ -99,7 +92,7 @@ generator client {
 
     // Request dmmf.
     final ProcessResult dmmfResult = await Process.run(
-      queryEngineBinary.path,
+      path,
       ['--datamodel-path', schema.path, 'cli', 'dmmf'],
       environment: configure.environment,
     );

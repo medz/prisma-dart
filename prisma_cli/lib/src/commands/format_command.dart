@@ -4,7 +4,7 @@ import 'package:args/command_runner.dart';
 import 'package:path/path.dart';
 
 import 'package:prisma_shared/prisma_shared.dart';
-import '../engine_downloader/binary_engine_downloader.dart';
+import '../engine_downloader/binary_engine_manger.dart';
 import '../engine_downloader/binary_engine_platform.dart';
 import '../engine_downloader/binary_engine_type.dart';
 import '../utils/ansi_progress.dart';
@@ -35,21 +35,14 @@ class FormatCommand extends Command<int> {
       return 1;
     }
 
-    // Format engine binary file.
-    final File formatEngineBinary =
-        File('prisma/engines/${BinaryEngineType.format.value}');
+    final manger = BinaryEngineManger(
+      engineType: BinaryEngineType.format,
+      platform: BinaryEnginePlatform.current,
+      version: engineVersion,
+    );
 
-    // If format engine binary file does not exist, download it.
-    if (!formatEngineBinary.existsSync()) {
-      final BinaryEngineDownloader downloader = BinaryEngineDownloader(
-        binaryPath: formatEngineBinary.path,
-        engineType: BinaryEngineType.format,
-        platform: BinaryEnginePlatform.current,
-        version: engineVersion,
-      );
-
-      await downloader.download(_onDownload);
-    }
+    // ensure exist (get a copy from cache if exist or downloading it)
+    final path = await manger.ensure(_onDownload);
 
     // Create format progress.
     final AnsiProgress formatProgress =
@@ -57,7 +50,7 @@ class FormatCommand extends Command<int> {
 
     // Run format engine binary.
     final ProcessResult result = await Process.run(
-      formatEngineBinary.path,
+      path,
       ['format', '-i', schema.path],
       environment: configure.environment,
     );
