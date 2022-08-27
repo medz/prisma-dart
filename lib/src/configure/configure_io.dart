@@ -1,24 +1,44 @@
-import 'dart:io'; //TODO remove direct dart:io to support web
-
+import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
-class Configure {
-  Configure._();
+import 'configure.dart';
+
+class _IO$Configure extends Configure {
+  /// Create IO configure.
+  _IO$Configure() {
+    _load();
+  }
+
+  /// Loaded document.
   late final Map<String, dynamic> _document;
 
+  @override
   Map<String, dynamic> get all => _document;
 
-  /// Load Prisma config file.
+  /// Load `prisma.yaml` file.
   void _load() {
-    final File configFile = File('prisma.yaml');
-    // If config file does not exist
+    // Get current directory.
+    final Directory currentDirectory = Directory.current;
+
+    // Build path to `prisma.yaml`.
+    final String configFilePath =
+        path.join(currentDirectory.path, 'prisma.yaml');
+
+    // Create prisma config file.
+    final File configFile = File(configFilePath);
+
+    // If file does not exist.
     if (!configFile.existsSync()) {
       _document = const <String, dynamic>{};
       return;
     }
 
+    // Load YAML.
     final Map yaml =
         loadYaml(configFile.readAsStringSync(), sourceUrl: configFile.uri);
+
+    // Parse YAML to Map.
     _parseYamlToMap(yaml, root: true);
   }
 
@@ -68,17 +88,7 @@ class Configure {
 
     return item;
   }
-
-  /// Call getter.
-  dynamic call(String name) {
-    return all[name.toLowerCase()];
-  }
-
-  operator [](String name) => call(name);
-
-  /// Environment.
-  Map<String, String> get environment => call('environment');
 }
 
-/// Prisma ORM configuration.
-Configure get configure => Configure._().._load();
+/// Create IO configure instance.
+Configure get configure => _IO$Configure();
