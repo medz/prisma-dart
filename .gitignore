@@ -6,6 +6,7 @@
 # https://dart.dev/guides/libraries/private-files#pubspeclock.
 pubspec.lock
 
-# Prisma ORM
+# Prisma ORM development files.
+.prisma/
 prisma/
-.env*
+prisma.yaml

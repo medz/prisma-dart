@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:orm/version.dart';
 
+import 'src/commands/format_command.dart';
 import 'src/commands/init_command.dart';
 
 /// The Prisma CLI executable name.
@@ -25,6 +26,7 @@ void main(List<String> args) async {
 
   // Add commands.
   runner.addCommand(InitCommand());
+  runner.addCommand(FormatCommand());
 
   // Get command result.
   final ArgResults results = runner.parse(args);

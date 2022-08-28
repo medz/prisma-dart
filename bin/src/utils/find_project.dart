@@ -19,3 +19,10 @@ String get projectDirectory {
 
 /// Join paths with [projectDirectory].
 String joinPaths(List<String> parts) => joinAll([projectDirectory, ...parts]);
+
+/// Join paths with [projectDirectory], return relative path.
+String joinRelativePaths(List<String> parts) =>
+    relative(joinAll([projectDirectory, ...parts]));
+
+/// Relative path from [projectDirectory] to [path].
+String relativePath(String path) => relative(path, from: projectDirectory);

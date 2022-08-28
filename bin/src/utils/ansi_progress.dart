@@ -41,4 +41,13 @@ class AnsiProgress {
     stdout.write('\b');
     stdout.write(animationCharacter);
   }
+
+  /// Create a future progress bar handler.
+  static void Function(Future<void> done) createFutureHandler(String message) {
+    return (Future<void> done) async {
+      final AnsiProgress progress = AnsiProgress(message);
+      await done;
+      progress.cancel(showTime: true);
+    };
+  }
 }
