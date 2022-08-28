@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:orm/version.dart';
 
+import 'src/commands/db/db_command.dart';
 import 'src/commands/format_command.dart';
 import 'src/commands/init_command.dart';
 
@@ -27,6 +28,7 @@ void main(List<String> args) async {
   // Add commands.
   runner.addCommand(InitCommand());
   runner.addCommand(FormatCommand());
+  runner.addCommand(DbCommand());
 
   // Get command result.
   final ArgResults results = runner.parse(args);
@@ -41,7 +43,7 @@ void main(List<String> args) async {
     await runner.runCommand(results);
   } catch (e) {
     if (!results.wasParsed('debug')) {
-      stderr.writeln(e);
+      print(e);
       exit(1);
     }
 

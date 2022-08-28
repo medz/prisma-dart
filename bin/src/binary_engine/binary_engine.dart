@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
+import 'package:orm/configure.dart';
 
 import '../utils/chmod.dart';
 import '../utils/find_project.dart';
@@ -43,6 +44,16 @@ class BinaryEngine {
         arguments,
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
+        environment: configure.environment,
+      );
+
+  /// Start the binary engine.
+  Future<Process> start(List<String> arguments) => Process.start(
+        executable,
+        arguments,
+        workingDirectory: projectDirectory,
+        includeParentEnvironment: false,
+        environment: configure.environment,
       );
 
   /// Download the binary engine.
