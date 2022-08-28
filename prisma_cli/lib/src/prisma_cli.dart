@@ -43,9 +43,9 @@ class PrismaCLI {
     try {
       final int? code = await _runner.runCommand(results);
       return code ?? 0;
-    } catch (e,s) {
+    } catch (e, s) {
       stderr.writeln(e);
-      stderr.writeln(s);// for easy debuggin
+      stderr.writeln(s); // for easy debuggin
       return 1;
     }
   }

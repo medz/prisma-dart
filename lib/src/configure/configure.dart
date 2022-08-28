@@ -11,7 +11,10 @@ abstract class Configure {
   Map<String, dynamic> get all;
 
   /// Call getter.
-  dynamic call(String name) => all[name.toLowerCase()];
+  dynamic call(String name, [dynamic defaultValue]) =>
+      all.containsKey(name.toLowerCase())
+          ? all[name.toLowerCase()]
+          : defaultValue;
 
   /// Environments.
   Map<String, String> get environment => call('environment');
