@@ -20,6 +20,7 @@ class FetcherResult {
   Map<String, dynamic> toJson() => _$FetcherResultToJson(this);
 }
 
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class DatasourceOverwrite {
   final String name;
   final String? url;
@@ -30,6 +31,11 @@ class DatasourceOverwrite {
     this.url,
     this.env,
   });
+
+  factory DatasourceOverwrite.fromJson(Map<String, dynamic> json) =>
+      _$DatasourceOverwriteFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DatasourceOverwriteToJson(this);
 }
 
 enum LogLevel {

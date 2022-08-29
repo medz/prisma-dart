@@ -6,6 +6,7 @@ import 'package:orm/version.dart';
 
 import 'src/commands/db/db_command.dart';
 import 'src/commands/format_command.dart';
+import 'src/commands/generate_command.dart';
 import 'src/commands/init_command.dart';
 
 /// The Prisma CLI executable name.
@@ -29,6 +30,7 @@ void main(List<String> args) async {
   runner.addCommand(InitCommand());
   runner.addCommand(FormatCommand());
   runner.addCommand(DbCommand());
+  runner.addCommand(GenerateCommand());
 
   // Get command result.
   final ArgResults results = runner.parse(args);

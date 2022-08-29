@@ -42,14 +42,14 @@ class DataSource {
   final ConnectorType activeProvider;
   final ConnectorType provider;
   final EnvValue url;
-  final Map<String, String> config;
+  final Map<String, String>? config;
 
   const DataSource({
     required this.name,
     required this.activeProvider,
     required this.provider,
     required this.url,
-    required this.config,
+    this.config,
   });
 
   factory DataSource.fromJson(Map<String, dynamic> json) =>

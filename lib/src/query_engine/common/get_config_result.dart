@@ -8,10 +8,12 @@ part 'get_config_result.g.dart';
 class GetConfigResult {
   final List<DataSource> datasources;
   final List<GeneratorConfig> generators;
+  final List<dynamic>? warnings;
 
   const GetConfigResult({
     required this.datasources,
     required this.generators,
+    this.warnings,
   });
 
   factory GetConfigResult.fromJson(Map<String, dynamic> json) =>

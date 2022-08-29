@@ -18,6 +18,21 @@ Map<String, dynamic> _$FetcherResultToJson(FetcherResult instance) =>
       'error': instance.error,
     };
 
+DatasourceOverwrite _$DatasourceOverwriteFromJson(Map<String, dynamic> json) =>
+    DatasourceOverwrite(
+      name: json['name'] as String,
+      url: json['url'] as String?,
+      env: json['env'] as String?,
+    );
+
+Map<String, dynamic> _$DatasourceOverwriteToJson(
+        DatasourceOverwrite instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'url': instance.url,
+      'env': instance.env,
+    };
+
 NullableEnvValue _$NullableEnvValueFromJson(Map<String, dynamic> json) =>
     NullableEnvValue(
       fromEnvVar: json['fromEnvVar'] as String?,

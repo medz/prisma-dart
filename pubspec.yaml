@@ -8,7 +8,6 @@ environment:
 
 executables:
   prisma: orm
-  prisma-client-dart: prisma_client_generator
 
 dependencies:
   archive: ^3.3.1

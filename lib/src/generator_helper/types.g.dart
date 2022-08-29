@@ -22,7 +22,9 @@ DataSource _$DataSourceFromJson(Map<String, dynamic> json) => DataSource(
           $enumDecode(_$ConnectorTypeEnumMap, json['activeProvider']),
       provider: $enumDecode(_$ConnectorTypeEnumMap, json['provider']),
       url: EnvValue.fromJson(json['url'] as Map<String, dynamic>),
-      config: Map<String, String>.from(json['config'] as Map),
+      config: (json['config'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$DataSourceToJson(DataSource instance) =>

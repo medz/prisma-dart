@@ -14,10 +14,12 @@ GetConfigResult _$GetConfigResultFromJson(Map<String, dynamic> json) =>
       generators: (json['generators'] as List<dynamic>)
           .map((e) => GeneratorConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
+      warnings: json['warnings'] as List<dynamic>?,
     );
 
 Map<String, dynamic> _$GetConfigResultToJson(GetConfigResult instance) =>
     <String, dynamic>{
       'datasources': instance.datasources.map((e) => e.toJson()).toList(),
       'generators': instance.generators.map((e) => e.toJson()).toList(),
+      'warnings': instance.warnings,
     };

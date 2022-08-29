@@ -91,6 +91,23 @@ class OtherOperationMappings {
   String toString() => jsonEncode(toJson());
 }
 
+/// Model mapping `one` suffix reader.
+Object? _oneSuffixReader(Map json, String key) {
+  // If the key is contained in the json, return it.
+  if (json.containsKey(key)) return json[key];
+
+  // If the key + 'One' is contained in the json, return it.
+  if (json.containsKey('${key}One')) return json['${key}One'];
+
+  // If the key suffix is `One`, remove it and return the value.
+  final String suffix = key.substring(key.length - 3).toLowerCase();
+  if (suffix == 'one') {
+    return json[key.substring(0, key.length - 3)];
+  }
+
+  return null;
+}
+
 /// Model operation mapping.
 @JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class ModelMapping {
@@ -107,22 +124,26 @@ class ModelMapping {
   final String? findMany;
 
   /// Create operation
-  final String? createOne;
+  @JsonKey(readValue: _oneSuffixReader)
+  final String? create;
 
   /// Create many operation
   final String? createMany;
 
-  /// Update operation
-  final String? updateOne;
+  /// update operation
+  @JsonKey(readValue: _oneSuffixReader)
+  final String? update;
 
   /// Update many operation
   final String? updateMany;
 
   /// Upsert operation
-  final String? upsertOne;
+  @JsonKey(readValue: _oneSuffixReader)
+  final String? upsert;
 
   /// Delete operation
-  final String? deleteOne;
+  @JsonKey(readValue: _oneSuffixReader)
+  final String? delete;
 
   /// Delete many operation
   final String? deleteMany;
@@ -145,12 +166,12 @@ class ModelMapping {
     this.findUnique,
     this.findFirst,
     this.findMany,
-    this.createOne,
+    this.create,
     this.createMany,
-    this.updateOne,
+    this.update,
     this.updateMany,
-    this.upsertOne,
-    this.deleteOne,
+    this.upsert,
+    this.delete,
     this.deleteMany,
     this.aggregate,
     this.groupBy,
@@ -166,28 +187,17 @@ class ModelMapping {
   /// Model operation mapping as JSON map.
   Map<String, dynamic> toJson() => _$ModelMappingToJson(this);
 
-  /// Model operation mapping as JSON map.
-  Map<String, dynamic> toActionMap() {
-    return {
-      'findUnique': findUnique,
-      'findFirst': findFirst,
-      'findMany': findMany,
-      'create': createOne,
-      'createMany': createMany,
-      'update': updateOne,
-      'updateMany': updateMany,
-      'upsert': upsertOne,
-      'delete': deleteOne,
-      'deleteMany': deleteMany,
-      'aggregate': aggregate,
-      'groupBy': groupBy,
-      'findRaw': findRaw,
-      'aggregateRaw': aggregateRaw,
-    };
-  }
-
   @override
   String toString() => jsonEncode(toJson());
+
+  /// Model operations.
+  List<String> get operations {
+    final Map<String, dynamic> json = toJson()
+      ..remove('model')
+      ..removeWhere((key, value) => value is! String || value.isEmpty);
+
+    return json.keys.toList();
+  }
 }
 
 /// Datemodel.

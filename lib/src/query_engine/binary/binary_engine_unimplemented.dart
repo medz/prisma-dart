@@ -4,8 +4,8 @@ import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
 
-class BinrayEngine extends Engine {
-  const BinrayEngine(super.config);
+class BinaryEngine extends Engine {
+  const BinaryEngine(super.config);
 
   @override
   Future<void> commitTransaction(
