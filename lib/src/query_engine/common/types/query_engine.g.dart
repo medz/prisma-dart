@@ -21,3 +21,15 @@ Map<String, dynamic> _$QueryEngineRequestHeadersToJson(
       'transactionId': instance.transactionId,
       'fatal': instance.fatal,
     };
+
+QueryEngineResult _$QueryEngineResultFromJson(Map<String, dynamic> json) =>
+    QueryEngineResult(
+      json['data'],
+      json['elapsed'] as int,
+    );
+
+Map<String, dynamic> _$QueryEngineResultToJson(QueryEngineResult instance) =>
+    <String, dynamic>{
+      'data': instance.data,
+      'elapsed': instance.elapsed,
+    };

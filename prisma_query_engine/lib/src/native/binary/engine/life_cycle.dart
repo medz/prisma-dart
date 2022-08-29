@@ -45,7 +45,7 @@ Future<void> spawn(BinaryEngine engine, String file) async {
           break;
         }
         final res = GQLResponse.fromJson(decodeBody);
-        if ((res.errors??[]).isNotEmpty) {
+        if ((res.errors ?? []).isNotEmpty) {
           gqlErrors = res.errors;
           sleep(Duration(milliseconds: 50));
           continue;
@@ -85,8 +85,9 @@ String ensure(
 
   final prismaQueryEngineBinary = configure["PRISMA_QUERY_ENGINE_BINARY"];
 
-  if (prismaQueryEngineBinary!=null && prismaQueryEngineBinary.isNotEmpty) {
-    print("PRISMA_QUERY_ENGINE_BINARY is defined, using $prismaQueryEngineBinary");
+  if (prismaQueryEngineBinary != null && prismaQueryEngineBinary.isNotEmpty) {
+    print(
+        "PRISMA_QUERY_ENGINE_BINARY is defined, using $prismaQueryEngineBinary");
 
     if (!File(prismaQueryEngineBinary).existsSync()) {
       throw "PRISMA_QUERY_ENGINE_BINARY was provided, but no query engine was found at $prismaQueryEngineBinary";

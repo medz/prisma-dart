@@ -4,7 +4,7 @@ import '../../generator_helper/types.dart';
 
 part 'get_config_result.g.dart';
 
-@JsonSerializable(createFactory: true, createToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class GetConfigResult {
   final List<DataSource> datasources;
   final List<GeneratorConfig> generators;

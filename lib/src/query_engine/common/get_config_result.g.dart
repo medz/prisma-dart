@@ -18,6 +18,6 @@ GetConfigResult _$GetConfigResultFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$GetConfigResultToJson(GetConfigResult instance) =>
     <String, dynamic>{
-      'datasources': instance.datasources,
-      'generators': instance.generators,
+      'datasources': instance.datasources.map((e) => e.toJson()).toList(),
+      'generators': instance.generators.map((e) => e.toJson()).toList(),
     };

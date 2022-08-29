@@ -30,7 +30,7 @@ Map<String, dynamic> _$DataSourceToJson(DataSource instance) =>
       'name': instance.name,
       'activeProvider': _$ConnectorTypeEnumMap[instance.activeProvider]!,
       'provider': _$ConnectorTypeEnumMap[instance.provider]!,
-      'url': instance.url,
+      'url': instance.url.toJson(),
       'config': instance.config,
     };
 
@@ -64,10 +64,10 @@ GeneratorConfig _$GeneratorConfigFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$GeneratorConfigToJson(GeneratorConfig instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'output': instance.output,
+      'output': instance.output?.toJson(),
       'isCustomOutput': instance.isCustomOutput,
-      'provider': instance.provider,
+      'provider': instance.provider.toJson(),
       'config': instance.config,
-      'binaryTargets': instance.binaryTargets,
+      'binaryTargets': instance.binaryTargets.map((e) => e.toJson()).toList(),
       'previewFeatures': instance.previewFeatures,
     };

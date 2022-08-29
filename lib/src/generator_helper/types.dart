@@ -36,7 +36,7 @@ class EnvValue {
 }
 
 /// https://github.com/prisma/prisma/blob/main/packages/generator-helper/src/types.ts#L63
-@JsonSerializable(createFactory: true, createToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class DataSource {
   final String name;
   final ConnectorType activeProvider;
@@ -59,7 +59,7 @@ class DataSource {
 }
 
 /// https://github.com/prisma/prisma/blob/main/packages/generator-helper/src/types.ts#L33
-@JsonSerializable(createFactory: true, createToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class GeneratorConfig {
   final String name;
   final EnvValue? output;

@@ -1,12 +1,14 @@
-import 'dart:async';
-
 import '../../dmmf/dmmf.dart' as dmmf show Document;
+import 'engine_config.dart';
 import 'get_config_result.dart';
 import 'types/query_engine.dart';
 import 'types/transaction.dart';
 
 abstract class Engine {
-  const Engine();
+  const Engine(this.config);
+
+  /// The engine configuration.
+  final EngineConfig config;
 
   /// Start the engine.
   Future<void> start();
@@ -21,17 +23,17 @@ abstract class Engine {
   Future<dmmf.Document> getDmmf();
 
   /// Get current engine version.
-  FutureOr<String> version({bool forceRun = false});
+  Future<String> version({bool forceRun = false});
 
   /// Request a query execution.
-  Future<T> request<T>({
+  Future<QueryEngineResult> request({
     required String query,
     QueryEngineRequestHeaders? headers,
     int? numTry,
   });
 
   /// Request batch query execution.
-  Future<List<T>> requestBatch<T>({
+  Future<QueryEngineResult> requestBatch({
     required List<String> queries,
     QueryEngineRequestHeaders? headers,
     bool? transaction,
