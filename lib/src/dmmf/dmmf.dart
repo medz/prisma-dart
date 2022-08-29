@@ -566,12 +566,12 @@ class InputObjectTypes {
   final List<InputType>? model;
 
   /// For prisma namespace [InputType].
-  final List<InputType> prisma;
+  final List<InputType>? prisma;
 
   /// Create a new input object types.
   const InputObjectTypes({
     this.model,
-    required this.prisma,
+    this.prisma,
   });
 
   /// Input object types from JSON factory constructor.
@@ -652,14 +652,14 @@ class InputConstraints {
 @JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class OutputObjectTypes {
   /// For mode namespace output types.
-  final List<OutputType> model;
+  final List<OutputType>? model;
 
   /// For prisma namespace output types.
   final List<OutputType> prisma;
 
   /// Create a new output object types.
   const OutputObjectTypes({
-    required this.model,
+    this.model,
     required this.prisma,
   });
 

@@ -263,15 +263,15 @@ InputObjectTypes _$InputObjectTypesFromJson(Map<String, dynamic> json) =>
       model: (json['model'] as List<dynamic>?)
           ?.map((e) => InputType.fromJson(e as Map<String, dynamic>))
           .toList(),
-      prisma: (json['prisma'] as List<dynamic>)
-          .map((e) => InputType.fromJson(e as Map<String, dynamic>))
+      prisma: (json['prisma'] as List<dynamic>?)
+          ?.map((e) => InputType.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$InputObjectTypesToJson(InputObjectTypes instance) =>
     <String, dynamic>{
       'model': instance.model?.map((e) => e.toJson()).toList(),
-      'prisma': instance.prisma.map((e) => e.toJson()).toList(),
+      'prisma': instance.prisma?.map((e) => e.toJson()).toList(),
     };
 
 InputType _$InputTypeFromJson(Map<String, dynamic> json) => InputType(
@@ -309,8 +309,8 @@ Map<String, dynamic> _$InputConstraintsToJson(InputConstraints instance) =>
 
 OutputObjectTypes _$OutputObjectTypesFromJson(Map<String, dynamic> json) =>
     OutputObjectTypes(
-      model: (json['model'] as List<dynamic>)
-          .map((e) => OutputType.fromJson(e as Map<String, dynamic>))
+      model: (json['model'] as List<dynamic>?)
+          ?.map((e) => OutputType.fromJson(e as Map<String, dynamic>))
           .toList(),
       prisma: (json['prisma'] as List<dynamic>)
           .map((e) => OutputType.fromJson(e as Map<String, dynamic>))
@@ -319,7 +319,7 @@ OutputObjectTypes _$OutputObjectTypesFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$OutputObjectTypesToJson(OutputObjectTypes instance) =>
     <String, dynamic>{
-      'model': instance.model.map((e) => e.toJson()).toList(),
+      'model': instance.model?.map((e) => e.toJson()).toList(),
       'prisma': instance.prisma.map((e) => e.toJson()).toList(),
     };
 
