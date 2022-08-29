@@ -111,7 +111,9 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<String> version({bool forceRun = false}) {
+  Future<String> version({bool forceRun = false}) async {
+    if (config.clientVersion != null && !forceRun) return config.clientVersion!;
+
     throw UnimplementedError();
   }
 
