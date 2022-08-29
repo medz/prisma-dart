@@ -44,11 +44,11 @@ class BinaryEngineManger {
   late final String _completeCacheBinaryPath =
       join(_cacheDirectory, _cacheBinaryPath);
 
-  /// ensure that the engine exist and return it is path
-  /// it will check if it exist in the project path and has the same version first
-  /// if not it will check the cache path
-  /// if not it will download a new version into cache, copy it to project folder and enure it us execution
-  /// always return a path of the engine
+  /// ensure that the engine exist and return it is path,
+  /// it will check if it exist in the project path and has the same version first,
+  /// if not it will check the cache path,
+  /// if not it will download a new version into cache, copy it to project folder and enure it us execution,
+  /// always return a path of the engine,
   Future<String> ensure(void Function(Future<void> done) onDownload) async {
     // if exist at the project path with the same version return the same path
     if (moveToProject &&
