@@ -136,9 +136,7 @@ class GenerateCommand extends Command {
       version: version,
     );
 
-    // Create generator.
-    final Generator generator = Generator(options);
-    // TODO: run
+    await generator(options);
 
     return 'Generation of "${generatorConfig.name}" succeeded';
   }

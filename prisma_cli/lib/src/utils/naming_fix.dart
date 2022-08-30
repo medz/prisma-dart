@@ -3,9 +3,8 @@ import 'package:prisma_cli/src/utils/dart_keyword.dart';
 /// convert prisma naming into dart naming
 /// handling if the name is a dart keyword
 extension NamingFix on String {
-  String get dartCase =>
-      _replaceDashWithDollar(_postfixDartKeyword(_camelCase(
-          this))); // all keyword start with small letter so only camelCase need to handle keyword
+  String get dartCase => _replaceDashWithDollar(_postfixDartKeyword(_camelCase(
+      this))); // all keyword start with small letter so only camelCase need to handle keyword
   String get dartClassCase => _upperCamelCase(this);
 }
 

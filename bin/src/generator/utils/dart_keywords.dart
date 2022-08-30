@@ -1,6 +1,5 @@
-
-
-const keywords = [
+/// See https://dart.dev/guides/language/language-tour#keywords
+const List<String> _keywords = [
   "abstract",
   "else",
   "import",
@@ -63,5 +62,9 @@ const keywords = [
   "yield",
   "dynamic",
   "implements",
-  "set"
+  "set",
 ];
+
+/// Dart keyword fixer.
+String dartKeywordFix(String value) =>
+    _keywords.contains(value.toLowerCase()) ? '$value\$' : value;

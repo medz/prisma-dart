@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../generator_helper/prisma_enum.dart';
+import '../../../runtime/prisma_enum.dart';
 
 part 'transaction.g.dart';
 

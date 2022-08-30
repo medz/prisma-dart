@@ -21,7 +21,8 @@ class InputObjectTypesBuilder extends CodeableAst {
   String _inputObjectTypesBuilder(List<InputType> inputObjectTypes) {
     final StringBuffer inputObjectTypesCode = StringBuffer();
     for (final InputType element in inputObjectTypes) {
-      inputObjectTypesCode.writeln('class ${className(element.name)} implements ToField  {');
+      inputObjectTypesCode
+          .writeln('class ${className(element.name)} implements ToField  {');
       inputObjectTypesCode.writeln(_buildConstructor(element));
       inputObjectTypesCode.writeln(_buildFields(element));
       inputObjectTypesCode.writeln(_buildInput(element.fields));
@@ -82,7 +83,7 @@ class InputObjectTypesBuilder extends CodeableAst {
         if (inputType.location == FieldLocation.scalar) {
           code.write(usedName);
           code.write(',null');
-        } else if (inputType.location == FieldLocation.enumTypes ) {
+        } else if (inputType.location == FieldLocation.enumTypes) {
           code.write("$usedName.value");
           code.write(',null');
         } else {

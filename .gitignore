@@ -10,3 +10,4 @@ pubspec.lock
 .prisma/
 prisma/
 prisma.yaml
+lib/src/generated/
