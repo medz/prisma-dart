@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
+
 import '../../../configure.dart';
 import '../../dmmf/dmmf.dart' as dmmf;
 import '../common/engine.dart';
@@ -8,6 +11,8 @@ import '../common/engine_config.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
+import 'status_retry_exception.dart';
+import 'utils/get_free_port.dart';
 
 /// Omit enviroment variables.
 Map<String, String> _omitEnviroment(
@@ -23,6 +28,18 @@ class BinaryEngine extends Engine {
 
   GetConfigResult? _getedConfigResult;
   dmmf.Document? _dmmf;
+
+  /// Started engine process.
+  Process? process;
+
+  /// Cached port.
+  int? _port;
+
+  /// Get current running port.
+  Future<int> get port async => _port ??= await getFreePort();
+
+  /// Http client
+  final http.Client _httpClient = http.Client();
 
   @override
   Future<void> commitTransaction(
@@ -95,8 +112,44 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<void> start() {
-    throw UnimplementedError();
+  Future<void> start() async {
+    process ??= await _createProcess();
+  }
+
+  /// Create engine process.
+  Future<Process> _createProcess() async {
+    final int port = await this.port;
+    process = await Process.start(
+      _executable,
+      ['--enable-raw-queries', '--port', port.toString()],
+      includeParentEnvironment: false,
+      environment: _omitEnviroment(_env, ['port']),
+      workingDirectory: config.cwd,
+    );
+
+    process?.stderr.pipe(stderr);
+    process?.stdout.pipe(stdout);
+
+    final Uri url = Uri.http(InternetAddress.anyIPv4.address, 'status');
+    await retry<bool>(
+      () async {
+        final http.Response response = await _httpClient.get(url);
+        if (response.statusCode != 200) {
+          throw StatusRetryException(false);
+        }
+
+        final result = json.decode(response.body);
+        if (result is Map<String, dynamic> && result['status'] == 'ok') {
+          return true;
+        }
+
+        throw StatusRetryException(false);
+      },
+      retryIf: (e) => e is StatusRetryException && e.status == false,
+      maxAttempts: 10,
+    );
+
+    return process!;
   }
 
   @override
@@ -106,8 +159,9 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<void> stop() {
-    throw UnimplementedError();
+  Future<void> stop() async {
+    process?.kill();
+    _port = null;
   }
 
   @override
