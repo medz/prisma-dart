@@ -7,7 +7,7 @@ String _enumBuilder(List<dmmf.SchemaEnum> schemaEnum) {
   for (final element in schemaEnum) {
     enumCodes.writeln('enum ${element.name} implements runtime.PrismaEnum {');
     for (final String value in element.values) {
-      enumCodes.writeln('  @json_annotation.JsonValue(\'$value\')');
+      // enumCodes.writeln('  @json_annotation.JsonValue(\'$value\')');
       enumCodes.writeln('  ${lowerCamelCase(value)}(\'$value\'),');
     }
     enumCodes.writeln(';');

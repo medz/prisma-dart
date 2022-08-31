@@ -805,15 +805,12 @@ class SchemaArg {
 
 /// Schema arg input type.
 @JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
-class SchemaType<T> {
+class SchemaType {
   /// Input type is a list.
   final bool isList;
 
   /// Arg type.
-  ///
-  /// Type of [String]/[InputType]/[SchemaEnum]
-  @_ArgTypeConverter<dynamic>()
-  final T type;
+  final String type;
 
   /// field location.
   final FieldLocation location;
@@ -830,12 +827,11 @@ class SchemaType<T> {
   });
 
   /// Schema arg input type from JSON factory constructor.
-  factory SchemaType.fromJson(Map<String, dynamic> json) {
-    return _$SchemaTypeFromJson<T>(json);
-  }
+  factory SchemaType.fromJson(Map<String, dynamic> json) =>
+      _$SchemaTypeFromJson(json);
 
   /// Schema arg input type as JSON map.
-  Map<String, dynamic> toJson() => _$SchemaTypeToJson<T>(this);
+  Map<String, dynamic> toJson() => _$SchemaTypeToJson(this);
 
   /// Schema arg input type as JSON string.
   @override
@@ -938,43 +934,4 @@ class SchemaField {
   /// Schema field as JSON string.
   @override
   String toString() => jsonEncode(toJson());
-}
-
-//******************************************************************* */
-//* Converters                                                        */
-//******************************************************************* */
-
-/// Arg type converter.
-class _ArgTypeConverter<T> implements JsonConverter<T, dynamic> {
-  const _ArgTypeConverter();
-
-  @override
-  T fromJson(dynamic json) {
-    if (json is String) {
-      return json as T;
-    } else if (json is Map<String, dynamic>) {
-      if (json['fields'] is List) {
-        return InputType.fromJson(json) as T;
-      }
-
-      if (json['values'] is List) {
-        return SchemaEnum.fromJson(json) as T;
-      }
-    }
-
-    throw ArgumentError('Invalid type: $json');
-  }
-
-  @override
-  dynamic toJson(T object) {
-    if (object is String) {
-      return object;
-    } else if (object is InputType) {
-      return object.toJson();
-    } else if (object is SchemaEnum) {
-      return object.toJson();
-    }
-
-    throw ArgumentError('Unknown type $object');
-  }
 }

@@ -1,6 +1,8 @@
 import 'package:orm/dmmf.dart' as dmmf;
 
 import '../utils/came_case.dart';
+import '../utils/object_field_type.dart';
+import '../utils/scalar.dart';
 
 /// Input field name.
 String _fieldName(String name) {
@@ -31,19 +33,9 @@ Future<String> schemaInputObjectTypesGenerator(
 /// Builds the input object types.
 String _builder(List<dmmf.InputType> inputs) {
   final StringBuffer code = StringBuffer();
-  // for (final dmmf.InputType element in inputObjectTypes) {
-  //   code.writeln('class ${className(element.name)} implements ToField  {');
-  //   code.writeln(_buildConstructor(element));
-  //   code.writeln(_buildFields(element));
-  //   code.writeln(_buildInput(element.fields));
-  //   code.writeln('}');
-  // }
-
   for (final dmmf.InputType input in inputs) {
     // Build class header.
-    code.write('class ${upperCamelCase(input.name)} implements');
-    code.write(' runtime.JsonSerializable');
-    code.writeln(' {');
+    code.writeln('class ${upperCamelCase(input.name)} {');
 
     // Build constructor.
     code.writeln(_constructorBuilder(input));
@@ -58,18 +50,54 @@ String _builder(List<dmmf.InputType> inputs) {
   return code.toString();
 }
 
-// Find
-
 /// Build input fields.
 String _fieldsBuilder(List<dmmf.SchemaArg> fields) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.SchemaArg field in fields) {
-    code.writeln('  @JsonKey(name: \'${field.name}\' )');
     code.write('  final ');
-    print(field.inputTypes.map((e) => e.toJson()));
+    code.write(_fieldTypeBuilder(field.inputTypes));
+    if (!field.isRequired) {
+      code.write('?');
+    }
+    code.writeln(' ${_fieldName(field.name)};');
   }
 
   return code.toString();
+}
+
+/// Build input field type.
+String _fieldTypeBuilder(List<dmmf.SchemaType> types) {
+  // If there is only one input type, return the type.
+  if (types.length == 1) {
+    return objectFieldType(types.first);
+  }
+
+  // Remove duplicates.
+  final Set<dmmf.SchemaType> uniqueTypes = Set.from(types);
+  if (uniqueTypes.length == 1) {
+    return objectFieldType(uniqueTypes.first);
+  }
+
+  // If unique types length is greater than 2, take the first two.
+  final List<dmmf.SchemaType> firstTwoTypes = uniqueTypes.take(2).toList();
+
+  // If the first two types are the same, return `isList` is true type.
+  if (firstTwoTypes.first.type == firstTwoTypes.last.type) {
+    final Iterable<dmmf.SchemaType> listTypes =
+        firstTwoTypes.where((element) => element.isList);
+    if (listTypes.length == 1) {
+      return objectFieldType(listTypes.first);
+    }
+  }
+
+  // Build Zore type.
+  final String zeroType = objectFieldType(firstTwoTypes.first);
+
+  // Build One type.
+  final String oneType = objectFieldType(firstTwoTypes.last);
+
+  // Build union type.
+  return 'runtime.PrismaUnion<$zeroType, $oneType>';
 }
 
 /// Builds the constructor.

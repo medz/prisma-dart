@@ -2,10 +2,12 @@ final Map<String, Type> _map = {
   'string': String,
   'float': double,
   'decimal': double,
+  'int': int,
+  'bigint': BigInt,
   'boolean': bool,
   'json': dynamic,
-  'unsupported': dynamic,
   'bytes': List<int>,
+  'unsupported': dynamic,
 };
 
 String scalar(String name) {

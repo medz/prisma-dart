@@ -121,7 +121,8 @@ class Query {
             field.name != "AND" &&
             field.name != "OR" &&
             field.name != "NOT") {
-          if (uniques[field.name]!.fields == field.fields) continue;//TODO sometime we try to add a list to the same list
+          if (uniques[field.name]!.fields == field.fields)
+            continue; //TODO sometime we try to add a list to the same list
           uniques[field.name]!.fields!.addAll(field.fields!);
         } else {
           finals.add(field);

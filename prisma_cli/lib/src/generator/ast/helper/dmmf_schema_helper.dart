@@ -20,8 +20,8 @@ abstract class DMMFSchemaHelper {
 
     queryType = outputTypeMap["Query"]!;
     mutationType = outputTypeMap["Mutation"]!;
-    queryFieldMap=_getQueryFieldMap();
-    mutationFieldMap=_getMutationFieldMap();
+    queryFieldMap = _getQueryFieldMap();
+    mutationFieldMap = _getMutationFieldMap();
     rootFieldMap = _getRootFieldMap();
     enumMap = _getEnumMap();
     inputTypeMap = _getInputTypeMap();
@@ -50,10 +50,7 @@ abstract class DMMFSchemaHelper {
   }
 
   Map<String, SchemaField> _getRootFieldMap() {
-    return {
-      ...queryFieldMap,
-      ...mutationFieldMap
-    };
+    return {...queryFieldMap, ...mutationFieldMap};
   }
 
   Map<String, SchemaField> _getQueryFieldMap() {

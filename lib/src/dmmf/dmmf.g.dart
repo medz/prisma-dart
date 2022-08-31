@@ -372,7 +372,7 @@ SchemaArg _$SchemaArgFromJson(Map<String, dynamic> json) => SchemaArg(
       isNullable: json['isNullable'] as bool,
       isRequired: json['isRequired'] as bool,
       inputTypes: (json['inputTypes'] as List<dynamic>)
-          .map((e) => SchemaType<dynamic>.fromJson(e as Map<String, dynamic>))
+          .map((e) => SchemaType.fromJson(e as Map<String, dynamic>))
           .toList(),
       deprecation: json['deprecation'] == null
           ? null
@@ -388,19 +388,18 @@ Map<String, dynamic> _$SchemaArgToJson(SchemaArg instance) => <String, dynamic>{
       'deprecation': instance.deprecation?.toJson(),
     };
 
-SchemaType<T> _$SchemaTypeFromJson<T>(Map<String, dynamic> json) =>
-    SchemaType<T>(
+SchemaType _$SchemaTypeFromJson(Map<String, dynamic> json) => SchemaType(
       isList: json['isList'] as bool,
-      type: _ArgTypeConverter<T>().fromJson(json['type']),
+      type: json['type'] as String,
       location: $enumDecode(_$FieldLocationEnumMap, json['location']),
       namespace:
           $enumDecodeNullable(_$FieldNamespaceEnumMap, json['namespace']),
     );
 
-Map<String, dynamic> _$SchemaTypeToJson<T>(SchemaType<T> instance) =>
+Map<String, dynamic> _$SchemaTypeToJson(SchemaType instance) =>
     <String, dynamic>{
       'isList': instance.isList,
-      'type': _ArgTypeConverter<T>().toJson(instance.type),
+      'type': instance.type,
       'location': _$FieldLocationEnumMap[instance.location]!,
       'namespace': _$FieldNamespaceEnumMap[instance.namespace],
     };
@@ -433,8 +432,8 @@ Map<String, dynamic> _$DeprecationToJson(Deprecation instance) =>
 SchemaField _$SchemaFieldFromJson(Map<String, dynamic> json) => SchemaField(
       name: json['name'] as String,
       isNullable: json['isNullable'] as bool?,
-      outputType: SchemaType<dynamic>.fromJson(
-          json['outputType'] as Map<String, dynamic>),
+      outputType:
+          SchemaType.fromJson(json['outputType'] as Map<String, dynamic>),
       args: (json['args'] as List<dynamic>)
           .map((e) => SchemaArg.fromJson(e as Map<String, dynamic>))
           .toList(),

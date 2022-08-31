@@ -65,7 +65,5 @@ class GQLError {
       _$GQLErrorFromJson(json);
   GQLError(this.error, this.path, this.query);
 
-  String? rawMessage() => error.replaceAll("\n", " ") ;
+  String? rawMessage() => error.replaceAll("\n", " ");
 }
-
-

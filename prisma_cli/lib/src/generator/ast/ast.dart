@@ -45,7 +45,7 @@ abstract class CodeableAst extends DMMFSchemaHelper {
     return " ";
   }
 
-    String addNoNull(bool isRequired) {
+  String addNoNull(bool isRequired) {
     if (isRequired) return "";
     return "!";
   }
@@ -76,16 +76,17 @@ abstract class CodeableAst extends DMMFSchemaHelper {
     if (uniqueInputTypes.length == 1) {
       return uniqueInputTypes.first;
     }
-  
 
     // return json if exist
-    final jsonInputType = uniqueInputTypes.where((element) =>  element.type == 'Json');
-    if(jsonInputType.isNotEmpty) {
+    final jsonInputType =
+        uniqueInputTypes.where((element) => element.type == 'Json');
+    if (jsonInputType.isNotEmpty) {
       return jsonInputType.first;
     }
     // remove scalar
-    final List<SchemaType> nonScalarInputTypes =
-        uniqueInputTypes.where((element) => element.location != FieldLocation.scalar).toList();
+    final List<SchemaType> nonScalarInputTypes = uniqueInputTypes
+        .where((element) => element.location != FieldLocation.scalar)
+        .toList();
     if (nonScalarInputTypes.length == 1) {
       return nonScalarInputTypes.first;
     }

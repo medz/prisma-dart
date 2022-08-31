@@ -11,14 +11,13 @@ const internalUpdateNotFoundMessage =
 const internalDeleteNotFoundMessage =
     "Error occurred during query execution: InterpretationError(\"Error for binding '0'\", Some(QueryGraphBuilderError(RecordNotFound(\"Record to delete does not exist.\"))))";
 
-
 Future<GQLResponse> execute(
   BinaryEngine engine,
   GQLRequest payload,
 ) async {
   final body = await request(engine, "POST", "/", payload.toJson());
   final GQLResponse response = GQLResponse.fromJson(json.decode(body));
-  if ((response.errors??[]).isNotEmpty) {
+  if ((response.errors ?? []).isNotEmpty) {
     final first = response.errors!.first;
     if (first.rawMessage() == internalUpdateNotFoundMessage ||
         first.rawMessage() == internalDeleteNotFoundMessage) {
@@ -29,7 +28,8 @@ Future<GQLResponse> execute(
   return response;
 }
 
-Future<GQLBatchResponse> batch(BinaryEngine engine, GQLBatchRequest payload) async {
+Future<GQLBatchResponse> batch(
+    BinaryEngine engine, GQLBatchRequest payload) async {
   final body = await request(engine, "POST", "/", payload.toJson());
   return json.decode(body);
 }
@@ -41,5 +41,9 @@ Future<String> request(
   }
   final requestBody = jsonEncode(payload);
   return await requestHttp(
-      engine.client, method, "${engine.url}$path", requestBody, );
+    engine.client,
+    method,
+    "${engine.url}$path",
+    requestBody,
+  );
 }

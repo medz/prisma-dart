@@ -17,7 +17,7 @@ class Engine extends shared.Engine {
   Future<GQLBatchResponse> batch(GQLBatchRequest payload) {
     throw UnimplementedError();
   }
-  
+
   @override
   Future<GQLResponse> request(GQLRequest payload) {
     throw UnimplementedError();

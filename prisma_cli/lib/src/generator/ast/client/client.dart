@@ -1,6 +1,5 @@
 import 'package:prisma_cli/src/generator/ast/ast.dart';
 
-
 class PrismaClientBuilder extends CodeableAst {
   PrismaClientBuilder(super.ast);
 
@@ -19,7 +18,8 @@ class PrismaClient {
 """);
 
     for (final model in ast.dmmf.datamodel.models) {
-      code.writeln("late final ${fieldName(model.name)} = ${className(model.name)}Model(engine) ;");
+      code.writeln(
+          "late final ${fieldName(model.name)} = ${className(model.name)}Model(engine) ;");
     }
 
     code.writeln("}");

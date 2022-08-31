@@ -13,12 +13,12 @@ class DynamicLibraryEngine implements shared.Engine {
   Future<void> stop() {
     throw UnimplementedError();
   }
-  
+
   @override
   Future<GQLBatchResponse> batch(GQLBatchRequest payload) {
     throw UnimplementedError();
   }
-  
+
   @override
   Future<GQLResponse> request(GQLRequest payload) {
     throw UnimplementedError();
