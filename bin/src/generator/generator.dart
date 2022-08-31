@@ -5,9 +5,17 @@ import 'package:orm/generator_helper.dart';
 import 'package:path/path.dart';
 
 import '../utils/find_project.dart';
+import 'dart_style_ignore_builder.dart';
 import 'generator_options.dart';
 import 'impirts_generator.dart';
+import 'model_delegate_builder.dart';
 import 'schema/schema_generator.dart';
+
+final demo = null;
+
+void main(List<String> args) {
+  print(demo.runtimeType);
+}
 
 /// Resolve output.
 String _resolveOutput(EnvValue? output, String schemaPath) {
@@ -45,7 +53,7 @@ Future<void> generator(GeneratorOptions options) async {
 
   // Generate headers.
   sink.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND');
-  sink.writeln('// ignore_for_file: non_constant_identifier_names');
+  sink.writeln(dartStyleIgnoreBuilder());
 
   // Generate imports.
   sink.writeln();
@@ -63,6 +71,10 @@ Future<void> generator(GeneratorOptions options) async {
   final String schema = await schemaGenerator(options.dmmf.schema);
   if (schema.isNotEmpty) sink.writeln(schema);
 
+  // Builder model delegates.
+  final String modelDelegates = modelDelegateBuilder(options.dmmf);
+  if (modelDelegates.isNotEmpty) sink.writeln(modelDelegates);
+
   // Close sink.
   await sink.close();
 
@@ -78,8 +90,4 @@ Future<void> generator(GeneratorOptions options) async {
     ],
     workingDirectory: output.parent.path,
   );
-}
-
-void main(List<String> args) {
-  print(Platform.executable);
 }

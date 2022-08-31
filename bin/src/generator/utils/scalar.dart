@@ -13,6 +13,8 @@ final Map<String, Type> _map = {
 String scalar(String name) {
   if (_map.containsKey(name.toLowerCase())) {
     return _map[name.toLowerCase()].toString();
+  } else if (name.toLowerCase() == 'null') {
+    return 'runtime.PrismaNull';
   }
 
   return name;

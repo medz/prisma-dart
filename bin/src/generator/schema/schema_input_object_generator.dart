@@ -1,14 +1,14 @@
 import 'package:orm/dmmf.dart' as dmmf;
 
 import '../utils/came_case.dart';
+import '../utils/dart_style.dart';
 import '../utils/object_field_type.dart';
-import '../utils/scalar.dart';
 
 /// Input field name.
 String _fieldName(String name) {
   if (['AND', 'OR', 'NOT'].contains(name)) return name;
 
-  return lowerCamelCase(name);
+  return dartStyleField(name);
 }
 
 Future<String> schemaInputObjectTypesGenerator(
@@ -55,7 +55,7 @@ String _fieldsBuilder(List<dmmf.SchemaArg> fields) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.SchemaArg field in fields) {
     code.write('  final ');
-    code.write(_fieldTypeBuilder(field.inputTypes));
+    code.write(fieldTypeBuilder(field.inputTypes));
     if (!field.isRequired) {
       code.write('?');
     }
@@ -66,7 +66,7 @@ String _fieldsBuilder(List<dmmf.SchemaArg> fields) {
 }
 
 /// Build input field type.
-String _fieldTypeBuilder(List<dmmf.SchemaType> types) {
+String fieldTypeBuilder(List<dmmf.SchemaType> types) {
   // If there is only one input type, return the type.
   if (types.length == 1) {
     return objectFieldType(types.first);

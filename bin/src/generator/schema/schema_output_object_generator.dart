@@ -1,6 +1,7 @@
 import 'package:orm/dmmf.dart' as dmmf;
 
 import '../utils/came_case.dart';
+import '../utils/dart_style.dart';
 import '../utils/object_field_type.dart';
 
 String schemaOutputObjectTypesBuilder(dmmf.OutputObjectTypes types) {
@@ -48,6 +49,10 @@ String _builder(List<dmmf.OutputType> types) {
 String _fieldsBuilder(List<dmmf.SchemaField> fields) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.SchemaField field in fields) {
+    if (field.name.toLowerCase() == '_count') {
+      continue;
+    }
+
     // Add final modifier.
     code.write('  final ');
 
@@ -73,6 +78,9 @@ String _constructorBuilder(dmmf.OutputType type) {
   code.writeln('const ${upperCamelCase(type.name)}({');
 
   for (final dmmf.SchemaField field in type.fields) {
+    if (field.name.toLowerCase() == '_count') {
+      continue;
+    }
     if (field.isNullable == false) {
       code.write('required ');
     }
@@ -97,5 +105,5 @@ String _resolveFieldName(String name) {
       return '\$max';
   }
 
-  return lowerCamelCase(name);
+  return dartStyleField(name);
 }
