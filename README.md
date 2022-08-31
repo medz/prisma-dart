@@ -1,25 +1,29 @@
-Next-generation ORM for Dart Native & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB
+Next-generation ORM for Dart Native & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
+
+![Pub Version](https://img.shields.io/pub/v/orm?label=latest)
+![Pub Version (including pre-releases)](https://img.shields.io/pub/v/orm?include_prereleases&label=prerelease)
+[![GitHub license](https://img.shields.io/github/license/odroe/prisma-dart)](https://github.com/odroe/prisma-dart/blob/main/LICENSE)
 
 ## What is it?
 
 Prisma is a **next-generation ORM** that consists of these tools:
 
-- **[Prisma CLI](https://pub.dev/packages/prisma_cli)** - A command line tool that allows you to create and manage your Prisma projects.
-- **[Prisma Dart Runtime](https://pub.dev/packages/orm)** - A Dart package, that allows you to use the ORM in your Dart code.
-- **[Prisma Query Engine](https://pub.dev/packages/prisma_query_engine)** - Prisma query engines wrapper:
+- **Prisma CLI** - A command line tool that allows you to create and manage your Prisma projects.
+- **Prisma Dart Runtime** - A Dart package, that allows you to use the ORM in your Dart code.
+- **Prisma Query Engine** - Prisma query engines wrapper:
   1. **Binary Engine** - Only for Dart Native. **❌ [@Ali Ammar](https://github.com/Ali1Ammar) Developing.**
-  2. **Dynamic Library Engine** - Supported for Dart Native and Flutter. **❌ [@Seven Du](https://github.com/medz) Developing.**
+  2. **Dynamic Library Engine** - Supported for Dart Native and Flutter Native. **❌ [@Seven Du](https://github.com/medz) Developing.**
   3. **Prisma Data Proxy Engint** - Supported all platforms. `❌ Waiting`
 
 
 ## TODO:
 
 - [x] `format` command.
-- [ ] `generate` command.
+- [ ] `generate` command. - In Progressing
 - [x] `init` command.
 - [x] `db push` command.
 - [ ] `db pull` command.
-- [ ] Binary query engine
+- [ ] Binary query engine - In Progressing (https://github.com/odroe/prisma/issues/1)
 - [ ] dylib query engine - In Progressing (https://github.com/odroe/prisma/issues/1)
 - [ ] Prisma data proxy
 
@@ -45,7 +49,7 @@ dart pub add orm
 Then, initialize ORM.
 
 ```bash
-dart run rom init
+dart run orm init
 ```
 
 ### 2. Model your data in the Prisma schema
@@ -78,7 +82,7 @@ Models in the Prisma schema have two main purposes:
 ### 3. Generate the Prisma Client API
 
 ```bash
-dart run rom generate
+dart run orm generate
 ```
 
 ## The Prisma schema
@@ -94,7 +98,7 @@ datasource db {
 
 // Generator
 generator client {
-  provider = "dart run orm generate"
+  provider = "prisma-client-dart"
 }
 
 // Data model
@@ -125,13 +129,7 @@ In this schema, you configure three things:
 
 ### Generating Prisma Client
 
-The first step when using Prisma Client is installing its `orm_runtime`:
-
-```bash
-dart pub add orm_runtime
-```
-
-After you change your data model, you'll need to manually re-generate Prisma Client to ensure the code inside `lib/src/generated_prisma_client` get updated:
+Run the following command to generate Prisma Client:
 
 ```bash
 dart run orm generate
@@ -144,7 +142,7 @@ Once the Prisma Client is generated, you can import it in your code and send que
 Import and instantiate Prisma Client
 
 ```dart
-import 'lib/src/generated_prisma_client/prisma_client.dart';
+import 'prisma_client.dart';
 
 final PrismaClient prisma = PrismaClient();
 ```
@@ -160,6 +158,8 @@ final allUsers = await prisma.user.findMany();
 
 #### Include the posts relation on each returned User object
 
+> **Note:** Temporarily not supported
+
 ```dart
 // Run inside `async` function
 final allUsers = await prisma.user.findMany(
@@ -173,14 +173,16 @@ final allUsers = await prisma.user.findMany(
 
 ```dart
 final filteredPosts = await prisma.post.findMany(
-  where: PostFindManyWhereInput.or([
-    PostFindManyWhereInput(
-      title: StringContains("odore"),
-    ),
-    PostFindManyWhereInput(
-      content: StringContains("odore"),
-    ),
-  ]),
+  where: PostFindManyWhereInput(
+    OR: [
+      PostFindManyWhereInput(
+        title: StringFilter(equals: "odore"),
+      ),
+      PostFindManyWhereInput(
+        content: StringFilter(equals: "odore"),
+      ),
+    ],
+  ),
 );
 ```
 
