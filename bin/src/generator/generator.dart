@@ -8,7 +8,7 @@ import '../utils/find_project.dart';
 import 'dart_style_ignore_builder.dart';
 import 'exports_builder.dart';
 import 'generator_options.dart';
-import 'impirts_generator.dart';
+import 'imports_generator.dart';
 import 'model_delegate_builder.dart';
 import 'schema/schema_generator.dart';
 

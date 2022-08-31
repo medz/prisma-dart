@@ -3,9 +3,16 @@ import 'package:orm/dmmf.dart' as dmmf;
 import '../utils/came_case.dart';
 import '../utils/dart_style.dart';
 
+const List<String> _ignores = ['TransactionIsolationLevel'];
+
 String _enumBuilder(List<dmmf.SchemaEnum> schemaEnum) {
   final StringBuffer enumCodes = StringBuffer();
-  for (final element in schemaEnum) {
+  for (final dmmf.SchemaEnum element in schemaEnum) {
+    // If enum is ignored, then skip.
+    if (_ignores.contains(element.name)) {
+      continue;
+    }
+
     enumCodes.writeln('enum ${element.name} implements runtime.PrismaEnum {');
     for (final String value in element.values) {
       enumCodes.writeln('  ${dartStyleField(value)}(\'$value\'),');

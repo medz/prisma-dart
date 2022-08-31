@@ -53,7 +53,6 @@ enum TransactionIsolationLevel implements PrismaEnum {
   const TransactionIsolationLevel(this.value);
 }
 
-@JsonSerializable(createFactory: true, createToJson: true)
 class TransactionOptions {
   final int maxWait;
   final int timeout;

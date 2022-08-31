@@ -1,12 +1,16 @@
-const Map<String, List<String>> _exports = {
-  'package:orm/orm.dart': ['PrismaUnion', 'PrismaNull'],
+final Map<String, List<String>> _exports = {
+  'package:orm/orm.dart': [
+    'PrismaUnion',
+    'PrismaNull',
+    'TransactionIsolationLevel',
+  ],
 };
 
 // Exports builder.
 String exportsBuilder() {
   final StringBuffer buffer = StringBuffer();
   for (final String package in _exports.keys) {
-    final List<String>? types = _exports[package];
+    final List<String>? types = _exports[package]?..sort();
 
     // If types is null, then package is not exported.
     if (types == null) {
