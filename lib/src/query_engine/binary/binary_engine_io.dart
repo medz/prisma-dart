@@ -41,6 +41,13 @@ class BinaryEngine extends Engine {
   /// Http client
   final http.Client _httpClient = http.Client();
 
+  /// Get server host.
+  final String host = '127.0.0.1';
+
+  /// Get server endpoint.
+  Future<Uri> get endpoint async =>
+      Uri.http(host, '/').replace(port: await port);
+
   @override
   Future<void> commitTransaction(
       {required TransactionHeaders headers, required TransactionInfo info}) {
@@ -119,37 +126,74 @@ class BinaryEngine extends Engine {
   /// Create engine process.
   Future<Process> _createProcess() async {
     final int port = await this.port;
-    process = await Process.start(
+    final Process process = await Process.start(
       _executable,
-      ['--enable-raw-queries', '--port', port.toString()],
+      [
+        '--enable-raw-queries',
+        '--port',
+        port.toString(),
+        '--host',
+        host,
+      ],
       includeParentEnvironment: false,
       environment: _omitEnviroment(_env, ['port']),
       workingDirectory: config.cwd,
     );
 
-    process?.stderr.pipe(stderr);
-    process?.stdout.pipe(stdout);
-
-    final Uri url = Uri.http(InternetAddress.anyIPv4.address, 'status');
-    await retry<bool>(
-      () async {
-        final http.Response response = await _httpClient.get(url);
-        if (response.statusCode != 200) {
-          throw StatusRetryException(false);
-        }
-
-        final result = json.decode(response.body);
-        if (result is Map<String, dynamic> && result['status'] == 'ok') {
-          return true;
-        }
-
-        throw StatusRetryException(false);
-      },
-      retryIf: (e) => e is StatusRetryException && e.status == false,
-      maxAttempts: 10,
+    // Listen for stderr.
+    process.stderr.listen(
+      (data) => stderr.write(utf8.decode(data)),
+      onDone: () => process..kill(),
     );
 
-    return process!;
+    // Listen for stdout.
+    process.stdout.listen(
+      (data) => stdout.write(utf8.decode(data)),
+      onDone: () => process..kill(),
+    );
+
+    // Build GraphQL server endpoint.
+    final Uri url = (await endpoint).replace(path: '/status');
+
+    // Wait for server to start.
+    try {
+      await retry<bool>(
+        () async {
+          try {
+            // Send GET request to server.
+            final http.Response response = await _httpClient.get(url);
+
+            // If request status code not 200, throw exception.
+            if (response.statusCode != 200) {
+              throw StatusRetryException(false);
+            }
+
+            // If response body contains 'ok', return true.
+            final dynamic result = json.decode(response.body);
+            if (result is Map && result['status'] == 'ok') {
+              return true;
+            }
+
+            // Otherwise, throw exception.
+            throw StatusRetryException(false);
+          } catch (e) {
+            throw StatusRetryException(false);
+          }
+        },
+
+        // If exception is StatusRetryException, and status is false, retry.
+        retryIf: (e) => e is StatusRetryException && e.status == false,
+
+        // Max retry count.
+        maxAttempts: 10,
+      );
+    } catch (e) {
+      await stop();
+      rethrow;
+    }
+
+    // Return created process
+    return process;
   }
 
   @override
@@ -181,7 +225,7 @@ class BinaryEngine extends Engine {
       }
     }
 
-    // Find query engine in project.
+    // Find query engine in enviroment.
     if (configure.environment.containsKey('PRISMA_QUERY_ENGINE_BINARY')) {
       final String binary = configure.env('PRISMA_QUERY_ENGINE_BINARY')!;
       final File executable = File(binary);
