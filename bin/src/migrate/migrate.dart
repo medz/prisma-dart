@@ -23,7 +23,7 @@ class Migrate {
 
   /// Start the migrate engine.
   Future<Process> _start() async {
-    if (_process is Process) _process;
+    if (_process != null) return _process!;
 
     final List<String> arguments = ['-d', schemaPath];
 
@@ -35,7 +35,7 @@ class Migrate {
 
     _process = await engine.start(arguments);
     _process?.stderr.pipe(stderr);
-    _process?.stdout.listen(_stdoutHandler, onDone: stop);
+    _process?.stdout.listen(_stdoutHandler);
 
     return _process!;
   }
