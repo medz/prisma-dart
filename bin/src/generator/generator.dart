@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 
 import '../utils/find_project.dart';
 import 'dart_style_ignore_builder.dart';
+import 'exports_builder.dart';
 import 'generator_options.dart';
 import 'impirts_generator.dart';
 import 'model_delegate_builder.dart';
@@ -54,10 +55,14 @@ Future<void> generator(GeneratorOptions options) async {
   // Generate headers.
   sink.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND');
   sink.writeln(dartStyleIgnoreBuilder());
+  sink.writeln();
 
   // Generate imports.
-  sink.writeln();
   sink.write(await importsGenerator());
+  sink.writeln();
+
+  // Build exports.
+  sink.writeln(exportsBuilder());
   sink.writeln();
 
   // Generate power by.
