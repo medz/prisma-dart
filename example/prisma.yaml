@@ -1,0 +1,2 @@
+environment:
+  DATABASE_URL: "postgres://seven@localhost:5432/demo?schema=public"
