@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-dart"
-  output = "../lib/src/generated"
+  output   = "../lib/src/generated"
 }
 
 datasource db {
