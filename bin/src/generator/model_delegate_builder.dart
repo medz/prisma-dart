@@ -73,22 +73,22 @@ String _buildBody(
       _findOperationArgs(document, gqlOperationName);
   final StringBuffer code = StringBuffer();
   code.writeln(
-      'const List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[');
+      'final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[');
   for (final dmmf.SchemaArg arg in args) {
     final String argName = dartStyleField(arg.name);
     code.writeln(
-        'runtime.GraphQLVeriable(\'$argName\', $argName, isRequired: ${arg.isRequired}),');
+        'runtime.GraphQLVeriable(\'${arg.name}\', $argName, isRequired: ${arg.isRequired}),');
   }
   code.writeln('];');
 
   // Build GraphQL SDL builder.
   code.writeln('''
-final runtime.GraphQLBuilder builder = runtime.GraphQLBuilder(
+final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
   document: _document,
   operationName: '$gqlOperationName',
   variables: variables,
   fields: runtime.GraphQLFieldsBuilder(
-    fields: ${modelname}ScalarFieldEnum,
+    fields: ${modelname}ScalarFieldEnum.values,
     document: _document,
   ),
   location: '${_findLocation(document, gqlOperationName)}',
@@ -98,9 +98,9 @@ final runtime.GraphQLBuilder builder = runtime.GraphQLBuilder(
   // Build GraphQL request.
   // TODO: Parser GraphQL response.
   code.writeln('''
-final runtime.QueryEngineResult result = await _engine.request(query: builder.build());
+final runtime.QueryEngineResult result = await _engine.request(query: sdl.build());
 
-// TODO: Parse result.
+
 return result.data;
 ''');
 
@@ -109,10 +109,18 @@ return result.data;
 
 /// Find GraphQL operation location.
 String _findLocation(dmmf.Document document, String gqlOperationName) {
-  if (_findDmmfOutputType(document, 'query') != null) {
-    return 'query';
-  } else if (_findDmmfOutputType(document, 'mutation') != null) {
-    return 'mutation';
+  final dmmf.OutputType? query = _findDmmfOutputType(document, 'query');
+  for (final dmmf.SchemaField field in query?.fields ?? []) {
+    if (field.name == gqlOperationName) {
+      return 'query';
+    }
+  }
+
+  final dmmf.OutputType? mutation = _findDmmfOutputType(document, 'mutation');
+  for (final dmmf.SchemaField field in mutation?.fields ?? []) {
+    if (field.name == gqlOperationName) {
+      return 'mutation';
+    }
   }
 
   throw Exception('Unable to find operation location.');
