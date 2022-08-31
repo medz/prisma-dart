@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -159,33 +160,29 @@ class BinaryEngine extends Engine {
     try {
       await retry<bool>(
         () async {
-          try {
-            // Send GET request to server.
-            final http.Response response = await _httpClient.get(url);
+          // Send GET request to server.
+          final http.Response response = await _httpClient.get(url);
 
-            // If request status code not 200, throw exception.
-            if (response.statusCode != 200) {
-              throw StatusRetryException(false);
-            }
-
-            // If response body contains 'ok', return true.
-            final dynamic result = json.decode(response.body);
-            if (result is Map && result['status'] == 'ok') {
-              return true;
-            }
-
-            // Otherwise, throw exception.
-            throw StatusRetryException(false);
-          } catch (e) {
+          // If request status code not 200, throw exception.
+          if (response.statusCode != 200) {
             throw StatusRetryException(false);
           }
+
+          // If response body contains 'ok', return true.
+          final dynamic result = json.decode(response.body);
+          if (result is Map && result['status'] == 'ok') {
+            return true;
+          }
+
+          // Otherwise, throw exception.
+          throw StatusRetryException(false);
         },
-
-        // If exception is StatusRetryException, and status is false, retry.
-        retryIf: (e) => e is StatusRetryException && e.status == false,
-
-        // Max retry count.
-        maxAttempts: 10,
+        retryIf: (e) =>
+            e is StatusRetryException ||
+            e is http.ClientException ||
+            e is SocketException ||
+            e is TimeoutException,
+        maxAttempts: 5,
       );
     } catch (e) {
       await stop();
