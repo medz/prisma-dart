@@ -11,16 +11,10 @@ String _enumBuilder(List<dmmf.SchemaEnum> schemaEnum) {
       continue;
     }
 
-    enumCodes.writeln(
-        'enum ${languageKeywordEncode(element.name)} implements runtime.PrismaEnum {');
+    enumCodes.writeln('enum ${languageKeywordEncode(element.name)} {');
     for (final String value in element.values) {
-      enumCodes.writeln('  ${languageKeywordEncode(value)}(\'$value\'),');
+      enumCodes.writeln('  ${languageKeywordEncode(value)},');
     }
-    enumCodes.writeln(';');
-    enumCodes.writeln('  @override');
-    enumCodes.writeln('  final String value;');
-    enumCodes
-        .writeln('  const ${languageKeywordEncode(element.name)}(this.value);');
     enumCodes.writeln('}');
   }
 

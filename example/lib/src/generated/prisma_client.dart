@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: non_constant_identifier_names, prefer_void_to_null
+// ignore_for_file: camel_case_types, constant_identifier_names, non_constant_identifier_names
 
 import 'package:orm/orm.dart' as runtime;
 import 'package:orm/dmmf.dart' as dmmf;
@@ -12,53 +12,33 @@ export 'package:orm/orm.dart'
 // GitHub: https://github.com/odroe/prisma-dart
 //******************************************************************************
 
-enum PostScalarFieldEnum implements runtime.PrismaEnum {
-  id('id'),
-  title('title'),
-  content('content'),
-  published('published'),
-  authorId('authorId'),
-  createdAt('createdAt'),
-  ;
-
-  @override
-  final String value;
-  const PostScalarFieldEnum(this.value);
+enum PostScalarFieldEnum {
+  id,
+  title,
+  content,
+  published,
+  authorId,
+  created_at,
 }
 
-enum QueryMode implements runtime.PrismaEnum {
-  default$('default'),
-  insensitive('insensitive'),
-  ;
-
-  @override
-  final String value;
-  const QueryMode(this.value);
+enum QueryMode {
+  default$,
+  insensitive,
 }
 
-enum SortOrder implements runtime.PrismaEnum {
-  asc('asc'),
-  desc('desc'),
-  ;
-
-  @override
-  final String value;
-  const SortOrder(this.value);
+enum SortOrder {
+  asc,
+  desc,
 }
 
-enum UserScalarFieldEnum implements runtime.PrismaEnum {
-  id('id'),
-  name('name'),
-  createdAt('createdAt'),
-  ;
-
-  @override
-  final String value;
-  const UserScalarFieldEnum(this.value);
+enum User_ScalarFieldEnum {
+  id,
+  name,
+  createdAt,
 }
 
-class UserWhereInput {
-  const UserWhereInput({
+class User_WhereInput {
+  const User_WhereInput({
     this.AND,
     this.OR,
     this.NOT,
@@ -68,17 +48,17 @@ class UserWhereInput {
     this.posts,
   });
 
-  final List<UserWhereInput>? AND;
-  final List<UserWhereInput>? OR;
-  final List<UserWhereInput>? NOT;
+  final List<User_WhereInput>? AND;
+  final List<User_WhereInput>? OR;
+  final List<User_WhereInput>? NOT;
   final runtime.PrismaUnion<IntFilter, int>? id;
   final runtime.PrismaUnion<StringFilter, String>? name;
   final runtime.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
   final PostListRelationFilter? posts;
 }
 
-class UserOrderByWithRelationInput {
-  const UserOrderByWithRelationInput({
+class User_OrderByWithRelationInput {
+  const User_OrderByWithRelationInput({
     this.id,
     this.name,
     this.createdAt,
@@ -91,16 +71,16 @@ class UserOrderByWithRelationInput {
   final PostOrderByRelationAggregateInput? posts;
 }
 
-class UserWhereUniqueInput {
-  const UserWhereUniqueInput({
+class User_WhereUniqueInput {
+  const User_WhereUniqueInput({
     this.id,
   });
 
   final int? id;
 }
 
-class UserOrderByWithAggregationInput {
-  const UserOrderByWithAggregationInput({
+class User_OrderByWithAggregationInput {
+  const User_OrderByWithAggregationInput({
     this.id,
     this.name,
     this.createdAt,
@@ -114,15 +94,15 @@ class UserOrderByWithAggregationInput {
   final SortOrder? id;
   final SortOrder? name;
   final SortOrder? createdAt;
-  final UserCountOrderByAggregateInput? $count;
-  final UserAvgOrderByAggregateInput? $avg;
-  final UserMaxOrderByAggregateInput? $max;
-  final UserMinOrderByAggregateInput? $min;
-  final UserSumOrderByAggregateInput? $sum;
+  final User_CountOrderByAggregateInput? $count;
+  final User_AvgOrderByAggregateInput? $avg;
+  final User_MaxOrderByAggregateInput? $max;
+  final User_MinOrderByAggregateInput? $min;
+  final User_SumOrderByAggregateInput? $sum;
 }
 
-class UserScalarWhereWithAggregatesInput {
-  const UserScalarWhereWithAggregatesInput({
+class User_ScalarWhereWithAggregatesInput {
+  const User_ScalarWhereWithAggregatesInput({
     this.AND,
     this.OR,
     this.NOT,
@@ -131,9 +111,9 @@ class UserScalarWhereWithAggregatesInput {
     this.createdAt,
   });
 
-  final List<UserScalarWhereWithAggregatesInput>? AND;
-  final List<UserScalarWhereWithAggregatesInput>? OR;
-  final List<UserScalarWhereWithAggregatesInput>? NOT;
+  final List<User_ScalarWhereWithAggregatesInput>? AND;
+  final List<User_ScalarWhereWithAggregatesInput>? OR;
+  final List<User_ScalarWhereWithAggregatesInput>? NOT;
   final runtime.PrismaUnion<IntWithAggregatesFilter, int>? id;
   final runtime.PrismaUnion<StringWithAggregatesFilter, String>? name;
   final runtime.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? createdAt;
@@ -150,7 +130,7 @@ class PostWhereInput {
     this.published,
     this.authorId,
     this.author,
-    this.createdAt,
+    this.created_at,
   });
 
   final List<PostWhereInput>? AND;
@@ -161,8 +141,8 @@ class PostWhereInput {
   final runtime.PrismaUnion<StringFilter, String>? content;
   final runtime.PrismaUnion<BoolFilter, bool>? published;
   final runtime.PrismaUnion<IntFilter, int>? authorId;
-  final runtime.PrismaUnion<UserRelationFilter, UserWhereInput>? author;
-  final runtime.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
+  final runtime.PrismaUnion<User_RelationFilter, User_WhereInput>? author;
+  final runtime.PrismaUnion<DateTimeFilter, DateTime>? created_at;
 }
 
 class PostOrderByWithRelationInput {
@@ -173,7 +153,7 @@ class PostOrderByWithRelationInput {
     this.published,
     this.authorId,
     this.author,
-    this.createdAt,
+    this.created_at,
   });
 
   final SortOrder? id;
@@ -181,8 +161,8 @@ class PostOrderByWithRelationInput {
   final SortOrder? content;
   final SortOrder? published;
   final SortOrder? authorId;
-  final UserOrderByWithRelationInput? author;
-  final SortOrder? createdAt;
+  final User_OrderByWithRelationInput? author;
+  final SortOrder? created_at;
 }
 
 class PostWhereUniqueInput {
@@ -200,7 +180,7 @@ class PostOrderByWithAggregationInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
     this.$count,
     this.$avg,
     this.$max,
@@ -213,7 +193,7 @@ class PostOrderByWithAggregationInput {
   final SortOrder? content;
   final SortOrder? published;
   final SortOrder? authorId;
-  final SortOrder? createdAt;
+  final SortOrder? created_at;
   final PostCountOrderByAggregateInput? $count;
   final PostAvgOrderByAggregateInput? $avg;
   final PostMaxOrderByAggregateInput? $max;
@@ -231,7 +211,7 @@ class PostScalarWhereWithAggregatesInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final List<PostScalarWhereWithAggregatesInput>? AND;
@@ -242,11 +222,11 @@ class PostScalarWhereWithAggregatesInput {
   final runtime.PrismaUnion<StringWithAggregatesFilter, String>? content;
   final runtime.PrismaUnion<BoolWithAggregatesFilter, bool>? published;
   final runtime.PrismaUnion<IntWithAggregatesFilter, int>? authorId;
-  final runtime.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? createdAt;
+  final runtime.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? created_at;
 }
 
-class UserCreateInput {
-  const UserCreateInput({
+class User_CreateInput {
+  const User_CreateInput({
     required this.name,
     this.createdAt,
     this.posts,
@@ -257,8 +237,8 @@ class UserCreateInput {
   final PostCreateNestedManyWithoutAuthorInput? posts;
 }
 
-class UserUncheckedCreateInput {
-  const UserUncheckedCreateInput({
+class User_UncheckedCreateInput {
+  const User_UncheckedCreateInput({
     this.id,
     required this.name,
     this.createdAt,
@@ -271,8 +251,8 @@ class UserUncheckedCreateInput {
   final PostUncheckedCreateNestedManyWithoutAuthorInput? posts;
 }
 
-class UserUpdateInput {
-  const UserUpdateInput({
+class User_UpdateInput {
+  const User_UpdateInput({
     this.name,
     this.createdAt,
     this.posts,
@@ -284,8 +264,8 @@ class UserUpdateInput {
   final PostUpdateManyWithoutAuthorNestedInput? posts;
 }
 
-class UserUncheckedUpdateInput {
-  const UserUncheckedUpdateInput({
+class User_UncheckedUpdateInput {
+  const User_UncheckedUpdateInput({
     this.id,
     this.name,
     this.createdAt,
@@ -299,8 +279,8 @@ class UserUncheckedUpdateInput {
   final PostUncheckedUpdateManyWithoutAuthorNestedInput? posts;
 }
 
-class UserCreateManyInput {
-  const UserCreateManyInput({
+class User_CreateManyInput {
+  const User_CreateManyInput({
     this.id,
     required this.name,
     this.createdAt,
@@ -311,8 +291,8 @@ class UserCreateManyInput {
   final DateTime? createdAt;
 }
 
-class UserUpdateManyMutationInput {
-  const UserUpdateManyMutationInput({
+class User_UpdateManyMutationInput {
+  const User_UpdateManyMutationInput({
     this.name,
     this.createdAt,
   });
@@ -322,8 +302,8 @@ class UserUpdateManyMutationInput {
       createdAt;
 }
 
-class UserUncheckedUpdateManyInput {
-  const UserUncheckedUpdateManyInput({
+class User_UncheckedUpdateManyInput {
+  const User_UncheckedUpdateManyInput({
     this.id,
     this.name,
     this.createdAt,
@@ -341,14 +321,14 @@ class PostCreateInput {
     required this.content,
     required this.published,
     required this.author,
-    this.createdAt,
+    this.created_at,
   });
 
   final String title;
   final String content;
   final bool published;
-  final UserCreateNestedOneWithoutPostsInput author;
-  final DateTime? createdAt;
+  final User_CreateNestedOneWithoutPostsInput author;
+  final DateTime? created_at;
 }
 
 class PostUncheckedCreateInput {
@@ -358,7 +338,7 @@ class PostUncheckedCreateInput {
     required this.content,
     required this.published,
     required this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final int? id;
@@ -366,7 +346,7 @@ class PostUncheckedCreateInput {
   final String content;
   final bool published;
   final int authorId;
-  final DateTime? createdAt;
+  final DateTime? created_at;
 }
 
 class PostUpdateInput {
@@ -375,15 +355,15 @@ class PostUpdateInput {
     this.content,
     this.published,
     this.author,
-    this.createdAt,
+    this.created_at,
   });
 
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? content;
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
-  final UserUpdateOneRequiredWithoutPostsNestedInput? author;
+  final User_UpdateOneRequiredWithoutPostsNestedInput? author;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
-      createdAt;
+      created_at;
 }
 
 class PostUncheckedUpdateInput {
@@ -393,7 +373,7 @@ class PostUncheckedUpdateInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? id;
@@ -402,7 +382,7 @@ class PostUncheckedUpdateInput {
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? authorId;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
-      createdAt;
+      created_at;
 }
 
 class PostCreateManyInput {
@@ -412,7 +392,7 @@ class PostCreateManyInput {
     required this.content,
     required this.published,
     required this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final int? id;
@@ -420,7 +400,7 @@ class PostCreateManyInput {
   final String content;
   final bool published;
   final int authorId;
-  final DateTime? createdAt;
+  final DateTime? created_at;
 }
 
 class PostUpdateManyMutationInput {
@@ -428,14 +408,14 @@ class PostUpdateManyMutationInput {
     this.title,
     this.content,
     this.published,
-    this.createdAt,
+    this.created_at,
   });
 
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? content;
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
-      createdAt;
+      created_at;
 }
 
 class PostUncheckedUpdateManyInput {
@@ -445,7 +425,7 @@ class PostUncheckedUpdateManyInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? id;
@@ -454,7 +434,7 @@ class PostUncheckedUpdateManyInput {
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? authorId;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
-      createdAt;
+      created_at;
 }
 
 class IntFilter {
@@ -551,8 +531,8 @@ class PostOrderByRelationAggregateInput {
   final SortOrder? $count;
 }
 
-class UserCountOrderByAggregateInput {
-  const UserCountOrderByAggregateInput({
+class User_CountOrderByAggregateInput {
+  const User_CountOrderByAggregateInput({
     this.id,
     this.name,
     this.createdAt,
@@ -563,28 +543,16 @@ class UserCountOrderByAggregateInput {
   final SortOrder? createdAt;
 }
 
-class UserAvgOrderByAggregateInput {
-  const UserAvgOrderByAggregateInput({
+class User_AvgOrderByAggregateInput {
+  const User_AvgOrderByAggregateInput({
     this.id,
   });
 
   final SortOrder? id;
 }
 
-class UserMaxOrderByAggregateInput {
-  const UserMaxOrderByAggregateInput({
-    this.id,
-    this.name,
-    this.createdAt,
-  });
-
-  final SortOrder? id;
-  final SortOrder? name;
-  final SortOrder? createdAt;
-}
-
-class UserMinOrderByAggregateInput {
-  const UserMinOrderByAggregateInput({
+class User_MaxOrderByAggregateInput {
+  const User_MaxOrderByAggregateInput({
     this.id,
     this.name,
     this.createdAt,
@@ -595,8 +563,20 @@ class UserMinOrderByAggregateInput {
   final SortOrder? createdAt;
 }
 
-class UserSumOrderByAggregateInput {
-  const UserSumOrderByAggregateInput({
+class User_MinOrderByAggregateInput {
+  const User_MinOrderByAggregateInput({
+    this.id,
+    this.name,
+    this.createdAt,
+  });
+
+  final SortOrder? id;
+  final SortOrder? name;
+  final SortOrder? createdAt;
+}
+
+class User_SumOrderByAggregateInput {
+  const User_SumOrderByAggregateInput({
     this.id,
   });
 
@@ -709,14 +689,14 @@ class BoolFilter {
   final runtime.PrismaUnion<bool, NestedBoolFilter>? not;
 }
 
-class UserRelationFilter {
-  const UserRelationFilter({
+class User_RelationFilter {
+  const User_RelationFilter({
     this.is$,
     this.isNot,
   });
 
-  final UserWhereInput? is$;
-  final UserWhereInput? isNot;
+  final User_WhereInput? is$;
+  final User_WhereInput? isNot;
 }
 
 class PostCountOrderByAggregateInput {
@@ -726,7 +706,7 @@ class PostCountOrderByAggregateInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final SortOrder? id;
@@ -734,7 +714,7 @@ class PostCountOrderByAggregateInput {
   final SortOrder? content;
   final SortOrder? published;
   final SortOrder? authorId;
-  final SortOrder? createdAt;
+  final SortOrder? created_at;
 }
 
 class PostAvgOrderByAggregateInput {
@@ -754,7 +734,7 @@ class PostMaxOrderByAggregateInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final SortOrder? id;
@@ -762,7 +742,7 @@ class PostMaxOrderByAggregateInput {
   final SortOrder? content;
   final SortOrder? published;
   final SortOrder? authorId;
-  final SortOrder? createdAt;
+  final SortOrder? created_at;
 }
 
 class PostMinOrderByAggregateInput {
@@ -772,7 +752,7 @@ class PostMinOrderByAggregateInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final SortOrder? id;
@@ -780,7 +760,7 @@ class PostMinOrderByAggregateInput {
   final SortOrder? content;
   final SortOrder? published;
   final SortOrder? authorId;
-  final SortOrder? createdAt;
+  final SortOrder? created_at;
 }
 
 class PostSumOrderByAggregateInput {
@@ -925,17 +905,17 @@ class PostUncheckedUpdateManyWithoutAuthorNestedInput {
   final List<PostScalarWhereInput>? deleteMany;
 }
 
-class UserCreateNestedOneWithoutPostsInput {
-  const UserCreateNestedOneWithoutPostsInput({
+class User_CreateNestedOneWithoutPostsInput {
+  const User_CreateNestedOneWithoutPostsInput({
     this.create,
     this.connectOrCreate,
     this.connect,
   });
 
-  final runtime.PrismaUnion<UserCreateWithoutPostsInput,
-      UserUncheckedCreateWithoutPostsInput>? create;
-  final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
-  final UserWhereUniqueInput? connect;
+  final runtime.PrismaUnion<User_CreateWithoutPostsInput,
+      User_UncheckedCreateWithoutPostsInput>? create;
+  final User_CreateOrConnectWithoutPostsInput? connectOrCreate;
+  final User_WhereUniqueInput? connect;
 }
 
 class BoolFieldUpdateOperationsInput {
@@ -946,8 +926,8 @@ class BoolFieldUpdateOperationsInput {
   final bool? set$;
 }
 
-class UserUpdateOneRequiredWithoutPostsNestedInput {
-  const UserUpdateOneRequiredWithoutPostsNestedInput({
+class User_UpdateOneRequiredWithoutPostsNestedInput {
+  const User_UpdateOneRequiredWithoutPostsNestedInput({
     this.create,
     this.connectOrCreate,
     this.upsert,
@@ -955,13 +935,13 @@ class UserUpdateOneRequiredWithoutPostsNestedInput {
     this.update,
   });
 
-  final runtime.PrismaUnion<UserCreateWithoutPostsInput,
-      UserUncheckedCreateWithoutPostsInput>? create;
-  final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
-  final UserUpsertWithoutPostsInput? upsert;
-  final UserWhereUniqueInput? connect;
-  final runtime.PrismaUnion<UserUpdateWithoutPostsInput,
-      UserUncheckedUpdateWithoutPostsInput>? update;
+  final runtime.PrismaUnion<User_CreateWithoutPostsInput,
+      User_UncheckedCreateWithoutPostsInput>? create;
+  final User_CreateOrConnectWithoutPostsInput? connectOrCreate;
+  final User_UpsertWithoutPostsInput? upsert;
+  final User_WhereUniqueInput? connect;
+  final runtime.PrismaUnion<User_UpdateWithoutPostsInput,
+      User_UncheckedUpdateWithoutPostsInput>? update;
 }
 
 class NestedIntFilter {
@@ -1183,13 +1163,13 @@ class PostCreateWithoutAuthorInput {
     required this.title,
     required this.content,
     required this.published,
-    this.createdAt,
+    this.created_at,
   });
 
   final String title;
   final String content;
   final bool published;
-  final DateTime? createdAt;
+  final DateTime? created_at;
 }
 
 class PostUncheckedCreateWithoutAuthorInput {
@@ -1198,14 +1178,14 @@ class PostUncheckedCreateWithoutAuthorInput {
     required this.title,
     required this.content,
     required this.published,
-    this.createdAt,
+    this.created_at,
   });
 
   final int? id;
   final String title;
   final String content;
   final bool published;
-  final DateTime? createdAt;
+  final DateTime? created_at;
 }
 
 class PostCreateOrConnectWithoutAuthorInput {
@@ -1275,7 +1255,7 @@ class PostScalarWhereInput {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final List<PostScalarWhereInput>? AND;
@@ -1286,11 +1266,11 @@ class PostScalarWhereInput {
   final runtime.PrismaUnion<StringFilter, String>? content;
   final runtime.PrismaUnion<BoolFilter, bool>? published;
   final runtime.PrismaUnion<IntFilter, int>? authorId;
-  final runtime.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
+  final runtime.PrismaUnion<DateTimeFilter, DateTime>? created_at;
 }
 
-class UserCreateWithoutPostsInput {
-  const UserCreateWithoutPostsInput({
+class User_CreateWithoutPostsInput {
+  const User_CreateWithoutPostsInput({
     required this.name,
     this.createdAt,
   });
@@ -1299,8 +1279,8 @@ class UserCreateWithoutPostsInput {
   final DateTime? createdAt;
 }
 
-class UserUncheckedCreateWithoutPostsInput {
-  const UserUncheckedCreateWithoutPostsInput({
+class User_UncheckedCreateWithoutPostsInput {
+  const User_UncheckedCreateWithoutPostsInput({
     this.id,
     required this.name,
     this.createdAt,
@@ -1311,31 +1291,31 @@ class UserUncheckedCreateWithoutPostsInput {
   final DateTime? createdAt;
 }
 
-class UserCreateOrConnectWithoutPostsInput {
-  const UserCreateOrConnectWithoutPostsInput({
+class User_CreateOrConnectWithoutPostsInput {
+  const User_CreateOrConnectWithoutPostsInput({
     required this.where,
     required this.create,
   });
 
-  final UserWhereUniqueInput where;
-  final runtime.PrismaUnion<UserCreateWithoutPostsInput,
-      UserUncheckedCreateWithoutPostsInput> create;
+  final User_WhereUniqueInput where;
+  final runtime.PrismaUnion<User_CreateWithoutPostsInput,
+      User_UncheckedCreateWithoutPostsInput> create;
 }
 
-class UserUpsertWithoutPostsInput {
-  const UserUpsertWithoutPostsInput({
+class User_UpsertWithoutPostsInput {
+  const User_UpsertWithoutPostsInput({
     required this.update,
     required this.create,
   });
 
-  final runtime.PrismaUnion<UserUpdateWithoutPostsInput,
-      UserUncheckedUpdateWithoutPostsInput> update;
-  final runtime.PrismaUnion<UserCreateWithoutPostsInput,
-      UserUncheckedCreateWithoutPostsInput> create;
+  final runtime.PrismaUnion<User_UpdateWithoutPostsInput,
+      User_UncheckedUpdateWithoutPostsInput> update;
+  final runtime.PrismaUnion<User_CreateWithoutPostsInput,
+      User_UncheckedCreateWithoutPostsInput> create;
 }
 
-class UserUpdateWithoutPostsInput {
-  const UserUpdateWithoutPostsInput({
+class User_UpdateWithoutPostsInput {
+  const User_UpdateWithoutPostsInput({
     this.name,
     this.createdAt,
   });
@@ -1345,8 +1325,8 @@ class UserUpdateWithoutPostsInput {
       createdAt;
 }
 
-class UserUncheckedUpdateWithoutPostsInput {
-  const UserUncheckedUpdateWithoutPostsInput({
+class User_UncheckedUpdateWithoutPostsInput {
+  const User_UncheckedUpdateWithoutPostsInput({
     this.id,
     this.name,
     this.createdAt,
@@ -1364,14 +1344,14 @@ class PostCreateManyAuthorInput {
     required this.title,
     required this.content,
     required this.published,
-    this.createdAt,
+    this.created_at,
   });
 
   final int? id;
   final String title;
   final String content;
   final bool published;
-  final DateTime? createdAt;
+  final DateTime? created_at;
 }
 
 class PostUpdateWithoutAuthorInput {
@@ -1379,14 +1359,14 @@ class PostUpdateWithoutAuthorInput {
     this.title,
     this.content,
     this.published,
-    this.createdAt,
+    this.created_at,
   });
 
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? content;
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
-      createdAt;
+      created_at;
 }
 
 class PostUncheckedUpdateWithoutAuthorInput {
@@ -1395,7 +1375,7 @@ class PostUncheckedUpdateWithoutAuthorInput {
     this.title,
     this.content,
     this.published,
-    this.createdAt,
+    this.created_at,
   });
 
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? id;
@@ -1403,7 +1383,7 @@ class PostUncheckedUpdateWithoutAuthorInput {
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? content;
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
-      createdAt;
+      created_at;
 }
 
 class PostUncheckedUpdateManyWithoutPostsInput {
@@ -1412,7 +1392,7 @@ class PostUncheckedUpdateManyWithoutPostsInput {
     this.title,
     this.content,
     this.published,
-    this.createdAt,
+    this.created_at,
   });
 
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? id;
@@ -1420,25 +1400,25 @@ class PostUncheckedUpdateManyWithoutPostsInput {
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? content;
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
-      createdAt;
+      created_at;
 }
 
-class AggregateUser {
-  const AggregateUser({
+class AggregateUser_ {
+  const AggregateUser_({
     this.$avg,
     this.$sum,
     this.$min,
     this.$max,
   });
 
-  final UserAvgAggregateOutputType? $avg;
-  final UserSumAggregateOutputType? $sum;
-  final UserMinAggregateOutputType? $min;
-  final UserMaxAggregateOutputType? $max;
+  final User_AvgAggregateOutputType? $avg;
+  final User_SumAggregateOutputType? $sum;
+  final User_MinAggregateOutputType? $min;
+  final User_MaxAggregateOutputType? $max;
 }
 
-class UserGroupByOutputType {
-  const UserGroupByOutputType({
+class User_GroupByOutputType {
+  const User_GroupByOutputType({
     required this.id,
     required this.name,
     required this.createdAt,
@@ -1451,10 +1431,10 @@ class UserGroupByOutputType {
   final int id;
   final String name;
   final DateTime createdAt;
-  final UserAvgAggregateOutputType? $avg;
-  final UserSumAggregateOutputType? $sum;
-  final UserMinAggregateOutputType? $min;
-  final UserMaxAggregateOutputType? $max;
+  final User_AvgAggregateOutputType? $avg;
+  final User_SumAggregateOutputType? $sum;
+  final User_MinAggregateOutputType? $min;
+  final User_MaxAggregateOutputType? $max;
 }
 
 class AggregatePost {
@@ -1478,7 +1458,7 @@ class PostGroupByOutputType {
     required this.content,
     required this.published,
     required this.authorId,
-    required this.createdAt,
+    required this.created_at,
     this.$avg,
     this.$sum,
     this.$min,
@@ -1490,7 +1470,7 @@ class PostGroupByOutputType {
   final String content;
   final bool published;
   final int authorId;
-  final DateTime createdAt;
+  final DateTime created_at;
   final PostAvgAggregateOutputType? $avg;
   final PostSumAggregateOutputType? $sum;
   final PostMinAggregateOutputType? $min;
@@ -1505,16 +1485,16 @@ class AffectedRowsOutput {
   final int count;
 }
 
-class UserCountOutputType {
-  const UserCountOutputType({
+class User_CountOutputType {
+  const User_CountOutputType({
     required this.posts,
   });
 
   final int posts;
 }
 
-class UserCountAggregateOutputType {
-  const UserCountAggregateOutputType({
+class User_CountAggregateOutputType {
+  const User_CountAggregateOutputType({
     required this.id,
     required this.name,
     required this.createdAt,
@@ -1527,24 +1507,24 @@ class UserCountAggregateOutputType {
   final int $all;
 }
 
-class UserAvgAggregateOutputType {
-  const UserAvgAggregateOutputType({
+class User_AvgAggregateOutputType {
+  const User_AvgAggregateOutputType({
     this.id,
   });
 
   final double? id;
 }
 
-class UserSumAggregateOutputType {
-  const UserSumAggregateOutputType({
+class User_SumAggregateOutputType {
+  const User_SumAggregateOutputType({
     this.id,
   });
 
   final int? id;
 }
 
-class UserMinAggregateOutputType {
-  const UserMinAggregateOutputType({
+class User_MinAggregateOutputType {
+  const User_MinAggregateOutputType({
     this.id,
     this.name,
     this.createdAt,
@@ -1555,8 +1535,8 @@ class UserMinAggregateOutputType {
   final DateTime? createdAt;
 }
 
-class UserMaxAggregateOutputType {
-  const UserMaxAggregateOutputType({
+class User_MaxAggregateOutputType {
+  const User_MaxAggregateOutputType({
     this.id,
     this.name,
     this.createdAt,
@@ -1574,7 +1554,7 @@ class PostCountAggregateOutputType {
     required this.content,
     required this.published,
     required this.authorId,
-    required this.createdAt,
+    required this.created_at,
     required this.$all,
   });
 
@@ -1583,7 +1563,7 @@ class PostCountAggregateOutputType {
   final int content;
   final int published;
   final int authorId;
-  final int createdAt;
+  final int created_at;
   final int $all;
 }
 
@@ -1614,7 +1594,7 @@ class PostMinAggregateOutputType {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final int? id;
@@ -1622,7 +1602,7 @@ class PostMinAggregateOutputType {
   final String? content;
   final bool? published;
   final int? authorId;
-  final DateTime? createdAt;
+  final DateTime? created_at;
 }
 
 class PostMaxAggregateOutputType {
@@ -1632,7 +1612,7 @@ class PostMaxAggregateOutputType {
     this.content,
     this.published,
     this.authorId,
-    this.createdAt,
+    this.created_at,
   });
 
   final int? id;
@@ -1640,11 +1620,11 @@ class PostMaxAggregateOutputType {
   final String? content;
   final bool? published;
   final int? authorId;
-  final DateTime? createdAt;
+  final DateTime? created_at;
 }
 
-class User {
-  const User({
+class User_ {
+  const User_({
     required this.id,
     required this.name,
     required this.createdAt,
@@ -1665,7 +1645,7 @@ class Post {
     required this.published,
     required this.authorId,
     required this.author,
-    required this.createdAt,
+    required this.created_at,
   });
 
   final int id;
@@ -1673,12 +1653,12 @@ class Post {
   final String content;
   final bool published;
   final int authorId;
-  final User author;
-  final DateTime createdAt;
+  final User_ author;
+  final DateTime created_at;
 }
 
-class UserDelegate {
-  const UserDelegate({
+class User_Delegate {
+  const User_Delegate({
     required runtime.Engine engine,
     required dmmf.Document document,
   })  : _engine = engine,
@@ -1687,18 +1667,18 @@ class UserDelegate {
   final runtime.Engine _engine;
   final dmmf.Document _document;
 
-  Future<User?> findUnique({
-    required UserWhereUniqueInput where,
+  Future<User_?> findUnique({
+    required User_WhereUniqueInput where,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
       runtime.GraphQLVeriable('where', where, isRequired: true),
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'findUniqueUser',
+      operationName: 'findUniqueUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'query',
@@ -1710,13 +1690,13 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<User?> findFirst({
-    UserWhereInput? where,
-    List<UserOrderByWithRelationInput>? orderBy,
-    UserWhereUniqueInput? cursor,
+  Future<User_?> findFirst({
+    User_WhereInput? where,
+    List<User_OrderByWithRelationInput>? orderBy,
+    User_WhereUniqueInput? cursor,
     int? take,
     int? skip,
-    List<UserScalarFieldEnum>? distinct,
+    List<User_ScalarFieldEnum>? distinct,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
       runtime.GraphQLVeriable('where', where, isRequired: false),
@@ -1728,10 +1708,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'findFirstUser',
+      operationName: 'findFirstUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'query',
@@ -1743,13 +1723,13 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<List<User>> findMany({
-    UserWhereInput? where,
-    List<UserOrderByWithRelationInput>? orderBy,
-    UserWhereUniqueInput? cursor,
+  Future<List<User_>> findMany({
+    User_WhereInput? where,
+    List<User_OrderByWithRelationInput>? orderBy,
+    User_WhereUniqueInput? cursor,
     int? take,
     int? skip,
-    List<UserScalarFieldEnum>? distinct,
+    List<User_ScalarFieldEnum>? distinct,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
       runtime.GraphQLVeriable('where', where, isRequired: false),
@@ -1761,10 +1741,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'findManyUser',
+      operationName: 'findManyUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'query',
@@ -1776,8 +1756,8 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<User> create({
-    required runtime.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
+  Future<User_> create({
+    required runtime.PrismaUnion<User_CreateInput, User_UncheckedCreateInput>
         data,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
@@ -1785,10 +1765,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'createOneUser',
+      operationName: 'createOneUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'mutation',
@@ -1801,7 +1781,7 @@ class UserDelegate {
   }
 
   Future<AffectedRowsOutput> createMany({
-    required List<UserCreateManyInput> data,
+    required List<User_CreateManyInput> data,
     bool? skipDuplicates,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
@@ -1811,10 +1791,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'createManyUser',
+      operationName: 'createManyUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'mutation',
@@ -1826,10 +1806,10 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<User?> update({
-    required runtime.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput>
+  Future<User_?> update({
+    required runtime.PrismaUnion<User_UpdateInput, User_UncheckedUpdateInput>
         data,
-    required UserWhereUniqueInput where,
+    required User_WhereUniqueInput where,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
       runtime.GraphQLVeriable('data', data, isRequired: true),
@@ -1837,10 +1817,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'updateOneUser',
+      operationName: 'updateOneUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'mutation',
@@ -1853,10 +1833,10 @@ class UserDelegate {
   }
 
   Future<AffectedRowsOutput> updateMany({
-    required runtime.PrismaUnion<UserUpdateManyMutationInput,
-            UserUncheckedUpdateManyInput>
+    required runtime.PrismaUnion<User_UpdateManyMutationInput,
+            User_UncheckedUpdateManyInput>
         data,
-    UserWhereInput? where,
+    User_WhereInput? where,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
       runtime.GraphQLVeriable('data', data, isRequired: true),
@@ -1864,10 +1844,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'updateManyUser',
+      operationName: 'updateManyUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'mutation',
@@ -1879,11 +1859,11 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<User> upsert({
-    required UserWhereUniqueInput where,
-    required runtime.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
+  Future<User_> upsert({
+    required User_WhereUniqueInput where,
+    required runtime.PrismaUnion<User_CreateInput, User_UncheckedCreateInput>
         create,
-    required runtime.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput>
+    required runtime.PrismaUnion<User_UpdateInput, User_UncheckedUpdateInput>
         update,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
@@ -1893,10 +1873,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'upsertOneUser',
+      operationName: 'upsertOneUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'mutation',
@@ -1908,18 +1888,18 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<User?> delete({
-    required UserWhereUniqueInput where,
+  Future<User_?> delete({
+    required User_WhereUniqueInput where,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
       runtime.GraphQLVeriable('where', where, isRequired: true),
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'deleteOneUser',
+      operationName: 'deleteOneUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'mutation',
@@ -1932,17 +1912,17 @@ class UserDelegate {
   }
 
   Future<AffectedRowsOutput> deleteMany({
-    UserWhereInput? where,
+    User_WhereInput? where,
   }) async {
     final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
       runtime.GraphQLVeriable('where', where, isRequired: false),
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'deleteManyUser',
+      operationName: 'deleteManyUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'mutation',
@@ -1954,10 +1934,10 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<AggregateUser> aggregate({
-    UserWhereInput? where,
-    List<UserOrderByWithRelationInput>? orderBy,
-    UserWhereUniqueInput? cursor,
+  Future<AggregateUser_> aggregate({
+    User_WhereInput? where,
+    List<User_OrderByWithRelationInput>? orderBy,
+    User_WhereUniqueInput? cursor,
     int? take,
     int? skip,
   }) async {
@@ -1970,10 +1950,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'aggregateUser',
+      operationName: 'aggregateUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'query',
@@ -1985,11 +1965,11 @@ class UserDelegate {
     return result.data;
   }
 
-  Future<List<UserGroupByOutputType>> groupBy({
-    UserWhereInput? where,
-    List<UserOrderByWithAggregationInput>? orderBy,
-    required List<UserScalarFieldEnum> by,
-    UserScalarWhereWithAggregatesInput? having,
+  Future<List<User_GroupByOutputType>> groupBy({
+    User_WhereInput? where,
+    List<User_OrderByWithAggregationInput>? orderBy,
+    required List<User_ScalarFieldEnum> by,
+    User_ScalarWhereWithAggregatesInput? having,
     int? take,
     int? skip,
   }) async {
@@ -2003,10 +1983,10 @@ class UserDelegate {
     ];
     final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
       document: _document,
-      operationName: 'groupByUser',
+      operationName: 'groupByUser_',
       variables: variables,
       fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
+        fields: User_ScalarFieldEnum.values,
         document: _document,
       ),
       location: 'query',

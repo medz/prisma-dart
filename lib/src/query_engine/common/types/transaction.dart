@@ -1,6 +1,6 @@
-import 'package:json_annotation/json_annotation.dart';
+// ignore_for_file: constant_identifier_names
 
-import '../../../runtime/prisma_enum.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'transaction.g.dart';
 
@@ -30,27 +30,12 @@ class TransactionInfo {
   Map<String, dynamic> toJson() => _$TransactionInfoToJson(this);
 }
 
-enum TransactionIsolationLevel implements PrismaEnum {
-  @JsonValue('ReadUncommitted')
-  readUncommitted('ReadUncommitted'),
-
-  @JsonValue('ReadCommitted')
-  readCommitted('ReadCommitted'),
-
-  @JsonValue('RepeatableRead')
-  repeatableRead('RepeatableRead'),
-
-  @JsonValue('Snapshot')
-  snapshot('Snapshot'),
-
-  @JsonValue('Serializable')
-  serializable('Serializable'),
-  ;
-
-  @override
-  final String value;
-
-  const TransactionIsolationLevel(this.value);
+enum TransactionIsolationLevel {
+  ReadUncommitted,
+  ReadCommitted,
+  RepeatableRead,
+  Snapshot,
+  Serializable,
 }
 
 class TransactionOptions {
