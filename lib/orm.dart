@@ -7,6 +7,8 @@ export 'src/query_engine/common/engine_config.dart';
 export 'src/query_engine/common/engine.dart';
 export 'src/query_engine/common/types/query_engine.dart';
 export 'src/query_engine/common/types/transaction.dart';
+export 'src/query_engine/common/errors/prisma_client_known_request_error.dart';
+export 'src/query_engine/common/errors/prisma_server_error.dart';
 
 // Runtime exports
 export 'src/runtime/datasource.dart';

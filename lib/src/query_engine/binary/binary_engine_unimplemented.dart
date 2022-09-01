@@ -24,19 +24,19 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<QueryEngineResult> request(
-      {required String query,
-      QueryEngineRequestHeaders? headers,
-      int? numTry}) {
+  Future<QueryEngineResult> request({
+    required String query,
+    QueryEngineRequestHeaders? headers,
+  }) {
     throw UnimplementedError();
   }
 
   @override
-  Future<QueryEngineResult> requestBatch(
-      {required List<String> queries,
-      QueryEngineRequestHeaders? headers,
-      bool? transaction,
-      int? numTry}) {
+  Future<QueryEngineResult> requestBatch({
+    required List<String> queries,
+    QueryEngineRequestHeaders? headers,
+    bool? transaction,
+  }) {
     throw UnimplementedError();
   }
 

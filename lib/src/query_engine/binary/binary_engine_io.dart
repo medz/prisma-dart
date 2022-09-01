@@ -11,6 +11,8 @@ import '../../../version.dart';
 import '../../dmmf/dmmf.dart' as dmmf;
 import '../common/engine.dart';
 import '../common/engine_config.dart';
+import '../common/errors/prisma_client_known_request_error.dart';
+import '../common/errors/prisma_server_error.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
@@ -50,6 +52,9 @@ class BinaryEngine extends Engine {
   /// Get server endpoint.
   Future<Uri> get endpoint async =>
       Uri.http(host, '/').replace(port: await port);
+
+  /// Get client version.
+  String get clientVersion => config.clientVersion ?? binaryVersion;
 
   @override
   Future<void> commitTransaction(
@@ -98,20 +103,93 @@ class BinaryEngine extends Engine {
     return _dmmf = dmmf.Document.fromJson(json.decode(result.stdout));
   }
 
-  @override
-  Future<QueryEngineResult> request(
-      {required String query,
-      QueryEngineRequestHeaders? headers,
-      int? numTry}) {
-    throw UnimplementedError();
+  /// GraphQL request body builder.
+  String gqlRequestBodyBuilder(String query) => json.encode({
+        'query': query,
+        'variables': {},
+      });
+
+  /// Runtime headers to http headers.
+  Map<String, String> runtimeHeadersToHttpHeaders(
+      [QueryEngineRequestHeaders? headers]) {
+    return headers?.toJson().map((key, value) {
+          if (key == 'transactionId') {
+            return MapEntry('X-transaction-id', value ?? '');
+          }
+
+          return MapEntry(key, value ?? '');
+        }) ??
+        {};
+  }
+
+  /// Request error handler.
+  void requestErrorHandler(List<dynamic>? errors) {
+    if (errors != null && errors.isNotEmpty) {
+      for (final dynamic err in errors) {
+        if (err is Map && err.containsKey('error')) {
+          throw PrismaClientKnownRequestError(err['error']);
+        }
+      }
+
+      throw PrismaClientKnownRequestError(json.encode(errors));
+    }
+  }
+
+  /// Header getter.
+  String? headerGetter(Map<String, String> headers, String key) {
+    if (headers.keys.map((e) => e.toLowerCase()).contains(key.toLowerCase())) {
+      return headers.entries
+          .firstWhere(
+              (element) => element.key.toLowerCase() == key.toLowerCase())
+          .value;
+    }
+
+    return null;
   }
 
   @override
-  Future<QueryEngineResult> requestBatch(
-      {required List<String> queries,
-      QueryEngineRequestHeaders? headers,
-      bool? transaction,
-      int? numTry}) {
+  Future<QueryEngineResult> request({
+    required String query,
+    QueryEngineRequestHeaders? headers,
+  }) async {
+    final http.Request request = http.Request('POST', await endpoint)
+      ..body = gqlRequestBodyBuilder(query)
+      ..headers['Content-Type'] = 'application/json'
+      ..headers.addAll(runtimeHeadersToHttpHeaders(headers));
+
+    return retry<QueryEngineResult>(
+      () async {
+        final http.StreamedResponse stream = await _httpClient.send(request);
+        final http.Response response = await http.Response.fromStream(stream);
+
+        if (response.statusCode >= 400) {
+          throw PrismaServerError('Request Prisma server failed.');
+        }
+
+        final Map<String, dynamic> result = json.decode(response.body);
+        requestErrorHandler(result['errors'] as List<dynamic>?);
+
+        // Rust engine returns time in microseconds and we want it in miliseconds
+        final int elapsed =
+            int.parse(headerGetter(response.headers, 'x-elapsed')!) ~/ 1000;
+
+        return QueryEngineResult(result['data'], elapsed);
+      },
+      maxDelay: const Duration(),
+      maxAttempts: config.env?['PRISMA_CLIENT_NO_RETRY'] == null ? 2 : 1,
+      retryIf: (e) =>
+          e is http.ClientException ||
+          e is SocketException ||
+          e is TimeoutException,
+    );
+  }
+
+  @override
+  Future<QueryEngineResult> requestBatch({
+    required List<String> queries,
+    QueryEngineRequestHeaders? headers,
+    bool? transaction,
+  }) {
     throw UnimplementedError();
   }
 
@@ -209,8 +287,7 @@ class BinaryEngine extends Engine {
 
   @override
   Future<String> version({bool forceRun = false}) async {
-    if (config.clientVersion != null && !forceRun) return config.clientVersion!;
-    if (!forceRun) return binaryVersion;
+    if (!forceRun) return clientVersion;
 
     final ProcessResult result = await Process.run(
       _executable,

@@ -8,8 +8,23 @@ void main() async {
   );
 
   final engine = BinaryEngine(config);
+  await engine.start();
 
-  final version = await engine.version(forceRun: true);
-
-  print(version);
+  try {
+    final result = await engine.request(
+      query: r'''
+query {
+  findManyUser {
+    id
+    name
+  }
+}
+      ''',
+    );
+    print(result.toJson());
+  } on PrismaClientKnownRequestError catch (e) {
+    print(e.message);
+  } finally {
+    await engine.stop();
+  }
 }

@@ -29,7 +29,6 @@ abstract class Engine {
   Future<QueryEngineResult> request({
     required String query,
     QueryEngineRequestHeaders? headers,
-    int? numTry,
   });
 
   /// Request batch query execution.
@@ -37,7 +36,6 @@ abstract class Engine {
     required List<String> queries,
     QueryEngineRequestHeaders? headers,
     bool? transaction,
-    int? numTry,
   });
 
   /// Start a transaction.
