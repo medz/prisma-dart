@@ -75,7 +75,8 @@ environment:
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-dart"
+  provider        = "prisma-client-dart"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {

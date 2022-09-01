@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-dart"
-  output   = "../lib/src/generated"
+  provider        = "prisma-client-dart"
+  output          = "../lib/src/generated"
   previewFeatures = ["interactiveTransactions"]
 }
 
@@ -20,11 +20,11 @@ model User {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String
-  published Boolean
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  published  Boolean
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
   created_at DateTime @default(now())
 }
