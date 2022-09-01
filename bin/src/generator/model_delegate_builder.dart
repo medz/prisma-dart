@@ -4,11 +4,16 @@ import 'package:orm/orm.dart' show languageKeywordEncode;
 import 'schema/schema_input_object_generator.dart';
 import 'utils/object_field_type.dart';
 
+/// Delegate name builder.
+String delegateNameBuilder(String name) {
+  return '${languageKeywordEncode(name)}Delegate';
+}
+
 String modelDelegateBuilder(dmmf.Document document) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.ModelMapping mapping in document.mappings.modelOperations) {
     final String modelname = languageKeywordEncode(mapping.model);
-    final String classname = '${modelname}Delegate';
+    final String classname = delegateNameBuilder(modelname);
 
     // Build class start.
     code.writeln('class $classname {');

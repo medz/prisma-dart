@@ -9,6 +9,7 @@ export 'src/query_engine/common/types/query_engine.dart';
 export 'src/query_engine/common/types/transaction.dart';
 
 // Runtime exports
+export 'src/runtime/datasource.dart';
 export 'src/runtime/language_keyword.dart';
 export 'src/runtime/prisma_union.dart';
 export 'src/runtime/prisma_null.dart';

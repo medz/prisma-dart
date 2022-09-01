@@ -3,6 +3,7 @@ final Map<String, List<String>> _exports = {
     'PrismaUnion',
     'PrismaNull',
     'TransactionIsolationLevel',
+    'Datasource',
   ],
 };
 

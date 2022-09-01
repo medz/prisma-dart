@@ -5,6 +5,7 @@ import 'package:orm/generator_helper.dart';
 import 'package:path/path.dart';
 
 import '../utils/find_project.dart';
+import 'client_builder.dart';
 import 'dart_style_ignore_builder.dart';
 import 'exports_builder.dart';
 import 'generator_options.dart';
@@ -79,6 +80,9 @@ Future<void> generator(GeneratorOptions options) async {
   // Builder model delegates.
   final String modelDelegates = modelDelegateBuilder(options.dmmf);
   if (modelDelegates.isNotEmpty) sink.writeln(modelDelegates);
+
+  // Build Prisma client.
+  sink.writeln(clientBuilder(options));
 
   // Close sink.
   await sink.close();
