@@ -442,8 +442,6 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     final http.StreamedResponse stream = await httpClient.send(request);
     final http.Response response = await http.Response.fromStream(stream);
 
-    // TODO: Why? Request transaction APIs always 404.
-    // See https://github.com/prisma/prisma/blob/29770bd78c28bea03c1ee473d391c07963bb323d/packages/engine-core/src/binary/BinaryEngine.ts#L1022
     if (response.statusCode >= 400) {
       throw PrismaServerError('Transaction start failed.');
     }

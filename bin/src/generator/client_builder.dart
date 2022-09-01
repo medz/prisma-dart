@@ -26,8 +26,9 @@ ${_datasourcesBuilder(options.datasources)}
 /// Prisma client.
 class PrismaClient {
   final runtime.Engine _engine;
+  final runtime.QueryEngineRequestHeaders? _headers;
 
-  const PrismaClient._(this._engine);
+  const PrismaClient._(this._engine, this._headers);
 
   factory PrismaClient({
     Datasources? datasources,
@@ -41,7 +42,60 @@ class PrismaClient {
       executable: _executable,
     );
 
-    return PrismaClient._(engine);
+    return PrismaClient._(engine, null);
+  }
+
+  /// Connect client to database.
+  Future<void> \$connect() => _engine.start();
+
+  /// Disconnect client from database.
+  Future<void> \$disconnect() => _engine.stop();
+
+  /// Start transaction.
+  /// 
+  /// Example:
+  /// ```dart
+  /// final User user = await prisma.\$transaction((PrismaClient prisma) async {
+  ///   final User user = await prisma.user.create(...);
+  ///   final Post post = await prisma.post.create(...);
+  /// 
+  ///   return user;
+  /// });
+  /// ```
+  Future<T> \$transaction<T>(Future<T> Function(PrismaClient) handler) async {
+    // If current client is already in transaction, use it.
+    if (_headers?.transactionId != null) return handler(this);
+
+    // Create transcation common headers.
+    final runtime.TransactionHeaders headers = runtime.TransactionHeaders();
+
+    // Request transaction info, Start transaction.
+    final runtime.TransactionInfo info = await _engine.startTransaction(
+      headers: headers
+    );
+
+    // Create new client with transaction headers.
+    final PrismaClient transactionClient = PrismaClient._(
+      _engine,
+      runtime.QueryEngineRequestHeaders(transactionId: info.id),
+    );
+
+    try {
+      return handler(transactionClient).then<T>((T value) async {
+        await _engine.commitTransaction(
+          headers: headers,
+          info: info
+        );
+
+        return value;
+      });
+    } catch (e) {
+      await _engine.rollbackTransaction(
+        headers: headers,
+        info: info
+      );
+      rethrow;
+    }
   }
 
   ${_modelDelegateGetters(options.dmmf.mappings.modelOperations)}
@@ -121,8 +175,13 @@ String _modelDelegateGetters(List<dmmf.ModelMapping> mappings) {
     final String name = runtime.languageKeywordEncode(mapping.model);
     final String delegateName = delegateNameBuilder(name);
     buffer.writeln('/// $name model delegate.');
-    buffer.writeln(
-        '$delegateName get ${_firstLetterLowercase(name)} => $delegateName(engine: _engine, document: _dmmf);');
+    buffer.writeln('''
+$delegateName get ${_firstLetterLowercase(name)} => $delegateName(
+  engine: _engine,
+  document: _dmmf,
+  headers: _headers
+);
+''');
     buffer.writeln();
   }
   return buffer.toString();

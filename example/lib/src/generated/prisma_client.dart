@@ -1663,11 +1663,14 @@ class UserDelegate {
   const UserDelegate({
     required runtime.Engine engine,
     required dmmf.Document document,
+    runtime.QueryEngineRequestHeaders? headers,
   })  : _engine = engine,
-        _document = document;
+        _document = document,
+        _headers = headers;
 
   final runtime.Engine _engine;
   final dmmf.Document _document;
+  final runtime.QueryEngineRequestHeaders? _headers;
 
   Future<User?> findUnique({
     required UserWhereUniqueInput where,
@@ -1686,8 +1689,10 @@ class UserDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1719,8 +1724,10 @@ class UserDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1752,8 +1759,10 @@ class UserDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1776,8 +1785,10 @@ class UserDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1802,8 +1813,10 @@ class UserDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1828,8 +1841,10 @@ class UserDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1855,8 +1870,10 @@ class UserDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1884,8 +1901,10 @@ class UserDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1907,8 +1926,10 @@ class UserDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1930,8 +1951,10 @@ class UserDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1961,8 +1984,10 @@ class UserDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -1994,8 +2019,10 @@ class UserDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2005,11 +2032,14 @@ class PostDelegate {
   const PostDelegate({
     required runtime.Engine engine,
     required dmmf.Document document,
+    runtime.QueryEngineRequestHeaders? headers,
   })  : _engine = engine,
-        _document = document;
+        _document = document,
+        _headers = headers;
 
   final runtime.Engine _engine;
   final dmmf.Document _document;
+  final runtime.QueryEngineRequestHeaders? _headers;
 
   Future<Post?> findUnique({
     required PostWhereUniqueInput where,
@@ -2028,8 +2058,10 @@ class PostDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2061,8 +2093,10 @@ class PostDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2094,8 +2128,10 @@ class PostDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2118,8 +2154,10 @@ class PostDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2144,8 +2182,10 @@ class PostDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2170,8 +2210,10 @@ class PostDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2197,8 +2239,10 @@ class PostDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2226,8 +2270,10 @@ class PostDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2249,8 +2295,10 @@ class PostDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2272,8 +2320,10 @@ class PostDelegate {
       location: 'mutation',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2303,8 +2353,10 @@ class PostDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2336,8 +2388,10 @@ class PostDelegate {
       location: 'query',
     );
 
-    final runtime.QueryEngineResult result =
-        await _engine.request(query: sdl.build());
+    final runtime.QueryEngineResult result = await _engine.request(
+      query: sdl.build(),
+      headers: _headers,
+    );
 
     return result.data;
   }
@@ -2357,7 +2411,7 @@ const String _executable =
 
 /// Prisma schema as string.
 final String _schema = convert.json.decode(
-    "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-dart\"\n  output   = \"../lib/src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  posts     Post[]\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  title     String\n  content   String\n  published Boolean\n  authorId  Int\n  author    User     @relation(fields: [authorId], references: [id])\n  created_at DateTime @default(now())\n}\n");
+    "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider        = \"prisma-client-dart\"\n  output          = \"../lib/src/generated\"\n  previewFeatures = [\"interactiveTransactions\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  posts     Post[]\n}\n\nmodel Post {\n  id         Int      @id @default(autoincrement())\n  title      String\n  content    String\n  published  Boolean\n  authorId   Int\n  author     User     @relation(fields: [authorId], references: [id])\n  created_at DateTime @default(now())\n}\n");
 
 class Datasources {
   final runtime.Datasource? db;
@@ -2380,8 +2434,9 @@ class Datasources {
 /// Prisma client.
 class PrismaClient {
   final runtime.Engine _engine;
+  final runtime.QueryEngineRequestHeaders? _headers;
 
-  const PrismaClient._(this._engine);
+  const PrismaClient._(this._engine, this._headers);
 
   factory PrismaClient({
     Datasources? datasources,
@@ -2395,12 +2450,60 @@ class PrismaClient {
       executable: _executable,
     );
 
-    return PrismaClient._(engine);
+    return PrismaClient._(engine, null);
+  }
+
+  /// Connect client to database.
+  Future<void> $connect() => _engine.start();
+
+  /// Disconnect client from database.
+  Future<void> $disconnect() => _engine.stop();
+
+  /// Start transaction.
+  ///
+  /// Example:
+  /// ```dart
+  /// final User user = await prisma.$transaction((PrismaClient prisma) async {
+  ///   final User user = await prisma.user.create(...);
+  ///   final Post post = await prisma.post.create(...);
+  ///
+  ///   return user;
+  /// });
+  /// ```
+  Future<T> $transaction<T>(Future<T> Function(PrismaClient) handler) async {
+    // If current client is already in transaction, use it.
+    if (_headers?.transactionId != null) return handler(this);
+
+    // Create transcation common headers.
+    final runtime.TransactionHeaders headers = runtime.TransactionHeaders();
+
+    // Request transaction info, Start transaction.
+    final runtime.TransactionInfo info =
+        await _engine.startTransaction(headers: headers);
+
+    // Create new client with transaction headers.
+    final PrismaClient transactionClient = PrismaClient._(
+      _engine,
+      runtime.QueryEngineRequestHeaders(transactionId: info.id),
+    );
+
+    try {
+      return handler(transactionClient).then<T>((T value) async {
+        await _engine.commitTransaction(headers: headers, info: info);
+
+        return value;
+      });
+    } catch (e) {
+      await _engine.rollbackTransaction(headers: headers, info: info);
+      rethrow;
+    }
   }
 
   /// User model delegate.
-  UserDelegate get user => UserDelegate(engine: _engine, document: _dmmf);
+  UserDelegate get user =>
+      UserDelegate(engine: _engine, document: _dmmf, headers: _headers);
 
   /// Post model delegate.
-  PostDelegate get post => PostDelegate(engine: _engine, document: _dmmf);
+  PostDelegate get post =>
+      PostDelegate(engine: _engine, document: _dmmf, headers: _headers);
 }

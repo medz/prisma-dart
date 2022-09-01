@@ -22,9 +22,11 @@ String modelDelegateBuilder(dmmf.Document document) {
     code.writeln('const $classname({');
     code.writeln('  required runtime.Engine engine,');
     code.writeln('  required dmmf.Document document,');
+    code.writeln('  runtime.QueryEngineRequestHeaders? headers,');
     code.writeln('}):');
     code.writeln('_engine = engine,');
-    code.writeln('_document = document;');
+    code.writeln('_document = document,');
+    code.writeln('_headers = headers;');
     code.writeln();
 
     // Build engine field;
@@ -32,6 +34,9 @@ String modelDelegateBuilder(dmmf.Document document) {
 
     // Build dmmf document field.
     code.writeln('final dmmf.Document _document;');
+
+    /// Build transaction ID field.
+    code.writeln('final runtime.QueryEngineRequestHeaders? _headers;');
 
     // Build operations.
     code.writeln();
@@ -97,13 +102,11 @@ final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
   ),
   location: '${_findLocation(document, gqlOperationName)}',
 );
-''');
 
-  // Build GraphQL request.
-  // TODO: Parser GraphQL response.
-  code.writeln('''
-final runtime.QueryEngineResult result = await _engine.request(query: sdl.build());
-
+final runtime.QueryEngineResult result = await _engine.request(
+  query: sdl.build(),
+  headers: _headers,
+);
 
 return result.data;
 ''');
