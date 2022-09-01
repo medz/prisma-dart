@@ -30,12 +30,10 @@ class BinaryEngine {
   String get _archiveBasename => type.value + _archiveExtension;
 
   /// Archive file path.
-  String get _archive =>
-      joinPaths(['.dart_tool', 'prisma-engines', _archiveBasename]);
+  String get _archive => joinPaths(['.dart_tool', 'prisma', _archiveBasename]);
 
   /// Executable file path.
-  String get executable =>
-      joinPaths(['.dart_tool', 'prisma-engines', type.value]);
+  String get executable => joinPaths(['.dart_tool', 'prisma', type.value]);
 
   /// Has the binary engine been downloaded.
   bool get hasDownloaded => File(executable).existsSync();

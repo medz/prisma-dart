@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:retry/retry.dart';
 
 import '../../../configure.dart';
+import '../../../version.dart';
 import '../../dmmf/dmmf.dart' as dmmf;
 import '../common/engine.dart';
 import '../common/engine_config.dart';
@@ -208,8 +210,26 @@ class BinaryEngine extends Engine {
   @override
   Future<String> version({bool forceRun = false}) async {
     if (config.clientVersion != null && !forceRun) return config.clientVersion!;
+    if (!forceRun) return binaryVersion;
 
-    throw UnimplementedError();
+    final ProcessResult result = await Process.run(
+      _executable,
+      ['--version'],
+      includeParentEnvironment: false,
+      environment: _env,
+      workingDirectory: config.cwd,
+    );
+
+    if (result.exitCode != 0) {
+      throw Exception(result.stderr);
+    }
+
+    return result.stdout
+        .toString()
+        .trim()
+        .replaceAll(' ', '')
+        .replaceAll('query-engine', '')
+        .trim();
   }
 
   /// Get prisma query engine executable.
@@ -231,13 +251,75 @@ class BinaryEngine extends Engine {
       }
     }
 
-    throw Exception('Prisma binray query engine not found.');
+    // Find quert engine in search directories.
+    for (final String directory in searchDirectories) {
+      final File executable = File(path.join(directory, 'query-engine'));
+      if (executable.existsSync()) {
+        return executable.path;
+      }
+    }
+
+    // If not found, throw exception.
+    throw Exception('Query engine not found.');
+  }
+
+  /// Get search path.
+  List<String> get searchDirectories {
+    final List<String> directories = [];
+    // If cwd is not null, add it to search directories.
+    if (config.cwd != null) {
+      directories.addAll(_searchDirectoriesBuilder(config.cwd!));
+    }
+
+    directories.addAll(_searchDirectoriesBuilder(Directory.current.path));
+    directories.addAll(
+        _searchDirectoriesBuilder(path.dirname(Platform.script.toFilePath())));
+    directories
+        .addAll(_searchDirectoriesBuilder(path.dirname(config.datamodelPath)));
+
+    return directories;
+  }
+
+  /// Search directories builder.
+  List<String> _searchDirectoriesBuilder(String parent) {
+    final List<String> directories = <String>[parent];
+    final List<String> parts = [
+      path.joinAll(['.dart_tool', 'prisma']),
+      'prisma',
+    ];
+
+    for (final String part in parts) {
+      final String directory = path.join(parent, part);
+      if (Directory(directory).existsSync()) {
+        directories.add(directory);
+      }
+    }
+
+    return directories;
+  }
+
+  /// Get resolved prisma dml path.
+  String get prismaDmlPath {
+    // If data model path file is exists, return it.
+    if (File(config.datamodelPath).existsSync()) {
+      return config.datamodelPath;
+    }
+
+    final String basename = path.basename(config.datamodelPath);
+    for (final String directory in searchDirectories) {
+      final String filepath = path.join(directory, basename);
+      if (File(filepath).existsSync()) {
+        return filepath;
+      }
+    }
+
+    throw Exception('Prisma data model file not found.');
   }
 
   /// Get Resolved environment variables.
   Map<String, String> get _env {
     final Map<String, String> env = <String, String>{
-      'PRISMA_DML_PATH': config.datamodelPath
+      'PRISMA_DML_PATH': prismaDmlPath,
     };
 
     if (config.logQueries == true) {
