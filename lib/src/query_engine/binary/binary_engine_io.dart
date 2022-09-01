@@ -185,12 +185,62 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<QueryEngineResult> requestBatch({
+  Future<List<QueryEngineResult>> requestBatch({
     required List<String> queries,
     QueryEngineRequestHeaders? headers,
     bool? transaction,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    final String body = json.encode({
+      'transaction': transaction ?? false,
+      'batch':
+          queries.map((e) => json.decode(gqlRequestBodyBuilder(e))).toList(),
+    });
+
+    final http.Request request = http.Request('POST', await endpoint)
+      ..body = body
+      ..headers['Content-Type'] = 'application/json'
+      ..headers.addAll(runtimeHeadersToHttpHeaders(headers));
+
+    return retry<List<QueryEngineResult>>(
+      () async {
+        final http.StreamedResponse stream = await _httpClient.send(request);
+        final http.Response response = await http.Response.fromStream(stream);
+
+        if (response.statusCode >= 400) {
+          throw PrismaServerError('Request Prisma server failed.');
+        }
+
+        final Map<String, dynamic> result = json.decode(response.body);
+
+        // Rust engine returns time in microseconds and we want it in miliseconds
+        final int elapsed =
+            int.parse(headerGetter(response.headers, 'x-elapsed')!) ~/ 1000;
+
+        final dynamic betch = result['batchResult'];
+        if (betch is List) {
+          return betch.map<QueryEngineResult>((element) {
+            if (element['errors'] is List) {
+              requestErrorHandler(element['errors']);
+            }
+
+            return QueryEngineResult(element['data'], elapsed);
+          }).toList();
+        }
+
+        final List<dynamic>? errors = result['errors'] as List<dynamic>?;
+        if (errors != null && errors.isNotEmpty) {
+          requestErrorHandler(errors);
+        }
+
+        throw PrismaClientKnownRequestError('Batch request known error.');
+      },
+      maxDelay: const Duration(),
+      maxAttempts: config.env?['PRISMA_CLIENT_NO_RETRY'] == null ? 2 : 1,
+      retryIf: (e) =>
+          e is http.ClientException ||
+          e is SocketException ||
+          e is TimeoutException,
+    );
   }
 
   @override

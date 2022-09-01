@@ -32,7 +32,7 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<QueryEngineResult> requestBatch({
+  Future<List<QueryEngineResult>> requestBatch({
     required List<String> queries,
     QueryEngineRequestHeaders? headers,
     bool? transaction,

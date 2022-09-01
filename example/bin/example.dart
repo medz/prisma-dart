@@ -11,17 +11,25 @@ void main() async {
   await engine.start();
 
   try {
-    final result = await engine.request(
-      query: r'''
-query {
-  findManyUser {
-    id
-    name
-  }
-}
-      ''',
+    final result = await engine.requestBatch(
+      queries: [
+        r'''
+          query {
+            findManyUser {
+              name
+            }
+          }
+        ''',
+        r'''
+          query {
+            findManyUser {
+              id
+            }
+          }
+        ''',
+      ],
     );
-    print(result.toJson());
+    print(result);
   } on PrismaClientKnownRequestError catch (e) {
     print(e.message);
   } finally {

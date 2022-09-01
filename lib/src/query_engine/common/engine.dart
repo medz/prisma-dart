@@ -32,7 +32,7 @@ abstract class Engine {
   });
 
   /// Request batch query execution.
-  Future<QueryEngineResult> requestBatch({
+  Future<List<QueryEngineResult>> requestBatch({
     required List<String> queries,
     QueryEngineRequestHeaders? headers,
     bool? transaction,
