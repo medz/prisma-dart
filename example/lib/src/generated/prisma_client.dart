@@ -104,21 +104,21 @@ class UserOrderByWithAggregationInput {
     this.id,
     this.name,
     this.createdAt,
-    this.count,
-    this.avg,
-    this.max,
-    this.min,
-    this.sum,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
   });
 
   final SortOrder? id;
   final SortOrder? name;
   final SortOrder? createdAt;
-  final UserCountOrderByAggregateInput? count;
-  final UserAvgOrderByAggregateInput? avg;
-  final UserMaxOrderByAggregateInput? max;
-  final UserMinOrderByAggregateInput? min;
-  final UserSumOrderByAggregateInput? sum;
+  final UserCountOrderByAggregateInput? $count;
+  final UserAvgOrderByAggregateInput? $avg;
+  final UserMaxOrderByAggregateInput? $max;
+  final UserMinOrderByAggregateInput? $min;
+  final UserSumOrderByAggregateInput? $sum;
 }
 
 class UserScalarWhereWithAggregatesInput {
@@ -201,11 +201,11 @@ class PostOrderByWithAggregationInput {
     this.published,
     this.authorId,
     this.createdAt,
-    this.count,
-    this.avg,
-    this.max,
-    this.min,
-    this.sum,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
   });
 
   final SortOrder? id;
@@ -214,11 +214,11 @@ class PostOrderByWithAggregationInput {
   final SortOrder? published;
   final SortOrder? authorId;
   final SortOrder? createdAt;
-  final PostCountOrderByAggregateInput? count;
-  final PostAvgOrderByAggregateInput? avg;
-  final PostMaxOrderByAggregateInput? max;
-  final PostMinOrderByAggregateInput? min;
-  final PostSumOrderByAggregateInput? sum;
+  final PostCountOrderByAggregateInput? $count;
+  final PostAvgOrderByAggregateInput? $avg;
+  final PostMaxOrderByAggregateInput? $max;
+  final PostMinOrderByAggregateInput? $min;
+  final PostSumOrderByAggregateInput? $sum;
 }
 
 class PostScalarWhereWithAggregatesInput {
@@ -545,10 +545,10 @@ class PostListRelationFilter {
 
 class PostOrderByRelationAggregateInput {
   const PostOrderByRelationAggregateInput({
-    this.count,
+    this.$count,
   });
 
-  final SortOrder? count;
+  final SortOrder? $count;
 }
 
 class UserCountOrderByAggregateInput {
@@ -613,11 +613,11 @@ class IntWithAggregatesFilter {
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final int? equals;
@@ -628,11 +628,11 @@ class IntWithAggregatesFilter {
   final int? gt;
   final int? gte;
   final runtime.PrismaUnion<int, NestedIntWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedFloatFilter? avg;
-  final NestedIntFilter? sum;
-  final NestedIntFilter? min;
-  final NestedIntFilter? max;
+  final NestedIntFilter? $count;
+  final NestedFloatFilter? $avg;
+  final NestedIntFilter? $sum;
+  final NestedIntFilter? $min;
+  final NestedIntFilter? $max;
 }
 
 class StringWithAggregatesFilter {
@@ -649,9 +649,9 @@ class StringWithAggregatesFilter {
     this.endsWith,
     this.mode,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final String? equals;
@@ -666,9 +666,9 @@ class StringWithAggregatesFilter {
   final String? endsWith;
   final QueryMode? mode;
   final runtime.PrismaUnion<String, NestedStringWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedStringFilter? min;
-  final NestedStringFilter? max;
+  final NestedIntFilter? $count;
+  final NestedStringFilter? $min;
+  final NestedStringFilter? $max;
 }
 
 class DateTimeWithAggregatesFilter {
@@ -681,9 +681,9 @@ class DateTimeWithAggregatesFilter {
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final DateTime? equals;
@@ -694,9 +694,9 @@ class DateTimeWithAggregatesFilter {
   final DateTime? gt;
   final DateTime? gte;
   final runtime.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedDateTimeFilter? min;
-  final NestedDateTimeFilter? max;
+  final NestedIntFilter? $count;
+  final NestedDateTimeFilter? $min;
+  final NestedDateTimeFilter? $max;
 }
 
 class BoolFilter {
@@ -797,16 +797,16 @@ class BoolWithAggregatesFilter {
   const BoolWithAggregatesFilter({
     this.equals,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final bool? equals;
   final runtime.PrismaUnion<bool, NestedBoolWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedBoolFilter? min;
-  final NestedBoolFilter? max;
+  final NestedIntFilter? $count;
+  final NestedBoolFilter? $min;
+  final NestedBoolFilter? $max;
 }
 
 class PostCreateNestedManyWithoutAuthorInput {
@@ -1046,11 +1046,11 @@ class NestedIntWithAggregatesFilter {
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final int? equals;
@@ -1061,11 +1061,11 @@ class NestedIntWithAggregatesFilter {
   final int? gt;
   final int? gte;
   final runtime.PrismaUnion<int, NestedIntWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedFloatFilter? avg;
-  final NestedIntFilter? sum;
-  final NestedIntFilter? min;
-  final NestedIntFilter? max;
+  final NestedIntFilter? $count;
+  final NestedFloatFilter? $avg;
+  final NestedIntFilter? $sum;
+  final NestedIntFilter? $min;
+  final NestedIntFilter? $max;
 }
 
 class NestedFloatFilter {
@@ -1103,9 +1103,9 @@ class NestedStringWithAggregatesFilter {
     this.startsWith,
     this.endsWith,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final String? equals;
@@ -1119,9 +1119,9 @@ class NestedStringWithAggregatesFilter {
   final String? startsWith;
   final String? endsWith;
   final runtime.PrismaUnion<String, NestedStringWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedStringFilter? min;
-  final NestedStringFilter? max;
+  final NestedIntFilter? $count;
+  final NestedStringFilter? $min;
+  final NestedStringFilter? $max;
 }
 
 class NestedDateTimeWithAggregatesFilter {
@@ -1134,9 +1134,9 @@ class NestedDateTimeWithAggregatesFilter {
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final DateTime? equals;
@@ -1147,9 +1147,9 @@ class NestedDateTimeWithAggregatesFilter {
   final DateTime? gt;
   final DateTime? gte;
   final runtime.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedDateTimeFilter? min;
-  final NestedDateTimeFilter? max;
+  final NestedIntFilter? $count;
+  final NestedDateTimeFilter? $min;
+  final NestedDateTimeFilter? $max;
 }
 
 class NestedBoolFilter {
@@ -1166,16 +1166,16 @@ class NestedBoolWithAggregatesFilter {
   const NestedBoolWithAggregatesFilter({
     this.equals,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final bool? equals;
   final runtime.PrismaUnion<bool, NestedBoolWithAggregatesFilter>? not;
-  final NestedIntFilter? count;
-  final NestedBoolFilter? min;
-  final NestedBoolFilter? max;
+  final NestedIntFilter? $count;
+  final NestedBoolFilter? $min;
+  final NestedBoolFilter? $max;
 }
 
 class PostCreateWithoutAuthorInput {
@@ -1518,13 +1518,13 @@ class UserCountAggregateOutputType {
     required this.id,
     required this.name,
     required this.createdAt,
-    required this.all,
+    required this.$all,
   });
 
   final int id;
   final int name;
   final int createdAt;
-  final int all;
+  final int $all;
 }
 
 class UserAvgAggregateOutputType {
@@ -1575,7 +1575,7 @@ class PostCountAggregateOutputType {
     required this.published,
     required this.authorId,
     required this.createdAt,
-    required this.all,
+    required this.$all,
   });
 
   final int id;
@@ -1584,7 +1584,7 @@ class PostCountAggregateOutputType {
   final int published;
   final int authorId;
   final int createdAt;
-  final int all;
+  final int $all;
 }
 
 class PostAvgAggregateOutputType {

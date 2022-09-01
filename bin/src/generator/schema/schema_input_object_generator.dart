@@ -1,14 +1,13 @@
 import 'package:orm/dmmf.dart' as dmmf;
+import 'package:orm/orm.dart' show languageKeywordEncode;
 
-import '../utils/came_case.dart';
-import '../utils/dart_style.dart';
 import '../utils/object_field_type.dart';
 
 /// Input field name.
 String _fieldName(String name) {
   if (['AND', 'OR', 'NOT'].contains(name)) return name;
 
-  return dartStyleField(name);
+  return languageKeywordEncode(name);
 }
 
 Future<String> schemaInputObjectTypesGenerator(
@@ -35,7 +34,7 @@ String _builder(List<dmmf.InputType> inputs) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.InputType input in inputs) {
     // Build class header.
-    code.writeln('class ${upperCamelCase(input.name)} {');
+    code.writeln('class ${languageKeywordEncode(input.name)} {');
 
     // Build constructor.
     code.writeln(_constructorBuilder(input));
@@ -103,7 +102,7 @@ String fieldTypeBuilder(List<dmmf.SchemaType> types) {
 /// Builds the constructor.
 String _constructorBuilder(dmmf.InputType input) {
   final StringBuffer code = StringBuffer();
-  code.writeln('  const ${upperCamelCase(input.name)}({');
+  code.writeln('  const ${languageKeywordEncode(input.name)}({');
   for (final dmmf.SchemaArg field in input.fields) {
     code.write('    ');
     if (field.isRequired) code.write('required ');

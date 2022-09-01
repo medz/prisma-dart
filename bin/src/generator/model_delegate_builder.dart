@@ -1,14 +1,13 @@
 import 'package:orm/dmmf.dart' as dmmf;
+import 'package:orm/orm.dart' show languageKeywordEncode;
 
 import 'schema/schema_input_object_generator.dart';
-import 'utils/came_case.dart';
-import 'utils/dart_style.dart';
 import 'utils/object_field_type.dart';
 
 String modelDelegateBuilder(dmmf.Document document) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.ModelMapping mapping in document.mappings.modelOperations) {
-    final String modelname = upperCamelCase(mapping.model);
+    final String modelname = languageKeywordEncode(mapping.model);
     final String classname = '${modelname}Delegate';
 
     // Build class start.
@@ -44,7 +43,7 @@ String modelDelegateBuilder(dmmf.Document document) {
       code.write(' ');
 
       // Build operation name.
-      code.write(dartStyleField(operation));
+      code.write(languageKeywordEncode(operation));
 
       // Build operation arguments.
       code.write('(');
@@ -75,7 +74,7 @@ String _buildBody(
   code.writeln(
       'final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[');
   for (final dmmf.SchemaArg arg in args) {
-    final String argName = dartStyleField(arg.name);
+    final String argName = languageKeywordEncode(arg.name);
     code.writeln(
         'runtime.GraphQLVeriable(\'${arg.name}\', $argName, isRequired: ${arg.isRequired}),');
   }
@@ -151,7 +150,7 @@ String _buildArguments(dmmf.Document document, String gqlOperationName) {
 
     // Build argument name.
     code.write(' ');
-    code.write(lowerCamelCase(arg.name));
+    code.write(languageKeywordEncode(arg.name));
     code.write(',');
   }
   code.write('}');

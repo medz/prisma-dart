@@ -1,7 +1,6 @@
 import 'package:orm/dmmf.dart' as dmmf;
+import 'package:orm/orm.dart' show languageKeywordEncode;
 
-import '../utils/came_case.dart';
-import '../utils/dart_style.dart';
 import '../utils/object_field_type.dart';
 
 String schemaOutputObjectTypesBuilder(dmmf.OutputObjectTypes types) {
@@ -30,7 +29,7 @@ String _builder(List<dmmf.OutputType> types) {
     if (['query', 'mutation'].contains(type.name.toLowerCase())) continue;
 
     // Build class header.
-    code.writeln('class ${upperCamelCase(type.name)} {');
+    code.writeln('class ${languageKeywordEncode(type.name)} {');
 
     // Build constructor.
     code.writeln(_constructorBuilder(type));
@@ -63,7 +62,7 @@ String _fieldsBuilder(List<dmmf.SchemaField> fields) {
     if (field.isNullable == true) code.write('?');
 
     // Build field name.
-    code.write(' ${_resolveFieldName(field.name)}');
+    code.write(' ${languageKeywordEncode(field.name)}');
 
     // Line end.
     code.writeln(';');
@@ -75,35 +74,17 @@ String _fieldsBuilder(List<dmmf.SchemaField> fields) {
 /// Build constructor.
 String _constructorBuilder(dmmf.OutputType type) {
   final StringBuffer code = StringBuffer();
-  code.writeln('const ${upperCamelCase(type.name)}({');
+  code.writeln('const ${languageKeywordEncode(type.name)}({');
 
   for (final dmmf.SchemaField field in type.fields) {
-    if (field.name.toLowerCase() == '_count') {
+    if (field.name == '_count') {
       continue;
     }
     if (field.isNullable == false) {
       code.write('required ');
     }
-    code.writeln('this.${_resolveFieldName(field.name)},');
+    code.writeln('this.${languageKeywordEncode(field.name)},');
   }
   code.writeln('});');
   return code.toString();
-}
-
-/// Output field name resolver.
-String _resolveFieldName(String name) {
-  switch (name) {
-    case '_count':
-      return '\$count';
-    case '_avg':
-      return '\$avg';
-    case '_sum':
-      return '\$sum';
-    case '_min':
-      return '\$min';
-    case '_max':
-      return '\$max';
-  }
-
-  return dartStyleField(name);
 }

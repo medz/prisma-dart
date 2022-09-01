@@ -1,7 +1,5 @@
 import 'package:orm/dmmf.dart' as dmmf;
-
-import '../utils/came_case.dart';
-import '../utils/dart_style.dart';
+import 'package:orm/orm.dart' show languageKeywordEncode;
 
 const List<String> _ignores = ['TransactionIsolationLevel'];
 
@@ -13,14 +11,16 @@ String _enumBuilder(List<dmmf.SchemaEnum> schemaEnum) {
       continue;
     }
 
-    enumCodes.writeln('enum ${element.name} implements runtime.PrismaEnum {');
+    enumCodes.writeln(
+        'enum ${languageKeywordEncode(element.name)} implements runtime.PrismaEnum {');
     for (final String value in element.values) {
-      enumCodes.writeln('  ${dartStyleField(value)}(\'$value\'),');
+      enumCodes.writeln('  ${languageKeywordEncode(value)}(\'$value\'),');
     }
     enumCodes.writeln(';');
     enumCodes.writeln('  @override');
     enumCodes.writeln('  final String value;');
-    enumCodes.writeln('  const ${upperCamelCase(element.name)}(this.value);');
+    enumCodes
+        .writeln('  const ${languageKeywordEncode(element.name)}(this.value);');
     enumCodes.writeln('}');
   }
 
