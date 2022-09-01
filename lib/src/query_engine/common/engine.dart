@@ -41,7 +41,7 @@ abstract class Engine {
   /// Start a transaction.
   Future<TransactionInfo> startTransaction({
     required TransactionHeaders headers,
-    TransactionOptions? options,
+    TransactionOptions options = const TransactionOptions(),
   });
 
   /// Commit a transaction.

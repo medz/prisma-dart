@@ -57,12 +57,6 @@ class BinaryEngine extends Engine {
   String get clientVersion => config.clientVersion ?? binaryVersion;
 
   @override
-  Future<void> commitTransaction(
-      {required TransactionHeaders headers, required TransactionInfo info}) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<GetConfigResult> getConfig() async {
     if (_getedConfigResult != null) {
       return _getedConfigResult!;
@@ -111,13 +105,14 @@ class BinaryEngine extends Engine {
 
   /// Runtime headers to http headers.
   Map<String, String> runtimeHeadersToHttpHeaders(
-      [QueryEngineRequestHeaders? headers]) {
-    return headers?.toJson().map((key, value) {
+      [Map<String, dynamic>? headers]) {
+    return headers?.map<String, String>((key, value) {
           if (key == 'transactionId') {
-            return MapEntry('X-transaction-id', value ?? '');
+            return MapEntry(
+                'X-transaction-id', value != null ? value.toString() : '');
           }
 
-          return MapEntry(key, value ?? '');
+          return MapEntry(key, value != null ? value.toString() : '');
         }) ??
         {};
   }
@@ -155,7 +150,7 @@ class BinaryEngine extends Engine {
     final http.Request request = http.Request('POST', await endpoint)
       ..body = gqlRequestBodyBuilder(query)
       ..headers['Content-Type'] = 'application/json'
-      ..headers.addAll(runtimeHeadersToHttpHeaders(headers));
+      ..headers.addAll(runtimeHeadersToHttpHeaders(headers?.toJson()));
 
     return retry<QueryEngineResult>(
       () async {
@@ -199,7 +194,7 @@ class BinaryEngine extends Engine {
     final http.Request request = http.Request('POST', await endpoint)
       ..body = body
       ..headers['Content-Type'] = 'application/json'
-      ..headers.addAll(runtimeHeadersToHttpHeaders(headers));
+      ..headers.addAll(runtimeHeadersToHttpHeaders(headers?.toJson()));
 
     return retry<List<QueryEngineResult>>(
       () async {
@@ -244,12 +239,6 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<void> rollbackTransaction(
-      {required TransactionHeaders headers, required TransactionInfo info}) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> start() async {
     process ??= await _createProcess();
   }
@@ -257,14 +246,23 @@ class BinaryEngine extends Engine {
   /// Create engine process.
   Future<Process> _createProcess() async {
     final int port = await this.port;
+    final List<String> additionalFlag = [];
+
+    if (config.allowTriggerPanic == true) {
+      additionalFlag.add('--debug');
+    }
+
     final Process process = await Process.start(
       _executable,
       [
         '--enable-raw-queries',
+        '--enable-open-telemetry',
         '--port',
         port.toString(),
         '--host',
         host,
+        ...config.flags ?? [],
+        ...additionalFlag,
       ],
       includeParentEnvironment: false,
       environment: _omitEnviroment(_env, ['port']),
@@ -324,9 +322,63 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<TransactionInfo> startTransaction(
-      {required TransactionHeaders headers, TransactionOptions? options}) {
-    throw UnimplementedError();
+  Future<TransactionInfo> startTransaction({
+    required TransactionHeaders headers,
+    TransactionOptions options = const TransactionOptions(),
+  }) async {
+    final String body = json.encode({
+      'max_wait': options.maxWait,
+      'timeout': options.timeout,
+      'isolation_level': options.isolationLevel?.name,
+    });
+    final Uri url = (await endpoint).replace(path: '/transaction/start');
+    final http.Request request = http.Request('POST', url)
+      ..body = body
+      ..headers['Content-Type'] = 'application/json'
+      ..headers.addAll(runtimeHeadersToHttpHeaders(headers.toJson()));
+
+    final http.StreamedResponse stream = await _httpClient.send(request);
+    final http.Response response = await http.Response.fromStream(stream);
+
+    // TODO: Why? Request transaction APIs always 404.
+    // See https://github.com/prisma/prisma/blob/29770bd78c28bea03c1ee473d391c07963bb323d/packages/engine-core/src/binary/BinaryEngine.ts#L1022
+    if (response.statusCode >= 400) {
+      throw PrismaServerError('Transaction start failed.');
+    }
+
+    return TransactionInfo.fromJson(json.decode(response.body));
+  }
+
+  @override
+  Future<void> commitTransaction({
+    required TransactionHeaders headers,
+    required TransactionInfo info,
+  }) async {
+    final Uri url =
+        (await endpoint).replace(path: '/transaction/${info.id}/commit');
+    final http.Request request = http.Request('POST', url);
+    final http.StreamedResponse stream = await _httpClient.send(request);
+    final http.Response response = await http.Response.fromStream(stream);
+
+    if (response.statusCode >= 400) {
+      throw PrismaServerError('Transaction commit failed.');
+    }
+  }
+
+  @override
+  Future<void> rollbackTransaction({
+    required TransactionHeaders headers,
+    required TransactionInfo info,
+  }) async {
+    final Uri url =
+        (await endpoint).replace(path: '/transaction/${info.id}/rollback');
+    final http.Request request = http.Request('POST', url);
+    final http.StreamedResponse stream = await _httpClient.send(request);
+    final http.Response response = await http.Response.fromStream(stream);
+
+    if (response.statusCode >= 400) {
+      throw PrismaServerError('Transaction rollback failed.');
+    }
   }
 
   @override
