@@ -2355,29 +2355,25 @@ final dmmf.Document _dmmf =
 const String _executable =
     '/Users/seven/workspace/prisma/example/.dart_tool/prisma/query-engine';
 
-/// Prisma schema path.
-const String _schemaPath = 'prisma/schema.prisma';
+/// Prisma schema as string.
+final String _schema = convert.json.decode(
+    "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-dart\"\n  output   = \"../lib/src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  posts     Post[]\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  title     String\n  content   String\n  published Boolean\n  authorId  Int\n  author    User     @relation(fields: [authorId], references: [id])\n  created_at DateTime @default(now())\n}\n");
 
 class Datasources {
   final runtime.Datasource? db;
 
   const Datasources({this.db});
 
-  List<runtime.DatasourceOverwrite> toOverwrites() {
-    final List<runtime.DatasourceOverwrite> overwrites = [];
+  Map<String, runtime.Datasource> toOverwrites() {
+    final Map<String, runtime.Datasource> overwrites$ =
+        <String, runtime.Datasource>{};
     if (db != null) {
-      overwrites.add(runtime.DatasourceOverwrite(
-        name: 'db',
-        url: db?.url,
-      ));
+      overwrites$['db'] = db!;
     } else {
-      overwrites.add(runtime.DatasourceOverwrite(
-        name: 'db',
-        env: 'DATABASE_URL',
-      ));
+      overwrites$['db'] = runtime.Datasource(url: 'env("DATABASE_URL")');
     }
 
-    return overwrites;
+    return overwrites$;
   }
 }
 
@@ -2390,16 +2386,14 @@ class PrismaClient {
   factory PrismaClient({
     Datasources? datasources,
   }) {
-    final List<runtime.DatasourceOverwrite>? overwrites =
-        datasources?.toOverwrites();
-    final runtime.EngineConfig config = runtime.EngineConfig(
-      datasources: (overwrites?.isNotEmpty == true) ? overwrites : null,
-      datamodelPath: _schemaPath,
-      prismaPath: _executable,
-      env: configure.environment,
+    final runtime.Engine engine = runtime.BinaryEngine(
+      datasources:
+          datasources?.toOverwrites() ?? const <String, runtime.Datasource>{},
+      dmmf: _dmmf,
+      schema: _schema,
+      environment: configure.environment,
+      executable: _executable,
     );
-
-    final runtime.Engine engine = runtime.BinaryEngine(config);
 
     return PrismaClient._(engine);
   }

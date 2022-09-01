@@ -1,14 +1,21 @@
-import '../../dmmf/dmmf.dart' as dmmf show Document;
-import 'engine_config.dart';
+import 'dart:async';
+
+import '../../dmmf/dmmf.dart' show Document;
 import 'get_config_result.dart';
 import 'types/query_engine.dart';
 import 'types/transaction.dart';
 
 abstract class Engine {
-  const Engine(this.config);
+  const Engine({
+    required this.schema,
+    required this.dmmf,
+  });
 
-  /// The engine configuration.
-  final EngineConfig config;
+  /// Prisma schema as SDL string.
+  final String schema;
+
+  /// Prisma schema as [Document].
+  final Document dmmf;
 
   /// Start the engine.
   Future<void> start();
@@ -17,13 +24,13 @@ abstract class Engine {
   Future<void> stop();
 
   /// Get Current configuration.
-  Future<GetConfigResult> getConfig();
+  FutureOr<GetConfigResult> getConfig();
 
   /// Get Current DMMF.
-  Future<dmmf.Document> getDmmf();
+  FutureOr<Document> getDmmf() => dmmf;
 
   /// Get current engine version.
-  Future<String> version({bool forceRun = false});
+  Future<String> version({bool forceRun = false}) async => 'unknown';
 
   /// Request a query execution.
   Future<QueryEngineResult> request({

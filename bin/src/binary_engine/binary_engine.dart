@@ -39,12 +39,19 @@ class BinaryEngine {
   bool get hasDownloaded => File(executable).existsSync();
 
   /// Run the binary engine.
-  Future<ProcessResult> run(List<String> arguments) => Process.run(
+  Future<ProcessResult> run(
+    List<String> arguments, {
+    Map<String, String> environment = const <String, String>{},
+  }) =>
+      Process.run(
         executable,
         arguments,
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
-        environment: configure.environment,
+        environment: <String, String>{
+          ...configure.environment,
+          ...environment,
+        },
       );
 
   /// Start the binary engine.

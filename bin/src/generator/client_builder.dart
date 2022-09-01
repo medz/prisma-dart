@@ -18,8 +18,8 @@ final dmmf.Document _dmmf = dmmf.Document.fromJson(convert.json.decode(_dmmfStr)
 /// Prisma query engine executable.
 const String _executable = '${options.executable}';
 
-/// Prisma schema path.
-const String _schemaPath = '${options.schemaPath}';
+/// Prisma schema as string.
+final String _schema = convert.json.decode(${json.encode(options.schema)});
 
 ${_datasourcesBuilder(options.datasources)}
 
@@ -32,15 +32,14 @@ class PrismaClient {
   factory PrismaClient({
     Datasources? datasources,
   }) {
-    final List<runtime.DatasourceOverwrite>? overwrites = datasources?.toOverwrites();
-    final runtime.EngineConfig config = runtime.EngineConfig(
-      datasources: (overwrites?.isNotEmpty == true) ? overwrites : null,
-      datamodelPath: _schemaPath,
-      prismaPath: _executable,
-      env: configure.environment,
-    );
 
-    final runtime.Engine engine = runtime.BinaryEngine(config);
+    final runtime.Engine engine = runtime.BinaryEngine(
+      datasources: datasources?.toOverwrites() ?? const <String, runtime.Datasource> {},
+      dmmf: _dmmf,
+      schema: _schema,
+      environment: configure.environment,
+      executable: _executable,
+    );
 
     return PrismaClient._(engine);
   }
@@ -66,30 +65,28 @@ class Datasources {
 /// Data sources to overwrite builder.
 String _datasourcesToOverwritesBuilder(List<helper.DataSource> datasources) {
   final StringBuffer buffer = StringBuffer();
-  buffer.writeln('List<runtime.DatasourceOverwrite> toOverwrites() {');
-  buffer.writeln('final List<runtime.DatasourceOverwrite> overwrites = [];');
+  buffer.writeln('Map<String, runtime.Datasource> toOverwrites() {');
+  buffer.writeln(
+      'final Map<String, runtime.Datasource> overwrites\$ = <String, runtime.Datasource>{};');
   for (final helper.DataSource ds in datasources) {
     buffer.writeln('''
   if (${runtime.languageKeywordEncode(ds.name)} != null) {
-    overwrites.add(runtime.DatasourceOverwrite(
-      name: '${ds.name}',
-      url: ${runtime.languageKeywordEncode(ds.name)}?.url,
-    ));
+    overwrites\$['${ds.name}'] = ${runtime.languageKeywordEncode(ds.name)}!;
   }
 ''');
+
     if (ds.url.fromEnvVar != null && ds.url.fromEnvVar?.isNotEmpty == true) {
       buffer.writeln('''
   else {
-    overwrites.add(runtime.DatasourceOverwrite(
-      name: '${ds.name}',
-      env: '${ds.url.fromEnvVar}',
-    ));
+    overwrites\$['${ds.name}'] = runtime.Datasource(
+      url: 'env("${ds.url.fromEnvVar}")'
+    );
   }
 ''');
     }
   }
 
-  buffer.writeln('return overwrites;');
+  buffer.writeln('return overwrites\$;');
   buffer.writeln('}');
 
   return buffer.toString();

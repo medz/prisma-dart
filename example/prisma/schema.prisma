@@ -4,6 +4,7 @@
 generator client {
   provider = "prisma-client-dart"
   output   = "../lib/src/generated"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {

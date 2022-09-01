@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
@@ -50,19 +51,18 @@ class GenerateCommand extends Command {
       await Future.delayed(Duration(microseconds: 500));
     }
 
-    // Create engine config.
-    final EngineConfig config = EngineConfig(
-      datamodelPath: schema.path,
-      env: configure.environment,
-      prismaPath: cliBinaryEngine.executable,
-      clientVersion: packageVersion,
+    // Request config result.
+    final ProcessResult configProcessResult = await cliBinaryEngine.run(
+      ['cli', 'get-config'],
+      environment: <String, String>{
+        'PRISMA_DML': base64.encode(schema.readAsBytesSync()),
+      },
     );
 
-    // Create query engine.
-    final BinaryEngine engine = BinaryEngine(config);
-
-    // Get config result.
-    final GetConfigResult configResult = await engine.getConfig();
+    // Parse config result.
+    final GetConfigResult configResult = GetConfigResult.fromJson(
+      jsonDecode(configProcessResult.stdout as String) as Map<String, dynamic>,
+    );
 
     // Print warnings.
     if (configResult.warnings?.isNotEmpty == true) {
@@ -88,8 +88,15 @@ class GenerateCommand extends Command {
       throw Exception(sb);
     }
 
-    // Get DMMF
-    final Document dmmf = await engine.getDmmf();
+    final ProcessResult dmmfProcessResult = await cliBinaryEngine.run(
+      ['--enable-raw-queries', 'cli', 'dmmf'],
+      environment: <String, String>{
+        'PRISMA_DML': base64.encode(schema.readAsBytesSync()),
+      },
+    );
+    final Document dmmf = Document.fromJson(
+      jsonDecode(dmmfProcessResult.stdout as String) as Map<String, dynamic>,
+    );
 
     // Run all configured generator.
     for (final GeneratorConfig config in generators) {

@@ -6,11 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:retry/retry.dart';
 
-import '../../../configure.dart';
-import '../../../version.dart';
 import '../../dmmf/dmmf.dart' as dmmf;
-import '../common/engine.dart';
-import '../common/engine_config.dart';
+import '../../runtime/datasource.dart';
 import '../common/errors/prisma_client_known_request_error.dart';
 import '../common/errors/prisma_server_error.dart';
 import '../common/get_config_result.dart';
@@ -18,21 +15,21 @@ import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
 import 'status_retry_exception.dart';
 import 'utils/get_free_port.dart';
+import 'binary_engine_unimplemented.dart' as unimplemented;
 
-/// Omit enviroment variables.
-Map<String, String> _omitEnviroment(
-    Map<String, String> enviroment, List<String> keys) {
-  final List<String> resolvedKeys = keys.map((e) => e.toUpperCase()).toList();
+/// localhost address.
+const String _localhost = r'127.0.0.1';
 
-  return enviroment
-    ..removeWhere((key, value) => resolvedKeys.contains(key.toUpperCase()));
-}
-
-class BinaryEngine extends Engine {
-  BinaryEngine(super.config);
-
-  GetConfigResult? _getedConfigResult;
-  dmmf.Document? _dmmf;
+class BinaryEngine extends unimplemented.BinaryEngine {
+  BinaryEngine({
+    required super.dmmf,
+    required super.schema,
+    required super.datasources,
+    required super.environment,
+    super.allowTriggerPanic,
+    super.executable,
+    super.workingDirectory,
+  });
 
   /// Started engine process.
   Process? process;
@@ -44,57 +41,161 @@ class BinaryEngine extends Engine {
   Future<int> get port async => _port ??= await getFreePort();
 
   /// Http client
-  final http.Client _httpClient = http.Client();
-
-  /// Get server host.
-  final String host = '127.0.0.1';
+  final http.Client httpClient = http.Client();
 
   /// Get server endpoint.
   Future<Uri> get endpoint async =>
-      Uri.http(host, '/').replace(port: await port);
+      Uri.http(_localhost, '/').replace(port: await port);
 
-  /// Get client version.
-  String get clientVersion => config.clientVersion ?? binaryVersion;
-
-  @override
-  Future<GetConfigResult> getConfig() async {
-    if (_getedConfigResult != null) {
-      return _getedConfigResult!;
+  /// Get search path.
+  List<String> get searchDirectories {
+    final List<String> directories = [];
+    // If cwd is not null, add it to search directories.
+    if (workingDirectory != null) {
+      directories.addAll(_searchDirectoriesBuilder(workingDirectory!));
     }
 
-    final ProcessResult result = await Process.run(
-      _executable,
-      ['cli', 'get-config'],
-      includeParentEnvironment: false,
-      environment: _omitEnviroment(_env, ['port']),
-      workingDirectory: config.cwd,
-    );
+    // Add current directory to search directories.
+    directories.addAll(_searchDirectoriesBuilder(Directory.current.path));
 
-    if (result.exitCode != 0) {
-      throw Exception(result.stderr);
+    // Add script directory to search directories.
+    directories.addAll(
+        _searchDirectoriesBuilder(path.dirname(Platform.script.toFilePath())));
+
+    // Add executable directory to search directories.
+    if (super.executable != null) {
+      directories
+          .addAll(_searchDirectoriesBuilder(path.dirname(super.executable!)));
     }
 
-    return _getedConfigResult =
-        GetConfigResult.fromJson(json.decode(result.stdout));
+    return directories;
   }
 
   @override
-  Future<dmmf.Document> getDmmf() async {
-    if (_dmmf != null) return _dmmf!;
+  Map<String, String> get environment {
+    final Map<String, String> environment = Map.from(super.environment)
+      ..removeWhere((key, value) => key.toLowerCase() == 'port');
+
+    // Build schema DML to environment.
+    environment['PRISMA_DML'] = base64.encode(utf8.encode(schema));
+
+    // If overwrite datasources is not null, add it to environment.
+    if (datasources.isNotEmpty) {
+      environment['OVERWRITE_DATASOURCES'] = json.encode(datasources);
+    }
+
+    // Rust backtrace.
+    if (!environment.containsKey('RUST_BACKTRACE')) {
+      environment['RUST_BACKTRACE'] = '1';
+    }
+
+    // Rust log
+    if (!environment.containsKey('RUST_LOG')) {
+      environment['RUST_BACKTRACE'] = 'info';
+    }
+
+    return environment;
+  }
+
+  /// Get overwrite datasources.
+  String? get overwriteDatasources {
+    final List<dynamic> overwriteDatasources = <dynamic>[];
+    for (final MapEntry<String, Datasource> entry in datasources.entries) {
+      final Map<String, dynamic> datasource = <String, dynamic>{
+        'name': entry.key,
+        'url': null,
+        'env': null,
+      };
+
+      /// If url is environment variable, add it to datasource.
+      final RegExp pattern = RegExp(r'env\("(.*)"\)');
+      final Match? match = pattern.firstMatch(entry.value.url!);
+      if (match != null) {
+        datasource['env'] = match.group(1);
+      }
+
+      // If url is not environment variable, add it to datasource.
+      if (entry.value.url != null && datasource['env'] == null) {
+        datasource['url'] = entry.value.url;
+      }
+
+      overwriteDatasources.add(datasource);
+    }
+
+    return json.encode(overwriteDatasources);
+  }
+
+  @override
+  String get executable {
+    // If set executable, return it.
+    if (super.executable != null && super.executable?.isNotEmpty == true) {
+      final executable = File(super.executable!);
+      if (executable.existsSync()) {
+        return executable.path;
+      }
+    }
+
+    // Find query engine in enviroment.
+    final String? forEnvirnoment = environment['PRISMA_QUERY_ENGINE_BINARY'];
+    if (forEnvirnoment != null && forEnvirnoment.isNotEmpty) {
+      if (File(forEnvirnoment).existsSync()) {
+        return forEnvirnoment;
+      }
+    }
+
+    // Find quert engine in search directories.
+    for (final String directory in searchDirectories) {
+      final File executable = File(path.join(directory, 'query-engine'));
+      if (executable.existsSync()) {
+        return executable.path;
+      }
+    }
+
+    // If not found, throw exception.
+    throw Exception('Query engine not found.');
+  }
+
+  /// Cached get config result.
+  Future<GetConfigResult>? _getConfigResult;
+
+  @override
+  Future<GetConfigResult> getConfig({bool forceRun = false}) {
+    if (!forceRun && _getConfigResult != null) return _getConfigResult!;
+
+    return _getConfigResult = Future<GetConfigResult>.sync(() async {
+      final ProcessResult result = await Process.run(
+        executable,
+        ['cli', 'get-config'],
+        includeParentEnvironment: false,
+        environment: environment,
+        workingDirectory: workingDirectory,
+      );
+
+      if (result.exitCode != 0) {
+        throw Exception(result.stderr);
+      }
+
+      return GetConfigResult.fromJson(json.decode(result.stdout));
+    });
+  }
+
+  @override
+  Future<dmmf.Document> getDmmf({bool forceRun = false}) async {
+    if (!forceRun) return super.getDmmf(forceRun: forceRun);
 
     final ProcessResult result = await Process.run(
-      _executable,
+      executable,
       ['--enable-raw-queries', 'cli', 'dmmf'],
       includeParentEnvironment: false,
-      environment: _omitEnviroment(_env, ['port']),
-      workingDirectory: config.cwd,
+      environment: environment,
+      workingDirectory: workingDirectory,
     );
 
     if (result.exitCode != 0) {
       throw Exception(result.stderr);
     }
 
-    return _dmmf = dmmf.Document.fromJson(json.decode(result.stdout));
+    return dmmf.Document.fromJson(json.decode(result.stdout));
   }
 
   /// GraphQL request body builder.
@@ -154,7 +255,7 @@ class BinaryEngine extends Engine {
 
     return retry<QueryEngineResult>(
       () async {
-        final http.StreamedResponse stream = await _httpClient.send(request);
+        final http.StreamedResponse stream = await httpClient.send(request);
         final http.Response response = await http.Response.fromStream(stream);
 
         if (response.statusCode >= 400) {
@@ -170,8 +271,9 @@ class BinaryEngine extends Engine {
 
         return QueryEngineResult(result['data'], elapsed);
       },
-      maxDelay: const Duration(),
-      maxAttempts: config.env?['PRISMA_CLIENT_NO_RETRY'] == null ? 2 : 1,
+      maxDelay: const Duration(milliseconds: 200),
+      maxAttempts:
+          environment.containsKey('PRISMA_CLIENT_NO_RETRY') == true ? 1 : 2,
       retryIf: (e) =>
           e is http.ClientException ||
           e is SocketException ||
@@ -198,7 +300,7 @@ class BinaryEngine extends Engine {
 
     return retry<List<QueryEngineResult>>(
       () async {
-        final http.StreamedResponse stream = await _httpClient.send(request);
+        final http.StreamedResponse stream = await httpClient.send(request);
         final http.Response response = await http.Response.fromStream(stream);
 
         if (response.statusCode >= 400) {
@@ -230,7 +332,8 @@ class BinaryEngine extends Engine {
         throw PrismaClientKnownRequestError('Batch request known error.');
       },
       maxDelay: const Duration(),
-      maxAttempts: config.env?['PRISMA_CLIENT_NO_RETRY'] == null ? 2 : 1,
+      maxAttempts:
+          environment.containsKey('PRISMA_CLIENT_NO_RETRY') == true ? 1 : 2,
       retryIf: (e) =>
           e is http.ClientException ||
           e is SocketException ||
@@ -246,27 +349,26 @@ class BinaryEngine extends Engine {
   /// Create engine process.
   Future<Process> _createProcess() async {
     final int port = await this.port;
-    final List<String> additionalFlag = [];
+    final List<String> additionalFlag = <String>[];
 
-    if (config.allowTriggerPanic == true) {
+    if (allowTriggerPanic == true) {
       additionalFlag.add('--debug');
     }
 
     final Process process = await Process.start(
-      _executable,
+      executable,
       [
         '--enable-raw-queries',
         '--enable-open-telemetry',
         '--port',
         port.toString(),
         '--host',
-        host,
-        ...config.flags ?? [],
+        _localhost,
         ...additionalFlag,
       ],
       includeParentEnvironment: false,
-      environment: _omitEnviroment(_env, ['port']),
-      workingDirectory: config.cwd,
+      environment: environment,
+      workingDirectory: workingDirectory,
     );
 
     // Listen for stderr.
@@ -289,10 +391,10 @@ class BinaryEngine extends Engine {
       await retry<bool>(
         () async {
           // Send GET request to server.
-          final http.Response response = await _httpClient.get(url);
+          final http.Response response = await httpClient.get(url);
 
           // If request status code not 200, throw exception.
-          if (response.statusCode != 200) {
+          if (response.statusCode >= 400) {
             throw StatusRetryException(false);
           }
 
@@ -337,7 +439,7 @@ class BinaryEngine extends Engine {
       ..headers['Content-Type'] = 'application/json'
       ..headers.addAll(runtimeHeadersToHttpHeaders(headers.toJson()));
 
-    final http.StreamedResponse stream = await _httpClient.send(request);
+    final http.StreamedResponse stream = await httpClient.send(request);
     final http.Response response = await http.Response.fromStream(stream);
 
     // TODO: Why? Request transaction APIs always 404.
@@ -357,7 +459,7 @@ class BinaryEngine extends Engine {
     final Uri url =
         (await endpoint).replace(path: '/transaction/${info.id}/commit');
     final http.Request request = http.Request('POST', url);
-    final http.StreamedResponse stream = await _httpClient.send(request);
+    final http.StreamedResponse stream = await httpClient.send(request);
     final http.Response response = await http.Response.fromStream(stream);
 
     if (response.statusCode >= 400) {
@@ -373,7 +475,7 @@ class BinaryEngine extends Engine {
     final Uri url =
         (await endpoint).replace(path: '/transaction/${info.id}/rollback');
     final http.Request request = http.Request('POST', url);
-    final http.StreamedResponse stream = await _httpClient.send(request);
+    final http.StreamedResponse stream = await httpClient.send(request);
     final http.Response response = await http.Response.fromStream(stream);
 
     if (response.statusCode >= 400) {
@@ -389,14 +491,14 @@ class BinaryEngine extends Engine {
 
   @override
   Future<String> version({bool forceRun = false}) async {
-    if (!forceRun) return clientVersion;
+    if (!forceRun) return super.version(forceRun: forceRun);
 
     final ProcessResult result = await Process.run(
-      _executable,
+      executable,
       ['--version'],
       includeParentEnvironment: false,
-      environment: _env,
-      workingDirectory: config.cwd,
+      environment: environment,
+      workingDirectory: workingDirectory,
     );
 
     if (result.exitCode != 0) {
@@ -409,54 +511,6 @@ class BinaryEngine extends Engine {
         .replaceAll(' ', '')
         .replaceAll('query-engine', '')
         .trim();
-  }
-
-  /// Get prisma query engine executable.
-  String get _executable {
-    // If set prisma path, return it.
-    if (config.prismaPath != null) {
-      final executable = File(config.prismaPath!);
-      if (executable.existsSync()) {
-        return executable.path;
-      }
-    }
-
-    // Find query engine in enviroment.
-    if (configure.environment.containsKey('PRISMA_QUERY_ENGINE_BINARY')) {
-      final String binary = configure.env('PRISMA_QUERY_ENGINE_BINARY')!;
-      final File executable = File(binary);
-      if (executable.existsSync()) {
-        return executable.path;
-      }
-    }
-
-    // Find quert engine in search directories.
-    for (final String directory in searchDirectories) {
-      final File executable = File(path.join(directory, 'query-engine'));
-      if (executable.existsSync()) {
-        return executable.path;
-      }
-    }
-
-    // If not found, throw exception.
-    throw Exception('Query engine not found.');
-  }
-
-  /// Get search path.
-  List<String> get searchDirectories {
-    final List<String> directories = [];
-    // If cwd is not null, add it to search directories.
-    if (config.cwd != null) {
-      directories.addAll(_searchDirectoriesBuilder(config.cwd!));
-    }
-
-    directories.addAll(_searchDirectoriesBuilder(Directory.current.path));
-    directories.addAll(
-        _searchDirectoriesBuilder(path.dirname(Platform.script.toFilePath())));
-    directories
-        .addAll(_searchDirectoriesBuilder(path.dirname(config.datamodelPath)));
-
-    return directories;
   }
 
   /// Search directories builder.
@@ -475,67 +529,5 @@ class BinaryEngine extends Engine {
     }
 
     return directories;
-  }
-
-  /// Get resolved prisma dml path.
-  String get prismaDmlPath {
-    // If data model path file is exists, return it.
-    if (File(config.datamodelPath).existsSync()) {
-      return config.datamodelPath;
-    }
-
-    final String basename = path.basename(config.datamodelPath);
-    for (final String directory in searchDirectories) {
-      final String filepath = path.join(directory, basename);
-      if (File(filepath).existsSync()) {
-        return filepath;
-      }
-    }
-
-    throw Exception('Prisma data model file not found.');
-  }
-
-  /// Get Resolved environment variables.
-  Map<String, String> get _env {
-    final Map<String, String> env = <String, String>{
-      'PRISMA_DML_PATH': prismaDmlPath,
-    };
-
-    if (config.logQueries == true) {
-      env['LOG_QUERIES'] = 'true';
-    }
-
-    if (config.datasources?.isNotEmpty == true) {
-      env['OVERWRITE_DATASOURCES'] = _datasourcesToJson();
-    }
-
-    if (Platform.environment.containsKey('NO_COLOR') &&
-        config.env?.containsKey('NO_COLOR') == false &&
-        config.showColors == true) {
-      env['CLICOLOR_FORCE'] = '1';
-    }
-
-    return <String, String>{
-      ...Platform.environment,
-      ...config.env ?? const <String, String>{},
-      ...env,
-      // use value from process.env or use default
-      'RUST_BACKTRACE': Platform.environment['RUST_BACKTRACE'] ??
-          config.env?['RUST_BACKTRACE'] ??
-          '1',
-      'RUST_LOG':
-          Platform.environment['RUST_LOG'] ?? config.env?['RUST_LOG'] ?? 'info',
-    };
-  }
-
-  /// Data sources to json.
-  String _datasourcesToJson() {
-    final List<dynamic> datasources = <dynamic>[];
-    for (final DatasourceOverwrite datasource
-        in config.datasources ?? const []) {
-      datasources.add(datasource.toJson());
-    }
-
-    return json.encode(datasources);
   }
 }
