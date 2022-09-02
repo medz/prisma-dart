@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:orm/generator_helper.dart';
-import 'package:orm/orm.dart';
 import 'package:path/path.dart';
 
 import '../utils/find_project.dart';
