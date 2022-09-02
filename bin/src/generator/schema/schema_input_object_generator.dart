@@ -33,20 +33,33 @@ Future<String> schemaInputObjectTypesGenerator(
 String _builder(List<dmmf.InputType> inputs) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.InputType input in inputs) {
-    // Build class header.
-    code.writeln('class ${languageKeywordEncode(input.name)} {');
+    code.writeln('''
+class ${languageKeywordEncode(input.name)} implements runtime.JsonSerializable {
+  ${_constructorBuilder(input)}
 
-    // Build constructor.
-    code.writeln(_constructorBuilder(input));
+  ${_fieldsBuilder(input.fields)}
 
-    // Build fields.
-    code.writeln(_fieldsBuilder(input.fields));
-
-    // Build class end.
-    code.writeln('}');
+  ${_toJsonBuilder(input.fields)}
+}
+''');
   }
 
   return code.toString();
+}
+
+/// Input object to Json builder.
+String _toJsonBuilder(List<dmmf.SchemaArg> fields) {
+  return '''
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic> {
+    ${fields.map(_toJsonFieldBuilder).join(',')}
+  };
+''';
+}
+
+/// To Json field builder.
+String _toJsonFieldBuilder(dmmf.SchemaArg field) {
+  return '\'${field.name}\': ${_fieldName(field.name)}';
 }
 
 /// Build input fields.

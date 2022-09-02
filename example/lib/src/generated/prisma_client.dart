@@ -39,7 +39,7 @@ enum UserScalarFieldEnum {
   createdAt,
 }
 
-class UserWhereInput {
+class UserWhereInput implements runtime.JsonSerializable {
   const UserWhereInput({
     this.AND,
     this.OR,
@@ -57,9 +57,20 @@ class UserWhereInput {
   final runtime.PrismaUnion<StringFilter, String>? name;
   final runtime.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
   final PostListRelationFilter? posts;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'id': id,
+        'name': name,
+        'createdAt': createdAt,
+        'posts': posts
+      };
 }
 
-class UserOrderByWithRelationInput {
+class UserOrderByWithRelationInput implements runtime.JsonSerializable {
   const UserOrderByWithRelationInput({
     this.id,
     this.name,
@@ -71,17 +82,28 @@ class UserOrderByWithRelationInput {
   final SortOrder? name;
   final SortOrder? createdAt;
   final PostOrderByRelationAggregateInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'name': name,
+        'createdAt': createdAt,
+        'posts': posts
+      };
 }
 
-class UserWhereUniqueInput {
+class UserWhereUniqueInput implements runtime.JsonSerializable {
   const UserWhereUniqueInput({
     this.id,
   });
 
   final int? id;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'id': id};
 }
 
-class UserOrderByWithAggregationInput {
+class UserOrderByWithAggregationInput implements runtime.JsonSerializable {
   const UserOrderByWithAggregationInput({
     this.id,
     this.name,
@@ -101,9 +123,21 @@ class UserOrderByWithAggregationInput {
   final UserMaxOrderByAggregateInput? $max;
   final UserMinOrderByAggregateInput? $min;
   final UserSumOrderByAggregateInput? $sum;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'name': name,
+        'createdAt': createdAt,
+        '_count': $count,
+        '_avg': $avg,
+        '_max': $max,
+        '_min': $min,
+        '_sum': $sum
+      };
 }
 
-class UserScalarWhereWithAggregatesInput {
+class UserScalarWhereWithAggregatesInput implements runtime.JsonSerializable {
   const UserScalarWhereWithAggregatesInput({
     this.AND,
     this.OR,
@@ -119,9 +153,19 @@ class UserScalarWhereWithAggregatesInput {
   final runtime.PrismaUnion<IntWithAggregatesFilter, int>? id;
   final runtime.PrismaUnion<StringWithAggregatesFilter, String>? name;
   final runtime.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'id': id,
+        'name': name,
+        'createdAt': createdAt
+      };
 }
 
-class PostWhereInput {
+class PostWhereInput implements runtime.JsonSerializable {
   const PostWhereInput({
     this.AND,
     this.OR,
@@ -145,9 +189,23 @@ class PostWhereInput {
   final runtime.PrismaUnion<IntFilter, int>? authorId;
   final runtime.PrismaUnion<UserRelationFilter, UserWhereInput>? author;
   final runtime.PrismaUnion<DateTimeFilter, DateTime>? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'author': author,
+        'created_at': created_at
+      };
 }
 
-class PostOrderByWithRelationInput {
+class PostOrderByWithRelationInput implements runtime.JsonSerializable {
   const PostOrderByWithRelationInput({
     this.id,
     this.title,
@@ -165,17 +223,31 @@ class PostOrderByWithRelationInput {
   final SortOrder? authorId;
   final UserOrderByWithRelationInput? author;
   final SortOrder? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'author': author,
+        'created_at': created_at
+      };
 }
 
-class PostWhereUniqueInput {
+class PostWhereUniqueInput implements runtime.JsonSerializable {
   const PostWhereUniqueInput({
     this.id,
   });
 
   final int? id;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'id': id};
 }
 
-class PostOrderByWithAggregationInput {
+class PostOrderByWithAggregationInput implements runtime.JsonSerializable {
   const PostOrderByWithAggregationInput({
     this.id,
     this.title,
@@ -201,9 +273,24 @@ class PostOrderByWithAggregationInput {
   final PostMaxOrderByAggregateInput? $max;
   final PostMinOrderByAggregateInput? $min;
   final PostSumOrderByAggregateInput? $sum;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at,
+        '_count': $count,
+        '_avg': $avg,
+        '_max': $max,
+        '_min': $min,
+        '_sum': $sum
+      };
 }
 
-class PostScalarWhereWithAggregatesInput {
+class PostScalarWhereWithAggregatesInput implements runtime.JsonSerializable {
   const PostScalarWhereWithAggregatesInput({
     this.AND,
     this.OR,
@@ -225,9 +312,22 @@ class PostScalarWhereWithAggregatesInput {
   final runtime.PrismaUnion<BoolWithAggregatesFilter, bool>? published;
   final runtime.PrismaUnion<IntWithAggregatesFilter, int>? authorId;
   final runtime.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class UserCreateInput {
+class UserCreateInput implements runtime.JsonSerializable {
   const UserCreateInput({
     required this.name,
     this.createdAt,
@@ -237,9 +337,13 @@ class UserCreateInput {
   final String name;
   final DateTime? createdAt;
   final PostCreateNestedManyWithoutAuthorInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'name': name, 'createdAt': createdAt, 'posts': posts};
 }
 
-class UserUncheckedCreateInput {
+class UserUncheckedCreateInput implements runtime.JsonSerializable {
   const UserUncheckedCreateInput({
     this.id,
     required this.name,
@@ -251,9 +355,17 @@ class UserUncheckedCreateInput {
   final String name;
   final DateTime? createdAt;
   final PostUncheckedCreateNestedManyWithoutAuthorInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'name': name,
+        'createdAt': createdAt,
+        'posts': posts
+      };
 }
 
-class UserUpdateInput {
+class UserUpdateInput implements runtime.JsonSerializable {
   const UserUpdateInput({
     this.name,
     this.createdAt,
@@ -264,9 +376,13 @@ class UserUpdateInput {
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
   final PostUpdateManyWithoutAuthorNestedInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'name': name, 'createdAt': createdAt, 'posts': posts};
 }
 
-class UserUncheckedUpdateInput {
+class UserUncheckedUpdateInput implements runtime.JsonSerializable {
   const UserUncheckedUpdateInput({
     this.id,
     this.name,
@@ -279,9 +395,17 @@ class UserUncheckedUpdateInput {
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
   final PostUncheckedUpdateManyWithoutAuthorNestedInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'name': name,
+        'createdAt': createdAt,
+        'posts': posts
+      };
 }
 
-class UserCreateManyInput {
+class UserCreateManyInput implements runtime.JsonSerializable {
   const UserCreateManyInput({
     this.id,
     required this.name,
@@ -291,9 +415,13 @@ class UserCreateManyInput {
   final int? id;
   final String name;
   final DateTime? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'name': name, 'createdAt': createdAt};
 }
 
-class UserUpdateManyMutationInput {
+class UserUpdateManyMutationInput implements runtime.JsonSerializable {
   const UserUpdateManyMutationInput({
     this.name,
     this.createdAt,
@@ -302,9 +430,13 @@ class UserUpdateManyMutationInput {
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'name': name, 'createdAt': createdAt};
 }
 
-class UserUncheckedUpdateManyInput {
+class UserUncheckedUpdateManyInput implements runtime.JsonSerializable {
   const UserUncheckedUpdateManyInput({
     this.id,
     this.name,
@@ -315,9 +447,13 @@ class UserUncheckedUpdateManyInput {
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'name': name, 'createdAt': createdAt};
 }
 
-class PostCreateInput {
+class PostCreateInput implements runtime.JsonSerializable {
   const PostCreateInput({
     required this.title,
     required this.content,
@@ -331,9 +467,18 @@ class PostCreateInput {
   final bool published;
   final UserCreateNestedOneWithoutPostsInput author;
   final DateTime? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'title': title,
+        'content': content,
+        'published': published,
+        'author': author,
+        'created_at': created_at
+      };
 }
 
-class PostUncheckedCreateInput {
+class PostUncheckedCreateInput implements runtime.JsonSerializable {
   const PostUncheckedCreateInput({
     this.id,
     required this.title,
@@ -349,9 +494,19 @@ class PostUncheckedCreateInput {
   final bool published;
   final int authorId;
   final DateTime? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class PostUpdateInput {
+class PostUpdateInput implements runtime.JsonSerializable {
   const PostUpdateInput({
     this.title,
     this.content,
@@ -366,9 +521,18 @@ class PostUpdateInput {
   final UserUpdateOneRequiredWithoutPostsNestedInput? author;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'title': title,
+        'content': content,
+        'published': published,
+        'author': author,
+        'created_at': created_at
+      };
 }
 
-class PostUncheckedUpdateInput {
+class PostUncheckedUpdateInput implements runtime.JsonSerializable {
   const PostUncheckedUpdateInput({
     this.id,
     this.title,
@@ -385,9 +549,19 @@ class PostUncheckedUpdateInput {
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? authorId;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class PostCreateManyInput {
+class PostCreateManyInput implements runtime.JsonSerializable {
   const PostCreateManyInput({
     this.id,
     required this.title,
@@ -403,9 +577,19 @@ class PostCreateManyInput {
   final bool published;
   final int authorId;
   final DateTime? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class PostUpdateManyMutationInput {
+class PostUpdateManyMutationInput implements runtime.JsonSerializable {
   const PostUpdateManyMutationInput({
     this.title,
     this.content,
@@ -418,9 +602,17 @@ class PostUpdateManyMutationInput {
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'title': title,
+        'content': content,
+        'published': published,
+        'created_at': created_at
+      };
 }
 
-class PostUncheckedUpdateManyInput {
+class PostUncheckedUpdateManyInput implements runtime.JsonSerializable {
   const PostUncheckedUpdateManyInput({
     this.id,
     this.title,
@@ -437,9 +629,19 @@ class PostUncheckedUpdateManyInput {
   final runtime.PrismaUnion<int, IntFieldUpdateOperationsInput>? authorId;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class IntFilter {
+class IntFilter implements runtime.JsonSerializable {
   const IntFilter({
     this.equals,
     this.in$,
@@ -459,9 +661,21 @@ class IntFilter {
   final int? gt;
   final int? gte;
   final runtime.PrismaUnion<int, NestedIntFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not
+      };
 }
 
-class StringFilter {
+class StringFilter implements runtime.JsonSerializable {
   const StringFilter({
     this.equals,
     this.in$,
@@ -489,9 +703,25 @@ class StringFilter {
   final String? endsWith;
   final QueryMode? mode;
   final runtime.PrismaUnion<String, NestedStringFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'mode': mode,
+        'not': not
+      };
 }
 
-class DateTimeFilter {
+class DateTimeFilter implements runtime.JsonSerializable {
   const DateTimeFilter({
     this.equals,
     this.in$,
@@ -511,9 +741,21 @@ class DateTimeFilter {
   final DateTime? gt;
   final DateTime? gte;
   final runtime.PrismaUnion<DateTime, NestedDateTimeFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not
+      };
 }
 
-class PostListRelationFilter {
+class PostListRelationFilter implements runtime.JsonSerializable {
   const PostListRelationFilter({
     this.every,
     this.some,
@@ -523,17 +765,24 @@ class PostListRelationFilter {
   final PostWhereInput? every;
   final PostWhereInput? some;
   final PostWhereInput? none;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'every': every, 'some': some, 'none': none};
 }
 
-class PostOrderByRelationAggregateInput {
+class PostOrderByRelationAggregateInput implements runtime.JsonSerializable {
   const PostOrderByRelationAggregateInput({
     this.$count,
   });
 
   final SortOrder? $count;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'_count': $count};
 }
 
-class UserCountOrderByAggregateInput {
+class UserCountOrderByAggregateInput implements runtime.JsonSerializable {
   const UserCountOrderByAggregateInput({
     this.id,
     this.name,
@@ -543,17 +792,24 @@ class UserCountOrderByAggregateInput {
   final SortOrder? id;
   final SortOrder? name;
   final SortOrder? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'name': name, 'createdAt': createdAt};
 }
 
-class UserAvgOrderByAggregateInput {
+class UserAvgOrderByAggregateInput implements runtime.JsonSerializable {
   const UserAvgOrderByAggregateInput({
     this.id,
   });
 
   final SortOrder? id;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'id': id};
 }
 
-class UserMaxOrderByAggregateInput {
+class UserMaxOrderByAggregateInput implements runtime.JsonSerializable {
   const UserMaxOrderByAggregateInput({
     this.id,
     this.name,
@@ -563,9 +819,13 @@ class UserMaxOrderByAggregateInput {
   final SortOrder? id;
   final SortOrder? name;
   final SortOrder? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'name': name, 'createdAt': createdAt};
 }
 
-class UserMinOrderByAggregateInput {
+class UserMinOrderByAggregateInput implements runtime.JsonSerializable {
   const UserMinOrderByAggregateInput({
     this.id,
     this.name,
@@ -575,17 +835,24 @@ class UserMinOrderByAggregateInput {
   final SortOrder? id;
   final SortOrder? name;
   final SortOrder? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'name': name, 'createdAt': createdAt};
 }
 
-class UserSumOrderByAggregateInput {
+class UserSumOrderByAggregateInput implements runtime.JsonSerializable {
   const UserSumOrderByAggregateInput({
     this.id,
   });
 
   final SortOrder? id;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'id': id};
 }
 
-class IntWithAggregatesFilter {
+class IntWithAggregatesFilter implements runtime.JsonSerializable {
   const IntWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -615,9 +882,26 @@ class IntWithAggregatesFilter {
   final NestedIntFilter? $sum;
   final NestedIntFilter? $min;
   final NestedIntFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not,
+        '_count': $count,
+        '_avg': $avg,
+        '_sum': $sum,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class StringWithAggregatesFilter {
+class StringWithAggregatesFilter implements runtime.JsonSerializable {
   const StringWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -651,9 +935,28 @@ class StringWithAggregatesFilter {
   final NestedIntFilter? $count;
   final NestedStringFilter? $min;
   final NestedStringFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'mode': mode,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class DateTimeWithAggregatesFilter {
+class DateTimeWithAggregatesFilter implements runtime.JsonSerializable {
   const DateTimeWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -679,9 +982,24 @@ class DateTimeWithAggregatesFilter {
   final NestedIntFilter? $count;
   final NestedDateTimeFilter? $min;
   final NestedDateTimeFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class BoolFilter {
+class BoolFilter implements runtime.JsonSerializable {
   const BoolFilter({
     this.equals,
     this.not,
@@ -689,9 +1007,13 @@ class BoolFilter {
 
   final bool? equals;
   final runtime.PrismaUnion<bool, NestedBoolFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'equals': equals, 'not': not};
 }
 
-class UserRelationFilter {
+class UserRelationFilter implements runtime.JsonSerializable {
   const UserRelationFilter({
     this.is$,
     this.isNot,
@@ -699,9 +1021,12 @@ class UserRelationFilter {
 
   final UserWhereInput? is$;
   final UserWhereInput? isNot;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'is': is$, 'isNot': isNot};
 }
 
-class PostCountOrderByAggregateInput {
+class PostCountOrderByAggregateInput implements runtime.JsonSerializable {
   const PostCountOrderByAggregateInput({
     this.id,
     this.title,
@@ -717,9 +1042,19 @@ class PostCountOrderByAggregateInput {
   final SortOrder? published;
   final SortOrder? authorId;
   final SortOrder? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class PostAvgOrderByAggregateInput {
+class PostAvgOrderByAggregateInput implements runtime.JsonSerializable {
   const PostAvgOrderByAggregateInput({
     this.id,
     this.authorId,
@@ -727,9 +1062,13 @@ class PostAvgOrderByAggregateInput {
 
   final SortOrder? id;
   final SortOrder? authorId;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'authorId': authorId};
 }
 
-class PostMaxOrderByAggregateInput {
+class PostMaxOrderByAggregateInput implements runtime.JsonSerializable {
   const PostMaxOrderByAggregateInput({
     this.id,
     this.title,
@@ -745,9 +1084,19 @@ class PostMaxOrderByAggregateInput {
   final SortOrder? published;
   final SortOrder? authorId;
   final SortOrder? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class PostMinOrderByAggregateInput {
+class PostMinOrderByAggregateInput implements runtime.JsonSerializable {
   const PostMinOrderByAggregateInput({
     this.id,
     this.title,
@@ -763,9 +1112,19 @@ class PostMinOrderByAggregateInput {
   final SortOrder? published;
   final SortOrder? authorId;
   final SortOrder? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class PostSumOrderByAggregateInput {
+class PostSumOrderByAggregateInput implements runtime.JsonSerializable {
   const PostSumOrderByAggregateInput({
     this.id,
     this.authorId,
@@ -773,9 +1132,13 @@ class PostSumOrderByAggregateInput {
 
   final SortOrder? id;
   final SortOrder? authorId;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'authorId': authorId};
 }
 
-class BoolWithAggregatesFilter {
+class BoolWithAggregatesFilter implements runtime.JsonSerializable {
   const BoolWithAggregatesFilter({
     this.equals,
     this.not,
@@ -789,9 +1152,19 @@ class BoolWithAggregatesFilter {
   final NestedIntFilter? $count;
   final NestedBoolFilter? $min;
   final NestedBoolFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class PostCreateNestedManyWithoutAuthorInput {
+class PostCreateNestedManyWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostCreateNestedManyWithoutAuthorInput({
     this.create,
     this.connectOrCreate,
@@ -803,9 +1176,18 @@ class PostCreateNestedManyWithoutAuthorInput {
   final List<PostCreateOrConnectWithoutAuthorInput>? connectOrCreate;
   final PostCreateManyAuthorInputEnvelope? createMany;
   final List<PostWhereUniqueInput>? connect;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'create': create,
+        'connectOrCreate': connectOrCreate,
+        'createMany': createMany,
+        'connect': connect
+      };
 }
 
-class PostUncheckedCreateNestedManyWithoutAuthorInput {
+class PostUncheckedCreateNestedManyWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostUncheckedCreateNestedManyWithoutAuthorInput({
     this.create,
     this.connectOrCreate,
@@ -817,25 +1199,40 @@ class PostUncheckedCreateNestedManyWithoutAuthorInput {
   final List<PostCreateOrConnectWithoutAuthorInput>? connectOrCreate;
   final PostCreateManyAuthorInputEnvelope? createMany;
   final List<PostWhereUniqueInput>? connect;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'create': create,
+        'connectOrCreate': connectOrCreate,
+        'createMany': createMany,
+        'connect': connect
+      };
 }
 
-class StringFieldUpdateOperationsInput {
+class StringFieldUpdateOperationsInput implements runtime.JsonSerializable {
   const StringFieldUpdateOperationsInput({
     this.set$,
   });
 
   final String? set$;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'set': set$};
 }
 
-class DateTimeFieldUpdateOperationsInput {
+class DateTimeFieldUpdateOperationsInput implements runtime.JsonSerializable {
   const DateTimeFieldUpdateOperationsInput({
     this.set$,
   });
 
   final DateTime? set$;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'set': set$};
 }
 
-class PostUpdateManyWithoutAuthorNestedInput {
+class PostUpdateManyWithoutAuthorNestedInput
+    implements runtime.JsonSerializable {
   const PostUpdateManyWithoutAuthorNestedInput({
     this.create,
     this.connectOrCreate,
@@ -861,9 +1258,24 @@ class PostUpdateManyWithoutAuthorNestedInput {
   final List<PostUpdateWithWhereUniqueWithoutAuthorInput>? update;
   final List<PostUpdateManyWithWhereWithoutAuthorInput>? updateMany;
   final List<PostScalarWhereInput>? deleteMany;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'create': create,
+        'connectOrCreate': connectOrCreate,
+        'upsert': upsert,
+        'createMany': createMany,
+        'set': set$,
+        'disconnect': disconnect,
+        'delete': delete,
+        'connect': connect,
+        'update': update,
+        'updateMany': updateMany,
+        'deleteMany': deleteMany
+      };
 }
 
-class IntFieldUpdateOperationsInput {
+class IntFieldUpdateOperationsInput implements runtime.JsonSerializable {
   const IntFieldUpdateOperationsInput({
     this.set$,
     this.increment,
@@ -877,9 +1289,19 @@ class IntFieldUpdateOperationsInput {
   final int? decrement;
   final int? multiply;
   final int? divide;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'set': set$,
+        'increment': increment,
+        'decrement': decrement,
+        'multiply': multiply,
+        'divide': divide
+      };
 }
 
-class PostUncheckedUpdateManyWithoutAuthorNestedInput {
+class PostUncheckedUpdateManyWithoutAuthorNestedInput
+    implements runtime.JsonSerializable {
   const PostUncheckedUpdateManyWithoutAuthorNestedInput({
     this.create,
     this.connectOrCreate,
@@ -905,9 +1327,24 @@ class PostUncheckedUpdateManyWithoutAuthorNestedInput {
   final List<PostUpdateWithWhereUniqueWithoutAuthorInput>? update;
   final List<PostUpdateManyWithWhereWithoutAuthorInput>? updateMany;
   final List<PostScalarWhereInput>? deleteMany;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'create': create,
+        'connectOrCreate': connectOrCreate,
+        'upsert': upsert,
+        'createMany': createMany,
+        'set': set$,
+        'disconnect': disconnect,
+        'delete': delete,
+        'connect': connect,
+        'update': update,
+        'updateMany': updateMany,
+        'deleteMany': deleteMany
+      };
 }
 
-class UserCreateNestedOneWithoutPostsInput {
+class UserCreateNestedOneWithoutPostsInput implements runtime.JsonSerializable {
   const UserCreateNestedOneWithoutPostsInput({
     this.create,
     this.connectOrCreate,
@@ -918,17 +1355,28 @@ class UserCreateNestedOneWithoutPostsInput {
       UserUncheckedCreateWithoutPostsInput>? create;
   final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
   final UserWhereUniqueInput? connect;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'create': create,
+        'connectOrCreate': connectOrCreate,
+        'connect': connect
+      };
 }
 
-class BoolFieldUpdateOperationsInput {
+class BoolFieldUpdateOperationsInput implements runtime.JsonSerializable {
   const BoolFieldUpdateOperationsInput({
     this.set$,
   });
 
   final bool? set$;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{'set': set$};
 }
 
-class UserUpdateOneRequiredWithoutPostsNestedInput {
+class UserUpdateOneRequiredWithoutPostsNestedInput
+    implements runtime.JsonSerializable {
   const UserUpdateOneRequiredWithoutPostsNestedInput({
     this.create,
     this.connectOrCreate,
@@ -944,9 +1392,18 @@ class UserUpdateOneRequiredWithoutPostsNestedInput {
   final UserWhereUniqueInput? connect;
   final runtime.PrismaUnion<UserUpdateWithoutPostsInput,
       UserUncheckedUpdateWithoutPostsInput>? update;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'create': create,
+        'connectOrCreate': connectOrCreate,
+        'upsert': upsert,
+        'connect': connect,
+        'update': update
+      };
 }
 
-class NestedIntFilter {
+class NestedIntFilter implements runtime.JsonSerializable {
   const NestedIntFilter({
     this.equals,
     this.in$,
@@ -966,9 +1423,21 @@ class NestedIntFilter {
   final int? gt;
   final int? gte;
   final runtime.PrismaUnion<int, NestedIntFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not
+      };
 }
 
-class NestedStringFilter {
+class NestedStringFilter implements runtime.JsonSerializable {
   const NestedStringFilter({
     this.equals,
     this.in$,
@@ -994,9 +1463,24 @@ class NestedStringFilter {
   final String? startsWith;
   final String? endsWith;
   final runtime.PrismaUnion<String, NestedStringFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'not': not
+      };
 }
 
-class NestedDateTimeFilter {
+class NestedDateTimeFilter implements runtime.JsonSerializable {
   const NestedDateTimeFilter({
     this.equals,
     this.in$,
@@ -1016,9 +1500,21 @@ class NestedDateTimeFilter {
   final DateTime? gt;
   final DateTime? gte;
   final runtime.PrismaUnion<DateTime, NestedDateTimeFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not
+      };
 }
 
-class NestedIntWithAggregatesFilter {
+class NestedIntWithAggregatesFilter implements runtime.JsonSerializable {
   const NestedIntWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -1048,9 +1544,26 @@ class NestedIntWithAggregatesFilter {
   final NestedIntFilter? $sum;
   final NestedIntFilter? $min;
   final NestedIntFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not,
+        '_count': $count,
+        '_avg': $avg,
+        '_sum': $sum,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class NestedFloatFilter {
+class NestedFloatFilter implements runtime.JsonSerializable {
   const NestedFloatFilter({
     this.equals,
     this.in$,
@@ -1070,9 +1583,21 @@ class NestedFloatFilter {
   final double? gt;
   final double? gte;
   final runtime.PrismaUnion<double, NestedFloatFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not
+      };
 }
 
-class NestedStringWithAggregatesFilter {
+class NestedStringWithAggregatesFilter implements runtime.JsonSerializable {
   const NestedStringWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -1104,9 +1629,27 @@ class NestedStringWithAggregatesFilter {
   final NestedIntFilter? $count;
   final NestedStringFilter? $min;
   final NestedStringFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'contains': contains,
+        'startsWith': startsWith,
+        'endsWith': endsWith,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class NestedDateTimeWithAggregatesFilter {
+class NestedDateTimeWithAggregatesFilter implements runtime.JsonSerializable {
   const NestedDateTimeWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -1132,9 +1675,24 @@ class NestedDateTimeWithAggregatesFilter {
   final NestedIntFilter? $count;
   final NestedDateTimeFilter? $min;
   final NestedDateTimeFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'in': in$,
+        'notIn': notIn,
+        'lt': lt,
+        'lte': lte,
+        'gt': gt,
+        'gte': gte,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class NestedBoolFilter {
+class NestedBoolFilter implements runtime.JsonSerializable {
   const NestedBoolFilter({
     this.equals,
     this.not,
@@ -1142,9 +1700,13 @@ class NestedBoolFilter {
 
   final bool? equals;
   final runtime.PrismaUnion<bool, NestedBoolFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'equals': equals, 'not': not};
 }
 
-class NestedBoolWithAggregatesFilter {
+class NestedBoolWithAggregatesFilter implements runtime.JsonSerializable {
   const NestedBoolWithAggregatesFilter({
     this.equals,
     this.not,
@@ -1158,9 +1720,18 @@ class NestedBoolWithAggregatesFilter {
   final NestedIntFilter? $count;
   final NestedBoolFilter? $min;
   final NestedBoolFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'equals': equals,
+        'not': not,
+        '_count': $count,
+        '_min': $min,
+        '_max': $max
+      };
 }
 
-class PostCreateWithoutAuthorInput {
+class PostCreateWithoutAuthorInput implements runtime.JsonSerializable {
   const PostCreateWithoutAuthorInput({
     required this.title,
     required this.content,
@@ -1172,9 +1743,18 @@ class PostCreateWithoutAuthorInput {
   final String content;
   final bool published;
   final DateTime? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'title': title,
+        'content': content,
+        'published': published,
+        'created_at': created_at
+      };
 }
 
-class PostUncheckedCreateWithoutAuthorInput {
+class PostUncheckedCreateWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostUncheckedCreateWithoutAuthorInput({
     this.id,
     required this.title,
@@ -1188,9 +1768,19 @@ class PostUncheckedCreateWithoutAuthorInput {
   final String content;
   final bool published;
   final DateTime? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'created_at': created_at
+      };
 }
 
-class PostCreateOrConnectWithoutAuthorInput {
+class PostCreateOrConnectWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostCreateOrConnectWithoutAuthorInput({
     required this.where,
     required this.create,
@@ -1199,9 +1789,13 @@ class PostCreateOrConnectWithoutAuthorInput {
   final PostWhereUniqueInput where;
   final runtime.PrismaUnion<PostCreateWithoutAuthorInput,
       PostUncheckedCreateWithoutAuthorInput> create;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'where': where, 'create': create};
 }
 
-class PostCreateManyAuthorInputEnvelope {
+class PostCreateManyAuthorInputEnvelope implements runtime.JsonSerializable {
   const PostCreateManyAuthorInputEnvelope({
     required this.data,
     this.skipDuplicates,
@@ -1209,9 +1803,14 @@ class PostCreateManyAuthorInputEnvelope {
 
   final List<PostCreateManyAuthorInput> data;
   final bool? skipDuplicates;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'data': data, 'skipDuplicates': skipDuplicates};
 }
 
-class PostUpsertWithWhereUniqueWithoutAuthorInput {
+class PostUpsertWithWhereUniqueWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostUpsertWithWhereUniqueWithoutAuthorInput({
     required this.where,
     required this.update,
@@ -1223,9 +1822,14 @@ class PostUpsertWithWhereUniqueWithoutAuthorInput {
       PostUncheckedUpdateWithoutAuthorInput> update;
   final runtime.PrismaUnion<PostCreateWithoutAuthorInput,
       PostUncheckedCreateWithoutAuthorInput> create;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'where': where, 'update': update, 'create': create};
 }
 
-class PostUpdateWithWhereUniqueWithoutAuthorInput {
+class PostUpdateWithWhereUniqueWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostUpdateWithWhereUniqueWithoutAuthorInput({
     required this.where,
     required this.data,
@@ -1234,9 +1838,14 @@ class PostUpdateWithWhereUniqueWithoutAuthorInput {
   final PostWhereUniqueInput where;
   final runtime.PrismaUnion<PostUpdateWithoutAuthorInput,
       PostUncheckedUpdateWithoutAuthorInput> data;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'where': where, 'data': data};
 }
 
-class PostUpdateManyWithWhereWithoutAuthorInput {
+class PostUpdateManyWithWhereWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostUpdateManyWithWhereWithoutAuthorInput({
     required this.where,
     required this.data,
@@ -1245,9 +1854,13 @@ class PostUpdateManyWithWhereWithoutAuthorInput {
   final PostScalarWhereInput where;
   final runtime.PrismaUnion<PostUpdateManyMutationInput,
       PostUncheckedUpdateManyWithoutPostsInput> data;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'where': where, 'data': data};
 }
 
-class PostScalarWhereInput {
+class PostScalarWhereInput implements runtime.JsonSerializable {
   const PostScalarWhereInput({
     this.AND,
     this.OR,
@@ -1269,9 +1882,22 @@ class PostScalarWhereInput {
   final runtime.PrismaUnion<BoolFilter, bool>? published;
   final runtime.PrismaUnion<IntFilter, int>? authorId;
   final runtime.PrismaUnion<DateTimeFilter, DateTime>? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'AND': AND,
+        'OR': OR,
+        'NOT': NOT,
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'authorId': authorId,
+        'created_at': created_at
+      };
 }
 
-class UserCreateWithoutPostsInput {
+class UserCreateWithoutPostsInput implements runtime.JsonSerializable {
   const UserCreateWithoutPostsInput({
     required this.name,
     this.createdAt,
@@ -1279,9 +1905,13 @@ class UserCreateWithoutPostsInput {
 
   final String name;
   final DateTime? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'name': name, 'createdAt': createdAt};
 }
 
-class UserUncheckedCreateWithoutPostsInput {
+class UserUncheckedCreateWithoutPostsInput implements runtime.JsonSerializable {
   const UserUncheckedCreateWithoutPostsInput({
     this.id,
     required this.name,
@@ -1291,9 +1921,13 @@ class UserUncheckedCreateWithoutPostsInput {
   final int? id;
   final String name;
   final DateTime? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'name': name, 'createdAt': createdAt};
 }
 
-class UserCreateOrConnectWithoutPostsInput {
+class UserCreateOrConnectWithoutPostsInput implements runtime.JsonSerializable {
   const UserCreateOrConnectWithoutPostsInput({
     required this.where,
     required this.create,
@@ -1302,9 +1936,13 @@ class UserCreateOrConnectWithoutPostsInput {
   final UserWhereUniqueInput where;
   final runtime.PrismaUnion<UserCreateWithoutPostsInput,
       UserUncheckedCreateWithoutPostsInput> create;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'where': where, 'create': create};
 }
 
-class UserUpsertWithoutPostsInput {
+class UserUpsertWithoutPostsInput implements runtime.JsonSerializable {
   const UserUpsertWithoutPostsInput({
     required this.update,
     required this.create,
@@ -1314,9 +1952,13 @@ class UserUpsertWithoutPostsInput {
       UserUncheckedUpdateWithoutPostsInput> update;
   final runtime.PrismaUnion<UserCreateWithoutPostsInput,
       UserUncheckedCreateWithoutPostsInput> create;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'update': update, 'create': create};
 }
 
-class UserUpdateWithoutPostsInput {
+class UserUpdateWithoutPostsInput implements runtime.JsonSerializable {
   const UserUpdateWithoutPostsInput({
     this.name,
     this.createdAt,
@@ -1325,9 +1967,13 @@ class UserUpdateWithoutPostsInput {
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'name': name, 'createdAt': createdAt};
 }
 
-class UserUncheckedUpdateWithoutPostsInput {
+class UserUncheckedUpdateWithoutPostsInput implements runtime.JsonSerializable {
   const UserUncheckedUpdateWithoutPostsInput({
     this.id,
     this.name,
@@ -1338,9 +1984,13 @@ class UserUncheckedUpdateWithoutPostsInput {
   final runtime.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'id': id, 'name': name, 'createdAt': createdAt};
 }
 
-class PostCreateManyAuthorInput {
+class PostCreateManyAuthorInput implements runtime.JsonSerializable {
   const PostCreateManyAuthorInput({
     this.id,
     required this.title,
@@ -1354,9 +2004,18 @@ class PostCreateManyAuthorInput {
   final String content;
   final bool published;
   final DateTime? created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'created_at': created_at
+      };
 }
 
-class PostUpdateWithoutAuthorInput {
+class PostUpdateWithoutAuthorInput implements runtime.JsonSerializable {
   const PostUpdateWithoutAuthorInput({
     this.title,
     this.content,
@@ -1369,9 +2028,18 @@ class PostUpdateWithoutAuthorInput {
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'title': title,
+        'content': content,
+        'published': published,
+        'created_at': created_at
+      };
 }
 
-class PostUncheckedUpdateWithoutAuthorInput {
+class PostUncheckedUpdateWithoutAuthorInput
+    implements runtime.JsonSerializable {
   const PostUncheckedUpdateWithoutAuthorInput({
     this.id,
     this.title,
@@ -1386,9 +2054,19 @@ class PostUncheckedUpdateWithoutAuthorInput {
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'created_at': created_at
+      };
 }
 
-class PostUncheckedUpdateManyWithoutPostsInput {
+class PostUncheckedUpdateManyWithoutPostsInput
+    implements runtime.JsonSerializable {
   const PostUncheckedUpdateManyWithoutPostsInput({
     this.id,
     this.title,
@@ -1403,6 +2081,15 @@ class PostUncheckedUpdateManyWithoutPostsInput {
   final runtime.PrismaUnion<bool, BoolFieldUpdateOperationsInput>? published;
   final runtime.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       created_at;
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'published': published,
+        'created_at': created_at
+      };
 }
 
 class AggregateUser {
