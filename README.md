@@ -11,21 +11,22 @@ Prisma is a **next-generation ORM** that consists of these tools:
 - **Prisma CLI** - A command line tool that allows you to create and manage your Prisma projects.
 - **Prisma Dart Runtime** - A Dart package, that allows you to use the ORM in your Dart code.
 - **Prisma Query Engine** - Prisma query engines wrapper:
-  1. **Binary Engine** - Only for Dart Native. **❌ [@Ali Ammar](https://github.com/Ali1Ammar) Developing.**
-  2. **Dynamic Library Engine** - Supported for Dart Native and Flutter Native. **❌ [@Seven Du](https://github.com/medz) Developing.**
+  1. **Binary Engine** - Only for Dart Native.
+  2. **Dynamic Library Engine** - Supported for Dart Native and Flutter Native. `❌ Waiting`
   3. **Prisma Data Proxy Engint** - Supported all platforms. `❌ Waiting`
 
 
 ## TODO:
 
-- [x] `format` command.
-- [ ] `generate` command. - In Progressing
-- [x] `init` command.
-- [x] `db push` command.
-- [ ] `db pull` command.
-- [ ] Binary query engine - In Progressing (https://github.com/odroe/prisma/issues/1)
+- [x] `format` command, Format your schema file.
+- [x] `generate` command - **Note:** Model deserialization is not supported at present
+- [x] `init` command, Initialize a new Prisma project.
+- [x] `db push` comman, Push your Prisma schema to your database.
+- [ ] `db pull` command, Pull your database schema to your Prisma schema.
+- [x] Binary query engine, Only for Dart Native.
 - [ ] dylib query engine - In Progressing (https://github.com/odroe/prisma/issues/1)
 - [ ] Prisma data proxy
+- [ ] Data model deserialization
 
 ## Getting started
 
