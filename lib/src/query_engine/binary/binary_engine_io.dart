@@ -415,8 +415,10 @@ class BinaryEngine extends unimplemented.BinaryEngine {
         maxAttempts: 5,
       );
     } catch (e) {
+      process.kill();
       await stop();
-      rethrow;
+
+      throw PrismaServerError('Failed to start Prisma server.');
     }
 
     // Return created process
