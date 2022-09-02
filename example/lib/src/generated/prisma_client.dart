@@ -2359,32 +2359,31 @@ class UserDelegate {
   final dmmf.Document _document;
   final runtime.QueryEngineRequestHeaders? _headers;
 
-  Future<User?> findUnique({
+  Future<dynamic> findUnique({
     required UserWhereUniqueInput where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'findUniqueUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'findUniqueUser',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('where', where, isRequired: true)]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<User?> findFirst({
+  Future<dynamic> findFirst({
     UserWhereInput? where,
     List<UserOrderByWithRelationInput>? orderBy,
     UserWhereUniqueInput? cursor,
@@ -2392,34 +2391,34 @@ class UserDelegate {
     int? skip,
     List<UserScalarFieldEnum>? distinct,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('cursor', cursor, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-      runtime.GraphQLVeriable('distinct', distinct, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'findFirstUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'findFirstUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('cursor', cursor, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false),
+            runtime.GraphQLArg('distinct', distinct, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<List<User>> findMany({
+  Future<dynamic> findMany({
     UserWhereInput? where,
     List<UserOrderByWithRelationInput>? orderBy,
     UserWhereUniqueInput? cursor,
@@ -2427,259 +2426,256 @@ class UserDelegate {
     int? skip,
     List<UserScalarFieldEnum>? distinct,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('cursor', cursor, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-      runtime.GraphQLVeriable('distinct', distinct, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'findManyUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'findManyUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('cursor', cursor, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false),
+            runtime.GraphQLArg('distinct', distinct, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<User> create({
+  Future<dynamic> create({
     required runtime.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
         data,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'createOneUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'createOneUser',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('data', data, isRequired: true)]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AffectedRowsOutput> createMany({
+  Future<dynamic> createMany({
     required List<UserCreateManyInput> data,
     bool? skipDuplicates,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-      runtime.GraphQLVeriable('skipDuplicates', skipDuplicates,
-          isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'createManyUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'createManyUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('data', data, isRequired: true),
+            runtime.GraphQLArg('skipDuplicates', skipDuplicates,
+                isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<User?> update({
+  Future<dynamic> update({
     required runtime.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput>
         data,
     required UserWhereUniqueInput where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'updateOneUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'updateOneUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('data', data, isRequired: true),
+            runtime.GraphQLArg('where', where, isRequired: true)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AffectedRowsOutput> updateMany({
+  Future<dynamic> updateMany({
     required runtime.PrismaUnion<UserUpdateManyMutationInput,
             UserUncheckedUpdateManyInput>
         data,
     UserWhereInput? where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'updateManyUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'updateManyUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('data', data, isRequired: true),
+            runtime.GraphQLArg('where', where, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<User> upsert({
+  Future<dynamic> upsert({
     required UserWhereUniqueInput where,
     required runtime.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
         create,
     required runtime.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput>
         update,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-      runtime.GraphQLVeriable('create', create, isRequired: true),
-      runtime.GraphQLVeriable('update', update, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'upsertOneUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'upsertOneUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: true),
+            runtime.GraphQLArg('create', create, isRequired: true),
+            runtime.GraphQLArg('update', update, isRequired: true)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<User?> delete({
+  Future<dynamic> delete({
     required UserWhereUniqueInput where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'deleteOneUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'deleteOneUser',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('where', where, isRequired: true)]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AffectedRowsOutput> deleteMany({
+  Future<dynamic> deleteMany({
     UserWhereInput? where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'deleteManyUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'deleteManyUser',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('where', where, isRequired: false)]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AggregateUser> aggregate({
+  Future<dynamic> aggregate({
     UserWhereInput? where,
     List<UserOrderByWithRelationInput>? orderBy,
     UserWhereUniqueInput? cursor,
     int? take,
     int? skip,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('cursor', cursor, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'aggregateUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'aggregateUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('cursor', cursor, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<List<UserGroupByOutputType>> groupBy({
+  Future<dynamic> groupBy({
     UserWhereInput? where,
     List<UserOrderByWithAggregationInput>? orderBy,
     required List<UserScalarFieldEnum> by,
@@ -2687,29 +2683,29 @@ class UserDelegate {
     int? take,
     int? skip,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('by', by, isRequired: true),
-      runtime.GraphQLVeriable('having', having, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'groupByUser',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: UserScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'groupByUser',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('by', by, isRequired: true),
+            runtime.GraphQLArg('having', having, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
@@ -2728,32 +2724,31 @@ class PostDelegate {
   final dmmf.Document _document;
   final runtime.QueryEngineRequestHeaders? _headers;
 
-  Future<Post?> findUnique({
+  Future<dynamic> findUnique({
     required PostWhereUniqueInput where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'findUniquePost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'findUniquePost',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('where', where, isRequired: true)]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<Post?> findFirst({
+  Future<dynamic> findFirst({
     PostWhereInput? where,
     List<PostOrderByWithRelationInput>? orderBy,
     PostWhereUniqueInput? cursor,
@@ -2761,34 +2756,34 @@ class PostDelegate {
     int? skip,
     List<PostScalarFieldEnum>? distinct,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('cursor', cursor, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-      runtime.GraphQLVeriable('distinct', distinct, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'findFirstPost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'findFirstPost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('cursor', cursor, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false),
+            runtime.GraphQLArg('distinct', distinct, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<List<Post>> findMany({
+  Future<dynamic> findMany({
     PostWhereInput? where,
     List<PostOrderByWithRelationInput>? orderBy,
     PostWhereUniqueInput? cursor,
@@ -2796,259 +2791,256 @@ class PostDelegate {
     int? skip,
     List<PostScalarFieldEnum>? distinct,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('cursor', cursor, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-      runtime.GraphQLVeriable('distinct', distinct, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'findManyPost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'findManyPost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('cursor', cursor, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false),
+            runtime.GraphQLArg('distinct', distinct, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<Post> create({
+  Future<dynamic> create({
     required runtime.PrismaUnion<PostCreateInput, PostUncheckedCreateInput>
         data,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'createOnePost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'createOnePost',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('data', data, isRequired: true)]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AffectedRowsOutput> createMany({
+  Future<dynamic> createMany({
     required List<PostCreateManyInput> data,
     bool? skipDuplicates,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-      runtime.GraphQLVeriable('skipDuplicates', skipDuplicates,
-          isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'createManyPost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'createManyPost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('data', data, isRequired: true),
+            runtime.GraphQLArg('skipDuplicates', skipDuplicates,
+                isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<Post?> update({
+  Future<dynamic> update({
     required runtime.PrismaUnion<PostUpdateInput, PostUncheckedUpdateInput>
         data,
     required PostWhereUniqueInput where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'updateOnePost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'updateOnePost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('data', data, isRequired: true),
+            runtime.GraphQLArg('where', where, isRequired: true)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AffectedRowsOutput> updateMany({
+  Future<dynamic> updateMany({
     required runtime.PrismaUnion<PostUpdateManyMutationInput,
             PostUncheckedUpdateManyInput>
         data,
     PostWhereInput? where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('data', data, isRequired: true),
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'updateManyPost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'updateManyPost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('data', data, isRequired: true),
+            runtime.GraphQLArg('where', where, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<Post> upsert({
+  Future<dynamic> upsert({
     required PostWhereUniqueInput where,
     required runtime.PrismaUnion<PostCreateInput, PostUncheckedCreateInput>
         create,
     required runtime.PrismaUnion<PostUpdateInput, PostUncheckedUpdateInput>
         update,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-      runtime.GraphQLVeriable('create', create, isRequired: true),
-      runtime.GraphQLVeriable('update', update, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'upsertOnePost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'upsertOnePost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: true),
+            runtime.GraphQLArg('create', create, isRequired: true),
+            runtime.GraphQLArg('update', update, isRequired: true)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<Post?> delete({
+  Future<dynamic> delete({
     required PostWhereUniqueInput where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: true),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'deleteOnePost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'deleteOnePost',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('where', where, isRequired: true)]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AffectedRowsOutput> deleteMany({
+  Future<dynamic> deleteMany({
     PostWhereInput? where,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'deleteManyPost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'mutation',
-    );
+    final String sdl = runtime.GraphQLField(
+      'mutation',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'deleteManyPost',
+          args: runtime.GraphQLArgs(
+              [runtime.GraphQLArg('where', where, isRequired: false)]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<AggregatePost> aggregate({
+  Future<dynamic> aggregate({
     PostWhereInput? where,
     List<PostOrderByWithRelationInput>? orderBy,
     PostWhereUniqueInput? cursor,
     int? take,
     int? skip,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('cursor', cursor, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'aggregatePost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'aggregatePost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('cursor', cursor, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }
 
-  Future<List<PostGroupByOutputType>> groupBy({
+  Future<dynamic> groupBy({
     PostWhereInput? where,
     List<PostOrderByWithAggregationInput>? orderBy,
     required List<PostScalarFieldEnum> by,
@@ -3056,29 +3048,29 @@ class PostDelegate {
     int? take,
     int? skip,
   }) async {
-    final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[
-      runtime.GraphQLVeriable('where', where, isRequired: false),
-      runtime.GraphQLVeriable('orderBy', orderBy, isRequired: false),
-      runtime.GraphQLVeriable('by', by, isRequired: true),
-      runtime.GraphQLVeriable('having', having, isRequired: false),
-      runtime.GraphQLVeriable('take', take, isRequired: false),
-      runtime.GraphQLVeriable('skip', skip, isRequired: false),
-    ];
-    final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-      document: _document,
-      operationName: 'groupByPost',
-      variables: variables,
-      fields: runtime.GraphQLFieldsBuilder(
-        fields: PostScalarFieldEnum.values,
-        document: _document,
-      ),
-      location: 'query',
-    );
+    final String sdl = runtime.GraphQLField(
+      'query',
+      fields: runtime.GraphQLFields([
+        runtime.GraphQLField(
+          'groupByPost',
+          args: runtime.GraphQLArgs([
+            runtime.GraphQLArg('where', where, isRequired: false),
+            runtime.GraphQLArg('orderBy', orderBy, isRequired: false),
+            runtime.GraphQLArg('by', by, isRequired: true),
+            runtime.GraphQLArg('having', having, isRequired: false),
+            runtime.GraphQLArg('take', take, isRequired: false),
+            runtime.GraphQLArg('skip', skip, isRequired: false)
+          ]),
+          fields: runtime.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum element) =>
+                  runtime.GraphQLField(element.name))
+              .toList()),
+        ),
+      ]),
+    ).toSdl();
 
-    final runtime.QueryEngineResult result = await _engine.request(
-      query: sdl.build(),
-      headers: _headers,
-    );
+    final runtime.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
 
     return result.data;
   }

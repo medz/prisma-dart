@@ -48,8 +48,10 @@ String modelDelegateBuilder(dmmf.Document document) {
       }
 
       // Build operation return type.
-      final String outputType = _findOutputType(document, gqlOperationName);
-      code.write(outputType);
+      // final String outputType = _findOutputType(document, gqlOperationName);
+      // code.write(outputType);
+      // TODO: Build operation return type, **Note** Current only test!
+      code.write('Future<dynamic>');
       code.write(' ');
 
       // Build operation name.
@@ -77,41 +79,93 @@ String modelDelegateBuilder(dmmf.Document document) {
 
 /// Build function body.
 String _buildBody(
-    dmmf.Document document, String gqlOperationName, String modelname) {
+  dmmf.Document document,
+  String gqlOperationName,
+  String modelname,
+) {
   final List<dmmf.SchemaArg> args =
       _findOperationArgs(document, gqlOperationName);
-  final StringBuffer code = StringBuffer();
-  code.writeln(
-      'final List<runtime.GraphQLVeriable> variables = <runtime.GraphQLVeriable>[');
-  for (final dmmf.SchemaArg arg in args) {
-    final String argName = languageKeywordEncode(arg.name);
-    code.writeln(
-        'runtime.GraphQLVeriable(\'${arg.name}\', $argName, isRequired: ${arg.isRequired}),');
-  }
-  code.writeln('];');
+  return '''
+  final String sdl = runtime.GraphQLField(
+    '${_findLocation(document, gqlOperationName)}',
+    fields: runtime.GraphQLFields([
+      runtime.GraphQLField(
+        '$gqlOperationName',
+        args: ${_gqlArgsBuilder(args)},
+        fields: ${_gqlFieldsBuilder(modelname)},
+      ),
+    ]),
+  ).toSdl();
 
-  // Build GraphQL SDL builder.
-  code.writeln('''
-final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-  document: _document,
-  operationName: '$gqlOperationName',
-  variables: variables,
-  fields: runtime.GraphQLFieldsBuilder(
-    fields: ${modelname}ScalarFieldEnum.values,
-    document: _document,
-  ),
-  location: '${_findLocation(document, gqlOperationName)}',
-);
+  final runtime.QueryEngineResult result = await _engine.request(
+    query: sdl,
+    headers: _headers
+  );
 
-final runtime.QueryEngineResult result = await _engine.request(
-  query: sdl.build(),
-  headers: _headers,
-);
+  return result.data;
+''';
+//   final StringBuffer code = StringBuffer();
+//   code.writeln('final List<runtime.GraphQLArg> args = <runtime.GraphQLArg>[');
+//   for (final dmmf.SchemaArg arg in args) {
+//     final String argName = languageKeywordEncode(arg.name);
+//     code.writeln(
+//         'runtime.GraphQLArg(\'${arg.name}\', $argName, isRequired: ${arg.isRequired}),');
+//   }
+//   code.writeln('];');
 
-return result.data;
-''');
+//   // Build GraphQL SDL builder.
+//   code.writeln('''
+// final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
+//   document: _document,
+//   operationName: '$gqlOperationName',
+//   args: args,
+//   fields: runtime.GraphQLFieldsBuilder(
+//     fields: ${modelname}ScalarFieldEnum.values,
+//     document: _document,
+//   ),
+//   location: '${_findLocation(document, gqlOperationName)}',
+// );
 
-  return code.toString();
+// final runtime.QueryEngineResult result = await _engine.request(
+//   query: sdl.build(),
+//   headers: _headers,
+// );
+
+// return result.data;
+// ''');
+
+//   return code.toString();
+}
+
+/// GraphQL fields builder.
+String _gqlFieldsBuilder(String modelname) {
+  return '''
+runtime.GraphQLFields(
+  ${modelname}ScalarFieldEnum.values.map(
+    (${modelname}ScalarFieldEnum element) => runtime.GraphQLField(element.name)
+  ).toList()
+)
+''';
+}
+
+/// GraphQL args builder.
+String _gqlArgsBuilder(List<dmmf.SchemaArg> args) {
+  return '''
+runtime.GraphQLArgs([
+  ${args.map(_gqlArgsChildBuilder).join(',')}
+])
+''';
+}
+
+/// GraphQL args child builder.
+String _gqlArgsChildBuilder(dmmf.SchemaArg arg) {
+  return '''
+runtime.GraphQLArg(
+  '${arg.name}',
+  ${languageKeywordEncode(arg.name)},
+  isRequired: ${arg.isRequired}
+)
+''';
 }
 
 /// Find GraphQL operation location.

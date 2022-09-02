@@ -21,6 +21,5 @@ export 'src/query_engine/binary/binary_engine_unimplemented.dart'
     if (dart.library.io) 'src/query_engine/binary/binary_engine_io.dart';
 
 // GraphQL exports
-export 'src/graphql/veriable.dart';
-export 'src/graphql/fields_builder.dart';
-export 'src/graphql/sdl.dart';
+export 'src/graphql/arg.dart';
+export 'src/graphql/field.dart';
