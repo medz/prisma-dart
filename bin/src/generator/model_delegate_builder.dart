@@ -21,19 +21,14 @@ String modelDelegateBuilder(dmmf.Document document) {
     // Build constructor.
     code.writeln('const $classname({');
     code.writeln('  required runtime.Engine engine,');
-    code.writeln('  required dmmf.Document document,');
     code.writeln('  runtime.QueryEngineRequestHeaders? headers,');
     code.writeln('}):');
     code.writeln('_engine = engine,');
-    code.writeln('_document = document,');
     code.writeln('_headers = headers;');
     code.writeln();
 
     // Build engine field;
     code.writeln('final runtime.Engine _engine;');
-
-    // Build dmmf document field.
-    code.writeln('final dmmf.Document _document;');
 
     /// Build transaction ID field.
     code.writeln('final runtime.QueryEngineRequestHeaders? _headers;');
@@ -104,37 +99,6 @@ String _buildBody(
 
   return result.data;
 ''';
-//   final StringBuffer code = StringBuffer();
-//   code.writeln('final List<runtime.GraphQLArg> args = <runtime.GraphQLArg>[');
-//   for (final dmmf.SchemaArg arg in args) {
-//     final String argName = languageKeywordEncode(arg.name);
-//     code.writeln(
-//         'runtime.GraphQLArg(\'${arg.name}\', $argName, isRequired: ${arg.isRequired}),');
-//   }
-//   code.writeln('];');
-
-//   // Build GraphQL SDL builder.
-//   code.writeln('''
-// final runtime.GraphQLSdl sdl = runtime.GraphQLSdl(
-//   document: _document,
-//   operationName: '$gqlOperationName',
-//   args: args,
-//   fields: runtime.GraphQLFieldsBuilder(
-//     fields: ${modelname}ScalarFieldEnum.values,
-//     document: _document,
-//   ),
-//   location: '${_findLocation(document, gqlOperationName)}',
-// );
-
-// final runtime.QueryEngineResult result = await _engine.request(
-//   query: sdl.build(),
-//   headers: _headers,
-// );
-
-// return result.data;
-// ''');
-
-//   return code.toString();
 }
 
 /// GraphQL fields builder.

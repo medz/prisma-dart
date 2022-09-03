@@ -178,7 +178,6 @@ String _modelDelegateGetters(List<dmmf.ModelMapping> mappings) {
     buffer.writeln('''
 $delegateName get ${_firstLetterLowercase(name)} => $delegateName(
   engine: _engine,
-  document: _dmmf,
   headers: _headers
 );
 ''');

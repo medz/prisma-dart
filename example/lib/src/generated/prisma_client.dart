@@ -2349,14 +2349,11 @@ class Post {
 class UserDelegate {
   const UserDelegate({
     required runtime.Engine engine,
-    required dmmf.Document document,
     runtime.QueryEngineRequestHeaders? headers,
   })  : _engine = engine,
-        _document = document,
         _headers = headers;
 
   final runtime.Engine _engine;
-  final dmmf.Document _document;
   final runtime.QueryEngineRequestHeaders? _headers;
 
   Future<dynamic> findUnique({
@@ -2714,14 +2711,11 @@ class UserDelegate {
 class PostDelegate {
   const PostDelegate({
     required runtime.Engine engine,
-    required dmmf.Document document,
     runtime.QueryEngineRequestHeaders? headers,
   })  : _engine = engine,
-        _document = document,
         _headers = headers;
 
   final runtime.Engine _engine;
-  final dmmf.Document _document;
   final runtime.QueryEngineRequestHeaders? _headers;
 
   Future<dynamic> findUnique({
@@ -3179,10 +3173,8 @@ class PrismaClient {
   }
 
   /// User model delegate.
-  UserDelegate get user =>
-      UserDelegate(engine: _engine, document: _dmmf, headers: _headers);
+  UserDelegate get user => UserDelegate(engine: _engine, headers: _headers);
 
   /// Post model delegate.
-  PostDelegate get post =>
-      PostDelegate(engine: _engine, document: _dmmf, headers: _headers);
+  PostDelegate get post => PostDelegate(engine: _engine, headers: _headers);
 }
