@@ -46,7 +46,7 @@ class DbPushSubCommand extends Command {
       type: BinaryEngineType.migration,
       version: binaryVersion,
     );
-    if (!engine.hasDownloaded) {
+    if (!await engine.hasDownloaded) {
       await engine.download(
           AnsiProgress.createFutureHandler('Download migration engine'));
       await Future.delayed(Duration(microseconds: 500));

@@ -39,7 +39,7 @@ class FormatCommand extends Command {
       type: BinaryEngineType.format,
       version: binaryVersion,
     );
-    if (!engine.hasDownloaded) {
+    if (!await engine.hasDownloaded) {
       await engine
           .download(AnsiProgress.createFutureHandler('Download format engine'));
       await Future.delayed(Duration(microseconds: 500));

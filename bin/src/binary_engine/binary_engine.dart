@@ -36,7 +36,18 @@ class BinaryEngine {
   String get executable => joinPaths(['.dart_tool', 'prisma', type.value]);
 
   /// Has the binary engine been downloaded.
-  bool get hasDownloaded => File(executable).existsSync();
+  Future<bool> get hasDownloaded async {
+    // Get excutable file version.
+    final ProcessResult result = await run(['--version']);
+
+    // If excutable file version is not same as binary engine version, delete it.
+    if (result.stdout.toString().contains(version)) {
+      return true;
+    }
+
+    await _clean();
+    return false;
+  }
 
   /// Run the binary engine.
   Future<ProcessResult> run(
