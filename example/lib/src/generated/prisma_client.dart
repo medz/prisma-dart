@@ -2377,7 +2377,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['findUniqueUser'];
   }
 
   Future<dynamic> findFirst({
@@ -2412,7 +2412,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['findFirstUser'];
   }
 
   Future<dynamic> findMany({
@@ -2447,7 +2447,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['findManyUser'];
   }
 
   Future<dynamic> create({
@@ -2472,7 +2472,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['createOneUser'];
   }
 
   Future<dynamic> createMany({
@@ -2500,7 +2500,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['createManyUser'];
   }
 
   Future<dynamic> update({
@@ -2528,7 +2528,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['updateOneUser'];
   }
 
   Future<dynamic> updateMany({
@@ -2557,7 +2557,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['updateManyUser'];
   }
 
   Future<dynamic> upsert({
@@ -2588,7 +2588,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['upsertOneUser'];
   }
 
   Future<dynamic> delete({
@@ -2612,7 +2612,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['deleteOneUser'];
   }
 
   Future<dynamic> deleteMany({
@@ -2636,7 +2636,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['deleteManyUser'];
   }
 
   Future<dynamic> aggregate({
@@ -2669,7 +2669,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['aggregateUser'];
   }
 
   Future<dynamic> groupBy({
@@ -2704,7 +2704,7 @@ class UserDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['groupByUser'];
   }
 }
 
@@ -2739,7 +2739,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['findUniquePost'];
   }
 
   Future<dynamic> findFirst({
@@ -2774,7 +2774,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['findFirstPost'];
   }
 
   Future<dynamic> findMany({
@@ -2809,7 +2809,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['findManyPost'];
   }
 
   Future<dynamic> create({
@@ -2834,7 +2834,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['createOnePost'];
   }
 
   Future<dynamic> createMany({
@@ -2862,7 +2862,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['createManyPost'];
   }
 
   Future<dynamic> update({
@@ -2890,7 +2890,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['updateOnePost'];
   }
 
   Future<dynamic> updateMany({
@@ -2919,7 +2919,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['updateManyPost'];
   }
 
   Future<dynamic> upsert({
@@ -2950,7 +2950,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['upsertOnePost'];
   }
 
   Future<dynamic> delete({
@@ -2974,7 +2974,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['deleteOnePost'];
   }
 
   Future<dynamic> deleteMany({
@@ -2998,7 +2998,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['deleteManyPost'];
   }
 
   Future<dynamic> aggregate({
@@ -3031,7 +3031,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['aggregatePost'];
   }
 
   Future<dynamic> groupBy({
@@ -3066,7 +3066,7 @@ class PostDelegate {
     final runtime.QueryEngineResult result =
         await _engine.request(query: sdl, headers: _headers);
 
-    return result.data;
+    return result.data['groupByPost'];
   }
 }
 

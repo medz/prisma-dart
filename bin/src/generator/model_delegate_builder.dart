@@ -97,7 +97,7 @@ String _buildBody(
     headers: _headers
   );
 
-  return result.data;
+  return result.data['$gqlOperationName'];
 ''';
 }
 
