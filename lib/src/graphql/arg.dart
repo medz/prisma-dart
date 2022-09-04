@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../runtime/json_serializable.dart';
 import '../runtime/prisma_null.dart';
 import '../runtime/prisma_union.dart';
@@ -51,7 +53,7 @@ class GraphQLArg {
     if (value is PrismaNull) return 'null';
 
     // If value is String
-    if (value is String) return '"""$value"""';
+    if (value is String) return json.encode(value);
 
     // If value is Enum, return, return enum name.
     if (value is Enum) return value.name;
