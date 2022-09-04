@@ -37,6 +37,10 @@ class BinaryEngine {
 
   /// Has the binary engine been downloaded.
   Future<bool> get hasDownloaded async {
+    if (!File(executable).existsSync()) {
+      return false;
+    }
+
     // Get excutable file version.
     final ProcessResult result = await run(['--version']);
 
