@@ -19,7 +19,7 @@ final dmmf.Document _dmmf = dmmf.Document.fromJson(convert.json.decode(_dmmfStr)
 const String _executable = '${options.executable}';
 
 /// Prisma schema as string.
-final String _schema = convert.json.decode(${json.encode(options.schema)});
+final String _schema = ${json.encode(options.schema)};
 
 ${_datasourcesBuilder(options.datasources)}
 
