@@ -4,8 +4,8 @@ import 'dart:io';
 import 'json_rpc.dart';
 import 'rpc_engine.dart';
 
-class Migrate extends RpcEngine {
-  Migrate({
+class MigrateEngine extends RpcEngine {
+  MigrateEngine({
     required super.engine,
     required this.schemaPath,
   });

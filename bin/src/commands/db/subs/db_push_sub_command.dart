@@ -8,7 +8,7 @@ import '../../../binary_engine/binary_engine.dart';
 import '../../../binary_engine/binary_engine_platform.dart';
 import '../../../binary_engine/binray_engine_type.dart';
 import '../../../internal/json_rpc.dart';
-import '../../../internal/migrate.dart';
+import '../../../internal/migrate_engine.dart';
 import '../../../utils/ansi_progress.dart';
 import '../../../utils/find_project.dart';
 
@@ -55,8 +55,8 @@ class DbPushSubCommand extends Command {
     // Create progress bar.
     final AnsiProgress progress = AnsiProgress('Pushing schema...');
 
-    // Create migrate.
-    final Migrate migrate = Migrate(
+    // Create migrate engine.
+    final MigrateEngine migrate = MigrateEngine(
       engine: engine,
       schemaPath: schema.path,
     );
@@ -92,7 +92,7 @@ class DbPushSubCommand extends Command {
   }
 
   /// Display messages.
-  void displayMessages(SchemaPushResponse response, Migrate migrate) {
+  void displayMessages(SchemaPushResponse response, MigrateEngine migrate) {
     if (response.error != null) {
       final StringBuffer message = StringBuffer();
       message.writeln(response.error?.message);
