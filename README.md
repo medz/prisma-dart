@@ -22,7 +22,7 @@ Prisma is a **next-generation ORM** that consists of these tools:
 - [x] `generate` command - **Note:** Model deserialization is not supported at present
 - [x] `init` command, Initialize a new Prisma project.
 - [x] `db push` comman, Push your Prisma schema to your database.
-- [ ] `db pull` command, Pull your database schema to your Prisma schema.
+- [x] `db pull` command, Pull your database schema to your Prisma schema.
 - [x] Binary query engine, Only for Dart Native.
 - [ ] dylib query engine - In Progressing (https://github.com/odroe/prisma/issues/1)
 - [ ] Prisma data proxy

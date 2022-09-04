@@ -1,3 +1,7 @@
+## 2.0.0-dev.5
+
+- Add `db pull` command, Pull your database schema to your Prisma schema.
+
 ## 2.0.0-dev.4
 
 - Gendeate command is now available.
