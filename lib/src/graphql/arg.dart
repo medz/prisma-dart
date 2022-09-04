@@ -183,6 +183,7 @@ class GraphQLArgs {
         list.add(sdl);
       }
     }
+    if (list.isEmpty) return null;
 
     return '(${list.join(', ')})';
   }
