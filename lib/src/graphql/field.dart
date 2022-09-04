@@ -48,25 +48,3 @@ class GraphQLFields {
     return '{${results.join(', ')}}';
   }
 }
-
-void main(List<String> args) {
-  final sdl = GraphQLField(
-    'query',
-    fields: GraphQLFields([
-      GraphQLField(
-        'user',
-        args: GraphQLArgs([
-          GraphQLArg('where', {
-            'id': 'String',
-          }),
-        ]),
-        fields: GraphQLFields([
-          GraphQLField('id'),
-          GraphQLField('name'),
-        ]),
-      ),
-    ]),
-  );
-
-  print(sdl.toSdl());
-}
