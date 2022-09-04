@@ -27,18 +27,22 @@ String _builder(List<dmmf.OutputType> types) {
   for (final dmmf.OutputType type in types) {
     // Skip query and mutation types.
     if (['query', 'mutation'].contains(type.name.toLowerCase())) continue;
+    code.writeln('''
+@json_annotation.JsonSerializable(
+  createFactory: true,
+  createToJson: true,
+  explicitToJson: true
+)
+class ${languageKeywordEncode(type.name)} {
+  ${_constructorBuilder(type)}
 
-    // Build class header.
-    code.writeln('class ${languageKeywordEncode(type.name)} {');
+  factory ${languageKeywordEncode(type.name)}.fromJson(Map<String, dynamic> json) => _\$${languageKeywordEncode(type.name)}FromJson(json);
 
-    // Build constructor.
-    code.writeln(_constructorBuilder(type));
+  ${_fieldsBuilder(type.fields)}
 
-    // Build fields.
-    code.writeln(_fieldsBuilder(type.fields));
-
-    // Build class end.
-    code.writeln('}');
+  Map<String, dynamic> toJson() => _\$${languageKeywordEncode(type.name)}ToJson(this);
+}
+''');
   }
 
   return code.toString();
@@ -48,24 +52,16 @@ String _builder(List<dmmf.OutputType> types) {
 String _fieldsBuilder(List<dmmf.SchemaField> fields) {
   final StringBuffer code = StringBuffer();
   for (final dmmf.SchemaField field in fields) {
+    // TODO: 等待 Include 功能完成才允许添加进去
     if (field.name.toLowerCase() == '_count') {
       continue;
     }
 
-    // Add final modifier.
-    code.write('  final ');
-
-    // Build field type.
-    code.write(objectFieldType(field.outputType));
-
-    // Nullable field.
-    if (field.isNullable == true) code.write('?');
-
-    // Build field name.
-    code.write(' ${languageKeywordEncode(field.name)}');
-
-    // Line end.
-    code.writeln(';');
+    code.writeln('''
+@json_annotation.JsonKey(name: '${field.name}')
+final ${objectFieldType(field.outputType)}${field.isNullable == true ? '?' : ''}
+  ${languageKeywordEncode(field.name)};
+''');
   }
 
   return code.toString();

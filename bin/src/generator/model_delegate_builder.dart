@@ -43,10 +43,8 @@ String modelDelegateBuilder(dmmf.Document document) {
       }
 
       // Build operation return type.
-      // final String outputType = _findOutputType(document, gqlOperationName);
-      // code.write(outputType);
-      // TODO: Build operation return type, **Note** Current only test!
-      code.write('Future<dynamic>');
+      final dmmf.SchemaField field = _findField(document, gqlOperationName);
+      code.write(_buildDartType(field.outputType, field.isNullable ?? false));
       code.write(' ');
 
       // Build operation name.
@@ -80,7 +78,7 @@ String _buildBody(
 ) {
   final List<dmmf.SchemaArg> args =
       _findOperationArgs(document, gqlOperationName);
-  return '''
+  final StringBuffer buffer = StringBuffer('''
   final String sdl = runtime.GraphQLField(
     '${_findLocation(document, gqlOperationName)}',
     fields: runtime.GraphQLFields([
@@ -97,8 +95,34 @@ String _buildBody(
     headers: _headers
   );
 
-  return result.data['$gqlOperationName'];
-''';
+''');
+
+  final dmmf.SchemaField field = _findField(document, gqlOperationName);
+  final dmmf.SchemaType outputType = field.outputType;
+
+  if (field.isNullable == true) {
+    buffer.writeln('''
+  if (result.data['$gqlOperationName'] == null) {
+    return null;
+  }
+''');
+  }
+
+  if (outputType.isList) {
+    buffer.writeln('''
+  return (result.data['$gqlOperationName'] as List<dynamic>)
+    .map<${languageKeywordEncode(outputType.type)}>(
+      (dynamic item) => ${languageKeywordEncode(outputType.type)}.fromJson(item as Map<String, dynamic>),
+    ).toList();
+''');
+    return buffer.toString();
+  }
+
+  buffer.writeln('''
+  return ${languageKeywordEncode(outputType.type)}.fromJson(result.data['$gqlOperationName'] as Map<String, dynamic>);
+''');
+
+  return buffer.toString();
 }
 
 /// GraphQL fields builder.
@@ -220,14 +244,14 @@ String? _findGqlOperationName(dmmf.ModelMapping mapping, String operation) {
   return json[operation] as String?;
 }
 
-/// Find output type.
-String _findOutputType(dmmf.Document document, String gqlOperationName) {
+/// Find output field
+dmmf.SchemaField _findField(dmmf.Document document, String gqlOperationName) {
   final dmmf.OutputType? query = _findDmmfOutputType(document, 'query');
 
   // Find output in query.
   for (final dmmf.SchemaField field in query?.fields ?? []) {
     if (field.name.toLowerCase() == gqlOperationName.toLowerCase()) {
-      return _buildDartType(field.outputType, field.isNullable ?? false);
+      return field;
     }
   }
 
@@ -235,7 +259,7 @@ String _findOutputType(dmmf.Document document, String gqlOperationName) {
   final dmmf.OutputType? mutation = _findDmmfOutputType(document, 'mutation');
   for (final dmmf.SchemaField field in mutation?.fields ?? []) {
     if (field.name.toLowerCase() == gqlOperationName.toLowerCase()) {
-      return _buildDartType(field.outputType, field.isNullable ?? false);
+      return field;
     }
   }
 

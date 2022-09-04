@@ -13,12 +13,6 @@ import 'imports_generator.dart';
 import 'model_delegate_builder.dart';
 import 'schema/schema_generator.dart';
 
-final demo = null;
-
-void main(List<String> args) {
-  print(demo.runtimeType);
-}
-
 /// Resolve output.
 String _resolveOutput(EnvValue? output, String schemaPath) {
   if (output == null || output.value.isEmpty) {
@@ -64,6 +58,11 @@ Future<void> generator(GeneratorOptions options) async {
 
   // Build exports.
   sink.writeln(exportsBuilder());
+  sink.writeln();
+
+  // Build part.
+
+  sink.writeln('part \'${basenameWithoutExtension(output.path)}.g.dart\';');
   sink.writeln();
 
   // Generate power by.

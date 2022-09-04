@@ -19,6 +19,8 @@ const List<_Import> _imports = <_Import>[
   _Import('package:orm/configure.dart'),
   _Import('package:orm/orm.dart', alias: 'runtime'),
   _Import('package:orm/dmmf.dart', alias: 'dmmf'),
+  _Import('package:json_annotation/json_annotation.dart',
+      alias: 'json_annotation'),
 ];
 
 Future<String> importsGenerator() async {

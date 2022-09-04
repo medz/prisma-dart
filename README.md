@@ -15,19 +15,6 @@ Prisma is a **next-generation ORM** that consists of these tools:
   2. **Dynamic Library Engine** - Supported for Dart Native and Flutter Native. `❌ Waiting`
   3. **Prisma Data Proxy Engint** - Supported all platforms. `❌ Waiting`
 
-
-## TODO:
-
-- [x] `format` command, Format your schema file.
-- [x] `generate` command - **Note:** Model deserialization is not supported at present
-- [x] `init` command, Initialize a new Prisma project.
-- [x] `db push` comman, Push your Prisma schema to your database.
-- [x] `db pull` command, Pull your database schema to your Prisma schema.
-- [x] Binary query engine, Only for Dart Native.
-- [ ] dylib query engine - In Progressing (https://github.com/odroe/prisma/issues/1)
-- [ ] Prisma data proxy
-- [ ] Data model deserialization
-
 ## Getting started
 
 > **Prerequisites**: Dart SDK `>=2.17.6 <3.0.0`
@@ -84,7 +71,16 @@ Models in the Prisma schema have two main purposes:
 
 ```bash
 dart run orm generate
+dart run build_runner build
 ```
+
+## Model deserialize (Why run `build_runner build`?)
+
+Deserialization of data models is currently done using `json_annotation` and `json_serializable`.
+
+> **Note** There are currently no plans to remove `json_annotation`, because `json_annotation` works very well and we currently do not have the ability to do the development work of deserialization ourselves.
+
+Whenever you run the `orm generate` command, you must run `build_runner build` for the Prisma client to work properly. For more information see 👉 [json_serializable](https://pub.dev/packages/json_serializable).
 
 ## The Prisma schema
 
@@ -134,6 +130,7 @@ Run the following command to generate Prisma Client:
 
 ```bash
 dart run orm generate
+dart run build_runner build
 ```
 
 ### Using Prisma Client to send queries to your database
@@ -155,19 +152,6 @@ Now you can start sending queries via the generated Prisma Client API, here are 
 ```dart
 // Run inside `async` function
 final allUsers = await prisma.user.findMany();
-```
-
-#### Include the posts relation on each returned User object
-
-> **Note:** Temporarily not supported
-
-```dart
-// Run inside `async` function
-final allUsers = await prisma.user.findMany(
-  include: UserInclude(
-    posts: true,
-  ),
-);
 ```
 
 #### Filter all Post records that contain "odore"
@@ -203,3 +187,13 @@ final user = await prisma.user.create({
   ),
 });
 ```
+
+## Q&A
+
+Q: Why does the Prisma query engine process still exist in the program process after I close it?
+
+A: Prisma engine startup is automatic, but shutdown is not, you need to call `$disconnect` at the end of your program shutdown to stop the engine process.
+
+Q: Why do I get an error when I run a transaction?
+
+A: Because the official version of Prisma is still in preview for interactive transactions, you need to add `previewFeatures = ["interactiveTransactions"]` to the generator of `schema.prisma`, the files created by `orm init` have been added by default.
