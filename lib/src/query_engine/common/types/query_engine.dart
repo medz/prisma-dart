@@ -22,7 +22,7 @@ class QueryEngineRequestHeaders {
 
 @JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class QueryEngineResult {
-  final dynamic data;
+  final Map<String, dynamic> data;
   final int elapsed;
 
   const QueryEngineResult(this.data, this.elapsed);

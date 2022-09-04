@@ -24,7 +24,7 @@ Map<String, dynamic> _$QueryEngineRequestHeadersToJson(
 
 QueryEngineResult _$QueryEngineResultFromJson(Map<String, dynamic> json) =>
     QueryEngineResult(
-      json['data'],
+      json['data'] as Map<String, dynamic>,
       json['elapsed'] as int,
     );
 
