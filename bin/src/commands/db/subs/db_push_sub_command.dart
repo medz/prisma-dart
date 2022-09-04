@@ -15,7 +15,7 @@ import '../../../utils/find_project.dart';
 class DbPushSubCommand extends Command {
   @override
   String get description =>
-      '🙌  Push the state from your Prisma schema to your database';
+      'Push the state from your Prisma schema to your database';
 
   @override
   String get name => 'push';
