@@ -19,7 +19,7 @@ class GraphQLField {
     // Build args SDL.
     final String? argsSdl = args?.toSdl();
     if (argsSdl != null) {
-      sdl.write(' $argsSdl');
+      sdl.write(argsSdl);
     }
 
     // Build fields SDL.
