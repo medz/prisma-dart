@@ -7,8 +7,8 @@ import 'package:orm/version.dart';
 import '../../../binary_engine/binary_engine.dart';
 import '../../../binary_engine/binary_engine_platform.dart';
 import '../../../binary_engine/binray_engine_type.dart';
-import '../../../migrate/json_rpc.dart';
-import '../../../migrate/migrate.dart';
+import '../../../internal/json_rpc.dart';
+import '../../../internal/migrate.dart';
 import '../../../utils/ansi_progress.dart';
 import '../../../utils/find_project.dart';
 
@@ -59,7 +59,6 @@ class DbPushSubCommand extends Command {
     final Migrate migrate = Migrate(
       engine: engine,
       schemaPath: schema.path,
-      // TODO: add enable preview flag.
     );
     final SchemaPushResponse response =
         await migrate.schemaPush(force: argResults?['force-reset']);
@@ -99,8 +98,6 @@ class DbPushSubCommand extends Command {
       message.writeln(response.error?.message);
       message.writeln(response.error?.data.message);
       migrate.stop();
-
-      print('');
 
       throw Exception(message);
     }
