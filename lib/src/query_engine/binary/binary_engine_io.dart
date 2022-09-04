@@ -248,6 +248,8 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required String query,
     QueryEngineRequestHeaders? headers,
   }) async {
+    await start();
+
     final http.Request request = http.Request('POST', await endpoint)
       ..body = gqlRequestBodyBuilder(query)
       ..headers['Content-Type'] = 'application/json'
@@ -287,6 +289,8 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     QueryEngineRequestHeaders? headers,
     bool? transaction,
   }) async {
+    await start();
+
     final String body = json.encode({
       'transaction': transaction ?? false,
       'batch':
@@ -378,10 +382,10 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     );
 
     // Listen for stdout.
-    process.stdout.listen(
-      (data) => stdout.write(utf8.decode(data)),
-      onDone: () => process..kill(),
-    );
+    // process.stdout.listen(
+    //   (data) => stdout.write(utf8.decode(data)),
+    //   onDone: () => process..kill(),
+    // );
 
     // Build GraphQL server endpoint.
     final Uri url = (await endpoint).replace(path: '/status');
@@ -430,6 +434,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required TransactionHeaders headers,
     TransactionOptions options = const TransactionOptions(),
   }) async {
+    await start();
     final String body = json.encode({
       'max_wait': options.maxWait,
       'timeout': options.timeout,
@@ -456,6 +461,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required TransactionHeaders headers,
     required TransactionInfo info,
   }) async {
+    await start();
     final Uri url =
         (await endpoint).replace(path: '/transaction/${info.id}/commit');
     final http.Request request = http.Request('POST', url);
@@ -472,6 +478,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required TransactionHeaders headers,
     required TransactionInfo info,
   }) async {
+    await start();
     final Uri url =
         (await endpoint).replace(path: '/transaction/${info.id}/rollback');
     final http.Request request = http.Request('POST', url);
