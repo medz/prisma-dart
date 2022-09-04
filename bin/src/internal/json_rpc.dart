@@ -71,7 +71,7 @@ class JsonRpcPayload extends JsonRpcMessage {
   final String method;
 
   /// params
-  final Map<String, dynamic>? params;
+  final dynamic params;
 
   @override
   Map<String, dynamic> toJson() => _$JsonRpcPayloadToJson(this);
@@ -133,4 +133,40 @@ class SchemaPushResponse extends JsonRpcResponse {
 
   factory SchemaPushResponse.fromJson(Map<String, dynamic> json) =>
       _$SchemaPushResponseFromJson(json);
+}
+
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+class IntrospectResult {
+  final String datamodel;
+  final String version;
+  final List<dynamic> warnings;
+
+  const IntrospectResult({
+    required this.datamodel,
+    required this.version,
+    required this.warnings,
+  });
+
+  factory IntrospectResult.fromJson(Map<String, dynamic> json) =>
+      _$IntrospectResultFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IntrospectResultToJson(this);
+}
+
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+class IntrospectResponse extends JsonRpcResponse {
+  IntrospectResponse({
+    required super.id,
+    super.jsonrpc,
+    super.error,
+    this.result,
+  });
+
+  final IntrospectResult? result;
+
+  factory IntrospectResponse.fromJson(Map<String, dynamic> json) =>
+      _$IntrospectResponseFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$IntrospectResponseToJson(this);
 }

@@ -2,6 +2,7 @@
 enum BinaryEngineType {
   query('query-engine'),
   migration('migration-engine'),
+  introspection('introspection-engine'),
   format('prisma-fmt'),
   ;
 

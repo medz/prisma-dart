@@ -86,3 +86,37 @@ SchemaPushResponse _$SchemaPushResponseFromJson(Map<String, dynamic> json) =>
           ? null
           : SchemaPushResult.fromJson(json['result'] as Map<String, dynamic>),
     );
+
+IntrospectResult _$IntrospectResultFromJson(Map<String, dynamic> json) =>
+    IntrospectResult(
+      datamodel: json['datamodel'] as String,
+      version: json['version'] as String,
+      warnings: json['warnings'] as List<dynamic>,
+    );
+
+Map<String, dynamic> _$IntrospectResultToJson(IntrospectResult instance) =>
+    <String, dynamic>{
+      'datamodel': instance.datamodel,
+      'version': instance.version,
+      'warnings': instance.warnings,
+    };
+
+IntrospectResponse _$IntrospectResponseFromJson(Map<String, dynamic> json) =>
+    IntrospectResponse(
+      id: json['id'] as int,
+      jsonrpc: json['jsonrpc'] as String? ?? '2.0',
+      error: json['error'] == null
+          ? null
+          : JsonRpcError.fromJson(json['error'] as Map<String, dynamic>),
+      result: json['result'] == null
+          ? null
+          : IntrospectResult.fromJson(json['result'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$IntrospectResponseToJson(IntrospectResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'jsonrpc': instance.jsonrpc,
+      'error': instance.error?.toJson(),
+      'result': instance.result?.toJson(),
+    };
