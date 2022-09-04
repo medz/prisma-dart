@@ -23,7 +23,7 @@ class GraphQLArg {
   final bool isRequired;
 
   const GraphQLArg(this.key, this.value, {this.isRequired = false})
-      : assert(isRequired == true && value != null,
+      : assert(!isRequired || value != null,
             '"$key" must be required and not null');
 
   @override
