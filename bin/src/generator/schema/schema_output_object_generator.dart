@@ -59,7 +59,7 @@ String _fieldsBuilder(List<dmmf.SchemaField> fields) {
 
     code.writeln('''
 @json_annotation.JsonKey(name: '${field.name}')
-final ${objectFieldType(field.outputType)}${field.isNullable == true ? '?' : ''}
+final ${objectFieldType(field.outputType)}${_shouldBeNullable(field) ? '?' : ''}
   ${languageKeywordEncode(field.name)};
 ''');
   }
@@ -76,11 +76,17 @@ String _constructorBuilder(dmmf.OutputType type) {
     if (field.name == '_count') {
       continue;
     }
-    if (field.isNullable == false) {
+    if (!_shouldBeNullable(field)) {
       code.write('required ');
     }
     code.writeln('this.${languageKeywordEncode(field.name)},');
   }
   code.writeln('});');
   return code.toString();
+}
+
+/// make a the field nullable if it is nullable or it is a relation model (fix #7)
+bool _shouldBeNullable(dmmf.SchemaField field) {
+  if (field.isNullable == true) return true;
+  return field.outputType.namespace == dmmf.FieldNamespace.model;
 }
