@@ -3,8 +3,13 @@ class PrismaUnion<T0, T1> {
   final T1? one;
 
   const PrismaUnion({this.zero, this.one})
-      : assert(zero != null || one != null, 'zore and one must be not null');
+      : assert(zero != null || one != null, 'PrismaUnion must have a value');
 
-  factory PrismaUnion.zero(T0 zero) => PrismaUnion(zero: zero);
-  factory PrismaUnion.one(T1 one) => PrismaUnion(one: one);
+  const PrismaUnion.zero(this.zero)
+      : one = null,
+        assert(zero != null, 'PrismaUnion.zero must have a value');
+
+  const PrismaUnion.one(this.one)
+      : zero = null,
+        assert(one != null, 'PrismaUnion.one must have a value');
 }
