@@ -362,7 +362,9 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       content: json['content'] as String,
       published: json['published'] as bool,
       created_at: DateTime.parse(json['created_at'] as String),
-      author: User.fromJson(json['author'] as Map<String, dynamic>),
+      author: json['author'] == null
+          ? null
+          : User.fromJson(json['author'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
@@ -372,5 +374,5 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'content': instance.content,
       'published': instance.published,
       'created_at': instance.created_at.toIso8601String(),
-      'author': instance.author.toJson(),
+      'author': instance.author?.toJson(),
     };
