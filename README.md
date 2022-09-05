@@ -173,18 +173,22 @@ final filteredPosts = await prisma.post.findMany(
 #### Create a new User and a new Post record in the same query
 
 ```dart
-final user = await prisma.user.create({
-  data: UserCreateInput(
-    name: 'Odore',
-    email: 'hello@odore.com',
-    posts: UserCreateWithPostInput(
-      create: PostCreateInput(
-        title: 'My first post',
-        content: 'This is my first post',
+final user = await prisma.user.create(
+  data: PrismaUnion.zero(
+    UserCreateInput(
+      name: 'Odroe',
+      posts: PostCreateNestedManyWithoutAuthorInput(
+        create: [
+          PostCreateWithoutAuthorInput(
+            title: 'Hello World',
+            content: 'This is my first post',
+            published: true,
+          ),
+        ],
       ),
     ),
   ),
-});
+);
 ```
 
 ## Q&A
