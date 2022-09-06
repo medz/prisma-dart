@@ -44,13 +44,11 @@ void main(List<String> args) async {
   try {
     await runner.runCommand(results);
   } catch (e, s) {
-    if (!results.wasParsed('debug')) {
-      print(e);
+    print(e);
+    if (results.wasParsed('debug')) {
       print(s);
-      exit(1);
     }
-
-    rethrow;
+    exit(1);
   }
 }
 
