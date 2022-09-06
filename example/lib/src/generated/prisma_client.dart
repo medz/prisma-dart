@@ -2572,7 +2572,7 @@ class Post {
     required this.content,
     required this.published,
     required this.created_at,
-    required this.author,
+    this.author,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
@@ -2596,7 +2596,7 @@ class Post {
   final DateTime created_at;
 
   @json_annotation.JsonKey(name: 'author')
-  final User author;
+  final User? author;
 
   Map<String, dynamic> toJson() => _$PostToJson(this);
 }
