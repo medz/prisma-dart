@@ -13,9 +13,9 @@ import '../common/errors/prisma_server_error.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
+import 'binary_engine_unimplemented.dart' as unimplemented;
 import 'status_retry_exception.dart';
 import 'utils/get_free_port.dart';
-import 'binary_engine_unimplemented.dart' as unimplemented;
 
 /// localhost address.
 const String _localhost = r'127.0.0.1';
@@ -264,7 +264,8 @@ class BinaryEngine extends unimplemented.BinaryEngine {
           throw PrismaServerError('Request Prisma server failed.');
         }
 
-        final Map<String, dynamic> result = json.decode(response.body);
+        final Map<String, dynamic> result =
+            json.decode(utf8.decode(response.bodyBytes));
         requestErrorHandler(result['errors'] as List<dynamic>?);
 
         // Rust engine returns time in microseconds and we want it in miliseconds
