@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 import 'configure.dart';
+import 'parser_env.dart';
 
 class _IO$Configure extends Configure {
   /// Create IO configure.
@@ -11,29 +13,45 @@ class _IO$Configure extends Configure {
   }
 
   /// Loaded document.
-  late final Map<String, dynamic> _document;
+  final Map<String, dynamic> _document = <String, dynamic>{
+    'environment': <String, String>{},
+  };
 
   @override
   Map<String, dynamic> get all => _document;
 
-  /// Load `prisma.yaml` file.
+  /// Load `prisma.yaml` or `.env` file.
   void _load() {
+    // get system envs
+    _document['environment']?.addAll(Platform.environment);
+
     // Get current directory.
-    final Directory currentDirectory = Directory.current;
+    final currentDirectory = Directory.current;
 
     // Build path to `prisma.yaml`.
-    final String configFilePath =
-        path.join(currentDirectory.path, 'prisma.yaml');
+    final configFilePath = path.join(currentDirectory.path, 'prisma.yaml');
 
     // Create prisma config file.
-    final File configFile = File(configFilePath);
+    final configFile = File(configFilePath);
 
-    // If file does not exist.
-    if (!configFile.existsSync()) {
-      _document = const <String, dynamic>{};
-      return;
+    // If file exist.
+    if (configFile.existsSync()) {
+      _buildPrismaYaml(configFile);
     }
 
+    // Build path to `.env`.
+    final configEnvFilePath = path.join(currentDirectory.path, '.env');
+
+    // Create `.env` file.
+    final configEnvFile = File(configEnvFilePath);
+
+    // If file exist.
+    if (configEnvFile.existsSync()) {
+      _buildEnvFile(configEnvFile);
+    }
+  }
+
+  void _buildPrismaYaml(File configFile) {
     // Load YAML.
     final Map yaml =
         loadYaml(configFile.readAsStringSync(), sourceUrl: configFile.uri);
@@ -42,9 +60,14 @@ class _IO$Configure extends Configure {
     _parseYamlToMap(yaml, root: true);
   }
 
+  void _buildEnvFile(File configEnvFile) {
+    // get env vars
+    final envs = ParserEnv().getVars(configEnvFile);
+    _document['environment']?.addAll(envs);
+  }
+
   /// Parse YAML to Map.
   void _parseYamlToMap(Map yaml, {bool root = false}) {
-    _document = <String, dynamic>{};
     for (final MapEntry<dynamic, dynamic> entity in yaml.entries) {
       if (entity.key == 'environment' && root) {
         _document['environment'] = _mergeEnvironment(entity.value);
@@ -58,7 +81,7 @@ class _IO$Configure extends Configure {
 
   /// Merge Environment.
   Map<String, String> _mergeEnvironment(dynamic environment) {
-    if (environment is! Map) return Platform.environment;
+    if (environment is! Map) return {};
     final Map<String, String> result = <String, String>{};
     for (final MapEntry<dynamic, dynamic> entity in environment.entries) {
       if (entity.value != null) {
@@ -70,10 +93,7 @@ class _IO$Configure extends Configure {
       }
     }
 
-    return {
-      ...Platform.environment,
-      ...result,
-    };
+    return result;
   }
 
   /// Parse Map item.
