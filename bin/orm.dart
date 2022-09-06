@@ -43,9 +43,10 @@ void main(List<String> args) async {
   // Run command.
   try {
     await runner.runCommand(results);
-  } catch (e) {
+  } catch (e, s) {
     if (!results.wasParsed('debug')) {
       print(e);
+      print(s);
       exit(1);
     }
 
