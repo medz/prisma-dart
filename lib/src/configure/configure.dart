@@ -17,7 +17,7 @@ abstract class Configure {
           : defaultValue;
 
   /// Environments.
-  Map<String, String> get environment => call('environment');
+  Map<String, String> get environment => call('environment') ?? {};
 
   /// Get environment variable.
   String? env(String name) => environment[name];
