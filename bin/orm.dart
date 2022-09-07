@@ -14,7 +14,7 @@ const String _executableName = r'dart run orm';
 
 /// Prisma CLI description.
 const String _description =
-    ' ◭ Prisma CLI 🚀\nPrisma is a modern DB toolkit to query, migrate and model your database.\n More info: https://github.com/prismaorm/dart';
+    ' ◭ Prisma CLI 🚀\nPrisma is a modern DB toolkit to query, migrate and model your database.\n More info: https://github.com/odroe/prisma-dart';
 
 void main(List<String> args) async {
   // Create command runner.
@@ -43,12 +43,14 @@ void main(List<String> args) async {
   // Run command.
   try {
     await runner.runCommand(results);
-  } catch (e, s) {
-    print(e);
-    if (results.wasParsed('debug')) {
-      print(s);
+  } catch (error, stackTrace) {
+    if (!results.wasParsed('debug')) {
+      print(error);
+      print(stackTrace);
+      exit(1);
     }
-    exit(1);
+
+    rethrow;
   }
 }
 

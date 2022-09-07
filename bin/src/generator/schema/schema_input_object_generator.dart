@@ -115,12 +115,20 @@ String fieldTypeBuilder(List<dmmf.SchemaType> types) {
 /// Builds the constructor.
 String _constructorBuilder(dmmf.InputType input) {
   final StringBuffer code = StringBuffer();
-  code.writeln('  const ${languageKeywordEncode(input.name)}({');
+  code.writeln('  const ${languageKeywordEncode(input.name)}(');
+  if (input.fields.isNotEmpty) {
+    code.writeln('{');
+  }
+
   for (final dmmf.SchemaArg field in input.fields) {
     code.write('    ');
     if (field.isRequired) code.write('required ');
     code.writeln('this.${_fieldName(field.name)},');
   }
-  code.writeln('  });');
+
+  if (input.fields.isNotEmpty) {
+    code.writeln('}');
+  }
+  code.writeln(' );');
   return code.toString();
 }

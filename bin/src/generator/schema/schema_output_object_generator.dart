@@ -28,7 +28,7 @@ String _builder(List<dmmf.OutputType> types) {
     // Skip query and mutation types.
     if (['query', 'mutation'].contains(type.name.toLowerCase())) continue;
     code.writeln('''
-@json_annotation.JsonSerializable(
+@JsonSerializable(
   createFactory: true,
   createToJson: true,
   explicitToJson: true
@@ -58,7 +58,7 @@ String _fieldsBuilder(List<dmmf.SchemaField> fields) {
     }
 
     code.writeln('''
-@json_annotation.JsonKey(name: '${field.name}')
+@JsonKey(name: '${field.name}')
 final ${objectFieldType(field.outputType)}${_shouldBeNullable(field) ? '?' : ''}
   ${languageKeywordEncode(field.name)};
 ''');
