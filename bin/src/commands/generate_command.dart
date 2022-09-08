@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:orm/configure.dart';
+import 'package:orm/configure.dart' as configure;
 import 'package:orm/dmmf.dart';
 import 'package:orm/generator_helper.dart';
 import 'package:orm/orm.dart';
@@ -28,8 +28,7 @@ class GenerateCommand extends Command {
       'schema',
       help: 'Custom path to your Prisma schema',
       valueHelp: 'path',
-      defaultsTo:
-          configure('schema', joinRelativePaths(['prisma', 'schema.prisma'])),
+      defaultsTo: configure.schema,
     );
   }
 

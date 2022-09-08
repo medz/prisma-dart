@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:orm/configure.dart';
+import 'package:orm/configure.dart' as configure;
 import 'package:orm/version.dart';
 
 import '../binary_engine/binary_engine.dart';
@@ -16,8 +16,7 @@ class FormatCommand extends Command {
       'schema',
       help: 'Schema file path.',
       valueHelp: 'path',
-      defaultsTo:
-          configure('schema', joinRelativePaths(['prisma', 'schema.prisma'])),
+      defaultsTo: configure.schema,
     );
   }
 
