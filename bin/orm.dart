@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
+import 'package:orm/configure.dart';
 import 'package:orm/version.dart';
 
 import 'src/commands/db/db_command.dart';
@@ -44,7 +45,7 @@ void main(List<String> args) async {
   try {
     await runner.runCommand(results);
   } catch (error, stackTrace) {
-    if (!results.wasParsed('debug')) {
+    if (!results.wasParsed('debug') || environment.DEBUG != null) {
       print(error);
       print(stackTrace);
       exit(1);
