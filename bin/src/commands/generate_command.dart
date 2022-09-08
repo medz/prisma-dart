@@ -14,7 +14,6 @@ import '../binary_engine/binray_engine_type.dart';
 import '../generator/generator.dart';
 import '../generator/generator_options.dart';
 import '../utils/ansi_progress.dart';
-import '../utils/find_project.dart';
 
 class GenerateCommand extends Command {
   @override
