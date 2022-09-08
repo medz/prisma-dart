@@ -41,11 +41,12 @@ prisma:
 ...
 ```
 
-｜ Parameter ｜ Description ｜ Default ｜
-｜ --- ｜ --- ｜ --- ｜
-｜ `prismarc` ｜ Custom runtime configuration path ｜ `.prismarc` ｜
+| Parameter | Description | Default |
+|---|:---| --- |
+| `prismarc` | Custom runtime configuration path | `.prismarc` |
 | `dotenv` | Custom dotenv path | `.env` |
 | `schema` | Custom Prisma schema path | `prisma/schema.prisma` |
+
 
 #### Custom engine path
 
