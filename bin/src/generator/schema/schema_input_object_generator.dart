@@ -125,7 +125,7 @@ String _constructorBuilder(dmmf.InputType input) {
     if (field.isRequired) code.write('required ');
     code.writeln('this.${_fieldName(field.name)},');
   }
-  
+
   if (input.fields.isNotEmpty) {
     code.writeln('}');
   }

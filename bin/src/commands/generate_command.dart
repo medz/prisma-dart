@@ -59,6 +59,12 @@ class GenerateCommand extends Command {
       },
     );
 
+    // throw error
+    if (configProcessResult.exitCode > 0) {
+      final json = jsonDecode(configProcessResult.stderr);
+      throw json['message'];
+    }
+
     // Parse config result.
     final GetConfigResult configResult = GetConfigResult.fromJson(
       jsonDecode(configProcessResult.stdout as String) as Map<String, dynamic>,
