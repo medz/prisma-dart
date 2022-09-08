@@ -16,7 +16,7 @@ const List<_Import> _imports = <_Import>[
     alias: 'convert',
     show: ['json'],
   ),
-  _Import('package:orm/configure.dart'),
+  _Import('package:orm/configure.dart', alias: 'configure'),
   _Import('package:orm/orm.dart', alias: 'runtime'),
   _Import('package:orm/dmmf.dart', alias: 'dmmf'),
   _Import('package:json_annotation/json_annotation.dart'),
@@ -29,9 +29,9 @@ Future<String> importsGenerator() async {
     if (element.alias != null) {
       imports.write(' as ${element.alias}');
     }
-    // if (element.show.isNotEmpty) {
-    //   imports.write(' show ${element.show.join(', ')}');
-    // }
+    if (element.show.isNotEmpty) {
+      imports.write(' show ${element.show.join(', ')}');
+    }
 
     imports.writeln(';');
   }
