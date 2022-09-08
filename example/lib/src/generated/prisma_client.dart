@@ -1,11 +1,11 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: camel_case_types, constant_identifier_names, depend_on_referenced_packages, non_constant_identifier_names
 
-import 'dart:convert' as convert;
-import 'package:orm/configure.dart';
+import 'dart:convert' as convert show json;
+import 'package:orm/configure.dart' as configure;
 import 'package:orm/orm.dart' as runtime;
 import 'package:orm/dmmf.dart' as dmmf;
-import 'package:json_annotation/json_annotation.dart' as json_annotation;
+import 'package:json_annotation/json_annotation.dart';
 
 export 'package:orm/orm.dart'
     show Datasource, PrismaNull, PrismaUnion, TransactionIsolationLevel;
@@ -2095,8 +2095,7 @@ class PostUncheckedUpdateManyWithoutPostsInput
       };
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class AggregateUser {
   const AggregateUser({
     this.$avg,
@@ -2108,23 +2107,22 @@ class AggregateUser {
   factory AggregateUser.fromJson(Map<String, dynamic> json) =>
       _$AggregateUserFromJson(json);
 
-  @json_annotation.JsonKey(name: '_avg')
+  @JsonKey(name: '_avg')
   final UserAvgAggregateOutputType? $avg;
 
-  @json_annotation.JsonKey(name: '_sum')
+  @JsonKey(name: '_sum')
   final UserSumAggregateOutputType? $sum;
 
-  @json_annotation.JsonKey(name: '_min')
+  @JsonKey(name: '_min')
   final UserMinAggregateOutputType? $min;
 
-  @json_annotation.JsonKey(name: '_max')
+  @JsonKey(name: '_max')
   final UserMaxAggregateOutputType? $max;
 
   Map<String, dynamic> toJson() => _$AggregateUserToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UserGroupByOutputType {
   const UserGroupByOutputType({
     required this.id,
@@ -2139,32 +2137,31 @@ class UserGroupByOutputType {
   factory UserGroupByOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserGroupByOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int id;
 
-  @json_annotation.JsonKey(name: 'name')
+  @JsonKey(name: 'name')
   final String name;
 
-  @json_annotation.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
 
-  @json_annotation.JsonKey(name: '_avg')
+  @JsonKey(name: '_avg')
   final UserAvgAggregateOutputType? $avg;
 
-  @json_annotation.JsonKey(name: '_sum')
+  @JsonKey(name: '_sum')
   final UserSumAggregateOutputType? $sum;
 
-  @json_annotation.JsonKey(name: '_min')
+  @JsonKey(name: '_min')
   final UserMinAggregateOutputType? $min;
 
-  @json_annotation.JsonKey(name: '_max')
+  @JsonKey(name: '_max')
   final UserMaxAggregateOutputType? $max;
 
   Map<String, dynamic> toJson() => _$UserGroupByOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class AggregatePost {
   const AggregatePost({
     this.$avg,
@@ -2176,23 +2173,22 @@ class AggregatePost {
   factory AggregatePost.fromJson(Map<String, dynamic> json) =>
       _$AggregatePostFromJson(json);
 
-  @json_annotation.JsonKey(name: '_avg')
+  @JsonKey(name: '_avg')
   final PostAvgAggregateOutputType? $avg;
 
-  @json_annotation.JsonKey(name: '_sum')
+  @JsonKey(name: '_sum')
   final PostSumAggregateOutputType? $sum;
 
-  @json_annotation.JsonKey(name: '_min')
+  @JsonKey(name: '_min')
   final PostMinAggregateOutputType? $min;
 
-  @json_annotation.JsonKey(name: '_max')
+  @JsonKey(name: '_max')
   final PostMaxAggregateOutputType? $max;
 
   Map<String, dynamic> toJson() => _$AggregatePostToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class PostGroupByOutputType {
   const PostGroupByOutputType({
     required this.id,
@@ -2210,41 +2206,40 @@ class PostGroupByOutputType {
   factory PostGroupByOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostGroupByOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int id;
 
-  @json_annotation.JsonKey(name: 'title')
+  @JsonKey(name: 'title')
   final String title;
 
-  @json_annotation.JsonKey(name: 'authorId')
+  @JsonKey(name: 'authorId')
   final int authorId;
 
-  @json_annotation.JsonKey(name: 'content')
+  @JsonKey(name: 'content')
   final String content;
 
-  @json_annotation.JsonKey(name: 'published')
+  @JsonKey(name: 'published')
   final bool published;
 
-  @json_annotation.JsonKey(name: 'created_at')
+  @JsonKey(name: 'created_at')
   final DateTime created_at;
 
-  @json_annotation.JsonKey(name: '_avg')
+  @JsonKey(name: '_avg')
   final PostAvgAggregateOutputType? $avg;
 
-  @json_annotation.JsonKey(name: '_sum')
+  @JsonKey(name: '_sum')
   final PostSumAggregateOutputType? $sum;
 
-  @json_annotation.JsonKey(name: '_min')
+  @JsonKey(name: '_min')
   final PostMinAggregateOutputType? $min;
 
-  @json_annotation.JsonKey(name: '_max')
+  @JsonKey(name: '_max')
   final PostMaxAggregateOutputType? $max;
 
   Map<String, dynamic> toJson() => _$PostGroupByOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class AffectedRowsOutput {
   const AffectedRowsOutput({
     required this.count,
@@ -2253,14 +2248,13 @@ class AffectedRowsOutput {
   factory AffectedRowsOutput.fromJson(Map<String, dynamic> json) =>
       _$AffectedRowsOutputFromJson(json);
 
-  @json_annotation.JsonKey(name: 'count')
+  @JsonKey(name: 'count')
   final int count;
 
   Map<String, dynamic> toJson() => _$AffectedRowsOutputToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UserCountOutputType {
   const UserCountOutputType({
     required this.posts,
@@ -2269,14 +2263,13 @@ class UserCountOutputType {
   factory UserCountOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserCountOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'posts')
+  @JsonKey(name: 'posts')
   final int posts;
 
   Map<String, dynamic> toJson() => _$UserCountOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UserCountAggregateOutputType {
   const UserCountAggregateOutputType({
     required this.id,
@@ -2288,23 +2281,22 @@ class UserCountAggregateOutputType {
   factory UserCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserCountAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int id;
 
-  @json_annotation.JsonKey(name: 'name')
+  @JsonKey(name: 'name')
   final int name;
 
-  @json_annotation.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final int createdAt;
 
-  @json_annotation.JsonKey(name: '_all')
+  @JsonKey(name: '_all')
   final int $all;
 
   Map<String, dynamic> toJson() => _$UserCountAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UserAvgAggregateOutputType {
   const UserAvgAggregateOutputType({
     this.id,
@@ -2313,14 +2305,13 @@ class UserAvgAggregateOutputType {
   factory UserAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserAvgAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final double? id;
 
   Map<String, dynamic> toJson() => _$UserAvgAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UserSumAggregateOutputType {
   const UserSumAggregateOutputType({
     this.id,
@@ -2329,14 +2320,13 @@ class UserSumAggregateOutputType {
   factory UserSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserSumAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int? id;
 
   Map<String, dynamic> toJson() => _$UserSumAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UserMinAggregateOutputType {
   const UserMinAggregateOutputType({
     this.id,
@@ -2347,20 +2337,19 @@ class UserMinAggregateOutputType {
   factory UserMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserMinAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int? id;
 
-  @json_annotation.JsonKey(name: 'name')
+  @JsonKey(name: 'name')
   final String? name;
 
-  @json_annotation.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime? createdAt;
 
   Map<String, dynamic> toJson() => _$UserMinAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UserMaxAggregateOutputType {
   const UserMaxAggregateOutputType({
     this.id,
@@ -2371,20 +2360,19 @@ class UserMaxAggregateOutputType {
   factory UserMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserMaxAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int? id;
 
-  @json_annotation.JsonKey(name: 'name')
+  @JsonKey(name: 'name')
   final String? name;
 
-  @json_annotation.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime? createdAt;
 
   Map<String, dynamic> toJson() => _$UserMaxAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class PostCountAggregateOutputType {
   const PostCountAggregateOutputType({
     required this.id,
@@ -2399,32 +2387,31 @@ class PostCountAggregateOutputType {
   factory PostCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostCountAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int id;
 
-  @json_annotation.JsonKey(name: 'title')
+  @JsonKey(name: 'title')
   final int title;
 
-  @json_annotation.JsonKey(name: 'authorId')
+  @JsonKey(name: 'authorId')
   final int authorId;
 
-  @json_annotation.JsonKey(name: 'content')
+  @JsonKey(name: 'content')
   final int content;
 
-  @json_annotation.JsonKey(name: 'published')
+  @JsonKey(name: 'published')
   final int published;
 
-  @json_annotation.JsonKey(name: 'created_at')
+  @JsonKey(name: 'created_at')
   final int created_at;
 
-  @json_annotation.JsonKey(name: '_all')
+  @JsonKey(name: '_all')
   final int $all;
 
   Map<String, dynamic> toJson() => _$PostCountAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class PostAvgAggregateOutputType {
   const PostAvgAggregateOutputType({
     this.id,
@@ -2434,17 +2421,16 @@ class PostAvgAggregateOutputType {
   factory PostAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostAvgAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final double? id;
 
-  @json_annotation.JsonKey(name: 'authorId')
+  @JsonKey(name: 'authorId')
   final double? authorId;
 
   Map<String, dynamic> toJson() => _$PostAvgAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class PostSumAggregateOutputType {
   const PostSumAggregateOutputType({
     this.id,
@@ -2454,17 +2440,16 @@ class PostSumAggregateOutputType {
   factory PostSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostSumAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int? id;
 
-  @json_annotation.JsonKey(name: 'authorId')
+  @JsonKey(name: 'authorId')
   final int? authorId;
 
   Map<String, dynamic> toJson() => _$PostSumAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class PostMinAggregateOutputType {
   const PostMinAggregateOutputType({
     this.id,
@@ -2478,29 +2463,28 @@ class PostMinAggregateOutputType {
   factory PostMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostMinAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int? id;
 
-  @json_annotation.JsonKey(name: 'title')
+  @JsonKey(name: 'title')
   final String? title;
 
-  @json_annotation.JsonKey(name: 'authorId')
+  @JsonKey(name: 'authorId')
   final int? authorId;
 
-  @json_annotation.JsonKey(name: 'content')
+  @JsonKey(name: 'content')
   final String? content;
 
-  @json_annotation.JsonKey(name: 'published')
+  @JsonKey(name: 'published')
   final bool? published;
 
-  @json_annotation.JsonKey(name: 'created_at')
+  @JsonKey(name: 'created_at')
   final DateTime? created_at;
 
   Map<String, dynamic> toJson() => _$PostMinAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class PostMaxAggregateOutputType {
   const PostMaxAggregateOutputType({
     this.id,
@@ -2514,29 +2498,28 @@ class PostMaxAggregateOutputType {
   factory PostMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostMaxAggregateOutputTypeFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int? id;
 
-  @json_annotation.JsonKey(name: 'title')
+  @JsonKey(name: 'title')
   final String? title;
 
-  @json_annotation.JsonKey(name: 'authorId')
+  @JsonKey(name: 'authorId')
   final int? authorId;
 
-  @json_annotation.JsonKey(name: 'content')
+  @JsonKey(name: 'content')
   final String? content;
 
-  @json_annotation.JsonKey(name: 'published')
+  @JsonKey(name: 'published')
   final bool? published;
 
-  @json_annotation.JsonKey(name: 'created_at')
+  @JsonKey(name: 'created_at')
   final DateTime? created_at;
 
   Map<String, dynamic> toJson() => _$PostMaxAggregateOutputTypeToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class User {
   const User({
     required this.id,
@@ -2547,23 +2530,22 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int id;
 
-  @json_annotation.JsonKey(name: 'name')
+  @JsonKey(name: 'name')
   final String name;
 
-  @json_annotation.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
 
-  @json_annotation.JsonKey(name: 'posts')
+  @JsonKey(name: 'posts')
   final List<Post>? posts;
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
 
-@json_annotation.JsonSerializable(
-    createFactory: true, createToJson: true, explicitToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class Post {
   const Post({
     required this.id,
@@ -2577,25 +2559,25 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 
-  @json_annotation.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int id;
 
-  @json_annotation.JsonKey(name: 'title')
+  @JsonKey(name: 'title')
   final String title;
 
-  @json_annotation.JsonKey(name: 'authorId')
+  @JsonKey(name: 'authorId')
   final int authorId;
 
-  @json_annotation.JsonKey(name: 'content')
+  @JsonKey(name: 'content')
   final String content;
 
-  @json_annotation.JsonKey(name: 'published')
+  @JsonKey(name: 'published')
   final bool published;
 
-  @json_annotation.JsonKey(name: 'created_at')
+  @JsonKey(name: 'created_at')
   final DateTime created_at;
 
-  @json_annotation.JsonKey(name: 'author')
+  @JsonKey(name: 'author')
   final User? author;
 
   Map<String, dynamic> toJson() => _$PostToJson(this);
@@ -3432,7 +3414,7 @@ class PrismaClient {
           datasources?.toOverwrites() ?? const <String, runtime.Datasource>{},
       dmmf: _dmmf,
       schema: _schema,
-      environment: environment.all,
+      environment: configure.environment.all,
       executable: _executable,
     );
 
