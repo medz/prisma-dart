@@ -4,7 +4,7 @@ import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
-import 'package:orm/configure.dart';
+import 'package:orm/configure.dart' as configure;
 
 import '../utils/chmod.dart';
 import '../utils/find_project.dart';
@@ -26,14 +26,30 @@ class BinaryEngine {
   String get _archiveExtension =>
       platform == BinaryEnginePlatform.windows ? '.exe.gz' : '.gz';
 
-  /// archive file name.
-  String get _archiveBasename => type.value + _archiveExtension;
-
   /// Archive file path.
-  String get _archive => joinPaths(['.dart_tool', 'prisma', _archiveBasename]);
+  String get _archive => executable + _archiveExtension;
 
   /// Executable file path.
-  String get executable => joinPaths(['.dart_tool', 'prisma', type.value]);
+  String get executable {
+    switch (type) {
+      case BinaryEngineType.query:
+        return configure.environment.PRISMA_QUERY_ENGINE_BINARY ??
+            _defaultEnginePathBuilder('query-engine');
+      case BinaryEngineType.migration:
+        return configure.environment.PRISMA_MIGRATION_ENGINE_BINARY ??
+            _defaultEnginePathBuilder('migration-engine');
+      case BinaryEngineType.introspection:
+        return configure.environment.PRISMA_INTROSPECTION_ENGINE_BINARY ??
+            _defaultEnginePathBuilder('introspection-engine');
+      case BinaryEngineType.format:
+        return configure.environment.PRISMA_FMT_BINARY ??
+            _defaultEnginePathBuilder('prisma-fmt');
+    }
+  }
+
+  /// Default engine path builder.
+  String _defaultEnginePathBuilder(String name) =>
+      joinPaths(['.dart_tool', 'prisma', name]);
 
   /// Has the binary engine been downloaded.
   Future<bool> get hasDownloaded async {
@@ -64,7 +80,7 @@ class BinaryEngine {
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
         environment: <String, String>{
-          ...configure.environment,
+          ...configure.environment.all,
           ...environment,
         },
       );
@@ -75,7 +91,7 @@ class BinaryEngine {
         arguments,
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
-        environment: configure.environment,
+        environment: configure.environment.all,
       );
 
   /// Download the binary engine.
@@ -90,12 +106,13 @@ class BinaryEngine {
     await _clean();
 
     // Create download url.
-    final Uri url = Uri.parse('https://binaries.prisma.sh').replace(
+    final Uri url =
+        Uri.parse(configure.environment.PRISMA_ENGINES_MIRROR).replace(
       pathSegments: [
         'all_commits',
         version,
         platform.value,
-        _archiveBasename,
+        type.value + _archiveExtension,
       ],
     );
 

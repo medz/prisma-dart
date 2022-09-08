@@ -51,17 +51,12 @@ class InitCommand extends Command {
 
   /// Create prisma config file.
   void createPrismaConfigFile(Uri uri) {
-    final File config = File(joinPaths(['prisma.yaml']));
+    final File config = File(joinPaths(['.prismarc']));
     if (!config.existsSync()) {
       config.createSync(recursive: true);
     }
 
-    final String template = r'''
-environment:
-  DATABASE_URL: {url}
-''';
-    final String content = template.replaceAll('{url}', uri.toString());
-    config.writeAsStringSync(content);
+    config.writeAsStringSync('DATABASE_URL = ${uri.toString()}');
   }
 
   /// Create prisma schema file.

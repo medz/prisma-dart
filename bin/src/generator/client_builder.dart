@@ -38,7 +38,7 @@ class PrismaClient {
       datasources: datasources?.toOverwrites() ?? const <String, runtime.Datasource> {},
       dmmf: _dmmf,
       schema: _schema,
-      environment: configure.environment,
+      environment: configure.environment.all,
       executable: _executable,
     );
 
