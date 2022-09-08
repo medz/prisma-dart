@@ -48,11 +48,8 @@ class BinaryEngine {
   }
 
   /// Default engine path builder.
-  String _defaultEnginePathBuilder(String name) => joinPaths([
-        '.dart_tool',
-        'prisma',
-        '${platform.name}-$name',
-      ]);
+  String _defaultEnginePathBuilder(String name) =>
+      joinPaths(['.dart_tool', 'prisma', name]);
 
   /// Has the binary engine been downloaded.
   Future<bool> get hasDownloaded async {
