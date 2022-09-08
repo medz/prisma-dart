@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:rc/rc.dart';
 
 import '../environment.dart';
+import '../configure.dart' as internal;
 import 'finder.dart';
 
 /// Create a [RuntimeConfiguration] with `prismarc` and `dotenv`.
@@ -47,3 +48,6 @@ RuntimeConfiguration get _prismarc {
 
 /// Create a new [Environment] from [RuntimeConfiguration].
 final Environment environment = Environment(_prismarc);
+
+/// Prisma schema path
+String get schema => prismaConifgurationResult.schema ?? internal.schema;
