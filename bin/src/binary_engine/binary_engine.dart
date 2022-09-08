@@ -4,7 +4,7 @@ import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
-import 'package:orm/configure.dart';
+import 'package:orm/configure.dart' as configure;
 
 import '../utils/chmod.dart';
 import '../utils/find_project.dart';
@@ -64,7 +64,7 @@ class BinaryEngine {
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
         environment: <String, String>{
-          ...configure.environment,
+          ...configure.environment.all,
           ...environment,
         },
       );
@@ -75,7 +75,7 @@ class BinaryEngine {
         arguments,
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
-        environment: configure.environment,
+        environment: configure.environment.all,
       );
 
   /// Download the binary engine.
