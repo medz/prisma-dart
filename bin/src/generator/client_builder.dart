@@ -118,32 +118,16 @@ class Datasources {
 
 /// Data sources to overwrite builder.
 String _datasourcesToOverwritesBuilder(List<helper.DataSource> datasources) {
-  final StringBuffer buffer = StringBuffer();
-  buffer.writeln('Map<String, runtime.Datasource> toOverwrites() {');
-  buffer.writeln(
-      'final Map<String, runtime.Datasource> overwrites\$ = <String, runtime.Datasource>{};');
-  for (final helper.DataSource ds in datasources) {
-    buffer.writeln('''
-  if (${runtime.languageKeywordEncode(ds.name)} != null) {
-    overwrites\$['${ds.name}'] = ${runtime.languageKeywordEncode(ds.name)}!;
-  }
-''');
-
-    if (ds.url.fromEnvVar != null && ds.url.fromEnvVar?.isNotEmpty == true) {
-      buffer.writeln('''
-  else {
-    overwrites\$['${ds.name}'] = runtime.Datasource(
-      url: 'env("${ds.url.fromEnvVar}")'
-    );
-  }
-''');
-    }
-  }
-
-  buffer.writeln('return overwrites\$;');
-  buffer.writeln('}');
-
-  return buffer.toString();
+  return '''
+Map<String, runtime.Datasource> toOverwrites() => <String, runtime.Datasource>{
+  ${datasources.map((ds) {
+    return '''
+      if (${runtime.languageKeywordEncode(ds.name)} != null)
+        '${ds.name}': ${runtime.languageKeywordEncode(ds.name)}!
+    ''';
+  }).join(',')}
+};
+''';
 }
 
 /// Data sources constructor builder.
