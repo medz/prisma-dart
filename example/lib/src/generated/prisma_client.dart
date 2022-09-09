@@ -3375,7 +3375,7 @@ final dmmf.Document _dmmf =
 
 /// Prisma query engine executable.
 const String _executable =
-    '/Users/seven/workspace/prisma/example/.dart_tool/prisma/darwin-query-engine';
+    '/Users/seven/workspace/prisma/example/.dart_tool/prisma/query-engine';
 
 /// Prisma schema as string.
 final String _schema =
@@ -3386,17 +3386,8 @@ class Datasources {
 
   const Datasources({this.db});
 
-  Map<String, runtime.Datasource> toOverwrites() {
-    final Map<String, runtime.Datasource> overwrites$ =
-        <String, runtime.Datasource>{};
-    if (db != null) {
-      overwrites$['db'] = db!;
-    } else {
-      overwrites$['db'] = runtime.Datasource(url: 'env("DATABASE_URL")');
-    }
-
-    return overwrites$;
-  }
+  Map<String, runtime.Datasource> toOverwrites() =>
+      <String, runtime.Datasource>{if (db != null) 'db': db!};
 }
 
 /// Prisma client.
