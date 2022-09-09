@@ -79,10 +79,9 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     // Build schema DML to environment.
     environment['PRISMA_DML'] = base64.encode(utf8.encode(schema));
 
-    // If overwrite datasources is not null, add it to environment.
-    if (datasources.isNotEmpty) {
-      environment['OVERWRITE_DATASOURCES'] = json.encode(datasources);
-    }
+    // Add owerwrite datasources environment variables.
+    environment['OVERWRITE_DATASOURCES'] =
+        base64.encode(utf8.encode(overwriteDatasources));
 
     // Rust backtrace.
     if (!environment.containsKey('RUST_BACKTRACE')) {
@@ -98,28 +97,19 @@ class BinaryEngine extends unimplemented.BinaryEngine {
   }
 
   /// Get overwrite datasources.
-  String? get overwriteDatasources {
-    final List<dynamic> overwriteDatasources = <dynamic>[];
+  String get overwriteDatasources {
+    final List<Map<String, dynamic>> overwriteDatasources = [];
     for (final MapEntry<String, Datasource> entry in datasources.entries) {
-      final Map<String, dynamic> datasource = <String, dynamic>{
+      // If entry value is not defined, skip it.
+      if (entry.value.url == null) {
+        continue;
+      }
+
+      // Add overwrite datasource.
+      overwriteDatasources.add({
         'name': entry.key,
-        'url': null,
-        'env': null,
-      };
-
-      /// If url is environment variable, add it to datasource.
-      final RegExp pattern = RegExp(r'env\("(.*)"\)');
-      final Match? match = pattern.firstMatch(entry.value.url!);
-      if (match != null) {
-        datasource['env'] = match.group(1);
-      }
-
-      // If url is not environment variable, add it to datasource.
-      if (entry.value.url != null && datasource['env'] == null) {
-        datasource['url'] = entry.value.url;
-      }
-
-      overwriteDatasources.add(datasource);
+        'url': entry.value.url,
+      });
     }
 
     return json.encode(overwriteDatasources);
