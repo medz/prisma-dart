@@ -84,7 +84,7 @@ File? _relativeOrFind({
 }
 
 // Find prisma configuration result.
-FindPrismaConfigurationResult get prismaConifgurationResult {
+FindPrismaConfigurationResult _findResult() {
   final File? pubspec = _findFile('pubspec.yaml');
   final Map<String, dynamic>? pubspecDocument = readPubspec(pubspec);
 
@@ -110,3 +110,6 @@ FindPrismaConfigurationResult get prismaConifgurationResult {
     schema: schema?.path ?? path.join('prisma', 'schema.prisma'),
   );
 }
+
+/// Find prisma configuration result.
+final FindPrismaConfigurationResult prismaConifgurationResult = _findResult();
