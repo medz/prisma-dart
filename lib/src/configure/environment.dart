@@ -7,14 +7,14 @@ import 'query_engine_type.dart';
 /// See https://www.prisma.io/docs/reference/api-reference/environment-variables-reference
 class Environment {
   /// Create a new [Environment] from [RuntimeConfiguration].
-  const Environment(RuntimeConfiguration prismarc) : _prismarc = prismarc;
+  Environment(RuntimeConfiguration prismarc) : _prismarc = prismarc;
 
   /// Current [RuntimeConfiguration].
-  final RuntimeConfiguration _prismarc;
+  RuntimeConfiguration _prismarc;
 
-  /// Get all environment variables
-  Map<String, String> get all =>
-      _prismarc.all.map((key, value) => MapEntry(key, value.toString()));
+  /// Custom runtime configuration.
+  void custom(RuntimeConfiguration runtimeConfiguration) =>
+      _prismarc = runtimeConfiguration;
 
   /// Merge [Environment] with [other].
   void merge({
@@ -52,6 +52,10 @@ class Environment {
       }
     }
   }
+
+  /// Get all environment variables
+  Map<String, String> get all =>
+      _prismarc.all.map((key, value) => MapEntry(key, value.toString()));
 
   /// Database URL
   String? get DATABASE_URL => all['DATABASE_URL'];
