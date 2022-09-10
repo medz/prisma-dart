@@ -1,5 +1,5 @@
 /// Prisma binary engines version.
-const String binaryVersion = 'bcc34eccb8bd811bcf624288e5e05b7abda86699';
+const String binaryVersion = 'c875e43600dfe042452e0b868f7a48b817b9640b';
 
 /// Prisma query engine C API version.
 const String capiVersion = '0.0.1';
