@@ -6,10 +6,13 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:retry/retry.dart';
 
+import '../../../version.dart';
 import '../../dmmf/dmmf.dart' as dmmf;
 import '../../runtime/datasource.dart';
+import '../common/errors/prisma_client_initialization_error.dart';
 import '../common/errors/prisma_client_known_request_error.dart';
-import '../common/errors/prisma_server_error.dart';
+import '../common/errors/prisma_client_rust_panic_error.dart';
+import '../common/errors/prisma_client_unknown_request_error.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
@@ -68,7 +71,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
           .addAll(_searchDirectoriesBuilder(path.dirname(super.executable!)));
     }
 
-    return directories;
+    return directories.toSet().toList();
   }
 
   @override
@@ -142,7 +145,22 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     }
 
     // If not found, throw exception.
-    throw Exception('Query engine not found.');
+    throw PrismaClientInitializationError(
+      '''
+Could not find query engine binary for current platform "${Platform.operatingSystem}" in query-engine path.
+
+This probably happens, because you built Prisma Client on a different platform.
+
+Searched Locations:
+${searchDirectories.map((e) => '  - $e').join('\n')}
+
+You already added the platform "${Platform.operatingSystem}" to the "generator" block in the "schema.prisma" file as described in https://pris.ly/d/client-generator, but something went wrong. That's suboptimal.
+
+Please create an issue at https://github.com/odroe/prisma-dart/issues/new
+'''
+          .trim(),
+      clientVersion: packageVersion,
+    );
   }
 
   /// Cached get config result.
@@ -210,14 +228,24 @@ class BinaryEngine extends unimplemented.BinaryEngine {
 
   /// Request error handler.
   void requestErrorHandler(List<dynamic>? errors) {
-    if (errors != null && errors.isNotEmpty) {
-      for (final dynamic err in errors) {
-        if (err is Map && err.containsKey('error')) {
-          throw PrismaClientKnownRequestError(err['error']);
-        }
+    // If errors is null, return.
+    if (errors == null || errors.isEmpty == true) return;
+
+    // Throw errors.
+    for (final dynamic error in errors) {
+      // If error is user_facing_error.
+      if (error is Map && error['user_facing_error'] is Map) {
+        throw PrismaClientKnownRequestError.fromJson({
+          ...error['user_facing_error'],
+          'clientVersion': packageVersion,
+        });
       }
 
-      throw PrismaClientKnownRequestError(json.encode(errors));
+      // Otherwise, throw unknown error.
+      throw PrismaClientUnknownRequestError(
+        json.encode(error),
+        clientVersion: packageVersion,
+      );
     }
   }
 
@@ -251,7 +279,10 @@ class BinaryEngine extends unimplemented.BinaryEngine {
         final http.Response response = await http.Response.fromStream(stream);
 
         if (response.statusCode >= 400) {
-          throw PrismaServerError('Request Prisma server failed.');
+          throw PrismaClientUnknownRequestError('''
+HTTP request failed with status code ${response.statusCode}.
+${response.body}
+''', clientVersion: packageVersion);
         }
 
         final Map<String, dynamic> result =
@@ -299,7 +330,10 @@ class BinaryEngine extends unimplemented.BinaryEngine {
         final http.Response response = await http.Response.fromStream(stream);
 
         if (response.statusCode >= 400) {
-          throw PrismaServerError('Request Prisma server failed.');
+          throw PrismaClientUnknownRequestError('''
+HTTP request failed with status code ${response.statusCode}.
+${response.body}
+''', clientVersion: packageVersion);
         }
 
         final Map<String, dynamic> result = json.decode(response.body);
@@ -324,7 +358,10 @@ class BinaryEngine extends unimplemented.BinaryEngine {
           requestErrorHandler(errors);
         }
 
-        throw PrismaClientKnownRequestError('Batch request known error.');
+        throw PrismaClientUnknownRequestError(
+          'Unexpected response from the query engine: ${json.encode(result)}',
+          clientVersion: packageVersion,
+        );
       },
       maxDelay: const Duration(),
       maxAttempts:
@@ -368,15 +405,14 @@ class BinaryEngine extends unimplemented.BinaryEngine {
 
     // Listen for stderr.
     process.stderr.listen(
-      (data) => stderr.write(utf8.decode(data)),
-      onDone: () => process..kill(),
+      (data) {
+        throw PrismaClientInitializationError.fromJson({
+          ...json.decode(utf8.decode(data)),
+          'clientVersion': packageVersion,
+        });
+      },
+      onDone: () => stop(),
     );
-
-    // Listen for stdout.
-    // process.stdout.listen(
-    //   (data) => stdout.write(utf8.decode(data)),
-    //   onDone: () => process..kill(),
-    // );
 
     // Build GraphQL server endpoint.
     final Uri url = (await endpoint).replace(path: '/status');
@@ -413,11 +449,58 @@ class BinaryEngine extends unimplemented.BinaryEngine {
       process.kill();
       await stop();
 
-      throw PrismaServerError('Failed to start Prisma server.');
+      throw PrismaClientInitializationError(
+        'Failed to start the query engine: ${e.toString()}',
+        clientVersion: packageVersion,
+      );
     }
 
     // Return created process
     return process;
+  }
+
+  /// Transaction request.
+  Future<Map<String, dynamic>> _transaction(http.Request request) async {
+    await start();
+
+    final http.StreamedResponse stream = await httpClient.send(request);
+    final http.Response response = await http.Response.fromStream(stream);
+
+    if (response.bodyBytes.isEmpty || response.statusCode == 404) {
+      throw PrismaClientUnknownRequestError('''
+Use the `prisma.\$transaction()` API to run queries in a transaction.
+
+Add the following to your `schema.prisma` file:
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+Read more about transactions in our documentation: 
+ - https://github.com/odroe/prisma-dart#qa
+ - https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions-in-preview
+''', clientVersion: packageVersion);
+    }
+
+    final Map<String, dynamic> result = json.decode(response.body);
+
+    // If result is a known error, throw it.
+    if (result['error_code'] != null) {
+      throw PrismaClientKnownRequestError.fromJson({
+        ...result,
+        'clientVersion': packageVersion,
+      });
+    }
+
+    if (response.statusCode >= 400) {
+      throw PrismaClientUnknownRequestError('''
+HTTP request failed with status code ${response.statusCode}.
+${response.body}
+''', clientVersion: packageVersion);
+    }
+
+    return result;
   }
 
   @override
@@ -425,7 +508,6 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required TransactionHeaders headers,
     TransactionOptions options = const TransactionOptions(),
   }) async {
-    await start();
     final String body = json.encode({
       'max_wait': options.maxWait,
       'timeout': options.timeout,
@@ -437,14 +519,9 @@ class BinaryEngine extends unimplemented.BinaryEngine {
       ..headers['Content-Type'] = 'application/json'
       ..headers.addAll(runtimeHeadersToHttpHeaders(headers.toJson()));
 
-    final http.StreamedResponse stream = await httpClient.send(request);
-    final http.Response response = await http.Response.fromStream(stream);
+    final Map<String, dynamic> result = await _transaction(request);
 
-    if (response.statusCode >= 400) {
-      throw PrismaServerError('Transaction start failed.');
-    }
-
-    return TransactionInfo.fromJson(json.decode(response.body));
+    return TransactionInfo.fromJson(result);
   }
 
   @override
@@ -452,16 +529,11 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required TransactionHeaders headers,
     required TransactionInfo info,
   }) async {
-    await start();
     final Uri url =
         (await endpoint).replace(path: '/transaction/${info.id}/commit');
     final http.Request request = http.Request('POST', url);
-    final http.StreamedResponse stream = await httpClient.send(request);
-    final http.Response response = await http.Response.fromStream(stream);
 
-    if (response.statusCode >= 400) {
-      throw PrismaServerError('Transaction commit failed.');
-    }
+    await _transaction(request);
   }
 
   @override
@@ -473,12 +545,8 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     final Uri url =
         (await endpoint).replace(path: '/transaction/${info.id}/rollback');
     final http.Request request = http.Request('POST', url);
-    final http.StreamedResponse stream = await httpClient.send(request);
-    final http.Response response = await http.Response.fromStream(stream);
 
-    if (response.statusCode >= 400) {
-      throw PrismaServerError('Transaction rollback failed.');
-    }
+    await _transaction(request);
   }
 
   @override
