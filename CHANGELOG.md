@@ -1,3 +1,56 @@
+## {next}
+
+🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20Prisma%20ORM%20for%20Dart%20release%20v{next}🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/{next}) about the release. 🌟
+
+### Major improvements:
+
+1. refactor `PrismaClientKnownRequestError`, Prisma Client throws a PrismaClientKnownRequestError exception if the query engine returns a known error related to the request - for example, a unique constraint violation. Reference 👉 [PrismaClientKnownRequestError](https://www.prisma.io/docs/reference/api-reference/error-reference#prismaclientknownrequesterror)
+2. All exceptions on the client side will throw predictable errors，Reference 👉 [PrismaClientKnownRequestError](https://www.prisma.io/docs/reference/api-reference/error-reference)
+3. `query_engine` renamed to `engine_core`
+
+### Better error message
+
+Take transaction errors as an example, before simply throwing `PrismaServerError` without any friendly prompts. Now:
+```
+PrismaClientUnknownRequestError:
+Use the `prisma.$transaction()` API to run queries in a transaction.
+
+Add the following to your `schema.prisma` file:
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+Read more about transactions in our documentation:
+ - https://github.com/odroe/prisma-dart#qa
+ - https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions-in-preview
+```
+
+If the engine is not found:
+```
+PrismaClientInitializationError:
+  message: Could not find query engine binary for current platform "macos" in query-engine path.
+
+This probably happens, because you built Prisma Client on a different platform.
+
+Searched Locations:
+  - /Users/seven/workspace/prisma/example
+  - /Users/seven/workspace/prisma/example/.dart_tool/prisma
+  - /Users/seven/workspace/prisma/example/prisma
+  - /Users/seven/workspace/prisma/example/.dart_tool/pub/bin/example
+
+You already added the platform "macos" to the "generator" block in the "schema.prisma" file as described in https://pris.ly/d/client-generator, but something went wrong. That's suboptimal.
+
+Please create an issue at https://github.com/odroe/prisma-dart/issues/new
+  errorCode: null
+  clientVersion: 2.1.2
+```
+
+### Bug fixes
+
+1. Fixed `packageVersion` not updating with version
+
 ## 2.1.2
 
 🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20Prisma%20ORM%20for%20Dart%20release%20v2.1.2🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.1.2) about the release. 🌟
