@@ -24,11 +24,15 @@ String _resolveOutput(EnvValue? output, String schemaPath) {
 
 /// Get generated file.
 File _getGeneratedFile(GeneratorOptions options) {
-  final String output =
+  final String directory =
       _resolveOutput(options.config.output, options.schemaPath);
-  final String filename = 'prisma_client.dart';
 
-  final File file = File(join(output, filename));
+  final String output =
+      directory.substring(directory.length - 5).toLowerCase() == '.dart'
+          ? directory
+          : join(directory, 'prisma_client.dart');
+
+  final File file = File(output);
   if (file.existsSync()) {
     file.deleteSync();
   }
