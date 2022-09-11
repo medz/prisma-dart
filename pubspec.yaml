@@ -13,6 +13,7 @@ executables:
 dependencies:
   archive: ^3.3.1
   args: ^2.3.1
+  code_builder: ^4.2.0
   http: ^0.13.5
   json_annotation: ^4.6.0
   path: ^1.8.2
