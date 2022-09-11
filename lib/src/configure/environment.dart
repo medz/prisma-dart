@@ -30,6 +30,7 @@ class Environment {
     String? PRISMA_MIGRATION_ENGINE_BINARY,
     String? PRISMA_INTROSPECTION_ENGINE_BINARY,
     String? PRISMA_FMT_BINARY,
+    bool? PRISMA_GENERATE_DATAPROXY,
   }) {
     final Map<String, String?> configuration = <String, String?>{
       'DATABASE_URL': DATABASE_URL,
@@ -44,6 +45,7 @@ class Environment {
       'PRISMA_MIGRATION_ENGINE_BINARY': PRISMA_MIGRATION_ENGINE_BINARY,
       'PRISMA_INTROSPECTION_ENGINE_BINARY': PRISMA_INTROSPECTION_ENGINE_BINARY,
       'PRISMA_FMT_BINARY': PRISMA_FMT_BINARY,
+      'PRISMA_GENERATE_DATAPROXY': PRISMA_GENERATE_DATAPROXY?.toString(),
     };
 
     for (final MapEntry<String, String?> entry in configuration.entries) {
@@ -108,4 +110,13 @@ class Environment {
 
   /// PRISMA_FMT_BINARY is used to set a custom location for your own format engine binary.
   String? get PRISMA_FMT_BINARY => all['PRISMA_FMT_BINARY'];
+
+  /// If [PRISMA_GENERATE_DATAPROXY] is `true`, then `dart run orm generate` will generate a client that supports Prisma data proxy.
+  bool get PRISMA_GENERATE_DATAPROXY {
+    if (_prismarc('PRISMA_GENERATE_DATAPROXY') is bool) {
+      return _prismarc<bool>('PRISMA_GENERATE_DATAPROXY')!;
+    }
+
+    return all['PRISMA_GENERATE_DATAPROXY']?.toLowerCase() == 'true';
+  }
 }
