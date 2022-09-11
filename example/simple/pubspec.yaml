@@ -1,4 +1,4 @@
-name: example
+name: simple_example
 description: A sample command-line application.
 version: 1.0.0
 publish_to: none
@@ -7,6 +7,7 @@ environment:
   sdk: '>=2.17.6 <3.0.0'
 
 dependencies:
+  faker: ^2.0.0
   orm: any
 
 dev_dependencies:
@@ -16,4 +17,4 @@ dev_dependencies:
 
 dependency_overrides:
   orm:
-    path: ..
+    path: ../../

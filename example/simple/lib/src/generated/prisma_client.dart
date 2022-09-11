@@ -3375,7 +3375,7 @@ final dmmf.Document _dmmf =
 
 /// Prisma query engine executable.
 const String _executable =
-    '/Users/seven/workspace/prisma/example/.dart_tool/prisma/query-engine';
+    '/Users/seven/workspace/prisma/example/simple/.dart_tool/prisma/query-engine';
 
 /// Prisma schema as string.
 final String _schema =
