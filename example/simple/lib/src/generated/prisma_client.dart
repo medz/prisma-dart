@@ -3215,125 +3215,583 @@ class Post implements _i2.JsonSerializable {
 }
 
 class UserDelegate {
-  const UserDelegate._(this._engine, [this._header]);
+  const UserDelegate._(this._engine, [this._headers]);
 
   final _i2.Engine _engine;
 
-  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _header;
+  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _headers;
 
   Future<_i2.PrismaNullable<User>> findUnique(
-      {required UserWhereUniqueInput where});
+      {required UserWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('findUniqueUser',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('where', where, isRequired: true)]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['findUniqueUser'] == null
+        ? null
+        : User.fromJson((result.data['findUniqueUser'] as Map).cast());
+  }
+
   Future<_i2.PrismaNullable<User>> findFirst(
       {_i2.PrismaNullable<UserWhereInput> where,
       _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
       _i2.PrismaNullable<UserWhereUniqueInput> cursor,
       _i2.PrismaNullable<int> take,
       _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct});
+      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('findFirstUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('cursor', cursor, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false),
+                _i2.GraphQLArg('distinct', distinct, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['findFirstUser'] == null
+        ? null
+        : User.fromJson((result.data['findFirstUser'] as Map).cast());
+  }
+
   Future<List<User>> findMany(
       {_i2.PrismaNullable<UserWhereInput> where,
       _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
       _i2.PrismaNullable<UserWhereUniqueInput> cursor,
       _i2.PrismaNullable<int> take,
       _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct});
+      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('findManyUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('cursor', cursor, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false),
+                _i2.GraphQLArg('distinct', distinct, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return (result.data['findManyUser'] as List)
+        .whereType<Map>()
+        .map((Map e) => User.fromJson(e.cast()))
+        .toList();
+  }
+
   Future<User> create(
       {required _i2.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
-          data});
+          data}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('createOneUser',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('data', data, isRequired: true)]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return User.fromJson((result.data['createOneUser'] as Map).cast());
+  }
+
   Future<AffectedRowsOutput> createMany(
       {required List<UserCreateManyInput> data,
-      _i2.PrismaNullable<bool> skipDuplicates});
+      _i2.PrismaNullable<bool> skipDuplicates}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('createManyUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('data', data, isRequired: true),
+                _i2.GraphQLArg('skipDuplicates', skipDuplicates,
+                    isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AffectedRowsOutput.fromJson(
+        (result.data['createManyUser'] as Map).cast());
+  }
+
   Future<_i2.PrismaNullable<User>> update(
       {required _i2.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput> data,
-      required UserWhereUniqueInput where});
+      required UserWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('updateOneUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('data', data, isRequired: true),
+                _i2.GraphQLArg('where', where, isRequired: true)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['updateOneUser'] == null
+        ? null
+        : User.fromJson((result.data['updateOneUser'] as Map).cast());
+  }
+
   Future<AffectedRowsOutput> updateMany(
       {required _i2.PrismaUnion<UserUpdateManyMutationInput,
               UserUncheckedUpdateManyInput>
           data,
-      _i2.PrismaNullable<UserWhereInput> where});
+      _i2.PrismaNullable<UserWhereInput> where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('updateManyUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('data', data, isRequired: true),
+                _i2.GraphQLArg('where', where, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AffectedRowsOutput.fromJson(
+        (result.data['updateManyUser'] as Map).cast());
+  }
+
   Future<User> upsert(
       {required UserWhereUniqueInput where,
       required _i2.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
           create,
       required _i2.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput>
-          update});
+          update}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('upsertOneUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: true),
+                _i2.GraphQLArg('create', create, isRequired: true),
+                _i2.GraphQLArg('update', update, isRequired: true)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return User.fromJson((result.data['upsertOneUser'] as Map).cast());
+  }
+
   Future<_i2.PrismaNullable<User>> delete(
-      {required UserWhereUniqueInput where});
+      {required UserWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('deleteOneUser',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('where', where, isRequired: true)]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['deleteOneUser'] == null
+        ? null
+        : User.fromJson((result.data['deleteOneUser'] as Map).cast());
+  }
+
   Future<AffectedRowsOutput> deleteMany(
-      {_i2.PrismaNullable<UserWhereInput> where});
+      {_i2.PrismaNullable<UserWhereInput> where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('deleteManyUser',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('where', where, isRequired: false)]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AffectedRowsOutput.fromJson(
+        (result.data['deleteManyUser'] as Map).cast());
+  }
+
   Future<AggregateUser> aggregate(
       {_i2.PrismaNullable<UserWhereInput> where,
       _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
       _i2.PrismaNullable<UserWhereUniqueInput> cursor,
       _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip});
+      _i2.PrismaNullable<int> skip}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('aggregateUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('cursor', cursor, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AggregateUser.fromJson((result.data['aggregateUser'] as Map).cast());
+  }
+
   Future<List<UserGroupByOutputType>> groupBy(
       {_i2.PrismaNullable<UserWhereInput> where,
       _i2.PrismaNullable<List<UserOrderByWithAggregationInput>> orderBy,
       required List<UserScalarFieldEnum> by,
       _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> having,
       _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip});
+      _i2.PrismaNullable<int> skip}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('groupByUser',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('by', by, isRequired: true),
+                _i2.GraphQLArg('having', having, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+                  .map((UserScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return (result.data['groupByUser'] as List)
+        .whereType<Map>()
+        .map((Map e) => UserGroupByOutputType.fromJson(e.cast()))
+        .toList();
+  }
 }
 
 class PostDelegate {
-  const PostDelegate._(this._engine, [this._header]);
+  const PostDelegate._(this._engine, [this._headers]);
 
   final _i2.Engine _engine;
 
-  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _header;
+  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _headers;
 
   Future<_i2.PrismaNullable<Post>> findUnique(
-      {required PostWhereUniqueInput where});
+      {required PostWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('findUniquePost',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('where', where, isRequired: true)]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['findUniquePost'] == null
+        ? null
+        : Post.fromJson((result.data['findUniquePost'] as Map).cast());
+  }
+
   Future<_i2.PrismaNullable<Post>> findFirst(
       {_i2.PrismaNullable<PostWhereInput> where,
       _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
       _i2.PrismaNullable<PostWhereUniqueInput> cursor,
       _i2.PrismaNullable<int> take,
       _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct});
+      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('findFirstPost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('cursor', cursor, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false),
+                _i2.GraphQLArg('distinct', distinct, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['findFirstPost'] == null
+        ? null
+        : Post.fromJson((result.data['findFirstPost'] as Map).cast());
+  }
+
   Future<List<Post>> findMany(
       {_i2.PrismaNullable<PostWhereInput> where,
       _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
       _i2.PrismaNullable<PostWhereUniqueInput> cursor,
       _i2.PrismaNullable<int> take,
       _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct});
+      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('findManyPost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('cursor', cursor, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false),
+                _i2.GraphQLArg('distinct', distinct, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return (result.data['findManyPost'] as List)
+        .whereType<Map>()
+        .map((Map e) => Post.fromJson(e.cast()))
+        .toList();
+  }
+
   Future<Post> create(
       {required _i2.PrismaUnion<PostCreateInput, PostUncheckedCreateInput>
-          data});
+          data}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('createOnePost',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('data', data, isRequired: true)]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return Post.fromJson((result.data['createOnePost'] as Map).cast());
+  }
+
   Future<AffectedRowsOutput> createMany(
       {required List<PostCreateManyInput> data,
-      _i2.PrismaNullable<bool> skipDuplicates});
+      _i2.PrismaNullable<bool> skipDuplicates}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('createManyPost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('data', data, isRequired: true),
+                _i2.GraphQLArg('skipDuplicates', skipDuplicates,
+                    isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AffectedRowsOutput.fromJson(
+        (result.data['createManyPost'] as Map).cast());
+  }
+
   Future<_i2.PrismaNullable<Post>> update(
       {required _i2.PrismaUnion<PostUpdateInput, PostUncheckedUpdateInput> data,
-      required PostWhereUniqueInput where});
+      required PostWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('updateOnePost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('data', data, isRequired: true),
+                _i2.GraphQLArg('where', where, isRequired: true)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['updateOnePost'] == null
+        ? null
+        : Post.fromJson((result.data['updateOnePost'] as Map).cast());
+  }
+
   Future<AffectedRowsOutput> updateMany(
       {required _i2.PrismaUnion<PostUpdateManyMutationInput,
               PostUncheckedUpdateManyInput>
           data,
-      _i2.PrismaNullable<PostWhereInput> where});
+      _i2.PrismaNullable<PostWhereInput> where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('updateManyPost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('data', data, isRequired: true),
+                _i2.GraphQLArg('where', where, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AffectedRowsOutput.fromJson(
+        (result.data['updateManyPost'] as Map).cast());
+  }
+
   Future<Post> upsert(
       {required PostWhereUniqueInput where,
       required _i2.PrismaUnion<PostCreateInput, PostUncheckedCreateInput>
           create,
       required _i2.PrismaUnion<PostUpdateInput, PostUncheckedUpdateInput>
-          update});
+          update}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('upsertOnePost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: true),
+                _i2.GraphQLArg('create', create, isRequired: true),
+                _i2.GraphQLArg('update', update, isRequired: true)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return Post.fromJson((result.data['upsertOnePost'] as Map).cast());
+  }
+
   Future<_i2.PrismaNullable<Post>> delete(
-      {required PostWhereUniqueInput where});
+      {required PostWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('deleteOnePost',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('where', where, isRequired: true)]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return result.data['deleteOnePost'] == null
+        ? null
+        : Post.fromJson((result.data['deleteOnePost'] as Map).cast());
+  }
+
   Future<AffectedRowsOutput> deleteMany(
-      {_i2.PrismaNullable<PostWhereInput> where});
+      {_i2.PrismaNullable<PostWhereInput> where}) async {
+    final String sdl = _i2.GraphQLField('mutation',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('deleteManyPost',
+              args: _i2.GraphQLArgs(
+                  [_i2.GraphQLArg('where', where, isRequired: false)]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AffectedRowsOutput.fromJson(
+        (result.data['deleteManyPost'] as Map).cast());
+  }
+
   Future<AggregatePost> aggregate(
       {_i2.PrismaNullable<PostWhereInput> where,
       _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
       _i2.PrismaNullable<PostWhereUniqueInput> cursor,
       _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip});
+      _i2.PrismaNullable<int> skip}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('aggregatePost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('cursor', cursor, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return AggregatePost.fromJson((result.data['aggregatePost'] as Map).cast());
+  }
+
   Future<List<PostGroupByOutputType>> groupBy(
       {_i2.PrismaNullable<PostWhereInput> where,
       _i2.PrismaNullable<List<PostOrderByWithAggregationInput>> orderBy,
       required List<PostScalarFieldEnum> by,
       _i2.PrismaNullable<PostScalarWhereWithAggregatesInput> having,
       _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip});
+      _i2.PrismaNullable<int> skip}) async {
+    final String sdl = _i2.GraphQLField('query',
+        fields: _i2.GraphQLFields([
+          _i2.GraphQLField('groupByPost',
+              args: _i2.GraphQLArgs([
+                _i2.GraphQLArg('where', where, isRequired: false),
+                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
+                _i2.GraphQLArg('by', by, isRequired: true),
+                _i2.GraphQLArg('having', having, isRequired: false),
+                _i2.GraphQLArg('take', take, isRequired: false),
+                _i2.GraphQLArg('skip', skip, isRequired: false)
+              ]),
+              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+                  .map((PostScalarFieldEnum e) =>
+                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+                  .toList()))
+        ])).toSdl();
+    final _i2.QueryEngineResult result =
+        await _engine.request(query: sdl, headers: _headers);
+    return (result.data['groupByPost'] as List)
+        .whereType<Map>()
+        .map((Map e) => PostGroupByOutputType.fromJson(e.cast()))
+        .toList();
+  }
 }

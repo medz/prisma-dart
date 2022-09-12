@@ -1,30 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart';
 
-// final Map<String, String> _map = {
-//   'string': 'String',
-//   'float': 'double',
-//   'decimal': 'double',
-//   'int': 'int',
-//   'bigint': 'BigInt',
-//   'boolean': 'bool',
-//   'json': 'dynamic',
-//   'bytes': 'List<int>',
-//   'unsupported': 'dynamic',
-//   'null': 'runtime.PrismaNull',
-// };
-
-// String scalar(String name) {
-//   if (_map.containsKey(name.toLowerCase())) {
-//     return _map[name.toLowerCase()].toString();
-//   }
-
-//   return name;
-// }
-
-/// ----------------------------
-/// New code
-/// ----------------------------
 final Map<String, Reference> _references = {
   'string': Reference('String'),
   'float': Reference('double'),

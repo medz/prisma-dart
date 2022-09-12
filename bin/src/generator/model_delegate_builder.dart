@@ -29,7 +29,7 @@ class ModelDelegateBuilder {
 
         // Header field.
         classBuilder.fields.add(Field((FieldBuilder fieldBuilder) {
-          fieldBuilder.name = '_header';
+          fieldBuilder.name = '_headers';
           fieldBuilder.type =
               TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
             typeReferenceBuilder.symbol = 'PrismaNullable';
@@ -57,7 +57,7 @@ class ModelDelegateBuilder {
           // Add header parameter, is optional.
           constructorBuilder.optionalParameters
               .add(Parameter((ParameterBuilder parameterBuilder) {
-            parameterBuilder.name = '_header';
+            parameterBuilder.name = '_headers';
             parameterBuilder.toThis = true;
           }));
         }));
@@ -71,10 +71,15 @@ class ModelDelegateBuilder {
           classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
             methodBuilder.returns = _findReturnType(gqlOperationName);
             methodBuilder.name = operation;
+            methodBuilder.modifier = MethodModifier.async;
 
             // Add named parameters.
             methodBuilder.optionalParameters
                 .addAll(_findParameters(gqlOperationName));
+
+            // Body of method.
+            methodBuilder.body =
+                _methodBodyBuilder(gqlOperationName, modelMapping.model);
           }));
         }
       }));
@@ -122,274 +127,175 @@ class ModelDelegateBuilder {
         ...options.dmmf.schema.outputObjectTypes.prisma,
         ...options.dmmf.schema.outputObjectTypes.model ?? [],
       ];
+
+  /// Find GraphQL operation location.
+  String _findOperationLocation(String name) {
+    final Iterable<dmmf.OutputType> query = mergedOutputObjectTypes
+        .where((element) => element.name.toLowerCase() == 'query');
+    for (final dmmf.OutputType outputType in query) {
+      for (final dmmf.SchemaField field in outputType.fields) {
+        if (field.name == name) {
+          return 'query';
+        }
+      }
+    }
+
+    final Iterable<dmmf.OutputType> mutation = mergedOutputObjectTypes
+        .where((element) => element.name.toLowerCase() == 'mutation');
+    for (final dmmf.OutputType outputType in mutation) {
+      for (final dmmf.SchemaField field in outputType.fields) {
+        if (field.name == name) {
+          return 'mutation';
+        }
+      }
+    }
+
+    throw Exception('Cannot find operation location of $name');
+  }
+
+  /// Method body builder.
+  Code _methodBodyBuilder(String name, String modelname) {
+    final dmmf.SchemaField field =
+        gqlMethods.firstWhere((element) => element.name == name);
+
+    return Block((BlockBuilder blockBuilder) {
+      final Expression args =
+          refer('GraphQLArgs', 'package:orm/orm.dart').newInstance(
+        [
+          literalList(field.args.map((element) {
+            return refer('GraphQLArg', 'package:orm/orm.dart').newInstance([
+              literalString(element.name),
+              refer(languageKeywordEncode(element.name))
+            ], {
+              'isRequired': literalBool(element.isRequired),
+            });
+          })),
+        ],
+      );
+      final Expression fields =
+          refer('GraphQLFields', 'package:orm/orm.dart').newInstance([
+        refer('${modelname}ScalarFieldEnum')
+            .property('values')
+            .property('map')
+            .call([
+              Method((MethodBuilder methodBuilder) {
+                methodBuilder.requiredParameters
+                    .add(Parameter((parameterBuilder) {
+                  parameterBuilder.name = 'e';
+                  parameterBuilder.type = refer('${modelname}ScalarFieldEnum');
+                }));
+
+                methodBuilder.body =
+                    refer('GraphQLField', 'package:orm/orm.dart').newInstance(
+                  [
+                    refer('languageKeywordDecode', 'package:orm/orm.dart')
+                        .call([
+                      refer('e').property('name'),
+                    ]),
+                  ],
+                ).code;
+
+                methodBuilder.lambda = true;
+              }).closure,
+            ])
+            .property('toList')
+            .call([]),
+      ]);
+
+      final Expression method =
+          refer('GraphQLField', 'package:orm/orm.dart').newInstance([
+        literalString(name)
+      ], {
+        'args': args,
+        'fields': fields,
+      });
+
+      final Expression rootFields =
+          refer('GraphQLFields', 'package:orm/orm.dart').newInstance([
+        literalList([method]),
+      ]);
+
+      // Build GraphQL SDL.
+      final Expression sdl = refer('GraphQLField', 'package:orm/orm.dart')
+          .newInstance([
+            literalString(_findOperationLocation(name)),
+          ], {
+            'fields': rootFields,
+          })
+          .property('toSdl')
+          .call([])
+          .assignFinal('sdl', refer('String'));
+
+      blockBuilder.addExpression(sdl);
+
+      // Build QueryEngineResult.
+      final Expression result = refer('_engine')
+          .property('request')
+          .call([], {
+            'query': refer('sdl'),
+            'headers': refer('_headers'),
+          })
+          .awaited
+          .assignFinal(
+            'result',
+            refer('QueryEngineResult', 'package:orm/orm.dart'),
+          );
+      blockBuilder.addExpression(result);
+
+      // Create return statement.
+      final Expression data =
+          refer('result').property('data').index(literalString(name));
+
+      // If field output type is List
+      if (field.outputType.isList) {
+        final Expression listReturn = data
+            .asA(TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
+              typeReferenceBuilder.symbol = 'List';
+              typeReferenceBuilder.isNullable = true;
+            }))
+            .property('whereType')
+            .call([], {}, [refer('Map')])
+            .property('map')
+            .call([
+              Method((MethodBuilder methodBuilder) {
+                methodBuilder.requiredParameters
+                    .add(Parameter((parameterBuilder) {
+                  parameterBuilder.name = 'e';
+                  parameterBuilder.type = refer('Map');
+                }));
+
+                methodBuilder.body =
+                    scalarForString(field.outputType.type, false)
+                        .newInstanceNamed('fromJson', [
+                  refer('e').property('cast').call([]),
+                ]).code;
+
+                methodBuilder.lambda = true;
+              }).closure,
+            ])
+            .property('toList')
+            .call([])
+            .returned;
+        blockBuilder.addExpression(listReturn);
+        return;
+      }
+
+      final Expression deserialize =
+          scalarForString(field.outputType.type, false)
+              .newInstanceNamed('fromJson', [
+        data.asA(refer('Map')).property('cast').call([]),
+      ]);
+
+      if (field.isNullable ?? true) {
+        final Expression nullableReturn = data
+            .equalTo(literalNull)
+            .conditional(literalNull, deserialize)
+            .returned;
+        blockBuilder.addExpression(nullableReturn);
+        return;
+      }
+
+      blockBuilder.addExpression(deserialize.returned);
+    });
+  }
 }
-
-// String modelDelegateBuilder(dmmf.Document document) {
-//   final StringBuffer code = StringBuffer();
-//   for (final dmmf.ModelMapping mapping in document.mappings.modelOperations) {
-//     final String modelname = languageKeywordEncode(mapping.model);
-//     final String classname = delegateNameBuilder(modelname);
-
-//     // Build operations.
-//     code.writeln();
-//     for (final String operation in mapping.operations) {
-//       final String? gqlOperationName =
-//           _findGqlOperationName(mapping, operation);
-//       if (gqlOperationName == null) {
-//         continue;
-//       }
-
-//       // Build operation return type.
-//       final dmmf.SchemaField field = _findField(document, gqlOperationName);
-//       code.write(_buildDartType(field.outputType, field.isNullable ?? false));
-//       code.write(' ');
-
-//       // Build operation name.
-//       code.write(languageKeywordEncode(operation));
-
-//       // Build operation arguments.
-//       code.write('(');
-//       code.write(_buildArguments(document, gqlOperationName));
-
-//       // Build operation body.
-//       code.writeln(') async {');
-//       code.writeln(_buildBody(document, gqlOperationName, modelname));
-
-//       // Build operation end.
-//       code.writeln('}');
-//       code.writeln();
-//     }
-
-//     // Build class end.
-//     code.writeln('}');
-//   }
-
-//   return code.toString();
-// }
-
-// /// Build function body.
-// String _buildBody(
-//   dmmf.Document document,
-//   String gqlOperationName,
-//   String modelname,
-// ) {
-//   final List<dmmf.SchemaArg> args =
-//       _findOperationArgs(document, gqlOperationName);
-//   final StringBuffer buffer = StringBuffer('''
-//   final String sdl = runtime.GraphQLField(
-//     '${_findLocation(document, gqlOperationName)}',
-//     fields: runtime.GraphQLFields([
-//       runtime.GraphQLField(
-//         '$gqlOperationName',
-//         args: ${_gqlArgsBuilder(args)},
-//         fields: ${_gqlFieldsBuilder(modelname)},
-//       ),
-//     ]),
-//   ).toSdl();
-
-//   final runtime.QueryEngineResult result = await _engine.request(
-//     query: sdl,
-//     headers: _headers
-//   );
-
-// ''');
-
-//   final dmmf.SchemaField field = _findField(document, gqlOperationName);
-//   final dmmf.SchemaType outputType = field.outputType;
-
-//   if (field.isNullable == true) {
-//     buffer.writeln('''
-//   if (result.data['$gqlOperationName'] == null) {
-//     return null;
-//   }
-// ''');
-//   }
-
-//   if (outputType.isList) {
-//     buffer.writeln('''
-//   return (result.data['$gqlOperationName'] as List<dynamic>)
-//     .map<${languageKeywordEncode(outputType.type)}>(
-//       (dynamic item) => ${languageKeywordEncode(outputType.type)}.fromJson(item as Map<String, dynamic>),
-//     ).toList();
-// ''');
-//     return buffer.toString();
-//   }
-
-//   buffer.writeln('''
-//   return ${languageKeywordEncode(outputType.type)}.fromJson(result.data['$gqlOperationName'] as Map<String, dynamic>);
-// ''');
-
-//   return buffer.toString();
-// }
-
-// /// GraphQL fields builder.
-// String _gqlFieldsBuilder(String modelname) {
-//   return '''
-// runtime.GraphQLFields(
-//   ${modelname}ScalarFieldEnum.values.map(
-//     (${modelname}ScalarFieldEnum element) => runtime.GraphQLField(element.name)
-//   ).toList()
-// )
-// ''';
-// }
-
-// /// GraphQL args builder.
-// String _gqlArgsBuilder(List<dmmf.SchemaArg> args) {
-//   return '''
-// runtime.GraphQLArgs([
-//   ${args.map(_gqlArgsChildBuilder).join(',')}
-// ])
-// ''';
-// }
-
-// /// GraphQL args child builder.
-// String _gqlArgsChildBuilder(dmmf.SchemaArg arg) {
-//   return '''
-// runtime.GraphQLArg(
-//   '${arg.name}',
-//   ${languageKeywordEncode(arg.name)},
-//   isRequired: ${arg.isRequired}
-// )
-// ''';
-// }
-
-// /// Find GraphQL operation location.
-// String _findLocation(dmmf.Document document, String gqlOperationName) {
-//   final dmmf.OutputType? query = _findDmmfOutputType(document, 'query');
-//   for (final dmmf.SchemaField field in query?.fields ?? []) {
-//     if (field.name == gqlOperationName) {
-//       return 'query';
-//     }
-//   }
-
-//   final dmmf.OutputType? mutation = _findDmmfOutputType(document, 'mutation');
-//   for (final dmmf.SchemaField field in mutation?.fields ?? []) {
-//     if (field.name == gqlOperationName) {
-//       return 'mutation';
-//     }
-//   }
-
-//   throw Exception('Unable to find operation location.');
-// }
-
-// /// Build arguments for operation.
-// String _buildArguments(dmmf.Document document, String gqlOperationName) {
-//   final List<dmmf.SchemaArg> args =
-//       _findOperationArgs(document, gqlOperationName);
-
-//   // If no arguments, return empty string.
-//   if (args.isEmpty) return '';
-
-//   final StringBuffer code = StringBuffer('{');
-//   for (final dmmf.SchemaArg arg in args) {
-//     // Build required symbol.
-//     if (arg.isRequired) {
-//       code.write('required ');
-//     }
-
-//     // Build argument type.
-//     code.write(fieldTypeBuilder(arg.inputTypes));
-
-//     // Build argument is nullable.
-//     if (!arg.isRequired) {
-//       code.write('?');
-//     }
-
-//     // Build argument name.
-//     code.write(' ');
-//     code.write(languageKeywordEncode(arg.name));
-//     code.write(',');
-//   }
-//   code.write('}');
-
-//   return code.toString();
-// }
-
-// /// Find operation arguments.
-// List<dmmf.SchemaArg> _findOperationArgs(
-//     dmmf.Document document, String gqlOperationName) {
-//   final dmmf.OutputType? query = _findDmmfOutputType(document, 'query');
-
-//   // Find args in query.
-//   for (final dmmf.SchemaField field in query?.fields ?? []) {
-//     if (field.name.toLowerCase() == gqlOperationName.toLowerCase()) {
-//       return field.args;
-//     }
-//   }
-
-//   // Find args in mutation.
-//   final dmmf.OutputType? mutation = _findDmmfOutputType(document, 'mutation');
-//   for (final dmmf.SchemaField field in mutation?.fields ?? []) {
-//     if (field.name.toLowerCase() == gqlOperationName.toLowerCase()) {
-//       return field.args;
-//     }
-//   }
-
-//   // Default, return empty list.
-//   return [];
-// }
-
-// // Find GraphQL operation name.
-// String? _findGqlOperationName(dmmf.ModelMapping mapping, String operation) {
-//   final Map<String, dynamic> json = mapping.toJson()
-//     ..removeWhere((key, value) => key != operation);
-
-//   if (json.isEmpty) {
-//     return null;
-//   }
-
-//   return json[operation] as String?;
-// }
-
-// /// Find output field
-// dmmf.SchemaField _findField(dmmf.Document document, String gqlOperationName) {
-//   final dmmf.OutputType? query = _findDmmfOutputType(document, 'query');
-
-//   // Find output in query.
-//   for (final dmmf.SchemaField field in query?.fields ?? []) {
-//     if (field.name.toLowerCase() == gqlOperationName.toLowerCase()) {
-//       return field;
-//     }
-//   }
-
-//   // Find output in mutation.
-//   final dmmf.OutputType? mutation = _findDmmfOutputType(document, 'mutation');
-//   for (final dmmf.SchemaField field in mutation?.fields ?? []) {
-//     if (field.name.toLowerCase() == gqlOperationName.toLowerCase()) {
-//       return field;
-//     }
-//   }
-
-//   throw Exception('Could not find output type for operation $gqlOperationName');
-// }
-
-// /// Build Dart type.
-// String _buildDartType(dmmf.SchemaType type, bool isNullable) {
-//   String dartType = objectFieldType(type);
-//   if (isNullable) {
-//     dartType += '?';
-//   }
-
-//   return 'Future<$dartType>';
-// }
-
-// /// Find GraphQL output type
-// dmmf.OutputType? _findDmmfOutputType(dmmf.Document document, String name) {
-//   final dmmf.OutputObjectTypes types = document.schema.outputObjectTypes;
-
-//   // Find input type in model namespace.
-//   for (final dmmf.OutputType type in types.model ?? []) {
-//     if (type.name.toLowerCase() == name.toLowerCase()) {
-//       return type;
-//     }
-//   }
-
-//   // Find input type in prisma namespace.
-//   for (final dmmf.OutputType type in types.prisma) {
-//     if (type.name.toLowerCase() == name.toLowerCase()) {
-//       return type;
-//     }
-//   }
-
-//   return null;
-// }
