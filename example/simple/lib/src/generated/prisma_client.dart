@@ -2,6 +2,8 @@ library prisma.client; // ignore_for_file: no_leading_underscores_for_library_pr
 
 import 'package:json_annotation/json_annotation.dart' as _i1;
 import 'package:orm/orm.dart' as _i2;
+import 'package:orm/dmmf.dart' as _i3;
+import 'package:orm/configure.dart' as _i4;
 export 'package:orm/orm.dart' show Datasource, PrismaNull, PrismaUnion;
 import 'package:json_annotation/json_annotation.dart'
     show $enumDecode, $enumDecodeNullable;
@@ -3793,5 +3795,12267 @@ class PostDelegate {
         .whereType<Map>()
         .map((Map e) => PostGroupByOutputType.fromJson(e.cast()))
         .toList();
+  }
+}
+
+final _i3.Document dmmf = _i3.Document.fromJson({
+  'datamodel': {
+    'models': [
+      {
+        'name': 'User',
+        'dbName': null,
+        'fields': [
+          {
+            'name': 'id',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': true,
+            'isReadOnly': false,
+            'hasDefaultValue': true,
+            'type': 'Int',
+            'default': {'name': 'autoincrement', 'args': []},
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'id',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': true,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'Int',
+              'default': {'name': 'autoincrement', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'name',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'String',
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'default': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'name',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'String',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'createdAt',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': true,
+            'type': 'DateTime',
+            'default': {'name': 'now', 'args': []},
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'createdAt',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'DateTime',
+              'default': {'name': 'now', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'sex',
+            'kind': 'enum',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': true,
+            'type': 'Sex',
+            'default': 'woman',
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'sex',
+              'kind': 'enum',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'Sex',
+              'default': 'woman',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'posts',
+            'kind': 'object',
+            'isList': true,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'Post',
+            'relationName': 'PostToUser',
+            'relationFromFields': [],
+            'relationToFields': [],
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'default': null,
+            'relationOnDelete': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'posts',
+              'kind': 'object',
+              'isList': true,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'Post',
+              'relationName': 'PostToUser',
+              'relationFromFields': [],
+              'relationToFields': [],
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          }
+        ],
+        'primaryKey': null,
+        'uniqueFields': [],
+        'uniqueIndexes': [],
+        'isGenerated': false,
+        'fieldsMap': null,
+        'documentation': null,
+        'extra': {
+          'name': 'User',
+          'dbName': null,
+          'fields': [
+            {
+              'name': 'id',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': true,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'Int',
+              'default': {'name': 'autoincrement', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'name',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'String',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'createdAt',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'DateTime',
+              'default': {'name': 'now', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'sex',
+              'kind': 'enum',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'Sex',
+              'default': 'woman',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'posts',
+              'kind': 'object',
+              'isList': true,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'Post',
+              'relationName': 'PostToUser',
+              'relationFromFields': [],
+              'relationToFields': [],
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          ],
+          'primaryKey': null,
+          'uniqueFields': [],
+          'uniqueIndexes': [],
+          'isGenerated': false
+        }
+      },
+      {
+        'name': 'Post',
+        'dbName': null,
+        'fields': [
+          {
+            'name': 'id',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': true,
+            'isReadOnly': false,
+            'hasDefaultValue': true,
+            'type': 'Int',
+            'default': {'name': 'autoincrement', 'args': []},
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'id',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': true,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'Int',
+              'default': {'name': 'autoincrement', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'title',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'String',
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'default': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'title',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'String',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'authorId',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': true,
+            'hasDefaultValue': false,
+            'type': 'Int',
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'default': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'authorId',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': true,
+              'hasDefaultValue': false,
+              'type': 'Int',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'content',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'String',
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'default': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'content',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'String',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'published',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'Boolean',
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'default': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'published',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'Boolean',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'created_at',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': true,
+            'type': 'DateTime',
+            'default': {'name': 'now', 'args': []},
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'created_at',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'DateTime',
+              'default': {'name': 'now', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          },
+          {
+            'name': 'author',
+            'kind': 'object',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'User',
+            'relationName': 'PostToUser',
+            'relationFromFields': ['authorId'],
+            'relationToFields': ['id'],
+            'isGenerated': false,
+            'isUpdatedAt': false,
+            'dbNames': null,
+            'default': null,
+            'relationOnDelete': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'author',
+              'kind': 'object',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'User',
+              'relationName': 'PostToUser',
+              'relationFromFields': ['authorId'],
+              'relationToFields': ['id'],
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          }
+        ],
+        'primaryKey': null,
+        'uniqueFields': [],
+        'uniqueIndexes': [],
+        'isGenerated': false,
+        'fieldsMap': null,
+        'documentation': null,
+        'extra': {
+          'name': 'Post',
+          'dbName': null,
+          'fields': [
+            {
+              'name': 'id',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': true,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'Int',
+              'default': {'name': 'autoincrement', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'title',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'String',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'authorId',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': true,
+              'hasDefaultValue': false,
+              'type': 'Int',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'content',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'String',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'published',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'Boolean',
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'created_at',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': true,
+              'type': 'DateTime',
+              'default': {'name': 'now', 'args': []},
+              'isGenerated': false,
+              'isUpdatedAt': false
+            },
+            {
+              'name': 'author',
+              'kind': 'object',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'User',
+              'relationName': 'PostToUser',
+              'relationFromFields': ['authorId'],
+              'relationToFields': ['id'],
+              'isGenerated': false,
+              'isUpdatedAt': false
+            }
+          ],
+          'primaryKey': null,
+          'uniqueFields': [],
+          'uniqueIndexes': [],
+          'isGenerated': false
+        }
+      }
+    ],
+    'enums': [
+      {
+        'name': 'Sex',
+        'values': [
+          {'name': 'man', 'dbName': null},
+          {'name': 'woman', 'dbName': null}
+        ],
+        'dbName': null,
+        'documentation': null
+      }
+    ],
+    'types': []
+  },
+  'schema': {
+    'rootQueryType': null,
+    'rootMutationType': null,
+    'inputObjectTypes': {
+      'model': null,
+      'prisma': [
+        {
+          'name': 'UserWhereInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'AND',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'OR',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'NOT',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'EnumSexFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'posts',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostListRelationFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserOrderByWithRelationInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'posts',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostOrderByRelationAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserWhereUniqueInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserOrderByWithAggregationInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCountOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_avg',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserAvgOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserMaxOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserMinOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_sum',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserSumOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserScalarWhereWithAggregatesInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'AND',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'UserScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'OR',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'UserScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'NOT',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'UserScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTimeWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'EnumSexWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostWhereInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'AND',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'OR',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'NOT',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'BoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'author',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserRelationFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostOrderByWithRelationInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'author',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserOrderByWithRelationInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostWhereUniqueInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostOrderByWithAggregationInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCountOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_avg',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostAvgOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostMaxOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostMinOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_sum',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostSumOrderByAggregateInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostScalarWhereWithAggregatesInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'AND',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'OR',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'NOT',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereWithAggregatesInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'BoolWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTimeWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCreateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'posts',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateNestedManyWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUncheckedCreateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'posts',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedCreateNestedManyWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUpdateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'EnumSexFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'posts',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateManyWithoutAuthorNestedInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUncheckedUpdateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'EnumSexFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'posts',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedUpdateManyWithoutAuthorNestedInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCreateManyInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUpdateManyMutationInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'EnumSexFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUncheckedUpdateManyInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'EnumSexFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCreateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'author',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCreateNestedOneWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedCreateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUpdateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'BoolFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'author',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserUpdateOneRequiredWithoutPostsNestedInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedUpdateInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'BoolFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCreateManyInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUpdateManyMutationInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'BoolFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedUpdateManyInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'BoolFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'IntFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'StringFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'contains',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'startsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'endsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'mode',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'QueryMode',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedStringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'DateTimeFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'EnumSexFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostListRelationFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'every',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'some',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'none',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostOrderByRelationAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCountOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserAvgOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserMaxOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserMinOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserSumOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'IntWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedIntWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_avg',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedFloatFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_sum',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'StringWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'contains',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'startsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'endsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'mode',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'QueryMode',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedStringWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedStringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedStringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'DateTimeWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'EnumSexWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'BoolFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedBoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserRelationFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'is',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'isNot',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCountOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostAvgOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostMaxOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostMinOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostSumOrderByAggregateInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'SortOrder',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'BoolWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedBoolWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedBoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedBoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCreateNestedManyWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connectOrCreate',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateManyAuthorInputEnvelope',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedCreateNestedManyWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connectOrCreate',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateManyAuthorInputEnvelope',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'StringFieldUpdateOperationsInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'set',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'DateTimeFieldUpdateOperationsInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'set',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'EnumSexFieldUpdateOperationsInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'set',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUpdateManyWithoutAuthorNestedInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connectOrCreate',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'upsert',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateManyAuthorInputEnvelope',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'set',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'disconnect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'delete',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'update',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'updateMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'deleteMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'IntFieldUpdateOperationsInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'set',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'increment',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'decrement',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'multiply',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'divide',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedUpdateManyWithoutAuthorNestedInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connectOrCreate',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostCreateOrConnectWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'upsert',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateManyAuthorInputEnvelope',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'set',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'disconnect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'delete',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'update',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'updateMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'deleteMany',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCreateNestedOneWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'UserUncheckedCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connectOrCreate',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCreateOrConnectWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'BoolFieldUpdateOperationsInput',
+          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'fields': [
+            {
+              'name': 'set',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUpdateOneRequiredWithoutPostsNestedInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'UserUncheckedCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connectOrCreate',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCreateOrConnectWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'upsert',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserUpsertWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'connect',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'update',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserUpdateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'UserUncheckedUpdateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedIntFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedStringFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'contains',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'startsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'endsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedStringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedDateTimeFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedEnumSexFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedIntWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedIntWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_avg',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedFloatFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_sum',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedFloatFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Float',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedFloatFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedStringWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'contains',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'startsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'endsWith',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedStringWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedStringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedStringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedDateTimeWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'lte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'gte',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedDateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedEnumSexWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'in',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'notIn',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedEnumSexFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedBoolFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedBoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'NestedBoolWithAggregatesFilter',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'equals',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'not',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'NestedBoolWithAggregatesFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_count',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedIntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_min',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedBoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': '_max',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'NestedBoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCreateWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedCreateWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCreateOrConnectWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'where',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCreateManyAuthorInputEnvelope',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'data',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'PostCreateManyAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'skipDuplicates',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'where',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'update',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedUpdateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedCreateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'where',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'data',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedUpdateWithoutAuthorInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUpdateManyWithWhereWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'where',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'data',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostUpdateManyMutationInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'PostUncheckedUpdateManyWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostScalarWhereInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'AND',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'OR',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'NOT',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': true,
+                  'type': 'PostScalarWhereInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'authorId',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'IntFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'StringFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'BoolFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTimeFilter',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCreateWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUncheckedCreateWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCreateOrConnectWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'where',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserWhereUniqueInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'UserUncheckedCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUpsertWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'update',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserUpdateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'UserUncheckedUpdateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'create',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'UserCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                },
+                {
+                  'isList': false,
+                  'type': 'UserUncheckedCreateWithoutPostsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUpdateWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'EnumSexFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserUncheckedUpdateWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'sex',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Sex',
+                  'location': 'enumTypes',
+                  'namespace': 'model'
+                },
+                {
+                  'isList': false,
+                  'type': 'EnumSexFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCreateManyAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUpdateWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'BoolFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedUpdateWithoutAuthorInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'BoolFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostUncheckedUpdateManyWithoutPostsInput',
+          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Int',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'IntFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'title',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'content',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'StringFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'published',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'Boolean',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'BoolFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            },
+            {
+              'name': 'created_at',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null
+                },
+                {
+                  'isList': false,
+                  'type': 'DateTimeFieldUpdateOperationsInput',
+                  'location': 'inputObjectTypes',
+                  'namespace': 'prisma'
+                }
+              ],
+              'deprecation': null
+            }
+          ],
+          'fieldMap': null
+        }
+      ]
+    },
+    'outputObjectTypes': {
+      'model': [
+        {
+          'name': 'User',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'name',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createdAt',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'sex',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Sex',
+                'location': 'enumTypes',
+                'namespace': 'model'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'posts',
+              'isNullable': true,
+              'outputType': {
+                'isList': true,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'cursor',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'distinct',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_count',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'UserCountOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'Post',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'title',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'authorId',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'content',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'published',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Boolean',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'created_at',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'author',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        }
+      ],
+      'prisma': [
+        {
+          'name': 'Query',
+          'fields': [
+            {
+              'name': 'findFirstUser',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'cursor',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'distinct',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'findManyUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': true,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'cursor',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'distinct',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'aggregateUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AggregateUser',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'cursor',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'groupByUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': true,
+                'type': 'UserGroupByOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserOrderByWithAggregationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserOrderByWithAggregationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'by',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'having',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserScalarWhereWithAggregatesInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'findUniqueUser',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'findFirstPost',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'cursor',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'distinct',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'findManyPost',
+              'isNullable': false,
+              'outputType': {
+                'isList': true,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'cursor',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'distinct',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'aggregatePost',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AggregatePost',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostOrderByWithRelationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'cursor',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'groupByPost',
+              'isNullable': false,
+              'outputType': {
+                'isList': true,
+                'type': 'PostGroupByOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'orderBy',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostOrderByWithAggregationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostOrderByWithAggregationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'by',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostScalarFieldEnum',
+                      'location': 'enumTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'having',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostScalarWhereWithAggregatesInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'take',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skip',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Int',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'findUniquePost',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'Mutation',
+          'fields': [
+            {
+              'name': 'createOneUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserUncheckedCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'upsertOneUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'create',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserUncheckedCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'update',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserUncheckedUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createManyUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AffectedRowsOutput',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserCreateManyInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skipDuplicates',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Boolean',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'deleteOneUser',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'updateOneUser',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'User',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserUncheckedUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'updateManyUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AffectedRowsOutput',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserUpdateManyMutationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'UserUncheckedUpdateManyInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'deleteManyUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AffectedRowsOutput',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'UserWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createOnePost',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostUncheckedCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'upsertOnePost',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'create',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostUncheckedCreateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'update',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostUncheckedUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createManyPost',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AffectedRowsOutput',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'PostCreateManyInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'skipDuplicates',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Boolean',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'deleteOnePost',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'updateOnePost',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Post',
+                'location': 'outputObjectTypes',
+                'namespace': 'model'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostUncheckedUpdateInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereUniqueInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'updateManyPost',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AffectedRowsOutput',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostUpdateManyMutationInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    },
+                    {
+                      'isList': false,
+                      'type': 'PostUncheckedUpdateManyInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'deleteManyPost',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AffectedRowsOutput',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [
+                {
+                  'name': 'where',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'PostWhereInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma'
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'executeRaw',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Json',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [
+                {
+                  'name': 'query',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'String',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'parameters',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Json',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'queryRaw',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Json',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [
+                {
+                  'name': 'query',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'String',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                },
+                {
+                  'name': 'parameters',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Json',
+                      'location': 'scalar',
+                      'namespace': null
+                    }
+                  ],
+                  'deprecation': null
+                }
+              ],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'AggregateUser',
+          'fields': [
+            {
+              'name': '_count',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserCountAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_avg',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserAvgAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_sum',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserSumAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_min',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserMinAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_max',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserMaxAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserGroupByOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'name',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createdAt',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'sex',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Sex',
+                'location': 'enumTypes',
+                'namespace': 'model'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_count',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserCountAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_avg',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserAvgAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_sum',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserSumAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_min',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserMinAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_max',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'UserMaxAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'AggregatePost',
+          'fields': [
+            {
+              'name': '_count',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostCountAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_avg',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostAvgAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_sum',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostSumAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_min',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostMinAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_max',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostMaxAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostGroupByOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'title',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'authorId',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'content',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'published',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Boolean',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'created_at',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_count',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostCountAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_avg',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostAvgAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_sum',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostSumAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_min',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostMinAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_max',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'PostMaxAggregateOutputType',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'AffectedRowsOutput',
+          'fields': [
+            {
+              'name': 'count',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCountOutputType',
+          'fields': [
+            {
+              'name': 'posts',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserCountAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'name',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createdAt',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'sex',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_all',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserAvgAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Float',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserSumAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserMinAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'name',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createdAt',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'sex',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Sex',
+                'location': 'enumTypes',
+                'namespace': 'model'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'UserMaxAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'name',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'createdAt',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'sex',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Sex',
+                'location': 'enumTypes',
+                'namespace': 'model'
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostCountAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'title',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'authorId',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'content',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'published',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'created_at',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': '_all',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostAvgAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Float',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'authorId',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Float',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostSumAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'authorId',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostMinAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'title',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'authorId',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'content',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'published',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Boolean',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'created_at',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        },
+        {
+          'name': 'PostMaxAggregateOutputType',
+          'fields': [
+            {
+              'name': 'id',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'title',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'authorId',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Int',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'content',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'String',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'published',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'Boolean',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            },
+            {
+              'name': 'created_at',
+              'isNullable': true,
+              'outputType': {
+                'isList': false,
+                'type': 'DateTime',
+                'location': 'scalar',
+                'namespace': null
+              },
+              'args': [],
+              'deprecation': null,
+              'documentation': null
+            }
+          ],
+          'fieldMap': null
+        }
+      ]
+    },
+    'enumTypes': {
+      'model': [
+        {
+          'name': 'Sex',
+          'values': ['man', 'woman']
+        }
+      ],
+      'prisma': [
+        {
+          'name': 'PostScalarFieldEnum',
+          'values': [
+            'id',
+            'title',
+            'authorId',
+            'content',
+            'published',
+            'created_at'
+          ]
+        },
+        {
+          'name': 'QueryMode',
+          'values': ['default', 'insensitive']
+        },
+        {
+          'name': 'SortOrder',
+          'values': ['asc', 'desc']
+        },
+        {
+          'name': 'TransactionIsolationLevel',
+          'values': [
+            'ReadUncommitted',
+            'ReadCommitted',
+            'RepeatableRead',
+            'Serializable'
+          ]
+        },
+        {
+          'name': 'UserScalarFieldEnum',
+          'values': ['id', 'name', 'createdAt', 'sex']
+        }
+      ]
+    }
+  },
+  'mappings': {
+    'modelOperations': [
+      {
+        'model': 'User',
+        'findUnique': 'findUniqueUser',
+        'findFirst': 'findFirstUser',
+        'findMany': 'findManyUser',
+        'create': 'createOneUser',
+        'createMany': 'createManyUser',
+        'update': 'updateOneUser',
+        'updateMany': 'updateManyUser',
+        'upsert': 'upsertOneUser',
+        'delete': 'deleteOneUser',
+        'deleteMany': 'deleteManyUser',
+        'aggregate': 'aggregateUser',
+        'groupBy': 'groupByUser',
+        'findRaw': null,
+        'aggregateRaw': null
+      },
+      {
+        'model': 'Post',
+        'findUnique': 'findUniquePost',
+        'findFirst': 'findFirstPost',
+        'findMany': 'findManyPost',
+        'create': 'createOnePost',
+        'createMany': 'createManyPost',
+        'update': 'updateOnePost',
+        'updateMany': 'updateManyPost',
+        'upsert': 'upsertOnePost',
+        'delete': 'deleteOnePost',
+        'deleteMany': 'deleteManyPost',
+        'aggregate': 'aggregatePost',
+        'groupBy': 'groupByPost',
+        'findRaw': null,
+        'aggregateRaw': null
+      }
+    ],
+    'otherOperations': {
+      'read': [],
+      'write': ['executeRaw', 'queryRaw']
+    }
+  }
+});
+const String schema =
+    'generator client {\n  provider        = "prisma-client-dart"\n  output          = "../lib/src/generated"\n  previewFeatures = ["interactiveTransactions"]\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\nenum Sex {\n  man\n  woman\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  sex Sex @default(woman)\n  posts     Post[]\n}\n\nmodel Post {\n  id         Int      @id @default(autoincrement())\n  title      String\n  authorId   Int\n  content    String\n  published  Boolean\n  created_at DateTime @default(now())\n  author     User     @relation(fields: [authorId], references: [id])\n}\n';
+const String _executable =
+    r'/Users/seven/workspace/prisma/example/simple/.dart_tool/prisma/query-engine';
+
+class Datasources {
+  Datasources({this.db});
+
+  final _i2.PrismaNullable<_i2.Datasource> db;
+
+  Map<String, _i2.Datasource> _toOverwrites() {
+    final $overwrites = <String, _i2.PrismaNullable<_i2.Datasource>>{'db': db}
+      ..removeWhere((_, v) => v == null);
+    return $overwrites.cast();
+  }
+}
+
+class PrismaClient {
+  const PrismaClient._(this._engine, [this._headers]);
+
+  factory PrismaClient({_i2.PrismaNullable<Datasources> datasources}) {
+    final _i2.Engine engine = _i2.BinaryEngine(
+        datasources: datasources?._toOverwrites() ?? <String, _i2.Datasource>{},
+        dmmf: dmmf,
+        schema: schema,
+        executable: _executable,
+        environment: _i4.environment.all);
+    return PrismaClient._(engine, null);
+  }
+
+  final _i2.Engine _engine;
+
+  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _headers;
+
+  UserDelegate get user => UserDelegate._(_engine, _headers);
+  PostDelegate get post => PostDelegate._(_engine, _headers);
+
+  /// Connect to the database.
+  Future<void> $connect() => _engine.start();
+
+  /// Disconnect from the database.
+  Future<void> $disconnect() => _engine.stop();
+  Future<T> $transaction<T>(Future<T> Function(PrismaClient) fn,
+      [_i2.TransactionOptions? options]) async {
+    if (_headers?.transactionId != null) return fn(this);
+    final _i2.TransactionHeaders headers = _i2.TransactionHeaders();
+    final _i2.TransactionInfo info =
+        await _engine.startTransaction(headers: headers);
+    try {
+      final T result = await fn(PrismaClient._(
+          _engine, _i2.QueryEngineRequestHeaders(transactionId: info.id)));
+      await _engine.commitTransaction(headers: headers, info: info);
+      return result;
+    } catch (e) {
+      await _engine.rollbackTransaction(headers: headers, info: info);
+      rethrow;
+    }
   }
 }

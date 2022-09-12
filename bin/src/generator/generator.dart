@@ -6,6 +6,7 @@ import 'package:orm/generator_helper.dart';
 import 'package:path/path.dart';
 
 import '../utils/find_project.dart';
+import 'client_builder.dart';
 import 'generator_options.dart';
 import 'model_delegate_builder.dart';
 import 'schema_builder.dart';
@@ -90,6 +91,9 @@ ${'//'.padRight(80, '*')} \n
 
     // Build model delegates.
     ModelDelegateBuilder(options, updates).build();
+
+    // Build prisma client.
+    ClientBuilder(options, updates).build();
   });
   final DartEmitter emitter = DartEmitter.scoped();
   final StringSink sink = library.accept(emitter);

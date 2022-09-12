@@ -11,7 +11,6 @@ import '../../dmmf/dmmf.dart' as dmmf;
 import '../../runtime/datasource.dart';
 import '../common/errors/prisma_client_initialization_error.dart';
 import '../common/errors/prisma_client_known_request_error.dart';
-import '../common/errors/prisma_client_rust_panic_error.dart';
 import '../common/errors/prisma_client_unknown_request_error.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
@@ -126,6 +125,15 @@ class BinaryEngine extends unimplemented.BinaryEngine {
       if (executable.existsSync()) {
         return executable.path;
       }
+
+      // Search executable in search directories.
+      for (final String directory in searchDirectories) {
+        final executable =
+            File(path.join(directory, path.basename(super.executable!)));
+        if (executable.existsSync()) {
+          return executable.path;
+        }
+      }
     }
 
     // Find query engine in enviroment.
@@ -133,6 +141,15 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     if (forEnvirnoment != null && forEnvirnoment.isNotEmpty) {
       if (File(forEnvirnoment).existsSync()) {
         return forEnvirnoment;
+      }
+
+      // Search executable in search directories.
+      for (final String directory in searchDirectories) {
+        final executable =
+            File(path.join(directory, path.basename(forEnvirnoment)));
+        if (executable.existsSync()) {
+          return executable.path;
+        }
       }
     }
 

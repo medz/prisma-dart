@@ -1,174 +1,409 @@
-import 'dart:convert';
-
-import 'package:orm/dmmf.dart' as dmmf;
-import 'package:orm/generator_helper.dart' as helper;
+import 'package:code_builder/code_builder.dart';
 import 'package:orm/orm.dart' as runtime;
 
 import 'generator_options.dart';
-import 'model_delegate_builder.dart' show delegateNameBuilder;
+import 'model_delegate_builder.dart';
 
-String clientBuilder(GeneratorOptions options) {
-  return '''
-/// Prisma schema DMMF json string.
-const String _dmmfStr = r'${json.encode(options.dmmf.toJson())}';
+class ClientBuilder {
+  final GeneratorOptions options;
+  final LibraryBuilder library;
 
-/// Prisma schema DMMF.
-final dmmf.Document _dmmf = dmmf.Document.fromJson(convert.json.decode(_dmmfStr));
+  const ClientBuilder(this.options, this.library);
 
-/// Prisma query engine executable.
-const String _executable = '${options.executable}';
-
-/// Prisma schema as string.
-final String _schema = ${json.encode(options.schema)};
-
-${_datasourcesBuilder(options.datasources)}
-
-/// Prisma client.
-class PrismaClient {
-  final runtime.Engine _engine;
-  final runtime.QueryEngineRequestHeaders? _headers;
-
-  const PrismaClient._(this._engine, this._headers);
-
-  factory PrismaClient({
-    Datasources? datasources,
-  }) {
-
-    final runtime.Engine engine = runtime.BinaryEngine(
-      datasources: datasources?.toOverwrites() ?? const <String, runtime.Datasource> {},
-      dmmf: _dmmf,
-      schema: _schema,
-      environment: configure.environment.all,
-      executable: _executable,
-    );
-
-    return PrismaClient._(engine, null);
-  }
-
-  /// Connect client to database.
-  Future<void> \$connect() => _engine.start();
-
-  /// Disconnect client from database.
-  Future<void> \$disconnect() => _engine.stop();
-
-  /// Start transaction.
-  /// 
-  /// Example:
-  /// ```dart
-  /// final User user = await prisma.\$transaction((PrismaClient prisma) async {
-  ///   final User user = await prisma.user.create(...);
-  ///   final Post post = await prisma.post.create(...);
-  /// 
-  ///   return user;
-  /// });
-  /// ```
-  Future<T> \$transaction<T>(Future<T> Function(PrismaClient) handler) async {
-    // If current client is already in transaction, use it.
-    if (_headers?.transactionId != null) return handler(this);
-
-    // Create transcation common headers.
-    final runtime.TransactionHeaders headers = runtime.TransactionHeaders();
-
-    // Request transaction info, Start transaction.
-    final runtime.TransactionInfo info = await _engine.startTransaction(
-      headers: headers
-    );
-
-    // Create new client with transaction headers.
-    final PrismaClient transactionClient = PrismaClient._(
-      _engine,
-      runtime.QueryEngineRequestHeaders(transactionId: info.id),
-    );
-
-    try {
-      return handler(transactionClient).then<T>((T value) async {
-        await _engine.commitTransaction(
-          headers: headers,
-          info: info
-        );
-
-        return value;
-      });
-    } catch (e) {
-      await _engine.rollbackTransaction(
-        headers: headers,
-        info: info
+  /// Build prisma client
+  void build() {
+    library.body.add(Block((BlockBuilder blockBuilder) {
+      // Build dmmf block.
+      blockBuilder.addExpression(
+        refer('Document', 'package:orm/dmmf.dart')
+            .property('fromJson')
+            .call([literalMap(options.dmmf.toJson())]).assignFinal(
+          'dmmf',
+          refer('Document', 'package:orm/dmmf.dart'),
+        ),
       );
-      rethrow;
+
+      // Build schema block.
+      blockBuilder.addExpression(
+        literalString(options.schema).assignConst('schema', refer('String')),
+      );
+
+      // Build query engine executable.
+      if (!options.dataProxy) {
+        blockBuilder.addExpression(
+          literalString(options.executable, raw: true)
+              .assignConst('_executable', refer('String')),
+        );
+      }
+    }));
+
+    // Build data source
+    library.body.add(Class((ClassBuilder classBuilder) {
+      classBuilder.name = 'Datasources';
+      classBuilder.fields.addAll(options.datasources.map((element) {
+        return Field((FieldBuilder fieldBuilder) {
+          fieldBuilder.name = runtime.languageKeywordEncode(element.name);
+          fieldBuilder.type = TypeReference((TypeReferenceBuilder builder) {
+            builder.symbol = 'PrismaNullable';
+            builder.url = 'package:orm/orm.dart';
+            builder.types.add(refer('Datasource', 'package:orm/orm.dart'));
+          });
+          fieldBuilder.modifier = FieldModifier.final$;
+        });
+      }));
+      classBuilder.constructors
+          .add(Constructor((ConstructorBuilder constructorBuilder) {
+        constructorBuilder.optionalParameters
+            .addAll(options.datasources.map((element) {
+          return Parameter((ParameterBuilder parameterBuilder) {
+            parameterBuilder.name = runtime.languageKeywordEncode(element.name);
+            parameterBuilder.toThis = true;
+            parameterBuilder.named = true;
+            parameterBuilder.required = false;
+          });
+        }));
+        classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
+          methodBuilder.name = '_toOverwrites';
+          methodBuilder.returns =
+              TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
+            typeReferenceBuilder.symbol = 'Map';
+            typeReferenceBuilder.types.addAll([
+              refer('String'),
+              refer('Datasource', 'package:orm/orm.dart'),
+            ]);
+          });
+          methodBuilder.body = Block((BlockBuilder blockBuilder) {
+            blockBuilder.addExpression(
+              literalMap(
+                options.datasources.asMap().map((key, value) {
+                  return MapEntry(
+                    value.name,
+                    refer(runtime.languageKeywordEncode(value.name)),
+                  );
+                }),
+                refer('String'),
+                TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
+                  typeReferenceBuilder.symbol = 'PrismaNullable';
+                  typeReferenceBuilder.url = 'package:orm/orm.dart';
+                  typeReferenceBuilder.types
+                      .add(refer('Datasource', 'package:orm/orm.dart'));
+                }),
+              ).cascade('removeWhere').call([
+                Method((MethodBuilder methodBuilder) {
+                  methodBuilder.requiredParameters
+                      .add(Parameter((ParameterBuilder parameterBuilder) {
+                    parameterBuilder.name = '_';
+                  }));
+                  methodBuilder.requiredParameters
+                      .add(Parameter((ParameterBuilder parameterBuilder) {
+                    parameterBuilder.name = 'v';
+                  }));
+                  methodBuilder.body = refer('v').equalTo(literalNull).code;
+                }).closure,
+              ]).assignFinal(r'$overwrites'),
+            );
+            blockBuilder.addExpression(
+              refer(r'$overwrites').property('cast').call([]).returned,
+            );
+          });
+        }));
+      }));
+    }));
+
+    // Build prisma client class
+    library.body.add(Class((ClassBuilder classBuilder) {
+      classBuilder.name = 'PrismaClient';
+
+      // Engine field.
+      classBuilder.fields.add(Field((FieldBuilder fieldBuilder) {
+        fieldBuilder.name = '_engine';
+        fieldBuilder.type = refer('Engine', 'package:orm/orm.dart');
+        fieldBuilder.modifier = FieldModifier.final$;
+      }));
+
+      // headers field.
+      classBuilder.fields.add(Field((FieldBuilder fieldBuilder) {
+        fieldBuilder.name = '_headers';
+        fieldBuilder.type = TypeReference((TypeReferenceBuilder builder) {
+          builder.symbol = 'PrismaNullable';
+          builder.url = 'package:orm/orm.dart';
+          builder.types
+              .add(refer('QueryEngineRequestHeaders', 'package:orm/orm.dart'));
+        });
+        fieldBuilder.modifier = FieldModifier.final$;
+      }));
+
+      // Create internal constructor.
+      classBuilder.constructors
+          .add(Constructor((ConstructorBuilder constructorBuilder) {
+        constructorBuilder.name = '_';
+        constructorBuilder.constant = true;
+
+        // Add engine parameter.
+        constructorBuilder.requiredParameters
+            .add(Parameter((ParameterBuilder parameterBuilder) {
+          parameterBuilder.name = '_engine';
+          parameterBuilder.toThis = true;
+        }));
+
+        // Add headers parameter.
+        constructorBuilder.optionalParameters
+            .add(Parameter((ParameterBuilder parameterBuilder) {
+          parameterBuilder.name = '_headers';
+          parameterBuilder.toThis = true;
+        }));
+      }));
+
+      // Create public constructor
+      classBuilder.constructors
+          .add(Constructor((ConstructorBuilder constructorBuilder) {
+        constructorBuilder.name = null; // Default constructor.
+        constructorBuilder.factory = true;
+
+        // Add constructor parameter.
+        constructorBuilder.optionalParameters
+            .add(Parameter((ParameterBuilder parameterBuilder) {
+          parameterBuilder.name = 'datasources';
+          parameterBuilder.named = true;
+          parameterBuilder.type =
+              TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
+            typeReferenceBuilder.symbol = 'PrismaNullable';
+            typeReferenceBuilder.url = 'package:orm/orm.dart';
+            typeReferenceBuilder.types.add(refer('Datasources'));
+          });
+        }));
+
+        // Create public constructor body.
+        constructorBuilder.body = Block((BlockBuilder blockBuilder) {
+          // Create a engine.
+          blockBuilder.addExpression(_createEngineInstance()
+              .assignFinal('engine', refer('Engine', 'package:orm/orm.dart')));
+
+          // Return a [this] instance.
+          blockBuilder
+              .addExpression(refer(classBuilder.name!).newInstanceNamed('_', [
+            refer('engine'),
+            literalNull,
+          ]).returned);
+        });
+      }));
+
+      // Create model delegates.
+      for (final String modelname
+          in options.dmmf.mappings.modelOperations.map((e) => e.model)) {
+        classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
+          methodBuilder.name =
+              _firstLetterLowercase(runtime.languageKeywordEncode(modelname));
+          methodBuilder.returns = refer(modelDelegateClassname(modelname));
+          methodBuilder.type = MethodType.getter;
+          methodBuilder.body =
+              refer(modelDelegateClassname(modelname)).newInstanceNamed('_', [
+            refer('_engine'),
+            refer('_headers'),
+          ]).code;
+          methodBuilder.lambda = true;
+        }));
+      }
+
+      // Create `$connect` method.
+      classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
+        methodBuilder.name = r'$connect';
+        methodBuilder.returns =
+            TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
+          typeReferenceBuilder.symbol = 'Future';
+          typeReferenceBuilder.types.add(refer('void'));
+        });
+        methodBuilder.lambda = true;
+        methodBuilder.body = refer('_engine').property('start').call([]).code;
+        methodBuilder.docs.add('/// Connect to the database.');
+      }));
+
+      // Create `$disconnect` method.
+      classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
+        methodBuilder.name = r'$disconnect';
+        methodBuilder.returns =
+            TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
+          typeReferenceBuilder.symbol = 'Future';
+          typeReferenceBuilder.types.add(refer('void'));
+        });
+        methodBuilder.lambda = true;
+        methodBuilder.body = refer('_engine').property('stop').call([]).code;
+        methodBuilder.docs.add('/// Disconnect from the database.');
+      }));
+
+      // create `$transaction` method.
+      classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
+        // Generic type.
+        final Reference genericType = refer('T');
+
+        methodBuilder.types.add(genericType);
+        methodBuilder.name = r'$transaction';
+        methodBuilder.returns =
+            TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
+          typeReferenceBuilder.symbol = 'Future';
+          typeReferenceBuilder.types.add(genericType);
+        });
+
+        // Add required parameter.
+        methodBuilder.requiredParameters
+            .add(Parameter((ParameterBuilder parameterBuilder) {
+          parameterBuilder.name = 'fn';
+          parameterBuilder.types.add(genericType);
+          parameterBuilder.type =
+              FunctionType((FunctionTypeBuilder functionTypeBuilder) {
+            functionTypeBuilder.returnType = methodBuilder.returns;
+            functionTypeBuilder.requiredParameters
+                .add(refer(classBuilder.name!));
+          });
+        }));
+
+        // add optional parameter.
+        methodBuilder.optionalParameters
+            .add(Parameter((ParameterBuilder parameterBuilder) {
+          parameterBuilder.name = 'options';
+          parameterBuilder.type =
+              refer('TransactionOptions?', 'package:orm/orm.dart');
+        }));
+
+        // The method is async.
+        methodBuilder.modifier = MethodModifier.async;
+
+        // Create method body.
+        methodBuilder.body = Block((BlockBuilder blockBuilder) {
+          blockBuilder.addExpression(CodeExpression(
+            Code(r'if (_headers?.transactionId != null) return fn(this)'),
+          ));
+          // Create a transaction header.
+          blockBuilder.addExpression(
+              refer('TransactionHeaders', 'package:orm/orm.dart')
+                  .newInstance([]).assignFinal('headers',
+                      refer('TransactionHeaders', 'package:orm/orm.dart')));
+          // Create a transaction.
+          blockBuilder.addExpression(
+            refer('_engine')
+                .property('startTransaction')
+                .call([], {
+                  'headers': refer('headers'),
+                })
+                .awaited
+                .assignFinal(
+                    'info', refer('TransactionInfo', 'package:orm/orm.dart')),
+          );
+
+          // Add a try catch block.
+          blockBuilder.statements.add(Code(r'try {'));
+          // blockBuilder.addExpression(CodeExpression(Code(r'try { null')));
+          blockBuilder.addExpression(
+            refer('fn')
+                .call([
+                  refer(classBuilder.name!).newInstanceNamed('_', [
+                    refer('_engine'),
+                    refer('QueryEngineRequestHeaders', 'package:orm/orm.dart')
+                        .newInstance([], {
+                      'transactionId': refer('info').property('id'),
+                    }),
+                  ]),
+                ])
+                .awaited
+                .assignFinal('result', genericType),
+          );
+          blockBuilder.addExpression(
+            refer('_engine').property('commitTransaction').call([], {
+              'headers': refer('headers'),
+              'info': refer('info'),
+            }).awaited,
+          );
+          blockBuilder.addExpression(refer('result').returned);
+          blockBuilder.statements.add(Code(r'} catch (e) {'));
+          blockBuilder.addExpression(
+            refer('_engine').property('rollbackTransaction').call([], {
+              'headers': refer('headers'),
+              'info': refer('info'),
+            }).awaited,
+          );
+          blockBuilder.addExpression(refer('rethrow'));
+          blockBuilder.statements.add(Code(r'}'));
+        });
+      }));
+    }));
+  }
+
+  /// Create engine instance.
+  Expression _createEngineInstance() {
+    if (options.dataProxy) {
+      // TODO: Implement data proxy.
     }
+
+    return _createBinaryEngineInstance();
   }
 
-  ${_modelDelegateGetters(options.dmmf.mappings.modelOperations)}
-}
-''';
-}
-
-/// Data sources builder.
-String _datasourcesBuilder(List<helper.DataSource> datasources) {
-  return '''
-class Datasources {
-  ${_datasourcesFieldsBuilder(datasources)}
-
-  ${_datasourcesConstructorBuilder(datasources)}
-
-  ${_datasourcesToOverwritesBuilder(datasources)}
-}
-''';
-}
-
-/// Data sources to overwrite builder.
-String _datasourcesToOverwritesBuilder(List<helper.DataSource> datasources) {
-  return '''
-Map<String, runtime.Datasource> toOverwrites() => <String, runtime.Datasource>{
-  ${datasources.map((ds) {
-    return '''
-      if (${runtime.languageKeywordEncode(ds.name)} != null)
-        '${ds.name}': ${runtime.languageKeywordEncode(ds.name)}!
-    ''';
-  }).join(',')}
-};
-''';
-}
-
-/// Data sources constructor builder.
-String _datasourcesConstructorBuilder(List<helper.DataSource> datasources) {
-  return '''
-  const Datasources({
-    ${datasources.map((ds) => 'this.${runtime.languageKeywordEncode(ds.name)}').join(',\n')}
-  });
-''';
-}
-
-/// Data sources fields builder.
-String _datasourcesFieldsBuilder(List<helper.DataSource> datasources) {
-  final StringBuffer buffer = StringBuffer();
-  for (final helper.DataSource datasource in datasources) {
-    runtime.languageKeywordEncode(datasource.name);
-    buffer.writeln(
-        'final runtime.Datasource? ${runtime.languageKeywordEncode(datasource.name)};');
-    buffer.writeln();
+  /// Create binary engine instance.
+  Expression _createBinaryEngineInstance() {
+    return refer('BinaryEngine', 'package:orm/orm.dart').newInstance([], {
+      'datasources': refer('datasources')
+          .nullSafeProperty('_toOverwrites')
+          .call([]).ifNullThen(literalMap({}, refer('String'),
+              refer('Datasource', 'package:orm/orm.dart'))),
+      'dmmf': refer('dmmf'),
+      'schema': refer('schema'),
+      'executable': refer('_executable'),
+      'environment':
+          refer('environment', 'package:orm/configure.dart').property('all'),
+    });
   }
-
-  return buffer.toString();
 }
 
-/// Returns model delegate getters.
-String _modelDelegateGetters(List<dmmf.ModelMapping> mappings) {
-  final StringBuffer buffer = StringBuffer();
-  for (final dmmf.ModelMapping mapping in mappings) {
-    final String name = runtime.languageKeywordEncode(mapping.model);
-    final String delegateName = delegateNameBuilder(name);
-    buffer.writeln('/// $name model delegate.');
-    buffer.writeln('''
-$delegateName get ${_firstLetterLowercase(name)} => $delegateName(
-  engine: _engine,
-  headers: _headers
-);
-''');
-    buffer.writeln();
-  }
-  return buffer.toString();
-}
+//   /// Start transaction.
+//   ///
+//   /// Example:
+//   /// ```dart
+//   /// final User user = await prisma.\$transaction((PrismaClient prisma) async {
+//   ///   final User user = await prisma.user.create(...);
+//   ///   final Post post = await prisma.post.create(...);
+//   ///
+//   ///   return user;
+//   /// });
+//   /// ```
+//   Future<T> \$transaction<T>(Future<T> Function(PrismaClient) handler) async {
+//     // If current client is already in transaction, use it.
+//     if (_headers?.transactionId != null) return handler(this);
+
+//     // Create transcation common headers.
+//     final runtime.TransactionHeaders headers = runtime.TransactionHeaders();
+
+//     // Request transaction info, Start transaction.
+//     final runtime.TransactionInfo info = await _engine.startTransaction(
+//       headers: headers
+//     );
+
+//     // Create new client with transaction headers.
+//     final PrismaClient transactionClient = PrismaClient._(
+//       _engine,
+//       runtime.QueryEngineRequestHeaders(transactionId: info.id),
+//     );
+
+//     try {
+//       return handler(transactionClient).then<T>((T value) async {
+//         await _engine.commitTransaction(
+//           headers: headers,
+//           info: info
+//         );
+
+//         return value;
+//       });
+//     } catch (e) {
+//       await _engine.rollbackTransaction(
+//         headers: headers,
+//         info: info
+//       );
+//       rethrow;
+//     }
+//   }
+
+//   ${_modelDelegateGetters(options.dmmf.mappings.modelOperations)}
+// }
+// ''';
+// }
 
 /// First letter of [name] is lowercased.
 String _firstLetterLowercase(String name) {

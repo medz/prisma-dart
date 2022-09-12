@@ -6,6 +6,8 @@ import 'generator_options.dart';
 import 'utils/scalar.dart';
 import 'utils/schema_type.dart';
 
+String modelDelegateClassname(String model) => '${model}Delegate';
+
 class ModelDelegateBuilder {
   final GeneratorOptions options;
   final LibraryBuilder library;
@@ -18,7 +20,7 @@ class ModelDelegateBuilder {
         in options.dmmf.mappings.modelOperations) {
       library.body.add(Class((ClassBuilder classBuilder) {
         // Delegate class name.
-        classBuilder.name = '${modelMapping.model}Delegate';
+        classBuilder.name = modelDelegateClassname(modelMapping.model);
 
         // Engine field.
         classBuilder.fields.add(Field((FieldBuilder fieldBuilder) {
