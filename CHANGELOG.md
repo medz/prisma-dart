@@ -47,9 +47,27 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
   clientVersion: 2.1.2
 ```
 
+### `$transaction` options
+
+`prisma.$transaction` now supports the following options:
+```dart
+final prisma = PrismaClient();
+await prisma.$transaction((prisma) async {
+   // ...
+}, TransactionOptions(
+   maxWait: 2000,
+   timeout: 5000,
+   isolationLevel: TransactionIsolationLevel.ReadUncommitted,
+));
+```
+
+More details 👉 [Interactive transactions](https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions-in-preview)
+
 ### Bug fixes
 
 1. Fixed `packageVersion` not updating with version
+2. Fixed binary query engine not automatically searching when `executable` is specified
+2. Fixed binary query engine not automatically searching when specifying `PRISMA_QUERY_ENGINE_BINARY` environment variable
 
 ### Engines version
 
