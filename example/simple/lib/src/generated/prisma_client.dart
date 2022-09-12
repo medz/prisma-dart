@@ -1,7 +1,10 @@
-// ignore_for_file: no_leading_underscores_for_library_prefixes
+library prisma.client; // ignore_for_file: no_leading_underscores_for_library_prefixes
+
 import 'package:json_annotation/json_annotation.dart' as _i1;
 import 'package:orm/orm.dart' as _i2;
 export 'package:orm/orm.dart' show Datasource, PrismaNull, PrismaUnion;
+import 'package:json_annotation/json_annotation.dart'
+    show $enumDecode, $enumDecodeNullable;
 export 'package:orm/orm.dart' show TransactionIsolationLevel;
 
 part 'prisma_client.g.dart';
@@ -3209,4 +3212,128 @@ class Post implements _i2.JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() => _$PostToJson(this);
+}
+
+class UserDelegate {
+  const UserDelegate._(this._engine, [this._header]);
+
+  final _i2.Engine _engine;
+
+  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _header;
+
+  Future<_i2.PrismaNullable<User>> findUnique(
+      {required UserWhereUniqueInput where});
+  Future<_i2.PrismaNullable<User>> findFirst(
+      {_i2.PrismaNullable<UserWhereInput> where,
+      _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+      _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip,
+      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct});
+  Future<List<User>> findMany(
+      {_i2.PrismaNullable<UserWhereInput> where,
+      _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+      _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip,
+      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct});
+  Future<User> create(
+      {required _i2.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
+          data});
+  Future<AffectedRowsOutput> createMany(
+      {required List<UserCreateManyInput> data,
+      _i2.PrismaNullable<bool> skipDuplicates});
+  Future<_i2.PrismaNullable<User>> update(
+      {required _i2.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput> data,
+      required UserWhereUniqueInput where});
+  Future<AffectedRowsOutput> updateMany(
+      {required _i2.PrismaUnion<UserUpdateManyMutationInput,
+              UserUncheckedUpdateManyInput>
+          data,
+      _i2.PrismaNullable<UserWhereInput> where});
+  Future<User> upsert(
+      {required UserWhereUniqueInput where,
+      required _i2.PrismaUnion<UserCreateInput, UserUncheckedCreateInput>
+          create,
+      required _i2.PrismaUnion<UserUpdateInput, UserUncheckedUpdateInput>
+          update});
+  Future<_i2.PrismaNullable<User>> delete(
+      {required UserWhereUniqueInput where});
+  Future<AffectedRowsOutput> deleteMany(
+      {_i2.PrismaNullable<UserWhereInput> where});
+  Future<AggregateUser> aggregate(
+      {_i2.PrismaNullable<UserWhereInput> where,
+      _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+      _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip});
+  Future<List<UserGroupByOutputType>> groupBy(
+      {_i2.PrismaNullable<UserWhereInput> where,
+      _i2.PrismaNullable<List<UserOrderByWithAggregationInput>> orderBy,
+      required List<UserScalarFieldEnum> by,
+      _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> having,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip});
+}
+
+class PostDelegate {
+  const PostDelegate._(this._engine, [this._header]);
+
+  final _i2.Engine _engine;
+
+  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _header;
+
+  Future<_i2.PrismaNullable<Post>> findUnique(
+      {required PostWhereUniqueInput where});
+  Future<_i2.PrismaNullable<Post>> findFirst(
+      {_i2.PrismaNullable<PostWhereInput> where,
+      _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
+      _i2.PrismaNullable<PostWhereUniqueInput> cursor,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip,
+      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct});
+  Future<List<Post>> findMany(
+      {_i2.PrismaNullable<PostWhereInput> where,
+      _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
+      _i2.PrismaNullable<PostWhereUniqueInput> cursor,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip,
+      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct});
+  Future<Post> create(
+      {required _i2.PrismaUnion<PostCreateInput, PostUncheckedCreateInput>
+          data});
+  Future<AffectedRowsOutput> createMany(
+      {required List<PostCreateManyInput> data,
+      _i2.PrismaNullable<bool> skipDuplicates});
+  Future<_i2.PrismaNullable<Post>> update(
+      {required _i2.PrismaUnion<PostUpdateInput, PostUncheckedUpdateInput> data,
+      required PostWhereUniqueInput where});
+  Future<AffectedRowsOutput> updateMany(
+      {required _i2.PrismaUnion<PostUpdateManyMutationInput,
+              PostUncheckedUpdateManyInput>
+          data,
+      _i2.PrismaNullable<PostWhereInput> where});
+  Future<Post> upsert(
+      {required PostWhereUniqueInput where,
+      required _i2.PrismaUnion<PostCreateInput, PostUncheckedCreateInput>
+          create,
+      required _i2.PrismaUnion<PostUpdateInput, PostUncheckedUpdateInput>
+          update});
+  Future<_i2.PrismaNullable<Post>> delete(
+      {required PostWhereUniqueInput where});
+  Future<AffectedRowsOutput> deleteMany(
+      {_i2.PrismaNullable<PostWhereInput> where});
+  Future<AggregatePost> aggregate(
+      {_i2.PrismaNullable<PostWhereInput> where,
+      _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
+      _i2.PrismaNullable<PostWhereUniqueInput> cursor,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip});
+  Future<List<PostGroupByOutputType>> groupBy(
+      {_i2.PrismaNullable<PostWhereInput> where,
+      _i2.PrismaNullable<List<PostOrderByWithAggregationInput>> orderBy,
+      required List<PostScalarFieldEnum> by,
+      _i2.PrismaNullable<PostScalarWhereWithAggregatesInput> having,
+      _i2.PrismaNullable<int> take,
+      _i2.PrismaNullable<int> skip});
 }

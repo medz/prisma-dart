@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'prisma_client.dart';
+part of prisma.client;
 
 // **************************************************************************
 // JsonSerializableGenerator

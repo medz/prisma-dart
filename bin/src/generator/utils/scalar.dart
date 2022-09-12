@@ -60,6 +60,8 @@ TypeReference scalarForString(String name, [bool isNullable = false]) {
 
 TypeReference scalar(SchemaType schemaType, [bool isNullable = false]) {
   if (isNullable) {
+    // See https://github.com/dart-lang/code_builder/issues/315
+    // If the issue is fixed, then PrismaNullable can be removed.
     return TypeReference((TypeReferenceBuilder updates) {
       updates.symbol = 'PrismaNullable';
       updates.url = 'package:orm/orm.dart';

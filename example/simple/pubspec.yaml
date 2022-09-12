@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   faker: ^2.0.0
+  json_annotation: ^4.6.0
   orm: any
 
 dev_dependencies:

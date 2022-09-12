@@ -80,12 +80,6 @@ class _OutputObjectTypesBuilder {
               },
             ));
 
-            // builder.body = code_builder.TypeReference(
-            //         '_\$${languageKeywordEncode(type.name)}FromJson')
-            //     .newInstance([
-            //   code_builder.Reference('this'),
-            // ]);
-
             builder.body = code_builder.Code(
                 '_\$${languageKeywordEncode(type.name)}FromJson(json)');
             builder.lambda = true;
