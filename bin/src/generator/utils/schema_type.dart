@@ -1,16 +1,17 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart';
 
-import 'object_field_type.dart';
+import 'scalar.dart';
 
-Reference schemaTypeResolver(List<SchemaType> types) {
+Reference schemaTypeResolver(List<SchemaType> types,
+    [bool isNullable = false]) {
   if (types.length == 1) {
-    return Reference(objectFieldType(types.first));
+    return scalar(types.first, isNullable);
   }
 
   final Set<SchemaType> uniqueTypes = Set.from(types);
   if (uniqueTypes.length == 1) {
-    return Reference(objectFieldType(uniqueTypes.first));
+    return scalar(uniqueTypes.first, isNullable);
   }
 
   final Iterable<SchemaType> twoTypes = uniqueTypes.take(2);
@@ -18,11 +19,22 @@ Reference schemaTypeResolver(List<SchemaType> types) {
   // Find is list type.
   final Iterable<SchemaType> listTypes = twoTypes.where((type) => type.isList);
   if (listTypes.isNotEmpty) {
-    return Reference(objectFieldType(listTypes.first));
+    return scalar(listTypes.first, isNullable);
   }
 
-  return Reference(
-    'PrismaUnion<${objectFieldType(twoTypes.first)}, ${objectFieldType(twoTypes.last)}>',
-    'package:orm/orm.dart',
-  );
+  final TypeReference reference = TypeReference((TypeReferenceBuilder updates) {
+    updates.symbol = 'PrismaUnion';
+    updates.url = 'package:orm/orm.dart';
+    updates.types.addAll(types.map((type) => scalar(type)));
+  });
+
+  if (isNullable) {
+    return TypeReference((TypeReferenceBuilder updates) {
+      updates.symbol = 'PrismaNullable';
+      updates.url = 'package:orm/orm.dart';
+      updates.types.add(reference);
+    });
+  }
+
+  return reference;
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
@@ -7,13 +6,7 @@ import 'package:orm/generator_helper.dart';
 import 'package:path/path.dart';
 
 import '../utils/find_project.dart';
-import 'client_builder.dart';
-import 'dart_style_ignore_builder.dart';
-import 'exports_builder.dart';
 import 'generator_options.dart';
-import 'imports_generator.dart';
-import 'model_delegate_builder.dart';
-import 'schema/schema_generator.dart';
 import 'schema_builder.dart';
 
 /// Resolve output.
@@ -46,15 +39,18 @@ File _getGeneratedFile(GeneratorOptions options) {
 final List<String> _ignores = [
   'constant_identifier_names',
   'non_constant_identifier_names',
+  'depend_on_referenced_packages',
 ]..sort();
 
 /// Run Dart client generator
 Future<void> generator(GeneratorOptions options) async {
-  final Library library = Library((LibraryBuilder updates) {
-    updates.name = 'prisma.client';
+  // Get output file.
+  final File output = _getGeneratedFile(options);
 
+  final Library library = Library((LibraryBuilder updates) {
     // Add header comment.
     updates.body.add(Code('''\n
+part '${basenameWithoutExtension(output.path)}.g.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 //
 // ignore_for_file: ${_ignores.join(', ')}
@@ -65,7 +61,7 @@ ${'//'.padRight(80, '*')}
 ${'//'.padRight(80, '*')} \n
 '''));
 
-    // Export
+    // Exports
     updates.directives.add(Directive.export(
       'package:orm/orm.dart',
       show: [
@@ -82,9 +78,6 @@ ${'//'.padRight(80, '*')} \n
   final StringSink sink = library.accept(emitter);
   final DartFormatter formatter = DartFormatter();
   final String formatted = formatter.format(sink.toString());
-
-  // Get output file.
-  final File output = _getGeneratedFile(options);
 
   // Write to file.
   output.writeAsStringSync(formatted);
