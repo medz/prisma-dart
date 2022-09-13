@@ -1,6 +1,6 @@
-## {next}
+## 2.1.3
 
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20Prisma%20ORM%20for%20Dart%20release%20v{next}🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/{next}) about the release. 🌟
+🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.1.3🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.1.3) about the release. 🌟
 
 ### Major improvements:
 
@@ -47,9 +47,27 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
   clientVersion: 2.1.2
 ```
 
+### `$transaction` options
+
+`prisma.$transaction` now supports the following options:
+```dart
+final prisma = PrismaClient();
+await prisma.$transaction((prisma) async {
+   // ...
+}, TransactionOptions(
+   maxWait: 2000,
+   timeout: 5000,
+   isolationLevel: TransactionIsolationLevel.ReadUncommitted,
+));
+```
+
+More details 👉 [Interactive transactions](https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions-in-preview)
+
 ### Bug fixes
 
 1. Fixed `packageVersion` not updating with version
+2. Fixed binary query engine not automatically searching when `executable` is specified
+2. Fixed binary query engine not automatically searching when specifying `PRISMA_QUERY_ENGINE_BINARY` environment variable
 
 ### Engines version
 

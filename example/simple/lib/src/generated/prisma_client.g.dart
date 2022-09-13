@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'prisma_client.dart';
+part of prisma.client;
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,6 +8,10 @@ part of 'prisma_client.dart';
 
 AggregateUser _$AggregateUserFromJson(Map<String, dynamic> json) =>
     AggregateUser(
+      $count: json['_count'] == null
+          ? null
+          : UserCountAggregateOutputType.fromJson(
+              json['_count'] as Map<String, dynamic>),
       $avg: json['_avg'] == null
           ? null
           : UserAvgAggregateOutputType.fromJson(
@@ -28,6 +32,7 @@ AggregateUser _$AggregateUserFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$AggregateUserToJson(AggregateUser instance) =>
     <String, dynamic>{
+      '_count': instance.$count?.toJson(),
       '_avg': instance.$avg?.toJson(),
       '_sum': instance.$sum?.toJson(),
       '_min': instance.$min?.toJson(),
@@ -40,6 +45,11 @@ UserGroupByOutputType _$UserGroupByOutputTypeFromJson(
       id: json['id'] as int,
       name: json['name'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      sex: $enumDecode(_$SexEnumMap, json['sex']),
+      $count: json['_count'] == null
+          ? null
+          : UserCountAggregateOutputType.fromJson(
+              json['_count'] as Map<String, dynamic>),
       $avg: json['_avg'] == null
           ? null
           : UserAvgAggregateOutputType.fromJson(
@@ -64,14 +74,25 @@ Map<String, dynamic> _$UserGroupByOutputTypeToJson(
       'id': instance.id,
       'name': instance.name,
       'createdAt': instance.createdAt.toIso8601String(),
+      'sex': _$SexEnumMap[instance.sex]!,
+      '_count': instance.$count?.toJson(),
       '_avg': instance.$avg?.toJson(),
       '_sum': instance.$sum?.toJson(),
       '_min': instance.$min?.toJson(),
       '_max': instance.$max?.toJson(),
     };
 
+const _$SexEnumMap = {
+  Sex.man: 'man',
+  Sex.woman: 'woman',
+};
+
 AggregatePost _$AggregatePostFromJson(Map<String, dynamic> json) =>
     AggregatePost(
+      $count: json['_count'] == null
+          ? null
+          : PostCountAggregateOutputType.fromJson(
+              json['_count'] as Map<String, dynamic>),
       $avg: json['_avg'] == null
           ? null
           : PostAvgAggregateOutputType.fromJson(
@@ -92,6 +113,7 @@ AggregatePost _$AggregatePostFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$AggregatePostToJson(AggregatePost instance) =>
     <String, dynamic>{
+      '_count': instance.$count?.toJson(),
       '_avg': instance.$avg?.toJson(),
       '_sum': instance.$sum?.toJson(),
       '_min': instance.$min?.toJson(),
@@ -107,6 +129,10 @@ PostGroupByOutputType _$PostGroupByOutputTypeFromJson(
       content: json['content'] as String,
       published: json['published'] as bool,
       created_at: DateTime.parse(json['created_at'] as String),
+      $count: json['_count'] == null
+          ? null
+          : PostCountAggregateOutputType.fromJson(
+              json['_count'] as Map<String, dynamic>),
       $avg: json['_avg'] == null
           ? null
           : PostAvgAggregateOutputType.fromJson(
@@ -134,6 +160,7 @@ Map<String, dynamic> _$PostGroupByOutputTypeToJson(
       'content': instance.content,
       'published': instance.published,
       'created_at': instance.created_at.toIso8601String(),
+      '_count': instance.$count?.toJson(),
       '_avg': instance.$avg?.toJson(),
       '_sum': instance.$sum?.toJson(),
       '_min': instance.$min?.toJson(),
@@ -167,6 +194,7 @@ UserCountAggregateOutputType _$UserCountAggregateOutputTypeFromJson(
       id: json['id'] as int,
       name: json['name'] as int,
       createdAt: json['createdAt'] as int,
+      sex: json['sex'] as int,
       $all: json['_all'] as int,
     );
 
@@ -176,6 +204,7 @@ Map<String, dynamic> _$UserCountAggregateOutputTypeToJson(
       'id': instance.id,
       'name': instance.name,
       'createdAt': instance.createdAt,
+      'sex': instance.sex,
       '_all': instance.$all,
     };
 
@@ -211,6 +240,7 @@ UserMinAggregateOutputType _$UserMinAggregateOutputTypeFromJson(
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
+      sex: $enumDecodeNullable(_$SexEnumMap, json['sex']),
     );
 
 Map<String, dynamic> _$UserMinAggregateOutputTypeToJson(
@@ -219,6 +249,7 @@ Map<String, dynamic> _$UserMinAggregateOutputTypeToJson(
       'id': instance.id,
       'name': instance.name,
       'createdAt': instance.createdAt?.toIso8601String(),
+      'sex': _$SexEnumMap[instance.sex],
     };
 
 UserMaxAggregateOutputType _$UserMaxAggregateOutputTypeFromJson(
@@ -229,6 +260,7 @@ UserMaxAggregateOutputType _$UserMaxAggregateOutputTypeFromJson(
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
+      sex: $enumDecodeNullable(_$SexEnumMap, json['sex']),
     );
 
 Map<String, dynamic> _$UserMaxAggregateOutputTypeToJson(
@@ -237,6 +269,7 @@ Map<String, dynamic> _$UserMaxAggregateOutputTypeToJson(
       'id': instance.id,
       'name': instance.name,
       'createdAt': instance.createdAt?.toIso8601String(),
+      'sex': _$SexEnumMap[instance.sex],
     };
 
 PostCountAggregateOutputType _$PostCountAggregateOutputTypeFromJson(
@@ -343,16 +376,14 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       id: json['id'] as int,
       name: json['name'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      posts: (json['posts'] as List<dynamic>?)
-          ?.map((e) => Post.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      sex: $enumDecode(_$SexEnumMap, json['sex']),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'createdAt': instance.createdAt.toIso8601String(),
-      'posts': instance.posts?.map((e) => e.toJson()).toList(),
+      'sex': _$SexEnumMap[instance.sex]!,
     };
 
 Post _$PostFromJson(Map<String, dynamic> json) => Post(
@@ -362,9 +393,6 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       content: json['content'] as String,
       published: json['published'] as bool,
       created_at: DateTime.parse(json['created_at'] as String),
-      author: json['author'] == null
-          ? null
-          : User.fromJson(json['author'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
@@ -374,5 +402,4 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'content': instance.content,
       'published': instance.published,
       'created_at': instance.created_at.toIso8601String(),
-      'author': instance.author?.toJson(),
     };

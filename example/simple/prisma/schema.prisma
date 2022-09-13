@@ -9,10 +9,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Sex {
+  man
+  woman
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now())
+  sex Sex @default(woman)
   posts     Post[]
 }
 
