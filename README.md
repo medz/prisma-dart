@@ -16,7 +16,7 @@ Prisma is a **next-generation ORM** that consists of these tools:
 
 ## Getting started
 
-> **Prerequisites**: Dart SDK `>=2.17.6 <3.0.0`
+> **Prerequisites**: Dart SDK `>=2.18.0 <3.0.0`
 
 ### 1. Create Dart project and setup Prisma
 
