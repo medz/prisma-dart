@@ -1,0 +1,14 @@
+name: analyze
+on: [push, pull_request]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1.3
+      - name: Install dependencies
+        run: dart pub get
+      - name: Analyze bin
+        run: dart analyze

@@ -3683,7 +3683,7 @@ class PostDelegate {
   }
 }
 
-final _i3.Document dmmf = _i3.Document.fromJson({
+final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   'datamodel': {
     'models': [
       {

@@ -15,24 +15,25 @@ class ClientBuilder {
     library.body.add(Block((BlockBuilder blockBuilder) {
       // Build dmmf block.
       blockBuilder.addExpression(
-        refer('Document', 'package:orm/dmmf.dart')
-            .property('fromJson')
-            .call([literalMap(options.dmmf.toJson())]).assignFinal(
-          'dmmf',
-          refer('Document', 'package:orm/dmmf.dart'),
-        ),
+        declareFinal('dmmf', type: refer('Document', 'package:orm/dmmf.dart'))
+            .assign(refer('Document', 'package:orm/dmmf.dart')
+                .property('fromJson')
+                .call([
+          literalMap(options.dmmf.toJson(), refer('String'), refer('dynamic'))
+        ])),
       );
 
       // Build schema block.
       blockBuilder.addExpression(
-        literalString(options.schema).assignConst('schema', refer('String')),
+        declareConst('schema', type: refer('String'))
+            .assign(literalString(options.schema)),
       );
 
       // Build query engine executable.
       if (!options.dataProxy) {
         blockBuilder.addExpression(
-          literalString(options.executable, raw: true)
-              .assignConst('_executable', refer('String')),
+          declareConst('_executable', type: refer('String'))
+              .assign(literalString(options.executable, raw: true)),
         );
       }
     }));
