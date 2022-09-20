@@ -18,7 +18,7 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now())
-  sex Sex @default(woman)
+  sex       Sex      @default(woman)
   posts     Post[]
 }
 

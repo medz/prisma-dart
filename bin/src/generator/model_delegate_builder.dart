@@ -3,10 +3,12 @@ import 'package:orm/dmmf.dart' as dmmf;
 import 'package:orm/orm.dart' show languageKeywordEncode;
 
 import 'generator_options.dart';
+import 'utils/dart_style.dart';
 import 'utils/scalar.dart';
 import 'utils/schema_type.dart';
 
-String modelDelegateClassname(String model) => '${model}Delegate';
+String modelDelegateClassname(String model) =>
+    '${dartClassnameFixer(model)}Delegate';
 
 class ModelDelegateBuilder {
   final GeneratorOptions options;
@@ -176,7 +178,7 @@ class ModelDelegateBuilder {
       );
       final Expression fields =
           refer('GraphQLFields', 'package:orm/orm.dart').newInstance([
-        refer('${modelname}ScalarFieldEnum')
+        refer('${dartClassnameFixer(modelname)}ScalarFieldEnum')
             .property('values')
             .property('map')
             .call([
@@ -184,7 +186,8 @@ class ModelDelegateBuilder {
                 methodBuilder.requiredParameters
                     .add(Parameter((parameterBuilder) {
                   parameterBuilder.name = 'e';
-                  parameterBuilder.type = refer('${modelname}ScalarFieldEnum');
+                  parameterBuilder.type =
+                      refer('${dartClassnameFixer(modelname)}ScalarFieldEnum');
                 }));
 
                 methodBuilder.body =
@@ -269,9 +272,10 @@ class ModelDelegateBuilder {
                   parameterBuilder.type = refer('Map');
                 }));
 
-                methodBuilder.body =
-                    scalarForString(field.outputType.type, false)
-                        .newInstanceNamed('fromJson', [
+                methodBuilder.body = scalarForString(
+                  dartClassnameFixer(field.outputType.type),
+                  false,
+                ).newInstanceNamed('fromJson', [
                   refer('e').property('cast').call([]),
                 ]).code;
 
@@ -285,9 +289,10 @@ class ModelDelegateBuilder {
         return;
       }
 
-      final Expression deserialize =
-          scalarForString(field.outputType.type, false)
-              .newInstanceNamed('fromJson', [
+      final Expression deserialize = scalarForString(
+        dartClassnameFixer(field.outputType.type),
+        false,
+      ).newInstanceNamed('fromJson', [
         data.asA(refer('Map')).property('cast').call([]),
       ]);
 

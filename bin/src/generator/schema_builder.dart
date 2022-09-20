@@ -3,6 +3,7 @@ import 'package:orm/dmmf.dart' as dmmf;
 import 'package:orm/src/runtime/language_keyword.dart';
 
 import 'generator_options.dart';
+import 'utils/dart_style.dart';
 import 'utils/scalar.dart';
 import 'utils/schema_type.dart';
 
@@ -60,7 +61,7 @@ class _OutputObjectTypesBuilder {
             },
           ),
         );
-        builder.name = languageKeywordEncode(type.name);
+        builder.name = dartClassnameFixer(type.name);
         builder.implements.add(
             code_builder.Reference('JsonSerializable', 'package:orm/orm.dart'));
 
@@ -81,7 +82,7 @@ class _OutputObjectTypesBuilder {
             ));
 
             builder.body = code_builder.Code(
-                '_\$${languageKeywordEncode(type.name)}FromJson(json)');
+                '_\$${dartClassnameFixer(type.name)}FromJson(json)');
             builder.lambda = true;
 
             builder.factory = true;
@@ -93,7 +94,7 @@ class _OutputObjectTypesBuilder {
             builder.name = 'toJson';
             builder.returns = code_builder.Reference('Map<String, dynamic>');
             builder.body = code_builder.Code(
-                '_\$${languageKeywordEncode(type.name)}ToJson(this)');
+                '_\$${dartClassnameFixer(type.name)}ToJson(this)');
             builder.lambda = true;
             builder.annotations.add(code_builder.Reference('override'));
           },
@@ -188,7 +189,7 @@ class _InputObjectTypesBuilder {
   void _buildInputTypes(List<dmmf.InputType> inputs) {
     for (final dmmf.InputType input in inputs) {
       library.body.add(code_builder.Class((code_builder.ClassBuilder updates) {
-        updates.name = languageKeywordEncode(input.name);
+        updates.name = dartClassnameFixer(input.name);
         updates.implements.add(
             code_builder.Reference('JsonSerializable', 'package:orm/orm.dart'));
 
@@ -302,12 +303,8 @@ class _EnumBuilder {
       }
 
       library.body.add(code_builder.Enum((code_builder.EnumBuilder updates) {
-        updates.name = languageKeywordEncode(element.name);
+        updates.name = dartClassnameFixer(element.name);
         updates.values.addAll(element.values.map(_buildEnumValue));
-        // updates.annotations.add(code_builder.TypeReference((updates) {
-        //   updates.symbol = 'JsonEnum';
-        //   updates.url = 'package:json_annotation/json_annotation.dart';
-        // }).newInstance([]));
       }));
     }
   }
