@@ -23,6 +23,10 @@ final User user = await prisma.user.create(
 
 - Nullable fields generating broken field implementations - [#23](https://github.com/odroe/prisma-dart/issues/23)
 
+### Features:
+
+- Add `precache` command, Populate the Prisma engines cache of binary artifacts.
+
 ## 2.1.3
 
 🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.1.3🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.1.3) about the release. 🌟
