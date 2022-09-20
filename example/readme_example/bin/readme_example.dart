@@ -11,7 +11,7 @@ void main() async {
       create: UserCreateInput(email: email),
       update: UserUpdateInput(
         name: NullableStringFieldUpdateOperationsInput(
-          set$: PrismaUnion.one(prismaNull),
+          set$: PrismaUnion.one(PrismaNull()),
         ),
       ),
     );
@@ -19,7 +19,7 @@ void main() async {
     final List<User> nullableUsers = await prisma.user.findMany(
       where: UserWhereInput(
         name: StringNullableFilter(
-          equals: PrismaUnion.one(prismaNull),
+          equals: PrismaUnion.one(PrismaNull()),
         ),
       ),
     );
