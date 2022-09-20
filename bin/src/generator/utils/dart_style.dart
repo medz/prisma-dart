@@ -5,11 +5,21 @@ import 'package:orm/src/runtime/language_keyword.dart';
 /// Example:
 /// a -> A
 /// _a -> $A
-/// a_ -> A$
+/// a_ -> A_
 String dartClassnameFixer(String name) {
   final String fixed = languageKeywordEncode(name);
 
-  if (fixed.length == 1) return name.toUpperCase();
+  return _charToUpperCase(fixed, 0);
+}
 
-  return fixed[0].toUpperCase() + fixed.substring(1);
+String _charToUpperCase(String name, int index) {
+  if (name.length == 1) return name.toUpperCase();
+
+  if (RegExp(r'[a-zA-Z]').hasMatch(name[index])) {
+    return name[index].toUpperCase() + name.substring(index + 1);
+  } else if ((index + 1) >= name.length) {
+    return name;
+  }
+
+  return name[index] + _charToUpperCase(name, index + 1);
 }
