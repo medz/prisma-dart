@@ -94,7 +94,8 @@ datasource db {
 
 // Generator
 generator client {
-  provider = "prisma-client-dart"
+  provider        = "prisma-client-dart"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 // Data model

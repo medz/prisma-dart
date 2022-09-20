@@ -3,3 +3,5 @@ class PrismaNull {
 }
 
 typedef PrismaNullable<T> = T?;
+
+const PrismaNull prismaNull = PrismaNull();
