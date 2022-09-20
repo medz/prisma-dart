@@ -16945,7 +16945,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   },
 });
 const String schema =
-    'generator client {\n  provider        = "prisma-client-dart"\n  output          = "../lib/src/generated"\n  previewFeatures = ["interactiveTransactions"]\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\nenum Sex {\n  man\n  woman\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  sex Sex @default(woman)\n  posts     Post[]\n}\n\nmodel Post {\n  id         Int      @id @default(autoincrement())\n  title      String\n  authorId   Int\n  content    String\n  published  Boolean\n  created_at DateTime @default(now())\n  author     User     @relation(fields: [authorId], references: [id])\n}\n';
+    'generator client {\n  provider        = "prisma-client-dart"\n  output          = "../lib/src/generated"\n  previewFeatures = ["interactiveTransactions"]\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\nenum Sex {\n  man\n  woman\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  sex       Sex      @default(woman)\n  posts     Post[]\n}\n\nmodel Post {\n  id         Int      @id @default(autoincrement())\n  title      String\n  authorId   Int\n  content    String\n  published  Boolean\n  created_at DateTime @default(now())\n  author     User     @relation(fields: [authorId], references: [id])\n}\n';
 const String _executable =
     r'/Users/seven/workspace/prisma/example/simple/.dart_tool/prisma/query-engine';
 

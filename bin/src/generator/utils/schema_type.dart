@@ -3,8 +3,10 @@ import 'package:orm/dmmf.dart';
 
 import 'scalar.dart';
 
-Reference schemaTypeResolver(List<SchemaType> types,
-    [bool isNullable = false]) {
+Reference schemaTypeResolver(
+  Iterable<SchemaType> types, [
+  bool isNullable = false,
+]) {
   if (types.length == 1) {
     return scalar(types.first, isNullable);
   }
