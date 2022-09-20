@@ -9,6 +9,7 @@ import 'src/commands/db/db_command.dart';
 import 'src/commands/format_command.dart';
 import 'src/commands/generate_command.dart';
 import 'src/commands/init_command.dart';
+import 'src/commands/precache_command.dart';
 
 /// The Prisma CLI executable name.
 const String _executableName = r'dart run orm';
@@ -32,6 +33,7 @@ void main(List<String> args) async {
   runner.addCommand(FormatCommand());
   runner.addCommand(DbCommand());
   runner.addCommand(GenerateCommand());
+  runner.addCommand(PrecacheCommand());
 
   // Get command result.
   final ArgResults results = runner.parse(args);
