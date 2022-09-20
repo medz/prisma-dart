@@ -1,4 +1,3 @@
-import 'package:orm/orm.dart';
 import 'package:readme_example/readme_example.dart';
 
 void main() async {
