@@ -14,6 +14,15 @@ Reference schemaTypeResolver(List<SchemaType> types,
     return scalar(uniqueTypes.first, isNullable);
   }
 
+  // If include `location` is inputObjectTypes. return single inputObjectType
+  if (uniqueTypes
+      .any((element) => element.location == FieldLocation.inputObjectTypes)) {
+    final type = uniqueTypes.firstWhere(
+        (element) => element.location == FieldLocation.inputObjectTypes);
+
+    return scalar(type, isNullable);
+  }
+
   final Iterable<SchemaType> twoTypes = uniqueTypes.take(2);
 
   // Find is list type.
@@ -25,7 +34,7 @@ Reference schemaTypeResolver(List<SchemaType> types,
   final TypeReference reference = TypeReference((TypeReferenceBuilder updates) {
     updates.symbol = 'PrismaUnion';
     updates.url = 'package:orm/orm.dart';
-    updates.types.addAll(types.map((type) => scalar(type)));
+    updates.types.addAll(twoTypes.map((type) => scalar(type)));
   });
 
   if (isNullable) {
