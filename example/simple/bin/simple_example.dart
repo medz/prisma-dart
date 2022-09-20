@@ -7,9 +7,7 @@ final PrismaClient prisma = PrismaClient();
 void main(List<String> args) async {
   try {
     final User user = await prisma.user.create(
-      data: PrismaUnion.zero(
-        UserCreateInput(name: Faker().person.name()),
-      ),
+      data: UserCreateInput(name: Faker().person.name()),
     );
 
     print(user.toJson());
