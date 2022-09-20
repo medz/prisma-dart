@@ -12,7 +12,7 @@ Prisma is a **next-generation ORM** that consists of these tools:
 - **Prisma Query Engine** - Prisma query engines wrapper:
   1. **Binary Engine** - Only for Dart Native.
   2. **Dynamic Library Engine** - Supported for Dart Native and Flutter Native. `❌ Waiting`
-  3. **Prisma Data Proxy Engint** - Supported all platforms. `❌ Waiting`
+  3. **Prisma Data Proxy Engint** - Supported all platforms. `❌ Waiting` See [Add Data proxy engine support](https://github.com/odroe/prisma-dart/issues/22).
 
 ## Getting started
 
@@ -145,19 +145,19 @@ import 'prisma_client.dart';
 final PrismaClient prisma = PrismaClient();
 ```
 
-Now you can start sending queries via the generated Prisma Client API, here are few sample queries. Note that all Prisma Client queries return plain old `Map<String, dynamic>`.
+Now you can start sending queries via the generated Prisma Client API, here are few sample queries.
 
 #### Retrieve all User records from the database
 
 ```dart
 // Run inside `async` function
-final allUsers = await prisma.user.findMany();
+final List<User> allUsers = await prisma.user.findMany();
 ```
 
 #### Filter all Post records that contain "odore"
 
 ```dart
-final filteredPosts = await prisma.post.findMany(
+final List<User> filteredPosts = await prisma.post.findMany(
   where: PostFindManyWhereInput(
     OR: [
       PostFindManyWhereInput(
@@ -174,19 +174,17 @@ final filteredPosts = await prisma.post.findMany(
 #### Create a new User and a new Post record in the same query
 
 ```dart
-final user = await prisma.user.create(
-  data: PrismaUnion.zero(
-    UserCreateInput(
-      name: 'Odroe',
-      posts: PostCreateNestedManyWithoutAuthorInput(
-        create: [
-          PostCreateWithoutAuthorInput(
-            title: 'Hello World',
-            content: 'This is my first post',
-            published: true,
-          ),
-        ],
-      ),
+final User user = await prisma.user.create(
+  data: UserCreateInput(
+    name: 'Odroe',
+    posts: PostCreateNestedManyWithoutAuthorInput(
+      create: [
+        PostCreateWithoutAuthorInput(
+          title: 'Hello World',
+          content: 'This is my first post',
+          published: true,
+        ),
+      ],
     ),
   ),
 );
