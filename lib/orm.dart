@@ -1,3 +1,5 @@
+library prisma.runtime;
+
 // Common exports
 export 'src/engine_core/common/get_config_result.dart';
 export 'src/engine_core/common/engine.dart';

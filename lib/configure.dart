@@ -1,3 +1,5 @@
+library prisma.configure;
+
 export 'src/configure/configure.dart'
     if (dart.library.html) 'src/configure/web/configure.dart'
     if (dart.library.io) 'src/configure/io/configure.dart';
