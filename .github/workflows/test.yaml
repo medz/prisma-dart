@@ -17,7 +17,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .dart_tool/prisma
-          key: ${{ runner.os }}-${{ runner.arch }}-prisma-engines
+          key: ${{ runner.os }}-${{ runner.arch }}-prisma-engines-${{ hashFiles('**/lib/version.dart') }}
       - name: Install dependencies
         run: dart pub get
       - name: Pre-download engines
