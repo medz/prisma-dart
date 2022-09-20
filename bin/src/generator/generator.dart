@@ -42,6 +42,7 @@ final List<String> _ignores = [
   'constant_identifier_names',
   'non_constant_identifier_names',
   'depend_on_referenced_packages',
+  'unused_import',
 ]..sort();
 
 /// Run Dart client generator

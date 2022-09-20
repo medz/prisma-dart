@@ -1,0 +1,26 @@
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      matrix:
+        sdk: 
+          - stable
+          - 2.18.0
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Cache prisma engines
+        uses: actions/cache@v3
+        with:
+          path: .dart_tool/prisma
+          key: ${{ runner.os }}-${{ runner.arch }}-prisma-engines-${{ hashFiles('**/lib/version.dart') }}
+      - name: Install dependencies
+        run: dart pub get
+      - name: Pre-download engines
+        run: dart run bin/orm.dart precache
+      - name: Run tests
+        run: dart test -r github
