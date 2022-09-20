@@ -5,6 +5,7 @@
 ### Bug fixes
 
 1. Fixed `$transaction` options not being passed.
+2. FIxed Using lowercase keywords in schema.prisma cannot generate clients correctly.
 
 ## Other
 
