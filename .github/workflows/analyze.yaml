@@ -11,4 +11,6 @@ jobs:
       - name: Install dependencies
         run: dart pub get
       - name: Analyze bin
-        run: dart analyze
+        run: dart analyze bin
+      - name: Analyze lib
+        run: dart analyze lib

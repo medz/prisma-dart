@@ -218,30 +218,33 @@ class ModelDelegateBuilder {
       ]);
 
       // Build GraphQL SDL.
-      final Expression sdl = refer('GraphQLField', 'package:orm/orm.dart')
-          .newInstance([
-            literalString(_findOperationLocation(name)),
-          ], {
-            'fields': rootFields,
-          })
-          .property('toSdl')
-          .call([])
-          .assignFinal('sdl', refer('String'));
+      final Expression sdl = declareFinal(
+        'sdl',
+        type: refer('String'),
+      ).assign(
+        refer('GraphQLField', 'package:orm/orm.dart')
+            .newInstance([
+              literalString(_findOperationLocation(name)),
+            ], {
+              'fields': rootFields,
+            })
+            .property('toSdl')
+            .call([]),
+      );
 
       blockBuilder.addExpression(sdl);
 
       // Build QueryEngineResult.
-      final Expression result = refer('_engine')
-          .property('request')
-          .call([], {
-            'query': refer('sdl'),
-            'headers': refer('_headers'),
-          })
-          .awaited
-          .assignFinal(
-            'result',
-            refer('QueryEngineResult', 'package:orm/orm.dart'),
-          );
+      final Expression result = declareFinal(
+        'result',
+        type: refer('QueryEngineResult', 'package:orm/orm.dart'),
+      ).assign(
+        refer('_engine').property('request').call([], {
+          'query': refer('sdl'),
+          'headers': refer('_headers'),
+        }).awaited,
+      );
+
       blockBuilder.addExpression(result);
 
       // Create return statement.

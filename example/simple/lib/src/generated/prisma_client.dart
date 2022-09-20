@@ -34,15 +34,16 @@ enum UserScalarFieldEnum { id, name, createdAt, sex }
 enum Sex { man, woman }
 
 class UserWhereInput implements _i2.JsonSerializable {
-  const UserWhereInput(
-      {this.AND,
-      this.OR,
-      this.NOT,
-      this.id,
-      this.name,
-      this.createdAt,
-      this.sex,
-      this.posts});
+  const UserWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+    this.posts,
+  });
 
   final _i2.PrismaNullable<UserWhereInput> AND;
 
@@ -76,8 +77,13 @@ class UserWhereInput implements _i2.JsonSerializable {
 }
 
 class UserOrderByWithRelationInput implements _i2.JsonSerializable {
-  const UserOrderByWithRelationInput(
-      {this.id, this.name, this.createdAt, this.sex, this.posts});
+  const UserOrderByWithRelationInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+    this.posts,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -115,16 +121,17 @@ class UserWhereUniqueInput implements _i2.JsonSerializable {
 }
 
 class UserOrderByWithAggregationInput implements _i2.JsonSerializable {
-  const UserOrderByWithAggregationInput(
-      {this.id,
-      this.name,
-      this.createdAt,
-      this.sex,
-      this.$count,
-      this.$avg,
-      this.$max,
-      this.$min,
-      this.$sum});
+  const UserOrderByWithAggregationInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -161,14 +168,15 @@ class UserOrderByWithAggregationInput implements _i2.JsonSerializable {
 }
 
 class UserScalarWhereWithAggregatesInput implements _i2.JsonSerializable {
-  const UserScalarWhereWithAggregatesInput(
-      {this.AND,
-      this.OR,
-      this.NOT,
-      this.id,
-      this.name,
-      this.createdAt,
-      this.sex});
+  const UserScalarWhereWithAggregatesInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> AND;
 
@@ -199,17 +207,18 @@ class UserScalarWhereWithAggregatesInput implements _i2.JsonSerializable {
 }
 
 class PostWhereInput implements _i2.JsonSerializable {
-  const PostWhereInput(
-      {this.AND,
-      this.OR,
-      this.NOT,
-      this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at,
-      this.author});
+  const PostWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+    this.author,
+  });
 
   final _i2.PrismaNullable<PostWhereInput> AND;
 
@@ -249,14 +258,15 @@ class PostWhereInput implements _i2.JsonSerializable {
 }
 
 class PostOrderByWithRelationInput implements _i2.JsonSerializable {
-  const PostOrderByWithRelationInput(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at,
-      this.author});
+  const PostOrderByWithRelationInput({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+    this.author,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -300,18 +310,19 @@ class PostWhereUniqueInput implements _i2.JsonSerializable {
 }
 
 class PostOrderByWithAggregationInput implements _i2.JsonSerializable {
-  const PostOrderByWithAggregationInput(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at,
-      this.$count,
-      this.$avg,
-      this.$max,
-      this.$min,
-      this.$sum});
+  const PostOrderByWithAggregationInput({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -354,16 +365,17 @@ class PostOrderByWithAggregationInput implements _i2.JsonSerializable {
 }
 
 class PostScalarWhereWithAggregatesInput implements _i2.JsonSerializable {
-  const PostScalarWhereWithAggregatesInput(
-      {this.AND,
-      this.OR,
-      this.NOT,
-      this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostScalarWhereWithAggregatesInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<PostScalarWhereWithAggregatesInput> AND;
 
@@ -400,8 +412,12 @@ class PostScalarWhereWithAggregatesInput implements _i2.JsonSerializable {
 }
 
 class UserCreateInput implements _i2.JsonSerializable {
-  const UserCreateInput(
-      {required this.name, this.createdAt, this.sex, this.posts});
+  const UserCreateInput({
+    required this.name,
+    this.createdAt,
+    this.sex,
+    this.posts,
+  });
 
   final String name;
 
@@ -423,8 +439,13 @@ class UserCreateInput implements _i2.JsonSerializable {
 }
 
 class UserUncheckedCreateInput implements _i2.JsonSerializable {
-  const UserUncheckedCreateInput(
-      {this.id, required this.name, this.createdAt, this.sex, this.posts});
+  const UserUncheckedCreateInput({
+    this.id,
+    required this.name,
+    this.createdAt,
+    this.sex,
+    this.posts,
+  });
 
   final _i2.PrismaNullable<int> id;
 
@@ -450,7 +471,12 @@ class UserUncheckedCreateInput implements _i2.JsonSerializable {
 }
 
 class UserUpdateInput implements _i2.JsonSerializable {
-  const UserUpdateInput({this.name, this.createdAt, this.sex, this.posts});
+  const UserUpdateInput({
+    this.name,
+    this.createdAt,
+    this.sex,
+    this.posts,
+  });
 
   final _i2.PrismaNullable<StringFieldUpdateOperationsInput> name;
 
@@ -472,8 +498,13 @@ class UserUpdateInput implements _i2.JsonSerializable {
 }
 
 class UserUncheckedUpdateInput implements _i2.JsonSerializable {
-  const UserUncheckedUpdateInput(
-      {this.id, this.name, this.createdAt, this.sex, this.posts});
+  const UserUncheckedUpdateInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+    this.posts,
+  });
 
   final _i2.PrismaNullable<IntFieldUpdateOperationsInput> id;
 
@@ -499,8 +530,12 @@ class UserUncheckedUpdateInput implements _i2.JsonSerializable {
 }
 
 class UserCreateManyInput implements _i2.JsonSerializable {
-  const UserCreateManyInput(
-      {this.id, required this.name, this.createdAt, this.sex});
+  const UserCreateManyInput({
+    this.id,
+    required this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<int> id;
 
@@ -522,7 +557,11 @@ class UserCreateManyInput implements _i2.JsonSerializable {
 }
 
 class UserUpdateManyMutationInput implements _i2.JsonSerializable {
-  const UserUpdateManyMutationInput({this.name, this.createdAt, this.sex});
+  const UserUpdateManyMutationInput({
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<StringFieldUpdateOperationsInput> name;
 
@@ -541,8 +580,12 @@ class UserUpdateManyMutationInput implements _i2.JsonSerializable {
 }
 
 class UserUncheckedUpdateManyInput implements _i2.JsonSerializable {
-  const UserUncheckedUpdateManyInput(
-      {this.id, this.name, this.createdAt, this.sex});
+  const UserUncheckedUpdateManyInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<IntFieldUpdateOperationsInput> id;
 
@@ -564,12 +607,13 @@ class UserUncheckedUpdateManyInput implements _i2.JsonSerializable {
 }
 
 class PostCreateInput implements _i2.JsonSerializable {
-  const PostCreateInput(
-      {required this.title,
-      required this.content,
-      required this.published,
-      this.created_at,
-      required this.author});
+  const PostCreateInput({
+    required this.title,
+    required this.content,
+    required this.published,
+    this.created_at,
+    required this.author,
+  });
 
   final String title;
 
@@ -594,13 +638,14 @@ class PostCreateInput implements _i2.JsonSerializable {
 }
 
 class PostUncheckedCreateInput implements _i2.JsonSerializable {
-  const PostUncheckedCreateInput(
-      {this.id,
-      required this.title,
-      required this.authorId,
-      required this.content,
-      required this.published,
-      this.created_at});
+  const PostUncheckedCreateInput({
+    this.id,
+    required this.title,
+    required this.authorId,
+    required this.content,
+    required this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<int> id;
 
@@ -628,8 +673,13 @@ class PostUncheckedCreateInput implements _i2.JsonSerializable {
 }
 
 class PostUpdateInput implements _i2.JsonSerializable {
-  const PostUpdateInput(
-      {this.title, this.content, this.published, this.created_at, this.author});
+  const PostUpdateInput({
+    this.title,
+    this.content,
+    this.published,
+    this.created_at,
+    this.author,
+  });
 
   final _i2.PrismaNullable<StringFieldUpdateOperationsInput> title;
 
@@ -654,13 +704,14 @@ class PostUpdateInput implements _i2.JsonSerializable {
 }
 
 class PostUncheckedUpdateInput implements _i2.JsonSerializable {
-  const PostUncheckedUpdateInput(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostUncheckedUpdateInput({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<IntFieldUpdateOperationsInput> id;
 
@@ -688,13 +739,14 @@ class PostUncheckedUpdateInput implements _i2.JsonSerializable {
 }
 
 class PostCreateManyInput implements _i2.JsonSerializable {
-  const PostCreateManyInput(
-      {this.id,
-      required this.title,
-      required this.authorId,
-      required this.content,
-      required this.published,
-      this.created_at});
+  const PostCreateManyInput({
+    this.id,
+    required this.title,
+    required this.authorId,
+    required this.content,
+    required this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<int> id;
 
@@ -722,8 +774,12 @@ class PostCreateManyInput implements _i2.JsonSerializable {
 }
 
 class PostUpdateManyMutationInput implements _i2.JsonSerializable {
-  const PostUpdateManyMutationInput(
-      {this.title, this.content, this.published, this.created_at});
+  const PostUpdateManyMutationInput({
+    this.title,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<StringFieldUpdateOperationsInput> title;
 
@@ -745,13 +801,14 @@ class PostUpdateManyMutationInput implements _i2.JsonSerializable {
 }
 
 class PostUncheckedUpdateManyInput implements _i2.JsonSerializable {
-  const PostUncheckedUpdateManyInput(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostUncheckedUpdateManyInput({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<IntFieldUpdateOperationsInput> id;
 
@@ -779,15 +836,16 @@ class PostUncheckedUpdateManyInput implements _i2.JsonSerializable {
 }
 
 class IntFilter implements _i2.JsonSerializable {
-  const IntFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not});
+  const IntFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
   final _i2.PrismaNullable<int> equals;
 
@@ -821,19 +879,20 @@ class IntFilter implements _i2.JsonSerializable {
 }
 
 class StringFilter implements _i2.JsonSerializable {
-  const StringFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.contains,
-      this.startsWith,
-      this.endsWith,
-      this.mode,
-      this.not});
+  const StringFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.mode,
+    this.not,
+  });
 
   final _i2.PrismaNullable<String> equals;
 
@@ -879,15 +938,16 @@ class StringFilter implements _i2.JsonSerializable {
 }
 
 class DateTimeFilter implements _i2.JsonSerializable {
-  const DateTimeFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not});
+  const DateTimeFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
   final _i2.PrismaNullable<DateTime> equals;
 
@@ -921,7 +981,12 @@ class DateTimeFilter implements _i2.JsonSerializable {
 }
 
 class EnumSexFilter implements _i2.JsonSerializable {
-  const EnumSexFilter({this.equals, this.in$, this.notIn, this.not});
+  const EnumSexFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.not,
+  });
 
   final _i2.PrismaNullable<Sex> equals;
 
@@ -943,7 +1008,11 @@ class EnumSexFilter implements _i2.JsonSerializable {
 }
 
 class PostListRelationFilter implements _i2.JsonSerializable {
-  const PostListRelationFilter({this.every, this.some, this.none});
+  const PostListRelationFilter({
+    this.every,
+    this.some,
+    this.none,
+  });
 
   final _i2.PrismaNullable<PostWhereInput> every;
 
@@ -975,8 +1044,12 @@ class PostOrderByRelationAggregateInput implements _i2.JsonSerializable {
 }
 
 class UserCountOrderByAggregateInput implements _i2.JsonSerializable {
-  const UserCountOrderByAggregateInput(
-      {this.id, this.name, this.createdAt, this.sex});
+  const UserCountOrderByAggregateInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1011,8 +1084,12 @@ class UserAvgOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class UserMaxOrderByAggregateInput implements _i2.JsonSerializable {
-  const UserMaxOrderByAggregateInput(
-      {this.id, this.name, this.createdAt, this.sex});
+  const UserMaxOrderByAggregateInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1034,8 +1111,12 @@ class UserMaxOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class UserMinOrderByAggregateInput implements _i2.JsonSerializable {
-  const UserMinOrderByAggregateInput(
-      {this.id, this.name, this.createdAt, this.sex});
+  const UserMinOrderByAggregateInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1070,20 +1151,21 @@ class UserSumOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class IntWithAggregatesFilter implements _i2.JsonSerializable {
-  const IntWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not,
-      this.$count,
-      this.$avg,
-      this.$sum,
-      this.$min,
-      this.$max});
+  const IntWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<int> equals;
 
@@ -1132,22 +1214,23 @@ class IntWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class StringWithAggregatesFilter implements _i2.JsonSerializable {
-  const StringWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.contains,
-      this.startsWith,
-      this.endsWith,
-      this.mode,
-      this.not,
-      this.$count,
-      this.$min,
-      this.$max});
+  const StringWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.mode,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<String> equals;
 
@@ -1202,18 +1285,19 @@ class StringWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class DateTimeWithAggregatesFilter implements _i2.JsonSerializable {
-  const DateTimeWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not,
-      this.$count,
-      this.$min,
-      this.$max});
+  const DateTimeWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<DateTime> equals;
 
@@ -1256,14 +1340,15 @@ class DateTimeWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class EnumSexWithAggregatesFilter implements _i2.JsonSerializable {
-  const EnumSexWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.not,
-      this.$count,
-      this.$min,
-      this.$max});
+  const EnumSexWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<Sex> equals;
 
@@ -1294,7 +1379,10 @@ class EnumSexWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class BoolFilter implements _i2.JsonSerializable {
-  const BoolFilter({this.equals, this.not});
+  const BoolFilter({
+    this.equals,
+    this.not,
+  });
 
   final _i2.PrismaNullable<bool> equals;
 
@@ -1310,7 +1398,10 @@ class BoolFilter implements _i2.JsonSerializable {
 }
 
 class UserRelationFilter implements _i2.JsonSerializable {
-  const UserRelationFilter({this.is$, this.isNot});
+  const UserRelationFilter({
+    this.is$,
+    this.isNot,
+  });
 
   final _i2.PrismaNullable<UserWhereInput> is$;
 
@@ -1326,13 +1417,14 @@ class UserRelationFilter implements _i2.JsonSerializable {
 }
 
 class PostCountOrderByAggregateInput implements _i2.JsonSerializable {
-  const PostCountOrderByAggregateInput(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostCountOrderByAggregateInput({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1360,7 +1452,10 @@ class PostCountOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class PostAvgOrderByAggregateInput implements _i2.JsonSerializable {
-  const PostAvgOrderByAggregateInput({this.id, this.authorId});
+  const PostAvgOrderByAggregateInput({
+    this.id,
+    this.authorId,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1376,13 +1471,14 @@ class PostAvgOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class PostMaxOrderByAggregateInput implements _i2.JsonSerializable {
-  const PostMaxOrderByAggregateInput(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostMaxOrderByAggregateInput({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1410,13 +1506,14 @@ class PostMaxOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class PostMinOrderByAggregateInput implements _i2.JsonSerializable {
-  const PostMinOrderByAggregateInput(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostMinOrderByAggregateInput({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1444,7 +1541,10 @@ class PostMinOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class PostSumOrderByAggregateInput implements _i2.JsonSerializable {
-  const PostSumOrderByAggregateInput({this.id, this.authorId});
+  const PostSumOrderByAggregateInput({
+    this.id,
+    this.authorId,
+  });
 
   final _i2.PrismaNullable<SortOrder> id;
 
@@ -1460,8 +1560,13 @@ class PostSumOrderByAggregateInput implements _i2.JsonSerializable {
 }
 
 class BoolWithAggregatesFilter implements _i2.JsonSerializable {
-  const BoolWithAggregatesFilter(
-      {this.equals, this.not, this.$count, this.$min, this.$max});
+  const BoolWithAggregatesFilter({
+    this.equals,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<bool> equals;
 
@@ -1486,8 +1591,12 @@ class BoolWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class PostCreateNestedManyWithoutAuthorInput implements _i2.JsonSerializable {
-  const PostCreateNestedManyWithoutAuthorInput(
-      {this.create, this.connectOrCreate, this.createMany, this.connect});
+  const PostCreateNestedManyWithoutAuthorInput({
+    this.create,
+    this.connectOrCreate,
+    this.createMany,
+    this.connect,
+  });
 
   final _i2.PrismaNullable<PostCreateWithoutAuthorInput> create;
 
@@ -1511,8 +1620,12 @@ class PostCreateNestedManyWithoutAuthorInput implements _i2.JsonSerializable {
 
 class PostUncheckedCreateNestedManyWithoutAuthorInput
     implements _i2.JsonSerializable {
-  const PostUncheckedCreateNestedManyWithoutAuthorInput(
-      {this.create, this.connectOrCreate, this.createMany, this.connect});
+  const PostUncheckedCreateNestedManyWithoutAuthorInput({
+    this.create,
+    this.connectOrCreate,
+    this.createMany,
+    this.connect,
+  });
 
   final _i2.PrismaNullable<PostCreateWithoutAuthorInput> create;
 
@@ -1574,18 +1687,19 @@ class EnumSexFieldUpdateOperationsInput implements _i2.JsonSerializable {
 }
 
 class PostUpdateManyWithoutAuthorNestedInput implements _i2.JsonSerializable {
-  const PostUpdateManyWithoutAuthorNestedInput(
-      {this.create,
-      this.connectOrCreate,
-      this.upsert,
-      this.createMany,
-      this.set$,
-      this.disconnect,
-      this.delete,
-      this.connect,
-      this.update,
-      this.updateMany,
-      this.deleteMany});
+  const PostUpdateManyWithoutAuthorNestedInput({
+    this.create,
+    this.connectOrCreate,
+    this.upsert,
+    this.createMany,
+    this.set$,
+    this.disconnect,
+    this.delete,
+    this.connect,
+    this.update,
+    this.updateMany,
+    this.deleteMany,
+  });
 
   final _i2.PrismaNullable<PostCreateWithoutAuthorInput> create;
 
@@ -1630,8 +1744,13 @@ class PostUpdateManyWithoutAuthorNestedInput implements _i2.JsonSerializable {
 }
 
 class IntFieldUpdateOperationsInput implements _i2.JsonSerializable {
-  const IntFieldUpdateOperationsInput(
-      {this.set$, this.increment, this.decrement, this.multiply, this.divide});
+  const IntFieldUpdateOperationsInput({
+    this.set$,
+    this.increment,
+    this.decrement,
+    this.multiply,
+    this.divide,
+  });
 
   final _i2.PrismaNullable<int> set$;
 
@@ -1657,18 +1776,19 @@ class IntFieldUpdateOperationsInput implements _i2.JsonSerializable {
 
 class PostUncheckedUpdateManyWithoutAuthorNestedInput
     implements _i2.JsonSerializable {
-  const PostUncheckedUpdateManyWithoutAuthorNestedInput(
-      {this.create,
-      this.connectOrCreate,
-      this.upsert,
-      this.createMany,
-      this.set$,
-      this.disconnect,
-      this.delete,
-      this.connect,
-      this.update,
-      this.updateMany,
-      this.deleteMany});
+  const PostUncheckedUpdateManyWithoutAuthorNestedInput({
+    this.create,
+    this.connectOrCreate,
+    this.upsert,
+    this.createMany,
+    this.set$,
+    this.disconnect,
+    this.delete,
+    this.connect,
+    this.update,
+    this.updateMany,
+    this.deleteMany,
+  });
 
   final _i2.PrismaNullable<PostCreateWithoutAuthorInput> create;
 
@@ -1713,8 +1833,11 @@ class PostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 class UserCreateNestedOneWithoutPostsInput implements _i2.JsonSerializable {
-  const UserCreateNestedOneWithoutPostsInput(
-      {this.create, this.connectOrCreate, this.connect});
+  const UserCreateNestedOneWithoutPostsInput({
+    this.create,
+    this.connectOrCreate,
+    this.connect,
+  });
 
   final _i2.PrismaNullable<UserCreateWithoutPostsInput> create;
 
@@ -1748,12 +1871,13 @@ class BoolFieldUpdateOperationsInput implements _i2.JsonSerializable {
 
 class UserUpdateOneRequiredWithoutPostsNestedInput
     implements _i2.JsonSerializable {
-  const UserUpdateOneRequiredWithoutPostsNestedInput(
-      {this.create,
-      this.connectOrCreate,
-      this.upsert,
-      this.connect,
-      this.update});
+  const UserUpdateOneRequiredWithoutPostsNestedInput({
+    this.create,
+    this.connectOrCreate,
+    this.upsert,
+    this.connect,
+    this.update,
+  });
 
   final _i2.PrismaNullable<UserCreateWithoutPostsInput> create;
 
@@ -1779,15 +1903,16 @@ class UserUpdateOneRequiredWithoutPostsNestedInput
 }
 
 class NestedIntFilter implements _i2.JsonSerializable {
-  const NestedIntFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not});
+  const NestedIntFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
   final _i2.PrismaNullable<int> equals;
 
@@ -1821,18 +1946,19 @@ class NestedIntFilter implements _i2.JsonSerializable {
 }
 
 class NestedStringFilter implements _i2.JsonSerializable {
-  const NestedStringFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.contains,
-      this.startsWith,
-      this.endsWith,
-      this.not});
+  const NestedStringFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+  });
 
   final _i2.PrismaNullable<String> equals;
 
@@ -1875,15 +2001,16 @@ class NestedStringFilter implements _i2.JsonSerializable {
 }
 
 class NestedDateTimeFilter implements _i2.JsonSerializable {
-  const NestedDateTimeFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not});
+  const NestedDateTimeFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
   final _i2.PrismaNullable<DateTime> equals;
 
@@ -1917,7 +2044,12 @@ class NestedDateTimeFilter implements _i2.JsonSerializable {
 }
 
 class NestedEnumSexFilter implements _i2.JsonSerializable {
-  const NestedEnumSexFilter({this.equals, this.in$, this.notIn, this.not});
+  const NestedEnumSexFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.not,
+  });
 
   final _i2.PrismaNullable<Sex> equals;
 
@@ -1939,20 +2071,21 @@ class NestedEnumSexFilter implements _i2.JsonSerializable {
 }
 
 class NestedIntWithAggregatesFilter implements _i2.JsonSerializable {
-  const NestedIntWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not,
-      this.$count,
-      this.$avg,
-      this.$sum,
-      this.$min,
-      this.$max});
+  const NestedIntWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<int> equals;
 
@@ -2001,15 +2134,16 @@ class NestedIntWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class NestedFloatFilter implements _i2.JsonSerializable {
-  const NestedFloatFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not});
+  const NestedFloatFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
   final _i2.PrismaNullable<double> equals;
 
@@ -2043,21 +2177,22 @@ class NestedFloatFilter implements _i2.JsonSerializable {
 }
 
 class NestedStringWithAggregatesFilter implements _i2.JsonSerializable {
-  const NestedStringWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.contains,
-      this.startsWith,
-      this.endsWith,
-      this.not,
-      this.$count,
-      this.$min,
-      this.$max});
+  const NestedStringWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<String> equals;
 
@@ -2109,18 +2244,19 @@ class NestedStringWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class NestedDateTimeWithAggregatesFilter implements _i2.JsonSerializable {
-  const NestedDateTimeWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.lt,
-      this.lte,
-      this.gt,
-      this.gte,
-      this.not,
-      this.$count,
-      this.$min,
-      this.$max});
+  const NestedDateTimeWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<DateTime> equals;
 
@@ -2163,14 +2299,15 @@ class NestedDateTimeWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class NestedEnumSexWithAggregatesFilter implements _i2.JsonSerializable {
-  const NestedEnumSexWithAggregatesFilter(
-      {this.equals,
-      this.in$,
-      this.notIn,
-      this.not,
-      this.$count,
-      this.$min,
-      this.$max});
+  const NestedEnumSexWithAggregatesFilter({
+    this.equals,
+    this.in$,
+    this.notIn,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<Sex> equals;
 
@@ -2201,7 +2338,10 @@ class NestedEnumSexWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class NestedBoolFilter implements _i2.JsonSerializable {
-  const NestedBoolFilter({this.equals, this.not});
+  const NestedBoolFilter({
+    this.equals,
+    this.not,
+  });
 
   final _i2.PrismaNullable<bool> equals;
 
@@ -2217,8 +2357,13 @@ class NestedBoolFilter implements _i2.JsonSerializable {
 }
 
 class NestedBoolWithAggregatesFilter implements _i2.JsonSerializable {
-  const NestedBoolWithAggregatesFilter(
-      {this.equals, this.not, this.$count, this.$min, this.$max});
+  const NestedBoolWithAggregatesFilter({
+    this.equals,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
 
   final _i2.PrismaNullable<bool> equals;
 
@@ -2243,11 +2388,12 @@ class NestedBoolWithAggregatesFilter implements _i2.JsonSerializable {
 }
 
 class PostCreateWithoutAuthorInput implements _i2.JsonSerializable {
-  const PostCreateWithoutAuthorInput(
-      {required this.title,
-      required this.content,
-      required this.published,
-      this.created_at});
+  const PostCreateWithoutAuthorInput({
+    required this.title,
+    required this.content,
+    required this.published,
+    this.created_at,
+  });
 
   final String title;
 
@@ -2269,12 +2415,13 @@ class PostCreateWithoutAuthorInput implements _i2.JsonSerializable {
 }
 
 class PostUncheckedCreateWithoutAuthorInput implements _i2.JsonSerializable {
-  const PostUncheckedCreateWithoutAuthorInput(
-      {this.id,
-      required this.title,
-      required this.content,
-      required this.published,
-      this.created_at});
+  const PostUncheckedCreateWithoutAuthorInput({
+    this.id,
+    required this.title,
+    required this.content,
+    required this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<int> id;
 
@@ -2299,8 +2446,10 @@ class PostUncheckedCreateWithoutAuthorInput implements _i2.JsonSerializable {
 }
 
 class PostCreateOrConnectWithoutAuthorInput implements _i2.JsonSerializable {
-  const PostCreateOrConnectWithoutAuthorInput(
-      {required this.where, required this.create});
+  const PostCreateOrConnectWithoutAuthorInput({
+    required this.where,
+    required this.create,
+  });
 
   final PostWhereUniqueInput where;
 
@@ -2316,8 +2465,10 @@ class PostCreateOrConnectWithoutAuthorInput implements _i2.JsonSerializable {
 }
 
 class PostCreateManyAuthorInputEnvelope implements _i2.JsonSerializable {
-  const PostCreateManyAuthorInputEnvelope(
-      {required this.data, this.skipDuplicates});
+  const PostCreateManyAuthorInputEnvelope({
+    required this.data,
+    this.skipDuplicates,
+  });
 
   final List<PostCreateManyAuthorInput> data;
 
@@ -2334,8 +2485,11 @@ class PostCreateManyAuthorInputEnvelope implements _i2.JsonSerializable {
 
 class PostUpsertWithWhereUniqueWithoutAuthorInput
     implements _i2.JsonSerializable {
-  const PostUpsertWithWhereUniqueWithoutAuthorInput(
-      {required this.where, required this.update, required this.create});
+  const PostUpsertWithWhereUniqueWithoutAuthorInput({
+    required this.where,
+    required this.update,
+    required this.create,
+  });
 
   final PostWhereUniqueInput where;
 
@@ -2355,8 +2509,10 @@ class PostUpsertWithWhereUniqueWithoutAuthorInput
 
 class PostUpdateWithWhereUniqueWithoutAuthorInput
     implements _i2.JsonSerializable {
-  const PostUpdateWithWhereUniqueWithoutAuthorInput(
-      {required this.where, required this.data});
+  const PostUpdateWithWhereUniqueWithoutAuthorInput({
+    required this.where,
+    required this.data,
+  });
 
   final PostWhereUniqueInput where;
 
@@ -2373,8 +2529,10 @@ class PostUpdateWithWhereUniqueWithoutAuthorInput
 
 class PostUpdateManyWithWhereWithoutAuthorInput
     implements _i2.JsonSerializable {
-  const PostUpdateManyWithWhereWithoutAuthorInput(
-      {required this.where, required this.data});
+  const PostUpdateManyWithWhereWithoutAuthorInput({
+    required this.where,
+    required this.data,
+  });
 
   final PostScalarWhereInput where;
 
@@ -2390,16 +2548,17 @@ class PostUpdateManyWithWhereWithoutAuthorInput
 }
 
 class PostScalarWhereInput implements _i2.JsonSerializable {
-  const PostScalarWhereInput(
-      {this.AND,
-      this.OR,
-      this.NOT,
-      this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostScalarWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<PostScalarWhereInput> AND;
 
@@ -2436,8 +2595,11 @@ class PostScalarWhereInput implements _i2.JsonSerializable {
 }
 
 class UserCreateWithoutPostsInput implements _i2.JsonSerializable {
-  const UserCreateWithoutPostsInput(
-      {required this.name, this.createdAt, this.sex});
+  const UserCreateWithoutPostsInput({
+    required this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final String name;
 
@@ -2456,8 +2618,12 @@ class UserCreateWithoutPostsInput implements _i2.JsonSerializable {
 }
 
 class UserUncheckedCreateWithoutPostsInput implements _i2.JsonSerializable {
-  const UserUncheckedCreateWithoutPostsInput(
-      {this.id, required this.name, this.createdAt, this.sex});
+  const UserUncheckedCreateWithoutPostsInput({
+    this.id,
+    required this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<int> id;
 
@@ -2479,8 +2645,10 @@ class UserUncheckedCreateWithoutPostsInput implements _i2.JsonSerializable {
 }
 
 class UserCreateOrConnectWithoutPostsInput implements _i2.JsonSerializable {
-  const UserCreateOrConnectWithoutPostsInput(
-      {required this.where, required this.create});
+  const UserCreateOrConnectWithoutPostsInput({
+    required this.where,
+    required this.create,
+  });
 
   final UserWhereUniqueInput where;
 
@@ -2496,8 +2664,10 @@ class UserCreateOrConnectWithoutPostsInput implements _i2.JsonSerializable {
 }
 
 class UserUpsertWithoutPostsInput implements _i2.JsonSerializable {
-  const UserUpsertWithoutPostsInput(
-      {required this.update, required this.create});
+  const UserUpsertWithoutPostsInput({
+    required this.update,
+    required this.create,
+  });
 
   final UserUpdateWithoutPostsInput update;
 
@@ -2513,7 +2683,11 @@ class UserUpsertWithoutPostsInput implements _i2.JsonSerializable {
 }
 
 class UserUpdateWithoutPostsInput implements _i2.JsonSerializable {
-  const UserUpdateWithoutPostsInput({this.name, this.createdAt, this.sex});
+  const UserUpdateWithoutPostsInput({
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<StringFieldUpdateOperationsInput> name;
 
@@ -2532,8 +2706,12 @@ class UserUpdateWithoutPostsInput implements _i2.JsonSerializable {
 }
 
 class UserUncheckedUpdateWithoutPostsInput implements _i2.JsonSerializable {
-  const UserUncheckedUpdateWithoutPostsInput(
-      {this.id, this.name, this.createdAt, this.sex});
+  const UserUncheckedUpdateWithoutPostsInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   final _i2.PrismaNullable<IntFieldUpdateOperationsInput> id;
 
@@ -2555,12 +2733,13 @@ class UserUncheckedUpdateWithoutPostsInput implements _i2.JsonSerializable {
 }
 
 class PostCreateManyAuthorInput implements _i2.JsonSerializable {
-  const PostCreateManyAuthorInput(
-      {this.id,
-      required this.title,
-      required this.content,
-      required this.published,
-      this.created_at});
+  const PostCreateManyAuthorInput({
+    this.id,
+    required this.title,
+    required this.content,
+    required this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<int> id;
 
@@ -2585,8 +2764,12 @@ class PostCreateManyAuthorInput implements _i2.JsonSerializable {
 }
 
 class PostUpdateWithoutAuthorInput implements _i2.JsonSerializable {
-  const PostUpdateWithoutAuthorInput(
-      {this.title, this.content, this.published, this.created_at});
+  const PostUpdateWithoutAuthorInput({
+    this.title,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<StringFieldUpdateOperationsInput> title;
 
@@ -2608,8 +2791,13 @@ class PostUpdateWithoutAuthorInput implements _i2.JsonSerializable {
 }
 
 class PostUncheckedUpdateWithoutAuthorInput implements _i2.JsonSerializable {
-  const PostUncheckedUpdateWithoutAuthorInput(
-      {this.id, this.title, this.content, this.published, this.created_at});
+  const PostUncheckedUpdateWithoutAuthorInput({
+    this.id,
+    this.title,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<IntFieldUpdateOperationsInput> id;
 
@@ -2634,8 +2822,13 @@ class PostUncheckedUpdateWithoutAuthorInput implements _i2.JsonSerializable {
 }
 
 class PostUncheckedUpdateManyWithoutPostsInput implements _i2.JsonSerializable {
-  const PostUncheckedUpdateManyWithoutPostsInput(
-      {this.id, this.title, this.content, this.published, this.created_at});
+  const PostUncheckedUpdateManyWithoutPostsInput({
+    this.id,
+    this.title,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   final _i2.PrismaNullable<IntFieldUpdateOperationsInput> id;
 
@@ -2660,10 +2853,18 @@ class PostUncheckedUpdateManyWithoutPostsInput implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class AggregateUser implements _i2.JsonSerializable {
-  const AggregateUser(
-      {this.$count, this.$avg, this.$sum, this.$min, this.$max});
+  const AggregateUser({
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
 
   factory AggregateUser.fromJson(Map<String, dynamic> json) =>
       _$AggregateUserFromJson(json);
@@ -2688,18 +2889,22 @@ class AggregateUser implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class UserGroupByOutputType implements _i2.JsonSerializable {
-  const UserGroupByOutputType(
-      {required this.id,
-      required this.name,
-      required this.createdAt,
-      required this.sex,
-      this.$count,
-      this.$avg,
-      this.$sum,
-      this.$min,
-      this.$max});
+  const UserGroupByOutputType({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+    required this.sex,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
 
   factory UserGroupByOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserGroupByOutputTypeFromJson(json);
@@ -2732,10 +2937,18 @@ class UserGroupByOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class AggregatePost implements _i2.JsonSerializable {
-  const AggregatePost(
-      {this.$count, this.$avg, this.$sum, this.$min, this.$max});
+  const AggregatePost({
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
 
   factory AggregatePost.fromJson(Map<String, dynamic> json) =>
       _$AggregatePostFromJson(json);
@@ -2760,20 +2973,24 @@ class AggregatePost implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class PostGroupByOutputType implements _i2.JsonSerializable {
-  const PostGroupByOutputType(
-      {required this.id,
-      required this.title,
-      required this.authorId,
-      required this.content,
-      required this.published,
-      required this.created_at,
-      this.$count,
-      this.$avg,
-      this.$sum,
-      this.$min,
-      this.$max});
+  const PostGroupByOutputType({
+    required this.id,
+    required this.title,
+    required this.authorId,
+    required this.content,
+    required this.published,
+    required this.created_at,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
 
   factory PostGroupByOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostGroupByOutputTypeFromJson(json);
@@ -2810,7 +3027,10 @@ class PostGroupByOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class AffectedRowsOutput implements _i2.JsonSerializable {
   const AffectedRowsOutput({required this.count});
 
@@ -2824,7 +3044,10 @@ class AffectedRowsOutput implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class UserCountOutputType implements _i2.JsonSerializable {
   const UserCountOutputType({required this.posts});
 
@@ -2838,14 +3061,18 @@ class UserCountOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class UserCountAggregateOutputType implements _i2.JsonSerializable {
-  const UserCountAggregateOutputType(
-      {required this.id,
-      required this.name,
-      required this.createdAt,
-      required this.sex,
-      required this.$all});
+  const UserCountAggregateOutputType({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+    required this.sex,
+    required this.$all,
+  });
 
   factory UserCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserCountAggregateOutputTypeFromJson(json);
@@ -2866,7 +3093,10 @@ class UserCountAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class UserAvgAggregateOutputType implements _i2.JsonSerializable {
   const UserAvgAggregateOutputType({this.id});
 
@@ -2880,7 +3110,10 @@ class UserAvgAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class UserSumAggregateOutputType implements _i2.JsonSerializable {
   const UserSumAggregateOutputType({this.id});
 
@@ -2894,10 +3127,17 @@ class UserSumAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class UserMinAggregateOutputType implements _i2.JsonSerializable {
-  const UserMinAggregateOutputType(
-      {this.id, this.name, this.createdAt, this.sex});
+  const UserMinAggregateOutputType({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   factory UserMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserMinAggregateOutputTypeFromJson(json);
@@ -2915,10 +3155,17 @@ class UserMinAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class UserMaxAggregateOutputType implements _i2.JsonSerializable {
-  const UserMaxAggregateOutputType(
-      {this.id, this.name, this.createdAt, this.sex});
+  const UserMaxAggregateOutputType({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.sex,
+  });
 
   factory UserMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$UserMaxAggregateOutputTypeFromJson(json);
@@ -2936,16 +3183,20 @@ class UserMaxAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class PostCountAggregateOutputType implements _i2.JsonSerializable {
-  const PostCountAggregateOutputType(
-      {required this.id,
-      required this.title,
-      required this.authorId,
-      required this.content,
-      required this.published,
-      required this.created_at,
-      required this.$all});
+  const PostCountAggregateOutputType({
+    required this.id,
+    required this.title,
+    required this.authorId,
+    required this.content,
+    required this.published,
+    required this.created_at,
+    required this.$all,
+  });
 
   factory PostCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostCountAggregateOutputTypeFromJson(json);
@@ -2970,9 +3221,15 @@ class PostCountAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class PostAvgAggregateOutputType implements _i2.JsonSerializable {
-  const PostAvgAggregateOutputType({this.id, this.authorId});
+  const PostAvgAggregateOutputType({
+    this.id,
+    this.authorId,
+  });
 
   factory PostAvgAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostAvgAggregateOutputTypeFromJson(json);
@@ -2986,9 +3243,15 @@ class PostAvgAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class PostSumAggregateOutputType implements _i2.JsonSerializable {
-  const PostSumAggregateOutputType({this.id, this.authorId});
+  const PostSumAggregateOutputType({
+    this.id,
+    this.authorId,
+  });
 
   factory PostSumAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostSumAggregateOutputTypeFromJson(json);
@@ -3002,15 +3265,19 @@ class PostSumAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class PostMinAggregateOutputType implements _i2.JsonSerializable {
-  const PostMinAggregateOutputType(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostMinAggregateOutputType({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   factory PostMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostMinAggregateOutputTypeFromJson(json);
@@ -3032,15 +3299,19 @@ class PostMinAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class PostMaxAggregateOutputType implements _i2.JsonSerializable {
-  const PostMaxAggregateOutputType(
-      {this.id,
-      this.title,
-      this.authorId,
-      this.content,
-      this.published,
-      this.created_at});
+  const PostMaxAggregateOutputType({
+    this.id,
+    this.title,
+    this.authorId,
+    this.content,
+    this.published,
+    this.created_at,
+  });
 
   factory PostMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
       _$PostMaxAggregateOutputTypeFromJson(json);
@@ -3062,13 +3333,17 @@ class PostMaxAggregateOutputType implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class User implements _i2.JsonSerializable {
-  const User(
-      {required this.id,
-      required this.name,
-      required this.createdAt,
-      required this.sex});
+  const User({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+    required this.sex,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
@@ -3085,15 +3360,19 @@ class User implements _i2.JsonSerializable {
 }
 
 @_i1.JsonSerializable(
-    createToJson: true, createFactory: true, explicitToJson: true)
+  createToJson: true,
+  createFactory: true,
+  explicitToJson: true,
+)
 class Post implements _i2.JsonSerializable {
-  const Post(
-      {required this.id,
-      required this.title,
-      required this.authorId,
-      required this.content,
-      required this.published,
-      required this.created_at});
+  const Post({
+    required this.id,
+    required this.title,
+    required this.authorId,
+    required this.content,
+    required this.published,
+    required this.created_at,
+  });
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 
@@ -3114,7 +3393,10 @@ class Post implements _i2.JsonSerializable {
 }
 
 class UserDelegate {
-  const UserDelegate._(this._engine, [this._headers]);
+  const UserDelegate._(
+    this._engine, [
+    this._headers,
+  ]);
 
   final _i2.Engine _engine;
 
@@ -3122,78 +3404,151 @@ class UserDelegate {
 
   Future<_i2.PrismaNullable<User>> findUnique(
       {required UserWhereUniqueInput where}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('findUniqueUser',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('where', where, isRequired: true)]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findUniqueUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            )
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['findUniqueUser'] == null
         ? null
         : User.fromJson((result.data['findUniqueUser'] as Map).cast());
   }
 
-  Future<_i2.PrismaNullable<User>> findFirst(
-      {_i2.PrismaNullable<UserWhereInput> where,
-      _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
-      _i2.PrismaNullable<UserWhereUniqueInput> cursor,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('findFirstUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('cursor', cursor, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false),
-                _i2.GraphQLArg('distinct', distinct, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<_i2.PrismaNullable<User>> findFirst({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+    _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findFirstUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'cursor',
+              cursor,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'distinct',
+              distinct,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['findFirstUser'] == null
         ? null
         : User.fromJson((result.data['findFirstUser'] as Map).cast());
   }
 
-  Future<List<User>> findMany(
-      {_i2.PrismaNullable<UserWhereInput> where,
-      _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
-      _i2.PrismaNullable<UserWhereUniqueInput> cursor,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('findManyUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('cursor', cursor, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false),
-                _i2.GraphQLArg('distinct', distinct, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<List<User>> findMany({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+    _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'cursor',
+              cursor,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'distinct',
+              distinct,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return (result.data['findManyUser'] as List)
         .whereType<Map>()
         .map((Map e) => User.fromJson(e.cast()))
@@ -3201,122 +3556,207 @@ class UserDelegate {
   }
 
   Future<User> create({required UserCreateInput data}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('createOneUser',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('data', data, isRequired: true)]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'createOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            )
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return User.fromJson((result.data['createOneUser'] as Map).cast());
   }
 
-  Future<AffectedRowsOutput> createMany(
-      {required List<UserCreateManyInput> data,
-      _i2.PrismaNullable<bool> skipDuplicates}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('createManyUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('data', data, isRequired: true),
-                _i2.GraphQLArg('skipDuplicates', skipDuplicates,
-                    isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<AffectedRowsOutput> createMany({
+    required List<UserCreateManyInput> data,
+    _i2.PrismaNullable<bool> skipDuplicates,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'createManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'skipDuplicates',
+              skipDuplicates,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AffectedRowsOutput.fromJson(
         (result.data['createManyUser'] as Map).cast());
   }
 
-  Future<_i2.PrismaNullable<User>> update(
-      {required UserUpdateInput data,
-      required UserWhereUniqueInput where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('updateOneUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('data', data, isRequired: true),
-                _i2.GraphQLArg('where', where, isRequired: true)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<_i2.PrismaNullable<User>> update({
+    required UserUpdateInput data,
+    required UserWhereUniqueInput where,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'updateOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['updateOneUser'] == null
         ? null
         : User.fromJson((result.data['updateOneUser'] as Map).cast());
   }
 
-  Future<AffectedRowsOutput> updateMany(
-      {required UserUpdateManyMutationInput data,
-      _i2.PrismaNullable<UserWhereInput> where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('updateManyUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('data', data, isRequired: true),
-                _i2.GraphQLArg('where', where, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<AffectedRowsOutput> updateMany({
+    required UserUpdateManyMutationInput data,
+    _i2.PrismaNullable<UserWhereInput> where,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'updateManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AffectedRowsOutput.fromJson(
         (result.data['updateManyUser'] as Map).cast());
   }
 
-  Future<User> upsert(
-      {required UserWhereUniqueInput where,
-      required UserCreateInput create,
-      required UserUpdateInput update}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('upsertOneUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: true),
-                _i2.GraphQLArg('create', create, isRequired: true),
-                _i2.GraphQLArg('update', update, isRequired: true)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<User> upsert({
+    required UserWhereUniqueInput where,
+    required UserCreateInput create,
+    required UserUpdateInput update,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'upsertOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'create',
+              create,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'update',
+              update,
+              isRequired: true,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return User.fromJson((result.data['upsertOneUser'] as Map).cast());
   }
 
   Future<_i2.PrismaNullable<User>> delete(
       {required UserWhereUniqueInput where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('deleteOneUser',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('where', where, isRequired: true)]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'deleteOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            )
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['deleteOneUser'] == null
         ? null
         : User.fromJson((result.data['deleteOneUser'] as Map).cast());
@@ -3324,73 +3764,142 @@ class UserDelegate {
 
   Future<AffectedRowsOutput> deleteMany(
       {_i2.PrismaNullable<UserWhereInput> where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('deleteManyUser',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('where', where, isRequired: false)]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'deleteManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            )
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AffectedRowsOutput.fromJson(
         (result.data['deleteManyUser'] as Map).cast());
   }
 
-  Future<AggregateUser> aggregate(
-      {_i2.PrismaNullable<UserWhereInput> where,
-      _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
-      _i2.PrismaNullable<UserWhereUniqueInput> cursor,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('aggregateUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('cursor', cursor, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<AggregateUser> aggregate({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'aggregateUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'cursor',
+              cursor,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AggregateUser.fromJson((result.data['aggregateUser'] as Map).cast());
   }
 
-  Future<List<UserGroupByOutputType>> groupBy(
-      {_i2.PrismaNullable<UserWhereInput> where,
-      _i2.PrismaNullable<List<UserOrderByWithAggregationInput>> orderBy,
-      required List<UserScalarFieldEnum> by,
-      _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> having,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('groupByUser',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('by', by, isRequired: true),
-                _i2.GraphQLArg('having', having, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(UserScalarFieldEnum.values
-                  .map((UserScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<List<UserGroupByOutputType>> groupBy({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithAggregationInput>> orderBy,
+    required List<UserScalarFieldEnum> by,
+    _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> having,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'groupByUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'by',
+              by,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'having',
+              having,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return (result.data['groupByUser'] as List)
         .whereType<Map>()
         .map((Map e) => UserGroupByOutputType.fromJson(e.cast()))
@@ -3399,7 +3908,10 @@ class UserDelegate {
 }
 
 class PostDelegate {
-  const PostDelegate._(this._engine, [this._headers]);
+  const PostDelegate._(
+    this._engine, [
+    this._headers,
+  ]);
 
   final _i2.Engine _engine;
 
@@ -3407,78 +3919,151 @@ class PostDelegate {
 
   Future<_i2.PrismaNullable<Post>> findUnique(
       {required PostWhereUniqueInput where}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('findUniquePost',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('where', where, isRequired: true)]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findUniquePost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            )
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['findUniquePost'] == null
         ? null
         : Post.fromJson((result.data['findUniquePost'] as Map).cast());
   }
 
-  Future<_i2.PrismaNullable<Post>> findFirst(
-      {_i2.PrismaNullable<PostWhereInput> where,
-      _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
-      _i2.PrismaNullable<PostWhereUniqueInput> cursor,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('findFirstPost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('cursor', cursor, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false),
-                _i2.GraphQLArg('distinct', distinct, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<_i2.PrismaNullable<Post>> findFirst({
+    _i2.PrismaNullable<PostWhereInput> where,
+    _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<PostWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+    _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findFirstPost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'cursor',
+              cursor,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'distinct',
+              distinct,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['findFirstPost'] == null
         ? null
         : Post.fromJson((result.data['findFirstPost'] as Map).cast());
   }
 
-  Future<List<Post>> findMany(
-      {_i2.PrismaNullable<PostWhereInput> where,
-      _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
-      _i2.PrismaNullable<PostWhereUniqueInput> cursor,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip,
-      _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('findManyPost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('cursor', cursor, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false),
-                _i2.GraphQLArg('distinct', distinct, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<List<Post>> findMany({
+    _i2.PrismaNullable<PostWhereInput> where,
+    _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<PostWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+    _i2.PrismaNullable<List<PostScalarFieldEnum>> distinct,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findManyPost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'cursor',
+              cursor,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'distinct',
+              distinct,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return (result.data['findManyPost'] as List)
         .whereType<Map>()
         .map((Map e) => Post.fromJson(e.cast()))
@@ -3486,122 +4071,207 @@ class PostDelegate {
   }
 
   Future<Post> create({required PostCreateInput data}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('createOnePost',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('data', data, isRequired: true)]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'createOnePost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            )
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return Post.fromJson((result.data['createOnePost'] as Map).cast());
   }
 
-  Future<AffectedRowsOutput> createMany(
-      {required List<PostCreateManyInput> data,
-      _i2.PrismaNullable<bool> skipDuplicates}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('createManyPost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('data', data, isRequired: true),
-                _i2.GraphQLArg('skipDuplicates', skipDuplicates,
-                    isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<AffectedRowsOutput> createMany({
+    required List<PostCreateManyInput> data,
+    _i2.PrismaNullable<bool> skipDuplicates,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'createManyPost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'skipDuplicates',
+              skipDuplicates,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AffectedRowsOutput.fromJson(
         (result.data['createManyPost'] as Map).cast());
   }
 
-  Future<_i2.PrismaNullable<Post>> update(
-      {required PostUpdateInput data,
-      required PostWhereUniqueInput where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('updateOnePost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('data', data, isRequired: true),
-                _i2.GraphQLArg('where', where, isRequired: true)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<_i2.PrismaNullable<Post>> update({
+    required PostUpdateInput data,
+    required PostWhereUniqueInput where,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'updateOnePost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['updateOnePost'] == null
         ? null
         : Post.fromJson((result.data['updateOnePost'] as Map).cast());
   }
 
-  Future<AffectedRowsOutput> updateMany(
-      {required PostUpdateManyMutationInput data,
-      _i2.PrismaNullable<PostWhereInput> where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('updateManyPost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('data', data, isRequired: true),
-                _i2.GraphQLArg('where', where, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<AffectedRowsOutput> updateMany({
+    required PostUpdateManyMutationInput data,
+    _i2.PrismaNullable<PostWhereInput> where,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'updateManyPost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AffectedRowsOutput.fromJson(
         (result.data['updateManyPost'] as Map).cast());
   }
 
-  Future<Post> upsert(
-      {required PostWhereUniqueInput where,
-      required PostCreateInput create,
-      required PostUpdateInput update}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('upsertOnePost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: true),
-                _i2.GraphQLArg('create', create, isRequired: true),
-                _i2.GraphQLArg('update', update, isRequired: true)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<Post> upsert({
+    required PostWhereUniqueInput where,
+    required PostCreateInput create,
+    required PostUpdateInput update,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'upsertOnePost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'create',
+              create,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'update',
+              update,
+              isRequired: true,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return Post.fromJson((result.data['upsertOnePost'] as Map).cast());
   }
 
   Future<_i2.PrismaNullable<Post>> delete(
       {required PostWhereUniqueInput where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('deleteOnePost',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('where', where, isRequired: true)]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'deleteOnePost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            )
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return result.data['deleteOnePost'] == null
         ? null
         : Post.fromJson((result.data['deleteOnePost'] as Map).cast());
@@ -3609,73 +4279,142 @@ class PostDelegate {
 
   Future<AffectedRowsOutput> deleteMany(
       {_i2.PrismaNullable<PostWhereInput> where}) async {
-    final String sdl = _i2.GraphQLField('mutation',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('deleteManyPost',
-              args: _i2.GraphQLArgs(
-                  [_i2.GraphQLArg('where', where, isRequired: false)]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'deleteManyPost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            )
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AffectedRowsOutput.fromJson(
         (result.data['deleteManyPost'] as Map).cast());
   }
 
-  Future<AggregatePost> aggregate(
-      {_i2.PrismaNullable<PostWhereInput> where,
-      _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
-      _i2.PrismaNullable<PostWhereUniqueInput> cursor,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('aggregatePost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('cursor', cursor, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<AggregatePost> aggregate({
+    _i2.PrismaNullable<PostWhereInput> where,
+    _i2.PrismaNullable<List<PostOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<PostWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'aggregatePost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'cursor',
+              cursor,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return AggregatePost.fromJson((result.data['aggregatePost'] as Map).cast());
   }
 
-  Future<List<PostGroupByOutputType>> groupBy(
-      {_i2.PrismaNullable<PostWhereInput> where,
-      _i2.PrismaNullable<List<PostOrderByWithAggregationInput>> orderBy,
-      required List<PostScalarFieldEnum> by,
-      _i2.PrismaNullable<PostScalarWhereWithAggregatesInput> having,
-      _i2.PrismaNullable<int> take,
-      _i2.PrismaNullable<int> skip}) async {
-    final String sdl = _i2.GraphQLField('query',
-        fields: _i2.GraphQLFields([
-          _i2.GraphQLField('groupByPost',
-              args: _i2.GraphQLArgs([
-                _i2.GraphQLArg('where', where, isRequired: false),
-                _i2.GraphQLArg('orderBy', orderBy, isRequired: false),
-                _i2.GraphQLArg('by', by, isRequired: true),
-                _i2.GraphQLArg('having', having, isRequired: false),
-                _i2.GraphQLArg('take', take, isRequired: false),
-                _i2.GraphQLArg('skip', skip, isRequired: false)
-              ]),
-              fields: _i2.GraphQLFields(PostScalarFieldEnum.values
-                  .map((PostScalarFieldEnum e) =>
-                      _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
-                  .toList()))
-        ])).toSdl();
-    final _i2.QueryEngineResult result =
-        await _engine.request(query: sdl, headers: _headers);
+  Future<List<PostGroupByOutputType>> groupBy({
+    _i2.PrismaNullable<PostWhereInput> where,
+    _i2.PrismaNullable<List<PostOrderByWithAggregationInput>> orderBy,
+    required List<PostScalarFieldEnum> by,
+    _i2.PrismaNullable<PostScalarWhereWithAggregatesInput> having,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'query',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'groupByPost',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'orderBy',
+              orderBy,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'by',
+              by,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'having',
+              having,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'take',
+              take,
+              isRequired: false,
+            ),
+            _i2.GraphQLArg(
+              'skip',
+              skip,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(PostScalarFieldEnum.values
+              .map((PostScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
     return (result.data['groupByPost'] as List)
         .whereType<Map>()
         .map((Map e) => PostGroupByOutputType.fromJson(e.cast()))
@@ -3700,7 +4439,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'isReadOnly': false,
             'hasDefaultValue': true,
             'type': 'Int',
-            'default': {'name': 'autoincrement', 'args': []},
+            'default': {
+              'name': 'autoincrement',
+              'args': [],
+            },
             'isGenerated': false,
             'isUpdatedAt': false,
             'dbNames': null,
@@ -3719,10 +4461,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'Int',
-              'default': {'name': 'autoincrement', 'args': []},
+              'default': {
+                'name': 'autoincrement',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'name',
@@ -3754,8 +4499,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'String',
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'createdAt',
@@ -3767,7 +4512,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'isReadOnly': false,
             'hasDefaultValue': true,
             'type': 'DateTime',
-            'default': {'name': 'now', 'args': []},
+            'default': {
+              'name': 'now',
+              'args': [],
+            },
             'isGenerated': false,
             'isUpdatedAt': false,
             'dbNames': null,
@@ -3786,10 +4534,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'DateTime',
-              'default': {'name': 'now', 'args': []},
+              'default': {
+                'name': 'now',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'sex',
@@ -3822,8 +4573,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'type': 'Sex',
               'default': 'woman',
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'posts',
@@ -3858,9 +4609,9 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'relationFromFields': [],
               'relationToFields': [],
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
-          }
+              'isUpdatedAt': false,
+            },
+          },
         ],
         'primaryKey': null,
         'uniqueFields': [],
@@ -3882,9 +4633,12 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'Int',
-              'default': {'name': 'autoincrement', 'args': []},
+              'default': {
+                'name': 'autoincrement',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'name',
@@ -3897,7 +4651,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'String',
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'createdAt',
@@ -3909,9 +4663,12 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'DateTime',
-              'default': {'name': 'now', 'args': []},
+              'default': {
+                'name': 'now',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'sex',
@@ -3925,7 +4682,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'type': 'Sex',
               'default': 'woman',
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'posts',
@@ -3941,14 +4698,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'relationFromFields': [],
               'relationToFields': [],
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           ],
           'primaryKey': null,
           'uniqueFields': [],
           'uniqueIndexes': [],
-          'isGenerated': false
-        }
+          'isGenerated': false,
+        },
       },
       {
         'name': 'Post',
@@ -3964,7 +4721,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'isReadOnly': false,
             'hasDefaultValue': true,
             'type': 'Int',
-            'default': {'name': 'autoincrement', 'args': []},
+            'default': {
+              'name': 'autoincrement',
+              'args': [],
+            },
             'isGenerated': false,
             'isUpdatedAt': false,
             'dbNames': null,
@@ -3983,10 +4743,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'Int',
-              'default': {'name': 'autoincrement', 'args': []},
+              'default': {
+                'name': 'autoincrement',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'title',
@@ -4018,8 +4781,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'String',
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'authorId',
@@ -4051,8 +4814,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'Int',
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'content',
@@ -4084,8 +4847,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'String',
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'published',
@@ -4117,8 +4880,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'Boolean',
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'created_at',
@@ -4130,7 +4893,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'isReadOnly': false,
             'hasDefaultValue': true,
             'type': 'DateTime',
-            'default': {'name': 'now', 'args': []},
+            'default': {
+              'name': 'now',
+              'args': [],
+            },
             'isGenerated': false,
             'isUpdatedAt': false,
             'dbNames': null,
@@ -4149,10 +4915,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'DateTime',
-              'default': {'name': 'now', 'args': []},
+              'default': {
+                'name': 'now',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           },
           {
             'name': 'author',
@@ -4187,9 +4956,9 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'relationFromFields': ['authorId'],
               'relationToFields': ['id'],
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
-          }
+              'isUpdatedAt': false,
+            },
+          },
         ],
         'primaryKey': null,
         'uniqueFields': [],
@@ -4211,9 +4980,12 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'Int',
-              'default': {'name': 'autoincrement', 'args': []},
+              'default': {
+                'name': 'autoincrement',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'title',
@@ -4226,7 +4998,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'String',
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'authorId',
@@ -4239,7 +5011,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'Int',
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'content',
@@ -4252,7 +5024,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'String',
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'published',
@@ -4265,7 +5037,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': false,
               'type': 'Boolean',
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'created_at',
@@ -4277,9 +5049,12 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isReadOnly': false,
               'hasDefaultValue': true,
               'type': 'DateTime',
-              'default': {'name': 'now', 'args': []},
+              'default': {
+                'name': 'now',
+                'args': [],
+              },
               'isGenerated': false,
-              'isUpdatedAt': false
+              'isUpdatedAt': false,
             },
             {
               'name': 'author',
@@ -4295,28 +5070,34 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'relationFromFields': ['authorId'],
               'relationToFields': ['id'],
               'isGenerated': false,
-              'isUpdatedAt': false
-            }
+              'isUpdatedAt': false,
+            },
           ],
           'primaryKey': null,
           'uniqueFields': [],
           'uniqueIndexes': [],
-          'isGenerated': false
-        }
-      }
+          'isGenerated': false,
+        },
+      },
     ],
     'enums': [
       {
         'name': 'Sex',
         'values': [
-          {'name': 'man', 'dbName': null},
-          {'name': 'woman', 'dbName': null}
+          {
+            'name': 'man',
+            'dbName': null,
+          },
+          {
+            'name': 'woman',
+            'dbName': null,
+          },
         ],
         'dbName': null,
-        'documentation': null
+        'documentation': null,
       }
     ],
-    'types': []
+    'types': [],
   },
   'schema': {
     'rootQueryType': null,
@@ -4326,7 +5107,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
       'prisma': [
         {
           'name': 'UserWhereInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'AND',
@@ -4338,16 +5122,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'OR',
@@ -4359,10 +5143,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'NOT',
@@ -4374,16 +5158,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'id',
@@ -4395,16 +5179,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -4416,16 +5200,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -4437,16 +5221,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -4458,16 +5242,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'EnumSexFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
-                }
+                  'namespace': 'model',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'posts',
@@ -4479,17 +5263,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostListRelationFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserOrderByWithRelationInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 0,
+          },
           'fields': [
             {
               'name': 'id',
@@ -4501,10 +5288,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -4516,10 +5303,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -4531,10 +5318,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -4546,10 +5333,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'posts',
@@ -4561,17 +5348,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostOrderByRelationAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserWhereUniqueInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -4583,17 +5373,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserOrderByWithAggregationInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 0,
+          },
           'fields': [
             {
               'name': 'id',
@@ -4605,10 +5398,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -4620,10 +5413,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -4635,10 +5428,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -4650,10 +5443,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -4665,10 +5458,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCountOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_avg',
@@ -4680,10 +5473,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserAvgOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -4695,10 +5488,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserMaxOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -4710,10 +5503,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserMinOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_sum',
@@ -4725,17 +5518,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserSumOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserScalarWhereWithAggregatesInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'AND',
@@ -4747,16 +5543,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'OR',
@@ -4768,10 +5564,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'NOT',
@@ -4783,16 +5579,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'id',
@@ -4804,16 +5600,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -4825,16 +5621,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -4846,16 +5642,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTimeWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -4867,23 +5663,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'EnumSexWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
-                }
+                  'namespace': 'model',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostWhereInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'AND',
@@ -4895,16 +5694,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'OR',
@@ -4916,10 +5715,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'NOT',
@@ -4931,16 +5730,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'id',
@@ -4952,16 +5751,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -4973,16 +5772,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -4994,16 +5793,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -5015,16 +5814,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -5036,16 +5835,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'BoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -5057,16 +5856,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'author',
@@ -5078,23 +5877,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserRelationFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostOrderByWithRelationInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 0,
+          },
           'fields': [
             {
               'name': 'id',
@@ -5106,10 +5908,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -5121,10 +5923,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -5136,10 +5938,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -5151,10 +5953,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -5166,10 +5968,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -5181,10 +5983,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'author',
@@ -5196,17 +5998,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserOrderByWithRelationInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostWhereUniqueInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -5218,17 +6023,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostOrderByWithAggregationInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 0},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 0,
+          },
           'fields': [
             {
               'name': 'id',
@@ -5240,10 +6048,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -5255,10 +6063,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -5270,10 +6078,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -5285,10 +6093,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -5300,10 +6108,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -5315,10 +6123,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -5330,10 +6138,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCountOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_avg',
@@ -5345,10 +6153,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostAvgOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -5360,10 +6168,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostMaxOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -5375,10 +6183,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostMinOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_sum',
@@ -5390,17 +6198,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostSumOrderByAggregateInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostScalarWhereWithAggregatesInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'AND',
@@ -5412,16 +6223,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'OR',
@@ -5433,10 +6244,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'PostScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'NOT',
@@ -5448,16 +6259,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'id',
@@ -5469,16 +6280,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -5490,16 +6301,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -5511,16 +6322,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -5532,16 +6343,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -5553,16 +6364,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'BoolWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -5574,23 +6385,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTimeWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCreateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'name',
@@ -5602,10 +6416,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -5617,10 +6431,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -5632,10 +6446,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'posts',
@@ -5647,17 +6461,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateNestedManyWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUncheckedCreateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -5669,10 +6486,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -5684,10 +6501,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -5699,10 +6516,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -5714,10 +6531,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'posts',
@@ -5729,17 +6546,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUncheckedCreateNestedManyWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUpdateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'name',
@@ -5751,16 +6571,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -5772,16 +6592,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -5793,16 +6613,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'EnumSexFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'posts',
@@ -5814,17 +6634,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateManyWithoutAuthorNestedInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUncheckedUpdateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -5836,16 +6659,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -5857,16 +6680,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -5878,16 +6701,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -5899,16 +6722,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'EnumSexFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'posts',
@@ -5920,17 +6743,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUncheckedUpdateManyWithoutAuthorNestedInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCreateManyInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -5942,10 +6768,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -5957,10 +6783,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -5972,10 +6798,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -5987,17 +6813,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUpdateManyMutationInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'name',
@@ -6009,16 +6838,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -6030,16 +6859,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -6051,23 +6880,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'EnumSexFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUncheckedUpdateManyInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -6079,16 +6911,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -6100,16 +6932,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -6121,16 +6953,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -6142,23 +6974,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'EnumSexFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCreateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'title',
@@ -6170,10 +7005,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -6185,10 +7020,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -6200,10 +7035,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -6215,10 +7050,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'author',
@@ -6230,17 +7065,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCreateNestedOneWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedCreateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -6252,10 +7090,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -6267,10 +7105,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -6282,10 +7120,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -6297,10 +7135,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -6312,10 +7150,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -6327,17 +7165,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUpdateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'title',
@@ -6349,16 +7190,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -6370,16 +7211,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -6391,16 +7232,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'BoolFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -6412,16 +7253,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'author',
@@ -6433,17 +7274,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserUpdateOneRequiredWithoutPostsNestedInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedUpdateInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -6455,16 +7299,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -6476,16 +7320,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -6497,16 +7341,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -6518,16 +7362,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -6539,16 +7383,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'BoolFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -6560,23 +7404,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCreateManyInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -6588,10 +7435,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -6603,10 +7450,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -6618,10 +7465,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -6633,10 +7480,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -6648,10 +7495,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -6663,17 +7510,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUpdateManyMutationInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'title',
@@ -6685,16 +7535,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -6706,16 +7556,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -6727,16 +7577,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'BoolFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -6748,23 +7598,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedUpdateManyInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -6776,16 +7629,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -6797,16 +7650,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -6818,16 +7671,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -6839,16 +7692,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -6860,16 +7713,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'BoolFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -6881,23 +7734,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'IntFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -6909,10 +7765,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -6924,10 +7780,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -6939,10 +7795,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -6954,10 +7810,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -6969,10 +7825,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -6984,10 +7840,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -6999,10 +7855,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -7014,23 +7870,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'StringFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -7042,10 +7901,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -7057,10 +7916,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -7072,10 +7931,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -7087,10 +7946,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -7102,10 +7961,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -7117,10 +7976,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -7132,10 +7991,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'contains',
@@ -7147,10 +8006,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'startsWith',
@@ -7162,10 +8021,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'endsWith',
@@ -7177,10 +8036,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'mode',
@@ -7192,10 +8051,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'QueryMode',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -7207,23 +8066,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedStringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'DateTimeFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -7235,10 +8097,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -7250,10 +8112,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -7265,10 +8127,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -7280,10 +8142,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -7295,10 +8157,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -7310,10 +8172,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -7325,10 +8187,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -7340,23 +8202,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedDateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'EnumSexFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -7368,10 +8233,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -7383,10 +8248,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -7398,10 +8263,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -7413,23 +8278,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'NestedEnumSexFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostListRelationFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'every',
@@ -7441,10 +8309,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'some',
@@ -7456,10 +8324,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'none',
@@ -7471,17 +8339,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostOrderByRelationAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': '_count',
@@ -7493,17 +8364,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCountOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -7515,10 +8389,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -7530,10 +8404,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -7545,10 +8419,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -7560,17 +8434,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserAvgOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -7582,17 +8459,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserMaxOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -7604,10 +8484,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -7619,10 +8499,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -7634,10 +8514,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -7649,17 +8529,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserMinOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -7671,10 +8554,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -7686,10 +8569,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -7701,10 +8584,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -7716,17 +8599,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserSumOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -7738,17 +8624,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'IntWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -7760,10 +8649,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -7775,10 +8664,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -7790,10 +8679,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -7805,10 +8694,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -7820,10 +8709,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -7835,10 +8724,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -7850,10 +8739,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -7865,16 +8754,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedIntWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -7886,10 +8775,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_avg',
@@ -7901,10 +8790,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedFloatFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_sum',
@@ -7916,10 +8805,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -7931,10 +8820,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -7946,17 +8835,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'StringWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -7968,10 +8860,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -7983,10 +8875,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -7998,10 +8890,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -8013,10 +8905,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -8028,10 +8920,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -8043,10 +8935,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -8058,10 +8950,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'contains',
@@ -8073,10 +8965,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'startsWith',
@@ -8088,10 +8980,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'endsWith',
@@ -8103,10 +8995,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'mode',
@@ -8118,10 +9010,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'QueryMode',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -8133,16 +9025,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedStringWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -8154,10 +9046,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -8169,10 +9061,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedStringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -8184,17 +9076,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedStringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'DateTimeWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -8206,10 +9101,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -8221,10 +9116,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -8236,10 +9131,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -8251,10 +9146,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -8266,10 +9161,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -8281,10 +9176,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -8296,10 +9191,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -8311,16 +9206,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedDateTimeWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -8332,10 +9227,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -8347,10 +9242,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedDateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -8362,17 +9257,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedDateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'EnumSexWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -8384,10 +9282,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -8399,10 +9297,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -8414,10 +9312,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -8429,16 +9327,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'NestedEnumSexWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -8450,10 +9348,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -8465,10 +9363,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedEnumSexFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -8480,17 +9378,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedEnumSexFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'BoolFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -8502,10 +9403,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -8517,23 +9418,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserRelationFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'is',
@@ -8545,10 +9449,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'isNot',
@@ -8560,17 +9464,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCountOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -8582,10 +9489,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -8597,10 +9504,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -8612,10 +9519,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -8627,10 +9534,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -8642,10 +9549,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -8657,17 +9564,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostAvgOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -8679,10 +9589,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -8694,17 +9604,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostMaxOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -8716,10 +9629,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -8731,10 +9644,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -8746,10 +9659,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -8761,10 +9674,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -8776,10 +9689,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -8791,17 +9704,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostMinOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -8813,10 +9729,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -8828,10 +9744,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -8843,10 +9759,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -8858,10 +9774,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -8873,10 +9789,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -8888,17 +9804,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostSumOrderByAggregateInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'id',
@@ -8910,10 +9829,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -8925,17 +9844,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'SortOrder',
                   'location': 'enumTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'BoolWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -8947,10 +9869,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -8962,16 +9884,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedBoolWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -8983,10 +9905,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -8998,10 +9920,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -9013,17 +9935,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCreateNestedManyWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'create',
@@ -9035,28 +9960,28 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connectOrCreate',
@@ -9068,16 +9993,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createMany',
@@ -9089,10 +10014,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateManyAuthorInputEnvelope',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connect',
@@ -9104,23 +10029,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedCreateNestedManyWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'create',
@@ -9132,28 +10060,28 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connectOrCreate',
@@ -9165,16 +10093,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createMany',
@@ -9186,10 +10114,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateManyAuthorInputEnvelope',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connect',
@@ -9201,23 +10129,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'StringFieldUpdateOperationsInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'set',
@@ -9229,17 +10160,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'DateTimeFieldUpdateOperationsInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'set',
@@ -9251,17 +10185,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'EnumSexFieldUpdateOperationsInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'set',
@@ -9273,17 +10210,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUpdateManyWithoutAuthorNestedInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'create',
@@ -9295,28 +10235,28 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connectOrCreate',
@@ -9328,16 +10268,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'upsert',
@@ -9349,16 +10289,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createMany',
@@ -9370,10 +10310,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateManyAuthorInputEnvelope',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'set',
@@ -9385,16 +10325,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'disconnect',
@@ -9406,16 +10346,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'delete',
@@ -9427,16 +10367,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connect',
@@ -9448,16 +10388,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'update',
@@ -9469,16 +10409,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'updateMany',
@@ -9490,16 +10430,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'deleteMany',
@@ -9511,23 +10451,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'IntFieldUpdateOperationsInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'set',
@@ -9539,10 +10482,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'increment',
@@ -9554,10 +10497,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'decrement',
@@ -9569,10 +10512,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'multiply',
@@ -9584,10 +10527,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'divide',
@@ -9599,17 +10542,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedUpdateManyWithoutAuthorNestedInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'create',
@@ -9621,28 +10567,28 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connectOrCreate',
@@ -9654,16 +10600,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostCreateOrConnectWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'upsert',
@@ -9675,16 +10621,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createMany',
@@ -9696,10 +10642,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateManyAuthorInputEnvelope',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'set',
@@ -9711,16 +10657,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'disconnect',
@@ -9732,16 +10678,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'delete',
@@ -9753,16 +10699,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connect',
@@ -9774,16 +10720,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'update',
@@ -9795,16 +10741,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'updateMany',
@@ -9816,16 +10762,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostUpdateManyWithWhereWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'deleteMany',
@@ -9837,23 +10783,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCreateNestedOneWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'create',
@@ -9865,16 +10814,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'UserUncheckedCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connectOrCreate',
@@ -9886,10 +10835,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCreateOrConnectWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connect',
@@ -9901,17 +10850,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'BoolFieldUpdateOperationsInput',
-          'constraints': {'maxNumFields': 1, 'minNumFields': 1},
+          'constraints': {
+            'maxNumFields': 1,
+            'minNumFields': 1,
+          },
           'fields': [
             {
               'name': 'set',
@@ -9923,17 +10875,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUpdateOneRequiredWithoutPostsNestedInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'create',
@@ -9945,16 +10900,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'UserUncheckedCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connectOrCreate',
@@ -9966,10 +10921,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCreateOrConnectWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'upsert',
@@ -9981,10 +10936,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserUpsertWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'connect',
@@ -9996,10 +10951,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'update',
@@ -10011,23 +10966,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserUpdateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'UserUncheckedUpdateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedIntFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -10039,10 +10997,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -10054,10 +11012,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -10069,10 +11027,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -10084,10 +11042,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -10099,10 +11057,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -10114,10 +11072,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -10129,10 +11087,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -10144,23 +11102,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedStringFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -10172,10 +11133,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -10187,10 +11148,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -10202,10 +11163,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -10217,10 +11178,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -10232,10 +11193,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -10247,10 +11208,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -10262,10 +11223,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'contains',
@@ -10277,10 +11238,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'startsWith',
@@ -10292,10 +11253,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'endsWith',
@@ -10307,10 +11268,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -10322,23 +11283,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedStringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedDateTimeFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -10350,10 +11314,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -10365,10 +11329,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -10380,10 +11344,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -10395,10 +11359,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -10410,10 +11374,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -10425,10 +11389,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -10440,10 +11404,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -10455,23 +11419,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedDateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedEnumSexFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -10483,10 +11450,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -10498,10 +11465,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -10513,10 +11480,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -10528,23 +11495,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'NestedEnumSexFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedIntWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -10556,10 +11526,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -10571,10 +11541,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -10586,10 +11556,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -10601,10 +11571,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -10616,10 +11586,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -10631,10 +11601,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -10646,10 +11616,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -10661,16 +11631,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedIntWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -10682,10 +11652,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_avg',
@@ -10697,10 +11667,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedFloatFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_sum',
@@ -10712,10 +11682,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -10727,10 +11697,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -10742,17 +11712,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedFloatFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -10764,10 +11737,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -10779,10 +11752,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -10794,10 +11767,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -10809,10 +11782,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -10824,10 +11797,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -10839,10 +11812,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -10854,10 +11827,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -10869,23 +11842,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Float',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedFloatFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedStringWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -10897,10 +11873,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -10912,10 +11888,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -10927,10 +11903,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -10942,10 +11918,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -10957,10 +11933,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -10972,10 +11948,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -10987,10 +11963,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'contains',
@@ -11002,10 +11978,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'startsWith',
@@ -11017,10 +11993,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'endsWith',
@@ -11032,10 +12008,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -11047,16 +12023,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedStringWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -11068,10 +12044,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -11083,10 +12059,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedStringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -11098,17 +12074,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedStringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedDateTimeWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -11120,10 +12099,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -11135,10 +12114,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -11150,10 +12129,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lt',
@@ -11165,10 +12144,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'lte',
@@ -11180,10 +12159,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gt',
@@ -11195,10 +12174,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'gte',
@@ -11210,10 +12189,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -11225,16 +12204,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedDateTimeWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -11246,10 +12225,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -11261,10 +12240,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedDateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -11276,17 +12255,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedDateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedEnumSexWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -11298,10 +12280,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'in',
@@ -11313,10 +12295,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'notIn',
@@ -11328,10 +12310,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -11343,16 +12325,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'NestedEnumSexWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -11364,10 +12346,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -11379,10 +12361,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedEnumSexFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -11394,17 +12376,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedEnumSexFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedBoolFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -11416,10 +12401,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -11431,23 +12416,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'NestedBoolWithAggregatesFilter',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'equals',
@@ -11459,10 +12447,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'not',
@@ -11474,16 +12462,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'NestedBoolWithAggregatesFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_count',
@@ -11495,10 +12483,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedIntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_min',
@@ -11510,10 +12498,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': '_max',
@@ -11525,17 +12513,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCreateWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'title',
@@ -11547,10 +12538,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -11562,10 +12553,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -11577,10 +12568,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -11592,17 +12583,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedCreateWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -11614,10 +12608,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -11629,10 +12623,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -11644,10 +12638,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -11659,10 +12653,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -11674,17 +12668,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCreateOrConnectWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'where',
@@ -11696,10 +12693,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'create',
@@ -11711,23 +12708,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCreateManyAuthorInputEnvelope',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'data',
@@ -11739,10 +12739,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'PostCreateManyAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'skipDuplicates',
@@ -11754,17 +12754,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUpsertWithWhereUniqueWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'where',
@@ -11776,10 +12779,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'update',
@@ -11791,16 +12794,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedUpdateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'create',
@@ -11812,23 +12815,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedCreateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUpdateWithWhereUniqueWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'where',
@@ -11840,10 +12846,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'data',
@@ -11855,23 +12861,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedUpdateWithoutAuthorInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUpdateManyWithWhereWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'where',
@@ -11883,10 +12892,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'data',
@@ -11898,23 +12907,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostUpdateManyMutationInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'PostUncheckedUpdateManyWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostScalarWhereInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'AND',
@@ -11926,16 +12938,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'OR',
@@ -11947,10 +12959,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': true,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'NOT',
@@ -11962,16 +12974,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': true,
                   'type': 'PostScalarWhereInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'id',
@@ -11983,16 +12995,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -12004,16 +13016,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'authorId',
@@ -12025,16 +13037,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'IntFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -12046,16 +13058,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'StringFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -12067,16 +13079,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'BoolFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -12088,23 +13100,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTimeFilter',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
-                }
+                  'namespace': null,
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCreateWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'name',
@@ -12116,10 +13131,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -12131,10 +13146,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -12146,17 +13161,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUncheckedCreateWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -12168,10 +13186,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -12183,10 +13201,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -12198,10 +13216,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -12213,17 +13231,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCreateOrConnectWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'where',
@@ -12235,10 +13256,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserWhereUniqueInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'create',
@@ -12250,23 +13271,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'UserUncheckedCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUpsertWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'update',
@@ -12278,16 +13302,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserUpdateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'UserUncheckedUpdateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'create',
@@ -12299,23 +13323,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'UserCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
+                  'namespace': 'prisma',
                 },
                 {
                   'isList': false,
                   'type': 'UserUncheckedCreateWithoutPostsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUpdateWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'name',
@@ -12327,16 +13354,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -12348,16 +13375,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -12369,23 +13396,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'EnumSexFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserUncheckedUpdateWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -12397,16 +13427,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'name',
@@ -12418,16 +13448,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'createdAt',
@@ -12439,16 +13469,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'sex',
@@ -12460,23 +13490,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Sex',
                   'location': 'enumTypes',
-                  'namespace': 'model'
+                  'namespace': 'model',
                 },
                 {
                   'isList': false,
                   'type': 'EnumSexFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCreateManyAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -12488,10 +13521,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -12503,10 +13536,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -12518,10 +13551,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -12533,10 +13566,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -12548,17 +13581,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 }
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUpdateWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'title',
@@ -12570,16 +13606,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -12591,16 +13627,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -12612,16 +13648,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'BoolFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -12633,23 +13669,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedUpdateWithoutAuthorInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -12661,16 +13700,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -12682,16 +13721,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -12703,16 +13742,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -12724,16 +13763,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'BoolFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -12745,23 +13784,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostUncheckedUpdateManyWithoutPostsInput',
-          'constraints': {'maxNumFields': null, 'minNumFields': null},
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
           'fields': [
             {
               'name': 'id',
@@ -12773,16 +13815,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Int',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'IntFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'title',
@@ -12794,16 +13836,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'content',
@@ -12815,16 +13857,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'String',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'StringFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'published',
@@ -12836,16 +13878,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'Boolean',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'BoolFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
+              'deprecation': null,
             },
             {
               'name': 'created_at',
@@ -12857,21 +13899,21 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'isList': false,
                   'type': 'DateTime',
                   'location': 'scalar',
-                  'namespace': null
+                  'namespace': null,
                 },
                 {
                   'isList': false,
                   'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
-                  'namespace': 'prisma'
-                }
+                  'namespace': 'prisma',
+                },
               ],
-              'deprecation': null
-            }
+              'deprecation': null,
+            },
           ],
-          'fieldMap': null
-        }
-      ]
+          'fieldMap': null,
+        },
+      ],
     },
     'outputObjectTypes': {
       'model': [
@@ -12885,11 +13927,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'name',
@@ -12898,11 +13940,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createdAt',
@@ -12911,11 +13953,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'sex',
@@ -12924,11 +13966,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Sex',
                 'location': 'enumTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'posts',
@@ -12937,7 +13979,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': true,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -12950,10 +13992,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -12965,16 +14007,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'cursor',
@@ -12986,10 +14028,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13001,10 +14043,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13016,10 +14058,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'distinct',
@@ -13031,14 +14073,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_count',
@@ -13047,14 +14089,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserCountOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'Post',
@@ -13066,11 +14108,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'title',
@@ -13079,11 +14121,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'authorId',
@@ -13092,11 +14134,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'content',
@@ -13105,11 +14147,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'published',
@@ -13118,11 +14160,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Boolean',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'created_at',
@@ -13131,11 +14173,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'author',
@@ -13144,15 +14186,15 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
-        }
+          'fieldMap': null,
+        },
       ],
       'prisma': [
         {
@@ -13165,7 +14207,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -13178,10 +14220,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13193,16 +14235,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'cursor',
@@ -13214,10 +14256,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13229,10 +14271,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13244,10 +14286,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'distinct',
@@ -13259,14 +14301,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'findManyUser',
@@ -13275,7 +14317,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': true,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -13288,10 +14330,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13303,16 +14345,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'cursor',
@@ -13324,10 +14366,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13339,10 +14381,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13354,10 +14396,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'distinct',
@@ -13369,14 +14411,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'aggregateUser',
@@ -13385,7 +14427,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AggregateUser',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -13398,10 +14440,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13413,16 +14455,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'cursor',
@@ -13434,10 +14476,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13449,10 +14491,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13464,14 +14506,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'groupByUser',
@@ -13480,7 +14522,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': true,
                 'type': 'UserGroupByOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -13493,10 +14535,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13508,16 +14550,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserOrderByWithAggregationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserOrderByWithAggregationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'by',
@@ -13529,16 +14571,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'having',
@@ -13550,10 +14592,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserScalarWhereWithAggregatesInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13565,10 +14607,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13580,14 +14622,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'findUniqueUser',
@@ -13596,7 +14638,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -13609,14 +14651,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'findFirstPost',
@@ -13625,7 +14667,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -13638,10 +14680,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13653,16 +14695,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'cursor',
@@ -13674,10 +14716,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13689,10 +14731,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13704,10 +14746,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'distinct',
@@ -13719,14 +14761,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'findManyPost',
@@ -13735,7 +14777,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': true,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -13748,10 +14790,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13763,16 +14805,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'cursor',
@@ -13784,10 +14826,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13799,10 +14841,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13814,10 +14856,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'distinct',
@@ -13829,14 +14871,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'aggregatePost',
@@ -13845,7 +14887,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AggregatePost',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -13858,10 +14900,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13873,16 +14915,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'cursor',
@@ -13894,10 +14936,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -13909,10 +14951,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -13924,14 +14966,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'groupByPost',
@@ -13940,7 +14982,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': true,
                 'type': 'PostGroupByOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -13953,10 +14995,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'orderBy',
@@ -13968,16 +15010,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostOrderByWithAggregationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostOrderByWithAggregationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'by',
@@ -13989,16 +15031,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostScalarFieldEnum',
                       'location': 'enumTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'having',
@@ -14010,10 +15052,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostScalarWhereWithAggregatesInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'take',
@@ -14025,10 +15067,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skip',
@@ -14040,14 +15082,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Int',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'findUniquePost',
@@ -14056,7 +15098,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14069,17 +15111,17 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'Mutation',
@@ -14091,7 +15133,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14104,20 +15146,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserUncheckedCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'upsertOneUser',
@@ -14126,7 +15168,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14139,10 +15181,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'create',
@@ -14154,16 +15196,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserUncheckedCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'update',
@@ -14175,20 +15217,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserUncheckedUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createManyUser',
@@ -14197,7 +15239,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AffectedRowsOutput',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -14210,10 +15252,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'UserCreateManyInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skipDuplicates',
@@ -14225,14 +15267,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Boolean',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'deleteOneUser',
@@ -14241,7 +15283,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14254,14 +15296,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'updateOneUser',
@@ -14270,7 +15312,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'User',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14283,16 +15325,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserUncheckedUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'where',
@@ -14304,14 +15346,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'updateManyUser',
@@ -14320,7 +15362,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AffectedRowsOutput',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -14333,16 +15375,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserUpdateManyMutationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'UserUncheckedUpdateManyInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'where',
@@ -14354,14 +15396,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'deleteManyUser',
@@ -14370,7 +15412,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AffectedRowsOutput',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -14383,14 +15425,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createOnePost',
@@ -14399,7 +15441,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14412,20 +15454,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostUncheckedCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'upsertOnePost',
@@ -14434,7 +15476,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14447,10 +15489,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'create',
@@ -14462,16 +15504,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostUncheckedCreateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'update',
@@ -14483,20 +15525,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostUncheckedUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createManyPost',
@@ -14505,7 +15547,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AffectedRowsOutput',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -14518,10 +15560,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': true,
                       'type': 'PostCreateManyInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'skipDuplicates',
@@ -14533,14 +15575,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Boolean',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'deleteOnePost',
@@ -14549,7 +15591,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14562,14 +15604,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'updateOnePost',
@@ -14578,7 +15620,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Post',
                 'location': 'outputObjectTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [
                 {
@@ -14591,16 +15633,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostUncheckedUpdateInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'where',
@@ -14612,14 +15654,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereUniqueInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'updateManyPost',
@@ -14628,7 +15670,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AffectedRowsOutput',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -14641,16 +15683,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostUpdateManyMutationInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     },
                     {
                       'isList': false,
                       'type': 'PostUncheckedUpdateManyInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
-                    }
+                      'namespace': 'prisma',
+                    },
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'where',
@@ -14662,14 +15704,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'deleteManyPost',
@@ -14678,7 +15720,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'AffectedRowsOutput',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [
                 {
@@ -14691,14 +15733,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'PostWhereInput',
                       'location': 'inputObjectTypes',
-                      'namespace': 'prisma'
+                      'namespace': 'prisma',
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 }
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'executeRaw',
@@ -14707,7 +15749,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Json',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [
                 {
@@ -14720,10 +15762,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'String',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'parameters',
@@ -14735,14 +15777,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Json',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'queryRaw',
@@ -14751,7 +15793,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Json',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [
                 {
@@ -14764,10 +15806,10 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'String',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
+                  'deprecation': null,
                 },
                 {
                   'name': 'parameters',
@@ -14779,17 +15821,17 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                       'isList': false,
                       'type': 'Json',
                       'location': 'scalar',
-                      'namespace': null
+                      'namespace': null,
                     }
                   ],
-                  'deprecation': null
-                }
+                  'deprecation': null,
+                },
               ],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'AggregateUser',
@@ -14801,11 +15843,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserCountAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_avg',
@@ -14814,11 +15856,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserAvgAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_sum',
@@ -14827,11 +15869,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserSumAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_min',
@@ -14840,11 +15882,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserMinAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_max',
@@ -14853,14 +15895,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserMaxAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserGroupByOutputType',
@@ -14872,11 +15914,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'name',
@@ -14885,11 +15927,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createdAt',
@@ -14898,11 +15940,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'sex',
@@ -14911,11 +15953,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Sex',
                 'location': 'enumTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_count',
@@ -14924,11 +15966,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserCountAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_avg',
@@ -14937,11 +15979,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserAvgAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_sum',
@@ -14950,11 +15992,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserSumAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_min',
@@ -14963,11 +16005,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserMinAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_max',
@@ -14976,14 +16018,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'UserMaxAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'AggregatePost',
@@ -14995,11 +16037,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostCountAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_avg',
@@ -15008,11 +16050,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostAvgAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_sum',
@@ -15021,11 +16063,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostSumAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_min',
@@ -15034,11 +16076,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostMinAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_max',
@@ -15047,14 +16089,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostMaxAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostGroupByOutputType',
@@ -15066,11 +16108,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'title',
@@ -15079,11 +16121,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'authorId',
@@ -15092,11 +16134,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'content',
@@ -15105,11 +16147,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'published',
@@ -15118,11 +16160,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Boolean',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'created_at',
@@ -15131,11 +16173,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_count',
@@ -15144,11 +16186,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostCountAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_avg',
@@ -15157,11 +16199,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostAvgAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_sum',
@@ -15170,11 +16212,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostSumAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_min',
@@ -15183,11 +16225,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostMinAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_max',
@@ -15196,14 +16238,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'PostMaxAggregateOutputType',
                 'location': 'outputObjectTypes',
-                'namespace': 'prisma'
+                'namespace': 'prisma',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'AffectedRowsOutput',
@@ -15215,14 +16257,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCountOutputType',
@@ -15234,14 +16276,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserCountAggregateOutputType',
@@ -15253,11 +16295,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'name',
@@ -15266,11 +16308,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createdAt',
@@ -15279,11 +16321,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'sex',
@@ -15292,11 +16334,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_all',
@@ -15305,14 +16347,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserAvgAggregateOutputType',
@@ -15324,14 +16366,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Float',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserSumAggregateOutputType',
@@ -15343,14 +16385,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             }
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserMinAggregateOutputType',
@@ -15362,11 +16404,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'name',
@@ -15375,11 +16417,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createdAt',
@@ -15388,11 +16430,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'sex',
@@ -15401,14 +16443,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Sex',
                 'location': 'enumTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'UserMaxAggregateOutputType',
@@ -15420,11 +16462,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'name',
@@ -15433,11 +16475,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'createdAt',
@@ -15446,11 +16488,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'sex',
@@ -15459,14 +16501,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Sex',
                 'location': 'enumTypes',
-                'namespace': 'model'
+                'namespace': 'model',
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostCountAggregateOutputType',
@@ -15478,11 +16520,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'title',
@@ -15491,11 +16533,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'authorId',
@@ -15504,11 +16546,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'content',
@@ -15517,11 +16559,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'published',
@@ -15530,11 +16572,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'created_at',
@@ -15543,11 +16585,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': '_all',
@@ -15556,14 +16598,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostAvgAggregateOutputType',
@@ -15575,11 +16617,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Float',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'authorId',
@@ -15588,14 +16630,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Float',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostSumAggregateOutputType',
@@ -15607,11 +16649,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'authorId',
@@ -15620,14 +16662,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostMinAggregateOutputType',
@@ -15639,11 +16681,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'title',
@@ -15652,11 +16694,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'authorId',
@@ -15665,11 +16707,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'content',
@@ -15678,11 +16720,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'published',
@@ -15691,11 +16733,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Boolean',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'created_at',
@@ -15704,14 +16746,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
+          'fieldMap': null,
         },
         {
           'name': 'PostMaxAggregateOutputType',
@@ -15723,11 +16765,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'title',
@@ -15736,11 +16778,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'authorId',
@@ -15749,11 +16791,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Int',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'content',
@@ -15762,11 +16804,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'String',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'published',
@@ -15775,11 +16817,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'Boolean',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
+              'documentation': null,
             },
             {
               'name': 'created_at',
@@ -15788,22 +16830,25 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 'isList': false,
                 'type': 'DateTime',
                 'location': 'scalar',
-                'namespace': null
+                'namespace': null,
               },
               'args': [],
               'deprecation': null,
-              'documentation': null
-            }
+              'documentation': null,
+            },
           ],
-          'fieldMap': null
-        }
-      ]
+          'fieldMap': null,
+        },
+      ],
     },
     'enumTypes': {
       'model': [
         {
           'name': 'Sex',
-          'values': ['man', 'woman']
+          'values': [
+            'man',
+            'woman',
+          ],
         }
       ],
       'prisma': [
@@ -15815,16 +16860,22 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'authorId',
             'content',
             'published',
-            'created_at'
-          ]
+            'created_at',
+          ],
         },
         {
           'name': 'QueryMode',
-          'values': ['default', 'insensitive']
+          'values': [
+            'default',
+            'insensitive',
+          ],
         },
         {
           'name': 'SortOrder',
-          'values': ['asc', 'desc']
+          'values': [
+            'asc',
+            'desc',
+          ],
         },
         {
           'name': 'TransactionIsolationLevel',
@@ -15832,15 +16883,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'ReadUncommitted',
             'ReadCommitted',
             'RepeatableRead',
-            'Serializable'
-          ]
+            'Serializable',
+          ],
         },
         {
           'name': 'UserScalarFieldEnum',
-          'values': ['id', 'name', 'createdAt', 'sex']
-        }
-      ]
-    }
+          'values': [
+            'id',
+            'name',
+            'createdAt',
+            'sex',
+          ],
+        },
+      ],
+    },
   },
   'mappings': {
     'modelOperations': [
@@ -15859,7 +16915,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
         'aggregate': 'aggregateUser',
         'groupBy': 'groupByUser',
         'findRaw': null,
-        'aggregateRaw': null
+        'aggregateRaw': null,
       },
       {
         'model': 'Post',
@@ -15876,14 +16932,17 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
         'aggregate': 'aggregatePost',
         'groupBy': 'groupByPost',
         'findRaw': null,
-        'aggregateRaw': null
-      }
+        'aggregateRaw': null,
+      },
     ],
     'otherOperations': {
       'read': [],
-      'write': ['executeRaw', 'queryRaw']
-    }
-  }
+      'write': [
+        'executeRaw',
+        'queryRaw',
+      ],
+    },
+  },
 });
 const String schema =
     'generator client {\n  provider        = "prisma-client-dart"\n  output          = "../lib/src/generated"\n  previewFeatures = ["interactiveTransactions"]\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\nenum Sex {\n  man\n  woman\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  sex Sex @default(woman)\n  posts     Post[]\n}\n\nmodel Post {\n  id         Int      @id @default(autoincrement())\n  title      String\n  authorId   Int\n  content    String\n  published  Boolean\n  created_at DateTime @default(now())\n  author     User     @relation(fields: [authorId], references: [id])\n}\n';
@@ -15897,49 +16956,93 @@ class Datasources {
 
   Map<String, _i2.Datasource> _toOverwrites() {
     final $overwrites = <String, _i2.PrismaNullable<_i2.Datasource>>{'db': db}
-      ..removeWhere((_, v) => v == null);
+      ..removeWhere((
+        _,
+        v,
+      ) =>
+          v == null);
     return $overwrites.cast();
   }
 }
 
 class PrismaClient {
-  const PrismaClient._(this._engine, [this._headers]);
+  const PrismaClient._(
+    this._engine, [
+    this._headers,
+  ]);
 
   factory PrismaClient({_i2.PrismaNullable<Datasources> datasources}) {
     final _i2.Engine engine = _i2.BinaryEngine(
-        datasources: datasources?._toOverwrites() ?? <String, _i2.Datasource>{},
-        dmmf: dmmf,
-        schema: schema,
-        executable: _executable,
-        environment: _i4.environment.all);
-    return PrismaClient._(engine, null);
+      datasources: datasources?._toOverwrites() ?? <String, _i2.Datasource>{},
+      dmmf: dmmf,
+      schema: schema,
+      executable: _executable,
+      environment: _i4.environment.all,
+    );
+    return PrismaClient._(
+      engine,
+      null,
+    );
   }
 
   final _i2.Engine _engine;
 
   final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _headers;
 
-  UserDelegate get user => UserDelegate._(_engine, _headers);
-  PostDelegate get post => PostDelegate._(_engine, _headers);
+  UserDelegate get user => UserDelegate._(
+        _engine,
+        _headers,
+      );
+  PostDelegate get post => PostDelegate._(
+        _engine,
+        _headers,
+      );
 
   /// Connect to the database.
   Future<void> $connect() => _engine.start();
 
   /// Disconnect from the database.
   Future<void> $disconnect() => _engine.stop();
-  Future<T> $transaction<T>(Future<T> Function(PrismaClient) fn,
-      [_i2.TransactionOptions? options]) async {
+
+  /// Interactive transactions.
+  ///
+  /// Sometimes you need more control over what queries execute within a transaction. Interactive transactions are meant to provide you with an escape hatch.
+  ///
+  /// **NOTE**: If you use interactive transactions, then you cannot use the [Data Proxy](https://www.prisma.io/docs/data-platform/data-proxy) at the same time.
+  ///
+  /// E.g:
+  /// ```dart
+  /// final prisma = PrismaClient();
+  /// prisma.$transaction((transaction) async {
+  ///   await transaction.user.create({ ... });
+  ///   await transaction.post.create({ ... });
+  /// });
+  /// ```
+  Future<T> $transaction<T>(
+    Future<T> Function(PrismaClient) fn, [
+    _i2.TransactionOptions? options,
+  ]) async {
     if (_headers?.transactionId != null) return fn(this);
     final _i2.TransactionHeaders headers = _i2.TransactionHeaders();
-    final _i2.TransactionInfo info =
-        await _engine.startTransaction(headers: headers);
+    final _i2.TransactionInfo info = await _engine.startTransaction(
+      headers: headers,
+      options: options ?? _i2.TransactionOptions(),
+    );
     try {
       final T result = await fn(PrismaClient._(
-          _engine, _i2.QueryEngineRequestHeaders(transactionId: info.id)));
-      await _engine.commitTransaction(headers: headers, info: info);
+        _engine,
+        _i2.QueryEngineRequestHeaders(transactionId: info.id),
+      ));
+      await _engine.commitTransaction(
+        headers: headers,
+        info: info,
+      );
       return result;
     } catch (e) {
-      await _engine.rollbackTransaction(headers: headers, info: info);
+      await _engine.rollbackTransaction(
+        headers: headers,
+        info: info,
+      );
       rethrow;
     }
   }
