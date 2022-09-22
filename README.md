@@ -3,6 +3,7 @@ Next-generation ORM for Dart Native & Flutter | PostgreSQL, MySQL, MariaDB, SQL 
 [![Pub Version](https://img.shields.io/pub/v/orm?label=latest)](https://pub.dev/packages/orm)
 [![GitHub license](https://img.shields.io/github/license/odroe/prisma-dart)](https://github.com/odroe/prisma-dart/blob/main/LICENSE)
 [![test](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml)
+![Twitter Follow](https://img.shields.io/twitter/follow/odroeinc?label=Follow%20Odroe&style=social)
 
 ## What is it?
 
