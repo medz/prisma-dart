@@ -3,7 +3,8 @@ library prisma.client; // ignore_for_file: no_leading_underscores_for_library_pr
 import 'package:json_annotation/json_annotation.dart' as _i1;
 import 'package:orm/orm.dart' as _i2;
 import 'package:orm/dmmf.dart' as _i3;
-import 'package:orm/configure.dart' as _i4;
+import 'dart:convert' as _i4;
+import 'package:orm/configure.dart' as _i5;
 export 'package:orm/orm.dart' show Datasource, PrismaNull, PrismaUnion;
 import 'package:json_annotation/json_annotation.dart'
     show $enumDecode, $enumDecodeNullable;
@@ -16944,8 +16945,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
     },
   },
 });
-const String schema =
-    'generator client {\n  provider        = "prisma-client-dart"\n  output          = "../lib/src/generated"\n  previewFeatures = ["interactiveTransactions"]\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\nenum Sex {\n  man\n  woman\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  sex       Sex      @default(woman)\n  posts     Post[]\n}\n\nmodel Post {\n  id         Int      @id @default(autoincrement())\n  title      String\n  authorId   Int\n  content    String\n  published  Boolean\n  created_at DateTime @default(now())\n  author     User     @relation(fields: [authorId], references: [id])\n}\n';
+final String schema = _i4.utf8.decode(_i4.base64.decode(
+    r'Z2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBvdXRwdXQgICAgICAgICAgPSAiLi4vbGliL3NyYy9nZW5lcmF0ZWQiCiAgcHJldmlld0ZlYXR1cmVzID0gWyJpbnRlcmFjdGl2ZVRyYW5zYWN0aW9ucyJdCn0KCmRhdGFzb3VyY2UgZGIgewogIHByb3ZpZGVyID0gInBvc3RncmVzcWwiCiAgdXJsICAgICAgPSBlbnYoIkRBVEFCQVNFX1VSTCIpCn0KCmVudW0gU2V4IHsKICBtYW4KICB3b21hbgp9Cgptb2RlbCBVc2VyIHsKICBpZCAgICAgICAgSW50ICAgICAgQGlkIEBkZWZhdWx0KGF1dG9pbmNyZW1lbnQoKSkKICBuYW1lICAgICAgU3RyaW5nCiAgY3JlYXRlZEF0IERhdGVUaW1lIEBkZWZhdWx0KG5vdygpKQogIHNleCAgICAgICBTZXggICAgICBAZGVmYXVsdCh3b21hbikKICBwb3N0cyAgICAgUG9zdFtdCn0KCm1vZGVsIFBvc3QgewogIGlkICAgICAgICAgSW50ICAgICAgQGlkIEBkZWZhdWx0KGF1dG9pbmNyZW1lbnQoKSkKICB0aXRsZSAgICAgIFN0cmluZwogIGF1dGhvcklkICAgSW50CiAgY29udGVudCAgICBTdHJpbmcKICBwdWJsaXNoZWQgIEJvb2xlYW4KICBjcmVhdGVkX2F0IERhdGVUaW1lIEBkZWZhdWx0KG5vdygpKQogIGF1dGhvciAgICAgVXNlciAgICAgQHJlbGF0aW9uKGZpZWxkczogW2F1dGhvcklkXSwgcmVmZXJlbmNlczogW2lkXSkKfQo='));
 const String _executable =
     r'/Users/seven/workspace/prisma/example/simple/.dart_tool/prisma/query-engine';
 
@@ -16977,7 +16978,7 @@ class PrismaClient {
       dmmf: dmmf,
       schema: schema,
       executable: _executable,
-      environment: _i4.environment.all,
+      environment: _i5.environment.all,
     );
     return PrismaClient._(
       engine,

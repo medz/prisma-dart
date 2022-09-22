@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/orm.dart' as runtime;
 
@@ -25,8 +27,14 @@ class ClientBuilder {
 
       // Build schema block.
       blockBuilder.addExpression(
-        declareConst('schema', type: refer('String'))
-            .assign(literalString(options.schema)),
+        declareFinal('schema', type: refer('String')).assign(
+          refer('utf8', 'dart:convert').property('decode').call([
+            refer('base64', 'dart:convert').property('decode').call([
+              literalString(base64.encode(utf8.encode(options.schema)),
+                  raw: true)
+            ]),
+          ]),
+        ),
       );
 
       // Build query engine executable.

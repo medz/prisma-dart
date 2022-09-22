@@ -3,7 +3,8 @@ library prisma.client; // ignore_for_file: no_leading_underscores_for_library_pr
 import 'package:json_annotation/json_annotation.dart' as _i1;
 import 'package:orm/orm.dart' as _i2;
 import 'package:orm/dmmf.dart' as _i3;
-import 'package:orm/configure.dart' as _i4;
+import 'dart:convert' as _i4;
+import 'package:orm/configure.dart' as _i5;
 export 'package:orm/orm.dart' show Datasource, PrismaNull, PrismaUnion;
 import 'package:json_annotation/json_annotation.dart'
     show $enumDecode, $enumDecodeNullable;
@@ -4444,7 +4445,7 @@ class UserDelegate {
   }
 }
 
-final _i3.Document dmmf = _i3.Document.fromJson({
+final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   'datamodel': {
     'models': [
       {
@@ -17216,8 +17217,8 @@ final _i3.Document dmmf = _i3.Document.fromJson({
     },
   },
 });
-const String schema =
-    '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider        = "prisma-client-dart"\n  previewFeatures = ["interactiveTransactions"]\n  output          = "../lib/readme_example.dart"\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\n// Data model\nmodel Post {\n  id        Int     @id @default(autoincrement())\n  title     String\n  content   String?\n  published Boolean @default(false)\n  author    User?   @relation(fields: [authorId], references: [id])\n  authorId  Int?\n}\n\nmodel User {\n  id    Int     @id @default(autoincrement())\n  email String  @unique\n  name  String?\n  posts Post[]\n}\n';
+final String schema = _i4.utf8.decode(_i4.base64.decode(
+    r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBwcmV2aWV3RmVhdHVyZXMgPSBbImludGVyYWN0aXZlVHJhbnNhY3Rpb25zIl0KICBvdXRwdXQgICAgICAgICAgPSAiLi4vbGliL3JlYWRtZV9leGFtcGxlLmRhcnQiCn0KCmRhdGFzb3VyY2UgZGIgewogIHByb3ZpZGVyID0gInBvc3RncmVzcWwiCiAgdXJsICAgICAgPSBlbnYoIkRBVEFCQVNFX1VSTCIpCn0KCi8vIERhdGEgbW9kZWwKbW9kZWwgUG9zdCB7CiAgaWQgICAgICAgIEludCAgICAgQGlkIEBkZWZhdWx0KGF1dG9pbmNyZW1lbnQoKSkKICB0aXRsZSAgICAgU3RyaW5nCiAgY29udGVudCAgIFN0cmluZz8KICBwdWJsaXNoZWQgQm9vbGVhbiBAZGVmYXVsdChmYWxzZSkKICBhdXRob3IgICAgVXNlcj8gICBAcmVsYXRpb24oZmllbGRzOiBbYXV0aG9ySWRdLCByZWZlcmVuY2VzOiBbaWRdKQogIGF1dGhvcklkICBJbnQ/Cn0KCm1vZGVsIFVzZXIgewogIGlkICAgIEludCAgICAgQGlkIEBkZWZhdWx0KGF1dG9pbmNyZW1lbnQoKSkKICBlbWFpbCBTdHJpbmcgIEB1bmlxdWUKICBuYW1lICBTdHJpbmc/CiAgcG9zdHMgUG9zdFtdCn0K'));
 const String _executable =
     r'/Users/seven/workspace/prisma/example/readme_example/.dart_tool/prisma/query-engine';
 
@@ -17249,7 +17250,7 @@ class PrismaClient {
       dmmf: dmmf,
       schema: schema,
       executable: _executable,
-      environment: _i4.environment.all,
+      environment: _i5.environment.all,
     );
     return PrismaClient._(
       engine,
@@ -17275,14 +17276,31 @@ class PrismaClient {
 
   /// Disconnect from the database.
   Future<void> $disconnect() => _engine.stop();
+
+  /// Interactive transactions.
+  ///
+  /// Sometimes you need more control over what queries execute within a transaction. Interactive transactions are meant to provide you with an escape hatch.
+  ///
+  /// **NOTE**: If you use interactive transactions, then you cannot use the [Data Proxy](https://www.prisma.io/docs/data-platform/data-proxy) at the same time.
+  ///
+  /// E.g:
+  /// ```dart
+  /// final prisma = PrismaClient();
+  /// prisma.$transaction((transaction) async {
+  ///   await transaction.user.create({ ... });
+  ///   await transaction.post.create({ ... });
+  /// });
+  /// ```
   Future<T> $transaction<T>(
     Future<T> Function(PrismaClient) fn, [
     _i2.TransactionOptions? options,
   ]) async {
     if (_headers?.transactionId != null) return fn(this);
     final _i2.TransactionHeaders headers = _i2.TransactionHeaders();
-    final _i2.TransactionInfo info =
-        await _engine.startTransaction(headers: headers);
+    final _i2.TransactionInfo info = await _engine.startTransaction(
+      headers: headers,
+      options: options ?? _i2.TransactionOptions(),
+    );
     try {
       final T result = await fn(PrismaClient._(
         _engine,
