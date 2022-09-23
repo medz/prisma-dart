@@ -1,3 +1,5 @@
+library prisma.cli;
+
 import 'dart:io';
 
 import 'package:args/args.dart';

@@ -1,1 +1,4 @@
 .github
+example/*
+!example/README.md
+test/

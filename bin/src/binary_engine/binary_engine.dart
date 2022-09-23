@@ -57,16 +57,20 @@ class BinaryEngine {
       return false;
     }
 
-    // Get excutable file version.
-    final ProcessResult result = await run(['--version']);
+    try {
+      // Get excutable file version.
+      final ProcessResult result = await run(['--version']);
 
-    // If excutable file version is not same as binary engine version, delete it.
-    if (result.stdout.toString().contains(version)) {
-      return true;
+      // If excutable file version is not same as binary engine version, delete it.
+      if (result.stdout.toString().contains(version)) {
+        return true;
+      }
+
+      throw Exception('Binary engine version is not same as excutable file.');
+    } catch (_) {
+      await _clean();
+      return false;
     }
-
-    await _clean();
-    return false;
   }
 
   /// Run the binary engine.

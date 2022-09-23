@@ -1,3 +1,5 @@
+library prisma.version;
+
 /// Prisma binary engines version.
 const String binaryVersion = 'c875e43600dfe042452e0b868f7a48b817b9640b';
 
@@ -5,4 +7,4 @@ const String binaryVersion = 'c875e43600dfe042452e0b868f7a48b817b9640b';
 const String capiVersion = '0.0.1';
 
 /// The Prisma CLI version.
-const String packageVersion = '2.2.0';
+const String packageVersion = '2.2.3';

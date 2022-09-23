@@ -1,3 +1,50 @@
+## 2.2.3
+
+🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.2.3🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.2.3) about the release. 🌟
+
+### Bug Fixes
+
+1. Fixed debian/ubuntu system distro match - [#31](https://github.com/odroe/prisma-dart/issues/31)
+2. Runtime - Fixed parse user facing error
+3. CLI - Fixed check engine version binary incomplete
+
+
+## 2.2.2
+
+Fixed generate `schema` not working ([#29](https://github.com/odroe/prisma-dart/issues/29)
+
+## 2.2.1
+
+🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.2.1🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.2.1) about the release. 🌟
+
+### Major improvements
+
+ Auto fix enum name and model name conflicts:
+ ```prisma
+ enum role {
+  user
+  admin
+ }
+
+ model user {
+  id Int @id @default(autoincrement())
+  role role
+ }
+ ```
+
+Before this release, the above schema would result in a `role` enum and a `user` model. This is not valid in Dart, so we now auto fix the enum name to `Role` and the model name to `User`.
+
+> Thanks to [@moepoi](https://github.com/moepoi)
+
+### Bug fixes
+
+1. Fixed `$transaction` options not being passed.
+2. FIxed Using lowercase keywords in schema.prisma cannot generate clients correctly. - [#26](https://github.com/odroe/prisma-dart/issues/26)
+
+## Other
+
+* Update `code_builder` to `^4.3.0`.
+
 ## 2.2.0
 
 🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.2.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.2.0) about the release. 🌟

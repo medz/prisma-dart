@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/orm.dart' as runtime;
 
@@ -15,24 +17,31 @@ class ClientBuilder {
     library.body.add(Block((BlockBuilder blockBuilder) {
       // Build dmmf block.
       blockBuilder.addExpression(
-        refer('Document', 'package:orm/dmmf.dart')
-            .property('fromJson')
-            .call([literalMap(options.dmmf.toJson())]).assignFinal(
-          'dmmf',
-          refer('Document', 'package:orm/dmmf.dart'),
-        ),
+        declareFinal('dmmf', type: refer('Document', 'package:orm/dmmf.dart'))
+            .assign(refer('Document', 'package:orm/dmmf.dart')
+                .property('fromJson')
+                .call([
+          literalMap(options.dmmf.toJson(), refer('String'), refer('dynamic'))
+        ])),
       );
 
       // Build schema block.
       blockBuilder.addExpression(
-        literalString(options.schema).assignConst('schema', refer('String')),
+        declareFinal('schema', type: refer('String')).assign(
+          refer('utf8', 'dart:convert').property('decode').call([
+            refer('base64', 'dart:convert').property('decode').call([
+              literalString(base64.encode(utf8.encode(options.schema)),
+                  raw: true)
+            ]),
+          ]),
+        ),
       );
 
       // Build query engine executable.
       if (!options.dataProxy) {
         blockBuilder.addExpression(
-          literalString(options.executable, raw: true)
-              .assignConst('_executable', refer('String')),
+          declareConst('_executable', type: refer('String'))
+              .assign(literalString(options.executable, raw: true)),
         );
       }
     }));
@@ -73,7 +82,7 @@ class ClientBuilder {
             ]);
           });
           methodBuilder.body = Block((BlockBuilder blockBuilder) {
-            blockBuilder.addExpression(
+            blockBuilder.addExpression(declareFinal(r'$overwrites').assign(
               literalMap(
                 options.datasources.asMap().map((key, value) {
                   return MapEntry(
@@ -100,8 +109,8 @@ class ClientBuilder {
                   }));
                   methodBuilder.body = refer('v').equalTo(literalNull).code;
                 }).closure,
-              ]).assignFinal(r'$overwrites'),
-            );
+              ]),
+            ));
             blockBuilder.addExpression(
               refer(r'$overwrites').property('cast').call([]).returned,
             );
@@ -176,8 +185,12 @@ class ClientBuilder {
         // Create public constructor body.
         constructorBuilder.body = Block((BlockBuilder blockBuilder) {
           // Create a engine.
-          blockBuilder.addExpression(_createEngineInstance()
-              .assignFinal('engine', refer('Engine', 'package:orm/orm.dart')));
+          blockBuilder.addExpression(
+            declareFinal(
+              'engine',
+              type: refer('Engine', 'package:orm/orm.dart'),
+            ).assign(_createEngineInstance()),
+          );
 
           // Return a [this] instance.
           blockBuilder
@@ -238,6 +251,22 @@ class ClientBuilder {
 
         methodBuilder.types.add(genericType);
         methodBuilder.name = r'$transaction';
+        methodBuilder.docs.addAll([
+          '/// Interactive transactions.',
+          '///',
+          '/// Sometimes you need more control over what queries execute within a transaction. Interactive transactions are meant to provide you with an escape hatch.',
+          '///',
+          '/// **NOTE**: If you use interactive transactions, then you cannot use the [Data Proxy](https://www.prisma.io/docs/data-platform/data-proxy) at the same time.',
+          '///',
+          '/// E.g:',
+          '/// ```dart',
+          '/// final prisma = PrismaClient();',
+          '/// prisma.\$transaction((transaction) async {',
+          '///   await transaction.user.create({ ... });',
+          '///   await transaction.post.create({ ... });',
+          '/// });',
+          '/// ```',
+        ]);
         methodBuilder.returns =
             TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
           typeReferenceBuilder.symbol = 'Future';
@@ -275,37 +304,46 @@ class ClientBuilder {
           ));
           // Create a transaction header.
           blockBuilder.addExpression(
+            declareFinal(
+              'headers',
+              type: refer('TransactionHeaders', 'package:orm/orm.dart'),
+            ).assign(
               refer('TransactionHeaders', 'package:orm/orm.dart')
-                  .newInstance([]).assignFinal('headers',
-                      refer('TransactionHeaders', 'package:orm/orm.dart')));
+                  .newInstance([]),
+            ),
+          );
+
           // Create a transaction.
           blockBuilder.addExpression(
-            refer('_engine')
-                .property('startTransaction')
-                .call([], {
-                  'headers': refer('headers'),
-                })
-                .awaited
-                .assignFinal(
-                    'info', refer('TransactionInfo', 'package:orm/orm.dart')),
+            declareFinal(
+              'info',
+              type: refer('TransactionInfo', 'package:orm/orm.dart'),
+            ).assign(
+              refer('_engine').property('startTransaction').call([], {
+                'headers': refer('headers'),
+                'options': refer('options').ifNullThen(
+                  refer('TransactionOptions', 'package:orm/orm.dart')
+                      .newInstance([]),
+                ),
+              }).awaited,
+            ),
           );
 
           // Add a try catch block.
           blockBuilder.statements.add(Code(r'try {'));
           // blockBuilder.addExpression(CodeExpression(Code(r'try { null')));
           blockBuilder.addExpression(
-            refer('fn')
-                .call([
-                  refer(classBuilder.name!).newInstanceNamed('_', [
-                    refer('_engine'),
-                    refer('QueryEngineRequestHeaders', 'package:orm/orm.dart')
-                        .newInstance([], {
-                      'transactionId': refer('info').property('id'),
-                    }),
-                  ]),
-                ])
-                .awaited
-                .assignFinal('result', genericType),
+            declareFinal('result', type: genericType).assign(
+              refer('fn').call([
+                refer(classBuilder.name!).newInstanceNamed('_', [
+                  refer('_engine'),
+                  refer('QueryEngineRequestHeaders', 'package:orm/orm.dart')
+                      .newInstance([], {
+                    'transactionId': refer('info').property('id'),
+                  }),
+                ]),
+              ]).awaited,
+            ),
           );
           blockBuilder.addExpression(
             refer('_engine').property('commitTransaction').call([], {

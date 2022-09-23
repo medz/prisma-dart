@@ -1,6 +1,8 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart';
 
+import 'dart_style.dart';
+
 final Map<String, Reference> _references = {
   'string': Reference('String'),
   'float': Reference('double'),
@@ -35,20 +37,29 @@ TypeReference scalarForString(String name, [bool isNullable = false]) {
 }
 
 TypeReference scalar(SchemaType schemaType, [bool isNullable = false]) {
+  final SchemaType resolvedSchemaType = SchemaType(
+    isList: schemaType.isList,
+    type: schemaType.location == FieldLocation.scalar
+        ? schemaType.type
+        : dartClassnameFixer(schemaType.type),
+    location: schemaType.location,
+    namespace: schemaType.namespace,
+  );
+
   if (isNullable) {
     // See https://github.com/dart-lang/code_builder/issues/315
     // If the issue is fixed, then PrismaNullable can be removed.
     return TypeReference((TypeReferenceBuilder updates) {
       updates.symbol = 'PrismaNullable';
       updates.url = 'package:orm/orm.dart';
-      updates.types.add(scalar(schemaType, false));
+      updates.types.add(scalar(resolvedSchemaType, false));
     });
-  } else if (schemaType.isList) {
+  } else if (resolvedSchemaType.isList) {
     return TypeReference((TypeReferenceBuilder updates) {
       updates.symbol = 'List';
 
       final SchemaType newType = SchemaType.fromJson({
-        ...schemaType.toJson(),
+        ...resolvedSchemaType.toJson(),
         'isList': false,
       });
 
@@ -56,11 +67,12 @@ TypeReference scalar(SchemaType schemaType, [bool isNullable = false]) {
     });
   }
 
-  final Reference? reference = _references[schemaType.type.toLowerCase()];
+  final Reference? reference =
+      _references[resolvedSchemaType.type.toLowerCase()];
   if (reference is TypeReference) return reference;
 
   return TypeReference((TypeReferenceBuilder updates) {
-    updates.symbol = reference?.symbol ?? schemaType.type;
+    updates.symbol = reference?.symbol ?? resolvedSchemaType.type;
     updates.url = reference?.url;
   });
 }
