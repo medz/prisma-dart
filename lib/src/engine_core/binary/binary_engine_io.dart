@@ -254,6 +254,9 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
       if (error is Map && error['user_facing_error'] is Map) {
         throw PrismaClientKnownRequestError.fromJson({
           ...error['user_facing_error'],
+          'code': error['user_facing_error']['error_code'] ??
+              error['user_facing_error']['code'] ??
+              'UNKNOWN',
           'clientVersion': packageVersion,
         });
       }
