@@ -197,6 +197,9 @@ _SystemDistro? _getSystemDistro() {
             return _SystemDistro.arm;
           case 'nixos':
             return _SystemDistro.nixos;
+          case 'ubuntu':
+          case 'debian':
+            return _SystemDistro.debian;
         }
       }
     }
