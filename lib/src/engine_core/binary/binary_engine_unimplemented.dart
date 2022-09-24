@@ -12,8 +12,8 @@ class BinaryEngine extends Engine {
   const BinaryEngine({
     required super.dmmf,
     required super.schema,
-    required this.datasources,
-    required this.environment,
+    required super.datasources,
+    required super.environment,
     this.allowTriggerPanic = false,
     this.executable,
     this.workingDirectory,
@@ -27,12 +27,6 @@ class BinaryEngine extends Engine {
 
   /// Allow trigger panic.
   final bool allowTriggerPanic;
-
-  /// Data sources.
-  final Map<String, Datasource> datasources;
-
-  /// Environment variables.
-  final Map<String, String> environment;
 
   @override
   Future<QueryEngineResult> request({
