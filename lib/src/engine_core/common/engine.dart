@@ -38,13 +38,6 @@ abstract class Engine {
     QueryEngineRequestHeaders? headers,
   });
 
-  /// Request batch query execution.
-  Future<List<QueryEngineResult>> requestBatch({
-    required List<String> queries,
-    QueryEngineRequestHeaders? headers,
-    bool? transaction,
-  });
-
   /// Start a transaction.
   Future<TransactionInfo> startTransaction({
     required TransactionHeaders headers,

@@ -43,15 +43,6 @@ class BinaryEngine extends Engine {
   }
 
   @override
-  Future<List<QueryEngineResult>> requestBatch({
-    required List<String> queries,
-    QueryEngineRequestHeaders? headers,
-    bool? transaction,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> rollbackTransaction({
     required TransactionHeaders headers,
     required TransactionInfo info,
