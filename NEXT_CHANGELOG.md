@@ -30,3 +30,27 @@ To customize the development runtime configuration file path, you can write in `
 prisma:
   development: custom.devrc
 ```
+
+#### Data Proxy
+
+Great, Prisma Dart now supports Prisma Data Proxy to access your database!
+
+you just need to run:
+
+```bash
+dart run orm generate --data-proxy
+```
+
+It can also be turned on from runtime configuration or dotenv:
+
+```
+PRISMA_GENERATE_DATAPROXY = true
+```
+
+##### Custom remote client version.
+
+If the default remote client version is not what you want, you can fix it by configuring:
+
+```
+PRISMA_CLIENT_DATA_PROXY_CLIENT_VERSION = "4.3.1"
+```
