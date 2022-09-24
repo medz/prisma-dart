@@ -1,1 +1,0 @@
-DATABASE_URL=postgres://seven@localhost:5432/demo?schema=readme ./.dart_tool/prisma/query-engine --datamodel-path ./prisma/schema.prisma --enable-raw-queries --port 4466 --enable-playground
