@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart';
@@ -110,10 +109,7 @@ class DataProxyEngine extends Engine {
       maxDelay: const Duration(milliseconds: 200),
       maxAttempts: 10,
       retryIf: (e) =>
-          e is ClientException ||
-          e is SocketException ||
-          e is TimeoutException ||
-          e == retryException,
+          e is ClientException || e is TimeoutException || e == retryException,
     );
   }
 

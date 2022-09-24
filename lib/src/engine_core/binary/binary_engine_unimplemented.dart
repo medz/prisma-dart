@@ -2,7 +2,6 @@ import 'dart:async';
 
 import '../../../version.dart';
 import '../../dmmf/dmmf.dart' show Document;
-import '../../runtime/datasource.dart';
 import '../common/engine.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
