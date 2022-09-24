@@ -17,6 +17,9 @@ export 'src/engine_core/common/errors/prisma_client_validation_error.dart';
 export 'src/engine_core/binary/binary_engine_unimplemented.dart'
     if (dart.library.io) 'src/engine_core/binary/binary_engine_io.dart';
 
+// Data proxy engine exports
+export 'src/engine_core/data_proxy/data_proxy_engine.dart';
+
 // Runtime exports
 export 'src/runtime/datasource.dart';
 export 'src/runtime/json_serializable.dart';

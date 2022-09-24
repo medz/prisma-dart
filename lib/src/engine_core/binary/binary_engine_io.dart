@@ -15,6 +15,8 @@ import '../common/errors/prisma_client_unknown_request_error.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
+import '../intenal_utils/runtime_http_headers_builder.dart';
+import '../intenal_utils/throw_graphql_error.dart';
 import 'binary_engine_unimplemented.dart' as unimplemented;
 import 'status_retry_exception.dart';
 import 'utils/get_free_port.dart';
@@ -229,46 +231,6 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
         'variables': {},
       });
 
-  /// Runtime headers to http headers.
-  Map<String, String> runtimeHeadersToHttpHeaders(
-      [Map<String, dynamic>? headers]) {
-    return headers?.map<String, String>((key, value) {
-          if (key == 'transactionId') {
-            return MapEntry(
-                'X-transaction-id', value != null ? value.toString() : '');
-          }
-
-          return MapEntry(key, value != null ? value.toString() : '');
-        }) ??
-        {};
-  }
-
-  /// Request error handler.
-  void requestErrorHandler(List<dynamic>? errors) {
-    // If errors is null, return.
-    if (errors == null || errors.isEmpty == true) return;
-
-    // Throw errors.
-    for (final dynamic error in errors) {
-      // If error is user_facing_error.
-      if (error is Map && error['user_facing_error'] is Map) {
-        throw PrismaClientKnownRequestError.fromJson({
-          ...error['user_facing_error'],
-          'code': error['user_facing_error']['error_code'] ??
-              error['user_facing_error']['code'] ??
-              'UNKNOWN',
-          'clientVersion': packageVersion,
-        });
-      }
-
-      // Otherwise, throw unknown error.
-      throw PrismaClientUnknownRequestError(
-        json.encode(error),
-        clientVersion: packageVersion,
-      );
-    }
-  }
-
   /// Header getter.
   String? headerGetter(Map<String, String> headers, String key) {
     if (headers.keys.map((e) => e.toLowerCase()).contains(key.toLowerCase())) {
@@ -291,7 +253,7 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
     final http.Request request = http.Request('POST', await endpoint)
       ..body = gqlRequestBodyBuilder(query)
       ..headers['Content-Type'] = 'application/json'
-      ..headers.addAll(runtimeHeadersToHttpHeaders(headers?.toJson()));
+      ..headers.addAll(runtimeHttpHeadersBuilder(headers?.toJson()));
 
     return retry<QueryEngineResult>(
       () async {
@@ -307,7 +269,7 @@ ${response.body}
 
         final Map<String, dynamic> result =
             json.decode(utf8.decode(response.bodyBytes));
-        requestErrorHandler(result['errors'] as List<dynamic>?);
+        throwGraphQLError(result['errors'] as List<dynamic>?);
 
         // Rust engine returns time in microseconds and we want it in miliseconds
         final int elapsed =
@@ -469,7 +431,7 @@ ${response.body}
     final http.Request request = http.Request('POST', url)
       ..body = body
       ..headers['Content-Type'] = 'application/json'
-      ..headers.addAll(runtimeHeadersToHttpHeaders(headers.toJson()));
+      ..headers.addAll(runtimeHttpHeadersBuilder(headers.toJson()));
 
     final Map<String, dynamic> result = await _transaction(request);
 

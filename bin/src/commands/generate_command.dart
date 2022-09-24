@@ -29,6 +29,11 @@ class GenerateCommand extends Command {
       valueHelp: 'path',
       defaultsTo: defaultSchemaPath,
     );
+    argParser.addFlag(
+      'data-proxy',
+      help: 'Enable the Data Proxy in the Prisma Client',
+      defaultsTo: development.PRISMA_GENERATE_DATAPROXY,
+    );
   }
 
   @override
@@ -138,7 +143,7 @@ class GenerateCommand extends Command {
     // Create generator options
     final GeneratorOptions options = GeneratorOptions(
       config: generatorConfig,
-      dataProxy: false,
+      dataProxy: argResults?['data-proxy'],
       datasources: configResult.datasources,
       dmmf: dmmf,
       schema: await File(schemaPath).readAsString(),
