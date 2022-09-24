@@ -18,7 +18,6 @@ class Environment {
 
   /// Merge [Environment] with [other].
   void merge({
-    String? DATABASE_URL,
     String? DEBUG,
     String? NO_COLOR,
     String? BROWSER,
@@ -33,7 +32,6 @@ class Environment {
     bool? PRISMA_GENERATE_DATAPROXY,
   }) {
     final Map<String, String?> configuration = <String, String?>{
-      'DATABASE_URL': DATABASE_URL,
       'DEBUG': DEBUG,
       'NO_COLOR': NO_COLOR,
       'BROWSER': BROWSER,
@@ -58,9 +56,6 @@ class Environment {
   /// Get all environment variables
   Map<String, String> get all =>
       _prismarc.all.map((key, value) => MapEntry(key, value.toString()));
-
-  /// Database URL
-  String? get DATABASE_URL => all['DATABASE_URL'];
 
   /// Debugging
   String? get DEBUG => all['DEBUG'];
