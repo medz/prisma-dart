@@ -1,8 +1,8 @@
-# Prisma ORM for Dart example
+# Prisma ORM simple example
 
 ## Getting started
 
-> **Prerequisites**: Dart SDK `>=2.17.6 <3.0.0`
+> **Prerequisites**: Dart SDK `>=2.18.0 <3.0.0`
 
 ### 1. Edit the `.prismarc` file to match your database connection:
 
@@ -33,7 +33,6 @@ dart run build_runner build
 
 The `build_runner` is used to generate the model deserialize. The model deserialize is used to deserialize the database query result to the model instance.
 
-
 ## Example
 ```dart
 import 'package:example/example.dart';
@@ -54,3 +53,7 @@ void main(List<String> args) async {
   await prisma.$disconnect();
 }
 ```
+
+## Learn more
+
+Try running the `dart run bin/simple.dart` command, which will insert a piece of data into the database.

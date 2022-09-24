@@ -1,5 +1,5 @@
-name: simple_example
-description: A sample command-line application.
+name: simple
+description: Prisma ORM simple example
 version: 1.0.0
 publish_to: none
 
@@ -9,13 +9,10 @@ environment:
 dependencies:
   faker: ^2.0.0
   json_annotation: ^4.6.0
-  orm: any
+  orm:
+    path: ../../
 
 dev_dependencies:
   build_runner: ^2.2.0
   json_serializable: ^6.3.1
   lints: ^2.0.0
-
-dependency_overrides:
-  orm:
-    path: ../../
