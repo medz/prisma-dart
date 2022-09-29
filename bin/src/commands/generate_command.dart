@@ -34,6 +34,17 @@ class GenerateCommand extends Command {
       help: 'Enable the Data Proxy in the Prisma Client',
       defaultsTo: development.PRISMA_GENERATE_DATAPROXY,
     );
+    argParser.addMultiOption(
+      'preview',
+      help: 'Enable preview features',
+      defaultsTo: const [],
+      allowed: GeneratorPreviewFeatures.values.map((e) => e.name),
+      allowedHelp: GeneratorPreviewFeatures.values
+          .asMap()
+          .map((key, value) => MapEntry(value.name, value.description)),
+      splitCommas: true,
+      valueHelp: 'flag',
+    );
   }
 
   @override
@@ -150,6 +161,9 @@ class GenerateCommand extends Command {
       schemaPath: schemaPath,
       executable: executable,
       version: version,
+      previewFeatures: GeneratorPreviewFeatures.fromNames(
+        argResults!['preview'],
+      ),
     );
 
     await generator(options);

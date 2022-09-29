@@ -1,5 +1,10 @@
 import 'package:faker/faker.dart';
+<<<<<<< HEAD:example/simple/bin/simple.dart
 import 'package:simple/simple.dart';
+=======
+
+import 'prisma_client.dart';
+>>>>>>> main:example/simple/bin/simple_example.dart
 
 /// Create a Prisma client.
 final PrismaClient prisma = PrismaClient();
