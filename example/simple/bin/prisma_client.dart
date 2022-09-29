@@ -10,7 +10,7 @@ import 'package:json_annotation/json_annotation.dart'
     show $enumDecode, $enumDecodeNullable;
 export 'package:orm/orm.dart' show TransactionIsolationLevel;
 
-part 'simple.g.dart';
+part 'prisma_client.g.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 //
 // ignore_for_file: constant_identifier_names, depend_on_referenced_packages, non_constant_identifier_names, unused_import
@@ -16946,11 +16946,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   },
 });
 final String schema = _i4.utf8.decode(_i4.base64.decode(
-<<<<<<<< HEAD:example/simple/lib/simple.dart
-    r'Z2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBvdXRwdXQgICAgICAgICAgPSAiLi4vbGliL3NpbXBsZS5kYXJ0IgogIHByZXZpZXdGZWF0dXJlcyA9IFsiaW50ZXJhY3RpdmVUcmFuc2FjdGlvbnMiXQp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJwb3N0Z3Jlc3FsIgogIHVybCAgICAgID0gZW52KCJEQVRBQkFTRV9VUkwiKQp9CgplbnVtIFNleCB7CiAgbWFuCiAgd29tYW4KfQoKbW9kZWwgVXNlciB7CiAgaWQgICAgICAgIEludCAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpCiAgbmFtZSAgICAgIFN0cmluZwogIGNyZWF0ZWRBdCBEYXRlVGltZSBAZGVmYXVsdChub3coKSkKICBzZXggICAgICAgU2V4ICAgICAgQGRlZmF1bHQod29tYW4pCiAgcG9zdHMgICAgIFBvc3RbXQp9Cgptb2RlbCBQb3N0IHsKICBpZCAgICAgICAgIEludCAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpCiAgdGl0bGUgICAgICBTdHJpbmcKICBhdXRob3JJZCAgIEludAogIGNvbnRlbnQgICAgU3RyaW5nCiAgcHVibGlzaGVkICBCb29sZWFuCiAgY3JlYXRlZF9hdCBEYXRlVGltZSBAZGVmYXVsdChub3coKSkKICBhdXRob3IgICAgIFVzZXIgICAgIEByZWxhdGlvbihmaWVsZHM6IFthdXRob3JJZF0sIHJlZmVyZW5jZXM6IFtpZF0pCn0K'));
-========
     r'Z2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBvdXRwdXQgICAgICAgICAgPSAiLi4vYmluL3ByaXNtYV9jbGllbnQuZGFydCIKICBwcmV2aWV3RmVhdHVyZXMgPSBbImludGVyYWN0aXZlVHJhbnNhY3Rpb25zIl0KfQoKZGF0YXNvdXJjZSBkYiB7CiAgcHJvdmlkZXIgPSAicG9zdGdyZXNxbCIKICB1cmwgICAgICA9IGVudigiREFUQUJBU0VfVVJMIikKfQoKZW51bSBTZXggewogIG1hbgogIHdvbWFuCn0KCm1vZGVsIFVzZXIgewogIGlkICAgICAgICBJbnQgICAgICBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIG5hbWUgICAgICBTdHJpbmcKICBjcmVhdGVkQXQgRGF0ZVRpbWUgQGRlZmF1bHQobm93KCkpCiAgc2V4ICAgICAgIFNleCAgICAgIEBkZWZhdWx0KHdvbWFuKQogIHBvc3RzICAgICBQb3N0W10KfQoKbW9kZWwgUG9zdCB7CiAgaWQgICAgICAgICBJbnQgICAgICBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIHRpdGxlICAgICAgU3RyaW5nCiAgYXV0aG9ySWQgICBJbnQKICBjb250ZW50ICAgIFN0cmluZwogIHB1Ymxpc2hlZCAgQm9vbGVhbgogIGNyZWF0ZWRfYXQgRGF0ZVRpbWUgQGRlZmF1bHQobm93KCkpCiAgYXV0aG9yICAgICBVc2VyICAgICBAcmVsYXRpb24oZmllbGRzOiBbYXV0aG9ySWRdLCByZWZlcmVuY2VzOiBbaWRdKQp9Cg=='));
->>>>>>>> main:example/simple/bin/prisma_client.dart
 const String _executable =
     r'/Users/seven/workspace/prisma/example/simple/.dart_tool/prisma/query-engine';
 
@@ -16988,16 +16984,8 @@ class PrismaClient {
       engine,
       null,
     );
-    _finalizer.attach(
-      client,
-      engine,
-      detach: client,
-    );
     return client;
   }
-
-  static final Finalizer<_i2.Engine> _finalizer =
-      Finalizer<_i2.Engine>((_i2.Engine engine) => engine.stop());
 
   final _i2.Engine _engine;
 
@@ -17018,7 +17006,6 @@ class PrismaClient {
   /// Disconnect from the database.
   Future<void> $disconnect() async {
     await _engine.stop();
-    _finalizer.detach(this);
   }
 
   /// Interactive transactions.
