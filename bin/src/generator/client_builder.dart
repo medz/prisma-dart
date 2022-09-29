@@ -123,6 +123,35 @@ class ClientBuilder {
     library.body.add(Class((ClassBuilder classBuilder) {
       classBuilder.name = 'PrismaClient';
 
+      // If [GeneratorPreviewFeatures.finalizer] is enabled, add finalizer
+      // field.
+      if (options.previewFeatures
+          .contains(GeneratorPreviewFeatures.finalizer)) {
+        classBuilder.fields.add(Field((FieldBuilder fieldBuilder) {
+          fieldBuilder.name = '_finalizer';
+          fieldBuilder.type = TypeReference((TypeReferenceBuilder builder) {
+            builder.symbol = 'Finalizer';
+            builder.types.add(refer('Engine', 'package:orm/orm.dart'));
+          });
+          fieldBuilder.static = true;
+          fieldBuilder.modifier = FieldModifier.final$;
+          fieldBuilder.assignment = fieldBuilder.type?.newInstance([
+            Method((MethodBuilder methodBuilder) {
+              methodBuilder.requiredParameters.add(
+                Parameter((ParameterBuilder parameterBuilder) {
+                  parameterBuilder.name = 'engine';
+                  parameterBuilder.type =
+                      refer('Engine', 'package:orm/orm.dart');
+                  parameterBuilder.named = false;
+                }),
+              );
+              methodBuilder.body =
+                  refer('engine').property('stop').call([]).code;
+            }).closure,
+          ]).code;
+        }));
+      }
+
       // Engine field.
       classBuilder.fields.add(Field((FieldBuilder fieldBuilder) {
         fieldBuilder.name = '_engine';
@@ -192,12 +221,33 @@ class ClientBuilder {
             ).assign(_createEngineInstance()),
           );
 
+          // Create PrismaClient instance.
+          blockBuilder.addExpression(
+            declareFinal(
+              'client',
+              type: refer(classBuilder.name!),
+            ).assign(
+              refer(classBuilder.name!).newInstanceNamed('_', [
+                refer('engine'),
+                literalNull,
+              ]),
+            ),
+          );
+
+          if (options.previewFeatures
+              .contains(GeneratorPreviewFeatures.finalizer)) {
+            blockBuilder.addExpression(
+              refer('_finalizer').property('attach').call([
+                refer('client'),
+                refer('engine'),
+              ], {
+                'detach': refer('client'),
+              }),
+            );
+          }
+
           // Return a [this] instance.
-          blockBuilder
-              .addExpression(refer(classBuilder.name!).newInstanceNamed('_', [
-            refer('engine'),
-            literalNull,
-          ]).returned);
+          blockBuilder.addExpression(refer('client').returned);
         });
       }));
 
@@ -239,9 +289,19 @@ class ClientBuilder {
           typeReferenceBuilder.symbol = 'Future';
           typeReferenceBuilder.types.add(refer('void'));
         });
-        methodBuilder.lambda = true;
-        methodBuilder.body = refer('_engine').property('stop').call([]).code;
+        methodBuilder.lambda = false;
         methodBuilder.docs.add('/// Disconnect from the database.');
+        methodBuilder.modifier = MethodModifier.async;
+        methodBuilder.body = Block((BlockBuilder blockBuilder) {
+          blockBuilder.addExpression(
+              refer('_engine').property('stop').call([]).awaited);
+
+          if (options.previewFeatures
+              .contains(GeneratorPreviewFeatures.finalizer)) {
+            blockBuilder.addExpression(
+                refer('_finalizer').property('detach').call([refer('this')]));
+          }
+        });
       }));
 
       // create `$transaction` method.
