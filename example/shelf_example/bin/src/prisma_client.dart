@@ -1,7 +1,7 @@
 library prisma.client; // ignore_for_file: no_leading_underscores_for_library_prefixes
 
-import 'package:orm/orm.dart' as _i1;
-import 'package:json_annotation/json_annotation.dart' as _i2;
+import 'package:json_annotation/json_annotation.dart' as _i1;
+import 'package:orm/orm.dart' as _i2;
 import 'package:orm/dmmf.dart' as _i3;
 import 'dart:convert' as _i4;
 import 'package:orm/configure.dart' as _i5;
@@ -20,34 +20,40 @@ part 'prisma_client.g.dart';
 // GitHub: https://github.com/odroe/prisma-dart
 //******************************************************************************
 
+enum QueryMode {
+  @_i1.JsonValue('default')
+  default$,
+  insensitive
+}
+
 enum SortOrder { asc, desc }
 
-enum TaskScalarFieldEnum { id, task, done, due }
+enum UserScalarFieldEnum { id, name, createdAt, updatedAt }
 
-class TaskWhereInput implements _i1.JsonSerializable {
-  const TaskWhereInput({
+class UserWhereInput implements _i2.JsonSerializable {
+  const UserWhereInput({
     this.AND,
     this.OR,
     this.NOT,
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<TaskWhereInput> AND;
+  final _i2.PrismaNullable<UserWhereInput> AND;
 
-  final _i1.PrismaNullable<List<TaskWhereInput>> OR;
+  final _i2.PrismaNullable<List<UserWhereInput>> OR;
 
-  final _i1.PrismaNullable<TaskWhereInput> NOT;
+  final _i2.PrismaNullable<UserWhereInput> NOT;
 
-  final _i1.PrismaNullable<StringFilter> id;
+  final _i2.PrismaNullable<StringFilter> id;
 
-  final _i1.PrismaNullable<StringFilter> task;
+  final _i2.PrismaNullable<StringFilter> name;
 
-  final _i1.PrismaNullable<BoolFilter> done;
+  final _i2.PrismaNullable<DateTimeFilter> createdAt;
 
-  final _i1.PrismaNullable<DateTimeFilter> due;
+  final _i2.PrismaNullable<DateTimeFilter> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
@@ -56,85 +62,85 @@ class TaskWhereInput implements _i1.JsonSerializable {
       'OR': OR,
       'NOT': NOT,
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskOrderByWithRelationInput implements _i1.JsonSerializable {
-  const TaskOrderByWithRelationInput({
+class UserOrderByWithRelationInput implements _i2.JsonSerializable {
+  const UserOrderByWithRelationInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<SortOrder> id;
+  final _i2.PrismaNullable<SortOrder> id;
 
-  final _i1.PrismaNullable<SortOrder> task;
+  final _i2.PrismaNullable<SortOrder> name;
 
-  final _i1.PrismaNullable<SortOrder> done;
+  final _i2.PrismaNullable<SortOrder> createdAt;
 
-  final _i1.PrismaNullable<SortOrder> due;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
-    };
-  }
-}
-
-class TaskWhereUniqueInput implements _i1.JsonSerializable {
-  const TaskWhereUniqueInput({this.id});
-
-  final _i1.PrismaNullable<String> id;
+  final _i2.PrismaNullable<SortOrder> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskOrderByWithAggregationInput implements _i1.JsonSerializable {
-  const TaskOrderByWithAggregationInput({
+class UserWhereUniqueInput implements _i2.JsonSerializable {
+  const UserWhereUniqueInput({this.id});
+
+  final _i2.PrismaNullable<String> id;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'id': id,
+    };
+  }
+}
+
+class UserOrderByWithAggregationInput implements _i2.JsonSerializable {
+  const UserOrderByWithAggregationInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
     this.$count,
     this.$max,
     this.$min,
   });
 
-  final _i1.PrismaNullable<SortOrder> id;
+  final _i2.PrismaNullable<SortOrder> id;
 
-  final _i1.PrismaNullable<SortOrder> task;
+  final _i2.PrismaNullable<SortOrder> name;
 
-  final _i1.PrismaNullable<SortOrder> done;
+  final _i2.PrismaNullable<SortOrder> createdAt;
 
-  final _i1.PrismaNullable<SortOrder> due;
+  final _i2.PrismaNullable<SortOrder> updatedAt;
 
-  final _i1.PrismaNullable<TaskCountOrderByAggregateInput> $count;
+  final _i2.PrismaNullable<UserCountOrderByAggregateInput> $count;
 
-  final _i1.PrismaNullable<TaskMaxOrderByAggregateInput> $max;
+  final _i2.PrismaNullable<UserMaxOrderByAggregateInput> $max;
 
-  final _i1.PrismaNullable<TaskMinOrderByAggregateInput> $min;
+  final _i2.PrismaNullable<UserMinOrderByAggregateInput> $min;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
       '_count': $count,
       '_max': $max,
       '_min': $min,
@@ -142,30 +148,30 @@ class TaskOrderByWithAggregationInput implements _i1.JsonSerializable {
   }
 }
 
-class TaskScalarWhereWithAggregatesInput implements _i1.JsonSerializable {
-  const TaskScalarWhereWithAggregatesInput({
+class UserScalarWhereWithAggregatesInput implements _i2.JsonSerializable {
+  const UserScalarWhereWithAggregatesInput({
     this.AND,
     this.OR,
     this.NOT,
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<TaskScalarWhereWithAggregatesInput> AND;
+  final _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> AND;
 
-  final _i1.PrismaNullable<List<TaskScalarWhereWithAggregatesInput>> OR;
+  final _i2.PrismaNullable<List<UserScalarWhereWithAggregatesInput>> OR;
 
-  final _i1.PrismaNullable<TaskScalarWhereWithAggregatesInput> NOT;
+  final _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> NOT;
 
-  final _i1.PrismaNullable<StringWithAggregatesFilter> id;
+  final _i2.PrismaNullable<StringWithAggregatesFilter> id;
 
-  final _i1.PrismaNullable<StringWithAggregatesFilter> task;
+  final _i2.PrismaNullable<StringWithAggregatesFilter> name;
 
-  final _i1.PrismaNullable<BoolWithAggregatesFilter> done;
+  final _i2.PrismaNullable<DateTimeWithAggregatesFilter> createdAt;
 
-  final _i1.PrismaNullable<DateTimeWithAggregatesFilter> due;
+  final _i2.PrismaNullable<DateTimeWithAggregatesFilter> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
@@ -174,176 +180,203 @@ class TaskScalarWhereWithAggregatesInput implements _i1.JsonSerializable {
       'OR': OR,
       'NOT': NOT,
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskCreateInput implements _i1.JsonSerializable {
-  const TaskCreateInput({
+class UserCreateInput implements _i2.JsonSerializable {
+  const UserCreateInput({
     this.id,
-    required this.task,
-    this.done,
-    this.due,
+    required this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<String> id;
+  final _i2.PrismaNullable<String> id;
 
-  final String task;
+  final String name;
 
-  final _i1.PrismaNullable<bool> done;
+  final _i2.PrismaNullable<DateTime> createdAt;
 
-  final _i1.PrismaNullable<DateTime> due;
+  final _i2.PrismaNullable<DateTime> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskUncheckedCreateInput implements _i1.JsonSerializable {
-  const TaskUncheckedCreateInput({
+class UserUncheckedCreateInput implements _i2.JsonSerializable {
+  const UserUncheckedCreateInput({
     this.id,
-    required this.task,
-    this.done,
-    this.due,
+    required this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<String> id;
+  final _i2.PrismaNullable<String> id;
 
-  final String task;
+  final String name;
 
-  final _i1.PrismaNullable<bool> done;
+  final _i2.PrismaNullable<DateTime> createdAt;
 
-  final _i1.PrismaNullable<DateTime> due;
+  final _i2.PrismaNullable<DateTime> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskUpdateInput implements _i1.JsonSerializable {
-  const TaskUpdateInput({
+class UserUpdateInput implements _i2.JsonSerializable {
+  const UserUpdateInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> id;
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> id;
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> task;
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> name;
 
-  final _i1.PrismaNullable<BoolFieldUpdateOperationsInput> done;
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> createdAt;
 
-  final _i1.PrismaNullable<DateTimeFieldUpdateOperationsInput> due;
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskUncheckedUpdateInput implements _i1.JsonSerializable {
-  const TaskUncheckedUpdateInput({
+class UserUncheckedUpdateInput implements _i2.JsonSerializable {
+  const UserUncheckedUpdateInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> id;
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> id;
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> task;
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> name;
 
-  final _i1.PrismaNullable<BoolFieldUpdateOperationsInput> done;
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> createdAt;
 
-  final _i1.PrismaNullable<DateTimeFieldUpdateOperationsInput> due;
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskUpdateManyMutationInput implements _i1.JsonSerializable {
-  const TaskUpdateManyMutationInput({
+class UserCreateManyInput implements _i2.JsonSerializable {
+  const UserCreateManyInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    required this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> id;
+  final _i2.PrismaNullable<String> id;
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> task;
+  final String name;
 
-  final _i1.PrismaNullable<BoolFieldUpdateOperationsInput> done;
+  final _i2.PrismaNullable<DateTime> createdAt;
 
-  final _i1.PrismaNullable<DateTimeFieldUpdateOperationsInput> due;
+  final _i2.PrismaNullable<DateTime> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskUncheckedUpdateManyInput implements _i1.JsonSerializable {
-  const TaskUncheckedUpdateManyInput({
+class UserUpdateManyMutationInput implements _i2.JsonSerializable {
+  const UserUpdateManyMutationInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> id;
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> id;
 
-  final _i1.PrismaNullable<StringFieldUpdateOperationsInput> task;
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> name;
 
-  final _i1.PrismaNullable<BoolFieldUpdateOperationsInput> done;
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> createdAt;
 
-  final _i1.PrismaNullable<DateTimeFieldUpdateOperationsInput> due;
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class StringFilter implements _i1.JsonSerializable {
+class UserUncheckedUpdateManyInput implements _i2.JsonSerializable {
+  const UserUncheckedUpdateManyInput({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> id;
+
+  final _i2.PrismaNullable<StringFieldUpdateOperationsInput> name;
+
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> createdAt;
+
+  final _i2.PrismaNullable<DateTimeFieldUpdateOperationsInput> updatedAt;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
+}
+
+class StringFilter implements _i2.JsonSerializable {
   const StringFilter({
     this.equals,
     this.in$,
@@ -355,30 +388,33 @@ class StringFilter implements _i1.JsonSerializable {
     this.contains,
     this.startsWith,
     this.endsWith,
+    this.mode,
     this.not,
   });
 
-  final _i1.PrismaNullable<String> equals;
+  final _i2.PrismaNullable<String> equals;
 
-  final _i1.PrismaNullable<List<String>> in$;
+  final _i2.PrismaNullable<List<String>> in$;
 
-  final _i1.PrismaNullable<List<String>> notIn;
+  final _i2.PrismaNullable<List<String>> notIn;
 
-  final _i1.PrismaNullable<String> lt;
+  final _i2.PrismaNullable<String> lt;
 
-  final _i1.PrismaNullable<String> lte;
+  final _i2.PrismaNullable<String> lte;
 
-  final _i1.PrismaNullable<String> gt;
+  final _i2.PrismaNullable<String> gt;
 
-  final _i1.PrismaNullable<String> gte;
+  final _i2.PrismaNullable<String> gte;
 
-  final _i1.PrismaNullable<String> contains;
+  final _i2.PrismaNullable<String> contains;
 
-  final _i1.PrismaNullable<String> startsWith;
+  final _i2.PrismaNullable<String> startsWith;
 
-  final _i1.PrismaNullable<String> endsWith;
+  final _i2.PrismaNullable<String> endsWith;
 
-  final _i1.PrismaNullable<NestedStringFilter> not;
+  final _i2.PrismaNullable<QueryMode> mode;
+
+  final _i2.PrismaNullable<NestedStringFilter> not;
 
   @override
   Map<String, dynamic> toJson() {
@@ -393,31 +429,13 @@ class StringFilter implements _i1.JsonSerializable {
       'contains': contains,
       'startsWith': startsWith,
       'endsWith': endsWith,
+      'mode': mode,
       'not': not,
     };
   }
 }
 
-class BoolFilter implements _i1.JsonSerializable {
-  const BoolFilter({
-    this.equals,
-    this.not,
-  });
-
-  final _i1.PrismaNullable<bool> equals;
-
-  final _i1.PrismaNullable<NestedBoolFilter> not;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'equals': equals,
-      'not': not,
-    };
-  }
-}
-
-class DateTimeFilter implements _i1.JsonSerializable {
+class DateTimeFilter implements _i2.JsonSerializable {
   const DateTimeFilter({
     this.equals,
     this.in$,
@@ -429,21 +447,21 @@ class DateTimeFilter implements _i1.JsonSerializable {
     this.not,
   });
 
-  final _i1.PrismaNullable<DateTime> equals;
+  final _i2.PrismaNullable<DateTime> equals;
 
-  final _i1.PrismaNullable<List<DateTime>> in$;
+  final _i2.PrismaNullable<List<DateTime>> in$;
 
-  final _i1.PrismaNullable<List<DateTime>> notIn;
+  final _i2.PrismaNullable<List<DateTime>> notIn;
 
-  final _i1.PrismaNullable<DateTime> lt;
+  final _i2.PrismaNullable<DateTime> lt;
 
-  final _i1.PrismaNullable<DateTime> lte;
+  final _i2.PrismaNullable<DateTime> lte;
 
-  final _i1.PrismaNullable<DateTime> gt;
+  final _i2.PrismaNullable<DateTime> gt;
 
-  final _i1.PrismaNullable<DateTime> gte;
+  final _i2.PrismaNullable<DateTime> gte;
 
-  final _i1.PrismaNullable<NestedDateTimeFilter> not;
+  final _i2.PrismaNullable<NestedDateTimeFilter> not;
 
   @override
   Map<String, dynamic> toJson() {
@@ -460,88 +478,88 @@ class DateTimeFilter implements _i1.JsonSerializable {
   }
 }
 
-class TaskCountOrderByAggregateInput implements _i1.JsonSerializable {
-  const TaskCountOrderByAggregateInput({
+class UserCountOrderByAggregateInput implements _i2.JsonSerializable {
+  const UserCountOrderByAggregateInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<SortOrder> id;
+  final _i2.PrismaNullable<SortOrder> id;
 
-  final _i1.PrismaNullable<SortOrder> task;
+  final _i2.PrismaNullable<SortOrder> name;
 
-  final _i1.PrismaNullable<SortOrder> done;
+  final _i2.PrismaNullable<SortOrder> createdAt;
 
-  final _i1.PrismaNullable<SortOrder> due;
+  final _i2.PrismaNullable<SortOrder> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskMaxOrderByAggregateInput implements _i1.JsonSerializable {
-  const TaskMaxOrderByAggregateInput({
+class UserMaxOrderByAggregateInput implements _i2.JsonSerializable {
+  const UserMaxOrderByAggregateInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<SortOrder> id;
+  final _i2.PrismaNullable<SortOrder> id;
 
-  final _i1.PrismaNullable<SortOrder> task;
+  final _i2.PrismaNullable<SortOrder> name;
 
-  final _i1.PrismaNullable<SortOrder> done;
+  final _i2.PrismaNullable<SortOrder> createdAt;
 
-  final _i1.PrismaNullable<SortOrder> due;
+  final _i2.PrismaNullable<SortOrder> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class TaskMinOrderByAggregateInput implements _i1.JsonSerializable {
-  const TaskMinOrderByAggregateInput({
+class UserMinOrderByAggregateInput implements _i2.JsonSerializable {
+  const UserMinOrderByAggregateInput({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final _i1.PrismaNullable<SortOrder> id;
+  final _i2.PrismaNullable<SortOrder> id;
 
-  final _i1.PrismaNullable<SortOrder> task;
+  final _i2.PrismaNullable<SortOrder> name;
 
-  final _i1.PrismaNullable<SortOrder> done;
+  final _i2.PrismaNullable<SortOrder> createdAt;
 
-  final _i1.PrismaNullable<SortOrder> due;
+  final _i2.PrismaNullable<SortOrder> updatedAt;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'task': task,
-      'done': done,
-      'due': due,
+      'name': name,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
 
-class StringWithAggregatesFilter implements _i1.JsonSerializable {
+class StringWithAggregatesFilter implements _i2.JsonSerializable {
   const StringWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -553,39 +571,42 @@ class StringWithAggregatesFilter implements _i1.JsonSerializable {
     this.contains,
     this.startsWith,
     this.endsWith,
+    this.mode,
     this.not,
     this.$count,
     this.$min,
     this.$max,
   });
 
-  final _i1.PrismaNullable<String> equals;
+  final _i2.PrismaNullable<String> equals;
 
-  final _i1.PrismaNullable<List<String>> in$;
+  final _i2.PrismaNullable<List<String>> in$;
 
-  final _i1.PrismaNullable<List<String>> notIn;
+  final _i2.PrismaNullable<List<String>> notIn;
 
-  final _i1.PrismaNullable<String> lt;
+  final _i2.PrismaNullable<String> lt;
 
-  final _i1.PrismaNullable<String> lte;
+  final _i2.PrismaNullable<String> lte;
 
-  final _i1.PrismaNullable<String> gt;
+  final _i2.PrismaNullable<String> gt;
 
-  final _i1.PrismaNullable<String> gte;
+  final _i2.PrismaNullable<String> gte;
 
-  final _i1.PrismaNullable<String> contains;
+  final _i2.PrismaNullable<String> contains;
 
-  final _i1.PrismaNullable<String> startsWith;
+  final _i2.PrismaNullable<String> startsWith;
 
-  final _i1.PrismaNullable<String> endsWith;
+  final _i2.PrismaNullable<String> endsWith;
 
-  final _i1.PrismaNullable<NestedStringWithAggregatesFilter> not;
+  final _i2.PrismaNullable<QueryMode> mode;
 
-  final _i1.PrismaNullable<NestedIntFilter> $count;
+  final _i2.PrismaNullable<NestedStringWithAggregatesFilter> not;
 
-  final _i1.PrismaNullable<NestedStringFilter> $min;
+  final _i2.PrismaNullable<NestedIntFilter> $count;
 
-  final _i1.PrismaNullable<NestedStringFilter> $max;
+  final _i2.PrismaNullable<NestedStringFilter> $min;
+
+  final _i2.PrismaNullable<NestedStringFilter> $max;
 
   @override
   Map<String, dynamic> toJson() {
@@ -600,6 +621,7 @@ class StringWithAggregatesFilter implements _i1.JsonSerializable {
       'contains': contains,
       'startsWith': startsWith,
       'endsWith': endsWith,
+      'mode': mode,
       'not': not,
       '_count': $count,
       '_min': $min,
@@ -608,38 +630,7 @@ class StringWithAggregatesFilter implements _i1.JsonSerializable {
   }
 }
 
-class BoolWithAggregatesFilter implements _i1.JsonSerializable {
-  const BoolWithAggregatesFilter({
-    this.equals,
-    this.not,
-    this.$count,
-    this.$min,
-    this.$max,
-  });
-
-  final _i1.PrismaNullable<bool> equals;
-
-  final _i1.PrismaNullable<NestedBoolWithAggregatesFilter> not;
-
-  final _i1.PrismaNullable<NestedIntFilter> $count;
-
-  final _i1.PrismaNullable<NestedBoolFilter> $min;
-
-  final _i1.PrismaNullable<NestedBoolFilter> $max;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'equals': equals,
-      'not': not,
-      '_count': $count,
-      '_min': $min,
-      '_max': $max,
-    };
-  }
-}
-
-class DateTimeWithAggregatesFilter implements _i1.JsonSerializable {
+class DateTimeWithAggregatesFilter implements _i2.JsonSerializable {
   const DateTimeWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -654,27 +645,27 @@ class DateTimeWithAggregatesFilter implements _i1.JsonSerializable {
     this.$max,
   });
 
-  final _i1.PrismaNullable<DateTime> equals;
+  final _i2.PrismaNullable<DateTime> equals;
 
-  final _i1.PrismaNullable<List<DateTime>> in$;
+  final _i2.PrismaNullable<List<DateTime>> in$;
 
-  final _i1.PrismaNullable<List<DateTime>> notIn;
+  final _i2.PrismaNullable<List<DateTime>> notIn;
 
-  final _i1.PrismaNullable<DateTime> lt;
+  final _i2.PrismaNullable<DateTime> lt;
 
-  final _i1.PrismaNullable<DateTime> lte;
+  final _i2.PrismaNullable<DateTime> lte;
 
-  final _i1.PrismaNullable<DateTime> gt;
+  final _i2.PrismaNullable<DateTime> gt;
 
-  final _i1.PrismaNullable<DateTime> gte;
+  final _i2.PrismaNullable<DateTime> gte;
 
-  final _i1.PrismaNullable<NestedDateTimeWithAggregatesFilter> not;
+  final _i2.PrismaNullable<NestedDateTimeWithAggregatesFilter> not;
 
-  final _i1.PrismaNullable<NestedIntFilter> $count;
+  final _i2.PrismaNullable<NestedIntFilter> $count;
 
-  final _i1.PrismaNullable<NestedDateTimeFilter> $min;
+  final _i2.PrismaNullable<NestedDateTimeFilter> $min;
 
-  final _i1.PrismaNullable<NestedDateTimeFilter> $max;
+  final _i2.PrismaNullable<NestedDateTimeFilter> $max;
 
   @override
   Map<String, dynamic> toJson() {
@@ -694,10 +685,10 @@ class DateTimeWithAggregatesFilter implements _i1.JsonSerializable {
   }
 }
 
-class StringFieldUpdateOperationsInput implements _i1.JsonSerializable {
+class StringFieldUpdateOperationsInput implements _i2.JsonSerializable {
   const StringFieldUpdateOperationsInput({this.set$});
 
-  final _i1.PrismaNullable<String> set$;
+  final _i2.PrismaNullable<String> set$;
 
   @override
   Map<String, dynamic> toJson() {
@@ -707,23 +698,10 @@ class StringFieldUpdateOperationsInput implements _i1.JsonSerializable {
   }
 }
 
-class BoolFieldUpdateOperationsInput implements _i1.JsonSerializable {
-  const BoolFieldUpdateOperationsInput({this.set$});
-
-  final _i1.PrismaNullable<bool> set$;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'set': set$,
-    };
-  }
-}
-
-class DateTimeFieldUpdateOperationsInput implements _i1.JsonSerializable {
+class DateTimeFieldUpdateOperationsInput implements _i2.JsonSerializable {
   const DateTimeFieldUpdateOperationsInput({this.set$});
 
-  final _i1.PrismaNullable<DateTime> set$;
+  final _i2.PrismaNullable<DateTime> set$;
 
   @override
   Map<String, dynamic> toJson() {
@@ -733,7 +711,7 @@ class DateTimeFieldUpdateOperationsInput implements _i1.JsonSerializable {
   }
 }
 
-class NestedStringFilter implements _i1.JsonSerializable {
+class NestedStringFilter implements _i2.JsonSerializable {
   const NestedStringFilter({
     this.equals,
     this.in$,
@@ -748,27 +726,27 @@ class NestedStringFilter implements _i1.JsonSerializable {
     this.not,
   });
 
-  final _i1.PrismaNullable<String> equals;
+  final _i2.PrismaNullable<String> equals;
 
-  final _i1.PrismaNullable<List<String>> in$;
+  final _i2.PrismaNullable<List<String>> in$;
 
-  final _i1.PrismaNullable<List<String>> notIn;
+  final _i2.PrismaNullable<List<String>> notIn;
 
-  final _i1.PrismaNullable<String> lt;
+  final _i2.PrismaNullable<String> lt;
 
-  final _i1.PrismaNullable<String> lte;
+  final _i2.PrismaNullable<String> lte;
 
-  final _i1.PrismaNullable<String> gt;
+  final _i2.PrismaNullable<String> gt;
 
-  final _i1.PrismaNullable<String> gte;
+  final _i2.PrismaNullable<String> gte;
 
-  final _i1.PrismaNullable<String> contains;
+  final _i2.PrismaNullable<String> contains;
 
-  final _i1.PrismaNullable<String> startsWith;
+  final _i2.PrismaNullable<String> startsWith;
 
-  final _i1.PrismaNullable<String> endsWith;
+  final _i2.PrismaNullable<String> endsWith;
 
-  final _i1.PrismaNullable<NestedStringFilter> not;
+  final _i2.PrismaNullable<NestedStringFilter> not;
 
   @override
   Map<String, dynamic> toJson() {
@@ -788,26 +766,7 @@ class NestedStringFilter implements _i1.JsonSerializable {
   }
 }
 
-class NestedBoolFilter implements _i1.JsonSerializable {
-  const NestedBoolFilter({
-    this.equals,
-    this.not,
-  });
-
-  final _i1.PrismaNullable<bool> equals;
-
-  final _i1.PrismaNullable<NestedBoolFilter> not;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'equals': equals,
-      'not': not,
-    };
-  }
-}
-
-class NestedDateTimeFilter implements _i1.JsonSerializable {
+class NestedDateTimeFilter implements _i2.JsonSerializable {
   const NestedDateTimeFilter({
     this.equals,
     this.in$,
@@ -819,21 +778,21 @@ class NestedDateTimeFilter implements _i1.JsonSerializable {
     this.not,
   });
 
-  final _i1.PrismaNullable<DateTime> equals;
+  final _i2.PrismaNullable<DateTime> equals;
 
-  final _i1.PrismaNullable<List<DateTime>> in$;
+  final _i2.PrismaNullable<List<DateTime>> in$;
 
-  final _i1.PrismaNullable<List<DateTime>> notIn;
+  final _i2.PrismaNullable<List<DateTime>> notIn;
 
-  final _i1.PrismaNullable<DateTime> lt;
+  final _i2.PrismaNullable<DateTime> lt;
 
-  final _i1.PrismaNullable<DateTime> lte;
+  final _i2.PrismaNullable<DateTime> lte;
 
-  final _i1.PrismaNullable<DateTime> gt;
+  final _i2.PrismaNullable<DateTime> gt;
 
-  final _i1.PrismaNullable<DateTime> gte;
+  final _i2.PrismaNullable<DateTime> gte;
 
-  final _i1.PrismaNullable<NestedDateTimeFilter> not;
+  final _i2.PrismaNullable<NestedDateTimeFilter> not;
 
   @override
   Map<String, dynamic> toJson() {
@@ -850,7 +809,7 @@ class NestedDateTimeFilter implements _i1.JsonSerializable {
   }
 }
 
-class NestedStringWithAggregatesFilter implements _i1.JsonSerializable {
+class NestedStringWithAggregatesFilter implements _i2.JsonSerializable {
   const NestedStringWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -868,33 +827,33 @@ class NestedStringWithAggregatesFilter implements _i1.JsonSerializable {
     this.$max,
   });
 
-  final _i1.PrismaNullable<String> equals;
+  final _i2.PrismaNullable<String> equals;
 
-  final _i1.PrismaNullable<List<String>> in$;
+  final _i2.PrismaNullable<List<String>> in$;
 
-  final _i1.PrismaNullable<List<String>> notIn;
+  final _i2.PrismaNullable<List<String>> notIn;
 
-  final _i1.PrismaNullable<String> lt;
+  final _i2.PrismaNullable<String> lt;
 
-  final _i1.PrismaNullable<String> lte;
+  final _i2.PrismaNullable<String> lte;
 
-  final _i1.PrismaNullable<String> gt;
+  final _i2.PrismaNullable<String> gt;
 
-  final _i1.PrismaNullable<String> gte;
+  final _i2.PrismaNullable<String> gte;
 
-  final _i1.PrismaNullable<String> contains;
+  final _i2.PrismaNullable<String> contains;
 
-  final _i1.PrismaNullable<String> startsWith;
+  final _i2.PrismaNullable<String> startsWith;
 
-  final _i1.PrismaNullable<String> endsWith;
+  final _i2.PrismaNullable<String> endsWith;
 
-  final _i1.PrismaNullable<NestedStringWithAggregatesFilter> not;
+  final _i2.PrismaNullable<NestedStringWithAggregatesFilter> not;
 
-  final _i1.PrismaNullable<NestedIntFilter> $count;
+  final _i2.PrismaNullable<NestedIntFilter> $count;
 
-  final _i1.PrismaNullable<NestedStringFilter> $min;
+  final _i2.PrismaNullable<NestedStringFilter> $min;
 
-  final _i1.PrismaNullable<NestedStringFilter> $max;
+  final _i2.PrismaNullable<NestedStringFilter> $max;
 
   @override
   Map<String, dynamic> toJson() {
@@ -917,7 +876,7 @@ class NestedStringWithAggregatesFilter implements _i1.JsonSerializable {
   }
 }
 
-class NestedIntFilter implements _i1.JsonSerializable {
+class NestedIntFilter implements _i2.JsonSerializable {
   const NestedIntFilter({
     this.equals,
     this.in$,
@@ -929,21 +888,21 @@ class NestedIntFilter implements _i1.JsonSerializable {
     this.not,
   });
 
-  final _i1.PrismaNullable<int> equals;
+  final _i2.PrismaNullable<int> equals;
 
-  final _i1.PrismaNullable<List<int>> in$;
+  final _i2.PrismaNullable<List<int>> in$;
 
-  final _i1.PrismaNullable<List<int>> notIn;
+  final _i2.PrismaNullable<List<int>> notIn;
 
-  final _i1.PrismaNullable<int> lt;
+  final _i2.PrismaNullable<int> lt;
 
-  final _i1.PrismaNullable<int> lte;
+  final _i2.PrismaNullable<int> lte;
 
-  final _i1.PrismaNullable<int> gt;
+  final _i2.PrismaNullable<int> gt;
 
-  final _i1.PrismaNullable<int> gte;
+  final _i2.PrismaNullable<int> gte;
 
-  final _i1.PrismaNullable<NestedIntFilter> not;
+  final _i2.PrismaNullable<NestedIntFilter> not;
 
   @override
   Map<String, dynamic> toJson() {
@@ -960,38 +919,7 @@ class NestedIntFilter implements _i1.JsonSerializable {
   }
 }
 
-class NestedBoolWithAggregatesFilter implements _i1.JsonSerializable {
-  const NestedBoolWithAggregatesFilter({
-    this.equals,
-    this.not,
-    this.$count,
-    this.$min,
-    this.$max,
-  });
-
-  final _i1.PrismaNullable<bool> equals;
-
-  final _i1.PrismaNullable<NestedBoolWithAggregatesFilter> not;
-
-  final _i1.PrismaNullable<NestedIntFilter> $count;
-
-  final _i1.PrismaNullable<NestedBoolFilter> $min;
-
-  final _i1.PrismaNullable<NestedBoolFilter> $max;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'equals': equals,
-      'not': not,
-      '_count': $count,
-      '_min': $min,
-      '_max': $max,
-    };
-  }
-}
-
-class NestedDateTimeWithAggregatesFilter implements _i1.JsonSerializable {
+class NestedDateTimeWithAggregatesFilter implements _i2.JsonSerializable {
   const NestedDateTimeWithAggregatesFilter({
     this.equals,
     this.in$,
@@ -1006,27 +934,27 @@ class NestedDateTimeWithAggregatesFilter implements _i1.JsonSerializable {
     this.$max,
   });
 
-  final _i1.PrismaNullable<DateTime> equals;
+  final _i2.PrismaNullable<DateTime> equals;
 
-  final _i1.PrismaNullable<List<DateTime>> in$;
+  final _i2.PrismaNullable<List<DateTime>> in$;
 
-  final _i1.PrismaNullable<List<DateTime>> notIn;
+  final _i2.PrismaNullable<List<DateTime>> notIn;
 
-  final _i1.PrismaNullable<DateTime> lt;
+  final _i2.PrismaNullable<DateTime> lt;
 
-  final _i1.PrismaNullable<DateTime> lte;
+  final _i2.PrismaNullable<DateTime> lte;
 
-  final _i1.PrismaNullable<DateTime> gt;
+  final _i2.PrismaNullable<DateTime> gt;
 
-  final _i1.PrismaNullable<DateTime> gte;
+  final _i2.PrismaNullable<DateTime> gte;
 
-  final _i1.PrismaNullable<NestedDateTimeWithAggregatesFilter> not;
+  final _i2.PrismaNullable<NestedDateTimeWithAggregatesFilter> not;
 
-  final _i1.PrismaNullable<NestedIntFilter> $count;
+  final _i2.PrismaNullable<NestedIntFilter> $count;
 
-  final _i1.PrismaNullable<NestedDateTimeFilter> $min;
+  final _i2.PrismaNullable<NestedDateTimeFilter> $min;
 
-  final _i1.PrismaNullable<NestedDateTimeFilter> $max;
+  final _i2.PrismaNullable<NestedDateTimeFilter> $max;
 
   @override
   Map<String, dynamic> toJson() {
@@ -1046,80 +974,80 @@ class NestedDateTimeWithAggregatesFilter implements _i1.JsonSerializable {
   }
 }
 
-@_i2.JsonSerializable(
+@_i1.JsonSerializable(
   createToJson: true,
   createFactory: true,
   explicitToJson: true,
 )
-class AggregateTask implements _i1.JsonSerializable {
-  const AggregateTask({
+class AggregateUser implements _i2.JsonSerializable {
+  const AggregateUser({
     this.$count,
     this.$min,
     this.$max,
   });
 
-  factory AggregateTask.fromJson(Map<String, dynamic> json) =>
-      _$AggregateTaskFromJson(json);
+  factory AggregateUser.fromJson(Map<String, dynamic> json) =>
+      _$AggregateUserFromJson(json);
 
-  @_i2.JsonKey(name: '_count')
-  final _i1.PrismaNullable<TaskCountAggregateOutputType> $count;
+  @_i1.JsonKey(name: '_count')
+  final _i2.PrismaNullable<UserCountAggregateOutputType> $count;
 
-  @_i2.JsonKey(name: '_min')
-  final _i1.PrismaNullable<TaskMinAggregateOutputType> $min;
+  @_i1.JsonKey(name: '_min')
+  final _i2.PrismaNullable<UserMinAggregateOutputType> $min;
 
-  @_i2.JsonKey(name: '_max')
-  final _i1.PrismaNullable<TaskMaxAggregateOutputType> $max;
+  @_i1.JsonKey(name: '_max')
+  final _i2.PrismaNullable<UserMaxAggregateOutputType> $max;
 
   @override
-  Map<String, dynamic> toJson() => _$AggregateTaskToJson(this);
+  Map<String, dynamic> toJson() => _$AggregateUserToJson(this);
 }
 
-@_i2.JsonSerializable(
+@_i1.JsonSerializable(
   createToJson: true,
   createFactory: true,
   explicitToJson: true,
 )
-class TaskGroupByOutputType implements _i1.JsonSerializable {
-  const TaskGroupByOutputType({
+class UserGroupByOutputType implements _i2.JsonSerializable {
+  const UserGroupByOutputType({
     required this.id,
-    required this.task,
-    required this.done,
-    required this.due,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
     this.$count,
     this.$min,
     this.$max,
   });
 
-  factory TaskGroupByOutputType.fromJson(Map<String, dynamic> json) =>
-      _$TaskGroupByOutputTypeFromJson(json);
+  factory UserGroupByOutputType.fromJson(Map<String, dynamic> json) =>
+      _$UserGroupByOutputTypeFromJson(json);
 
   final String id;
 
-  final String task;
+  final String name;
 
-  final bool done;
+  final DateTime createdAt;
 
-  final DateTime due;
+  final DateTime updatedAt;
 
-  @_i2.JsonKey(name: '_count')
-  final _i1.PrismaNullable<TaskCountAggregateOutputType> $count;
+  @_i1.JsonKey(name: '_count')
+  final _i2.PrismaNullable<UserCountAggregateOutputType> $count;
 
-  @_i2.JsonKey(name: '_min')
-  final _i1.PrismaNullable<TaskMinAggregateOutputType> $min;
+  @_i1.JsonKey(name: '_min')
+  final _i2.PrismaNullable<UserMinAggregateOutputType> $min;
 
-  @_i2.JsonKey(name: '_max')
-  final _i1.PrismaNullable<TaskMaxAggregateOutputType> $max;
+  @_i1.JsonKey(name: '_max')
+  final _i2.PrismaNullable<UserMaxAggregateOutputType> $max;
 
   @override
-  Map<String, dynamic> toJson() => _$TaskGroupByOutputTypeToJson(this);
+  Map<String, dynamic> toJson() => _$UserGroupByOutputTypeToJson(this);
 }
 
-@_i2.JsonSerializable(
+@_i1.JsonSerializable(
   createToJson: true,
   createFactory: true,
   explicitToJson: true,
 )
-class AffectedRowsOutput implements _i1.JsonSerializable {
+class AffectedRowsOutput implements _i2.JsonSerializable {
   const AffectedRowsOutput({required this.count});
 
   factory AffectedRowsOutput.fromJson(Map<String, dynamic> json) =>
@@ -1131,596 +1059,632 @@ class AffectedRowsOutput implements _i1.JsonSerializable {
   Map<String, dynamic> toJson() => _$AffectedRowsOutputToJson(this);
 }
 
-@_i2.JsonSerializable(
+@_i1.JsonSerializable(
   createToJson: true,
   createFactory: true,
   explicitToJson: true,
 )
-class TaskCountAggregateOutputType implements _i1.JsonSerializable {
-  const TaskCountAggregateOutputType({
+class UserCountAggregateOutputType implements _i2.JsonSerializable {
+  const UserCountAggregateOutputType({
     required this.id,
-    required this.task,
-    required this.done,
-    required this.due,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
     required this.$all,
   });
 
-  factory TaskCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-      _$TaskCountAggregateOutputTypeFromJson(json);
+  factory UserCountAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+      _$UserCountAggregateOutputTypeFromJson(json);
 
   final int id;
 
-  final int task;
+  final int name;
 
-  final int done;
+  final int createdAt;
 
-  final int due;
+  final int updatedAt;
 
-  @_i2.JsonKey(name: '_all')
+  @_i1.JsonKey(name: '_all')
   final int $all;
 
   @override
-  Map<String, dynamic> toJson() => _$TaskCountAggregateOutputTypeToJson(this);
+  Map<String, dynamic> toJson() => _$UserCountAggregateOutputTypeToJson(this);
 }
 
-@_i2.JsonSerializable(
+@_i1.JsonSerializable(
   createToJson: true,
   createFactory: true,
   explicitToJson: true,
 )
-class TaskMinAggregateOutputType implements _i1.JsonSerializable {
-  const TaskMinAggregateOutputType({
+class UserMinAggregateOutputType implements _i2.JsonSerializable {
+  const UserMinAggregateOutputType({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  factory TaskMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-      _$TaskMinAggregateOutputTypeFromJson(json);
+  factory UserMinAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+      _$UserMinAggregateOutputTypeFromJson(json);
 
-  final _i1.PrismaNullable<String> id;
+  final _i2.PrismaNullable<String> id;
 
-  final _i1.PrismaNullable<String> task;
+  final _i2.PrismaNullable<String> name;
 
-  final _i1.PrismaNullable<bool> done;
+  final _i2.PrismaNullable<DateTime> createdAt;
 
-  final _i1.PrismaNullable<DateTime> due;
+  final _i2.PrismaNullable<DateTime> updatedAt;
 
   @override
-  Map<String, dynamic> toJson() => _$TaskMinAggregateOutputTypeToJson(this);
+  Map<String, dynamic> toJson() => _$UserMinAggregateOutputTypeToJson(this);
 }
 
-@_i2.JsonSerializable(
+@_i1.JsonSerializable(
   createToJson: true,
   createFactory: true,
   explicitToJson: true,
 )
-class TaskMaxAggregateOutputType implements _i1.JsonSerializable {
-  const TaskMaxAggregateOutputType({
+class UserMaxAggregateOutputType implements _i2.JsonSerializable {
+  const UserMaxAggregateOutputType({
     this.id,
-    this.task,
-    this.done,
-    this.due,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  factory TaskMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
-      _$TaskMaxAggregateOutputTypeFromJson(json);
+  factory UserMaxAggregateOutputType.fromJson(Map<String, dynamic> json) =>
+      _$UserMaxAggregateOutputTypeFromJson(json);
 
-  final _i1.PrismaNullable<String> id;
+  final _i2.PrismaNullable<String> id;
 
-  final _i1.PrismaNullable<String> task;
+  final _i2.PrismaNullable<String> name;
 
-  final _i1.PrismaNullable<bool> done;
+  final _i2.PrismaNullable<DateTime> createdAt;
 
-  final _i1.PrismaNullable<DateTime> due;
+  final _i2.PrismaNullable<DateTime> updatedAt;
 
   @override
-  Map<String, dynamic> toJson() => _$TaskMaxAggregateOutputTypeToJson(this);
+  Map<String, dynamic> toJson() => _$UserMaxAggregateOutputTypeToJson(this);
 }
 
-@_i2.JsonSerializable(
+@_i1.JsonSerializable(
   createToJson: true,
   createFactory: true,
   explicitToJson: true,
 )
-class Task implements _i1.JsonSerializable {
-  const Task({
+class User implements _i2.JsonSerializable {
+  const User({
     required this.id,
-    required this.task,
-    required this.done,
-    required this.due,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   final String id;
 
-  final String task;
+  final String name;
 
-  final bool done;
+  final DateTime createdAt;
 
-  final DateTime due;
+  final DateTime updatedAt;
 
   @override
-  Map<String, dynamic> toJson() => _$TaskToJson(this);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 }
 
-class TaskDelegate {
-  const TaskDelegate._(
+class UserDelegate {
+  const UserDelegate._(
     this._engine, [
     this._headers,
   ]);
 
-  final _i1.Engine _engine;
+  final _i2.Engine _engine;
 
-  final _i1.PrismaNullable<_i1.QueryEngineRequestHeaders> _headers;
+  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _headers;
 
-  Future<_i1.PrismaNullable<Task>> findUnique(
-      {required TaskWhereUniqueInput where}) async {
-    final String sdl = _i1.GraphQLField(
+  Future<_i2.PrismaNullable<User>> findUnique(
+      {required UserWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField(
       'query',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'findUniqueTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findUniqueUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: true,
             )
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return result.data['findUniqueTask'] == null
+    return result.data['findUniqueUser'] == null
         ? null
-        : Task.fromJson((result.data['findUniqueTask'] as Map).cast());
+        : User.fromJson((result.data['findUniqueUser'] as Map).cast());
   }
 
-  Future<_i1.PrismaNullable<Task>> findFirst({
-    _i1.PrismaNullable<TaskWhereInput> where,
-    _i1.PrismaNullable<List<TaskOrderByWithRelationInput>> orderBy,
-    _i1.PrismaNullable<TaskWhereUniqueInput> cursor,
-    _i1.PrismaNullable<int> take,
-    _i1.PrismaNullable<int> skip,
-    _i1.PrismaNullable<List<TaskScalarFieldEnum>> distinct,
+  Future<_i2.PrismaNullable<User>> findFirst({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+    _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct,
   }) async {
-    final String sdl = _i1.GraphQLField(
+    final String sdl = _i2.GraphQLField(
       'query',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'findFirstTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findFirstUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'orderBy',
               orderBy,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'cursor',
               cursor,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'take',
               take,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'skip',
               skip,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'distinct',
               distinct,
               isRequired: false,
             ),
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return result.data['findFirstTask'] == null
+    return result.data['findFirstUser'] == null
         ? null
-        : Task.fromJson((result.data['findFirstTask'] as Map).cast());
+        : User.fromJson((result.data['findFirstUser'] as Map).cast());
   }
 
-  Future<List<Task>> findMany({
-    _i1.PrismaNullable<TaskWhereInput> where,
-    _i1.PrismaNullable<List<TaskOrderByWithRelationInput>> orderBy,
-    _i1.PrismaNullable<TaskWhereUniqueInput> cursor,
-    _i1.PrismaNullable<int> take,
-    _i1.PrismaNullable<int> skip,
-    _i1.PrismaNullable<List<TaskScalarFieldEnum>> distinct,
+  Future<List<User>> findMany({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
+    _i2.PrismaNullable<List<UserScalarFieldEnum>> distinct,
   }) async {
-    final String sdl = _i1.GraphQLField(
+    final String sdl = _i2.GraphQLField(
       'query',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'findManyTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'findManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'orderBy',
               orderBy,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'cursor',
               cursor,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'take',
               take,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'skip',
               skip,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'distinct',
               distinct,
               isRequired: false,
             ),
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return (result.data['findManyTask'] as List)
+    return (result.data['findManyUser'] as List)
         .whereType<Map>()
-        .map((Map e) => Task.fromJson(e.cast()))
+        .map((Map e) => User.fromJson(e.cast()))
         .toList();
   }
 
-  Future<Task> create({required TaskCreateInput data}) async {
-    final String sdl = _i1.GraphQLField(
+  Future<User> create({required UserCreateInput data}) async {
+    final String sdl = _i2.GraphQLField(
       'mutation',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'createOneTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'createOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'data',
               data,
               isRequired: true,
             )
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return Task.fromJson((result.data['createOneTask'] as Map).cast());
+    return User.fromJson((result.data['createOneUser'] as Map).cast());
   }
 
-  Future<_i1.PrismaNullable<Task>> update({
-    required TaskUpdateInput data,
-    required TaskWhereUniqueInput where,
+  Future<AffectedRowsOutput> createMany({
+    required List<UserCreateManyInput> data,
+    _i2.PrismaNullable<bool> skipDuplicates,
   }) async {
-    final String sdl = _i1.GraphQLField(
+    final String sdl = _i2.GraphQLField(
       'mutation',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'updateOneTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'createManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'data',
               data,
               isRequired: true,
             ),
-            _i1.GraphQLArg(
-              'where',
-              where,
-              isRequired: true,
-            ),
-          ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
-              .toList()),
-        )
-      ]),
-    ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
-      query: sdl,
-      headers: _headers,
-    );
-    return result.data['updateOneTask'] == null
-        ? null
-        : Task.fromJson((result.data['updateOneTask'] as Map).cast());
-  }
-
-  Future<AffectedRowsOutput> updateMany({
-    required TaskUpdateManyMutationInput data,
-    _i1.PrismaNullable<TaskWhereInput> where,
-  }) async {
-    final String sdl = _i1.GraphQLField(
-      'mutation',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'updateManyTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
-              'data',
-              data,
-              isRequired: true,
-            ),
-            _i1.GraphQLArg(
-              'where',
-              where,
+            _i2.GraphQLArg(
+              'skipDuplicates',
+              skipDuplicates,
               isRequired: false,
             ),
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
     return AffectedRowsOutput.fromJson(
-        (result.data['updateManyTask'] as Map).cast());
+        (result.data['createManyUser'] as Map).cast());
   }
 
-  Future<Task> upsert({
-    required TaskWhereUniqueInput where,
-    required TaskCreateInput create,
-    required TaskUpdateInput update,
+  Future<_i2.PrismaNullable<User>> update({
+    required UserUpdateInput data,
+    required UserWhereUniqueInput where,
   }) async {
-    final String sdl = _i1.GraphQLField(
+    final String sdl = _i2.GraphQLField(
       'mutation',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'upsertOneTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'updateOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: true,
             ),
-            _i1.GraphQLArg(
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
+    return result.data['updateOneUser'] == null
+        ? null
+        : User.fromJson((result.data['updateOneUser'] as Map).cast());
+  }
+
+  Future<AffectedRowsOutput> updateMany({
+    required UserUpdateManyMutationInput data,
+    _i2.PrismaNullable<UserWhereInput> where,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'updateManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'data',
+              data,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: false,
+            ),
+          ]),
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
+              .toList()),
+        )
+      ]),
+    ).toSdl();
+    final _i2.QueryEngineResult result = await _engine.request(
+      query: sdl,
+      headers: _headers,
+    );
+    return AffectedRowsOutput.fromJson(
+        (result.data['updateManyUser'] as Map).cast());
+  }
+
+  Future<User> upsert({
+    required UserWhereUniqueInput where,
+    required UserCreateInput create,
+    required UserUpdateInput update,
+  }) async {
+    final String sdl = _i2.GraphQLField(
+      'mutation',
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'upsertOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
+              'where',
+              where,
+              isRequired: true,
+            ),
+            _i2.GraphQLArg(
               'create',
               create,
               isRequired: true,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'update',
               update,
               isRequired: true,
             ),
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return Task.fromJson((result.data['upsertOneTask'] as Map).cast());
+    return User.fromJson((result.data['upsertOneUser'] as Map).cast());
   }
 
-  Future<_i1.PrismaNullable<Task>> delete(
-      {required TaskWhereUniqueInput where}) async {
-    final String sdl = _i1.GraphQLField(
+  Future<_i2.PrismaNullable<User>> delete(
+      {required UserWhereUniqueInput where}) async {
+    final String sdl = _i2.GraphQLField(
       'mutation',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'deleteOneTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'deleteOneUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: true,
             )
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return result.data['deleteOneTask'] == null
+    return result.data['deleteOneUser'] == null
         ? null
-        : Task.fromJson((result.data['deleteOneTask'] as Map).cast());
+        : User.fromJson((result.data['deleteOneUser'] as Map).cast());
   }
 
   Future<AffectedRowsOutput> deleteMany(
-      {_i1.PrismaNullable<TaskWhereInput> where}) async {
-    final String sdl = _i1.GraphQLField(
+      {_i2.PrismaNullable<UserWhereInput> where}) async {
+    final String sdl = _i2.GraphQLField(
       'mutation',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'deleteManyTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'deleteManyUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: false,
             )
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
     return AffectedRowsOutput.fromJson(
-        (result.data['deleteManyTask'] as Map).cast());
+        (result.data['deleteManyUser'] as Map).cast());
   }
 
-  Future<AggregateTask> aggregate({
-    _i1.PrismaNullable<TaskWhereInput> where,
-    _i1.PrismaNullable<List<TaskOrderByWithRelationInput>> orderBy,
-    _i1.PrismaNullable<TaskWhereUniqueInput> cursor,
-    _i1.PrismaNullable<int> take,
-    _i1.PrismaNullable<int> skip,
+  Future<AggregateUser> aggregate({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithRelationInput>> orderBy,
+    _i2.PrismaNullable<UserWhereUniqueInput> cursor,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
   }) async {
-    final String sdl = _i1.GraphQLField(
+    final String sdl = _i2.GraphQLField(
       'query',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'aggregateTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'aggregateUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'orderBy',
               orderBy,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'cursor',
               cursor,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'take',
               take,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'skip',
               skip,
               isRequired: false,
             ),
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return AggregateTask.fromJson((result.data['aggregateTask'] as Map).cast());
+    return AggregateUser.fromJson((result.data['aggregateUser'] as Map).cast());
   }
 
-  Future<List<TaskGroupByOutputType>> groupBy({
-    _i1.PrismaNullable<TaskWhereInput> where,
-    _i1.PrismaNullable<List<TaskOrderByWithAggregationInput>> orderBy,
-    required List<TaskScalarFieldEnum> by,
-    _i1.PrismaNullable<TaskScalarWhereWithAggregatesInput> having,
-    _i1.PrismaNullable<int> take,
-    _i1.PrismaNullable<int> skip,
+  Future<List<UserGroupByOutputType>> groupBy({
+    _i2.PrismaNullable<UserWhereInput> where,
+    _i2.PrismaNullable<List<UserOrderByWithAggregationInput>> orderBy,
+    required List<UserScalarFieldEnum> by,
+    _i2.PrismaNullable<UserScalarWhereWithAggregatesInput> having,
+    _i2.PrismaNullable<int> take,
+    _i2.PrismaNullable<int> skip,
   }) async {
-    final String sdl = _i1.GraphQLField(
+    final String sdl = _i2.GraphQLField(
       'query',
-      fields: _i1.GraphQLFields([
-        _i1.GraphQLField(
-          'groupByTask',
-          args: _i1.GraphQLArgs([
-            _i1.GraphQLArg(
+      fields: _i2.GraphQLFields([
+        _i2.GraphQLField(
+          'groupByUser',
+          args: _i2.GraphQLArgs([
+            _i2.GraphQLArg(
               'where',
               where,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'orderBy',
               orderBy,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'by',
               by,
               isRequired: true,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'having',
               having,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'take',
               take,
               isRequired: false,
             ),
-            _i1.GraphQLArg(
+            _i2.GraphQLArg(
               'skip',
               skip,
               isRequired: false,
             ),
           ]),
-          fields: _i1.GraphQLFields(TaskScalarFieldEnum.values
-              .map((TaskScalarFieldEnum e) =>
-                  _i1.GraphQLField(_i1.languageKeywordDecode(e.name)))
+          fields: _i2.GraphQLFields(UserScalarFieldEnum.values
+              .map((UserScalarFieldEnum e) =>
+                  _i2.GraphQLField(_i2.languageKeywordDecode(e.name)))
               .toList()),
         )
       ]),
     ).toSdl();
-    final _i1.QueryEngineResult result = await _engine.request(
+    final _i2.QueryEngineResult result = await _engine.request(
       query: sdl,
       headers: _headers,
     );
-    return (result.data['groupByTask'] as List)
+    return (result.data['groupByUser'] as List)
         .whereType<Map>()
-        .map((Map e) => TaskGroupByOutputType.fromJson(e.cast()))
+        .map((Map e) => UserGroupByOutputType.fromJson(e.cast()))
         .toList();
   }
 }
@@ -1729,7 +1693,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   'datamodel': {
     'models': [
       {
-        'name': 'Task',
+        'name': 'User',
         'dbName': null,
         'fields': [
           {
@@ -1773,7 +1737,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             },
           },
           {
-            'name': 'task',
+            'name': 'name',
             'kind': 'scalar',
             'isList': false,
             'isRequired': true,
@@ -1792,7 +1756,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'relationName': null,
             'documentation': null,
             'additionalProperties': {
-              'name': 'task',
+              'name': 'name',
               'kind': 'scalar',
               'isList': false,
               'isRequired': true,
@@ -1806,41 +1770,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             },
           },
           {
-            'name': 'done',
-            'kind': 'scalar',
-            'isList': false,
-            'isRequired': true,
-            'isUnique': false,
-            'isId': false,
-            'isReadOnly': false,
-            'hasDefaultValue': true,
-            'type': 'Boolean',
-            'default': false,
-            'isGenerated': false,
-            'isUpdatedAt': false,
-            'dbNames': null,
-            'relationFromFields': null,
-            'relationToFields': null,
-            'relationOnDelete': null,
-            'relationName': null,
-            'documentation': null,
-            'additionalProperties': {
-              'name': 'done',
-              'kind': 'scalar',
-              'isList': false,
-              'isRequired': true,
-              'isUnique': false,
-              'isId': false,
-              'isReadOnly': false,
-              'hasDefaultValue': true,
-              'type': 'Boolean',
-              'default': false,
-              'isGenerated': false,
-              'isUpdatedAt': false,
-            },
-          },
-          {
-            'name': 'due',
+            'name': 'createdAt',
             'kind': 'scalar',
             'isList': false,
             'isRequired': true,
@@ -1850,8 +1780,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'hasDefaultValue': true,
             'type': 'DateTime',
             'default': {
-              'name': 'dbgenerated',
-              'args': ['(datetime(\'now\', \'+2 days\'))'],
+              'name': 'now',
+              'args': [],
             },
             'isGenerated': false,
             'isUpdatedAt': false,
@@ -1862,7 +1792,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
             'relationName': null,
             'documentation': null,
             'additionalProperties': {
-              'name': 'due',
+              'name': 'createdAt',
               'kind': 'scalar',
               'isList': false,
               'isRequired': true,
@@ -1872,11 +1802,44 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': true,
               'type': 'DateTime',
               'default': {
-                'name': 'dbgenerated',
-                'args': ['(datetime(\'now\', \'+2 days\'))'],
+                'name': 'now',
+                'args': [],
               },
               'isGenerated': false,
               'isUpdatedAt': false,
+            },
+          },
+          {
+            'name': 'updatedAt',
+            'kind': 'scalar',
+            'isList': false,
+            'isRequired': true,
+            'isUnique': false,
+            'isId': false,
+            'isReadOnly': false,
+            'hasDefaultValue': false,
+            'type': 'DateTime',
+            'isGenerated': false,
+            'isUpdatedAt': true,
+            'dbNames': null,
+            'default': null,
+            'relationFromFields': null,
+            'relationToFields': null,
+            'relationOnDelete': null,
+            'relationName': null,
+            'documentation': null,
+            'additionalProperties': {
+              'name': 'updatedAt',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'DateTime',
+              'isGenerated': false,
+              'isUpdatedAt': true,
             },
           },
         ],
@@ -1887,7 +1850,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
         'fieldsMap': null,
         'documentation': null,
         'extra': {
-          'name': 'Task',
+          'name': 'User',
           'dbName': null,
           'fields': [
             {
@@ -1908,7 +1871,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isUpdatedAt': false,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'kind': 'scalar',
               'isList': false,
               'isRequired': true,
@@ -1921,21 +1884,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isUpdatedAt': false,
             },
             {
-              'name': 'done',
-              'kind': 'scalar',
-              'isList': false,
-              'isRequired': true,
-              'isUnique': false,
-              'isId': false,
-              'isReadOnly': false,
-              'hasDefaultValue': true,
-              'type': 'Boolean',
-              'default': false,
-              'isGenerated': false,
-              'isUpdatedAt': false,
-            },
-            {
-              'name': 'due',
+              'name': 'createdAt',
               'kind': 'scalar',
               'isList': false,
               'isRequired': true,
@@ -1945,11 +1894,24 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'hasDefaultValue': true,
               'type': 'DateTime',
               'default': {
-                'name': 'dbgenerated',
-                'args': ['(datetime(\'now\', \'+2 days\'))'],
+                'name': 'now',
+                'args': [],
               },
               'isGenerated': false,
               'isUpdatedAt': false,
+            },
+            {
+              'name': 'updatedAt',
+              'kind': 'scalar',
+              'isList': false,
+              'isRequired': true,
+              'isUnique': false,
+              'isId': false,
+              'isReadOnly': false,
+              'hasDefaultValue': false,
+              'type': 'DateTime',
+              'isGenerated': false,
+              'isUpdatedAt': true,
             },
           ],
           'primaryKey': null,
@@ -1969,7 +1931,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
       'model': null,
       'prisma': [
         {
-          'name': 'TaskWhereInput',
+          'name': 'UserWhereInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -1983,13 +1945,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'TaskWhereInput',
+                  'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
                 {
                   'isList': true,
-                  'type': 'TaskWhereInput',
+                  'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2004,7 +1966,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': true,
-                  'type': 'TaskWhereInput',
+                  'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 }
@@ -2019,13 +1981,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'TaskWhereInput',
+                  'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
                 {
                   'isList': true,
-                  'type': 'TaskWhereInput',
+                  'type': 'UserWhereInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2054,7 +2016,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2075,20 +2037,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'BoolFilter',
+                  'type': 'DateTimeFilter',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
                 {
                   'isList': false,
-                  'type': 'Boolean',
+                  'type': 'DateTime',
                   'location': 'scalar',
                   'namespace': null,
                 },
@@ -2096,7 +2058,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2120,7 +2082,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskOrderByWithRelationInput',
+          'name': 'UserOrderByWithRelationInput',
           'constraints': {
             'maxNumFields': 1,
             'minNumFields': 0,
@@ -2142,7 +2104,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2157,7 +2119,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2172,7 +2134,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2190,7 +2152,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskWhereUniqueInput',
+          'name': 'UserWhereUniqueInput',
           'constraints': {
             'maxNumFields': 1,
             'minNumFields': 1,
@@ -2215,7 +2177,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskOrderByWithAggregationInput',
+          'name': 'UserOrderByWithAggregationInput',
           'constraints': {
             'maxNumFields': 1,
             'minNumFields': 0,
@@ -2237,7 +2199,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2252,7 +2214,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2267,7 +2229,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2289,7 +2251,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'TaskCountOrderByAggregateInput',
+                  'type': 'UserCountOrderByAggregateInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 }
@@ -2304,7 +2266,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'TaskMaxOrderByAggregateInput',
+                  'type': 'UserMaxOrderByAggregateInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 }
@@ -2319,7 +2281,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'TaskMinOrderByAggregateInput',
+                  'type': 'UserMinOrderByAggregateInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 }
@@ -2330,7 +2292,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskScalarWhereWithAggregatesInput',
+          'name': 'UserScalarWhereWithAggregatesInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -2344,13 +2306,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'TaskScalarWhereWithAggregatesInput',
+                  'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
                 {
                   'isList': true,
-                  'type': 'TaskScalarWhereWithAggregatesInput',
+                  'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2365,7 +2327,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': true,
-                  'type': 'TaskScalarWhereWithAggregatesInput',
+                  'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 }
@@ -2380,13 +2342,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'TaskScalarWhereWithAggregatesInput',
+                  'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
                 {
                   'isList': true,
-                  'type': 'TaskScalarWhereWithAggregatesInput',
+                  'type': 'UserScalarWhereWithAggregatesInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2415,7 +2377,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2436,20 +2398,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'BoolWithAggregatesFilter',
+                  'type': 'DateTimeWithAggregatesFilter',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
                 {
                   'isList': false,
-                  'type': 'Boolean',
+                  'type': 'DateTime',
                   'location': 'scalar',
                   'namespace': null,
                 },
@@ -2457,7 +2419,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2481,7 +2443,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskCreateInput',
+          'name': 'UserCreateInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -2503,7 +2465,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': true,
@@ -2518,14 +2480,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'Boolean',
+                  'type': 'DateTime',
                   'location': 'scalar',
                   'namespace': null,
                 }
@@ -2533,7 +2495,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2551,7 +2513,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskUncheckedCreateInput',
+          'name': 'UserUncheckedCreateInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -2573,7 +2535,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': true,
@@ -2588,22 +2550,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': 'due',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2617,11 +2564,26 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               ],
               'deprecation': null,
             },
+            {
+              'name': 'updatedAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null,
+                }
+              ],
+              'deprecation': null,
+            },
           ],
           'fieldMap': null,
         },
         {
-          'name': 'TaskUpdateInput',
+          'name': 'UserUpdateInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -2649,7 +2611,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2670,20 +2632,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'Boolean',
+                  'type': 'DateTime',
                   'location': 'scalar',
                   'namespace': null,
                 },
                 {
                   'isList': false,
-                  'type': 'BoolFieldUpdateOperationsInput',
+                  'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2691,7 +2653,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2715,7 +2677,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskUncheckedUpdateInput',
+          'name': 'UserUncheckedUpdateInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -2743,7 +2705,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2764,20 +2726,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'Boolean',
+                  'type': 'DateTime',
                   'location': 'scalar',
                   'namespace': null,
                 },
                 {
                   'isList': false,
-                  'type': 'BoolFieldUpdateOperationsInput',
+                  'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2785,7 +2747,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2809,7 +2771,77 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskUpdateManyMutationInput',
+          'name': 'UserCreateManyInput',
+          'constraints': {
+            'maxNumFields': null,
+            'minNumFields': null,
+          },
+          'fields': [
+            {
+              'name': 'id',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null,
+                }
+              ],
+              'deprecation': null,
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': true,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null,
+                }
+              ],
+              'deprecation': null,
+            },
+            {
+              'name': 'createdAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null,
+                }
+              ],
+              'deprecation': null,
+            },
+            {
+              'name': 'updatedAt',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'DateTime',
+                  'location': 'scalar',
+                  'namespace': null,
+                }
+              ],
+              'deprecation': null,
+            },
+          ],
+          'fieldMap': null,
+        },
+        {
+          'name': 'UserUpdateManyMutationInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -2837,7 +2869,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2858,20 +2890,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'Boolean',
+                  'type': 'DateTime',
                   'location': 'scalar',
                   'namespace': null,
                 },
                 {
                   'isList': false,
-                  'type': 'BoolFieldUpdateOperationsInput',
+                  'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2879,7 +2911,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2903,7 +2935,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskUncheckedUpdateManyInput',
+          'name': 'UserUncheckedUpdateManyInput',
           'constraints': {
             'maxNumFields': null,
             'minNumFields': null,
@@ -2931,7 +2963,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -2952,20 +2984,20 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
               'inputTypes': [
                 {
                   'isList': false,
-                  'type': 'Boolean',
+                  'type': 'DateTime',
                   'location': 'scalar',
                   'namespace': null,
                 },
                 {
                   'isList': false,
-                  'type': 'BoolFieldUpdateOperationsInput',
+                  'type': 'DateTimeFieldUpdateOperationsInput',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -2973,7 +3005,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3154,6 +3186,21 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
+              'name': 'mode',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'QueryMode',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma',
+                }
+              ],
+              'deprecation': null,
+            },
+            {
               'name': 'not',
               'comment': null,
               'isNullable': false,
@@ -3168,52 +3215,6 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 {
                   'isList': false,
                   'type': 'NestedStringFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                },
-              ],
-              'deprecation': null,
-            },
-          ],
-          'fieldMap': null,
-        },
-        {
-          'name': 'BoolFilter',
-          'constraints': {
-            'maxNumFields': null,
-            'minNumFields': null,
-          },
-          'fields': [
-            {
-              'name': 'equals',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': 'not',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                },
-                {
-                  'isList': false,
-                  'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -3360,7 +3361,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskCountOrderByAggregateInput',
+          'name': 'UserCountOrderByAggregateInput',
           'constraints': {
             'maxNumFields': 1,
             'minNumFields': 1,
@@ -3382,7 +3383,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3397,7 +3398,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3412,7 +3413,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3430,7 +3431,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskMaxOrderByAggregateInput',
+          'name': 'UserMaxOrderByAggregateInput',
           'constraints': {
             'maxNumFields': 1,
             'minNumFields': 1,
@@ -3452,7 +3453,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3467,7 +3468,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3482,7 +3483,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3500,7 +3501,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskMinOrderByAggregateInput',
+          'name': 'UserMinOrderByAggregateInput',
           'constraints': {
             'maxNumFields': 1,
             'minNumFields': 1,
@@ -3522,7 +3523,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3537,7 +3538,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3552,7 +3553,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'comment': null,
               'isNullable': false,
               'isRequired': false,
@@ -3727,6 +3728,21 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'deprecation': null,
             },
             {
+              'name': 'mode',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'QueryMode',
+                  'location': 'enumTypes',
+                  'namespace': 'prisma',
+                }
+              ],
+              'deprecation': null,
+            },
+            {
               'name': 'not',
               'comment': null,
               'isNullable': false,
@@ -3786,97 +3802,6 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 {
                   'isList': false,
                   'type': 'NestedStringFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                }
-              ],
-              'deprecation': null,
-            },
-          ],
-          'fieldMap': null,
-        },
-        {
-          'name': 'BoolWithAggregatesFilter',
-          'constraints': {
-            'maxNumFields': null,
-            'minNumFields': null,
-          },
-          'fields': [
-            {
-              'name': 'equals',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': 'not',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                },
-                {
-                  'isList': false,
-                  'type': 'NestedBoolWithAggregatesFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                },
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': '_count',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'NestedIntFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': '_min',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'NestedBoolFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': '_max',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 }
@@ -4093,31 +4018,6 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'BoolFieldUpdateOperationsInput',
-          'constraints': {
-            'maxNumFields': 1,
-            'minNumFields': 1,
-          },
-          'fields': [
-            {
-              'name': 'set',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                }
-              ],
-              'deprecation': null,
-            }
-          ],
-          'fieldMap': null,
-        },
-        {
           'name': 'DateTimeFieldUpdateOperationsInput',
           'constraints': {
             'maxNumFields': 1,
@@ -4314,52 +4214,6 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                 {
                   'isList': false,
                   'type': 'NestedStringFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                },
-              ],
-              'deprecation': null,
-            },
-          ],
-          'fieldMap': null,
-        },
-        {
-          'name': 'NestedBoolFilter',
-          'constraints': {
-            'maxNumFields': null,
-            'minNumFields': null,
-          },
-          'fields': [
-            {
-              'name': 'equals',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': 'not',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                },
-                {
-                  'isList': false,
-                  'type': 'NestedBoolFilter',
                   'location': 'inputObjectTypes',
                   'namespace': 'prisma',
                 },
@@ -4868,97 +4722,6 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'NestedBoolWithAggregatesFilter',
-          'constraints': {
-            'maxNumFields': null,
-            'minNumFields': null,
-          },
-          'fields': [
-            {
-              'name': 'equals',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': 'not',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'Boolean',
-                  'location': 'scalar',
-                  'namespace': null,
-                },
-                {
-                  'isList': false,
-                  'type': 'NestedBoolWithAggregatesFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                },
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': '_count',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'NestedIntFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': '_min',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'NestedBoolFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                }
-              ],
-              'deprecation': null,
-            },
-            {
-              'name': '_max',
-              'comment': null,
-              'isNullable': false,
-              'isRequired': false,
-              'inputTypes': [
-                {
-                  'isList': false,
-                  'type': 'NestedBoolFilter',
-                  'location': 'inputObjectTypes',
-                  'namespace': 'prisma',
-                }
-              ],
-              'deprecation': null,
-            },
-          ],
-          'fieldMap': null,
-        },
-        {
           'name': 'NestedDateTimeWithAggregatesFilter',
           'constraints': {
             'maxNumFields': null,
@@ -5144,7 +4907,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
     'outputObjectTypes': {
       'model': [
         {
-          'name': 'Task',
+          'name': 'User',
           'fields': [
             {
               'name': 'id',
@@ -5160,7 +4923,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -5173,11 +4936,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'isNullable': false,
               'outputType': {
                 'isList': false,
-                'type': 'Boolean',
+                'type': 'DateTime',
                 'location': 'scalar',
                 'namespace': null,
               },
@@ -5186,7 +4949,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -5207,11 +4970,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'name': 'Query',
           'fields': [
             {
-              'name': 'findFirstTask',
+              'name': 'findFirstUser',
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'Task',
+                'type': 'User',
                 'location': 'outputObjectTypes',
                 'namespace': 'model',
               },
@@ -5224,7 +4987,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereInput',
+                      'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5239,13 +5002,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': true,
-                      'type': 'TaskOrderByWithRelationInput',
+                      'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskOrderByWithRelationInput',
+                      'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5260,7 +5023,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereUniqueInput',
+                      'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5305,7 +5068,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': true,
-                      'type': 'TaskScalarFieldEnum',
+                      'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
                       'namespace': 'prisma',
                     }
@@ -5317,11 +5080,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'findManyTask',
+              'name': 'findManyUser',
               'isNullable': false,
               'outputType': {
                 'isList': true,
-                'type': 'Task',
+                'type': 'User',
                 'location': 'outputObjectTypes',
                 'namespace': 'model',
               },
@@ -5334,7 +5097,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereInput',
+                      'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5349,13 +5112,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': true,
-                      'type': 'TaskOrderByWithRelationInput',
+                      'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskOrderByWithRelationInput',
+                      'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5370,7 +5133,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereUniqueInput',
+                      'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5415,7 +5178,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': true,
-                      'type': 'TaskScalarFieldEnum',
+                      'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
                       'namespace': 'prisma',
                     }
@@ -5427,11 +5190,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'aggregateTask',
+              'name': 'aggregateUser',
               'isNullable': false,
               'outputType': {
                 'isList': false,
-                'type': 'AggregateTask',
+                'type': 'AggregateUser',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -5444,7 +5207,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereInput',
+                      'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5459,13 +5222,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': true,
-                      'type': 'TaskOrderByWithRelationInput',
+                      'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskOrderByWithRelationInput',
+                      'type': 'UserOrderByWithRelationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5480,7 +5243,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereUniqueInput',
+                      'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5522,11 +5285,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'groupByTask',
+              'name': 'groupByUser',
               'isNullable': false,
               'outputType': {
                 'isList': true,
-                'type': 'TaskGroupByOutputType',
+                'type': 'UserGroupByOutputType',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -5539,7 +5302,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereInput',
+                      'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5554,13 +5317,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': true,
-                      'type': 'TaskOrderByWithAggregationInput',
+                      'type': 'UserOrderByWithAggregationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskOrderByWithAggregationInput',
+                      'type': 'UserOrderByWithAggregationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5575,13 +5338,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': true,
-                      'type': 'TaskScalarFieldEnum',
+                      'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskScalarFieldEnum',
+                      'type': 'UserScalarFieldEnum',
                       'location': 'enumTypes',
                       'namespace': 'prisma',
                     },
@@ -5596,7 +5359,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskScalarWhereWithAggregatesInput',
+                      'type': 'UserScalarWhereWithAggregatesInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5638,11 +5401,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'findUniqueTask',
+              'name': 'findUniqueUser',
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'Task',
+                'type': 'User',
                 'location': 'outputObjectTypes',
                 'namespace': 'model',
               },
@@ -5655,7 +5418,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereUniqueInput',
+                      'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5673,11 +5436,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'name': 'Mutation',
           'fields': [
             {
-              'name': 'createOneTask',
+              'name': 'createOneUser',
               'isNullable': false,
               'outputType': {
                 'isList': false,
-                'type': 'Task',
+                'type': 'User',
                 'location': 'outputObjectTypes',
                 'namespace': 'model',
               },
@@ -5690,13 +5453,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskCreateInput',
+                      'type': 'UserCreateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskUncheckedCreateInput',
+                      'type': 'UserUncheckedCreateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5708,11 +5471,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'upsertOneTask',
+              'name': 'upsertOneUser',
               'isNullable': false,
               'outputType': {
                 'isList': false,
-                'type': 'Task',
+                'type': 'User',
                 'location': 'outputObjectTypes',
                 'namespace': 'model',
               },
@@ -5725,7 +5488,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereUniqueInput',
+                      'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5740,13 +5503,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskCreateInput',
+                      'type': 'UserCreateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskUncheckedCreateInput',
+                      'type': 'UserUncheckedCreateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5761,13 +5524,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskUpdateInput',
+                      'type': 'UserUpdateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskUncheckedUpdateInput',
+                      'type': 'UserUncheckedUpdateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5779,11 +5542,55 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'deleteOneTask',
+              'name': 'createManyUser',
+              'isNullable': false,
+              'outputType': {
+                'isList': false,
+                'type': 'AffectedRowsOutput',
+                'location': 'outputObjectTypes',
+                'namespace': 'prisma',
+              },
+              'args': [
+                {
+                  'name': 'data',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': true,
+                  'inputTypes': [
+                    {
+                      'isList': true,
+                      'type': 'UserCreateManyInput',
+                      'location': 'inputObjectTypes',
+                      'namespace': 'prisma',
+                    }
+                  ],
+                  'deprecation': null,
+                },
+                {
+                  'name': 'skipDuplicates',
+                  'comment': null,
+                  'isNullable': false,
+                  'isRequired': false,
+                  'inputTypes': [
+                    {
+                      'isList': false,
+                      'type': 'Boolean',
+                      'location': 'scalar',
+                      'namespace': null,
+                    }
+                  ],
+                  'deprecation': null,
+                },
+              ],
+              'deprecation': null,
+              'documentation': null,
+            },
+            {
+              'name': 'deleteOneUser',
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'Task',
+                'type': 'User',
                 'location': 'outputObjectTypes',
                 'namespace': 'model',
               },
@@ -5796,7 +5603,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereUniqueInput',
+                      'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5808,11 +5615,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'updateOneTask',
+              'name': 'updateOneUser',
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'Task',
+                'type': 'User',
                 'location': 'outputObjectTypes',
                 'namespace': 'model',
               },
@@ -5825,13 +5632,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskUpdateInput',
+                      'type': 'UserUpdateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskUncheckedUpdateInput',
+                      'type': 'UserUncheckedUpdateInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5846,7 +5653,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereUniqueInput',
+                      'type': 'UserWhereUniqueInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5858,7 +5665,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'updateManyTask',
+              'name': 'updateManyUser',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -5875,13 +5682,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskUpdateManyMutationInput',
+                      'type': 'UserUpdateManyMutationInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
                     {
                       'isList': false,
-                      'type': 'TaskUncheckedUpdateManyInput',
+                      'type': 'UserUncheckedUpdateManyInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     },
@@ -5896,7 +5703,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereInput',
+                      'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -5908,7 +5715,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'deleteManyTask',
+              'name': 'deleteManyUser',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -5925,7 +5732,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
                   'inputTypes': [
                     {
                       'isList': false,
-                      'type': 'TaskWhereInput',
+                      'type': 'UserWhereInput',
                       'location': 'inputObjectTypes',
                       'namespace': 'prisma',
                     }
@@ -6028,14 +5835,14 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'AggregateTask',
+          'name': 'AggregateUser',
           'fields': [
             {
               'name': '_count',
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'TaskCountAggregateOutputType',
+                'type': 'UserCountAggregateOutputType',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -6048,7 +5855,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'TaskMinAggregateOutputType',
+                'type': 'UserMinAggregateOutputType',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -6061,7 +5868,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'TaskMaxAggregateOutputType',
+                'type': 'UserMaxAggregateOutputType',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -6073,7 +5880,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskGroupByOutputType',
+          'name': 'UserGroupByOutputType',
           'fields': [
             {
               'name': 'id',
@@ -6089,7 +5896,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -6102,11 +5909,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'isNullable': false,
               'outputType': {
                 'isList': false,
-                'type': 'Boolean',
+                'type': 'DateTime',
                 'location': 'scalar',
                 'namespace': null,
               },
@@ -6115,7 +5922,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -6132,7 +5939,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'TaskCountAggregateOutputType',
+                'type': 'UserCountAggregateOutputType',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -6145,7 +5952,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'TaskMinAggregateOutputType',
+                'type': 'UserMinAggregateOutputType',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -6158,7 +5965,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'TaskMaxAggregateOutputType',
+                'type': 'UserMaxAggregateOutputType',
                 'location': 'outputObjectTypes',
                 'namespace': 'prisma',
               },
@@ -6189,7 +5996,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskCountAggregateOutputType',
+          'name': 'UserCountAggregateOutputType',
           'fields': [
             {
               'name': 'id',
@@ -6205,7 +6012,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -6218,7 +6025,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -6231,7 +6038,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'isNullable': false,
               'outputType': {
                 'isList': false,
@@ -6260,7 +6067,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskMinAggregateOutputType',
+          'name': 'UserMinAggregateOutputType',
           'fields': [
             {
               'name': 'id',
@@ -6276,7 +6083,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'isNullable': true,
               'outputType': {
                 'isList': false,
@@ -6289,11 +6096,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'Boolean',
+                'type': 'DateTime',
                 'location': 'scalar',
                 'namespace': null,
               },
@@ -6302,7 +6109,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'isNullable': true,
               'outputType': {
                 'isList': false,
@@ -6318,7 +6125,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           'fieldMap': null,
         },
         {
-          'name': 'TaskMaxAggregateOutputType',
+          'name': 'UserMaxAggregateOutputType',
           'fields': [
             {
               'name': 'id',
@@ -6334,7 +6141,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'task',
+              'name': 'name',
               'isNullable': true,
               'outputType': {
                 'isList': false,
@@ -6347,11 +6154,11 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'done',
+              'name': 'createdAt',
               'isNullable': true,
               'outputType': {
                 'isList': false,
-                'type': 'Boolean',
+                'type': 'DateTime',
                 'location': 'scalar',
                 'namespace': null,
               },
@@ -6360,7 +6167,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
               'documentation': null,
             },
             {
-              'name': 'due',
+              'name': 'updatedAt',
               'isNullable': true,
               'outputType': {
                 'isList': false,
@@ -6381,6 +6188,13 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
       'model': null,
       'prisma': [
         {
+          'name': 'QueryMode',
+          'values': [
+            'default',
+            'insensitive',
+          ],
+        },
+        {
           'name': 'SortOrder',
           'values': [
             'asc',
@@ -6388,17 +6202,22 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
           ],
         },
         {
-          'name': 'TaskScalarFieldEnum',
+          'name': 'TransactionIsolationLevel',
           'values': [
-            'id',
-            'task',
-            'done',
-            'due',
+            'ReadUncommitted',
+            'ReadCommitted',
+            'RepeatableRead',
+            'Serializable',
           ],
         },
         {
-          'name': 'TransactionIsolationLevel',
-          'values': ['Serializable'],
+          'name': 'UserScalarFieldEnum',
+          'values': [
+            'id',
+            'name',
+            'createdAt',
+            'updatedAt',
+          ],
         },
       ],
     },
@@ -6406,19 +6225,19 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   'mappings': {
     'modelOperations': [
       {
-        'model': 'Task',
-        'findUnique': 'findUniqueTask',
-        'findFirst': 'findFirstTask',
-        'findMany': 'findManyTask',
-        'create': 'createOneTask',
-        'createMany': null,
-        'update': 'updateOneTask',
-        'updateMany': 'updateManyTask',
-        'upsert': 'upsertOneTask',
-        'delete': 'deleteOneTask',
-        'deleteMany': 'deleteManyTask',
-        'aggregate': 'aggregateTask',
-        'groupBy': 'groupByTask',
+        'model': 'User',
+        'findUnique': 'findUniqueUser',
+        'findFirst': 'findFirstUser',
+        'findMany': 'findManyUser',
+        'create': 'createOneUser',
+        'createMany': 'createManyUser',
+        'update': 'updateOneUser',
+        'updateMany': 'updateManyUser',
+        'upsert': 'upsertOneUser',
+        'delete': 'deleteOneUser',
+        'deleteMany': 'deleteManyUser',
+        'aggregate': 'aggregateUser',
+        'groupBy': 'groupByUser',
         'findRaw': null,
         'aggregateRaw': null,
       }
@@ -6433,17 +6252,16 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   },
 });
 final String schema = _i4.utf8.decode(_i4.base64.decode(
-    r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBwcmV2aWV3RmVhdHVyZXMgPSBbImludGVyYWN0aXZlVHJhbnNhY3Rpb25zIl0KICBvdXRwdXQgICAgICAgICAgPSAiLi4vbGliL3ByaXNtYV9jbGllbnQuZGFydCIKfQoKZGF0YXNvdXJjZSBkYiB7CiAgcHJvdmlkZXIgPSAic3FsaXRlIgogIHVybCAgICAgID0gImZpbGU6Li9kZXYuZGIiCn0KCm1vZGVsIFRhc2sgewogIGlkICAgU3RyaW5nICAgQGlkIEBkZWZhdWx0KGN1aWQoKSkKICB0YXNrIFN0cmluZwogIGRvbmUgQm9vbGVhbiAgQGRlZmF1bHQoZmFsc2UpCiAgZHVlICBEYXRlVGltZSBAZGVmYXVsdChkYmdlbmVyYXRlZCgiKGRhdGV0aW1lKCdub3cnLCAnKzIgZGF5cycpKSIpKSAvL3NxbGl0ZQp9Cg=='));
-const String _executable =
-    r'/prisma-dart/example/sqlite/.dart_tool/prisma/query-engine';
+    r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBwcmV2aWV3RmVhdHVyZXMgPSBbImludGVyYWN0aXZlVHJhbnNhY3Rpb25zIl0KICBvdXRwdXQgICAgICAgICAgPSAiLi4vYmluL3NyYy9wcmlzbWFfY2xpZW50LmRhcnQiCn0KCmRhdGFzb3VyY2UgZGIgewogIHByb3ZpZGVyID0gInBvc3RncmVzcWwiCiAgdXJsICAgICAgPSBlbnYoIkRBVEFCQVNFX1VSTCIpCn0KCm1vZGVsIFVzZXIgewogIGlkICAgICAgICBTdHJpbmcgICBAaWQgQGRlZmF1bHQoY3VpZCgpKQogIG5hbWUgICAgICBTdHJpbmcKICBjcmVhdGVkQXQgRGF0ZVRpbWUgQGRlZmF1bHQobm93KCkpCiAgdXBkYXRlZEF0IERhdGVUaW1lIEB1cGRhdGVkQXQKfQo='));
+const String _executable = r'bin/q';
 
 class Datasources {
   Datasources({this.db});
 
-  final _i1.PrismaNullable<_i1.Datasource> db;
+  final _i2.PrismaNullable<_i2.Datasource> db;
 
-  Map<String, _i1.Datasource> _toOverwrites() {
-    final $overwrites = <String, _i1.PrismaNullable<_i1.Datasource>>{'db': db}
+  Map<String, _i2.Datasource> _toOverwrites() {
+    final $overwrites = <String, _i2.PrismaNullable<_i2.Datasource>>{'db': db}
       ..removeWhere((
         _,
         v,
@@ -6459,9 +6277,9 @@ class PrismaClient {
     this._headers,
   ]);
 
-  factory PrismaClient({_i1.PrismaNullable<Datasources> datasources}) {
-    final _i1.Engine engine = _i1.BinaryEngine(
-      datasources: datasources?._toOverwrites() ?? <String, _i1.Datasource>{},
+  factory PrismaClient({_i2.PrismaNullable<Datasources> datasources}) {
+    final _i2.Engine engine = _i2.BinaryEngine(
+      datasources: datasources?._toOverwrites() ?? <String, _i2.Datasource>{},
       dmmf: dmmf,
       schema: schema,
       executable: _executable,
@@ -6473,11 +6291,11 @@ class PrismaClient {
     );
   }
 
-  final _i1.Engine _engine;
+  final _i2.Engine _engine;
 
-  final _i1.PrismaNullable<_i1.QueryEngineRequestHeaders> _headers;
+  final _i2.PrismaNullable<_i2.QueryEngineRequestHeaders> _headers;
 
-  TaskDelegate get task => TaskDelegate._(
+  UserDelegate get user => UserDelegate._(
         _engine,
         _headers,
       );
@@ -6504,18 +6322,18 @@ class PrismaClient {
   /// ```
   Future<T> $transaction<T>(
     Future<T> Function(PrismaClient) fn, [
-    _i1.TransactionOptions? options,
+    _i2.TransactionOptions? options,
   ]) async {
     if (_headers?.transactionId != null) return fn(this);
-    final _i1.TransactionHeaders headers = _i1.TransactionHeaders();
-    final _i1.TransactionInfo info = await _engine.startTransaction(
+    final _i2.TransactionHeaders headers = _i2.TransactionHeaders();
+    final _i2.TransactionInfo info = await _engine.startTransaction(
       headers: headers,
-      options: options ?? _i1.TransactionOptions(),
+      options: options ?? _i2.TransactionOptions(),
     );
     try {
       final T result = await fn(PrismaClient._(
         _engine,
-        _i1.QueryEngineRequestHeaders(transactionId: info.id),
+        _i2.QueryEngineRequestHeaders(transactionId: info.id),
       ));
       await _engine.commitTransaction(
         headers: headers,

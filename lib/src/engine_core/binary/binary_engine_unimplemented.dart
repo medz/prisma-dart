@@ -2,7 +2,6 @@ import 'dart:async';
 
 import '../../../version.dart';
 import '../../dmmf/dmmf.dart' show Document;
-import '../../runtime/datasource.dart';
 import '../common/engine.dart';
 import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
@@ -12,8 +11,8 @@ class BinaryEngine extends Engine {
   const BinaryEngine({
     required super.dmmf,
     required super.schema,
-    required this.datasources,
-    required this.environment,
+    required super.datasources,
+    required super.environment,
     this.allowTriggerPanic = false,
     this.executable,
     this.workingDirectory,
@@ -28,25 +27,10 @@ class BinaryEngine extends Engine {
   /// Allow trigger panic.
   final bool allowTriggerPanic;
 
-  /// Data sources.
-  final Map<String, Datasource> datasources;
-
-  /// Environment variables.
-  final Map<String, String> environment;
-
   @override
   Future<QueryEngineResult> request({
     required String query,
     QueryEngineRequestHeaders? headers,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<QueryEngineResult>> requestBatch({
-    required List<String> queries,
-    QueryEngineRequestHeaders? headers,
-    bool? transaction,
   }) {
     throw UnimplementedError();
   }

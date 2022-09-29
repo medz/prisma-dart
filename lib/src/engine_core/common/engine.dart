@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../dmmf/dmmf.dart' show Document;
+import '../../runtime/datasource.dart';
 import 'get_config_result.dart';
 import 'types/query_engine.dart';
 import 'types/transaction.dart';
@@ -9,6 +10,8 @@ abstract class Engine {
   const Engine({
     required this.schema,
     required this.dmmf,
+    required this.datasources,
+    required this.environment,
   });
 
   /// Prisma schema as SDL string.
@@ -16,6 +19,12 @@ abstract class Engine {
 
   /// Prisma schema as [Document].
   final Document dmmf;
+
+  /// Data sources.
+  final Map<String, Datasource> datasources;
+
+  /// Environment variables.
+  final Map<String, String> environment;
 
   /// Start the engine.
   Future<void> start();
@@ -36,13 +45,6 @@ abstract class Engine {
   Future<QueryEngineResult> request({
     required String query,
     QueryEngineRequestHeaders? headers,
-  });
-
-  /// Request batch query execution.
-  Future<List<QueryEngineResult>> requestBatch({
-    required List<String> queries,
-    QueryEngineRequestHeaders? headers,
-    bool? transaction,
   });
 
   /// Start a transaction.

@@ -4,6 +4,61 @@
 
 ### Features
 
+#### Development runtime configuration.
+
+When using Prisma ORM to develop an app, you may want the development configuration to be inconsistent with the production environment (although this can be avoided by configuring the production environment separately), but there are always surprises.
+
+For example, when we use Data Proxy, the client and CLI cannot be consistent, because the link address of Data Proxy cannot manage your database.
+
+Now, you just need to add a `.dev.rc` to the root of your Dart project whose configuration will override the same configuration for prismarc and dotenv:
+
+```yaml
+# .prismarc
+DATABASE_URL: prisma://{location}.prisma-data.com/?api_key={Your API key}
+
+# .dev.rc
+DATABASE_URL: postgres://user:password@localhost:5432/mydb
+```
+
+For example in the configuration above, the actual CLI runtime uses `postgres://user:password@localhost:5432/mydb`, while in Prisma Client it uses `prisma://{location}.prisma-data.com/?api_key` ={Your API key}`.
+
+##### Custom development runtime configuration
+
+To customize the development runtime configuration file path, you can write in `pubspec.yaml`:
+
+```yaml
+prisma:
+  development: custom.devrc
+```
+
+#### Data Proxy (Preview)
+
+Great, Prisma Dart now supports Prisma Data Proxy to access your database!
+
+you just need to run:
+
+```bash
+dart run orm generate --data-proxy --preview=data-proxy
+```
+
+It can also be turned on from runtime configuration or dotenv:
+
+```bash
+# Configuration file
+PRISMA_GENERATE_DATAPROXY = true
+
+# Command line
+dart run orm generate --preview=data-proxy
+```
+
+##### Custom remote client version.
+
+If the default remote client version is not what you want, you can fix it by configuring:
+
+```bash
+PRISMA_CLIENT_DATA_PROXY_CLIENT_VERSION = "4.3.1"
+```
+
 #### [Finalizer](https://api.flutter.dev/flutter/dart-core/Finalizer-class.html) for `PrismaClient`
 
 The `PrismaClient` now has a finalizer that will close the underlying database connection when the client is garbage collected.
@@ -16,7 +71,8 @@ The `PrismaClient` now has a finalizer that will close the underlying database c
 
 E.g.
 ```bash
-dart run orm generate --preview=finalizer ## Enable finalizer feature for generated PrismaClient.
+# Enable finalizer feature for generated PrismaClient.
+dart run orm generate --preview=finalizer
 ```
 
 ### Fixed bugs

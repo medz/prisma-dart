@@ -4,7 +4,7 @@ import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
-import 'package:orm/configure.dart' as configure;
+import 'package:orm/src/configure/io/cli.dart';
 
 import '../utils/chmod.dart';
 import '../utils/find_project.dart';
@@ -33,16 +33,16 @@ class BinaryEngine {
   String get executable {
     switch (type) {
       case BinaryEngineType.query:
-        return configure.environment.PRISMA_QUERY_ENGINE_BINARY ??
+        return development.PRISMA_QUERY_ENGINE_BINARY ??
             _defaultEnginePathBuilder('query-engine');
       case BinaryEngineType.migration:
-        return configure.environment.PRISMA_MIGRATION_ENGINE_BINARY ??
+        return development.PRISMA_MIGRATION_ENGINE_BINARY ??
             _defaultEnginePathBuilder('migration-engine');
       case BinaryEngineType.introspection:
-        return configure.environment.PRISMA_INTROSPECTION_ENGINE_BINARY ??
+        return development.PRISMA_INTROSPECTION_ENGINE_BINARY ??
             _defaultEnginePathBuilder('introspection-engine');
       case BinaryEngineType.format:
-        return configure.environment.PRISMA_FMT_BINARY ??
+        return development.PRISMA_FMT_BINARY ??
             _defaultEnginePathBuilder('prisma-fmt');
     }
   }
@@ -84,7 +84,7 @@ class BinaryEngine {
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
         environment: <String, String>{
-          ...configure.environment.all,
+          ...development.all,
           ...environment,
         },
       );
@@ -95,7 +95,7 @@ class BinaryEngine {
         arguments,
         workingDirectory: projectDirectory,
         includeParentEnvironment: false,
-        environment: configure.environment.all,
+        environment: development.all,
       );
 
   /// Download the binary engine.
@@ -110,8 +110,7 @@ class BinaryEngine {
     await _clean();
 
     // Create download url.
-    final Uri url =
-        Uri.parse(configure.environment.PRISMA_ENGINES_MIRROR).replace(
+    final Uri url = Uri.parse(development.PRISMA_ENGINES_MIRROR).replace(
       pathSegments: [
         'all_commits',
         version,

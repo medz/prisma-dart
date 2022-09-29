@@ -1,23 +1,28 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
+import 'package:rc/rc.dart';
 import 'package:yaml/yaml.dart';
 
-class FindPrismaConfigurationResult {
-  const FindPrismaConfigurationResult({
+class _FindPrismaConfigurationResult {
+  const _FindPrismaConfigurationResult({
     this.prismarc,
     this.dotenv,
-    this.schema,
+    required this.schema,
+    this.development,
   });
 
   /// The prisma runtime configuration file path.
   final String? prismarc;
 
+  /// Development runtime configuration file path.
+  final String? development;
+
   /// The dotenv file path.
   final String? dotenv;
 
   /// Custom schema path.
-  final String? schema;
+  final String schema;
 }
 
 /// Get search paths.
@@ -84,7 +89,7 @@ File? _relativeOrFind({
 }
 
 // Find prisma configuration result.
-FindPrismaConfigurationResult _findResult() {
+_FindPrismaConfigurationResult _findResult() {
   final File? pubspec = _findFile('pubspec.yaml');
   final Map<String, dynamic>? pubspecDocument = readPubspec(pubspec);
 
@@ -92,6 +97,11 @@ FindPrismaConfigurationResult _findResult() {
     name: pubspecDocument?['prisma']?['prismarc']?.toString(),
     directory: pubspec?.parent.path,
     filename: '.prismarc',
+  );
+  final File? development = _relativeOrFind(
+    name: pubspecDocument?['prisma']?['development']?.toString(),
+    directory: pubspec?.parent.path,
+    filename: '.dev.rc',
   );
   final File? dotenv = _relativeOrFind(
     name: pubspecDocument?['prisma']?['env']?.toString(),
@@ -104,12 +114,70 @@ FindPrismaConfigurationResult _findResult() {
     filename: 'schema.prisma',
   );
 
-  return FindPrismaConfigurationResult(
+  return _FindPrismaConfigurationResult(
     prismarc: prismarc?.path,
     dotenv: dotenv?.path,
     schema: schema?.path ?? path.join('prisma', 'schema.prisma'),
+    development: development?.path,
   );
 }
 
 /// Find prisma configuration result.
-final FindPrismaConfigurationResult prismaConifgurationResult = _findResult();
+final _FindPrismaConfigurationResult _result = _findResult();
+
+/// Merge runtime configuration.
+void _mergeUtil(RuntimeConfiguration root, RuntimeConfiguration? other) {
+  if (other != null) {
+    for (final MapEntry<String, dynamic> entry in other.all.entries) {
+      root.context.configuration[entry.key] = entry.value;
+    }
+  }
+}
+
+/// Create runtime configuration.
+RuntimeConfiguration _createRuntimeConfiguration() {
+  // Dotenv
+  final RuntimeConfiguration? dotenv = _result.dotenv != null
+      ? RuntimeConfiguration.from(_result.dotenv!, includeEnvironment: false)
+      : null;
+
+  // Prisma runtime configuration
+  final RuntimeConfiguration? prismarc = _result.prismarc != null
+      ? RuntimeConfiguration.from(_result.prismarc!, includeEnvironment: false)
+      : null;
+
+  // Create root configuration
+  final RuntimeConfiguration root = RuntimeConfiguration(
+    contents: "",
+    environment: Platform.environment,
+  );
+
+  _mergeUtil(root, dotenv);
+  _mergeUtil(root, prismarc);
+
+  return root;
+}
+
+final RuntimeConfiguration runtime = _createRuntimeConfiguration();
+
+/// Create deveopment runtime configuration.
+RuntimeConfiguration _createDevelopmentConfiguration() {
+  // Development runtime configuration
+  final RuntimeConfiguration? development = _result.development != null
+      ? RuntimeConfiguration.from(_result.development!,
+          includeEnvironment: false)
+      : null;
+
+  // Create root configuration
+  final RuntimeConfiguration root = RuntimeConfiguration(contents: "");
+
+  _mergeUtil(root, runtime);
+  _mergeUtil(root, development);
+
+  return root;
+}
+
+final RuntimeConfiguration development = _createDevelopmentConfiguration();
+
+/// Returns prisma schema path.
+final String schema = _result.schema;

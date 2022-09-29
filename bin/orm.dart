@@ -48,15 +48,34 @@ void main(List<String> args) async {
   // Run command.
   try {
     await runner.runCommand(results);
-  } catch (error, stackTrace) {
-    if (!results.wasParsed('debug') || environment.DEBUG != null) {
-      print(error);
-      print(stackTrace);
-      exit(1);
+  } catch (error) {
+    print('');
+    if (results.wasParsed('debug') || environment.DEBUG != null) {
+      rethrow;
     }
 
-    rethrow;
+    runner.printUsage();
+    print('\n');
+    print(_redTextWrapper(error.toString(), () => !_noColor));
+    print('\n');
+    exit(1);
   }
+}
+
+/// Red text if then terminal supports it.
+String _redTextWrapper(String text, [bool Function()? condition]) {
+  if (stdout.supportsAnsiEscapes && (condition == null || condition())) {
+    return '\x1B[31m$text\x1B[0m';
+  }
+
+  return text;
+}
+
+/// No color.
+bool get _noColor {
+  return environment.NO_COLOR != null ||
+      environment.NO_COLOR == 'true' ||
+      environment.NO_COLOR == '1';
 }
 
 /// Print CLI and engines version.

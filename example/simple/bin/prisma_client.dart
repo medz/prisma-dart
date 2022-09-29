@@ -16984,16 +16984,8 @@ class PrismaClient {
       engine,
       null,
     );
-    _finalizer.attach(
-      client,
-      engine,
-      detach: client,
-    );
     return client;
   }
-
-  static final Finalizer<_i2.Engine> _finalizer =
-      Finalizer<_i2.Engine>((_i2.Engine engine) => engine.stop());
 
   final _i2.Engine _engine;
 
@@ -17014,7 +17006,6 @@ class PrismaClient {
   /// Disconnect from the database.
   Future<void> $disconnect() async {
     await _engine.stop();
-    _finalizer.detach(this);
   }
 
   /// Interactive transactions.
