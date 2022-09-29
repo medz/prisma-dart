@@ -24,11 +24,20 @@ class PrismaClientKnownRequestError implements Exception {
   /// ```json
   /// { target: [ 'email' ] }
   /// ```
-  final Map<String, dynamic> meta;
+  final Map<String, dynamic>? meta;
 
   /// Error message associated with [error code](https://www.prisma.io/docs/reference/api-reference/error-reference#error-codes).
   final String message;
 
   /// Version of Prisma Client (for example, 2.19.0)
   final String clientVersion;
+
+  @override
+  String toString() => '''
+PrismaClientKnownRequestError(
+  message: $message,
+  code: $code,
+  meta: $meta,
+  clientVersion: $clientVersion,
+)''';
 }

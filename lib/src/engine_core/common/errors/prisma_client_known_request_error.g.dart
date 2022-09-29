@@ -11,6 +11,6 @@ PrismaClientKnownRequestError _$PrismaClientKnownRequestErrorFromJson(
     PrismaClientKnownRequestError(
       json['message'] as String,
       code: json['code'] as String,
-      meta: json['meta'] as Map<String, dynamic>,
+      meta: json['meta'] as Map<String, dynamic>?,
       clientVersion: json['clientVersion'] as String,
     );
