@@ -18,3 +18,9 @@ E.g.
 ```bash
 dart run orm generate --preview=finalizer ## Enable finalizer feature for generated PrismaClient.
 ```
+
+### Fixed bugs
+
+* Runtime:
+  * Known request error meta allow nullable - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@NCavazzon#1574468691776999448](https://twitter.com/NCavazzon/status/1574468691776999448)
+  * Fixed date time not serialized - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@mizxamthegod#1574470423097610265](https://twitter.com/mizxamthegod/status/1574470423097610265)
