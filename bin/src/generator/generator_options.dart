@@ -2,10 +2,35 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:orm/dmmf.dart';
 import 'package:orm/generator_helper.dart';
 
-part 'generator_options.g.dart';
+/// Generator preview features.
+enum GeneratorPreviewFeatures {
+  /// Finalizer
+  finalizer('Enable finalizer feature for generated PrismaClient.'),
+  ;
 
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+  /// Create a new [GeneratorPreviewFeatures] instace.
+  const GeneratorPreviewFeatures(this.description);
+
+  /// Preview features description.
+  final String description;
+
+  /// Resolve [GeneratorPreviewFeatures] from [name].
+  static GeneratorPreviewFeatures fromName(String name) {
+    return GeneratorPreviewFeatures.values.firstWhere(
+      (e) => e.name.toLowerCase() == name.toLowerCase(),
+    );
+  }
+
+  /// Resolve [GeneratorPreviewFeatures] from [names].
+  static Iterable<GeneratorPreviewFeatures> fromNames(List<String> names) {
+    return names.map((e) => fromName(e)).toList();
+  }
+}
+
 class GeneratorOptions {
+  /// Generator preview features.
+  final Iterable<GeneratorPreviewFeatures> previewFeatures;
+
   /// Schema DMMF document
   final Document dmmf;
 
@@ -39,9 +64,6 @@ class GeneratorOptions {
     required this.schema,
     required this.schemaPath,
     required this.version,
+    this.previewFeatures = const [],
   });
-
-  factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
-      _$GeneratorOptionsFromJson(json);
-  Map<String, dynamic> toJson() => _$GeneratorOptionsToJson(this);
 }
