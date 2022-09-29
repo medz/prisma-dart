@@ -31,7 +31,8 @@ class GenerateCommand extends Command {
     );
     argParser.addFlag(
       'data-proxy',
-      help: 'Enable the Data Proxy in the Prisma Client',
+      help:
+          '(Preview) Enable the generated Prisma client to use the Data Proxy, Takes effect when used with `--preview=data-proxy`',
       defaultsTo: development.PRISMA_GENERATE_DATAPROXY,
     );
     argParser.addMultiOption(
@@ -151,19 +152,29 @@ class GenerateCommand extends Command {
     required String executable,
     required String version,
   }) async {
+    // Create preview features.
+    final Iterable<GeneratorPreviewFeatures> previewFeatures =
+        GeneratorPreviewFeatures.fromNames(argResults?['preview'] ?? const []);
+
+    // If enable data proxy, but not in preview features.
+    if (argResults?['data-proxy'] == true &&
+        !previewFeatures.contains(GeneratorPreviewFeatures.dataProxy)) {
+      throw Exception(
+          'The `--data-proxy` flag can only be used with `--preview=data-proxy`');
+    }
+
     // Create generator options
     final GeneratorOptions options = GeneratorOptions(
       config: generatorConfig,
-      dataProxy: argResults?['data-proxy'],
+      dataProxy: argResults?['data-proxy'] &&
+          previewFeatures.contains(GeneratorPreviewFeatures.dataProxy),
       datasources: configResult.datasources,
       dmmf: dmmf,
       schema: await File(schemaPath).readAsString(),
       schemaPath: schemaPath,
       executable: executable,
       version: version,
-      previewFeatures: GeneratorPreviewFeatures.fromNames(
-        argResults!['preview'],
-      ),
+      previewFeatures: previewFeatures,
     );
 
     await generator(options);

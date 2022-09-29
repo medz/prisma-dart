@@ -4,14 +4,22 @@ import 'package:orm/generator_helper.dart';
 /// Generator preview features.
 enum GeneratorPreviewFeatures {
   /// Finalizer
-  finalizer('Enable finalizer feature for generated PrismaClient.'),
+  finalizer(
+      'finalizer', 'Enable finalizer feature for generated PrismaClient.'),
+
+  /// Prisma Data proxy
+  dataProxy(
+      'data-proxy', 'Enable `--data-proxy` flag for generated PrismaClient.'),
   ;
 
   /// Create a new [GeneratorPreviewFeatures] instace.
-  const GeneratorPreviewFeatures(this.description);
+  const GeneratorPreviewFeatures(this.name, this.description);
 
   /// Preview features description.
   final String description;
+
+  /// Preview features name.
+  final String name;
 
   /// Resolve [GeneratorPreviewFeatures] from [name].
   static GeneratorPreviewFeatures fromName(String name) {
