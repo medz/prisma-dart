@@ -49,6 +49,13 @@ class GraphQLArg {
   String? _sdlBuilder(dynamic value) {
     if (value == null) return null;
 
+    // If value is a [DateTime] return timestamp.
+    if (value is DateTime) {
+      return _sdlBuilder(value.isUtc
+          ? value.toIso8601String()
+          : value.toUtc().toIso8601String());
+    }
+
     // If value is null, return null.
     if (value is PrismaNull) return 'null';
 
