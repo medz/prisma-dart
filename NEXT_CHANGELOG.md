@@ -31,27 +31,31 @@ prisma:
   development: custom.devrc
 ```
 
-#### Data Proxy
+#### Data Proxy (Preview)
 
 Great, Prisma Dart now supports Prisma Data Proxy to access your database!
 
 you just need to run:
 
 ```bash
-dart run orm generate --data-proxy
+dart run orm generate --data-proxy --preview=data-proxy
 ```
 
 It can also be turned on from runtime configuration or dotenv:
 
-```
+```bash
+# Configuration file
 PRISMA_GENERATE_DATAPROXY = true
+
+# Command line
+dart run orm generate --preview=data-proxy
 ```
 
 ##### Custom remote client version.
 
 If the default remote client version is not what you want, you can fix it by configuring:
 
-```
+```bash
 PRISMA_CLIENT_DATA_PROXY_CLIENT_VERSION = "4.3.1"
 ```
 
@@ -67,7 +71,8 @@ The `PrismaClient` now has a finalizer that will close the underlying database c
 
 E.g.
 ```bash
-dart run orm generate --preview=finalizer ## Enable finalizer feature for generated PrismaClient.
+# Enable finalizer feature for generated PrismaClient.
+dart run orm generate --preview=finalizer
 ```
 
 ### Fixed bugs
