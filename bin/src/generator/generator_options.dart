@@ -1,4 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:orm/dmmf.dart';
 import 'package:orm/generator_helper.dart';
 
