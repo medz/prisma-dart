@@ -3,7 +3,7 @@ Next-generation ORM for Dart Native & Flutter | PostgreSQL, MySQL, MariaDB, SQL 
 [![Pub Version](https://img.shields.io/pub/v/orm?label=latest)](https://pub.dev/packages/orm)
 [![GitHub license](https://img.shields.io/github/license/odroe/prisma-dart)](https://github.com/odroe/prisma-dart/blob/main/LICENSE)
 [![test](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml)
-[![Twitter Follow](https://img.shields.io/twitter/follow/odroeinc?label=Follow%20Odroe&style=social)](https://twitter.com/odroeinc)
+[![analyze](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml)
 
 ## What is it?
 
@@ -14,7 +14,7 @@ Prisma is a **next-generation ORM** that consists of these tools:
 - **Prisma Query Engine** - Prisma query engines wrapper:
   1. **Binary Engine** - Only for Dart Native.
   2. **Dynamic Library Engine** - Supported for Dart Native and Flutter Native. `❌ Waiting`
-  3. **Prisma Data Proxy Engint** - Supported all platforms. `❌ Waiting` See [Add Data proxy engine support](https://github.com/odroe/prisma-dart/issues/22).
+  3. **Prisma Data Proxy Engint** - Supported all platforms. - (Preview) `generate` command uses `--data-proxy` flag.
 
 ## Getting started
 
