@@ -16946,7 +16946,7 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
   },
 });
 final String schema = _i4.utf8.decode(_i4.base64.decode(
-    r'Z2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBvdXRwdXQgICAgICAgICAgPSAiLi4vbGliL3NyYy9nZW5lcmF0ZWQiCiAgcHJldmlld0ZlYXR1cmVzID0gWyJpbnRlcmFjdGl2ZVRyYW5zYWN0aW9ucyJdCn0KCmRhdGFzb3VyY2UgZGIgewogIHByb3ZpZGVyID0gInBvc3RncmVzcWwiCiAgdXJsICAgICAgPSBlbnYoIkRBVEFCQVNFX1VSTCIpCn0KCmVudW0gU2V4IHsKICBtYW4KICB3b21hbgp9Cgptb2RlbCBVc2VyIHsKICBpZCAgICAgICAgSW50ICAgICAgQGlkIEBkZWZhdWx0KGF1dG9pbmNyZW1lbnQoKSkKICBuYW1lICAgICAgU3RyaW5nCiAgY3JlYXRlZEF0IERhdGVUaW1lIEBkZWZhdWx0KG5vdygpKQogIHNleCAgICAgICBTZXggICAgICBAZGVmYXVsdCh3b21hbikKICBwb3N0cyAgICAgUG9zdFtdCn0KCm1vZGVsIFBvc3QgewogIGlkICAgICAgICAgSW50ICAgICAgQGlkIEBkZWZhdWx0KGF1dG9pbmNyZW1lbnQoKSkKICB0aXRsZSAgICAgIFN0cmluZwogIGF1dGhvcklkICAgSW50CiAgY29udGVudCAgICBTdHJpbmcKICBwdWJsaXNoZWQgIEJvb2xlYW4KICBjcmVhdGVkX2F0IERhdGVUaW1lIEBkZWZhdWx0KG5vdygpKQogIGF1dGhvciAgICAgVXNlciAgICAgQHJlbGF0aW9uKGZpZWxkczogW2F1dGhvcklkXSwgcmVmZXJlbmNlczogW2lkXSkKfQo='));
+    r'Z2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBvdXRwdXQgICAgICAgICAgPSAiLi4vYmluL3ByaXNtYV9jbGllbnQuZGFydCIKICBwcmV2aWV3RmVhdHVyZXMgPSBbImludGVyYWN0aXZlVHJhbnNhY3Rpb25zIl0KfQoKZGF0YXNvdXJjZSBkYiB7CiAgcHJvdmlkZXIgPSAicG9zdGdyZXNxbCIKICB1cmwgICAgICA9IGVudigiREFUQUJBU0VfVVJMIikKfQoKZW51bSBTZXggewogIG1hbgogIHdvbWFuCn0KCm1vZGVsIFVzZXIgewogIGlkICAgICAgICBJbnQgICAgICBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIG5hbWUgICAgICBTdHJpbmcKICBjcmVhdGVkQXQgRGF0ZVRpbWUgQGRlZmF1bHQobm93KCkpCiAgc2V4ICAgICAgIFNleCAgICAgIEBkZWZhdWx0KHdvbWFuKQogIHBvc3RzICAgICBQb3N0W10KfQoKbW9kZWwgUG9zdCB7CiAgaWQgICAgICAgICBJbnQgICAgICBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIHRpdGxlICAgICAgU3RyaW5nCiAgYXV0aG9ySWQgICBJbnQKICBjb250ZW50ICAgIFN0cmluZwogIHB1Ymxpc2hlZCAgQm9vbGVhbgogIGNyZWF0ZWRfYXQgRGF0ZVRpbWUgQGRlZmF1bHQobm93KCkpCiAgYXV0aG9yICAgICBVc2VyICAgICBAcmVsYXRpb24oZmllbGRzOiBbYXV0aG9ySWRdLCByZWZlcmVuY2VzOiBbaWRdKQp9Cg=='));
 const String _executable =
     r'/Users/seven/workspace/prisma/example/simple/.dart_tool/prisma/query-engine';
 
@@ -16980,11 +16980,20 @@ class PrismaClient {
       executable: _executable,
       environment: _i5.environment.all,
     );
-    return PrismaClient._(
+    final PrismaClient client = PrismaClient._(
       engine,
       null,
     );
+    _finalizer.attach(
+      client,
+      engine,
+      detach: client,
+    );
+    return client;
   }
+
+  static final Finalizer<_i2.Engine> _finalizer =
+      Finalizer<_i2.Engine>((_i2.Engine engine) => engine.stop());
 
   final _i2.Engine _engine;
 
@@ -17003,7 +17012,10 @@ class PrismaClient {
   Future<void> $connect() => _engine.start();
 
   /// Disconnect from the database.
-  Future<void> $disconnect() => _engine.stop();
+  Future<void> $disconnect() async {
+    await _engine.stop();
+    _finalizer.detach(this);
+  }
 
   /// Interactive transactions.
   ///

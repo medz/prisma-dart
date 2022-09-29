@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-dart"
-  output          = "../lib/src/generated"
+  output          = "../bin/prisma_client.dart"
   previewFeatures = ["interactiveTransactions"]
 }
 
