@@ -2,3 +2,4 @@
 example/*
 !example/README.md
 test/
+docs/
