@@ -30,7 +30,7 @@ export default defineConfig({
 
         nav: [
             { text: "Getting started", link: "/getting-started" },
-            { text: "Guides", link: "/guides" },
+            { text: "Guides", link: "/guides/" },
             { text: "Concepts", link: "/concepts" },
             {
                 text: "Reference",
