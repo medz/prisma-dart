@@ -35,12 +35,34 @@ export default defineConfig({
             {
                 text: "Reference",
                 items: [
-                    { text: "Prisma Schema reference", link: "https://prisma.io/docs/reference/api-reference/prisma-schema-reference" },
-                    { text: "Library API reference", link: "https://pub.dev/documentation/orm/latest/" },
-                    { text: "Command reference", link: "reference/command" },
+                    { text: "Prisma official reference", link: "https://www.prisma.io/docs/reference" },
+                    { text: "API reference", link: "https://pub.dev/documentation/orm/latest/" },
+                    { text: "Prisma CLI reference", link: "/reference/cli" },
                 ],
             },
             { text: "♥︎ Sponsor", link: "https://opencollective.com/prisma-dart" },
+        ],
+
+        sidebar: [
+            {
+                text: "Introduction",
+                items: [
+                    { text: "Getting started", link: "/getting-started" },
+                    { text: "Concepts", link: "/concepts" },
+                ],
+            },
+            {
+                text: "Guides",
+                items: [],
+            },
+            {
+                text: "Reference",
+                items: [
+                    { text: "Prisma CLI reference", link: "/reference/cli" },
+                    { text: "API reference", link: "https://pub.dev/documentation/orm/latest/" },
+                    { text: "Prisma official reference", link: "https://www.prisma.io/docs/reference" },
+                ]
+            }
         ],
     },
 
