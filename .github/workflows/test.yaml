@@ -1,5 +1,15 @@
 name: test
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - "**.dart"
+    paths-ignore:
+      - "docs/**"
+  pull_request:
+      paths:
+        - "**.dart"
+      paths-ignore:
+        - "docs/**"
 jobs:
   test:
     strategy:
