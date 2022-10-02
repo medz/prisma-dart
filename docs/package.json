@@ -1,0 +1,12 @@
+{
+  "homepage": "https://prisma.pub",
+  "private": true,
+  "dependencies": {
+    "vitepress": "^1.0.0-alpha.17"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "serve": "vitepress serve"
+  }
+}
