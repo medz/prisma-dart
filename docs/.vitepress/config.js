@@ -53,7 +53,11 @@ export default defineConfig({
             },
             {
                 text: "Guides",
-                items: [],
+                items: [
+                    { text: "Overview", link: "/guides/" },
+                    { text: "Configuretion", link: "/guides/configuretion" },
+                    { text: "Preview Features", link: "/guides/preview-features" },
+                ],
             },
             {
                 text: "Reference",
