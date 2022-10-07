@@ -9,7 +9,7 @@ export default defineConfig({
 
     head: [
         // Basic
-        ["link", { rel: "icon", type: "image/png", href: "/logo.png" }],
+        ["link", { rel: "icon", type: "image/png", href: "/logo.svg" }],
 
         // Twitter
         ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
@@ -17,7 +17,7 @@ export default defineConfig({
     ],
 
     themeConfig: {
-        logo: "/logo.png",
+        logo: "/logo.svg",
 
         socialLinks: [
             { icon: 'twitter', link: 'https://twitter.com/odroeinc' },
@@ -68,6 +68,11 @@ export default defineConfig({
                 ]
             }
         ],
+
+        footer: {
+            message: "Released under the BSD-3-Clause License",
+            copyright: `Copyright © ${new Date().getFullYear()} Odroe Inc.`,
+        },
     },
 
     markdown: {

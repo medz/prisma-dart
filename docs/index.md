@@ -6,7 +6,8 @@ hero:
     text: Next-generation Dart and Flutter ORM
     tagline: Prisma unlocks a new level of developer experience when working with databases thanks to its intuitive data model, automated migrations, type-safety & auto-completion.
     image:
-        src: /logo.png
+        src: /logo.svg
+        alt: Prisma ORM for Dart
     actions:
         - theme: brand
           text: ⚡️ Get Started
