@@ -1,13 +1,11 @@
 name: test
 on:
   push:
-    paths:
-      - "bin/**.dart"
-      - "lib/**.dart"
+    paths-ignore:
+      - "docs/**"
   pull_request:
-      paths:
-        - "bin/**.dart"
-        - "lib/**.dart"
+      paths-ignore:
+        - "docs/**"
 jobs:
   test:
     strategy:

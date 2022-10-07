@@ -1,13 +1,11 @@
 name: analyze
 on:
   push:
-    paths:
-      - "bin/**.dart"
-      - "lib/**.dart"
+    paths-ignore:
+      - "docs/**"
   pull_request:
-      paths:
-        - "bin/**.dart"
-        - "lib/**.dart"
+      paths-ignore:
+        - "docs/**"
 jobs:
   analyze:
     runs-on: ubuntu-latest
