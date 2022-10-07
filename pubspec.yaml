@@ -3,6 +3,9 @@ description: ◭ Next-generation ORM for Dart & Flutter | PostgreSQL, MySQL, Mar
 version: 2.3.0
 homepage: https://prisma.pub
 repository: https://github.com/odroe/prisma-dart
+funding:
+  - https://opencollective.com/prisma-dart
+  - https://opencollective.com/odroe
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
