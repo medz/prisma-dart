@@ -102,5 +102,6 @@ prisma.$on([PrismaLogLevel.query], (e) {
 
 ### Difference
 
-1. Prisma TS/JS 客户端的 `log` 有多类型输入，但是 Dart 客户端只支持 `PrismaLogDefinition` 类型，因为 Dart 不支持多类型输入。
-2. Prisma TS/JS 客户端的 `$on` 只能订阅单个事件，或者一次性全部订阅。但是 Dart 客户端可以订阅多个事件。
+1. Prisma TS/JS client `log` has multi-type input, but Dart client only supports `PrismaLogDefinition` type because Dart does not support multi-type input.
+2. Prisma TS/JS client `$on` can only subscribe to a single event, or all at once. But Dart clients can subscribe to multiple events.
+3. Prisma TS/JS client log input is Object, Dart client try to satisfy [Event types](https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#event-types) Cases are wrapped with `Exception`.
