@@ -9,6 +9,7 @@ import 'package:retry/retry.dart';
 import '../../../version.dart';
 import '../../dmmf/dmmf.dart' as dmmf;
 import '../../runtime/datasource.dart';
+import '../../runtime/prisma_log.dart';
 import '../common/errors/prisma_client_initialization_error.dart';
 import '../common/errors/prisma_client_known_request_error.dart';
 import '../common/errors/prisma_client_unknown_request_error.dart';
@@ -30,6 +31,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required super.schema,
     required super.datasources,
     required super.environment,
+    required super.logEmitter,
     super.allowTriggerPanic,
     super.executable,
     super.workingDirectory,
@@ -88,17 +90,39 @@ class BinaryEngine extends unimplemented.BinaryEngine {
         base64.encode(utf8.encode(overwriteDatasources));
 
     // Rust backtrace.
-    if (!environment.containsKey('RUST_BACKTRACE')) {
-      environment['RUST_BACKTRACE'] = '1';
-    }
+    environment['RUST_BACKTRACE'] ??= '1';
 
     // Rust log
-    if (!environment.containsKey('RUST_LOG')) {
-      environment['RUST_BACKTRACE'] = 'info';
+    environment['RUST_LOG'] ??= rustLogLevel.name;
+
+    if (environment['LOG_QUERIES'] == null && hasLogQueries) {
+      environment['LOG_QUERIES'] = 'true';
     }
 
     return environment;
   }
+
+  /// Return rust log level.
+  PrismaLogLevel get rustLogLevel {
+    final Iterable<PrismaLogLevel> levels =
+        logEmitter.definitions.map((e) => e.level).toSet();
+    if (levels.isEmpty) return PrismaLogLevel.info;
+
+    return levels.reduce((value, element) {
+      if (element == PrismaLogLevel.query) {
+        return value;
+      } else if (value == PrismaLogLevel.info ||
+          element == PrismaLogLevel.info) {
+        return PrismaLogLevel.info;
+      }
+
+      return element;
+    });
+  }
+
+  /// Has log queries.
+  bool get hasLogQueries => logEmitter.definitions
+      .any((element) => element.level == PrismaLogLevel.query);
 
   /// Get overwrite datasources.
   String get overwriteDatasources {
@@ -190,19 +214,24 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
     if (!forceRun && _getConfigResult != null) return _getConfigResult!;
 
     return _getConfigResult = Future<GetConfigResult>.sync(() async {
-      final ProcessResult result = await Process.run(
-        executable,
-        ['cli', 'get-config'],
-        includeParentEnvironment: false,
-        environment: environment,
-        workingDirectory: workingDirectory,
-      );
+      try {
+        final ProcessResult result = await Process.run(
+          executable,
+          ['cli', 'get-config'],
+          includeParentEnvironment: false,
+          environment: environment,
+          workingDirectory: workingDirectory,
+        );
 
-      if (result.exitCode != 0) {
-        throw Exception(result.stderr);
+        if (result.exitCode != 0) {
+          throw Exception(result.stderr);
+        }
+
+        return GetConfigResult.fromJson(json.decode(result.stdout));
+      } on Exception catch (e) {
+        logEmitter.emit(PrismaLogLevel.error, e);
+        rethrow;
       }
-
-      return GetConfigResult.fromJson(json.decode(result.stdout));
     });
   }
 
@@ -219,7 +248,10 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
     );
 
     if (result.exitCode != 0) {
-      throw Exception(result.stderr);
+      final Exception e = Exception(result.stderr);
+      logEmitter.emit(PrismaLogLevel.error, e);
+
+      throw e;
     }
 
     return dmmf.Document.fromJson(json.decode(result.stdout));
@@ -261,10 +293,12 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
         final http.Response response = await http.Response.fromStream(stream);
 
         if (response.statusCode >= 400) {
-          throw PrismaClientUnknownRequestError('''
+          final e = PrismaClientUnknownRequestError('''
 HTTP request failed with status code ${response.statusCode}.
 ${response.body}
 ''', clientVersion: packageVersion);
+          logEmitter.emit(PrismaLogLevel.error, e);
+          throw e;
         }
 
         final Map<String, dynamic> result =
@@ -295,35 +329,64 @@ ${response.body}
   /// Create engine process.
   Future<Process> _createProcess() async {
     final int port = await this.port;
-    final List<String> additionalFlag = <String>[];
+
+    final List<String> arguments = <String>[
+      '--enable-raw-queries',
+      '--enable-metrics',
+      '--enable-open-telemetry',
+      '--port',
+      port.toString(),
+      '--host',
+      _localhost,
+    ];
 
     if (allowTriggerPanic == true) {
-      additionalFlag.add('--debug');
+      arguments.add('--debug');
     }
 
     final Process process = await Process.start(
       executable,
-      [
-        '--enable-raw-queries',
-        '--enable-open-telemetry',
-        '--port',
-        port.toString(),
-        '--host',
-        _localhost,
-        ...additionalFlag,
-      ],
+      arguments,
       includeParentEnvironment: false,
       environment: environment,
       workingDirectory: workingDirectory,
     );
 
-    // Listen for stderr.
+    process.stdout.listen(
+      (List<int> data) {
+        final Iterable<String> lines =
+            utf8.decode(data).split(RegExp(r'\r?\n'));
+        for (final String line in lines) {
+          if (line.trim().isEmpty) {
+            continue;
+          }
+
+          try {
+            final Map<String, dynamic> json = jsonDecode(line);
+            final PrismaLogLevel level = PrismaQueryEvent.isQueryEvent(json)
+                ? PrismaLogLevel.query
+                : PrismaLogLevel.info;
+            logEmitter.emit(level, PrismaEvent.forJson(json));
+          } catch (e) {
+            logEmitter.emit(
+                PrismaLogLevel.error, e is Exception ? e : Exception(e));
+          }
+        }
+      },
+      onDone: () => stop(),
+    );
+
     process.stderr.listen(
-      (data) {
-        throw PrismaClientInitializationError.fromJson({
-          ...json.decode(utf8.decode(data)),
-          'clientVersion': packageVersion,
-        });
+      (List<int> data) {
+        final Iterable<String> lines =
+            utf8.decode(data).split(RegExp(r'\r?\n'));
+        for (final String line in lines) {
+          if (line.trim().isEmpty) {
+            continue;
+          }
+
+          logEmitter.emit(PrismaLogLevel.error, Exception(line));
+        }
       },
       onDone: () => stop(),
     );
@@ -363,10 +426,12 @@ ${response.body}
       process.kill();
       await stop();
 
-      throw PrismaClientInitializationError(
+      final err = PrismaClientInitializationError(
         'Failed to start the query engine: ${e.toString()}',
         clientVersion: packageVersion,
       );
+      logEmitter.emit(PrismaLogLevel.error, err);
+      throw err;
     }
 
     // Return created process

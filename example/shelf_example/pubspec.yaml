@@ -9,7 +9,8 @@ environment:
 dependencies:
   args: ^2.0.0
   json_annotation: ^4.7.0
-  orm: ^2.2.3
+  orm:
+    path: ../../
   shelf: ^1.1.0
   shelf_router: ^1.0.0
 

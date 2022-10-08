@@ -7,6 +7,7 @@ import 'package:retry/retry.dart';
 
 import '../../../version.dart';
 import '../../runtime/datasource.dart';
+import '../../runtime/prisma_log.dart';
 import '../common/engine.dart';
 import '../common/errors/prisma_client_unknown_request_error.dart';
 import '../common/get_config_result.dart';
@@ -20,6 +21,7 @@ import '../intenal_utils/throw_graphql_error.dart';
 /// Prisma data proxy engine.
 class DataProxyEngine extends Engine {
   DataProxyEngine({
+    required super.logEmitter,
     required super.schema,
     required super.dmmf,
     required super.datasources,
@@ -70,9 +72,25 @@ class DataProxyEngine extends Engine {
   @override
   Future<QueryEngineResult> request(
       {required String query, QueryEngineRequestHeaders? headers}) async {
+    logEmitter.emit(
+      PrismaLogLevel.query,
+      PrismaQueryEvent(
+        target: '',
+        timestamp: DateTime.now(),
+        query: query,
+        params: "{}",
+        duration: 0,
+      ),
+    );
+
     final Exception retryException = Exception('retry');
     return retry<QueryEngineResult>(
       () async {
+        final Uri url = this.url.replace(
+              path: '${this.url.path}/graphql',
+            );
+        logEmitter.emit(PrismaLogLevel.info, Exception('Calling $url'));
+
         final Response response = await post(
           url.replace(
             path: '${url.path}/graphql',
@@ -94,11 +112,18 @@ class DataProxyEngine extends Engine {
           await _updateSchema();
           throw retryException;
         } else if (response.statusCode > 400) {
-          throw PrismaClientUnknownRequestError('Bad request',
+          final e = PrismaClientUnknownRequestError('Bad request',
               clientVersion: binaryVersion);
+          logEmitter.emit(PrismaLogLevel.error, e);
+          throw e;
         }
 
-        throwGraphQLError(result['errors']);
+        try {
+          throwGraphQLError(result['errors']);
+        } on Exception catch (e) {
+          logEmitter.emit(PrismaLogLevel.error, e);
+          rethrow;
+        }
 
         // Rust engine returns time in microseconds and we want it in miliseconds
         final int elapsed =
@@ -127,9 +152,14 @@ class DataProxyEngine extends Engine {
     );
 
     if (response.statusCode > 400) {
-      throw PrismaClientUnknownRequestError('Update schema failed',
+      final e = PrismaClientUnknownRequestError('Update schema failed',
           clientVersion: binaryVersion);
+      logEmitter.emit(PrismaLogLevel.error, e);
+      throw e;
     }
+
+    logEmitter.emit(PrismaLogLevel.info,
+        Exception('Schema (re)uploaded (hash: $schemaHash)'));
   }
 
   /// Returns base64 encoded string of the schema.

@@ -26,6 +26,7 @@ export 'src/runtime/json_serializable.dart';
 export 'src/runtime/language_keyword.dart';
 export 'src/runtime/prisma_union.dart';
 export 'src/runtime/prisma_null.dart';
+export 'src/runtime/prisma_log.dart';
 
 // GraphQL exports
 export 'src/graphql/arg.dart';

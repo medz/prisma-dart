@@ -199,7 +199,7 @@ class ClientBuilder {
         constructorBuilder.name = null; // Default constructor.
         constructorBuilder.factory = true;
 
-        // Add constructor parameter.
+        // Add constructor datasources parameter.
         constructorBuilder.optionalParameters
             .add(Parameter((ParameterBuilder parameterBuilder) {
           parameterBuilder.name = 'datasources';
@@ -211,6 +211,28 @@ class ClientBuilder {
             typeReferenceBuilder.types.add(refer('Datasources'));
           });
         }));
+
+        // Add constructor log parameter.
+        if (options.previewFeatures
+            .contains(GeneratorPreviewFeatures.logging)) {
+          constructorBuilder.optionalParameters
+              .add(Parameter((ParameterBuilder parameterBuilder) {
+            parameterBuilder.name = 'log';
+            parameterBuilder.named = true;
+            parameterBuilder.type =
+                TypeReference((TypeReferenceBuilder update) {
+              update.symbol = 'Iterable';
+              update.url = 'dart:core';
+              update.types.add(
+                refer('PrismaLogDefinition', 'package:orm/orm.dart'),
+              );
+            });
+
+            parameterBuilder.defaultTo = literalConstList(
+                    [], refer('PrismaLogDefinition', 'package:orm/orm.dart'))
+                .code;
+          }));
+        }
 
         // Create public constructor body.
         constructorBuilder.body = Block((BlockBuilder blockBuilder) {
@@ -269,6 +291,50 @@ class ClientBuilder {
         }));
       }
 
+      // Create `$on` method.
+      // Output:
+      // void $on(
+      //  Iterable<PrismaLogLevel> levels,
+      //  PrismaLogHandler handler
+      // ) => _engine.logEmitter.on(levels.toSet(), handler);
+      if (options.previewFeatures.contains(GeneratorPreviewFeatures.logging)) {
+        classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
+          methodBuilder.name = r'$on';
+          methodBuilder.requiredParameters.add(Parameter((ParameterBuilder b) {
+            b.name = 'levels';
+            b.type = TypeReference((TypeReferenceBuilder update) {
+              update.symbol = 'Iterable';
+              update.url = 'dart:core';
+              update.types.add(
+                refer('PrismaLogLevel', 'package:orm/orm.dart'),
+              );
+            });
+          }));
+          methodBuilder.requiredParameters.add(Parameter((ParameterBuilder b) {
+            b.name = 'handler';
+            b.type = refer('PrismaLogHandler', 'package:orm/orm.dart');
+          }));
+          methodBuilder.body =
+              refer('_engine').property('logEmitter').property('on').call([
+            refer('levels').property('toSet').call([]),
+            refer('handler'),
+          ]).code;
+          methodBuilder.docs.add('''
+/// The \$on() method allows you to subscribe to events.
+/// 
+/// All message use a [Exception] class wrapper.
+/// 
+/// Example:
+/// ```dart
+/// prisma.\$on([PrismaLogLevel.query], (e) {
+///   if (e is PrismaQueryEvent) {
+///     print(e.query);
+///   }
+/// });
+/// ```''');
+        }));
+      }
+
       // Create `$connect` method.
       classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
         methodBuilder.name = r'$connect';
@@ -318,7 +384,7 @@ class ClientBuilder {
             '///',
             '/// Sometimes you need more control over what queries execute within a transaction. Interactive transactions are meant to provide you with an escape hatch.',
             '///',
-            '/// **NOTE**: If you use interactive transactions, then you cannot use the [Data Proxy](https://www.prisma.io/docs/data-platform/data-proxy) at the same time.',
+            '/// **NOTE**: If you use interactive transactions, then you cannot use the [Data Proxy](https://prisma.pub/guides/preview-features#data-proxy) at the same time.',
             '///',
             '/// E.g:',
             '/// ```dart',
@@ -431,30 +497,47 @@ class ClientBuilder {
 
   /// Create engine instance.
   Expression _createEngineInstance() {
-    if (options.dataProxy) {
-      return _createDataProxyEngineInstance();
-    }
-
-    return _createBinaryEngineInstance();
-  }
-
-  /// Create binary engine instance.
-  Expression _createBinaryEngineInstance() {
-    return refer('BinaryEngine', 'package:orm/orm.dart').newInstance([], {
+    // Create common named arguments.
+    final Map<String, Expression> namedArguments = {
       'datasources': refer('datasources')
           .nullSafeProperty('_toOverwrites')
           .call([]).ifNullThen(literalMap({}, refer('String'),
               refer('Datasource', 'package:orm/orm.dart'))),
       'dmmf': refer('dmmf'),
       'schema': refer('schema'),
-      'executable': refer('_executable'),
       'environment':
           refer('environment', 'package:orm/configure.dart').property('all'),
+    };
+
+    // Add logEmitter.
+    final logDefinitions =
+        options.previewFeatures.contains(GeneratorPreviewFeatures.logging)
+            ? refer('log')
+            : literalConstList(
+                [], refer('PrismaLogDefinition', 'package:orm/orm.dart'));
+    namedArguments['logEmitter'] =
+        refer('PrismaLogEmitter', 'package:orm/orm.dart')
+            .newInstance([logDefinitions]);
+
+    if (options.dataProxy) {
+      return _createDataProxyEngineInstance(namedArguments);
+    }
+
+    return _createBinaryEngineInstance(namedArguments);
+  }
+
+  /// Create binary engine instance.
+  Expression _createBinaryEngineInstance(
+      Map<String, Expression> namedArguments) {
+    return refer('BinaryEngine', 'package:orm/orm.dart').newInstance([], {
+      ...namedArguments,
+      'executable': refer('_executable'),
     });
   }
 
   /// Create data proxy engine instance.
-  Expression _createDataProxyEngineInstance() {
+  Expression _createDataProxyEngineInstance(
+      Map<String, Expression> namedArguments) {
     final Iterable<Expression> datasources =
         options.datasources.map((DataSource datasource) {
       return refer('Datasource', 'package:orm/orm.dart').newInstance([], {
@@ -465,14 +548,7 @@ class ClientBuilder {
     });
 
     return refer('DataProxyEngine', 'package:orm/orm.dart').newInstance([], {
-      'datasources': refer('datasources')
-          .nullSafeProperty('_toOverwrites')
-          .call([]).ifNullThen(literalMap({}, refer('String'),
-              refer('Datasource', 'package:orm/orm.dart'))),
-      'dmmf': refer('dmmf'),
-      'schema': refer('schema'),
-      'environment':
-          refer('environment', 'package:orm/configure.dart').property('all'),
+      ...namedArguments,
       'intenalDatasources': literalList(datasources),
     });
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../dmmf/dmmf.dart' show Document;
 import '../../runtime/datasource.dart';
+import '../../runtime/prisma_log.dart';
 import 'get_config_result.dart';
 import 'types/query_engine.dart';
 import 'types/transaction.dart';
@@ -12,7 +13,11 @@ abstract class Engine {
     required this.dmmf,
     required this.datasources,
     required this.environment,
+    required this.logEmitter,
   });
+
+  /// Prisma log emitter
+  final PrismaLogEmitter logEmitter;
 
   /// Prisma schema as SDL string.
   final String schema;
