@@ -16977,8 +16977,9 @@ class PrismaClient {
       datasources: datasources?._toOverwrites() ?? <String, _i2.Datasource>{},
       dmmf: dmmf,
       schema: schema,
-      executable: _executable,
       environment: _i5.environment.all,
+      logEmitter: _i2.PrismaLogEmitter(const <_i2.PrismaLogDefinition>[]),
+      executable: _executable,
     );
     final PrismaClient client = PrismaClient._(
       engine,
@@ -17012,7 +17013,7 @@ class PrismaClient {
   ///
   /// Sometimes you need more control over what queries execute within a transaction. Interactive transactions are meant to provide you with an escape hatch.
   ///
-  /// **NOTE**: If you use interactive transactions, then you cannot use the [Data Proxy](https://www.prisma.io/docs/data-platform/data-proxy) at the same time.
+  /// **NOTE**: If you use interactive transactions, then you cannot use the [Data Proxy](https://prisma.pub/guides/preview-features#data-proxy) at the same time.
   ///
   /// E.g:
   /// ```dart

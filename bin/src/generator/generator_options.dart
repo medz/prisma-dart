@@ -10,7 +10,9 @@ enum GeneratorPreviewFeatures {
   /// Prisma Data proxy
   dataProxy(
       'data-proxy', 'Enable `--data-proxy` flag for generated PrismaClient.'),
-  ;
+
+  /// Prisma client `$on` method.
+  logging('logging', r'Enable `$on` method for generated PrismaClient.');
 
   /// Create a new [GeneratorPreviewFeatures] instace.
   const GeneratorPreviewFeatures(this.name, this.description);

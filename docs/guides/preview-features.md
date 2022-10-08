@@ -68,3 +68,40 @@ This feature is currently in preview state, you need to install `2.3.0` and abov
 ```bash
 dart run orm generate --preview=finalizer
 ```
+
+## Logging
+
+Prisma ORM for Dart now supports [logging](https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/logging) as a preview feature. That means, it might have some flaws, but we hope you'll try it out and provide feedback.
+
+To enable logging, you need to set the `log` property on the `PrismaClient` constructor and `generate` command:
+
+```bash
+dart run orm generate --preview=logging
+```
+
+```dart
+PrismaClient(
+  log: [
+    PrismaLogDefinition(
+      level: PrismaLogLevel.query,
+      emit: PrismaLogEvent.stdout,
+    ),
+  ],
+)
+```
+
+### Subscribe to log events
+
+You can subscribe to log events to perform custom actions when a log occurs.
+
+```dart
+prisma.$on([PrismaLogLevel.query], (e) {
+  print(e);
+});
+```
+
+### Difference
+
+1. Prisma TS/JS client `log` has multi-type input, but Dart client only supports `PrismaLogDefinition` type because Dart does not support multi-type input.
+2. Prisma TS/JS client `$on` can only subscribe to a single event, or all at once. But Dart clients can subscribe to multiple events.
+3. Prisma TS/JS client log input is Object, Dart client try to satisfy [Event types](https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#event-types) Cases are wrapped with `Exception`.

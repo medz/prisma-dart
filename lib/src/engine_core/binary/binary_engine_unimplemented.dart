@@ -13,6 +13,7 @@ class BinaryEngine extends Engine {
     required super.schema,
     required super.datasources,
     required super.environment,
+    required super.logEmitter,
     this.allowTriggerPanic = false,
     this.executable,
     this.workingDirectory,

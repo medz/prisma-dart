@@ -6253,7 +6253,8 @@ final _i3.Document dmmf = _i3.Document.fromJson(<String, dynamic>{
 });
 final String schema = _i4.utf8.decode(_i4.base64.decode(
     r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgICAgICAgID0gInByaXNtYS1jbGllbnQtZGFydCIKICBwcmV2aWV3RmVhdHVyZXMgPSBbImludGVyYWN0aXZlVHJhbnNhY3Rpb25zIl0KICBvdXRwdXQgICAgICAgICAgPSAiLi4vYmluL3NyYy9wcmlzbWFfY2xpZW50LmRhcnQiCn0KCmRhdGFzb3VyY2UgZGIgewogIHByb3ZpZGVyID0gInBvc3RncmVzcWwiCiAgdXJsICAgICAgPSBlbnYoIkRBVEFCQVNFX1VSTCIpCn0KCm1vZGVsIFVzZXIgewogIGlkICAgICAgICBTdHJpbmcgICBAaWQgQGRlZmF1bHQoY3VpZCgpKQogIG5hbWUgICAgICBTdHJpbmcKICBjcmVhdGVkQXQgRGF0ZVRpbWUgQGRlZmF1bHQobm93KCkpCiAgdXBkYXRlZEF0IERhdGVUaW1lIEB1cGRhdGVkQXQKfQo='));
-const String _executable = r'bin/q';
+const String _executable =
+    r'/Users/seven/workspace/prisma/example/shelf_example/.dart_tool/prisma/query-engine';
 
 class Datasources {
   Datasources({this.db});
@@ -6282,13 +6283,15 @@ class PrismaClient {
       datasources: datasources?._toOverwrites() ?? <String, _i2.Datasource>{},
       dmmf: dmmf,
       schema: schema,
-      executable: _executable,
       environment: _i5.environment.all,
+      logEmitter: _i2.PrismaLogEmitter(const <_i2.PrismaLogDefinition>[]),
+      executable: _executable,
     );
-    return PrismaClient._(
+    final PrismaClient client = PrismaClient._(
       engine,
       null,
     );
+    return client;
   }
 
   final _i2.Engine _engine;
@@ -6304,7 +6307,9 @@ class PrismaClient {
   Future<void> $connect() => _engine.start();
 
   /// Disconnect from the database.
-  Future<void> $disconnect() => _engine.stop();
+  Future<void> $disconnect() async {
+    await _engine.stop();
+  }
 
   /// Interactive transactions.
   ///
