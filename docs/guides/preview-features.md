@@ -68,3 +68,39 @@ This feature is currently in preview state, you need to install `2.3.0` and abov
 ```bash
 dart run orm generate --preview=finalizer
 ```
+
+## Logging
+
+Prisma ORM for Dart now supports [logging](https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/logging) as a preview feature. That means, it might have some flaws, but we hope you'll try it out and provide feedback.
+
+To enable logging, you need to set the `log` property on the `PrismaClient` constructor and `generate` command:
+
+```bash
+dart run orm generate --preview=logging
+```
+
+```dart
+PrismaClient(
+  log: [
+    PrismaLogDefinition(
+      level: PrismaLogLevel.query,
+      emit: PrismaLogEvent.stdout,
+    ),
+  ],
+)
+```
+
+### Subscribe to log events
+
+You can subscribe to log events to perform custom actions when a log occurs.
+
+```dart
+prisma.$on([PrismaLogLevel.query], (e) {
+  print(e);
+});
+```
+
+### Difference
+
+1. Prisma TS/JS 客户端的 `log` 有多类型输入，但是 Dart 客户端只支持 `PrismaLogDefinition` 类型，因为 Dart 不支持多类型输入。
+2. Prisma TS/JS 客户端的 `$on` 只能订阅单个事件，或者一次性全部订阅。但是 Dart 客户端可以订阅多个事件。
