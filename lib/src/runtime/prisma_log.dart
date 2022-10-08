@@ -134,12 +134,6 @@ class PrismaQueryEvent implements PrismaEvent {
 
 typedef PrismaLogHandler = void Function(Exception exception);
 
-/// Loggable prisma client.
-abstract class PrismaClientLoggable {
-  /// Register a log handler.
-  void $on(Set<PrismaLogLevel> levels, PrismaLogHandler handler);
-}
-
 /// Log emitter
 abstract class PrismaLogEmitter {
   /// Emit a log message
