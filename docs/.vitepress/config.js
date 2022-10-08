@@ -5,7 +5,7 @@ export default defineConfig({
     description: "Next-generation ORM for Dart & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB",
 
     lastUpdated: true,
-    cleanUrls: "without-subfolders",
+    cleanUrls: "with-subfolders",
 
     head: [
         // Basic
