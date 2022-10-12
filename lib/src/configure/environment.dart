@@ -59,8 +59,7 @@ enum PrismaEnvironment<T> {
     );
   }
 
-  static String? _nullableStringParser<T>(dynamic value) =>
-      value ? value.toString() : null;
+  static String? _nullableStringParser<T>(dynamic value) => value?.toString();
 
   static bool _boolParser<T>(dynamic value) {
     if (value is bool) {
@@ -77,10 +76,10 @@ enum PrismaEnvironment<T> {
   }
 }
 
-/// Prisma environment reader
-class PrismaEnvironmentReader {
-  /// Create a new instance of [PrismaEnvironmentReader]
-  PrismaEnvironmentReader({
+/// Prisma environment operator
+class PrismaEnvironmentOperator {
+  /// Create a new instance of [PrismaEnvironmentOperator]
+  PrismaEnvironmentOperator({
     Map<PrismaEnvironment, dynamic>? prisma,
     Map<String, String>? other,
   }) {
@@ -95,25 +94,54 @@ class PrismaEnvironmentReader {
 
   late final Map<PrismaEnvironment, dynamic> _prisma;
   late final Map<String, String> _other;
+  Map<Object, Object> _override = {};
+
+  /// Read override or then.
+  Object? _overrideOrThen(Object key, Object? Function() then) {
+    if (_override.containsKey(key)) {
+      return _override[key];
+    }
+
+    return then();
+  }
+
+  /// Override the environment
+  void override(Object key, Object value) {
+    _override[key] = value;
+  }
+
+  /// Override all environment
+  void overrideAll(Map<Object, Object> map) {
+    _override = {..._override, ...map};
+  }
 
   /// Read a Prisma environment variable.
   T prisma<T>(PrismaEnvironment<T> key) {
-    final value = _prisma[key] ?? _other[key.name];
+    final value = _overrideOrThen(
+      key,
+      () => _overrideOrThen(
+        key.name,
+        () => _prisma[key] ?? _other[key.name],
+      ),
+    );
 
     return key.parser(value);
   }
 
   /// Update a Prisma environment variable.
   void updatePrisma<T>(PrismaEnvironment<T> key, T value) =>
-      _prisma[key] = value;
+      _prisma[key] = key.parser(value);
 
   /// Update all Prisma environment variables.
   void updateAllPrisma(Map<PrismaEnvironment, dynamic> values) =>
-      _prisma.addAll(values);
+      values.forEach((key, value) => updatePrisma(key, value));
 
   /// Read a other environment variable.
   String? other(String key) {
-    final String? value = _other[key] ?? internal.environment[key];
+    final Object? value = _overrideOrThen(
+      key,
+      () => _other[key] ?? internal.environment[key],
+    );
     final parsed = PrismaEnvironment.lookup(key).parser(value);
 
     return parsed ? parsed.toString() : null;
@@ -135,5 +163,19 @@ class PrismaEnvironmentReader {
     for (final entry in values.entries) {
       updateOther(entry.key, entry.value);
     }
+  }
+
+  /// Return the environment as a map
+  Map<String, String> toEnvironment({
+    bool includeSystemEnvironment = false,
+  }) {
+    return {
+      if (includeSystemEnvironment) ...internal.environment,
+      ..._other,
+      ..._prisma.map((key, value) => MapEntry(
+          key.name, value is QueryEngineType ? value.name : value.toString())),
+      ..._override
+          .map((key, value) => MapEntry(key.toString(), value.toString())),
+    };
   }
 }

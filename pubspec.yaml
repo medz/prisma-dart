@@ -22,7 +22,6 @@ dependencies:
   http: ^0.13.5
   json_annotation: ^4.6.0
   path: ^1.8.2
-  rc: ^0.1.0
   retry: ^3.1.0
   yaml: ^3.1.1
 
@@ -33,5 +32,6 @@ dev_dependencies:
   test: ^1.21.6
 
 prisma:
-  configure:
-  schema: schema.prisma
+  # production: lib/production.dart
+  # development: prisma/development.dart
+  schema: prisma/schema.prisma

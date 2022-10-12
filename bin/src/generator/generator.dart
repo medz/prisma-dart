@@ -5,7 +5,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:orm/generator_helper.dart';
 import 'package:path/path.dart';
 
-import '../utils/find_project.dart';
+import '../configure.dart';
 import 'client_builder.dart';
 import 'generator_options.dart';
 import 'model_delegate_builder.dart';
@@ -13,11 +13,12 @@ import 'schema_builder.dart';
 
 /// Resolve output.
 String _resolveOutput(EnvValue? output, String schemaPath) {
-  if (output == null || output.value.isEmpty) {
-    return joinRelativePaths(['lib', 'src', 'generated']);
+  if (output == null || output.value.trim().isEmpty) {
+    return join(configure.root, 'lib');
   }
 
-  return relative(join(dirname(schemaPath), output.value));
+  return relative(join(dirname(schemaPath), output.value.trim()),
+      from: configure.root);
 }
 
 /// Get generated file.

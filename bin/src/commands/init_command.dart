@@ -5,7 +5,6 @@ import 'package:path/path.dart';
 
 import '../datasource.dart';
 import '../utils/ansi_progress.dart';
-import '../utils/find_project.dart';
 
 class InitCommand extends Command {
   InitCommand() {

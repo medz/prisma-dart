@@ -1,5 +1,6 @@
 library prisma.cli;
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -12,6 +13,7 @@ import 'src/commands/format_command.dart';
 import 'src/commands/generate_command.dart';
 import 'src/commands/init_command.dart';
 import 'src/commands/precache_command.dart';
+import 'src/configure.dart';
 
 /// The Prisma CLI executable name.
 const String _executableName = r'dart run orm';
@@ -21,6 +23,8 @@ const String _description =
     ' ◭ Prisma CLI 🚀\nPrisma is a modern DB toolkit to query, migrate and model your database.\n More info: https://github.com/odroe/prisma-dart';
 
 void main(List<String> args) async {
+  bootstrap();
+
   // Create command runner.
   final CommandRunner runner = CommandRunner(_executableName, _description);
 
@@ -50,7 +54,8 @@ void main(List<String> args) async {
     await runner.runCommand(results);
   } catch (error) {
     print('');
-    if (results.wasParsed('debug') || environment.DEBUG != null) {
+    if (results.wasParsed('debug') ||
+        configure.prisma(PrismaEnvironment.DEBUG) != null) {
       rethrow;
     }
 
@@ -72,11 +77,7 @@ String _redTextWrapper(String text, [bool Function()? condition]) {
 }
 
 /// No color.
-bool get _noColor {
-  return environment.NO_COLOR != null ||
-      environment.NO_COLOR == 'true' ||
-      environment.NO_COLOR == '1';
-}
+bool get _noColor => configure.prisma(PrismaEnvironment.NO_COLOR);
 
 /// Print CLI and engines version.
 void _printVersion() {
@@ -87,4 +88,33 @@ void _printVersion() {
   ''';
 
   print(info);
+}
+
+void bootstrap() {
+  final String? executable = configure.developmentExecutable;
+
+  // If executable is null, skip.
+  if (executable == null) {
+    return;
+  }
+
+  final List<String> arguments = configure.developmentArguments.toList();
+  final ProcessResult result = Process.runSync(
+    executable,
+    arguments,
+    includeParentEnvironment: true,
+    stderrEncoding: utf8,
+    stdoutEncoding: utf8,
+  );
+
+  if (result.exitCode != 0) {
+    stderr.write(result.stderr);
+    exit(result.exitCode);
+  }
+
+  final Iterable<String> lines = result.stdout
+      .toString()
+      .split(RegExp(r'\r?\n'))
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty);
 }
