@@ -31,3 +31,7 @@ dev_dependencies:
   json_serializable: ^6.3.1
   lints: ^2.0.0
   test: ^1.21.6
+
+prisma:
+  configure:
+  schema: schema.prisma
