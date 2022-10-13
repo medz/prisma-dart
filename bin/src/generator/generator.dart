@@ -5,7 +5,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:orm/generator_helper.dart';
 import 'package:path/path.dart';
 
-import '../configure.dart';
+import '../environment.dart';
 import 'client_builder.dart';
 import 'generator_options.dart';
 import 'model_delegate_builder.dart';
@@ -14,11 +14,11 @@ import 'schema_builder.dart';
 /// Resolve output.
 String _resolveOutput(EnvValue? output, String schemaPath) {
   if (output == null || output.value.trim().isEmpty) {
-    return join(configure.root, 'lib');
+    return join(environment.projectRoot, 'lib');
   }
 
   return relative(join(dirname(schemaPath), output.value.trim()),
-      from: configure.root);
+      from: environment.projectRoot);
 }
 
 /// Get generated file.

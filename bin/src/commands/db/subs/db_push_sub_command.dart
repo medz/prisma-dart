@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:orm/src/configure/io/cli.dart';
 import 'package:orm/version.dart';
 
 import '../../../binary_engine/binary_engine.dart';
 import '../../../binary_engine/binary_engine_platform.dart';
 import '../../../binary_engine/binray_engine_type.dart';
+import '../../../environment.dart';
 import '../../../internal/json_rpc.dart';
 import '../../../internal/migrate_engine.dart';
 import '../../../utils/ansi_progress.dart';
@@ -28,7 +28,7 @@ class DbPushSubCommand extends Command {
       'schema',
       help: 'Schema file path.',
       valueHelp: 'path',
-      defaultsTo: defaultSchemaPath,
+      defaultsTo: environment.schema.path,
     );
   }
 

@@ -4,4 +4,4 @@ import 'environment.dart';
 
 /// Production environment configurator.
 typedef ProductionEnvironmentConfigurator = FutureOr<void> Function(
-    PrismaEnvironmentOperator);
+    PrismaEnvironment environment);

@@ -5,12 +5,12 @@ import 'package:args/command_runner.dart';
 import 'package:orm/dmmf.dart';
 import 'package:orm/generator_helper.dart';
 import 'package:orm/orm.dart';
-import 'package:orm/src/configure/io/cli.dart';
 import 'package:orm/version.dart';
 
 import '../binary_engine/binary_engine.dart' as binary;
 import '../binary_engine/binary_engine_platform.dart';
 import '../binary_engine/binray_engine_type.dart';
+import '../environment.dart';
 import '../generator/generator.dart';
 import '../generator/generator_options.dart';
 import '../utils/ansi_progress.dart';
@@ -27,13 +27,13 @@ class GenerateCommand extends Command {
       'schema',
       help: 'Custom path to your Prisma schema',
       valueHelp: 'path',
-      defaultsTo: defaultSchemaPath,
+      defaultsTo: environment.schema.path,
     );
     argParser.addFlag(
       'data-proxy',
       help:
           '(Preview) Enable the generated Prisma client to use the Data Proxy, Takes effect when used with `--preview=data-proxy`',
-      defaultsTo: development.PRISMA_GENERATE_DATAPROXY,
+      defaultsTo: environment.generateDataProxy,
     );
     argParser.addMultiOption(
       'preview',
