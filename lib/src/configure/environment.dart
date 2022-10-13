@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:rc/rc.dart';
 
 import '../../version.dart';
+import 'production_environment_configurator.dart';
 import 'query_engine_type.dart';
 
 /// See https://www.prisma.io/docs/reference/api-reference/environment-variables-reference
@@ -53,4 +54,12 @@ class PrismaEnvironment extends MapBase<String, String> implements Environment {
       this['PRISMA_CLIENT_DATA_PROXY_CLIENT_VERSION'] ??
       dataProxyRemoteClientVersion;
   bool get generateDataProxy => this['PRISMA_GENERATE_DATAPROXY'] == 'true';
+
+  /// Calls [ProductionEnvironmentConfigurator] callback.
+  Future<PrismaEnvironment> call(
+      ProductionEnvironmentConfigurator configurator) async {
+    await configurator(this);
+
+    return this;
+  }
 }

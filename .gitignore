@@ -10,3 +10,4 @@ pubspec.lock
 prisma/development.dart
 prisma_configurator.dart
 prisma_client.dart
+prisma_client.g.dart

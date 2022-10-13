@@ -64,6 +64,9 @@ class GeneratorOptions {
   /// Is data proxy.
   final bool dataProxy;
 
+  /// Prisma client output path.
+  final String output;
+
   const GeneratorOptions({
     required this.config,
     required this.dataProxy,
@@ -73,6 +76,7 @@ class GeneratorOptions {
     required this.schema,
     required this.schemaPath,
     required this.version,
+    required this.output,
     this.previewFeatures = const [],
   });
 }

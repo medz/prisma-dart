@@ -2,42 +2,12 @@ import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:orm/generator_helper.dart';
 import 'package:path/path.dart';
 
-import '../environment.dart';
 import 'client_builder.dart';
 import 'generator_options.dart';
 import 'model_delegate_builder.dart';
 import 'schema_builder.dart';
-
-/// Resolve output.
-String _resolveOutput(EnvValue? output, String schemaPath) {
-  if (output == null || output.value.trim().isEmpty) {
-    return join(environment.projectRoot, 'lib');
-  }
-
-  return relative(join(dirname(schemaPath), output.value.trim()),
-      from: environment.projectRoot);
-}
-
-/// Get generated file.
-File _getGeneratedFile(GeneratorOptions options) {
-  final String directory =
-      _resolveOutput(options.config.output, options.schemaPath);
-
-  final String output =
-      directory.substring(directory.length - 5).toLowerCase() == '.dart'
-          ? directory
-          : join(directory, 'prisma_client.dart');
-
-  final File file = File(output);
-  if (file.existsSync()) {
-    file.deleteSync();
-  }
-
-  return file..createSync(recursive: true);
-}
 
 final List<String> _ignores = [
   'constant_identifier_names',
@@ -49,7 +19,7 @@ final List<String> _ignores = [
 /// Run Dart client generator
 Future<void> generator(GeneratorOptions options) async {
   // Get output file.
-  final File output = _getGeneratedFile(options);
+  final File output = File(options.output);
 
   final Library library = Library((LibraryBuilder updates) {
     updates.name = 'prisma.client';

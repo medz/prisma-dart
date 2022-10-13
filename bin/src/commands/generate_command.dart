@@ -6,6 +6,7 @@ import 'package:orm/dmmf.dart';
 import 'package:orm/generator_helper.dart';
 import 'package:orm/orm.dart';
 import 'package:orm/version.dart';
+import 'package:path/path.dart';
 
 import '../binary_engine/binary_engine.dart' as binary;
 import '../binary_engine/binary_engine_platform.dart';
@@ -14,6 +15,33 @@ import '../environment.dart';
 import '../generator/generator.dart';
 import '../generator/generator_options.dart';
 import '../utils/ansi_progress.dart';
+
+/// Resolve output
+String _resolveOutput(EnvValue? output, String schemaPath) {
+  if (output == null || output.value.trim().isEmpty) {
+    return join(environment.projectRoot, 'lib');
+  }
+
+  return relative(join(dirname(schemaPath), output.value.trim()),
+      from: environment.projectRoot);
+}
+
+/// Get generated file.
+String _getGeneratedFilePath(EnvValue? output, String schemaPath) {
+  final String directory = _resolveOutput(output, schemaPath);
+
+  final String result =
+      directory.substring(directory.length - 5).toLowerCase() == '.dart'
+          ? directory
+          : join(directory, 'prisma_client.dart');
+
+  final File file = File(result);
+  if (!file.existsSync()) {
+    file.createSync(recursive: true);
+  }
+
+  return file.path;
+}
 
 class GenerateCommand extends Command {
   @override
@@ -175,6 +203,7 @@ class GenerateCommand extends Command {
       executable: executable,
       version: version,
       previewFeatures: previewFeatures,
+      output: _getGeneratedFilePath(generatorConfig.output, schemaPath),
     );
 
     await generator(options);

@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:retry/retry.dart';
 
 import '../../../version.dart';
+import '../../configure/environment.dart';
 import '../../dmmf/dmmf.dart' as dmmf;
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
@@ -30,8 +31,8 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required super.dmmf,
     required super.schema,
     required super.datasources,
-    required super.environment,
     required super.logEmitter,
+    required super.environment,
     super.allowTriggerPanic,
     super.executable,
     super.workingDirectory,
@@ -54,7 +55,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
       Uri.http(_localhost, '/').replace(port: await port);
 
   /// Get search path.
-  List<String> get searchDirectories {
+  Future<List<String>> get searchDirectories async {
     final List<String> directories = [];
     // If cwd is not null, add it to search directories.
     if (workingDirectory != null) {
@@ -69,18 +70,21 @@ class BinaryEngine extends unimplemented.BinaryEngine {
         _searchDirectoriesBuilder(path.dirname(Platform.script.toFilePath())));
 
     // Add executable directory to search directories.
-    if (super.executable != null) {
+    final String? superExecutable = await super.executable;
+    if (superExecutable != null) {
       directories
-          .addAll(_searchDirectoriesBuilder(path.dirname(super.executable!)));
+          .addAll(_searchDirectoriesBuilder(path.dirname(superExecutable)));
     }
 
     return directories.toSet().toList();
   }
 
   @override
-  Map<String, String> get environment {
-    final Map<String, String> environment = Map.from(super.environment)
-      ..removeWhere((key, value) => key.toLowerCase() == 'port');
+  Future<PrismaEnvironment> get environment async {
+    final PrismaEnvironment environment = await super.environment;
+
+    // Remove port from environment.
+    environment.removeWhere((key, value) => key.toLowerCase().trim() == 'port');
 
     // Build schema DML to environment.
     environment['PRISMA_DML'] = base64.encode(utf8.encode(schema));
@@ -144,18 +148,21 @@ class BinaryEngine extends unimplemented.BinaryEngine {
   }
 
   @override
-  String get executable {
+  Future<String> get executable async {
+    final PrismaEnvironment environment = await this.environment;
+    final String? superExecutable = await super.executable;
+
     // If set executable, return it.
-    if (super.executable != null && super.executable?.isNotEmpty == true) {
-      final executable = File(super.executable!);
+    if (superExecutable != null) {
+      final executable = File(superExecutable);
       if (executable.existsSync()) {
         return executable.path;
       }
 
       // Search executable in search directories.
-      for (final String directory in searchDirectories) {
+      for (final String directory in await searchDirectories) {
         final executable =
-            File(path.join(directory, path.basename(super.executable!)));
+            File(path.join(directory, path.basename(superExecutable)));
         if (executable.existsSync()) {
           return executable.path;
         }
@@ -170,7 +177,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
       }
 
       // Search executable in search directories.
-      for (final String directory in searchDirectories) {
+      for (final String directory in await searchDirectories) {
         final executable =
             File(path.join(directory, path.basename(forEnvirnoment)));
         if (executable.existsSync()) {
@@ -180,7 +187,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     }
 
     // Find quert engine in search directories.
-    for (final String directory in searchDirectories) {
+    for (final String directory in await searchDirectories) {
       final File executable = File(path.join(directory, 'query-engine'));
       if (executable.existsSync()) {
         return executable.path;
@@ -195,7 +202,7 @@ Could not find query engine binary for current platform "${Platform.operatingSys
 This probably happens, because you built Prisma Client on a different platform.
 
 Searched Locations:
-${searchDirectories.map((e) => '  - $e').join('\n')}
+${(await searchDirectories).map((e) => '  - $e').join('\n')}
 
 You already added the platform "${Platform.operatingSystem}" to the "generator" block in the "schema.prisma" file as described in https://pris.ly/d/client-generator, but something went wrong. That's suboptimal.
 
@@ -216,10 +223,10 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
     return _getConfigResult = Future<GetConfigResult>.sync(() async {
       try {
         final ProcessResult result = await Process.run(
-          executable,
+          await executable,
           ['cli', 'get-config'],
           includeParentEnvironment: false,
-          environment: environment,
+          environment: await environment,
           workingDirectory: workingDirectory,
         );
 
@@ -240,10 +247,10 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
     if (!forceRun) return super.getDmmf(forceRun: forceRun);
 
     final ProcessResult result = await Process.run(
-      executable,
+      await executable,
       ['--enable-raw-queries', 'cli', 'dmmf'],
       includeParentEnvironment: false,
-      environment: environment,
+      environment: await environment,
       workingDirectory: workingDirectory,
     );
 
@@ -281,7 +288,7 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
     QueryEngineRequestHeaders? headers,
   }) async {
     await start();
-
+    final PrismaEnvironment environment = await this.environment;
     final http.Request request = http.Request('POST', await endpoint)
       ..body = gqlRequestBodyBuilder(query)
       ..headers['Content-Type'] = 'application/json'
@@ -345,10 +352,10 @@ ${response.body}
     }
 
     final Process process = await Process.start(
-      executable,
+      await executable,
       arguments,
       includeParentEnvironment: false,
-      environment: environment,
+      environment: await environment,
       workingDirectory: workingDirectory,
     );
 
@@ -539,10 +546,10 @@ ${response.body}
     if (!forceRun) return super.version(forceRun: forceRun);
 
     final ProcessResult result = await Process.run(
-      executable,
+      await executable,
       ['--version'],
       includeParentEnvironment: false,
-      environment: environment,
+      environment: await environment,
       workingDirectory: workingDirectory,
     );
 
