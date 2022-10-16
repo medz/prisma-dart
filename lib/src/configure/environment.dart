@@ -3,21 +3,23 @@ import 'dart:collection';
 import 'package:rc/rc.dart';
 
 import '../../version.dart';
+import '_internal/internal.dart';
 import 'production_environment_configurator.dart';
 import 'query_engine_type.dart';
 
 /// See https://www.prisma.io/docs/reference/api-reference/environment-variables-reference
 class PrismaEnvironment extends MapBase<String, String> implements Environment {
-  /// Create a new prisma environment.
-  PrismaEnvironment({
-    bool includePlatformEnvironment = true,
-  }) {
-    _environment =
-        Environment(includePlatformEnvironment: includePlatformEnvironment);
-  }
+  // Internal create new instance.
+  PrismaEnvironment._internal(this._environment);
+
+  /// Create a new [PrismaEnvironment] instance.
+  factory PrismaEnvironment({bool includePlatformEnvironment = true}) =>
+      PrismaEnvironment._internal(
+          Environment(includePlatformEnvironment: includePlatformEnvironment)
+              .toIgnoreCase());
 
   /// Environment variable store.
-  late final Environment _environment;
+  final Environment _environment;
 
   @override
   String? operator [](Object? key) => _environment[key];
@@ -34,7 +36,8 @@ class PrismaEnvironment extends MapBase<String, String> implements Environment {
   @override
   String? remove(Object? key) => _environment.remove(key);
 
-  bool get debug => this['DEBUG'] == 'true';
+  bool get debug => parseBool(this['DEBUG']);
+
   String? get noColor => this['NO_COLOR'];
 
   QueryEngineType get clientEngineType =>
@@ -53,7 +56,7 @@ class PrismaEnvironment extends MapBase<String, String> implements Environment {
   String get clientDataProxyClientVersion =>
       this['PRISMA_CLIENT_DATA_PROXY_CLIENT_VERSION'] ??
       dataProxyRemoteClientVersion;
-  bool get generateDataProxy => this['PRISMA_GENERATE_DATAPROXY'] == 'true';
+  bool get generateDataProxy => parseBool(this['PRISMA_GENERATE_DATAPROXY']);
 
   /// Calls [ProductionEnvironmentConfigurator] callback.
   Future<PrismaEnvironment> call(
@@ -62,4 +65,12 @@ class PrismaEnvironment extends MapBase<String, String> implements Environment {
 
     return this;
   }
+
+  @override
+  PrismaEnvironment toCaseSensitive() =>
+      PrismaEnvironment._internal(_environment.toCaseSensitive());
+
+  @override
+  PrismaEnvironment toIgnoreCase() =>
+      PrismaEnvironment._internal(_environment.toIgnoreCase());
 }

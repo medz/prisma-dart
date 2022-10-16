@@ -47,7 +47,7 @@ class PrismaDevelopment {
     }
 
     // Write end keyword.
-    print(_end);
+    printToConsole(_end);
   }
 
   /// Prisma development environment client.
