@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:retry/retry.dart';
 
 import '../../../version.dart';
+import '../../configure/environment.dart';
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
 import '../common/engine.dart';
@@ -189,9 +190,10 @@ class DataProxyEngine extends Engine {
         .map((e) => e.url)
         .where((e) => e?.isNotEmpty == true)
         .cast<String>();
+    final PrismaEnvironment environment = await this.environment;
 
     for (final name in envNames) {
-      final value = (await environment)[name];
+      final value = environment[name];
       if (value?.isNotEmpty == true) {
         return parseConnectionAddress(value!);
       }
