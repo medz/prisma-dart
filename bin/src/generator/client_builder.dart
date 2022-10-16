@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/generator_helper.dart';
