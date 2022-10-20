@@ -1,5 +1,5 @@
 .github
-example/*
-!example/README.md
 test/
 docs/
+prisma/
+lib/prisma_*

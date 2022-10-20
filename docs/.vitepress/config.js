@@ -60,6 +60,7 @@ export default defineConfig({
                 items: [
                     { text: "Getting started", link: "/getting-started" },
                     { text: "Concepts", link: "/concepts" },
+                    { text: "Examples", link: "/examples" },
                 ],
             },
             {

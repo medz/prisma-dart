@@ -4,10 +4,10 @@ import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
-import 'package:orm/src/configure/io/cli.dart';
+import 'package:path/path.dart';
 
+import '../environment.dart' as internal;
 import '../utils/chmod.dart';
-import '../utils/find_project.dart';
 import 'binary_engine_platform.dart';
 import 'binray_engine_type.dart';
 
@@ -33,23 +33,23 @@ class BinaryEngine {
   String get executable {
     switch (type) {
       case BinaryEngineType.query:
-        return development.PRISMA_QUERY_ENGINE_BINARY ??
+        return internal.environment.queryEngineBinary ??
             _defaultEnginePathBuilder('query-engine');
       case BinaryEngineType.migration:
-        return development.PRISMA_MIGRATION_ENGINE_BINARY ??
+        return internal.environment.migrationEngineBinary ??
             _defaultEnginePathBuilder('migration-engine');
       case BinaryEngineType.introspection:
-        return development.PRISMA_INTROSPECTION_ENGINE_BINARY ??
+        return internal.environment.introspectionEngineBinary ??
             _defaultEnginePathBuilder('introspection-engine');
       case BinaryEngineType.format:
-        return development.PRISMA_FMT_BINARY ??
+        return internal.environment.fmtBinary ??
             _defaultEnginePathBuilder('prisma-fmt');
     }
   }
 
   /// Default engine path builder.
   String _defaultEnginePathBuilder(String name) =>
-      joinPaths(['.dart_tool', 'prisma', name]);
+      joinAll([internal.environment.projectRoot, '.dart_tool', 'prisma', name]);
 
   /// Has the binary engine been downloaded.
   Future<bool> get hasDownloaded async {
@@ -81,21 +81,28 @@ class BinaryEngine {
       Process.run(
         executable,
         arguments,
-        workingDirectory: projectDirectory,
-        includeParentEnvironment: false,
-        environment: <String, String>{
-          ...development.all,
+        workingDirectory: internal.environment.projectRoot,
+        includeParentEnvironment: true,
+        environment: {
+          ...internal.environment,
           ...environment,
         },
       );
 
   /// Start the binary engine.
-  Future<Process> start(List<String> arguments) => Process.start(
+  Future<Process> start(
+    List<String> arguments, {
+    Map<String, String> environment = const <String, String>{},
+  }) =>
+      Process.start(
         executable,
         arguments,
-        workingDirectory: projectDirectory,
-        includeParentEnvironment: false,
-        environment: development.all,
+        workingDirectory: internal.environment.projectRoot,
+        includeParentEnvironment: true,
+        environment: {
+          ...internal.environment,
+          ...environment,
+        },
       );
 
   /// Download the binary engine.
@@ -110,7 +117,7 @@ class BinaryEngine {
     await _clean();
 
     // Create download url.
-    final Uri url = Uri.parse(development.PRISMA_ENGINES_MIRROR).replace(
+    final Uri url = Uri.parse(internal.environment.enginesMirror).replace(
       pathSegments: [
         'all_commits',
         version,

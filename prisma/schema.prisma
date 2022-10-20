@@ -1,6 +1,8 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider        = "prisma-client-dart"
-  output          = "../bin/prisma_client.dart"
   previewFeatures = ["interactiveTransactions"]
 }
 
@@ -9,16 +11,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Sex {
-  man
-  woman
-}
-
 model User {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
-  sex       Sex      @default(woman)
   posts     Post[]
 }
 

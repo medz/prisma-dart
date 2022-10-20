@@ -1,203 +1,56 @@
-Next-generation ORM for Dart & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
+# Prisma ・ [![Pub Version](https://img.shields.io/pub/v/orm?label=latest)](https://pub.dev/packages/orm)[![GitHub license](https://img.shields.io/github/license/odroe/prisma-dart)](https://github.com/odroe/prisma-dart/blob/main/LICENSE)[![test](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml)[![analyze](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml)
 
-[![Pub Version](https://img.shields.io/pub/v/orm?label=latest)](https://pub.dev/packages/orm)
-[![GitHub license](https://img.shields.io/github/license/odroe/prisma-dart)](https://github.com/odroe/prisma-dart/blob/main/LICENSE)
-[![test](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml)
-[![analyze](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml)
+Prisma (for Dart) is a **next-generation ORM** for Dart and Flutter.
 
-## What is it?
+- **Most Popular Databases**: Prisma supports PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
+- **Type-safe**: Prisma Client is a query builder that’s tailored to your schema. We designed its API to be intuitive, both for SQL veterans and developers brand new to databases. The auto-completion helps you figure out your query without the need for documentation.
+- **Human-readable**: Prisma schema is intuitive and lets you declare your database tables in a human-readable way — making your data modeling experience a delight. You define your models by hand or introspect them from an existing database.
 
-Prisma is a **next-generation ORM** that consists of these tools:
+👉 [Learn how to use Prisma ORM for Dart in your project](https://prisma.pub/getting-started).
 
-- **Prisma CLI** - A command line tool that allows you to create and manage your Prisma projects.
-- **Prisma Dart Runtime** - A Dart package, that allows you to use the ORM in your Dart code.
-- **Prisma Query Engine** - Prisma query engines wrapper:
-  1. **Binary Engine** - Only for Dart Native.
-  2. **Dynamic Library Engine** - Supported for Dart Native and Flutter Native. `❌ Waiting`
-  3. **Prisma Data Proxy Engint** - Supported all platforms. - (Preview) `generate` command uses `--data-proxy` flag.
+## Instanciation
 
-## Getting started
+This will add a like this to you packages `pubspec.yaml` (and run an implicit `dart pub get`):
 
-> **Prerequisites**: Dart SDK `>=2.18.0 <3.0.0`
-
-### 1. Create Dart project and setup Prisma
-
-As a first step, create a simple dart console project
-
-```bash
-dart create hello
-cd hello
+```yaml
+dependencies:
+  orm: latest
 ```
 
-Next, add `orm` package to your project.
+## Documentation
 
-```bash
-dart pub add orm
-```
+You can find the Prisma ORM for Dart [on the website](https://prisma.pub).
 
-Then, initialize ORM.
+The documentation is divided into the following sections:
 
-```bash
-dart run orm init
-```
+ * [Getting Started](https://prisma.pub/getting-started)
+ * [Concepts](https://prisma.pub/concepts)
+ * [Guides](https://prisma.pub/guides)
+ * [CLI Reference](https://prisma.pub/reference/cli)
 
-### 2. Model your data in the Prisma schema
+> You can improve it by sending pull requests to [`docs` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/docs).
 
-The Prisma schema provides an intuitive way to model data. Add the following models to your schema.prisma file:
+## Examples
 
-```prisma
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
-}
+We have several examples [on the website](https://prisma.pub/examples), you can also find them in the [`example` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/example).
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
-```
+## Query engine support matrix
 
-Models in the Prisma schema have two main purposes:
+| Engine | Version | Supported | Notes |
+|--------|---------|-----------|-------|
+| [Binary](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#binarytargets-options) | `c875e43600dfe042452e0b868f7a48b817b9640b` | ✅ | Dart Native Only |
+| [Library (C API)](https://github.com/odroe/prisma-query-c-api) | `0.0.1` | ❌ | Flutter (Except Web), Dart Native |
+| [Data Proxy](https://prisma.pub/guides/preview-features#data-proxy) | `any | ✅ | All platforms (Flutter, Dart Native, Web) - Preview |
 
-- Represent the tables in the underlying database
-- Serve as foundation for the generated Prisma Client API
+## Contributing
 
-### 3. Generate the Prisma Client API
+We welcome contributions! Please read our [contributing guide](CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Prisma.
 
-```bash
-dart run orm generate
-dart run build_runner build
-```
+## Code of Conduct
 
-## Model deserialize (Why run `build_runner build`?)
+This project has adopted the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). For more information see the [Code of Conduct FAQ](https://www.contributor-covenant.org/faq) or contact [hello@odroe.com](mailto:hello@odroe.com) with any additional questions or comments.
 
-Deserialization of data models is currently done using `json_annotation` and `json_serializable`.
+## Stay in touch
 
-> **Note** There are currently no plans to remove `json_annotation`, because `json_annotation` works very well and we currently do not have the ability to do the development work of deserialization ourselves.
-
-Whenever you run the `orm generate` command, you must run `build_runner build` for the Prisma client to work properly. For more information see 👉 [json_serializable](https://pub.dev/packages/json_serializable).
-
-## The Prisma schema
-
-Every project that uses a tool from the Prisma toolkit starts with a [Prisma schema file](https://www.prisma.io/docs/concepts/components/prisma-schema). The Prisma schema allows developers to define their application models in an intuitive data modeling language. It also contains the connection to a database and defines a generator:
-
-```prisma
-// Data source
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-// Generator
-generator client {
-  provider        = "prisma-client-dart"
-  previewFeatures = ["interactiveTransactions"]
-}
-
-// Data model
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields:  [authorId], references: [id])
-  authorId  Int?
-}
-
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
-}
-```
-
-In this schema, you configure three things:
-
-- **Data source** - Specifies your database connection (via an environment variable)
-- **Generator** - Indicates that you want to generate Prisma Client
-- **Data model** - Defines your application models
-
-## Accessing your database with Prisma Client
-
-### Generating Prisma Client
-
-Run the following command to generate Prisma Client:
-
-```bash
-dart run orm generate
-dart run build_runner build
-```
-
-### Using Prisma Client to send queries to your database
-
-Once the Prisma Client is generated, you can import it in your code and send queries to your database. This is what the setup code looks like.
-
-Import and instantiate Prisma Client
-
-```dart
-import 'prisma_client.dart';
-
-final PrismaClient prisma = PrismaClient();
-```
-
-Now you can start sending queries via the generated Prisma Client API, here are few sample queries.
-
-#### Retrieve all User records from the database
-
-```dart
-// Run inside `async` function
-final List<User> allUsers = await prisma.user.findMany();
-```
-
-#### Filter all Post records that contain "odore"
-
-```dart
-final List<User> filteredPosts = await prisma.post.findMany(
-  where: PostFindManyWhereInput(
-    OR: [
-      PostFindManyWhereInput(
-        title: StringFilter(equals: "odore"),
-      ),
-      PostFindManyWhereInput(
-        content: StringFilter(equals: "odore"),
-      ),
-    ],
-  ),
-);
-```
-
-#### Create a new User and a new Post record in the same query
-
-```dart
-final User user = await prisma.user.create(
-  data: UserCreateInput(
-    name: 'Odroe',
-    posts: PostCreateNestedManyWithoutAuthorInput(
-      create: [
-        PostCreateWithoutAuthorInput(
-          title: 'Hello World',
-          content: 'This is my first post',
-          published: true,
-        ),
-      ],
-    ),
-  ),
-);
-```
-
-## Q&A
-
-Q: Why does the Prisma query engine process still exist in the program process after I close it?
-
-A: Prisma engine startup is automatic, but shutdown is not, you need to call `$disconnect` at the end of your program shutdown to stop the engine process.
-
-Q: Why do I get an error when I run a transaction?
-
-A: Because the official version of Prisma is still in preview for interactive transactions, you need to add `previewFeatures = ["interactiveTransactions"]` to the generator of `schema.prisma`, the files created by `orm init` have been added by default.
+* [Website](https://prisma.pub)
+* [Twitter](https://twitter.com/odroeinc)

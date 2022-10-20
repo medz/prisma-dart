@@ -20,7 +20,7 @@ class BinaryEngine extends Engine {
   });
 
   /// The binary engine executable.
-  final String? executable;
+  final FutureOr<String?>? executable;
 
   /// Binary engine working directory.
   final String? workingDirectory;

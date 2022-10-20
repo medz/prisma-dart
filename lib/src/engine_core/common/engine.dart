@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../configure/environment.dart';
 import '../../dmmf/dmmf.dart' show Document;
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
@@ -29,7 +30,7 @@ abstract class Engine {
   final Map<String, Datasource> datasources;
 
   /// Environment variables.
-  final Map<String, String> environment;
+  final Future<PrismaEnvironment> environment;
 
   /// Start the engine.
   Future<void> start();

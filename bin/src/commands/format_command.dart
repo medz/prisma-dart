@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:orm/src/configure/io/cli.dart';
 import 'package:orm/version.dart';
+import 'package:path/path.dart';
 
 import '../binary_engine/binary_engine.dart';
 import '../binary_engine/binary_engine_platform.dart';
 import '../binary_engine/binray_engine_type.dart';
+import '../environment.dart';
 import '../utils/ansi_progress.dart';
-import '../utils/find_project.dart';
 
 class FormatCommand extends Command {
   FormatCommand() {
@@ -16,7 +16,7 @@ class FormatCommand extends Command {
       'schema',
       help: 'Schema file path.',
       valueHelp: 'path',
-      defaultsTo: defaultSchemaPath,
+      defaultsTo: environment.schema.path,
     );
   }
 
@@ -30,7 +30,7 @@ class FormatCommand extends Command {
   Future<void> run() async {
     final File schema = File(argResults!['schema']);
     if (!schema.existsSync()) {
-      return print('Missing schema file path.');
+      throw Exception('Provided schema file does not exist. - ${schema.path}');
     }
 
     final BinaryEngine engine = BinaryEngine(
@@ -49,8 +49,8 @@ class FormatCommand extends Command {
         AnsiProgress('Formatting prisma schema...');
 
     // Run format engine binary.
-    final ProcessResult result =
-        await engine.run(['format', '-i', relativePath(schema.path)]);
+    final ProcessResult result = await engine.run(
+        ['format', '-i', relative(schema.path, from: environment.projectRoot)]);
 
     // If format engine binary failed, print error message.
     if (result.exitCode != 0) {

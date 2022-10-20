@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:retry/retry.dart';
 
 import '../../../version.dart';
+import '../../configure/environment.dart';
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
 import '../common/engine.dart';
@@ -86,9 +87,9 @@ class DataProxyEngine extends Engine {
     final Exception retryException = Exception('retry');
     return retry<QueryEngineResult>(
       () async {
-        final Uri url = this.url.replace(
-              path: '${this.url.path}/graphql',
-            );
+        final Uri url = (await this.url).replace(
+          path: '${(await this.url).path}/graphql',
+        );
         logEmitter.emit(PrismaLogLevel.info, Exception('Calling $url'));
 
         final Response response = await post(
@@ -141,8 +142,8 @@ class DataProxyEngine extends Engine {
   /// Update schema.
   Future<void> _updateSchema() async {
     final Response response = await put(
-      url.replace(
-        path: '${url.path}/schema',
+      (await url).replace(
+        path: '${(await url).path}/schema',
       ),
       headers: runtimeHttpHeadersBuilder({
         'Authorization': 'Bearer $_apiKey',
@@ -174,7 +175,7 @@ class DataProxyEngine extends Engine {
   String get schemaHash => sha256.convert(utf8.encode(schema)).toString();
 
   /// Returns connection url.
-  Uri get connectionAddress {
+  Future<Uri> get connectionAddress async {
     // If datasources is not empty, use the first one.
     final Iterable<String> urls = datasources.entries
         .map((e) => e.value.url)
@@ -189,6 +190,7 @@ class DataProxyEngine extends Engine {
         .map((e) => e.url)
         .where((e) => e?.isNotEmpty == true)
         .cast<String>();
+    final PrismaEnvironment environment = await this.environment;
 
     for (final name in envNames) {
       final value = environment[name];
@@ -201,14 +203,15 @@ class DataProxyEngine extends Engine {
   }
 
   /// Return request url.
-  Uri get url => connectionAddress.replace(
+  Future<Uri> get url async => (await connectionAddress).replace(
         scheme: 'https',
         path: '/$remoteClientVersion/$schemaHash',
         queryParameters: {},
       );
 
   /// Return Prisma data proxy api key.
-  String get _apiKey => connectionAddress.queryParameters['api_key']!;
+  Future<String> get _apiKey async =>
+      (await connectionAddress).queryParameters['api_key']!;
 
   /// Paser connection address.
   Uri parseConnectionAddress(String url) {
@@ -227,13 +230,6 @@ class DataProxyEngine extends Engine {
   }
 
   /// Return data proxy remote client version.
-  String get remoteClientVersion {
-    final String? version =
-        environment['PRISMA_CLIENT_DATA_PROXY_CLIENT_VERSION'];
-    if (version?.isEmpty == true) {
-      throw StateError('Not found Data Proxy remote client version');
-    }
-
-    return version!;
-  }
+  Future<String> get remoteClientVersion async =>
+      (await environment).clientDataProxyClientVersion;
 }
