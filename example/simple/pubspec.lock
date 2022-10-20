@@ -280,7 +280,7 @@ packages:
       name: orm
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1"
+    version: "2.4.0"
   package_config:
     dependency: transitive
     description:
@@ -322,7 +322,7 @@ packages:
       name: rc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.2"
   retry:
     dependency: transitive
     description:
