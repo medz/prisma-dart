@@ -36,11 +36,13 @@ We have several examples [on the website](https://prisma.pub/examples), you can 
 
 ## Query engine support matrix
 
-| Engine | Version | Supported | Notes |
-|--------|---------|-----------|-------|
-| [Binary](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#binarytargets-options) | `c875e43600dfe042452e0b868f7a48b817b9640b` | ✅ | Dart Native Only |
-| [Library (C API)](https://github.com/odroe/prisma-query-c-api) | `0.0.1` | ❌ | Flutter (Except Web), Dart Native |
-| [Data Proxy](https://prisma.pub/guides/preview-features#data-proxy) | `any | ✅ | All platforms (Flutter, Dart Native, Web) - Preview |
+| Engine | Dart Native | Dart Web | Flutter Native | Flutter Web |
+| :--- | :---: | :---: | :---: | :---: |
+| Binart     | ✅ | ❌ | ❌ | ❌ |
+| Library    | ✅ | ❌ | ✅ | ❌ |
+| Data Proxy | ✅ | ✅ | ✅ | ✅ |
+
+> The `Library` engine has not been supported yet. If you are Rust developer, you can help us by contributing to the [Prisma Query Engine (C API)](https://github.com/odroe/prisma-query-c-api).
 
 ## Contributing
 
