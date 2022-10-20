@@ -79,6 +79,8 @@ import 'package:orm/configure.dart';
 
 /// Prisma development environment configurator.
 void configurator(PrismaDevelopment development) {
+  development.override('DATABASE_URL', r'$uri');
+
   // You can override environment variable example:
   // development.override('DEBUG', 'true');
 
