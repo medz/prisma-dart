@@ -11,7 +11,7 @@ updates:
     schedule:
       interval: daily
 
-  # Pub spec
+  # `orm` package
   - package-ecosystem: pub
     directory: /
     schedule:

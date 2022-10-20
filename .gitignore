@@ -7,7 +7,7 @@
 pubspec.lock
 
 # Development files or directories.
-prisma/development.dart
-prisma_configurator.dart
-prisma_client.dart
-prisma_client.g.dart
+/prisma/development.dart
+/prisma_configurator.dart
+/prisma_client.dart
+/prisma_client.g.dart
