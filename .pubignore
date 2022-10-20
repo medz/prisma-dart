@@ -3,3 +3,5 @@ test/
 docs/
 prisma/
 lib/prisma_*
+example/*
+!example/README.md
