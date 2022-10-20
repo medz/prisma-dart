@@ -38,7 +38,7 @@ We have several examples [on the website](https://prisma.pub/examples), you can 
 
 | Engine | Dart Native | Dart Web | Flutter Native | Flutter Web |
 | :--- | :---: | :---: | :---: | :---: |
-| Binart     | ✅ | ❌ | ❌ | ❌ |
+| Binary     | ✅ | ❌ | ❌ | ❌ |
 | Library    | ✅ | ❌ | ✅ | ❌ |
 | Data Proxy | ✅ | ✅ | ✅ | ✅ |
 
