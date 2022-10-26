@@ -1,3 +1,7 @@
+# 2.4.2
+
+ * Fix `init` command generated SQLite database file url
+
 ## 2.4.1
 
 ### Bug Fixes
