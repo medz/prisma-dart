@@ -133,7 +133,7 @@ void main() async {
     try {
      final User user = await prisma.user.create(
         data: UserCreateInput(
-            name: "Seven",
+            name: PrismaUnion.zero("Seven"),
             email: "seven@odroe.com",
         ),
      );
