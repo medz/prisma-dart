@@ -1,4 +1,4 @@
-# 2.4.2
+## 2.4.2
 
  * Fix `init` command generated SQLite database file url
 
