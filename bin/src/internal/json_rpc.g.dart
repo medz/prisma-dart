@@ -35,7 +35,7 @@ JsonRpcErrorData _$JsonRpcErrorDataFromJson(Map<String, dynamic> json) =>
     JsonRpcErrorData(
       isPanic: json['is_panic'] as bool,
       message: json['message'] as String,
-      errorCode: json['error_code'] as String,
+      errorCode: json['error_code'] as String?,
     );
 
 Map<String, dynamic> _$JsonRpcErrorDataToJson(JsonRpcErrorData instance) =>

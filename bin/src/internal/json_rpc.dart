@@ -44,12 +44,12 @@ class JsonRpcErrorData {
   final String message;
 
   @JsonKey(name: 'error_code')
-  final String errorCode;
+  final String? errorCode;
 
   const JsonRpcErrorData({
     required this.isPanic,
     required this.message,
-    required this.errorCode,
+    this.errorCode,
   });
 
   factory JsonRpcErrorData.fromJson(Map<String, dynamic> json) =>
