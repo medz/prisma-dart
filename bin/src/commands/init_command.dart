@@ -141,7 +141,7 @@ datasource db {
       case DatasourceProvider.mysql:
         return Uri.parse('mysql://root:root@localhost:3306/mysql');
       case DatasourceProvider.sqlite:
-        return Uri.parse('file://./prisma/prisma.db');
+        return Uri.parse('file:./prisma/prisma.db');
       case DatasourceProvider.sqlserver:
         return Uri.parse('sqlserver://sa:sa@localhost:1433/sqlserver');
       case DatasourceProvider.mongodb:
