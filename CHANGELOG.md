@@ -1,3 +1,9 @@
+## 2.4.1
+
+### Bug Fixes
+
+  * Fix JSON-RPC error code on error data is nullable - [#52](https://github.com/odroe/prisma-dart/issues/52)
+
 ## 2.4.0
 
 🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.4.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.4.0) about the release. 🌟
