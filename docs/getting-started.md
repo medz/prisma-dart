@@ -82,6 +82,19 @@ Run this command:
 dart run orm db push
 ```
 
+## Install `json_serializable` and `build_runner`
+
+```bash
+dart pub add json_serializable -d
+dart pub add build_runner -d
+```
+
+::: warning  Client Model deserialize
+Deserialization of data models is currently done using `json_annotation` and `json_serializable`.
+
+> Whenever you run the `orm generate` command, you must run `build_runner build` for the Prisma client to work properly. For more information see 👉 [json_serializable](https://pub.dev/packages/json_serializable).
+:::
+
 ## Generate client
 
 The `generate` command generates assets like Prisma Client based on the generator and data model blocks defined in your `prisma/schema.prisma` file.
@@ -90,12 +103,6 @@ The `generate` command generates assets like Prisma Client based on the generato
 dart run orm generate
 dart run build_runner build
 ```
-
-::: warning  Client Model deserialize
-Deserialization of data models is currently done using `json_annotation` and `json_serializable`.
-
-> Whenever you run the `orm generate` command, you must run `build_runner build` for the Prisma client to work properly. For more information see 👉 [json_serializable](https://pub.dev/packages/json_serializable).
-:::
 
 ## Explore Prisma client
 
