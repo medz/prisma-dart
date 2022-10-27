@@ -11,6 +11,7 @@ dev_dependencies:
   json_serializable: ^6.5.4
   lints: ^2.0.1
   test: ^1.21.7
+
 dependencies:
   json_annotation: ^4.7.0
   orm: ^2.4.2
