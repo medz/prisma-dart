@@ -56,3 +56,4 @@ This project has adopted the [Contributor Covenant Code of Conduct](CODE_OF_COND
 
 * [Website](https://prisma.pub)
 * [Twitter](https://twitter.com/odroeinc)
+* [Discord](https://discord.gg/r27AjtUUbV)
