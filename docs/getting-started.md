@@ -182,7 +182,7 @@ final PrismaClient prisma = PrismaClient();
 
 void main() async {
     try {
-     const users = await prisma.user.findMany()
+     final users = await prisma.user.findMany()
      print(users);
     } catch(e) {
         print(e.toString());
