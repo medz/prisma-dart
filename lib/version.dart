@@ -7,7 +7,7 @@ const String binaryVersion = 'c875e43600dfe042452e0b868f7a48b817b9640b';
 const String capiVersion = '0.0.1';
 
 /// The Prisma CLI version.
-const String packageVersion = '2.4.2';
+const String packageVersion = '2.4.3';
 
 /// Prisma data proxy remote client version.
 const String dataProxyRemoteClientVersion = '4.3.1';

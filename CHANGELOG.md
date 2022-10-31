@@ -1,3 +1,7 @@
+## 2.4.3
+
+  * Fix `generate` command error format.
+
 ## 2.4.2
 
  * Fix `init` command generated SQLite database file url
