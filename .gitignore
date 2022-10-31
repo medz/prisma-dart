@@ -8,6 +8,6 @@ pubspec.lock
 
 # Development files or directories.
 /prisma/development.dart
-/prisma_configurator.dart
-/prisma_client.dart
-/prisma_client.g.dart
+/lib/prisma_configurator.dart
+/lib/prisma_client.dart
+/lib/prisma_client.g.dart

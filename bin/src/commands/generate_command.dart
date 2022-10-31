@@ -143,6 +143,11 @@ class GenerateCommand extends Command {
         'PRISMA_DML': base64.encode(schema.readAsBytesSync()),
       },
     );
+    if (dmmfProcessResult.exitCode != 0) {
+      final json = jsonDecode(dmmfProcessResult.stderr);
+      throw json['message'];
+    }
+
     final Document dmmf = Document.fromJson(
       jsonDecode(dmmfProcessResult.stdout as String) as Map<String, dynamic>,
     );
