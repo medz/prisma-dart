@@ -3,7 +3,7 @@ import 'package:orm/dmmf.dart';
 
 import 'dart_style.dart';
 
-final Map<String, Reference> _references = {
+final Map<String, Reference> scalarReferneces = {
   'string': Reference('String'),
   'float': Reference('double'),
   'decimal': Reference('double'),
@@ -27,7 +27,7 @@ TypeReference scalarForString(String name, [bool isNullable = false]) {
     });
   }
 
-  final Reference? reference = _references[name.toLowerCase()];
+  final Reference? reference = scalarReferneces[name.toLowerCase()];
   if (reference is TypeReference) return reference;
 
   return TypeReference((TypeReferenceBuilder updates) {
@@ -68,7 +68,7 @@ TypeReference scalar(SchemaType schemaType, [bool isNullable = false]) {
   }
 
   final Reference? reference =
-      _references[resolvedSchemaType.type.toLowerCase()];
+      scalarReferneces[resolvedSchemaType.type.toLowerCase()];
   if (reference is TypeReference) return reference;
 
   return TypeReference((TypeReferenceBuilder updates) {
