@@ -289,6 +289,12 @@ class ModelDelegateBuilder {
         return;
       }
 
+      // Raw return.
+      if (scalarReferneces.keys.contains(field.outputType.type.toLowerCase())) {
+        blockBuilder.addExpression(data.returned);
+        return;
+      }
+
       final Expression deserialize = scalarForString(
         dartClassnameFixer(field.outputType.type),
         false,
