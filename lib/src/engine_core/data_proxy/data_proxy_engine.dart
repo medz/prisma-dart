@@ -18,6 +18,7 @@ import '../intenal_utils/header_getter.dart';
 import '../intenal_utils/is_schema_missing.dart';
 import '../intenal_utils/runtime_http_headers_builder.dart';
 import '../intenal_utils/throw_graphql_error.dart';
+import '_internal/data_proxy_tx_info.dart';
 
 /// Prisma data proxy engine.
 class DataProxyEngine extends Engine {
@@ -35,24 +36,107 @@ class DataProxyEngine extends Engine {
 
   @override
   Future<void> commitTransaction(
-      {required TransactionHeaders headers, required TransactionInfo info}) {
-    throw UnimplementedError(
-        'Interactive commitTransaction are not yet supported');
+      {required TransactionHeaders headers,
+      required TransactionInfo info}) async {
+    final Uri url = (info as DataProxyTxInfo).endpoint;
+    final Uri endppoint = url.replace(
+      pathSegments: [
+        ...url.pathSegments,
+        'commit',
+      ],
+    );
+    final Response response = await post(
+      endppoint,
+      headers: runtimeHttpHeadersBuilder(headers.toJson()),
+    );
+
+    if (response.statusCode > 400) {
+      final e = PrismaClientUnknownRequestError('Bad request',
+          clientVersion: binaryVersion);
+      logEmitter.emit(PrismaLogLevel.error, e);
+      throw e;
+    }
+
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    try {
+      throwGraphQLError(json['errors']);
+    } on Exception catch (e) {
+      logEmitter.emit(PrismaLogLevel.error, e);
+      rethrow;
+    }
   }
 
   @override
   Future<void> rollbackTransaction(
-      {required TransactionHeaders headers, required TransactionInfo info}) {
-    throw UnimplementedError(
-        'Interactive rollbackTransaction are not yet supported');
+      {required TransactionHeaders headers,
+      required TransactionInfo info}) async {
+    final Uri url = (info as DataProxyTxInfo).endpoint;
+    final Uri endppoint = url.replace(
+      pathSegments: [
+        ...url.pathSegments,
+        'rollback',
+      ],
+    );
+    final Response response = await post(
+      endppoint,
+      headers: runtimeHttpHeadersBuilder(headers.toJson()),
+    );
+
+    if (response.statusCode > 400) {
+      final e = PrismaClientUnknownRequestError('Bad request',
+          clientVersion: binaryVersion);
+      logEmitter.emit(PrismaLogLevel.error, e);
+      throw e;
+    }
+
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    try {
+      throwGraphQLError(json['errors']);
+    } on Exception catch (e) {
+      logEmitter.emit(PrismaLogLevel.error, e);
+      rethrow;
+    }
   }
 
   @override
   Future<TransactionInfo> startTransaction(
       {required TransactionHeaders headers,
-      TransactionOptions options = const TransactionOptions()}) {
-    throw UnimplementedError(
-        'Interactive startTransaction are not yet supported');
+      TransactionOptions options = const TransactionOptions()}) async {
+    final Uri baseUrl = await url;
+    final Uri endpoint = baseUrl.replace(
+      pathSegments: [...baseUrl.pathSegments, 'transaction', 'start'],
+    );
+    final String body = jsonEncode({
+      'max_wait': options.maxWait,
+      'timeout': options.timeout,
+      'isolation_level': options.isolationLevel?.name,
+    });
+    final Response response = await post(
+      endpoint,
+      headers: {
+        ...runtimeHttpHeadersBuilder(headers.toJson()),
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+
+    if (response.statusCode > 400) {
+      final e = PrismaClientUnknownRequestError('Bad request',
+          clientVersion: binaryVersion);
+      logEmitter.emit(PrismaLogLevel.error, e);
+      throw e;
+    }
+
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    try {
+      throwGraphQLError(json['errors']);
+    } on Exception catch (e) {
+      logEmitter.emit(PrismaLogLevel.error, e);
+      rethrow;
+    }
+
+    return DataProxyTxInfo(json['id'],
+        endpoint: json['data-proxy']['endpoint']);
   }
 
   @override
