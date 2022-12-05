@@ -322,7 +322,7 @@ class Field {
   /// Is updated at, Auto update [DateTime] field.
   ///
   /// ⚠️ does not exist on 'type' but does on 'model'
-  final bool isUpdatedAt;
+  final bool? isUpdatedAt;
 
   /// Describes the data type in the same the way is is defined
   /// in the Prisma schema:
