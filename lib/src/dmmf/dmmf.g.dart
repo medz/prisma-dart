@@ -143,7 +143,7 @@ Field _$FieldFromJson(Map<String, dynamic> json) => Field(
       isId: json['isId'] as bool,
       isReadOnly: json['isReadOnly'] as bool,
       isGenerated: json['isGenerated'] as bool?,
-      isUpdatedAt: json['isUpdatedAt'] as bool,
+      isUpdatedAt: json['isUpdatedAt'] as bool?,
       type: json['type'] as String,
       dbNames:
           (json['dbNames'] as List<dynamic>?)?.map((e) => e as String).toList(),
