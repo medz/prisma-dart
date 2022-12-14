@@ -24,23 +24,6 @@ However, Prisma ORM for Dart is specially developed for Dart language, so we don
 
 All experimental features are theoretically not supported in Prisma ORM for Dart, we need to gradually add stable features that already exist to guide the development direction of Prisma ORM for Dart.
 
-## (Inconsistent) - Interactive transactions
-
-Although Interactive transactions is a preview feature in the Prisma official client, it must be enabled by Prisma ORM for Dart.
-
-The reason is also very simple, because of Dart syntax limitations, we cannot complete batch queries and Interactive transactions in the same method. In the long run, we must choose Interactive transactions to achieve a better experience.
-
-Interactive transactions Before Prisma officially announces it as a stable feature, you always need to declare it in the Prisma schema:
-
-::: info schema.prisma
-```prisma
-generator client {
-  // ...
-  previewFeatures = ["interactiveTransactions"]
-}
-```
-:::
-
 ## (Unsupported) - Prisma Migrate
 
 Because Prisma Migrate is complex and changeable, we have not yet determined the official development direction of Prisma for Migrate, coupled with our lack of staff (community contributions are welcome), we do not support it for the time being.
