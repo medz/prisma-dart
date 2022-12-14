@@ -201,7 +201,7 @@ Map<String, dynamic> _$PrimaryKeyToJson(PrimaryKey instance) =>
     };
 
 UniqueIndex _$UniqueIndexFromJson(Map<String, dynamic> json) => UniqueIndex(
-      name: json['name'] as String,
+      name: json['name'] as String?,
       fields:
           (json['fields'] as List<dynamic>).map((e) => e as String).toList(),
     );

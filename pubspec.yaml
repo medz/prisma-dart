@@ -5,7 +5,7 @@ homepage: https://prisma.pub
 repository: https://github.com/odroe/prisma-dart
 funding:
   - https://opencollective.com/prisma-dart
-  - https://opencollective.com/odroe
+  - https://ko-fi.com/odroe
 
 environment:
   sdk: '>=2.18.0 <3.0.0'

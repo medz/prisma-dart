@@ -436,14 +436,14 @@ class PrimaryKey {
 @JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class UniqueIndex {
   /// Unique index name.
-  final String name;
+  final String? name;
 
   /// Unique index fields.
   final List<String> fields;
 
   /// Create a new unique index.
   const UniqueIndex({
-    required this.name,
+    this.name,
     required this.fields,
   });
 
