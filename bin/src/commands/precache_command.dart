@@ -3,7 +3,7 @@ import 'package:orm/version.dart';
 import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../binary_engine/binary_engine.dart';
-import '../binary_engine/binray_engine_type.dart';
+import '../binary_engine/binary_engine_type.dart';
 import '../utils/ansi_progress.dart';
 
 class PrecacheCommand extends Command {

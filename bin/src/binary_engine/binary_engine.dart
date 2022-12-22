@@ -8,7 +8,7 @@ import 'package:path/path.dart';
 
 import '../environment.dart' as internal;
 import '../utils/chmod.dart';
-import 'binray_engine_type.dart';
+import 'binary_engine_type.dart';
 
 class BinaryEngine {
   const BinaryEngine({

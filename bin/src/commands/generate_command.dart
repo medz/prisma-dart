@@ -10,7 +10,7 @@ import 'package:path/path.dart';
 import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../binary_engine/binary_engine.dart' as binary;
-import '../binary_engine/binray_engine_type.dart';
+import '../binary_engine/binary_engine_type.dart';
 import '../environment.dart';
 import '../generator/generator.dart';
 import '../generator/generator_options.dart';
@@ -90,7 +90,7 @@ class GenerateCommand extends Command {
     );
     if (!await cliBinaryEngine.hasDownloaded) {
       await cliBinaryEngine.download(
-          AnsiProgress.createFutureHandler('Download binray query engine'));
+          AnsiProgress.createFutureHandler('Download binary query engine'));
       await Future.delayed(Duration(microseconds: 500));
     }
 
