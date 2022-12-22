@@ -8,7 +8,6 @@ import 'package:path/path.dart';
 
 import '../environment.dart' as internal;
 import '../utils/chmod.dart';
-import 'binary_engine_platform.dart';
 import 'binray_engine_type.dart';
 
 class BinaryEngine {
@@ -18,13 +17,12 @@ class BinaryEngine {
     required this.version,
   });
 
-  final BinaryEnginePlatform platform;
+  final String platform;
   final BinaryEngineType type;
   final String version;
 
   /// Get archive file extension.
-  String get _archiveExtension =>
-      platform == BinaryEnginePlatform.windows ? '.exe.gz' : '.gz';
+  String get _archiveExtension => Platform.isWindows ? '.exe.gz' : '.gz';
 
   /// Archive file path.
   String get _archive => executable + _archiveExtension;
@@ -121,7 +119,7 @@ class BinaryEngine {
       pathSegments: [
         'all_commits',
         version,
-        platform.value,
+        platform,
         type.value + _archiveExtension,
       ],
     );

@@ -7,9 +7,9 @@ import 'package:orm/generator_helper.dart';
 import 'package:orm/orm.dart';
 import 'package:orm/version.dart';
 import 'package:path/path.dart';
+import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../binary_engine/binary_engine.dart' as binary;
-import '../binary_engine/binary_engine_platform.dart';
 import '../binary_engine/binray_engine_type.dart';
 import '../environment.dart';
 import '../generator/generator.dart';
@@ -84,7 +84,7 @@ class GenerateCommand extends Command {
     }
 
     final binary.BinaryEngine cliBinaryEngine = binary.BinaryEngine(
-      platform: BinaryEnginePlatform.current,
+      platform: getBinaryPlatform(),
       type: BinaryEngineType.query,
       version: binaryVersion,
     );
