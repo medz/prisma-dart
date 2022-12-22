@@ -5,4 +5,3 @@ prisma/
 lib/prisma_*
 example/*
 !example/README.md
-packages/
