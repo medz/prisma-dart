@@ -33,3 +33,16 @@ final PrismaClient prisma = createPrismaClient(...);
 All previews will be removed and existing Previews will be marked as stable in this release.
 
 > Preview will no longer be enabled in future releases, but release `*.preview.{num}` versions to mark
+
+## New features
+
+### Support `queryRaw` and `executeRaw` methods
+
+Prisma client now supports `queryRaw` and `executeRaw` methods.
+
+```dart
+final PrismaClient prisma = createPrismaClient(...);
+
+final List<Map<String, dynamic>> result = await prisma.$queryRaw('SELECT * FROM User');
+final int affectedRows = await prisma.$executeRaw('DELETE FROM User');
+```

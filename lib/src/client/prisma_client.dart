@@ -3,7 +3,10 @@ import 'dart:async';
 import '../engine_core/common/engine.dart';
 import '../engine_core/common/types/query_engine.dart';
 import '../engine_core/common/types/transaction.dart';
+import '../graphql/arg.dart';
+import '../graphql/field.dart';
 import '../runtime/prisma_log.dart';
+import 'raw_codec.dart';
 
 /// Prisma transaction function.
 typedef PrismaTransactionCallback<T> = FutureOr<T> Function(
@@ -111,4 +114,73 @@ class PrismaClient {
   /// ```
   void $on(Iterable<PrismaLogLevel> levels, PrismaLogHandler handler) =>
       $engine.logEmitter.on(levels.toSet(), handler);
+
+  /// Query raw SQL.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// final result = await prisma.$queryRaw('SELECT * FROM User');
+  /// ```
+  Future<dynamic> $queryRaw(
+    String query, {
+    List<dynamic> parameters = const [],
+  }) async {
+    final String sdl = GraphQLField(
+      'mutation',
+      fields: GraphQLFields([
+        GraphQLField(
+          'queryRaw',
+          args: GraphQLArgs([
+            GraphQLArg('query', query),
+            GraphQLArg('parameters', serializeRawParameters),
+          ]),
+        )
+      ]),
+    ).toSdl();
+
+    // Request the query.
+    final QueryEngineResult result = await $engine.request(
+      query: sdl,
+      headers: $headers,
+    );
+
+    // Get query result.
+    final dynamic queryRawResult = result.data['queryRaw'];
+
+    // Return the result.
+    return deserializeRawResult(queryRawResult);
+  }
+
+  /// Execute raw SQL.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// final int affectedRows = await prisma.$executeRaw('DELETE FROM User');
+  /// ```
+  Future<int> $executeRaw(
+    String query, {
+    List<dynamic> parameters = const [],
+  }) async {
+    final String sdl = GraphQLField(
+      'mutation',
+      fields: GraphQLFields([
+        GraphQLField(
+          'queryRaw',
+          args: GraphQLArgs([
+            GraphQLArg('query', query),
+            GraphQLArg('parameters', serializeRawParameters),
+          ]),
+        )
+      ]),
+    ).toSdl();
+
+    // Request the query.
+    final QueryEngineResult result = await $engine.request(
+      query: sdl,
+      headers: $headers,
+    );
+
+    // return the affected rows.
+    return result.data['executeRaw'];
+  }
 }
