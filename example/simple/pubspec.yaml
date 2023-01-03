@@ -14,4 +14,4 @@ dev_dependencies:
 
 dependencies:
   json_annotation: ^4.7.0
-  orm: ^2.4.6
+  orm: ^2.4.7

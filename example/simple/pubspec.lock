@@ -280,7 +280,7 @@ packages:
       name: orm
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.6"
+    version: "2.4.7"
   package_config:
     dependency: transitive
     description:
@@ -302,6 +302,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.1"
+  prisma_get_platform:
+    dependency: transitive
+    description:
+      name: prisma_get_platform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+1"
   pub_semver:
     dependency: transitive
     description:
