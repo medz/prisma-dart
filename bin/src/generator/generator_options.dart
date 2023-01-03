@@ -7,10 +7,6 @@ enum GeneratorPreviewFeatures {
   finalizer(
       'finalizer', 'Enable finalizer feature for generated PrismaClient.'),
 
-  /// Prisma Data proxy
-  dataProxy(
-      'data-proxy', 'Enable `--data-proxy` flag for generated PrismaClient.'),
-
   /// Prisma client `$on` method.
   logging('logging', r'Enable `$on` method for generated PrismaClient.');
 
