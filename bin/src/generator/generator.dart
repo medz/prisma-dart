@@ -44,6 +44,7 @@ ${'//'.padRight(80, '*')} \n
         'Datasource',
         'PrismaNull',
         'PrismaUnion',
+        'PrismaClient',
       ]..sort(),
     ));
 
