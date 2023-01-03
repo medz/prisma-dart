@@ -83,12 +83,12 @@ String languageKeywordEncode(String name) {
 /// Dart language keyword decode
 String languageKeywordDecode(String name) {
   // If name ends with `$`, remove `$`;
-  if (name.endsWith('\$')) {
+  if (name.endsWith(r'$')) {
     return name.substring(0, name.length - 1);
   }
 
   // If starts with `$`, replace `$` with `_`;
-  if (name.startsWith('\$')) {
+  if (name.startsWith(r'$')) {
     return '_${name.substring(1)}';
   }
 

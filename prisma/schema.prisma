@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://seven@localhost:5432/prisma-dart?schema=public"
 }
 
 model User {

@@ -31,3 +31,6 @@ export 'src/runtime/prisma_log.dart';
 // GraphQL exports
 export 'src/graphql/arg.dart';
 export 'src/graphql/field.dart';
+
+// Client exports
+export 'src/client/prisma_client.dart';

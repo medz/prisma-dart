@@ -84,14 +84,6 @@ generator client {
 |----------|----------|-------------|---------|
 | `--schema` | No | Custom path to your Prisma schema | `prisma/schema.prisma` |
 | `--[no-]data-proxy` | No | Enable the generated Prisma client to use the Data Proxy | `--no-data-proxy` |
-| `--preview` | No | Enable Prisma ORM for Dart preview features |
-
-### Preview Flags
-
-| Flag | Description |
-|------|-------------|
-| `data-proxy` | Enable `--data-proxy` flag for generated PrismaClient. |
-| `finalizer` | Enable [Finalizer](https://api.flutter.dev/flutter/dart-core/Finalizer-class.html) feature for generated PrismaClient. |
 
 ## format
 

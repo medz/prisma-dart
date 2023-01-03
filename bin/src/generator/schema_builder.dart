@@ -193,40 +193,53 @@ class _InputObjectTypesBuilder {
         updates.implements.add(
             code_builder.Reference('JsonSerializable', 'package:orm/orm.dart'));
 
+        updates.annotations.add(
+          code_builder.TypeReference(
+              (code_builder.TypeReferenceBuilder updates) {
+            updates.symbol = 'JsonSerializable';
+            updates.url = 'package:json_annotation/json_annotation.dart';
+          }).newInstance(
+            [],
+            {
+              'createToJson': code_builder.literalTrue,
+              'createFactory': code_builder.literalTrue,
+              'explicitToJson': code_builder.literalTrue,
+            },
+          ),
+        );
+
+        updates.constructors.add(code_builder.Constructor(
+          (code_builder.ConstructorBuilder builder) {
+            builder.name = 'fromJson';
+            builder.requiredParameters.add(code_builder.Parameter(
+              (code_builder.ParameterBuilder builder) {
+                builder.name = 'json';
+                builder.type = code_builder.Reference('Map<String, dynamic>');
+              },
+            ));
+
+            builder.body =
+                code_builder.Code('_\$${updates.name}FromJson(json)');
+            builder.lambda = true;
+
+            builder.factory = true;
+          },
+        ));
+
+        updates.methods.add(code_builder.Method(
+          (code_builder.MethodBuilder builder) {
+            builder.name = 'toJson';
+            builder.returns = code_builder.Reference('Map<String, dynamic>');
+            builder.body = code_builder.Code('_\$${updates.name}ToJson(this)');
+            builder.lambda = true;
+            builder.annotations.add(code_builder.Reference('override'));
+          },
+        ));
+
         _constructorBuilder(updates, input);
         _fieldsBuilder(updates, input);
-        _toJsonBuilder(updates, input);
       }));
     }
-  }
-
-  /// Input object to Json builder.
-  void _toJsonBuilder(code_builder.ClassBuilder updates, dmmf.InputType input) {
-    updates.methods
-        .add(code_builder.Method((code_builder.MethodBuilder updates) {
-      updates.annotations.add(code_builder.Reference('override'));
-      updates.name = 'toJson';
-      updates.returns = code_builder.TypeReference(
-          (code_builder.TypeReferenceBuilder updates) {
-        updates.symbol = 'Map';
-        updates.types.addAll([
-          code_builder.Reference('String'),
-          code_builder.Reference('dynamic'),
-        ]);
-      });
-
-      updates.body = code_builder.Block((code_builder.BlockBuilder updates) {
-        updates.statements.add(code_builder.Code('return <String, dynamic>'));
-        updates.statements.add(code_builder.Code('{'));
-
-        for (final dmmf.SchemaArg field in input.fields) {
-          updates.statements.add(code_builder.Code(
-              "'${field.name}': ${languageKeywordEncode(field.name)},"));
-        }
-
-        updates.statements.add(code_builder.Code('};'));
-      });
-    }));
   }
 
   /// Fields builder.
@@ -235,6 +248,14 @@ class _InputObjectTypesBuilder {
     for (final dmmf.SchemaArg field in inputType.fields) {
       updates.fields
           .add(code_builder.Field((code_builder.FieldBuilder updates) {
+        updates.annotations.add(code_builder.TypeReference(
+            (code_builder.TypeReferenceBuilder updates) {
+          updates.symbol = 'JsonKey';
+          updates.url = 'package:json_annotation/json_annotation.dart';
+        }).newInstance([], {
+          'name': code_builder.literalString(field.name),
+        }));
+
         updates.modifier = code_builder.FieldModifier.final$;
         updates.name = languageKeywordEncode(field.name);
         updates.type = schemaTypeResolver(
