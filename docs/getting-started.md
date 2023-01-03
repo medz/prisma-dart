@@ -106,13 +106,13 @@ dart run build_runner build
 
 ## Explore Prisma client
 
-The default Prisma client is located in `lib/src/generated/prisma_client.dart`, just need this:
+The default Prisma client is located in `lib/prisma_client.dart`, just need this:
 
 ::: info lib/main.dart
 ```dart
-import "src/generated/prisma_client.dart";
+import "prisma_client.dart";
 
-final PrismaClient prisma = PrismaClient();
+final PrismaClient prisma = createPrismaClient();
 
 void main() async {
     try {
@@ -132,9 +132,9 @@ Let's start with a small query to create a new `User` record in the database and
 
 ::: info lib/main.dart
 ```dart{7-13}
-import "src/generated/prisma_client.dart";
+import "prisma_client.dart";
 
-final PrismaClient prisma = PrismaClient();
+final PrismaClient prisma = createPrismaClient();
 
 void main() async {
     try {
@@ -176,9 +176,9 @@ Delete the previous Prisma Client query and add the new `findMany` query instead
 
 ::: info lib/main.dart
 ```dart{7,8}
-import "src/generated/prisma_client.dart";
+import "prisma_client.dart";
 
-final PrismaClient prisma = PrismaClient();
+final PrismaClient prisma = createPrismaClient();
 
 void main() async {
     try {
