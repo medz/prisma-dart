@@ -46,3 +46,11 @@ final PrismaClient prisma = createPrismaClient(...);
 final List<Map<String, dynamic>> result = await prisma.$queryRaw('SELECT * FROM User');
 final int affectedRows = await prisma.$executeRaw('DELETE FROM User');
 ```
+
+### Input classes support `fromJson` method
+
+All input classes now support `fromJson` method.
+
+```dart
+final UserCreateInput input = UserCreateInput.fromJson(...);
+```
