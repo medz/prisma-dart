@@ -324,23 +324,21 @@ class ClientBuilder {
       }));
 
       // Add constructor log parameter
-      if (options.previewFeatures.contains(GeneratorPreviewFeatures.logging)) {
-        builder.optionalParameters.add(Parameter((ParameterBuilder builder) {
-          builder.name = 'log';
-          builder.named = true;
-          builder.type = TypeReference((TypeReferenceBuilder update) {
-            update.symbol = 'Iterable';
-            update.url = 'dart:core';
-            update.types.add(
-              refer('PrismaLogDefinition', 'package:orm/orm.dart'),
-            );
-          });
+      builder.optionalParameters.add(Parameter((ParameterBuilder builder) {
+        builder.name = 'log';
+        builder.named = true;
+        builder.type = TypeReference((TypeReferenceBuilder update) {
+          update.symbol = 'Iterable';
+          update.url = 'dart:core';
+          update.types.add(
+            refer('PrismaLogDefinition', 'package:orm/orm.dart'),
+          );
+        });
 
-          builder.defaultTo = literalConstList(
-                  [], refer('PrismaLogDefinition', 'package:orm/orm.dart'))
-              .code;
-        }));
-      }
+        builder.defaultTo = literalConstList(
+                [], refer('PrismaLogDefinition', 'package:orm/orm.dart'))
+            .code;
+      }));
 
       // Create body
       builder.body = Block((BlockBuilder blockBuilder) {
@@ -419,14 +417,9 @@ class ClientBuilder {
     };
 
     // Add logEmitter.
-    final logDefinitions =
-        options.previewFeatures.contains(GeneratorPreviewFeatures.logging)
-            ? refer('log')
-            : literalConstList(
-                [], refer('PrismaLogDefinition', 'package:orm/orm.dart'));
     namedArguments['logEmitter'] =
         refer('PrismaLogEmitter', 'package:orm/orm.dart')
-            .newInstance([logDefinitions]);
+            .newInstance([refer('log')]);
 
     if (options.dataProxy) {
       return _createDataProxyEngineInstance(namedArguments);

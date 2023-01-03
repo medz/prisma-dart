@@ -91,14 +91,20 @@ class UserOrderByWithRelationInput implements _i1.JsonSerializable {
 }
 
 class UserWhereUniqueInput implements _i1.JsonSerializable {
-  const UserWhereUniqueInput({this.id});
+  const UserWhereUniqueInput({
+    this.id,
+    this.name,
+  });
 
   final _i1.PrismaNullable<int> id;
+
+  final _i1.PrismaNullable<String> name;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
+      'name': name,
     };
   }
 }
@@ -1981,7 +1987,7 @@ final _i4.Document dmmf = _i4.Document.fromJson(<String, dynamic>{
             'kind': 'scalar',
             'isList': false,
             'isRequired': true,
-            'isUnique': false,
+            'isUnique': true,
             'isId': false,
             'isReadOnly': false,
             'hasDefaultValue': false,
@@ -2000,7 +2006,7 @@ final _i4.Document dmmf = _i4.Document.fromJson(<String, dynamic>{
               'kind': 'scalar',
               'isList': false,
               'isRequired': true,
-              'isUnique': false,
+              'isUnique': true,
               'isId': false,
               'isReadOnly': false,
               'hasDefaultValue': false,
@@ -2115,7 +2121,7 @@ final _i4.Document dmmf = _i4.Document.fromJson(<String, dynamic>{
               'kind': 'scalar',
               'isList': false,
               'isRequired': true,
-              'isUnique': false,
+              'isUnique': true,
               'isId': false,
               'isReadOnly': false,
               'hasDefaultValue': false,
@@ -2412,7 +2418,22 @@ final _i4.Document dmmf = _i4.Document.fromJson(<String, dynamic>{
                 }
               ],
               'deprecation': null,
-            }
+            },
+            {
+              'name': 'name',
+              'comment': null,
+              'isNullable': false,
+              'isRequired': false,
+              'inputTypes': [
+                {
+                  'isList': false,
+                  'type': 'String',
+                  'location': 'scalar',
+                  'namespace': null,
+                }
+              ],
+              'deprecation': null,
+            },
           ],
           'fieldMap': null,
         },
@@ -7367,7 +7388,7 @@ final _i4.Document dmmf = _i4.Document.fromJson(<String, dynamic>{
   },
 });
 final String schema = _i5.utf8.decode(_i5.base64.decode(
-    r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgPSAicHJpc21hLWNsaWVudC1kYXJ0Igp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJzcWxpdGUiCiAgdXJsICAgICAgPSAiZmlsZTouL2RiLnNxbGl0ZSIKfQoKbW9kZWwgVXNlciB7CiAgaWQgICAgICAgIEludCAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpCiAgbmFtZSAgICAgIFN0cmluZwogIGNyZWF0ZWRBdCBEYXRlVGltZSBAZGVmYXVsdChub3coKSkKICB1cGRhdGVkQXQgRGF0ZVRpbWUgQHVwZGF0ZWRBdAp9Cg=='));
+    r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgPSAicHJpc21hLWNsaWVudC1kYXJ0Igp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJzcWxpdGUiCiAgdXJsICAgICAgPSAiZmlsZTouL2RiLnNxbGl0ZSIKfQoKbW9kZWwgVXNlciB7CiAgaWQgICAgICAgIEludCAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpCiAgbmFtZSAgICAgIFN0cmluZyAgIEB1bmlxdWUKICBjcmVhdGVkQXQgRGF0ZVRpbWUgQGRlZmF1bHQobm93KCkpCiAgdXBkYXRlZEF0IERhdGVUaW1lIEB1cGRhdGVkQXQKfQo='));
 const String _executable =
     r'/Users/seven/workspace/prisma-dart/example/rest_api/.dart_tool/prisma/query-engine';
 
@@ -7393,21 +7414,32 @@ class PrismaClient {
     this._headers,
   ]);
 
-  factory PrismaClient({_i1.PrismaNullable<Datasources> datasources}) {
+  factory PrismaClient({
+    _i1.PrismaNullable<Datasources> datasources,
+    Iterable<_i1.PrismaLogDefinition> log = const <_i1.PrismaLogDefinition>[],
+  }) {
     final _i1.Engine engine = _i1.BinaryEngine(
       datasources: datasources?._toOverwrites() ?? <String, _i1.Datasource>{},
       dmmf: dmmf,
       schema: schema,
       environment: environment,
-      logEmitter: _i1.PrismaLogEmitter(const <_i1.PrismaLogDefinition>[]),
+      logEmitter: _i1.PrismaLogEmitter(log),
       executable: _executable,
     );
     final PrismaClient client = PrismaClient._(
       engine,
       null,
     );
+    _finalizer.attach(
+      client,
+      engine,
+      detach: client,
+    );
     return client;
   }
+
+  static final Finalizer<_i1.Engine> _finalizer =
+      Finalizer<_i1.Engine>((_i1.Engine engine) => engine.stop());
 
   final _i1.Engine _engine;
 
@@ -7418,12 +7450,34 @@ class PrismaClient {
         _headers,
       );
 
+  /// The $on() method allows you to subscribe to events.
+  ///
+  /// All message use a [Exception] class wrapper.
+  ///
+  /// Example:
+  /// ```dart
+  /// prisma.$on([PrismaLogLevel.query], (e) {
+  ///   if (e is PrismaQueryEvent) {
+  ///     print(e.query);
+  ///   }
+  /// });
+  /// ```
+  $on(
+    Iterable<_i1.PrismaLogLevel> levels,
+    _i1.PrismaLogHandler handler,
+  ) =>
+      _engine.logEmitter.on(
+        levels.toSet(),
+        handler,
+      );
+
   /// Connect to the database.
   Future<void> $connect() => _engine.start();
 
   /// Disconnect from the database.
   Future<void> $disconnect() async {
     await _engine.stop();
+    _finalizer.detach(this);
   }
 
   /// Interactive transactions.
