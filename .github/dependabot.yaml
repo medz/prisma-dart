@@ -24,3 +24,17 @@ updates:
       interval: daily
     labels:
       - "example"
+
+  # RESTful example
+  - package-ecosystem: pub
+    directory: /example/rest_api
+    schedule:
+      interval: daily
+    labels:
+      - "example"
+
+  # Prisma get platform
+  - package-ecosystem: pub
+    directory: /packages/prisma_get_platform
+    schedule:
+      interval: daily
