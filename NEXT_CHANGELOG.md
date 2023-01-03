@@ -54,3 +54,8 @@ All input classes now support `fromJson` method.
 ```dart
 final UserCreateInput input = UserCreateInput.fromJson(...);
 ```
+
+### Engines
+
+1. Prisma binary engines version updated to `d6e67a83f971b175a593ccc12e15c4a757f93ffe`
+2. Remote engines version updated to `4.8.0`
