@@ -2,7 +2,7 @@
   "homepage": "https://prisma.pub",
   "private": true,
   "dependencies": {
-    "vitepress": "^1.0.0-alpha.17"
+    "vitepress": "^1.0.0-alpha.35"
   },
   "scripts": {
     "dev": "vitepress dev",
