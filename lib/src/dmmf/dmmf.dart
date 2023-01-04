@@ -117,8 +117,14 @@ class ModelMapping {
   /// Find unique operation
   final String? findUnique;
 
+  /// Find unique or throw operation
+  final String? findUniqueOrThrow;
+
   /// Find first operation
   final String? findFirst;
+
+  /// Find first or throw operation
+  final String? findFirstOrThrow;
 
   /// Find many operation
   final String? findMany;
@@ -164,7 +170,9 @@ class ModelMapping {
   const ModelMapping({
     required this.model,
     this.findUnique,
+    this.findUniqueOrThrow,
     this.findFirst,
+    this.findFirstOrThrow,
     this.findMany,
     this.create,
     this.createMany,

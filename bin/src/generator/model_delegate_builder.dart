@@ -115,9 +115,18 @@ class ModelDelegateBuilder {
 
     return TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
       typeReferenceBuilder.symbol = 'Future';
-      typeReferenceBuilder.types
-          .add(scalar(field.outputType, field.isNullable ?? true));
+      bool isNullable = field.isNullable ?? true;
+      if (isOrThrowOperation(field.name)) {
+        isNullable = false;
+      }
+
+      typeReferenceBuilder.types.add(scalar(field.outputType, isNullable));
     });
+  }
+
+  /// Operation is or throw.
+  bool isOrThrowOperation(String name) {
+    return name.toLowerCase().endsWith('OrThrow'.toLowerCase());
   }
 
   List<dmmf.SchemaField> get gqlMethods => mergedOutputObjectTypes
@@ -302,7 +311,12 @@ class ModelDelegateBuilder {
         data.asA(refer('Map')).property('cast').call([]),
       ]);
 
-      if (field.isNullable ?? true) {
+      bool isNullable = field.isNullable ?? true;
+      if (isOrThrowOperation(name)) {
+        isNullable = false;
+      }
+
+      if (isNullable) {
         final Expression nullableReturn = data
             .equalTo(literalNull)
             .conditional(literalNull, deserialize)

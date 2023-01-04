@@ -49,7 +49,9 @@ Map<String, dynamic> _$OtherOperationMappingsToJson(
 ModelMapping _$ModelMappingFromJson(Map<String, dynamic> json) => ModelMapping(
       model: json['model'] as String,
       findUnique: json['findUnique'] as String?,
+      findUniqueOrThrow: json['findUniqueOrThrow'] as String?,
       findFirst: json['findFirst'] as String?,
+      findFirstOrThrow: json['findFirstOrThrow'] as String?,
       findMany: json['findMany'] as String?,
       create: _oneSuffixReader(json, 'create') as String?,
       createMany: json['createMany'] as String?,
@@ -68,7 +70,9 @@ Map<String, dynamic> _$ModelMappingToJson(ModelMapping instance) =>
     <String, dynamic>{
       'model': instance.model,
       'findUnique': instance.findUnique,
+      'findUniqueOrThrow': instance.findUniqueOrThrow,
       'findFirst': instance.findFirst,
+      'findFirstOrThrow': instance.findFirstOrThrow,
       'findMany': instance.findMany,
       'create': instance.create,
       'createMany': instance.createMany,
