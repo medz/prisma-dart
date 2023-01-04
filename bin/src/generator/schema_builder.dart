@@ -192,21 +192,36 @@ class _InputObjectTypesBuilder {
         updates.name = dartClassnameFixer(input.name);
         updates.implements.add(
             code_builder.Reference('JsonSerializable', 'package:orm/orm.dart'));
+        updates.mixins.add(code_builder.Reference('_\$${updates.name}'));
 
-        updates.annotations.add(
-          code_builder.TypeReference(
-              (code_builder.TypeReferenceBuilder updates) {
-            updates.symbol = 'JsonSerializable';
-            updates.url = 'package:json_annotation/json_annotation.dart';
-          }).newInstance(
-            [],
-            {
-              'createToJson': code_builder.literalTrue,
-              'createFactory': code_builder.literalTrue,
-              'explicitToJson': code_builder.literalTrue,
-            },
-          ),
-        );
+        // Add freezed annotation.
+        updates.annotations.add(code_builder.refer('freezed'));
+
+        // for (final dmmf.SchemaArg arg in input.fields) {
+        //   arg.inputTypes;
+        //   final Iterable<code_builder.Reference> types = buildSchemaTypes(
+        //       arg.inputTypes, arg.isNullable || !arg.isRequired);
+        //   if (types.length == 1) {
+        //     updates.constructors.add(code_builder.Constructor((c) {}));
+        //   }
+
+        //   // for (final code_builder.Reference type in types) {}
+        // }
+
+        // updates.annotations.add(
+        //   code_builder.TypeReference(
+        //       (code_builder.TypeReferenceBuilder updates) {
+        //     updates.symbol = 'JsonSerializable';
+        //     updates.url = 'package:json_annotation/json_annotation.dart';
+        //   }).newInstance(
+        //     [],
+        //     {
+        //       'createToJson': code_builder.literalTrue,
+        //       'createFactory': code_builder.literalTrue,
+        //       'explicitToJson': code_builder.literalTrue,
+        //     },
+        //   ),
+        // );
 
         updates.constructors.add(code_builder.Constructor(
           (code_builder.ConstructorBuilder builder) {
@@ -226,18 +241,18 @@ class _InputObjectTypesBuilder {
           },
         ));
 
-        updates.methods.add(code_builder.Method(
-          (code_builder.MethodBuilder builder) {
-            builder.name = 'toJson';
-            builder.returns = code_builder.Reference('Map<String, dynamic>');
-            builder.body = code_builder.Code('_\$${updates.name}ToJson(this)');
-            builder.lambda = true;
-            builder.annotations.add(code_builder.Reference('override'));
-          },
-        ));
+        // updates.methods.add(code_builder.Method(
+        //   (code_builder.MethodBuilder builder) {
+        //     builder.name = 'toJson';
+        //     builder.returns = code_builder.Reference('Map<String, dynamic>');
+        //     builder.body = code_builder.Code('_\$${updates.name}ToJson(this)');
+        //     builder.lambda = true;
+        //     builder.annotations.add(code_builder.Reference('override'));
+        //   },
+        // ));
 
         _constructorBuilder(updates, input);
-        _fieldsBuilder(updates, input);
+        // _fieldsBuilder(updates, input);
       }));
     }
   }
@@ -271,28 +286,102 @@ class _InputObjectTypesBuilder {
   /// Constructor builder.
   void _constructorBuilder(
       code_builder.ClassBuilder updates, dmmf.InputType inputType) {
-    final code_builder.Constructor constructor =
-        code_builder.Constructor((code_builder.ConstructorBuilder updates) {
-      updates.constant = true;
+    final code_builder.Constructor constructor = code_builder.Constructor(
+        (code_builder.ConstructorBuilder constructorBuilder) {
+      constructorBuilder.factory = true;
+      constructorBuilder.constant = true;
+      constructorBuilder.redirect = code_builder.refer('_${updates.name}');
 
       for (final dmmf.SchemaArg field in inputType.fields) {
-        final code_builder.Parameter parameter =
-            code_builder.Parameter((code_builder.ParameterBuilder updates) {
-          updates.named = true;
-          updates.toThis = true;
-          updates.required = field.isRequired;
-          updates.name = languageKeywordEncode(field.name);
+        final code_builder.Parameter parameter = code_builder.Parameter(
+            (code_builder.ParameterBuilder parameterBuilder) {
+          parameterBuilder.named = true;
+          // updates.toThis = true;
+          parameterBuilder.required = field.isRequired;
+          parameterBuilder.name = languageKeywordEncode(field.name);
+          parameterBuilder.type = schemaArgBuilder(updates, field);
 
           if (field.comment != null) {
-            updates.docs.add(field.comment!);
+            parameterBuilder.docs.add(field.comment!);
           }
         });
 
-        updates.optionalParameters.add(parameter);
+        constructorBuilder.optionalParameters.add(parameter);
       }
     });
 
     updates.constructors.add(constructor);
+  }
+
+  /// Build schema arg
+  code_builder.Reference schemaArgBuilder(
+      code_builder.ClassBuilder classBuilder, dmmf.SchemaArg arg) {
+    final bool nullable = arg.isNullable == true || !arg.isRequired;
+    if (arg.inputTypes.length == 1) {
+      return schemaTypeResolver(arg.inputTypes, nullable);
+    }
+
+    final String classname = '${classBuilder.name}_${arg.name}';
+    library.body.add(
+      code_builder.Class((code_builder.ClassBuilder updates) {
+        updates.name = classname;
+        updates.annotations.add(code_builder.refer('freezed'));
+        updates.mixins.add(code_builder.refer('_\$${updates.name}'));
+        updates.implements.add(
+            code_builder.Reference('JsonSerializable', 'package:orm/orm.dart'));
+
+        for (final dmmf.SchemaType type in arg.inputTypes) {
+          final code_builder.Constructor constructor = code_builder.Constructor(
+              (code_builder.ConstructorBuilder constructorBuilder) {
+            constructorBuilder.name =
+                'with${languageKeywordEncode(type.type)}${type.isList ? 'List' : ''}';
+            constructorBuilder.factory = true;
+            constructorBuilder.constant = true;
+            constructorBuilder.redirect = code_builder
+                .refer('${updates.name}_${constructorBuilder.name}');
+
+            constructorBuilder.requiredParameters.add(
+                code_builder.Parameter((code_builder.ParameterBuilder updates) {
+              updates.name = 'value';
+              updates.type = schemaTypeResolver([type], false);
+            }));
+          });
+
+          updates.constructors.add(constructor);
+        }
+
+        // Add fromJson constructor.
+        updates.constructors.add(code_builder.Constructor(
+          (code_builder.ConstructorBuilder builder) {
+            builder.name = 'fromJson';
+            builder.requiredParameters.add(code_builder.Parameter(
+              (code_builder.ParameterBuilder builder) {
+                builder.name = 'json';
+                builder.type = code_builder.Reference('Map<String, dynamic>');
+              },
+            ));
+
+            builder.body =
+                code_builder.Code('_\$${updates.name}FromJson(json)');
+            builder.lambda = true;
+
+            builder.factory = true;
+          },
+        ));
+
+        // Add toJson method.
+        // updates.methods
+        //     .add(code_builder.Method((code_builder.MethodBuilder builder) {
+        //   builder.name = 'toJson';
+        //   builder.returns = code_builder.Reference('Map<String, dynamic>');
+        //   builder.body = code_builder.Code('_\$${updates.name}ToJson(this)');
+        //   builder.lambda = true;
+        //   builder.annotations.add(code_builder.Reference('override'));
+        // }));
+      }),
+    );
+
+    return code_builder.refer(classname + (nullable ? '?' : ''));
   }
 }
 

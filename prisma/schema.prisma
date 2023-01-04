@@ -19,7 +19,7 @@ model User {
 
 model Post {
   id         Int      @id @default(autoincrement())
-  title      String
+  title      String?
   authorId   Int
   content    String
   published  Boolean

@@ -28,6 +28,7 @@ Future<void> generator(GeneratorOptions options) async {
     // Add header comment.
     updates.body.add(Code('''\n
 part '${basenameWithoutExtension(output.path)}.g.dart';
+part '${basenameWithoutExtension(output.path)}.freezed.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 //
 // ignore_for_file: ${_ignores.join(', ')}
@@ -59,6 +60,8 @@ ${'//'.padRight(80, '*')} \n
         r'$enumDecode',
       ]..sort(),
     ));
+    updates.directives.add(
+        Directive.import('package:freezed_annotation/freezed_annotation.dart'));
 
     // Build schema.
     SchemaBuilder(options, updates).build();
