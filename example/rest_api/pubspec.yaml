@@ -12,7 +12,7 @@ dev_dependencies:
   lints: ^2.0.0
   
 dependencies:
-  orm: ^2.4.6
+  orm: ^2.5.0
   spry: ^0.1.2
   spry_interceptor: ^0.0.2
   spry_json: ^0.1.0

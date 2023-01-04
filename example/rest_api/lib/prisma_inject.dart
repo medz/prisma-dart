@@ -6,7 +6,7 @@ class _PrismaInjector {
   PrismaClient? prisma;
 
   Future<void> call(Context context, MiddlewareNext next) async {
-    context[#prisma] = prisma ??= PrismaClient();
+    context[#prisma] = prisma ??= createPrismaClient();
 
     return next();
   }
