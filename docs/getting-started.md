@@ -82,9 +82,10 @@ Run this command:
 dart run orm db push
 ```
 
-## Install `json_serializable` and `build_runner`
+## Install `json_serializable`, `build_runner` and `freezed`
 
 ```bash
+dart pub add freezed -d
 dart pub add json_serializable -d
 dart pub add build_runner -d
 ```
@@ -139,9 +140,11 @@ final PrismaClient prisma = createPrismaClient();
 void main() async {
     try {
      final User user = await prisma.user.create(
-        data: UserCreateInput(
-            name: PrismaUnion.zero("Seven"),
-            email: "seven@odroe.com",
+        data: CreateOneUserData.withUserUncheckedCreateInput(
+            UserUncheckedCreateInput(
+                name: 'Seven',
+                email: 'seven@odroe.com',
+            ),
         ),
      );
      print(user.toJson());

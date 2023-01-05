@@ -9,7 +9,7 @@ void main() {
   });
 
   test('test single char with underscore', () {
-    expect(dartClassnameFixer('_a'), r'$A');
+    expect(dartClassnameFixer('_a'), r'Prisma__a');
   });
 
   test('test single char with underscore', () {
@@ -21,7 +21,7 @@ void main() {
   });
 
   test('test multiple char with underscore', () {
-    expect(dartClassnameFixer('_abc'), r'$Abc');
+    expect(dartClassnameFixer('_abc'), r'Prisma__abc');
   });
 
   test('test multiple char with underscore', () {
@@ -29,6 +29,6 @@ void main() {
   });
 
   test('test multiple char with underscore', () {
-    expect(dartClassnameFixer('_abc_'), r'$Abc_');
+    expect(dartClassnameFixer('_abc_'), r'Prisma__abc_');
   });
 }

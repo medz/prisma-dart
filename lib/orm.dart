@@ -24,7 +24,6 @@ export 'src/engine_core/data_proxy/data_proxy_engine.dart';
 export 'src/runtime/datasource.dart';
 export 'src/runtime/json_serializable.dart';
 export 'src/runtime/language_keyword.dart';
-export 'src/runtime/prisma_union.dart';
 export 'src/runtime/prisma_null.dart';
 export 'src/runtime/prisma_log.dart';
 

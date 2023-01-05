@@ -5,7 +5,6 @@ import 'package:orm/orm.dart' show languageKeywordEncode;
 import 'generator_options.dart';
 import 'utils/dart_style.dart';
 import 'utils/scalar.dart';
-import 'utils/schema_type.dart';
 
 String modelDelegateClassname(String model) =>
     '${dartClassnameFixer(model)}Delegate';
@@ -96,16 +95,73 @@ class ModelDelegateBuilder {
         gqlMethods.firstWhere((element) => element.name == name);
 
     return field.args.map(
-      (element) => Parameter(
+      (dmmf.SchemaArg element) => Parameter(
         (ParameterBuilder parameterBuilder) {
+          parameterBuilder.type = scalar(element.inputTypes.first,
+              element.isNullable || !element.isRequired);
+
+          if (element.inputTypes.length > 1) {
+            parameterBuilder.type = buildParameterUnionType(name, element);
+          }
+
           parameterBuilder.name = languageKeywordEncode(element.name);
           parameterBuilder.named = true;
-          parameterBuilder.type =
-              schemaTypeResolver(element.inputTypes, !element.isRequired);
           parameterBuilder.required = element.isRequired;
         },
       ),
     );
+  }
+
+  /// Build parameter union type.
+  Reference buildParameterUnionType(String action, dmmf.SchemaArg arg) {
+    final String classname =
+        dartClassnameFixer(action) + dartClassnameFixer(arg.name);
+    final Class classBuilder = Class((ClassBuilder classBuilder) {
+      classBuilder.name = classname;
+      classBuilder.annotations.add(refer('freezed'));
+      classBuilder.implements
+          .add(refer('JsonSerializable', 'package:orm/orm.dart'));
+      classBuilder.mixins.add(refer('_\$$classname'));
+
+      for (final dmmf.SchemaType type in arg.inputTypes) {
+        classBuilder.constructors
+            .add(Constructor((ConstructorBuilder constructorBuilder) {
+          constructorBuilder.name =
+              'with${dartClassnameFixer(type.type)}${type.isList ? 'List' : ''}';
+          constructorBuilder.constant = true;
+          constructorBuilder.factory = true;
+          constructorBuilder.redirect = refer(
+              '_$classname${dartClassnameFixer(constructorBuilder.name!)}');
+          constructorBuilder.requiredParameters
+              .add(Parameter((ParameterBuilder parameterBuilder) {
+            parameterBuilder.name = 'value';
+            parameterBuilder.type = scalar(type, false);
+          }));
+        }));
+      }
+
+      // Add fromJson factory.
+      // Add fromJson constructor.
+      classBuilder.constructors.add(Constructor(
+        (ConstructorBuilder builder) {
+          builder.name = 'fromJson';
+          builder.requiredParameters.add(Parameter(
+            (ParameterBuilder builder) {
+              builder.name = 'json';
+              builder.type = Reference('Map<String, dynamic>');
+            },
+          ));
+
+          builder.body = Code('_\$${classBuilder.name}FromJson(json)');
+          builder.lambda = true;
+          builder.factory = true;
+        },
+      ));
+    });
+
+    library.body.add(classBuilder);
+
+    return refer(classname + ((arg.isNullable || !arg.isRequired) ? '?' : ''));
   }
 
   /// Find GraphQL operation return type.
