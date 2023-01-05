@@ -63,7 +63,3 @@ This project has adopted the [Contributor Covenant Code of Conduct](CODE_OF_COND
 If you like Prisma ORM for Dart, you can buy us a coffee:
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/odroe)
-
-| AliPay | WeChat Pay |
-| :---: | :---: |
-| ![AliPay](graphs/alipay.jpg) | ![WeChat Pay](graphs/wechat_pay.jpg) |
