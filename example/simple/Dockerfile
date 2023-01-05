@@ -19,9 +19,7 @@ RUN dart run orm generate
 RUN dart run build_runner build --delete-conflicting-outputs
 
 # Build simple app execable
-RUN dart compile exe bin/simple.dart -o /app/simple
-
-CMD ["dart", "run", "bin/simple.dart"]
+RUN dart compile exe lib/main.dart -o /app/simple
 
 # Build a small image
 FROM scratch

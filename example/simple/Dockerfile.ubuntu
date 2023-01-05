@@ -21,7 +21,7 @@ ENV PRISMA_QUERY_ENGINE_BINARY=/app/query-engine
 RUN dart run orm generate && dart run build_runner build --delete-conflicting-outputs
 
 # Build simple app executable
-RUN dart compile exe bin/simple.dart -o /app/simple
+RUN dart compile exe lib/main.dart -o /app/simple
 
 # Build a simple image
 FROM ubuntu:latest
