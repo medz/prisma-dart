@@ -102,7 +102,6 @@ class ModelDelegateBuilder {
 
           if (element.inputTypes.length > 1) {
             parameterBuilder.type = buildParameterUnionType(name, element);
-            print(parameterBuilder.type);
           }
 
           parameterBuilder.name = languageKeywordEncode(element.name);
