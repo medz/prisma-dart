@@ -5,14 +5,13 @@ void main() async {
 
   try {
     final users = await prisma.user.findMany(
-      // where: UserWhereInput(
-      //   id: IntFilter(
-      //     lte: 100,
-      //   ),
-      // ),
-      where: UserWhereInput.fromJson({
-        "id": {"lte": 100},
-      }),
+      where: UserWhereInput(
+        id: UserWhereInput_id.withIntFilter(
+          IntFilter(
+            dart__in: [1, 2, 3],
+          ),
+        ),
+      ),
     );
 
     print(users.map((e) => e.toJson()));

@@ -15,6 +15,9 @@ final List<String> _ignores = [
   'depend_on_referenced_packages',
   'unused_import',
   'unused_shown_name',
+  'unnecessary_import',
+  'camel_case_types',
+  'invalid_annotation_target',
 ]..sort();
 
 /// Run Dart client generator
@@ -45,21 +48,16 @@ ${'//'.padRight(80, '*')} \n
       show: [
         'Datasource',
         'PrismaNull',
-        'PrismaUnion',
         'PrismaClient',
       ]..sort(),
     ));
-
-    // Inport `package:json_annotation/json_annotation.dart`
-    // 临时修复👉https://github.com/google/json_serializable.dart/issues/1115
-    // 等待 https://github.com/google/json_serializable.dart/pull/1116 并发布新版本
     updates.directives.add(Directive.import(
-      'package:json_annotation/json_annotation.dart',
+      'package:orm/orm.dart',
       show: [
-        r'$enumDecodeNullable',
-        r'$enumDecode',
+        'PrismaNull',
       ]..sort(),
     ));
+
     updates.directives.add(
         Directive.import('package:freezed_annotation/freezed_annotation.dart'));
 

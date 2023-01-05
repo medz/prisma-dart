@@ -68,7 +68,7 @@ const List<String> _languageKeywords = [
 /// Dart language keyword encode
 String languageKeywordEncode(String name) {
   if (_languageKeywords.contains(name)) {
-    return '${name}_dart_';
+    return 'dart__$name';
   }
 
   if (name.startsWith('_')) {
@@ -80,8 +80,8 @@ String languageKeywordEncode(String name) {
 
 /// Dart language keyword decode
 String languageKeywordDecode(String name) {
-  if (name.endsWith(r'_dart_')) {
-    return name.substring(0, name.length - 6);
+  if (name.startsWith(r'dart__')) {
+    return name.substring(6);
   }
 
   if (name.startsWith(r'prisma__')) {

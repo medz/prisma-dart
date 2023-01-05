@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import '../runtime/json_serializable.dart';
 import '../runtime/prisma_null.dart';
-import '../runtime/prisma_union.dart';
 
 /// GraphQL variable SDL builder.
 ///
@@ -31,15 +30,15 @@ class GraphQLArg {
 
   /// Built GraphQL SDL.
   String? toSdl() {
-    final PrismaUnion<PrismaNull, dynamic>? result = _objectBuilder(value);
+    Object? result = _objectBuilder(value);
 
     // If result is null return null.
     if (result == null) return null;
 
     // If result.zero is PrismaNull, return built SDL.
-    if (result.zero is PrismaNull) return '$key: null';
+    if (result is PrismaNull) return '$key: null';
 
-    final String? sdl = _sdlBuilder(result.one);
+    final String? sdl = _sdlBuilder(result);
     if (sdl == null) return null;
 
     return '$key: $sdl';
@@ -48,6 +47,11 @@ class GraphQLArg {
   /// SDL builder.
   String? _sdlBuilder(dynamic value) {
     if (value == null) return null;
+
+    // If result is a Feeezed union, return value;
+    if (value is Map && value.containsKey('runtimeType')) {
+      return _sdlBuilder(value['value']);
+    }
 
     // If value is a [DateTime] return timestamp.
     if (value is DateTime) {
@@ -86,81 +90,27 @@ class GraphQLArg {
       return '{${list.join(', ')}}';
     }
 
-    /// If value is PrismaUnion, return union.
-    if (value is PrismaUnion) {
-      return _sdlPrismaUnionBuilder(value);
-    }
-
     return value.toString();
   }
 
-  /// SDL builder for PrismaUnion.
-  String _sdlPrismaUnionBuilder(PrismaUnion union) {
-    final String? zore = _sdlBuilder(union.zero);
-    final String? one = _sdlBuilder(union.one);
-
-    return (zore ?? one)!;
-  }
-
   /// Recursively build GraphQL SDL.
-  PrismaUnion<PrismaNull, dynamic>? _objectBuilder(dynamic value) {
-    // If value is null, return null.
-    if (value == null) return null;
-
-    // If value is enum, return Prisma union with enum name.
-    if (value is Enum) return PrismaUnion.one(value);
+  Object? _objectBuilder(dynamic value) {
+    // If value is feezed union, return value.
+    if (value is Map && value.containsKey('runtimeType')) {
+      return _objectBuilder(value['value']);
+    }
 
     /// If value is list, return Prisma union with list of values.
-    if (value is List) return PrismaUnion.one(_listBuilder(value));
+    if (value is List) return _listBuilder(value);
 
     /// If value is map, return Prisma union with map of values.
-    if (value is Map) return PrismaUnion.one(_mapBuilder(value));
+    if (value is Map) return _mapBuilder(value);
 
     /// If value is json serializable.
     if (value is JsonSerializable) return _objectBuilder(value.toJson());
 
-    // If value is Prisma null, return Prisma union with Prisma null.
-    if (value is PrismaNull) return PrismaUnion.zero(value);
-
-    // If value is Prisma union, return Prisma union with Prisma union.
-    if (value is PrismaUnion) return _prismaUnionBuilder(value);
-
     // Default return Prisma union with value.
-    return PrismaUnion.one(value);
-  }
-
-  /// Prisma union build.
-  PrismaUnion<PrismaNull, dynamic>? _prismaUnionBuilder(PrismaUnion value) {
-    final PrismaUnion<PrismaNull, dynamic>? zero = _objectBuilder(value.zero);
-    final PrismaUnion<PrismaNull, dynamic>? one = _objectBuilder(value.one);
-
-    // If zero.one is Map
-    if (zero?.one is Map) {
-      return PrismaUnion.one({
-        ...zero?.one as Map,
-        ...one?.one is Map ? one?.one : {},
-      });
-    }
-
-    // If one.one is Map
-    if (one?.one is Map) {
-      return PrismaUnion.one({
-        ...zero?.one is Map ? zero?.one : {},
-        ...one?.one as Map,
-      });
-    }
-
-    // If zero.one is not null, return Prisma union with zero.one.
-    if (zero?.one != null) {
-      return PrismaUnion.one(zero?.one);
-    }
-
-    // If one.one is not null, return Prisma union with one.one.
-    if (one?.one != null) {
-      return PrismaUnion.one(one?.one);
-    }
-
-    return zero ?? one;
+    return value;
   }
 
   /// Map builder.
@@ -171,7 +121,7 @@ class GraphQLArg {
 
   /// List build.
   List<dynamic> _listBuilder(List<dynamic> list) {
-    return list.map((value) => _objectBuilder(value)?.one).toList();
+    return list.map((value) => _objectBuilder(value)).toList();
   }
 }
 

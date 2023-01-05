@@ -5,7 +5,6 @@ import 'package:orm/src/runtime/language_keyword.dart';
 import 'generator_options.dart';
 import 'utils/dart_style.dart';
 import 'utils/scalar.dart';
-import 'utils/schema_type.dart';
 
 class SchemaBuilder {
   final GeneratorOptions options;
@@ -51,7 +50,6 @@ class _OutputObjectTypesBuilder {
           code_builder.TypeReference(
               (code_builder.TypeReferenceBuilder updates) {
             updates.symbol = 'JsonSerializable';
-            updates.url = 'package:json_annotation/json_annotation.dart';
           }).newInstance(
             [],
             {
@@ -146,7 +144,6 @@ class _OutputObjectTypesBuilder {
           updates.annotations.add(code_builder.TypeReference(
               (code_builder.TypeReferenceBuilder updates) {
             updates.symbol = 'JsonKey';
-            updates.url = 'package:json_annotation/json_annotation.dart';
           }).newInstance([], {
             'name': code_builder.literalString(field.name),
           }));
@@ -197,32 +194,6 @@ class _InputObjectTypesBuilder {
         // Add freezed annotation.
         updates.annotations.add(code_builder.refer('freezed'));
 
-        // for (final dmmf.SchemaArg arg in input.fields) {
-        //   arg.inputTypes;
-        //   final Iterable<code_builder.Reference> types = buildSchemaTypes(
-        //       arg.inputTypes, arg.isNullable || !arg.isRequired);
-        //   if (types.length == 1) {
-        //     updates.constructors.add(code_builder.Constructor((c) {}));
-        //   }
-
-        //   // for (final code_builder.Reference type in types) {}
-        // }
-
-        // updates.annotations.add(
-        //   code_builder.TypeReference(
-        //       (code_builder.TypeReferenceBuilder updates) {
-        //     updates.symbol = 'JsonSerializable';
-        //     updates.url = 'package:json_annotation/json_annotation.dart';
-        //   }).newInstance(
-        //     [],
-        //     {
-        //       'createToJson': code_builder.literalTrue,
-        //       'createFactory': code_builder.literalTrue,
-        //       'explicitToJson': code_builder.literalTrue,
-        //     },
-        //   ),
-        // );
-
         updates.constructors.add(code_builder.Constructor(
           (code_builder.ConstructorBuilder builder) {
             builder.name = 'fromJson';
@@ -241,44 +212,7 @@ class _InputObjectTypesBuilder {
           },
         ));
 
-        // updates.methods.add(code_builder.Method(
-        //   (code_builder.MethodBuilder builder) {
-        //     builder.name = 'toJson';
-        //     builder.returns = code_builder.Reference('Map<String, dynamic>');
-        //     builder.body = code_builder.Code('_\$${updates.name}ToJson(this)');
-        //     builder.lambda = true;
-        //     builder.annotations.add(code_builder.Reference('override'));
-        //   },
-        // ));
-
         _constructorBuilder(updates, input);
-        // _fieldsBuilder(updates, input);
-      }));
-    }
-  }
-
-  /// Fields builder.
-  void _fieldsBuilder(
-      code_builder.ClassBuilder updates, dmmf.InputType inputType) {
-    for (final dmmf.SchemaArg field in inputType.fields) {
-      updates.fields
-          .add(code_builder.Field((code_builder.FieldBuilder updates) {
-        updates.annotations.add(code_builder.TypeReference(
-            (code_builder.TypeReferenceBuilder updates) {
-          updates.symbol = 'JsonKey';
-          updates.url = 'package:json_annotation/json_annotation.dart';
-        }).newInstance([], {
-          'name': code_builder.literalString(field.name),
-        }));
-
-        updates.modifier = code_builder.FieldModifier.final$;
-        updates.name = languageKeywordEncode(field.name);
-        updates.type = schemaTypeResolver(
-            field.inputTypes, field.isNullable == true || !field.isRequired);
-
-        if (field.comment != null) {
-          updates.docs.add(field.comment!);
-        }
       }));
     }
   }
@@ -300,6 +234,10 @@ class _InputObjectTypesBuilder {
           parameterBuilder.required = field.isRequired;
           parameterBuilder.name = languageKeywordEncode(field.name);
           parameterBuilder.type = schemaArgBuilder(updates, field);
+          parameterBuilder.annotations
+              .add(code_builder.refer('JsonKey').newInstance([], {
+            'name': code_builder.literalString(field.name),
+          }));
 
           if (field.comment != null) {
             parameterBuilder.docs.add(field.comment!);
@@ -318,7 +256,7 @@ class _InputObjectTypesBuilder {
       code_builder.ClassBuilder classBuilder, dmmf.SchemaArg arg) {
     final bool nullable = arg.isNullable == true || !arg.isRequired;
     if (arg.inputTypes.length == 1) {
-      return schemaTypeResolver(arg.inputTypes, nullable);
+      return scalar(arg.inputTypes.first, nullable);
     }
 
     final String classname = '${classBuilder.name}_${arg.name}';
@@ -343,7 +281,7 @@ class _InputObjectTypesBuilder {
             constructorBuilder.requiredParameters.add(
                 code_builder.Parameter((code_builder.ParameterBuilder updates) {
               updates.name = 'value';
-              updates.type = schemaTypeResolver([type], false);
+              updates.type = scalar(type, false);
             }));
           });
 
@@ -368,16 +306,6 @@ class _InputObjectTypesBuilder {
             builder.factory = true;
           },
         ));
-
-        // Add toJson method.
-        // updates.methods
-        //     .add(code_builder.Method((code_builder.MethodBuilder builder) {
-        //   builder.name = 'toJson';
-        //   builder.returns = code_builder.Reference('Map<String, dynamic>');
-        //   builder.body = code_builder.Code('_\$${updates.name}ToJson(this)');
-        //   builder.lambda = true;
-        //   builder.annotations.add(code_builder.Reference('override'));
-        // }));
       }),
     );
 
@@ -427,7 +355,6 @@ class _EnumBuilder {
       if (updates.name != value) {
         updates.annotations.add(code_builder.TypeReference((updates) {
           updates.symbol = 'JsonValue';
-          updates.url = 'package:json_annotation/json_annotation.dart';
         }).newInstance([code_builder.literalString(value)]));
       }
     });
