@@ -2,11 +2,11 @@
 
 ## APIs
 
-- `GET /api/users` - Get all users
-- `GET /api/users/:id` - Get a user by id
-- `POST /api/users` - Create a user
-- `PUT /api/users/:id` - Update a user
-- `DELETE /api/users/:id` - Delete a user
+- `GET /users` - Get all users
+- `GET /users/:id` - Get a user by id
+- `POST /users` - Create a user
+- `PUT /users/:id` - Update a user
+- `DELETE /users/:id` - Delete a user
 
 ## How to use
 
