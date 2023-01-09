@@ -16,4 +16,4 @@ dependencies:
   spry: ^0.1.2
   spry_interceptor: ^0.1.0
   spry_json: ^0.1.0
-  spry_router: ^0.1.0
+  spry_router: ^0.3.2
