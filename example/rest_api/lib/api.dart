@@ -3,7 +3,7 @@ import 'package:spry_router/spry_router.dart';
 import 'handlers.dart';
 
 Router _createRouter() {
-  final Router router = Router('/api');
+  final Router router = Router();
 
   router.get('/users', getAllUsers);
   router.post('/users', createUser);
