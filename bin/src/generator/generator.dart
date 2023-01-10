@@ -55,6 +55,7 @@ ${'//'.padRight(80, '*')} \n
       'package:orm/orm.dart',
       show: [
         'PrismaNull',
+        r'$PrismaNullCopyWith',
       ]..sort(),
     ));
 
@@ -70,7 +71,11 @@ ${'//'.padRight(80, '*')} \n
     // Build prisma client.
     ClientBuilder(options, updates).build();
   });
-  final DartEmitter emitter = DartEmitter.scoped();
+  final DartEmitter emitter = DartEmitter(
+    allocator: Allocator.simplePrefixing(),
+    orderDirectives: true,
+    useNullSafetySyntax: true,
+  );
   final StringSink sink = library.accept(emitter);
   final DartFormatter formatter = DartFormatter();
   final String formatted = formatter.format(sink.toString());

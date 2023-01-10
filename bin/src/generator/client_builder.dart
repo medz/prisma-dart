@@ -124,166 +124,6 @@ class ClientBuilder {
       }));
     }));
 
-//     // Build prisma client class
-//     library.body.add(Class((ClassBuilder classBuilder) {
-//       classBuilder.name = 'PrismaClient';
-
-//       // If [GeneratorPreviewFeatures.finalizer] is enabled, add finalizer
-//       // field.
-//       if (options.previewFeatures
-//           .contains(GeneratorPreviewFeatures.finalizer)) {
-//         classBuilder.fields.add(Field((FieldBuilder fieldBuilder) {
-//           fieldBuilder.name = '_finalizer';
-//           fieldBuilder.type = TypeReference((TypeReferenceBuilder builder) {
-//             builder.symbol = 'Finalizer';
-//             builder.types.add(refer('Engine', 'package:orm/orm.dart'));
-//           });
-//           fieldBuilder.static = true;
-//           fieldBuilder.modifier = FieldModifier.final$;
-//           fieldBuilder.assignment = fieldBuilder.type?.newInstance([
-//             Method((MethodBuilder methodBuilder) {
-//               methodBuilder.requiredParameters.add(
-//                 Parameter((ParameterBuilder parameterBuilder) {
-//                   parameterBuilder.name = 'engine';
-//                   parameterBuilder.type =
-//                       refer('Engine', 'package:orm/orm.dart');
-//                   parameterBuilder.named = false;
-//                 }),
-//               );
-//               methodBuilder.body =
-//                   refer('engine').property('stop').call([]).code;
-//             }).closure,
-//           ]).code;
-//         }));
-//       }
-
-//       // Create public constructor
-//       classBuilder.constructors
-//           .add(Constructor((ConstructorBuilder constructorBuilder) {
-//         constructorBuilder.name = null; // Default constructor.
-//         constructorBuilder.factory = true;
-
-//         // Add constructor datasources parameter.
-//         constructorBuilder.optionalParameters
-//             .add(Parameter((ParameterBuilder parameterBuilder) {
-//           parameterBuilder.name = 'datasources';
-//           parameterBuilder.named = true;
-//           parameterBuilder.type =
-//               TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
-//             typeReferenceBuilder.symbol = 'PrismaNullable';
-//             typeReferenceBuilder.url = 'package:orm/orm.dart';
-//             typeReferenceBuilder.types.add(refer('Datasources'));
-//           });
-//         }));
-
-//         // Add constructor log parameter.
-//         if (options.previewFeatures
-//             .contains(GeneratorPreviewFeatures.logging)) {
-//           constructorBuilder.optionalParameters
-//               .add(Parameter((ParameterBuilder parameterBuilder) {
-//             parameterBuilder.name = 'log';
-//             parameterBuilder.named = true;
-//             parameterBuilder.type =
-//                 TypeReference((TypeReferenceBuilder update) {
-//               update.symbol = 'Iterable';
-//               update.url = 'dart:core';
-//               update.types.add(
-//                 refer('PrismaLogDefinition', 'package:orm/orm.dart'),
-//               );
-//             });
-
-//             parameterBuilder.defaultTo = literalConstList(
-//                     [], refer('PrismaLogDefinition', 'package:orm/orm.dart'))
-//                 .code;
-//           }));
-//         }
-
-//         // Create public constructor body.
-//         constructorBuilder.body = Block((BlockBuilder blockBuilder) {
-//           // Create a engine.
-//           blockBuilder.addExpression(
-//             declareFinal(
-//               'engine',
-//               type: refer('Engine', 'package:orm/orm.dart'),
-//             ).assign(_createEngineInstance()),
-//           );
-
-//           // Create PrismaClient instance.
-//           blockBuilder.addExpression(
-//             declareFinal(
-//               'client',
-//               type: refer(classBuilder.name!),
-//             ).assign(
-//               refer(classBuilder.name!).newInstanceNamed('_', [
-//                 refer('engine'),
-//                 literalNull,
-//               ]),
-//             ),
-//           );
-
-//           if (options.previewFeatures
-//               .contains(GeneratorPreviewFeatures.finalizer)) {
-//             blockBuilder.addExpression(
-//               refer('_finalizer').property('attach').call([
-//                 refer('client'),
-//                 refer('engine'),
-//               ], {
-//                 'detach': refer('client'),
-//               }),
-//             );
-//           }
-
-//           // Return a [this] instance.
-//           blockBuilder.addExpression(refer('client').returned);
-//         });
-//       }));
-
-//       // Create `$on` method.
-//       // Output:
-//       // void $on(
-//       //  Iterable<PrismaLogLevel> levels,
-//       //  PrismaLogHandler handler
-//       // ) => _engine.logEmitter.on(levels.toSet(), handler);
-//       if (options.previewFeatures.contains(GeneratorPreviewFeatures.logging)) {
-//         classBuilder.methods.add(Method((MethodBuilder methodBuilder) {
-//           methodBuilder.name = r'$on';
-//           methodBuilder.requiredParameters.add(Parameter((ParameterBuilder b) {
-//             b.name = 'levels';
-//             b.type = TypeReference((TypeReferenceBuilder update) {
-//               update.symbol = 'Iterable';
-//               update.url = 'dart:core';
-//               update.types.add(
-//                 refer('PrismaLogLevel', 'package:orm/orm.dart'),
-//               );
-//             });
-//           }));
-//           methodBuilder.requiredParameters.add(Parameter((ParameterBuilder b) {
-//             b.name = 'handler';
-//             b.type = refer('PrismaLogHandler', 'package:orm/orm.dart');
-//           }));
-//           methodBuilder.body =
-//               refer('_engine').property('logEmitter').property('on').call([
-//             refer('levels').property('toSet').call([]),
-//             refer('handler'),
-//           ]).code;
-//           methodBuilder.docs.add('''
-// /// The \$on() method allows you to subscribe to events.
-// ///
-// /// All message use a [Exception] class wrapper.
-// ///
-// /// Example:
-// /// ```dart
-// /// prisma.\$on([PrismaLogLevel.query], (e) {
-// ///   if (e is PrismaQueryEvent) {
-// ///     print(e.query);
-// ///   }
-// /// });
-// /// ```''');
-//         }));
-//       }
-
-//     }));
-
     /// Extension [PrismaClient] class.
     library.body.add(Extension((ExtensionBuilder builder) {
       builder.name = 'ModelDelegateOnPrismaClientExtension';
@@ -318,7 +158,7 @@ class ClientBuilder {
         builder.named = true;
         builder.type =
             TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
-          typeReferenceBuilder.symbol = 'Datasources?';
+          typeReferenceBuilder.symbol = 'Datasources';
           typeReferenceBuilder.isNullable = true;
         });
       }));
@@ -333,15 +173,26 @@ class ClientBuilder {
           update.types.add(
             refer('PrismaLogDefinition', 'package:orm/orm.dart'),
           );
+          update.isNullable = true;
         });
-
-        builder.defaultTo = literalConstList(
-                [], refer('PrismaLogDefinition', 'package:orm/orm.dart'))
-            .code;
       }));
 
       // Create body
       builder.body = Block((BlockBuilder blockBuilder) {
+        // Create log emitter
+        blockBuilder.addExpression(
+          declareFinal(
+            'logEmitter',
+            type: refer('PrismaLogEmitter', 'package:orm/orm.dart'),
+          ).assign(
+            refer('PrismaLogEmitter', 'package:orm/orm.dart').newInstance(
+              [
+                refer('log').ifNullThen(literalList([])),
+              ],
+            ),
+          ),
+        );
+
         // Create a engine.
         blockBuilder.addExpression(
           declareFinal(
@@ -414,12 +265,13 @@ class ClientBuilder {
       'dmmf': refer('dmmf'),
       'schema': refer('schema'),
       'environment': refer('environment'),
+      'logEmitter': refer('logEmitter'),
     };
 
-    // Add logEmitter.
-    namedArguments['logEmitter'] =
-        refer('PrismaLogEmitter', 'package:orm/orm.dart')
-            .newInstance([refer('log')]);
+    // // Add logEmitter.
+    // namedArguments['logEmitter'] =
+    //     refer('PrismaLogEmitter', 'package:orm/orm.dart')
+    //         .newInstance([refer('log')]);
 
     if (options.dataProxy) {
       return _createDataProxyEngineInstance(namedArguments);

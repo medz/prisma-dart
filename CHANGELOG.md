@@ -1,3 +1,9 @@
+## 2.6.1
+
+1. Fixed generated freezed file has undefined class error - [#96](https://github.com/odroe/prisma-dart/issues/96)
+2. generated Prisma Dart Client is now null-safe
+3. Optimize the log parameter for `createPrismaClient`
+
 ## 2.6.0
 
 🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.6.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.6.0) about the release. 🌟

@@ -24,6 +24,40 @@ mixin _$PrismaNull {
 }
 
 /// @nodoc
+abstract class $PrismaNullCopyWith<$Res> {
+  factory $PrismaNullCopyWith(
+          PrismaNull value, $Res Function(PrismaNull) then) =
+      _$PrismaNullCopyWithImpl<$Res, PrismaNull>;
+}
+
+/// @nodoc
+class _$PrismaNullCopyWithImpl<$Res, $Val extends PrismaNull>
+    implements $PrismaNullCopyWith<$Res> {
+  _$PrismaNullCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$_PrismaNullCopyWith<$Res> {
+  factory _$$_PrismaNullCopyWith(
+          _$_PrismaNull value, $Res Function(_$_PrismaNull) then) =
+      __$$_PrismaNullCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_PrismaNullCopyWithImpl<$Res>
+    extends _$PrismaNullCopyWithImpl<$Res, _$_PrismaNull>
+    implements _$$_PrismaNullCopyWith<$Res> {
+  __$$_PrismaNullCopyWithImpl(
+      _$_PrismaNull _value, $Res Function(_$_PrismaNull) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
 @JsonSerializable()
 class _$_PrismaNull implements _PrismaNull {
   const _$_PrismaNull();
@@ -35,6 +69,16 @@ class _$_PrismaNull implements _PrismaNull {
   String toString() {
     return 'PrismaNull()';
   }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_PrismaNull);
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   Map<String, dynamic> toJson() {

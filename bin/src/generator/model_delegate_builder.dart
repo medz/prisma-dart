@@ -322,10 +322,7 @@ class ModelDelegateBuilder {
       // If field output type is List
       if (field.outputType.isList) {
         final Expression listReturn = data
-            .asA(TypeReference((TypeReferenceBuilder typeReferenceBuilder) {
-              typeReferenceBuilder.symbol = 'List';
-              typeReferenceBuilder.isNullable = true;
-            }))
+            .asA(refer('List', 'dart:core'))
             .property('whereType')
             .call([], {}, [refer('Map')])
             .property('map')
