@@ -18,7 +18,7 @@ class JsonRpcMessage {
   Map<String, dynamic> toJson() => _$JsonRpcMessageToJson(this);
 }
 
-@JsonSerializable(createFactory: true, createToJson: true)
+@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
 class JsonRpcError {
   final int code;
   final String message;
@@ -77,7 +77,8 @@ class JsonRpcPayload extends JsonRpcMessage {
   Map<String, dynamic> toJson() => _$JsonRpcPayloadToJson(this);
 }
 
-@JsonSerializable(createFactory: true, createToJson: false)
+@JsonSerializable(
+    createFactory: true, createToJson: false, explicitToJson: true)
 class JsonRpcResponse extends JsonRpcMessage {
   const JsonRpcResponse({
     required super.id,
@@ -120,7 +121,8 @@ class SchemaPushResult {
       _$SchemaPushResultFromJson(json);
 }
 
-@JsonSerializable(createFactory: true, createToJson: false)
+@JsonSerializable(
+    createFactory: true, createToJson: false, explicitToJson: true)
 class SchemaPushResponse extends JsonRpcResponse {
   const SchemaPushResponse({
     required super.id,
