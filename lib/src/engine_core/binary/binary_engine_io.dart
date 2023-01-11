@@ -459,8 +459,7 @@ Use the `prisma.\$transaction()` API to run queries in a transaction.
 Add the following to your `schema.prisma` file:
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions"]
+  provider = "prisma-client-dart"
 }
 
 Read more about transactions in our documentation: 
