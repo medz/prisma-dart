@@ -6,7 +6,6 @@ abstract class JsonSerializable {
 
 /// Date time toJson serializer.
 dynamic dateTimeToJson(dynamic value) {
-  print(value is DateTime);
   if (value is DateTime) {
     return value.isUtc
         ? value.toIso8601String()
