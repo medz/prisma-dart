@@ -1,3 +1,8 @@
+## 2.6.2
+
+1. Fixed `DateTime` to `String` must be ISO8601 format error - [#103](https://github.com/odroe/prisma-dart/issues/103)
+2. Fixed `PrismaNull` being serialized as `null` error.
+
 ## 2.6.1
 
 1. Fixed generated freezed file has undefined class error - [#96](https://github.com/odroe/prisma-dart/issues/96)
