@@ -56,6 +56,7 @@ ${'//'.padRight(80, '*')} \n
       show: [
         'PrismaNull',
         r'$PrismaNullCopyWith',
+        'dateTimeToJson',
       ]..sort(),
     ));
 

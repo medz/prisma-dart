@@ -140,14 +140,17 @@ class _OutputObjectTypesBuilder {
         updates.modifier = code_builder.FieldModifier.final$;
         updates.type = scalar(field.outputType, field.isNullable ?? true);
 
-        if (field.name != updates.name) {
-          updates.annotations.add(code_builder.TypeReference(
-              (code_builder.TypeReferenceBuilder updates) {
-            updates.symbol = 'JsonKey';
-          }).newInstance([], {
-            'name': code_builder.literalString(field.name),
-          }));
+        final Map<String, code_builder.Expression> annotationNamedArguments = {
+          'name': code_builder.literalString(field.name),
+        };
+        if (field.outputType.type.toLowerCase() == 'datetime') {
+          annotationNamedArguments['toJson'] =
+              code_builder.refer('dateTimeToJson');
         }
+
+        updates.annotations.add(code_builder
+            .refer('JsonKey')
+            .newInstance([], annotationNamedArguments));
 
         if (field.documentation != null) {
           updates.docs.add(field.documentation!);
@@ -230,14 +233,25 @@ class _InputObjectTypesBuilder {
         final code_builder.Parameter parameter = code_builder.Parameter(
             (code_builder.ParameterBuilder parameterBuilder) {
           parameterBuilder.named = true;
-          // updates.toThis = true;
           parameterBuilder.required = field.isRequired;
           parameterBuilder.name = languageKeywordEncode(field.name);
           parameterBuilder.type = schemaArgBuilder(updates, field);
-          parameterBuilder.annotations
-              .add(code_builder.refer('JsonKey').newInstance([], {
+
+          final Map<String, code_builder.Expression> annotationNamedArguments =
+              {
             'name': code_builder.literalString(field.name),
-          }));
+          };
+
+          // If input types is only one, add toJson.
+          if (field.inputTypes.length == 1 &&
+              field.inputTypes.first.type.toLowerCase() == 'datetime') {
+            annotationNamedArguments['toJson'] =
+                code_builder.refer('dateTimeToJson');
+          }
+
+          parameterBuilder.annotations.add(code_builder
+              .refer('JsonKey')
+              .newInstance([], annotationNamedArguments));
 
           if (field.comment != null) {
             parameterBuilder.docs.add(field.comment!);
@@ -282,6 +296,14 @@ class _InputObjectTypesBuilder {
                 code_builder.Parameter((code_builder.ParameterBuilder updates) {
               updates.name = 'value';
               updates.type = scalar(type, false);
+
+              // If the type is DateTime, add JsonKey annotation.
+              if (type.type.toLowerCase() == 'datetime') {
+                updates.annotations
+                    .add(code_builder.refer('JsonKey').newInstance([], {
+                  'toJson': code_builder.refer('dateTimeToJson'),
+                }));
+              }
             }));
           });
 
