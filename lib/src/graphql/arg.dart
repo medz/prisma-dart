@@ -100,6 +100,9 @@ class GraphQLArg {
       return _objectBuilder(value['value']);
     }
 
+    // If value is PrismaNull, return it.
+    if (value is PrismaNull) return value;
+
     /// If value is list, return Prisma union with list of values.
     if (value is List) return _listBuilder(value);
 
