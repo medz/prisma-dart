@@ -4,22 +4,17 @@ void main() async {
   final PrismaClient prisma = createPrismaClient();
 
   try {
-    final users = await prisma.user.findMany(
-      where: UserWhereInput(
-        id: UserWhereInput_id.withIntFilter(
-          IntFilter(
-            dart__in: [1, 2, 3],
-          ),
-        ),
+    // Create a new and delete it.
+    final data = CreateOneUserData.withUserUncheckedCreateInput(
+      UserUncheckedCreateInput(
+        name: 'Some name',
+        createdAt: DateTime.now(),
       ),
     );
+    final user = await prisma.user.create(data: data);
 
-    print(users.map((e) => e.toJson()));
-
-    await prisma.user.findUniqueOrThrow(
-      where: UserWhereUniqueInput(
-        id: 2,
-      ),
+    await prisma.user.delete(
+      where: UserWhereUniqueInput(id: user.id),
     );
   } catch (e) {
     print(e);
