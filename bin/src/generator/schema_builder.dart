@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart' as code_builder;
-import 'package:orm/dmmf.dart' as dmmf;
 import 'package:orm/src/runtime/language_keyword.dart';
+import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
 
 import 'generator_options.dart';
 import 'utils/dart_style.dart';

@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:orm/dmmf.dart';
+import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 import 'dart_style.dart';
 

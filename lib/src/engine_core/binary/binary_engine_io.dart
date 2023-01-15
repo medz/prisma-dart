@@ -4,11 +4,11 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
 import 'package:retry/retry.dart';
 
 import '../../../version.dart';
 import '../../configure/environment.dart';
-import '../../dmmf/dmmf.dart' as dmmf;
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
 import '../common/errors/prisma_client_initialization_error.dart';
@@ -243,7 +243,7 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
   }
 
   @override
-  Future<dmmf.Document> getDmmf({bool forceRun = false}) async {
+  Future<Document> getDmmf({bool forceRun = false}) async {
     if (!forceRun) return super.getDmmf(forceRun: forceRun);
 
     final ProcessResult result = await Process.run(
@@ -261,7 +261,7 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
       throw e;
     }
 
-    return dmmf.Document.fromJson(json.decode(result.stdout));
+    return Document.fromJson(json.decode(result.stdout));
   }
 
   /// GraphQL request body builder.

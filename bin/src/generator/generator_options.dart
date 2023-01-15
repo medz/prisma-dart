@@ -1,5 +1,5 @@
-import 'package:orm/dmmf.dart';
 import 'package:orm/generator_helper.dart';
+import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 class GeneratorOptions {
   /// Schema DMMF document

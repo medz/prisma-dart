@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:orm/dmmf.dart' as dmmf;
 import 'package:orm/orm.dart' show languageKeywordEncode;
+import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
 
 import 'generator_options.dart';
 import 'utils/dart_style.dart';

@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
+
 import '../../configure/environment.dart';
-import '../../dmmf/dmmf.dart' show Document;
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
 import 'get_config_result.dart';

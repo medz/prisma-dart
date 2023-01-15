@@ -22,8 +22,9 @@ class ClientBuilder {
 
       // Build dmmf block.
       blockBuilder.addExpression(
-        declareFinal('dmmf', type: refer('Document', 'package:orm/dmmf.dart'))
-            .assign(refer('Document', 'package:orm/dmmf.dart')
+        declareFinal('dmmf',
+                type: refer('Document', 'package:prisma_dmmf/prisma_dmmf.dart'))
+            .assign(refer('Document', 'package:prisma_dmmf/prisma_dmmf.dart')
                 .property('fromJson')
                 .call([
           literalMap(options.dmmf.toJson(), refer('String'), refer('dynamic'))
