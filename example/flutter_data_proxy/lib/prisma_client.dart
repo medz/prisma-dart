@@ -7558,7 +7558,7 @@ _i1.PrismaClient createPrismaClient({
     schema: schema,
     environment: environment,
     logEmitter: logEmitter,
-    intenalDatasources: [_i1.Datasource(url: 'DATABASE_URL')],
+    intenalDatasources: [const _i1.Datasource(url: 'DATABASE_URL')],
   );
   final _i1.PrismaClient client = _i1.PrismaClient.fromEngine(engine);
   return client;

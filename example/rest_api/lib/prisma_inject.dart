@@ -5,7 +5,7 @@ import 'prisma_client.dart';
 class _PrismaInjector {
   PrismaClient? prisma;
 
-  Future<void> call(Context context, MiddlewareNext next) async {
+  Future<void> call(Context context, Next next) async {
     context[#prisma] = prisma ??= createPrismaClient();
 
     return next();
