@@ -1,3 +1,3 @@
-## 1.0.0
+## 0.0.0
 
-- Initial version.
+First release of prisma_env.
