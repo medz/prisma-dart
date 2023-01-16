@@ -4,8 +4,8 @@ import 'package:args/command_runner.dart';
 import 'package:path/path.dart';
 
 import '../datasource.dart';
-import '../environment.dart';
 import '../utils/ansi_progress.dart';
+import '../utils/finder.dart';
 
 class InitCommand extends Command {
   InitCommand() {
@@ -29,9 +29,16 @@ class InitCommand extends Command {
 
   @override
   void run() {
-    final File schema = findSchemaFile();
+    final File schema = findPrismaSchemaFile();
+    if (schema.existsSync()) {
+      throw Exception('''
+${relative(schema.path)} already exists.
+
+Please try again in a project that is not yet using Prisma.
+''');
+    }
+
     final DatasourceProvider provider = resolveProvider();
-    final Uri url = resolveUrl(provider);
 
     // Create ansi progress bar.
     final AnsiProgress process = AnsiProgress('Initializing Prisma...');
@@ -39,64 +46,11 @@ class InitCommand extends Command {
     // Create prisma schema file.
     createPrismaSchemaFile(schema, provider);
 
-    // Create prisma config files
-    createPrismaConfigFile(url);
-
     // Cancel progress bar.
     process.cancel(
       overrideMessage: 'Initialization completed successfully.',
       showTime: true,
     );
-  }
-
-  /// Create prisma config file.
-  void createPrismaConfigFile(Uri uri) {
-    // Create production environment configurator.
-    final File production = environment.production;
-    if (production.existsSync() != true) {
-      production.createSync(recursive: true);
-      production.writeAsStringSync(
-        '''
-import 'package:orm/configure.dart';
-
-/// Configure Prisma for production environment.
-/// 
-/// **NOTE**: The function name must be ${environment.productionFunctionName}.
-void ${environment.productionFunctionName}(PrismaEnvironment environment) {
-  environment['DATABASE_URL'] = r'$uri';
-}
-''',
-      );
-    }
-
-    // Create development environment configurator.
-    final File development = environment.development;
-    if (development.existsSync() != true) {
-      development.createSync(recursive: true);
-      development.writeAsStringSync(
-        '''
-import 'package:orm/configure.dart';
-
-/// Prisma development environment configurator.
-void configurator(PrismaDevelopment development) {
-  development.override('DATABASE_URL', r'$uri');
-
-  // You can override environment variable example:
-  // development.override('DEBUG', 'true');
-
-  // You can remove environment variable example:
-  // development.remove('DEBUG');
-}
-
-/// Configure Prisma for development environment.
-/// 
-/// **NOTE**: Prisma development must is a executable.
-/// 
-/// The `main` function is a Dart executable file entrypoint.
-void main() => PrismaDevelopment.server(configurator);
-''',
-      );
-    }
   }
 
   /// Create prisma schema file.
@@ -170,23 +124,5 @@ datasource db {
     }
 
     return DatasourceProvider.lookup(uri.scheme);
-  }
-
-  /// Find prisma schema file.
-  File findSchemaFile() {
-    late File exists;
-    try {
-      exists = environment.schema;
-    } catch (e) {
-      exists = File(join(environment.projectRoot, 'prisma', 'schema.prisma'));
-    }
-
-    if (exists.existsSync() != true) return exists;
-
-    throw Exception('''
-${relative(exists.path)} already exists.
-
-Please try again in a project that is not yet using Prisma.
-''');
   }
 }

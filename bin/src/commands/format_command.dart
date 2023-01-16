@@ -7,8 +7,8 @@ import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../binary_engine/binary_engine.dart';
 import '../binary_engine/binary_engine_type.dart';
-import '../environment.dart';
 import '../utils/ansi_progress.dart';
+import '../utils/finder.dart';
 
 class FormatCommand extends Command {
   FormatCommand() {
@@ -16,7 +16,7 @@ class FormatCommand extends Command {
       'schema',
       help: 'Schema file path.',
       valueHelp: 'path',
-      defaultsTo: environment.schema.path,
+      defaultsTo: findPrismaSchemaFile().path,
     );
   }
 
@@ -49,8 +49,8 @@ class FormatCommand extends Command {
         AnsiProgress('Formatting prisma schema...');
 
     // Run format engine binary.
-    final ProcessResult result = await engine.run(
-        ['format', '-i', relative(schema.path, from: environment.projectRoot)]);
+    final ProcessResult result =
+        await engine.run(['format', '-i', relative(schema.path)]);
 
     // If format engine binary failed, print error message.
     if (result.exitCode != 0) {

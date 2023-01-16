@@ -4,11 +4,10 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
+import 'package:prisma_env/prisma_env.dart';
 import 'package:retry/retry.dart';
 
 import '../../../version.dart';
-import '../../configure/environment.dart';
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
 import '../common/errors/prisma_client_initialization_error.dart';
@@ -32,7 +31,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     required super.schema,
     required super.datasources,
     required super.logEmitter,
-    required super.environment,
+    required super.config,
     super.allowTriggerPanic,
     super.executable,
     super.workingDirectory,
@@ -79,12 +78,8 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     return directories.toSet().toList();
   }
 
-  @override
-  Future<PrismaEnvironment> get environment async {
-    final PrismaEnvironment environment = await super.environment;
-
-    // Remove port from environment.
-    environment.removeWhere((key, value) => key.toLowerCase().trim() == 'port');
+  Map<String, String> get environment {
+    final Map<String, String> environment = {};
 
     // Build schema DML to environment.
     environment['PRISMA_DML'] = base64.encode(utf8.encode(schema));
@@ -101,6 +96,12 @@ class BinaryEngine extends unimplemented.BinaryEngine {
 
     if (environment['LOG_QUERIES'] == null && hasLogQueries) {
       environment['LOG_QUERIES'] = 'true';
+    }
+
+    for (final datasource in config.datasources) {
+      if (datasource.url.fromEnvVar != null) {
+        environment[datasource.url.fromEnvVar!] = datasource.url.value;
+      }
     }
 
     return environment;
@@ -149,7 +150,6 @@ class BinaryEngine extends unimplemented.BinaryEngine {
 
   @override
   Future<String> get executable async {
-    final PrismaEnvironment environment = await this.environment;
     final String? superExecutable = await super.executable;
 
     // If set executable, return it.
@@ -170,7 +170,7 @@ class BinaryEngine extends unimplemented.BinaryEngine {
     }
 
     // Find query engine in enviroment.
-    final String? forEnvirnoment = environment['PRISMA_QUERY_ENGINE_BINARY'];
+    final String? forEnvirnoment = PrismaEnv.queryEngineBinary;
     if (forEnvirnoment != null && forEnvirnoment.isNotEmpty) {
       if (File(forEnvirnoment).existsSync()) {
         return forEnvirnoment;
@@ -225,8 +225,8 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
         final ProcessResult result = await Process.run(
           await executable,
           ['cli', 'get-config'],
-          includeParentEnvironment: false,
-          environment: await environment,
+          includeParentEnvironment: true,
+          environment: environment,
           workingDirectory: workingDirectory,
         );
 
@@ -240,28 +240,6 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
         rethrow;
       }
     });
-  }
-
-  @override
-  Future<Document> getDmmf({bool forceRun = false}) async {
-    if (!forceRun) return super.getDmmf(forceRun: forceRun);
-
-    final ProcessResult result = await Process.run(
-      await executable,
-      ['--enable-raw-queries', 'cli', 'dmmf'],
-      includeParentEnvironment: false,
-      environment: await environment,
-      workingDirectory: workingDirectory,
-    );
-
-    if (result.exitCode != 0) {
-      final Exception e = Exception(result.stderr);
-      logEmitter.emit(PrismaLogLevel.error, e);
-
-      throw e;
-    }
-
-    return Document.fromJson(json.decode(result.stdout));
   }
 
   /// GraphQL request body builder.
@@ -288,7 +266,6 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
     QueryEngineRequestHeaders? headers,
   }) async {
     await start();
-    final PrismaEnvironment environment = await this.environment;
     final http.Request request = http.Request('POST', await endpoint)
       ..body = gqlRequestBodyBuilder(query)
       ..headers['Content-Type'] = 'application/json'
@@ -319,8 +296,7 @@ ${response.body}
         return QueryEngineResult(result['data'], elapsed);
       },
       maxDelay: const Duration(milliseconds: 200),
-      maxAttempts:
-          environment.containsKey('PRISMA_CLIENT_NO_RETRY') == true ? 1 : 2,
+      maxAttempts: bool.fromEnvironment('PRISMA_CLIENT_NO_RETRY') ? 1 : 2,
       retryIf: (e) =>
           e is http.ClientException ||
           e is SocketException ||
@@ -354,8 +330,8 @@ ${response.body}
     final Process process = await Process.start(
       await executable,
       arguments,
-      includeParentEnvironment: false,
-      environment: await environment,
+      includeParentEnvironment: true,
+      environment: environment,
       workingDirectory: workingDirectory,
     );
 
@@ -547,8 +523,8 @@ ${response.body}
     final ProcessResult result = await Process.run(
       await executable,
       ['--version'],
-      includeParentEnvironment: false,
-      environment: await environment,
+      includeParentEnvironment: true,
+      environment: environment,
       workingDirectory: workingDirectory,
     );
 

@@ -7,23 +7,23 @@ import 'package:orm/orm.dart';
 import 'package:orm/version.dart';
 import 'package:path/path.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart';
+import 'package:prisma_env/prisma_env.dart';
 import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../binary_engine/binary_engine.dart' as binary;
 import '../binary_engine/binary_engine_type.dart';
-import '../environment.dart';
 import '../generator/generator.dart';
 import '../generator/generator_options.dart';
 import '../utils/ansi_progress.dart';
+import '../utils/finder.dart';
 
 /// Resolve output
 String _resolveOutput(EnvValue? output, String schemaPath) {
   if (output == null || output.value.trim().isEmpty) {
-    return join(environment.projectRoot, 'lib');
+    return join(findProjectRoot(), 'lib');
   }
 
-  return relative(join(dirname(schemaPath), output.value.trim()),
-      from: environment.projectRoot);
+  return relative(join(dirname(schemaPath), output.value.trim()));
 }
 
 /// Get generated file.
@@ -55,12 +55,12 @@ class GenerateCommand extends Command {
       'schema',
       help: 'Custom path to your Prisma schema',
       valueHelp: 'path',
-      defaultsTo: environment.schema.path,
+      defaultsTo: findPrismaSchemaFile().path,
     );
     argParser.addFlag(
       'data-proxy',
       help: 'Enable the generated Prisma client to use the Data Proxy',
-      defaultsTo: environment.generateDataProxy,
+      defaultsTo: PrismaEnv.generateDataProxy,
     );
   }
 
@@ -95,6 +95,9 @@ class GenerateCommand extends Command {
       final json = jsonDecode(configProcessResult.stderr);
       throw json['message'];
     }
+
+    print(configProcessResult.stdout);
+    exit(0);
 
     // Parse config result.
     final GetConfigResult configResult = GetConfigResult.fromJson(

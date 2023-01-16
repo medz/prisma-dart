@@ -24,6 +24,7 @@ dependencies:
   json_annotation: ^4.6.0
   path: ^1.8.2
   prisma_dmmf: ^0.0.2
+  prisma_env: ^0.0.0
   prisma_get_platform: ^0.0.1
   rc: ^0.2.2
   retry: ^3.1.0

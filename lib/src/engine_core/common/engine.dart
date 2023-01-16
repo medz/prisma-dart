@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
 
-import '../../configure/environment.dart';
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
 import 'get_config_result.dart';
@@ -14,9 +13,12 @@ abstract class Engine {
     required this.schema,
     required this.dmmf,
     required this.datasources,
-    required this.environment,
     required this.logEmitter,
+    required this.config,
   });
+
+  /// Current Config result.
+  final GetConfigResult config;
 
   /// Prisma log emitter
   final PrismaLogEmitter logEmitter;
@@ -30,9 +32,6 @@ abstract class Engine {
   /// Data sources.
   final Map<String, Datasource> datasources;
 
-  /// Environment variables.
-  final Future<PrismaEnvironment> environment;
-
   /// Start the engine.
   Future<void> start();
 
@@ -40,10 +39,10 @@ abstract class Engine {
   Future<void> stop();
 
   /// Get Current configuration.
-  FutureOr<GetConfigResult> getConfig();
+  Future<GetConfigResult> getConfig() async => config;
 
   /// Get Current DMMF.
-  FutureOr<Document> getDmmf() => dmmf;
+  Future<Document> getDmmf() async => dmmf;
 
   /// Get current engine version.
   Future<String> version({bool forceRun = false}) async => 'unknown';

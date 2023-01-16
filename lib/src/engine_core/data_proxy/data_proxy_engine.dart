@@ -3,15 +3,14 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart';
+import 'package:prisma_env/prisma_env.dart';
 import 'package:retry/retry.dart';
 
 import '../../../version.dart';
-import '../../configure/environment.dart';
 import '../../runtime/datasource.dart';
 import '../../runtime/prisma_log.dart';
 import '../common/engine.dart';
 import '../common/errors/prisma_client_unknown_request_error.dart';
-import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
 import '../intenal_utils/header_getter.dart';
@@ -26,8 +25,8 @@ class DataProxyEngine extends Engine {
     required super.logEmitter,
     required super.schema,
     required super.dmmf,
+    required super.config,
     required super.datasources,
-    required super.environment,
     required this.intenalDatasources,
   });
 
@@ -150,11 +149,6 @@ class DataProxyEngine extends Engine {
   }
 
   @override
-  FutureOr<GetConfigResult> getConfig() {
-    throw UnimplementedError('Interactive getConfig are not yet supported');
-  }
-
-  @override
   Future<QueryEngineResult> request(
       {required String query, QueryEngineRequestHeaders? headers}) async {
     logEmitter.emit(
@@ -270,18 +264,17 @@ class DataProxyEngine extends Engine {
     }
 
     // Find in internal datasources.
-    final Iterable<String> envNames = intenalDatasources
-        .map((e) => e.url)
-        .where((e) => e?.isNotEmpty == true)
-        .cast<String>();
-    final PrismaEnvironment environment = await this.environment;
+    // final Iterable<String> envNames = intenalDatasources
+    //     .map((e) => e.url)
+    //     .where((e) => e?.isNotEmpty == true)
+    //     .cast<String>();
 
-    for (final name in envNames) {
-      final value = environment[name];
-      if (value?.isNotEmpty == true) {
-        return parseConnectionAddress(value!);
-      }
-    }
+    // for (final name in envNames) {
+    //   final value = environment[name];
+    //   if (value?.isNotEmpty == true) {
+    //     return parseConnectionAddress(value!);
+    //   }
+    // }
 
     throw StateError('Not found Data Proxy connection address');
   }
@@ -315,5 +308,5 @@ class DataProxyEngine extends Engine {
 
   /// Return data proxy remote client version.
   Future<String> get remoteClientVersion async =>
-      (await environment).clientDataProxyClientVersion;
+      PrismaEnv.clientDataProxyClientVersion ?? 'latest';
 }

@@ -1,10 +1,7 @@
 import 'dart:async';
 
-import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
-
 import '../../../version.dart';
 import '../common/engine.dart';
-import '../common/get_config_result.dart';
 import '../common/types/query_engine.dart';
 import '../common/types/transaction.dart';
 
@@ -13,8 +10,8 @@ class BinaryEngine extends Engine {
     required super.dmmf,
     required super.schema,
     required super.datasources,
-    required super.environment,
     required super.logEmitter,
+    required super.config,
     this.allowTriggerPanic = false,
     this.executable,
     this.workingDirectory,
@@ -76,17 +73,5 @@ class BinaryEngine extends Engine {
     if (forceRun) return binaryVersion;
 
     return super.version(forceRun: forceRun);
-  }
-
-  @override
-  FutureOr<GetConfigResult> getConfig({bool forceRun = false}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<Document> getDmmf({bool forceRun = false}) {
-    if (!forceRun) return super.getDmmf();
-
-    throw UnimplementedError();
   }
 }

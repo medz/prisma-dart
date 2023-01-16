@@ -6,10 +6,10 @@ import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../../../binary_engine/binary_engine.dart';
 import '../../../binary_engine/binary_engine_type.dart';
-import '../../../environment.dart';
 import '../../../internal/introspection_engine.dart';
 import '../../../internal/json_rpc.dart';
 import '../../../utils/ansi_progress.dart';
+import '../../../utils/finder.dart';
 
 class DbPullSubCommand extends Command<void> {
   @override
@@ -27,7 +27,7 @@ class DbPullSubCommand extends Command<void> {
       'schema',
       help: 'Custom path to your Prisma schema',
       valueHelp: 'path',
-      defaultsTo: environment.schema.path,
+      defaultsTo: findPrismaSchemaFile().path,
     );
     argParser.addOption(
       'composite-type-depth',

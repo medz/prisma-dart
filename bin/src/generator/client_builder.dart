@@ -3,9 +3,7 @@ import 'dart:convert';
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/generator_helper.dart';
 import 'package:orm/orm.dart' as runtime;
-import 'package:path/path.dart';
 
-import '../environment.dart';
 import 'generator_options.dart';
 import 'model_delegate_builder.dart';
 
@@ -18,8 +16,6 @@ class ClientBuilder {
   /// Build prisma client
   void build() {
     library.body.add(Block((BlockBuilder blockBuilder) {
-      blockBuilder.addExpression(createPrismaEnvironment());
-
       // Build dmmf block.
       blockBuilder.addExpression(
         declareFinal('dmmf',
@@ -218,41 +214,6 @@ class ClientBuilder {
         blockBuilder.addExpression(refer('client').returned);
       });
     }));
-  }
-
-  // Create [PrismaEnvironment] future instance
-  Expression createPrismaEnvironment() {
-    final Reference prismaEnvironment = refer(
-      'PrismaEnvironment',
-      'package:orm/configure.dart',
-    );
-    final TypeReference future = TypeReference((TypeReferenceBuilder update) {
-      update.symbol = 'Future';
-      update.types.add(prismaEnvironment);
-    });
-    final Expression closure = Method((MethodBuilder update) {
-      update.modifier = MethodModifier.async;
-      update.returns = future;
-
-      final Expression def = prismaEnvironment.newInstance([], {
-        'includePlatformEnvironment': literalTrue,
-      });
-      update.body = def.code;
-
-      final production = environment.production;
-      if (production.existsSync()) {
-        final String path = relative(relative(production.path),
-            from: dirname(relative(options.output)));
-        final Reference configurator =
-            refer(environment.productionFunctionName, path);
-
-        update.body = def.property('call').call([configurator]).code;
-      }
-    }).closure;
-
-    return declareFinal('environment').assign(
-      future.newInstance([closure]),
-    );
   }
 
   /// Create engine instance.

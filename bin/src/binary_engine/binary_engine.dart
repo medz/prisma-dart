@@ -5,9 +5,10 @@ import 'dart:isolate';
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
+import 'package:prisma_env/prisma_env.dart';
 
-import '../environment.dart' as internal;
 import '../utils/chmod.dart';
+import '../utils/finder.dart';
 import 'binary_engine_type.dart';
 
 class BinaryEngine {
@@ -31,23 +32,22 @@ class BinaryEngine {
   String get executable {
     switch (type) {
       case BinaryEngineType.query:
-        return internal.environment.queryEngineBinary ??
+        return PrismaEnv.queryEngineBinary ??
             _defaultEnginePathBuilder('query-engine');
       case BinaryEngineType.migration:
-        return internal.environment.migrationEngineBinary ??
+        return PrismaEnv.migrationEngineBinary ??
             _defaultEnginePathBuilder('migration-engine');
       case BinaryEngineType.introspection:
-        return internal.environment.introspectionEngineBinary ??
+        return PrismaEnv.introspectionEngineBinary ??
             _defaultEnginePathBuilder('introspection-engine');
       case BinaryEngineType.format:
-        return internal.environment.fmtBinary ??
-            _defaultEnginePathBuilder('prisma-fmt');
+        return PrismaEnv.fmtBinary ?? _defaultEnginePathBuilder('prisma-fmt');
     }
   }
 
   /// Default engine path builder.
   String _defaultEnginePathBuilder(String name) =>
-      joinAll([internal.environment.projectRoot, '.dart_tool', 'prisma', name]);
+      joinAll([findProjectRoot(), '.dart_tool', 'prisma', name]);
 
   /// Has the binary engine been downloaded.
   Future<bool> get hasDownloaded async {
@@ -79,10 +79,8 @@ class BinaryEngine {
       Process.run(
         executable,
         arguments,
-        workingDirectory: internal.environment.projectRoot,
         includeParentEnvironment: true,
         environment: {
-          ...internal.environment,
           ...environment,
         },
       );
@@ -95,10 +93,8 @@ class BinaryEngine {
       Process.start(
         executable,
         arguments,
-        workingDirectory: internal.environment.projectRoot,
         includeParentEnvironment: true,
         environment: {
-          ...internal.environment,
           ...environment,
         },
       );
@@ -115,7 +111,7 @@ class BinaryEngine {
     await _clean();
 
     // Create download url.
-    final Uri url = Uri.parse(internal.environment.enginesMirror).replace(
+    final Uri url = PrismaEnv.enginesMirror.replace(
       pathSegments: [
         'all_commits',
         version,

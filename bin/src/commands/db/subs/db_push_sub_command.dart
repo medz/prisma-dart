@@ -6,10 +6,10 @@ import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../../../binary_engine/binary_engine.dart';
 import '../../../binary_engine/binary_engine_type.dart';
-import '../../../environment.dart';
 import '../../../internal/json_rpc.dart';
 import '../../../internal/migrate_engine.dart';
 import '../../../utils/ansi_progress.dart';
+import '../../../utils/finder.dart';
 
 class DbPushSubCommand extends Command {
   @override
@@ -28,7 +28,7 @@ class DbPushSubCommand extends Command {
       'schema',
       help: 'Schema file path.',
       valueHelp: 'path',
-      defaultsTo: environment.schema.path,
+      defaultsTo: findPrismaSchemaFile().path,
     );
   }
 
