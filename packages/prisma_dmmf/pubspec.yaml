@@ -1,11 +1,11 @@
 name: prisma_dmmf
 description: __internal__, do not use | The library for serializing and deserializing Prisma DMMF.
-version: 0.0.1
+version: 0.0.2
 homepage: https://prisma.pub
 repository: https://github.com/odroe/prisma-dart/tree/main/packages/prisma_dmmf
 
 environment:
-  sdk: '>=2.18.6 <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
 
 dependencies:
   json_annotation: ^4.7.0
