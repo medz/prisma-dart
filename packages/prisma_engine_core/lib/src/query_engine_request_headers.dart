@@ -2,12 +2,21 @@ import 'transaction.dart';
 
 /// Query engine request headers.
 class QueryEngineRequestHeaders extends TransactionHeaders {
-  /// Transaction id header.
-  final String? transactionId;
-
-  /// Creates a new instance of [QueryEngineRequestHeaders].
-  const QueryEngineRequestHeaders({
+  /// Create a new instance of [QueryEngineRequestHeaders].
+  QueryEngineRequestHeaders({
     super.traceparent,
-    this.transactionId,
-  });
+    String? transactionId,
+  }) {
+    this.transactionId = transactionId;
+  }
+
+  /// Returns the transaction id.
+  String? get transactionId => this['x-transaction-id'];
+
+  /// Sets the transaction id.
+  set transactionId(String? value) {
+    if (value != null && value.isNotEmpty) {
+      this['x-transaction-id'] = value;
+    }
+  }
 }
