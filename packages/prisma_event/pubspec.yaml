@@ -1,0 +1,12 @@
+name: prisma_event
+description: Prisma event bus, Implementing Prisma logging APIs.
+version: 0.0.0
+homepage: https://prisma.pub
+repository: https://github.com/odroe/prisma-dart/tree/main/packages/prisma_event
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.16.0
