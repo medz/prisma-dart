@@ -14,4 +14,4 @@ dev_dependencies:
   test: ^1.22.2
 
 dependencies:
-  orm: ^2.6.1
+  orm: ^2.6.2
