@@ -1,5 +1,5 @@
 name: prisma_env
-description: A starting point for Dart libraries or applications.
+description: This package is used to read the environment configuration required by Prisma set via Dart --define.
 version: 0.0.0
 homepage: https://prisma.pub
 repository: https://github.com/odroe/prisma-dart/tree/main/packages/prisma_env
