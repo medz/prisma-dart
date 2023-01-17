@@ -1,5 +1,6 @@
-/// Prisma Environtment
-abstract class PrismaEnv {
+library prisma.environtment;
+
+abstract class Environtment {
   /// Debug mode
   static const String debug = String.fromEnvironment('DEBUG');
 

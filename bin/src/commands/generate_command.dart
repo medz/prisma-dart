@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:orm/environtment.dart';
 import 'package:orm/generator_helper.dart';
 import 'package:orm/orm.dart';
 import 'package:orm/version.dart';
 import 'package:path/path.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart';
-import 'package:prisma_env/prisma_env.dart';
 import 'package:prisma_get_platform/prisma_get_platform.dart';
 
 import '../binary_engine/binary_engine.dart' as binary;
@@ -60,7 +60,7 @@ class GenerateCommand extends Command {
     argParser.addFlag(
       'data-proxy',
       help: 'Enable the generated Prisma client to use the Data Proxy',
-      defaultsTo: PrismaEnv.generateDataProxy,
+      defaultsTo: Environtment.generateDataProxy,
     );
   }
 

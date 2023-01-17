@@ -4,8 +4,8 @@ import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
+import 'package:orm/environtment.dart';
 import 'package:path/path.dart';
-import 'package:prisma_env/prisma_env.dart';
 
 import '../utils/chmod.dart';
 import '../utils/finder.dart';
@@ -32,16 +32,17 @@ class BinaryEngine {
   String get executable {
     switch (type) {
       case BinaryEngineType.query:
-        return PrismaEnv.queryEngineBinary ??
+        return Environtment.queryEngineBinary ??
             _defaultEnginePathBuilder('query-engine');
       case BinaryEngineType.migration:
-        return PrismaEnv.migrationEngineBinary ??
+        return Environtment.migrationEngineBinary ??
             _defaultEnginePathBuilder('migration-engine');
       case BinaryEngineType.introspection:
-        return PrismaEnv.introspectionEngineBinary ??
+        return Environtment.introspectionEngineBinary ??
             _defaultEnginePathBuilder('introspection-engine');
       case BinaryEngineType.format:
-        return PrismaEnv.fmtBinary ?? _defaultEnginePathBuilder('prisma-fmt');
+        return Environtment.fmtBinary ??
+            _defaultEnginePathBuilder('prisma-fmt');
     }
   }
 
@@ -111,7 +112,7 @@ class BinaryEngine {
     await _clean();
 
     // Create download url.
-    final Uri url = PrismaEnv.enginesMirror.replace(
+    final Uri url = Environtment.enginesMirror.replace(
       pathSegments: [
         'all_commits',
         version,

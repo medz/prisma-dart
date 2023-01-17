@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
+import 'package:orm/environtment.dart';
 import 'package:orm/version.dart';
-import 'package:prisma_env/prisma_env.dart';
 
 import 'src/commands/db/db_command.dart';
 import 'src/commands/format_command.dart';
@@ -51,8 +51,8 @@ void main(List<String> args) async {
   } catch (error) {
     print('');
     if (results.wasParsed('debug') ||
-        PrismaEnv.debug == 'prisma*' ||
-        PrismaEnv.debug == '*') {
+        Environtment.debug == 'prisma*' ||
+        Environtment.debug == '*') {
       rethrow;
     }
 
@@ -79,7 +79,7 @@ void _printVersion() {
   ${'Prisma CLI'.padRight(40)}$packageVersion
   ${'Prisma Binary Engines'.padRight(40)}$binaryVersion
   ${'Prisma Query C API'.padRight(40)}$capiVersion
-  ${'Data Proxy Remote Client'.padRight(40)}${PrismaEnv.clientDataProxyClientVersion ?? dataProxyRemoteClientVersion}
+  ${'Data Proxy Remote Client'.padRight(40)}${Environtment.clientDataProxyClientVersion ?? dataProxyRemoteClientVersion}
   ''';
 
   print(info);
