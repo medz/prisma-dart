@@ -5,6 +5,9 @@ import 'emit.dart';
 import 'event.dart';
 import 'payload.dart';
 
+/// Prisma event listener.
+typedef Listener = void Function(Payload payload);
+
 /// Prisma event logger
 abstract class Logger {
   /// Create a new logger.
@@ -16,8 +19,8 @@ abstract class Logger {
   /// The log definitions.
   Iterable<Definition> get definitions;
 
-  /// Listen to log events.
-  void on(Iterable<Event> events, void Function(Payload payload) listener);
+  /// Listen to log event.
+  void on(Event event, Listener listener);
 
   /// Emit a log event.
   void emit(Event event, Payload payload);
@@ -95,9 +98,9 @@ class _LoggerImpl implements Logger {
   }
 
   @override
-  void on(Iterable<Event> events, void Function(Payload payload) listener) {
+  void on(Event event, Listener listener) {
     broadcast.stream
-        .where((event) => events.contains(event.event))
+        .where((e) => e.event == event)
         .where((event) => definitions
             .where((element) => element.emit == Emit.event)
             .map((element) => element.event)
