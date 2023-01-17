@@ -23,6 +23,8 @@ const retry.RetryOptions _retryOptions = retry.RetryOptions(
 ///
 /// The Universal Engine is a wrapper around the Prisma GraphQL and the
 /// Prisma Data Proxy (if enabled).
+///
+/// **Note**: If the endpoint is a Data Proxy, the Universal Engine has no special optimizations for Data Proxy.
 class UniversalEngine implements Engine {
   /// The GraphQL endpoint.
   final Uri endpoint;
@@ -39,10 +41,6 @@ class UniversalEngine implements Engine {
     required this.logger,
     this.headers,
   });
-
-  @override
-  void on(logger_package.Event event, logger_package.Listener listener) =>
-      logger.on(event, listener);
 
   @override
   Future<GraphQLResult> request({

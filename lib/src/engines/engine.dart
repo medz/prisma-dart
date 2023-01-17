@@ -1,5 +1,3 @@
-import 'package:orm/logger.dart' as logger;
-
 import 'graphql_result.dart';
 import 'query_engine_request_headers.dart';
 import 'transaction.dart';
@@ -11,9 +9,6 @@ abstract class Engine {
 
   /// Stops the engine.
   Future<void> stop();
-
-  /// Register a new event listener.
-  void on(logger.Event event, logger.Listener listener);
 
   /// Requests a query execution.
   Future<GraphQLResult> request({
