@@ -5,13 +5,13 @@ import 'emit.dart';
 import 'event.dart';
 import 'payload.dart';
 
-/// Prisma event emitter.
-abstract class Emitter {
+/// Prisma event logger
+abstract class Logger {
   /// Create a new logger.
-  factory Emitter({
+  factory Logger({
     Iterable<Event>? stdout,
     Iterable<Event>? event,
-  }) = _EmitterImpl;
+  }) = _LoggerImpl;
 
   /// The log definitions.
   Iterable<Definition> get definitions;
@@ -31,7 +31,7 @@ class _BroadcastEvent {
   _BroadcastEvent(this.event, this.payload);
 }
 
-class _EmitterImpl implements Emitter {
+class _LoggerImpl implements Logger {
   @override
   final List<Definition> definitions;
 
@@ -39,13 +39,13 @@ class _EmitterImpl implements Emitter {
   final StreamController<_BroadcastEvent> broadcast;
 
   /// Create a new Emmiter.
-  const _EmitterImpl._internal({
+  const _LoggerImpl._internal({
     required this.definitions,
     required this.broadcast,
   });
 
   /// Create a new logger.
-  factory _EmitterImpl({
+  factory _LoggerImpl({
     Iterable<Event>? stdout,
     Iterable<Event>? event,
   }) {
@@ -66,7 +66,7 @@ class _EmitterImpl implements Emitter {
           .addAll(event.toSet().map((event) => Definition(event, Emit.event)));
     }
 
-    return _EmitterImpl._internal(
+    return _LoggerImpl._internal(
       definitions: definitions,
       broadcast: broadcast,
     );
