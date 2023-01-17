@@ -100,17 +100,23 @@ class Engine {
     Future<TransactionInfo> fn(void Function(Uri) logger) async {
       logger(url);
 
-      print(body);
-
       final response = await http.post(url,
           headers: _resolveHeaders(headers: headers), body: body);
-      print(response.body);
       final json =
           (convert.json.decode(response.body) as Map).cast<String, dynamic>();
 
-      return TransactionInfo(
-        id: json['id'] as String,
-      );
+      if (json.containsKey('id')) {
+        // If the request not is data-proxy, generate a transaction endpoint.
+        if (!json.containsKey('data-proxy')) {
+          json['endpoint'] = endpoint.replace(
+            pathSegments: [...endpoint.pathSegments, 'transaction', json['id']],
+          );
+        }
+
+        return TransactionInfo.fromJson(json);
+      }
+
+      throw json;
     }
 
     return withRetry<TransactionInfo>(fn, gerund: 'starting transaction');
@@ -121,12 +127,8 @@ class Engine {
     required TransactionHeaders headers,
     required TransactionInfo info,
   }) async {
-    final url = endpoint.replace(pathSegments: [
-      ...endpoint.pathSegments,
-      'transaction',
-      info.id,
-      'commit'
-    ]);
+    final url = info.endpoint
+        .replace(pathSegments: [...info.endpoint.pathSegments, 'rollback']);
 
     return _otherTransaction(url, gerund: 'committing');
   }
@@ -136,12 +138,8 @@ class Engine {
     required TransactionHeaders headers,
     required TransactionInfo info,
   }) async {
-    final url = endpoint.replace(pathSegments: [
-      ...endpoint.pathSegments,
-      'transaction',
-      info.id,
-      'rollback'
-    ]);
+    final url = info.endpoint
+        .replace(pathSegments: [...info.endpoint.pathSegments, 'rollback']);
 
     return _otherTransaction(url, gerund: 'rolling back');
   }

@@ -29,8 +29,38 @@ class TransactionInfo {
   /// Transaction id.
   final String id;
 
+  /// Original JSON.
+  final Map<String, dynamic> json;
+
+  /// Transaction commit and rollback url.
+  final Uri endpoint;
+
   /// Creates a new instance of [TransactionInfo].
-  const TransactionInfo({required this.id});
+  const TransactionInfo(
+      {required this.id, required this.json, required this.endpoint});
+
+  /// Create a new instance of [TransactionInfo] from a JSON.
+  factory TransactionInfo.fromJson(Map<String, dynamic> json) {
+    return TransactionInfo(
+      id: json['id'] as String,
+      json: json,
+      endpoint: _resolveEndpoint(json),
+    );
+  }
+
+  /// Resolves the transaction endpoint.
+  static Uri _resolveEndpoint(Map<String, dynamic> json) {
+    if (json.containsKey('endpoint')) {
+      final endpoint = json['endpoint'];
+      if (endpoint is Uri) return endpoint;
+
+      return Uri.parse(endpoint.toString());
+    } else if (json.containsKey('data-proxy') && json['data-proxy'] is Map) {
+      return Uri.parse(json['data-proxy']['endpoint'] as String);
+    }
+
+    throw ArgumentError.value(json, 'json', 'Invalid transaction info');
+  }
 }
 
 /// Transaction Headers.

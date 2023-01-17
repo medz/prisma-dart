@@ -66,10 +66,14 @@ class GraphQLResult {
   /// Errors.
   final Iterable<GraphQLError>? errors;
 
+  /// Original JSON.
+  final Map<String, dynamic> json;
+
   /// Creates a new instance of [GraphQLResult].
   const GraphQLResult({
     this.data,
     this.errors,
+    required this.json,
   }) : assert(data != null || errors != null);
 
   /// Creates a new instance of [GraphQLResult] from a JSON [Map].
@@ -82,6 +86,7 @@ class GraphQLResult {
     return GraphQLResult(
       data: data,
       errors: errors,
+      json: json,
     );
   }
 }
