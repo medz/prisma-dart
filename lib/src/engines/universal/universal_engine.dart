@@ -9,8 +9,8 @@ import '../engine.dart';
 import '../graphql_result.dart';
 import '../query_engine_request_headers.dart';
 import '../transaction.dart';
-import '_internal/headers_wrapper.dart';
-import '_internal/stringify_query.dart';
+import '../_internal/headers_wrapper.dart';
+import '../_internal/stringify_query.dart';
 
 /// Create RetryOptions with exponential backoff.
 const retry.RetryOptions _retryOptions = retry.RetryOptions(
