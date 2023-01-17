@@ -1,86 +1,49 @@
-library prisma.cli;
-
+import 'dart:async';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:args/command_runner.dart';
-import 'package:orm/environtment.dart';
-import 'package:orm/version.dart';
+import 'package:code_builder/code_builder.dart';
 
-import 'src/commands/db/db_command.dart';
-import 'src/commands/format_command.dart';
-import 'src/commands/generate_command.dart';
-import 'src/commands/init_command.dart';
-import 'src/commands/precache_command.dart';
+import 'generator/generator.dart';
+import 'generator/prisma_info.dart';
 
-/// The Prisma CLI executable name.
-const String _executableName = r'dart run orm';
+/// Prisma Dart client generator
+void main(Iterable<String> args) async {
+  final parase = ArgParser();
 
-/// Prisma CLI description.
-const String _description =
-    ' ◭ Prisma CLI 🚀\nPrisma is a modern DB toolkit to query, migrate and model your database.\n More info: https://github.com/odroe/prisma-dart';
+  // Register the `ecosystem` option.
+  parase.addOption(
+    'package-manager',
+    abbr: 'p',
+    help: 'The NodeJS package manager to use.',
+    allowed: ['npm', 'yarn', 'pnpm'],
+    defaultsTo: 'npm',
+  );
 
-void main(List<String> args) async {
-  // Create command runner.
-  final CommandRunner runner = CommandRunner(_executableName, _description);
+  // Register the `help` option.
+  parase.addFlag(
+    'help',
+    abbr: 'h',
+    help: 'Prints this help information.',
+    negatable: false,
+  );
 
-  // Add global options.
-  runner.argParser.addFlag('version',
-      abbr: 'v', negatable: false, help: 'Print CLI and engines version.');
-  runner.argParser
-      .addFlag('debug', negatable: false, help: 'Print debug information.');
+  // Parse the arguments.
+  final results = parase.parse(args);
 
-  // Add commands.
-  runner.addCommand(InitCommand());
-  runner.addCommand(FormatCommand());
-  runner.addCommand(DbCommand());
-  runner.addCommand(GenerateCommand());
-  runner.addCommand(PrecacheCommand());
+  // Print the help information if requested.
+  if (results['help'] as bool) return stdout.writeln(parase.usage);
 
-  // Get command result.
-  final ArgResults results = runner.parse(args);
+  final info = PrismaInfo.lookup(results['package-manager']);
 
-  // If version flag is set, print version and exit.
-  if (results.wasParsed('version')) {
-    return _printVersion();
-  }
+  final completer = Completer<Generator>();
+  final library = Library((LibraryBuilder updates) async {
+    final generator = await Generator.create(info: info, library: updates);
+    completer.complete(generator);
+  });
+  final generator = await completer.future;
 
-  // Run command.
-  try {
-    await runner.runCommand(results);
-  } catch (error) {
-    print('');
-    if (results.wasParsed('debug') ||
-        Environtment.debug == 'prisma*' ||
-        Environtment.debug == '*') {
-      rethrow;
-    }
+  print(generator.generatorId);
 
-    runner.printUsage();
-    print('\n');
-    print(_redTextWrapper(error.toString()));
-    print('\n');
-    exit(1);
-  }
-}
-
-/// Red text if then terminal supports it.
-String _redTextWrapper(String text) {
-  if (stdout.supportsAnsiEscapes) {
-    return '\x1B[31m$text\x1B[0m';
-  }
-
-  return text;
-}
-
-/// Print CLI and engines version.
-void _printVersion() {
-  final String info = '''
-  ${'Prisma CLI'.padRight(40)}$packageVersion
-  ${'Prisma Binary Engines'.padRight(40)}$binaryVersion
-  ${'Prisma Query C API'.padRight(40)}$capiVersion
-  ${'Data Proxy Remote Client'.padRight(40)}${Environtment.clientDataProxyClientVersion ?? dataProxyRemoteClientVersion}
-  ''';
-
-  print(info);
+  await generator();
 }

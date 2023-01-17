@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-dart"
+  provider = "dart run orm"
+  binaryTargets = ["native"]
 }
 
 datasource db {
