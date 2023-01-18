@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import '../engine_core/common/engine.dart';
-import '../engine_core/common/types/query_engine.dart';
-import '../engine_core/common/types/transaction.dart';
+import '../../engine_core.dart';
 import '../graphql/arg.dart';
 import '../graphql/field.dart';
 import '../runtime/prisma_log.dart';
