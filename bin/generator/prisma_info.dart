@@ -23,8 +23,9 @@ class PrismaInfo {
       ],
       stdoutEncoding: convert.utf8,
     );
-    final json = convert.json.decode(result.stdout);
-
-    return PrismaInfo._(json['prisma'], json['current-platform']);
+    // Find JSON block.
+    final json = result.stdout.toString().split('{').last.split('}').first;
+    final map = convert.json.decode('{$json}');
+    return PrismaInfo._(map['prisma'], map['current-platform']);
   }
 }

@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:orm/environtment.dart';
 import 'package:orm/logger.dart' as logger_package;
 import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
 
 import '../engine.dart';
 import '../universal/universal_engine.dart';
@@ -182,6 +184,82 @@ class BinaryEngine extends UniversalEngine implements Engine {
       includeParentEnvironment: true,
       mode: ProcessStartMode.normal,
     );
-    // TODO;
+
+    // Listen stdout.
+    _listenStdout(process);
+
+    // Wait for ready.
+    final ready = await _waitPrismaServerReady();
+    if (!ready) {
+      throw Exception('Cannot start the query engine');
+    }
+
+    return process;
   }
+
+  /// Listen stdout.
+  _listenStdout(Process process) {
+    process.stdout
+        .transform(convert.utf8.decoder)
+        .transform(const convert.LineSplitter())
+        .listen(
+      (line) {
+        if (line.isEmpty) return;
+        try {
+          final json = convert.json.decode(line);
+          if (json['fields'] == null) return;
+
+          final level = json['level'].toString().toLowerCase().trim();
+          final event = logger_package.Event.values.firstWhere(
+              (e) => e.name == level,
+              orElse: () => json['fields']?['query'] != null
+                  ? logger_package.Event.query
+                  : logger_package.Event.info);
+          final payload = logger_package.Payload.fromJson(json);
+
+          logger.emit(event, payload);
+        } catch (e) {
+          final message = Error.safeToString(e);
+          logger.emit(logger_package.Event.error,
+              logger_package.Payload(message: message));
+        }
+        throw Exception('Cannot parse the query engine log');
+      },
+    );
+  }
+
+  /// Stop the binary query engine.
+  @override
+  Future<void> stop() async {
+    if (process?.kill() == true) {
+      final exitCode = await process!.exitCode;
+      logger.emit(
+          logger_package.Event.info,
+          logger_package.Payload(
+              message: 'Stopped the query engine (Exit code: $exitCode)'));
+    }
+
+    process = null;
+  }
+
+  /// Wait the prisma server ready.
+  Future<bool> _waitPrismaServerReady() {
+    final url = endpoint.replace(
+      pathSegments: [...endpoint.pathSegments, 'status'],
+    );
+
+    return retry<bool>(() async {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final json = convert.json.decode(response.body);
+        if (json['status'].toString().toLowerCase() == 'ok') return true;
+      }
+
+      throw Exception('Prisma server is not ready');
+    });
+  }
+
+  /// Request the query engine endpoint.
+  @override
+  Uri resolveRequestEndpoint() => endpoint;
 }

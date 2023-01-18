@@ -18,12 +18,14 @@ class Payload {
 
   /// Create a new event payload from a JSON [Map].
   factory Payload.fromJson(Map<String, dynamic> json) {
+    if (json['fields']['query'] != null) return QueryPayload.fromJson(json);
+
     return Payload(
       target: json['target'] as String?,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      message: json['message'] as String,
+      message: json['fields']['message'].toString(),
     );
   }
 
@@ -67,11 +69,11 @@ class QueryPayload extends Payload {
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      query: json['query'] as String,
-      params: json['params'] as String?,
-      duration: json['duration'] == null
+      query: json['fields']['query'] as String,
+      params: json['fields']['params'] as String?,
+      duration: json['fields']['duration_ms'] == null
           ? null
-          : Duration(milliseconds: json['duration'] as int),
+          : Duration(milliseconds: json['fields']['duration_ms'] as int),
     );
   }
 

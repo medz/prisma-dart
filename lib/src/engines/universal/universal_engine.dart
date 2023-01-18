@@ -42,6 +42,13 @@ class UniversalEngine implements Engine {
     this.headers,
   });
 
+  /// Resolve the request endpoint.
+  Uri resolveRequestEndpoint() {
+    return endpoint.replace(
+      pathSegments: [...endpoint.pathSegments, 'graphql'],
+    );
+  }
+
   @override
   Future<GraphQLResult> request({
     required String query,
@@ -51,9 +58,7 @@ class UniversalEngine implements Engine {
     logger.emit(
         logger_package.Event.query, logger_package.QueryPayload(query: query));
 
-    final url = endpoint.replace(
-      pathSegments: [...endpoint.pathSegments, 'graphql'],
-    );
+    final url = resolveRequestEndpoint();
     final wrappedHeaders =
         headersWrapper(headers: [this.headers, headers], info: transaction);
     final body = stringifyQuery(query);
@@ -67,10 +72,19 @@ class UniversalEngine implements Engine {
       final json =
           (convert.json.decode(response.body) as Map).cast<String, dynamic>();
 
+      // TODO: Handle errors.
+
       return GraphQLResult.fromJson(json);
     }
 
     return withRetry<GraphQLResult>(fn, gerund: 'querying');
+  }
+
+  /// Resolve start transaction endpoint.
+  Uri resolveStartTransactionEndpoint() {
+    return endpoint.replace(
+      pathSegments: [...endpoint.pathSegments, 'transaction', 'start'],
+    );
   }
 
   @override
@@ -80,9 +94,7 @@ class UniversalEngine implements Engine {
     Duration maxWait = const Duration(seconds: 2),
     IsolationLevel? isolationLevel,
   }) {
-    final url = endpoint.replace(
-      pathSegments: [...endpoint.pathSegments, 'transaction', 'start'],
-    );
+    final url = resolveStartTransactionEndpoint();
     final body = convert.json.encode({
       'max_wait': timeout.inMilliseconds,
       'timeout': maxWait.inMilliseconds,
@@ -99,26 +111,50 @@ class UniversalEngine implements Engine {
       final json =
           (convert.json.decode(response.body) as Map).cast<String, dynamic>();
 
+      // TODO Error handling
+
       return TransactionInfo.fromJson(json);
     }
 
     return withRetry<TransactionInfo>(fn, gerund: 'starting transaction');
   }
 
+  /// Resolve the commit transaction endpoint.
+  Uri resolveCommitTransactionEndpoint(TransactionInfo info) {
+    return endpoint.replace(
+      pathSegments: [
+        ...endpoint.pathSegments,
+        'transaction',
+        info.id,
+        'commit',
+      ],
+    );
+  }
+
   @override
   Future<void> commitTransaction(
       {required TransactionInfo info, TransactionHeaders? headers}) {
-    final url = info.endpoint
-        .replace(pathSegments: [...info.endpoint.pathSegments, 'rollback']);
+    final url = resolveCommitTransactionEndpoint(info);
 
     return _otherTransaction(url, gerund: 'committing');
+  }
+
+  /// Resolve the rollback transaction endpoint.
+  Uri resolveRollbackTransactionEndpoint(TransactionInfo info) {
+    return endpoint.replace(
+      pathSegments: [
+        ...endpoint.pathSegments,
+        'transaction',
+        info.id,
+        'rollback',
+      ],
+    );
   }
 
   @override
   Future<void> rollbackTransaction(
       {required TransactionInfo info, TransactionHeaders? headers}) {
-    final url = info.endpoint
-        .replace(pathSegments: [...info.endpoint.pathSegments, 'rollback']);
+    final url = resolveRollbackTransactionEndpoint(info);
 
     return _otherTransaction(url, gerund: 'rolling back');
   }
@@ -189,6 +225,8 @@ class UniversalEngine implements Engine {
       logger(url);
 
       await http.post(url);
+
+      // TODO: Handle errors.
     }
 
     await withRetry<void>(fn, gerund: '$gerund transaction');
