@@ -1,29 +1,92 @@
 import 'dart:convert';
 
-String serializeRawParameters(Iterable<dynamic> parameters) {
-  return json.encode(parameters.map((e) => _encodeParameter(e)));
-}
+/// Prisma Typed parameter
+class PrismaTypedParameter {
+  /// The parameter type.
+  final String type;
 
-/// Encode a parameter to a JSON compatible value.
-dynamic _encodeParameter(dynamic parameter) {
-  if (parameter is BigInt) {
-    return {
-      "prisma__type": "bigint",
-      "prisma__value": parameter.toString(),
-    };
-  } else if (parameter is DateTime) {
-    return {
-      "prisma__type": "date",
-      "prisma__value": parameter.toIso8601String(),
-    };
-  } else if (parameter is double) {
-    return {
-      "prisma__type": "decimal",
-      "prisma__value": parameter.toString(),
-    };
+  /// The parameter value.
+  final String value;
+
+  /// Create a new instance of [PrismaTypedParameter].
+  const PrismaTypedParameter(this.type, this.value);
+
+  /// Create a new instance of [PrismaTypedParameter] from a JSON map.
+  factory PrismaTypedParameter.fromJson(Map<String, dynamic> json) {
+    return PrismaTypedParameter(
+      json['prisma__type'] as String,
+      json['prisma__value'] as String,
+    );
   }
 
-  return parameter;
+  /// Create from a [BigInt].
+  factory PrismaTypedParameter.fromBigInt(BigInt value) {
+    return PrismaTypedParameter('bigint', value.toString());
+  }
+
+  /// Create from a [DateTime].
+  factory PrismaTypedParameter.fromDateTime(DateTime value) {
+    return PrismaTypedParameter('date', value.toIso8601String());
+  }
+
+  /// Create from a [double].
+  factory PrismaTypedParameter.fromDouble(double value) {
+    return PrismaTypedParameter('decimal', value.toString());
+  }
+
+  /// Convert the parameter to a JSON map.
+  Map<String, dynamic> toJson() {
+    return {
+      'prisma__type': type,
+      'prisma__value': value,
+    };
+  }
+}
+
+final demo = Utf8Codec;
+
+/// Prisma RAW parameter codec.
+class PrismaRawParameterCodec extends Codec<Object?, Object?> {
+  /// Create a new instance of [PrismaRawParameterCodec].
+  const PrismaRawParameterCodec();
+
+  @override
+  Converter<Object?, Object?> get decoder => const PrismaRawParameterDecoder();
+
+  @override
+  Converter<Object?, Object?> get encoder => const PrismaRawParameterEncoder();
+}
+
+/// Prisma RAW encoder converter.
+class PrismaRawParameterEncoder extends Converter<Object?, Object?> {
+  /// Create a new instance of [PrismaRawParameterEncoder].
+  const PrismaRawParameterEncoder();
+
+  @override
+  Object? convert(Object? input) {
+    if (input is BigInt) {
+      return PrismaTypedParameter.fromBigInt(input);
+    } else if (input is DateTime) {
+      return PrismaTypedParameter.fromDateTime(input);
+    } else if (input is double) {
+      return PrismaTypedParameter.fromDouble(input);
+    }
+
+    return input;
+  }
+}
+
+/// Prisma RAW parameter decoder.
+class PrismaRawParameterDecoder extends Converter<Object?, Object?> {
+  /// Create a new instance of [PrismaRawParameterDecoder].
+  const PrismaRawParameterDecoder();
+
+  @override
+  Object? convert(Object? input) {
+    // TODO: implement convert
+
+    return input;
+  }
 }
 
 dynamic deserializeRawResult(dynamic result) {
