@@ -1,4 +1,4 @@
-import '../transaction.dart';
+import '../../engine_core/transaction.dart';
 
 /// Default query request headers.
 final Map<String, String> _defaultHeaders = {

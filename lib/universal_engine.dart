@@ -1,16 +1,15 @@
+library prisma.engine.universal;
+
 import 'dart:async';
 import 'dart:convert' as convert;
 
-import 'package:orm/logger.dart' as logger_package;
 import 'package:retry/retry.dart' as retry;
 import 'package:http/http.dart' as http;
 
-import '../engine.dart';
-import '../graphql_result.dart';
-import '../query_engine_request_headers.dart';
-import '../transaction.dart';
-import '../_internal/headers_wrapper.dart';
-import '../_internal/stringify_query.dart';
+import 'engine_core.dart';
+import 'logger.dart';
+import 'src/_internal/engines/headers_wrapper.dart';
+import 'src/_internal/engines/stringify_query.dart';
 
 /// Create RetryOptions with exponential backoff.
 const retry.RetryOptions _retryOptions = retry.RetryOptions(
@@ -33,7 +32,7 @@ class UniversalEngine implements Engine {
   final Map<String, String>? headers;
 
   /// Prisma Emitter.
-  final logger_package.Logger logger;
+  final Logger logger;
 
   /// Create a new instance of [UniversalEngine].
   const UniversalEngine({
@@ -55,8 +54,7 @@ class UniversalEngine implements Engine {
     QueryEngineRequestHeaders? headers,
     TransactionInfo? transaction,
   }) {
-    logger.emit(
-        logger_package.Event.query, logger_package.QueryPayload(query: query));
+    logger.emit(Event.query, QueryPayload(query: query));
 
     final url = resolveRequestEndpoint();
     final wrappedHeaders =
@@ -179,19 +177,18 @@ class UniversalEngine implements Engine {
     int attempt = 0;
 
     // Create a logger.
-    void logger(Uri uri) => this.logger.emit(logger_package.Event.info,
-        logger_package.Payload(message: 'Calling $uri (n=$attempt)'));
+    void logger(Uri uri) => this
+        .logger
+        .emit(Event.info, Payload(message: 'Calling $uri (n=$attempt)'));
 
     // Create a retry function.
     Future<T> callback() {
       if (attempt > 0) {
         this.logger.emit(
-              logger_package.Event.warn,
-              logger_package.Payload(
+            Event.warn,
+            Payload(
                 message:
-                    'Retrying after ${_retryOptions.delay(attempt).inMilliseconds}ms',
-              ),
-            );
+                    'Retrying after ${_retryOptions.delay(attempt).inMilliseconds}ms'));
       }
 
       attempt++;
@@ -203,8 +200,8 @@ class UniversalEngine implements Engine {
       retryIf: retryIf,
       onRetry: (e) async {
         this.logger.emit(
-              logger_package.Event.warn,
-              logger_package.Payload(
+              Event.warn,
+              Payload(
                 message:
                     'Attempt $attempt/${_retryOptions.maxAttempts} failed for $gerund: $e',
               ),

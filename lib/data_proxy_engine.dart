@@ -1,8 +1,10 @@
-import 'package:http/http.dart' as http;
-import 'package:orm/logger.dart' as logger_package;
+library prisma.engine.data_proxy;
 
-import '../engine.dart';
-import '../universal/universal_engine.dart';
+import 'package:http/http.dart' as http;
+
+import 'logger.dart';
+import 'engine_core.dart';
+import 'universal_engine.dart';
 
 /// Prisma Data Proxy api key name.
 const String _tokenName = 'api_key';
@@ -73,19 +75,44 @@ class DataProxyEngine extends UniversalEngine implements Engine {
       ...this.headers,
       'Content-Type': 'plain/text; charset=utf-8',
     };
-    logger.emit(logger_package.Event.info,
-        logger_package.Payload(message: 'Calling $url for schema update...'));
+    logger.emit(
+        Event.info, Payload(message: 'Calling $url for schema update...'));
 
     final response = await http.put(url, headers: headers, body: schema);
 
     if (response.statusCode != 200) {
       final message = 'Error while updating schema: ${response.body}';
-      logger.emit(
-          logger_package.Event.warn, logger_package.Payload(message: message));
+      logger.emit(Event.warn, Payload(message: message));
       throw Exception(message);
     }
 
-    logger.emit(logger_package.Event.info,
-        logger_package.Payload(message: 'Schema (re)uploaded (hash: $hash)'));
+    logger.emit(
+        Event.info, Payload(message: 'Schema (re)uploaded (hash: $hash)'));
+  }
+
+  @override
+  Uri resolveCommitTransactionEndpoint(info) =>
+      _resolveTransactionEndpoint(info, 'commit');
+
+  @override
+  Uri resolveRollbackTransactionEndpoint(info) =>
+      _resolveTransactionEndpoint(info, 'rollback');
+
+  /// Resolve the Data Proxy endpoint for a transaction(commit or rollback).
+  Uri _resolveTransactionEndpoint(TransactionInfo info, String action) {
+    if (info['data-proxy'] is Map) {
+      final dataProxy = (info['data-proxy'] as Map).cast<String, dynamic>();
+      if (dataProxy['endpoint'] is String) {
+        final enpoint = dataProxy['endpoint'] as String;
+        if (enpoint.isNotEmpty) {
+          final url = Uri.parse(enpoint);
+
+          return url.replace(pathSegments: [...url.pathSegments, action]);
+        }
+      }
+    }
+
+    logger.emit(Event.error, Payload(message: 'No Data Proxy endpoint found.'));
+    throw Exception('No Data Proxy endpoint found.');
   }
 }

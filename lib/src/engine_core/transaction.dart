@@ -28,21 +28,8 @@ enum IsolationLevel {
 class TransactionInfo extends CaseInsensitiveMap<String, dynamic> {
   TransactionInfo.fromJson(super.store);
 
-  /// Transaction info ready.
-  bool get ready => _id is String;
-
-  String? get _id {
-    final id = this['id'];
-
-    return id is String ? id : null;
-  }
-
   /// Returns the transaction id.
-  String get id {
-    if (_id is String) return _id!;
-
-    throw ArgumentError.value(this, 'id', 'Transaction id not found.');
-  }
+  String get id => this['id'] as String;
 }
 
 /// Transaction Headers.

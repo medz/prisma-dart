@@ -1,14 +1,15 @@
+library prisma.engine.binary;
+
 import 'dart:convert' as convert;
 import 'dart:io';
 
-import 'package:orm/environtment.dart';
-import 'package:orm/logger.dart' as logger_package;
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 import 'package:retry/retry.dart';
 
-import '../engine.dart';
-import '../universal/universal_engine.dart';
+import 'engine_core.dart';
+import 'logger.dart';
+import 'universal_engine.dart';
 
 /// Prisma binary query engine.
 class BinaryEngine extends UniversalEngine implements Engine {
@@ -55,12 +56,6 @@ class BinaryEngine extends UniversalEngine implements Engine {
     // If executable exists, return it.
     if (File(executable).existsSync()) {
       return executable;
-    }
-
-    // If define in environtment, return it.
-    if (Environtment.queryEngineBinary is String &&
-        Environtment.queryEngineBinary?.isNotEmpty == true) {
-      return Environtment.queryEngineBinary!;
     }
 
     final basename = path.basename(executable);
@@ -132,9 +127,8 @@ class BinaryEngine extends UniversalEngine implements Engine {
   /// Resolve rust log level.
   String get _rustLogLevel {
     return logger.definitions.map((e) => e.event).reduce((value, element) {
-      if (element == logger_package.Event.query) return element;
-      if (element == logger_package.Event.info ||
-          value == logger_package.Event.info) return logger_package.Event.info;
+      if (element == Event.query) return element;
+      if (element == Event.info || value == Event.info) return Event.info;
 
       return element;
     }).name;
@@ -142,7 +136,7 @@ class BinaryEngine extends UniversalEngine implements Engine {
 
   /// Has log queries.
   bool get hasLogQueries =>
-      logger.definitions.any((e) => e.event == logger_package.Event.query);
+      logger.definitions.any((e) => e.event == Event.query);
 
   /// Start the binary query engine.
   @override
@@ -210,18 +204,15 @@ class BinaryEngine extends UniversalEngine implements Engine {
           if (json['fields'] == null) return;
 
           final level = json['level'].toString().toLowerCase().trim();
-          final event = logger_package.Event.values.firstWhere(
-              (e) => e.name == level,
-              orElse: () => json['fields']?['query'] != null
-                  ? logger_package.Event.query
-                  : logger_package.Event.info);
-          final payload = logger_package.Payload.fromJson(json);
+          final event = Event.values.firstWhere((e) => e.name == level,
+              orElse: () =>
+                  json['fields']?['query'] != null ? Event.query : Event.info);
+          final payload = Payload.fromJson(json);
 
           logger.emit(event, payload);
         } catch (e) {
           final message = Error.safeToString(e);
-          logger.emit(logger_package.Event.error,
-              logger_package.Payload(message: message));
+          logger.emit(Event.error, Payload(message: message));
         }
         throw Exception('Cannot parse the query engine log');
       },
@@ -233,10 +224,8 @@ class BinaryEngine extends UniversalEngine implements Engine {
   Future<void> stop() async {
     if (process?.kill() == true) {
       final exitCode = await process!.exitCode;
-      logger.emit(
-          logger_package.Event.info,
-          logger_package.Payload(
-              message: 'Stopped the query engine (Exit code: $exitCode)'));
+      logger.emit(Event.info,
+          Payload(message: 'Stopped the query engine (Exit code: $exitCode)'));
     }
 
     process = null;

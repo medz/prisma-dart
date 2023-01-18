@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:orm/logger.dart';
-import 'package:orm/src/engines/binary/binary_engine.dart';
+import 'package:orm/binary_engine.dart';
 
 final executable = 'node_modules/prisma/query-engine-darwin-arm64';
 final schema = File('prisma/schema.prisma').readAsStringSync();
