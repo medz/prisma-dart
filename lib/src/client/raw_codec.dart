@@ -70,6 +70,10 @@ class PrismaRawParameterEncoder extends Converter<Object?, Object?> {
       return PrismaTypedParameter.fromDateTime(input);
     } else if (input is double) {
       return PrismaTypedParameter.fromDouble(input);
+    } else if (input is Iterable) {
+      return input.map((e) => convert(e));
+    } else if (input is Map) {
+      return input.map((key, value) => MapEntry(key, convert(value)));
     }
 
     return input;
@@ -83,45 +87,36 @@ class PrismaRawParameterDecoder extends Converter<Object?, Object?> {
 
   @override
   Object? convert(Object? input) {
-    // TODO: implement convert
+    if (input is Map) {
+      if (input.containsKey('prisma__type')) {
+        return _decodeParameter(input['prisma__type'], input['prisma__value']);
+      }
+
+      return input.map((key, value) => MapEntry(key, convert(value)));
+    } else if (input is Iterable) {
+      return input.map((e) => convert(e));
+    }
 
     return input;
   }
-}
 
-dynamic deserializeRawResult(dynamic result) {
-  if (result is Map) {
-    return (_decodeParameter(result) as Map).map((key, value) => MapEntry(
-          key,
-          deserializeRawResult(value),
-        ));
-  } else if (result is Iterable) {
-    return result.map((e) => deserializeRawResult(e));
-  }
-
-  return result;
-}
-
-/// Decode a JSON compatible value to a parameter.
-dynamic _decodeParameter(dynamic parameter) {
-  if (parameter is Map) {
-    if (parameter.containsKey("prisma__type")) {
-      final type = parameter["prisma__type"];
-      final value = parameter["prisma__value"];
-
-      if (type == "bigint") {
-        return BigInt.parse(value);
-      } else if (type == "date" || type == "datetime") {
-        return DateTime.parse(value);
-      } else if (type == "decimal") {
-        return double.parse(value);
-      } else if (type == 'int') {
-        return int.parse(value);
-      }
-
-      return value;
+  /// Decode a JSON compatible value to a parameter.
+  Object _decodeParameter(String type, String value) {
+    type = type.toLowerCase().trim();
+    final parse = _typedParameterParsers[type];
+    if (parse != null) {
+      return parse(value);
     }
+
+    return value;
   }
 
-  return parameter;
+  /// Typed parameter to parses.
+  static const _typedParameterParsers = {
+    'bigint': BigInt.parse,
+    'date': DateTime.parse,
+    'datetime': DateTime.parse,
+    'decimal': double.parse,
+    'int': int.parse,
+  };
 }
