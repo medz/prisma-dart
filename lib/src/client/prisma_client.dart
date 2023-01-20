@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import '../../engine_core.dart';
+import '../../logger.dart';
 import '../graphql/arg.dart';
 import '../graphql/field.dart';
-import '../runtime/prisma_log.dart';
-import 'raw_codec.dart';
+import 'prisma_raw_codec.dart';
 
 /// Prisma transaction function.
 typedef PrismaTransactionCallback<T> = FutureOr<T> Function(
@@ -58,8 +58,10 @@ class PrismaClient {
   /// ```
   Future<T> $transaction<T>(
     PrismaTransactionCallback<T> callback, {
-    TransactionOptions options = const TransactionOptions(),
-    TransactionHeaders headers = const TransactionHeaders(),
+    TransactionHeaders? headers,
+    Duration timeout = const Duration(seconds: 5),
+    Duration maxWait = const Duration(seconds: 2),
+    IsolationLevel? isolationLevel,
   }) async {
     // If the client is a transaction, use it.
     if ($headers?.transactionId != null) {
@@ -68,8 +70,10 @@ class PrismaClient {
 
     // Request a new transaction.
     final TransactionInfo transactionInfo = await $engine.startTransaction(
-      options: options,
       headers: headers,
+      timeout: timeout,
+      maxWait: maxWait,
+      isolationLevel: isolationLevel,
     );
 
     // Create a new client for the transaction.
@@ -77,7 +81,7 @@ class PrismaClient {
       $engine,
       headers: QueryEngineRequestHeaders(
         transactionId: transactionInfo.id,
-        traceparent: headers.traceparent,
+        traceparent: headers?.traceparent,
       ),
     );
 
@@ -110,8 +114,8 @@ class PrismaClient {
   ///   }
   /// });
   /// ```
-  void $on(Iterable<PrismaLogLevel> levels, PrismaLogHandler handler) =>
-      $engine.logEmitter.on(levels.toSet(), handler);
+  void $on(Event event, Listener listener) =>
+      $engine.logger.on(event, listener);
 
   /// Query raw SQL.
   ///
@@ -130,23 +134,23 @@ class PrismaClient {
           'queryRaw',
           args: GraphQLArgs([
             GraphQLArg('query', query),
-            GraphQLArg('parameters', serializeRawParameters),
+            GraphQLArg('parameters', prismaRawParameter.encode(parameters)),
           ]),
         )
       ]),
     ).toSdl();
 
     // Request the query.
-    final QueryEngineResult result = await $engine.request(
+    final GraphQLResult result = await $engine.request(
       query: sdl,
       headers: $headers,
     );
 
     // Get query result.
-    final dynamic queryRawResult = result.data['queryRaw'];
+    final dynamic queryRawResult = result.data?['queryRaw'];
 
     // Return the result.
-    return deserializeRawResult(queryRawResult);
+    return prismaRawParameter.decode(queryRawResult);
   }
 
   /// Execute raw SQL.
@@ -166,19 +170,18 @@ class PrismaClient {
           'queryRaw',
           args: GraphQLArgs([
             GraphQLArg('query', query),
-            GraphQLArg('parameters', serializeRawParameters),
+            GraphQLArg('parameters', prismaRawParameter.encode(parameters)),
           ]),
         )
       ]),
     ).toSdl();
 
     // Request the query.
-    final QueryEngineResult result = await $engine.request(
+    final GraphQLResult result = await $engine.request(
       query: sdl,
       headers: $headers,
     );
 
-    // return the affected rows.
-    return result.data['executeRaw'];
+    return result.data?['executeRaw'];
   }
 }

@@ -41,9 +41,18 @@ class PrismaTypedParameter {
       'prisma__value': value,
     };
   }
+
+  /// Try parse the paramter value.
+  static PrismaTypedParameter? tryParse(Map<String, String> json) {
+    if (json.containsKey('prisma__type') && json.containsKey('prisma__value')) {
+      return PrismaTypedParameter.fromJson(json);
+    }
+    return null;
+  }
 }
 
-final demo = Utf8Codec;
+/// Create a new instance of [PrismaRawParameterCodec].
+const prismaRawParameter = PrismaRawParameterCodec();
 
 /// Prisma RAW parameter codec.
 class PrismaRawParameterCodec extends Codec<Object?, Object?> {
@@ -88,8 +97,9 @@ class PrismaRawParameterDecoder extends Converter<Object?, Object?> {
   @override
   Object? convert(Object? input) {
     if (input is Map) {
-      if (input.containsKey('prisma__type')) {
-        return _decodeParameter(input['prisma__type'], input['prisma__value']);
+      final parameter = PrismaTypedParameter.tryParse(input.cast());
+      if (parameter != null) {
+        return _decodeParameter(parameter.type, parameter.value);
       }
 
       return input.map((key, value) => MapEntry(key, convert(value)));

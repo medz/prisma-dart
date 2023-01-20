@@ -1,9 +1,13 @@
+import '../logger/logger.dart';
 import 'graphql_result.dart';
 import 'query_engine_request_headers.dart';
 import 'transaction.dart';
 
 /// Prisma Query engine interfact.
 abstract class Engine {
+  /// Current engine logger.
+  Logger get logger;
+
   /// Starts the engine.
   Future<void> start();
 
