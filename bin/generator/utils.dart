@@ -1,4 +1,7 @@
+import 'package:code_builder/code_builder.dart';
 import 'package:recase/recase.dart';
+
+import 'packages.dart' as packages;
 
 extension DartClassname on String {
   /// Dart property reserved keywords
@@ -61,4 +64,18 @@ extension DartClassname on String {
 
     return this;
   }
+}
+
+/// Nullable Reference
+extension NullableReferenceExtension on Reference {
+  /// Nullable reference
+  Reference get nullable => TypeReference((TypeReferenceBuilder updates) {
+        updates.symbol = symbol;
+        updates.url = url;
+        updates.isNullable = true;
+
+        if (this is TypeReference) {
+          updates.types.addAll((this as TypeReference).types);
+        }
+      });
 }

@@ -4,7 +4,7 @@ import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
 
 import 'generator_options.dart';
 import 'utils/dart_style.dart';
-import 'utils/scalar.dart';
+import '../../generator/scalars.dart';
 
 String modelDelegateClassname(String model) =>
     '${dartClassnameFixer(model)}Delegate';

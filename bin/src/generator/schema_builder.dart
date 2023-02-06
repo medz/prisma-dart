@@ -3,8 +3,7 @@ import 'package:orm/src/runtime/language_keyword.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
 
 import 'generator_options.dart';
-import 'utils/dart_style.dart';
-import 'utils/scalar.dart';
+import '../../generator/scalars.dart';
 
 class SchemaBuilder {
   final GeneratorOptions options;
@@ -14,7 +13,6 @@ class SchemaBuilder {
 
   /// Build schema.
   void build() {
-    _EnumBuilder(library, options.dmmf.schema.enumTypes).build();
     _InputObjectTypesBuilder(library, options.dmmf.schema.inputObjectTypes)
         .build();
     _OutputObjectTypesBuilder(

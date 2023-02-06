@@ -44,7 +44,12 @@ void main(Iterable<String> args) async {
   final generator = await completer.future;
 
   // Build the library.
-  generator.generate();
+  try {
+    generator.generate();
+  } catch (e, s) {
+    print(s);
+    throw Error.safeToString(e);
+  }
 
   // Done.
   await generator.done();

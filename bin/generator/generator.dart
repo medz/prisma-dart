@@ -10,6 +10,7 @@ import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
 import 'generator_options.dart';
 import 'packages.dart' as packages;
 import 'prisma_info.dart';
+import 'scalars.dart';
 import 'utils.dart';
 
 class Generator {
@@ -93,7 +94,33 @@ class Generator {
 
   void generate() {
     generateEnum();
+    generateInputObjectTypes();
+    defineDirectives();
     writeLibrary();
+  }
+}
+
+/// directives for the library
+extension LibraryDirectives on Generator {
+  /// Define the library directives
+  void defineDirectives() {
+    _imports();
+    _parts();
+  }
+
+  /// Import packages
+  void _imports() {
+    library.directives.add(code.Directive.import(packages.jsonSerializable));
+  }
+
+  /// parts
+  void _parts() {
+    final basename = path.basename(_resolveOutputPath());
+    final part = basename.endsWith('.dart')
+        ? basename.substring(0, basename.length - 5)
+        : basename;
+
+    library.directives.add(code.Directive.part('$part.g.dart'));
   }
 }
 
@@ -191,6 +218,158 @@ extension EnumGenerator on Generator {
           );
         }
       });
+    });
+  }
+}
+
+/// Input object types generator
+extension InputObjectTypesGenerator on Generator {
+  /// Generate input object types
+  void generateInputObjectTypes() {
+    _builder(options.dmmf.schema.inputObjectTypes.model);
+    _builder(options.dmmf.schema.inputObjectTypes.prisma);
+  }
+
+  /// input object types builder
+  void _builder(Iterable<dmmf.InputType>? types) {
+    // If there are no types, skip it.
+    if (types == null || types.isEmpty) {
+      return;
+    }
+
+    library.body.addAll(types.map((e) => _buildClass(e)));
+  }
+
+  /// Build class
+  code.Class _buildClass(dmmf.InputType input) {
+    return code.Class((code.ClassBuilder updates) {
+      updates
+        ..name = input.name.toDartClassname()
+        ..annotations.add(code.refer('jsonSerializable', packages.orm))
+        ..implements.add(code.refer('JsonSerializable', packages.orm))
+        ..fields.addAll(input.fields.map((e) => _buildField(e)))
+        ..methods.add(_buildToJsonMethod(input));
+
+      // Build constructors
+      updates.constructors.addAll([
+        // Default constructor
+        _buildDefaultConstructor(updates.fields.build()),
+        // From json constructor
+        _buildFromJsonConstructor(),
+      ]);
+    });
+  }
+
+  /// Build field
+  code.Field _buildField(dmmf.SchemaArg field) {
+    return code.Field((code.FieldBuilder updates) {
+      updates
+        ..name = field.name.toDartPropertyName()
+        ..type = _buildFieldType(field)
+        ..modifier = code.FieldModifier.final$;
+
+      // Add document comment
+      if (field.comment != null) {
+        updates.docs.addAll(field.comment!
+            .split('\r')
+            .map((e) => e.split('\n'))
+            .expand((e) => e)
+            .map((e) => e.trim()));
+      }
+
+      // Add JsonKey annotation
+      if (updates.name != field.name) {
+        updates.annotations.add(code.refer('JsonKey').newInstance([], {
+          'name': code.literalString(field.name, raw: true),
+        }));
+      }
+
+      // Add deprecation annotation
+      if (field.deprecation != null) {
+        updates.annotations.add(code.refer('Deprecated').newInstance([
+          code.literalString(field.deprecation!.reason),
+        ]));
+      }
+    });
+  }
+
+  /// Build field type
+  code.Reference _buildFieldType(dmmf.SchemaArg field) {
+    final types = field.inputTypes;
+
+    // If the types is a single type, return it.
+    if (types.length == 1) {
+      return scalar(field.inputTypes.first, !field.isRequired);
+    }
+
+    // Build union type
+    final reference = code.TypeReference((code.TypeReferenceBuilder updates) {
+      updates
+        ..symbol = 'PrismaUnion${types.length}'
+        ..url = packages.orm
+        ..types.addAll(types.map((e) => scalar(e, false)));
+    });
+
+    return field.isRequired ? reference : reference.nullable;
+  }
+
+  /// Build to json method
+  ///
+  /// With the help of the [json_serializable] package, the `toJson` method is generated.
+  code.Method _buildToJsonMethod(dmmf.InputType input) {
+    return code.Method((code.MethodBuilder updates) {
+      updates
+        ..name = 'toJson'
+        ..returns = code.refer('Map<String, dynamic>')
+        ..annotations.add(code.refer('override'))
+        ..body = code
+            .refer('_\$${input.name.toDartClassname()}ToJson')
+            .call([code.refer('this')]).code
+        ..lambda = true;
+    });
+  }
+
+  /// Build default constructor
+  code.Constructor _buildDefaultConstructor(Iterable<code.Field> fields) {
+    return code.Constructor((code.ConstructorBuilder updates) {
+      updates.constant = true;
+      updates.optionalParameters.addAll(fields.map((e) {
+        return code.Parameter((code.ParameterBuilder updates) {
+          updates
+            ..name = e.name
+            ..named = true
+            ..toThis = true
+            ..required = _resolveReferenceRequired(e.type);
+        });
+      }));
+    });
+  }
+
+  /// Resolve the reference is required
+  bool _resolveReferenceRequired(code.Reference? reference) {
+    if (reference is code.TypeReference) {
+      return !(reference.isNullable ?? false);
+    }
+
+    return true;
+  }
+
+  /// Build from json constructor
+  code.Constructor _buildFromJsonConstructor() {
+    return code.Constructor((code.ConstructorBuilder updates) {
+      updates
+        ..name = 'fromJson'
+        ..factory = true
+        ..requiredParameters
+            .add(code.Parameter((code.ParameterBuilder updates) {
+          updates
+            ..name = 'json'
+            ..type = code.refer('Map<String, dynamic>');
+        }))
+        ..body = code
+            .refer('_\$${updates.name}FromJson')
+            .call([code.refer('json')]).code
+        ..lambda = true;
     });
   }
 }
