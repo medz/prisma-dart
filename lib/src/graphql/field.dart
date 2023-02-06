@@ -1,4 +1,3 @@
-import '../runtime/language_keyword.dart';
 import 'arg.dart';
 
 class GraphQLField {
@@ -14,7 +13,7 @@ class GraphQLField {
 
   /// Build GraphQL field SDL.
   String toSdl() {
-    final StringBuffer sdl = StringBuffer(languageKeywordDecode(name));
+    final StringBuffer sdl = StringBuffer(name);
 
     // Build args SDL.
     final String? argsSdl = args?.toSdl();

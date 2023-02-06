@@ -1,7 +1,10 @@
+import 'package:freezed_annotation/freezed_annotation.dart'
+    as freezed_annotation;
+
 /// JSON serializable.
 abstract class JsonSerializable {
   /// serializes the object to JSON
-  toJson();
+  Map<String, dynamic> toJson();
 }
 
 /// Date time toJson serializer.
@@ -18,3 +21,17 @@ dynamic dateTimeToJson(dynamic value) {
 
   return value;
 }
+
+const freezed = freezed_annotation.Freezed(
+  copyWith: false,
+  equal: false,
+  fromJson: true,
+  toJson: true,
+  toStringOverride: false,
+  makeCollectionsUnmodifiable: false,
+  genericArgumentFactories: false,
+);
+
+const jsonSerializable = freezed_annotation.JsonSerializable(
+  explicitToJson: true,
+);

@@ -43,7 +43,7 @@ void main(Iterable<String> args) async {
   });
   final generator = await completer.future;
 
-  print(generator.generatorId);
+  print(generator.library);
 
-  await generator();
+  await generator.done();
 }

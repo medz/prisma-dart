@@ -125,7 +125,7 @@ class PrismaClient {
   /// ```
   Future<dynamic> $queryRaw(
     String query, {
-    List<dynamic> parameters = const [],
+    Iterable<dynamic> parameters = const [],
   }) async {
     final String sdl = GraphQLField(
       'mutation',
@@ -161,7 +161,7 @@ class PrismaClient {
   /// ```
   Future<int> $executeRaw(
     String query, {
-    List<dynamic> parameters = const [],
+    Iterable<dynamic> parameters = const [],
   }) async {
     final String sdl = GraphQLField(
       'mutation',

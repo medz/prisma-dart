@@ -1,8 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'package:orm/orm.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
-
-import 'json_serializable_annotation.dart';
 
 part 'generator_options.g.dart';
 part 'generator_options.freezed.dart';

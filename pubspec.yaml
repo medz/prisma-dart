@@ -26,6 +26,7 @@ dependencies:
   prisma_dmmf: ^0.0.2
   prisma_get_platform: ^0.0.1
   rc: ^0.2.2
+  recase: ^4.1.0
   retry: ^3.1.0
   yaml: ^3.1.1
 
