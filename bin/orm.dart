@@ -37,13 +37,15 @@ void main(Iterable<String> args) async {
   final info = PrismaInfo.lookup(results['package-manager']);
 
   final completer = Completer<Generator>();
-  final library = Library((LibraryBuilder updates) async {
-    final generator = await Generator.create(info: info, library: updates);
-    completer.complete(generator);
+  Library((LibraryBuilder updates) {
+    updates.name = 'prisma.client';
+    completer.complete(Generator.create(info: info, library: updates));
   });
   final generator = await completer.future;
 
-  print(generator.library);
+  // Build the library.
+  generator.generate();
 
+  // Done.
   await generator.done();
 }

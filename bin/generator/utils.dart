@@ -38,17 +38,14 @@ extension DartClassname on String {
   ].map((e) => e.toLowerCase());
 
   /// Convert to dart class name
-  String toDartClassname() =>
-      toDartPropertyName()._removeUnsuportedCharacters().pascalCase;
+  String toDartClassname() => toDartPropertyName().pascalCase;
 
   /// Convert to dart property name
-  String toDartPropertyName() => _withoutDartReserved()
-      ._toDartPublicName()
-      ._removeUnsuportedCharacters()
-      .camelCase;
+  String toDartPropertyName() =>
+      withoutDartReserved().toDartPublicName().camelCase;
 
   /// Fix dart reserved keyword
-  String _withoutDartReserved() {
+  String withoutDartReserved() {
     if (_reservedKeywords.contains(toLowerCase())) {
       return r'$' + this;
     }
@@ -57,21 +54,11 @@ extension DartClassname on String {
   }
 
   /// To dart public property/class name
-  String _toDartPublicName() {
+  String toDartPublicName() {
     if (startsWith('_')) {
       return r'$' + substring(1);
     }
 
     return this;
-  }
-
-  /// Only allow [a-zA-Z0-9_] characters
-  String _removeUnsuportedCharacters() {
-    final fixed = replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '');
-    if (fixed.startsWith(RegExp(r'[0-9]'))) {
-      return r'$' + fixed;
-    }
-
-    return fixed;
   }
 }
