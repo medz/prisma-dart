@@ -97,7 +97,7 @@ class Generator {
   void generate() {
     generateEnum();
     generateInputObjectTypes();
-    generateOutputObjectTypes();
+    generateScalarModels();
     defineDirectives();
     writeLibrary();
   }
@@ -245,13 +245,13 @@ extension InputObjectTypesGenerator on Generator {
 
   /// Build class
   code.Class _buildClass(dmmf.InputType input) {
+    final classname = input.name.toDartClassname();
     return code.Class((code.ClassBuilder updates) {
-      final classname = input.name.toDartClassname();
       updates
         ..name = classname
         ..annotations.add(code.refer('jsonSerializable', packages.orm))
         ..implements.add(code.refer('JsonSerializable', packages.orm))
-        ..methods.add(_buildToJsonMethod(input));
+        ..methods.add(_buildToJsonMethod(classname));
 
       // Build fields & add fields.
       final fields = input.fields.map((e) => _buildField(e));
@@ -323,15 +323,14 @@ extension InputObjectTypesGenerator on Generator {
   /// Build to json method
   ///
   /// With the help of the [json_serializable] package, the `toJson` method is generated.
-  code.Method _buildToJsonMethod(dmmf.InputType input) {
+  code.Method _buildToJsonMethod(String classname) {
     return code.Method((code.MethodBuilder updates) {
       updates
         ..name = 'toJson'
         ..returns = code.refer('Map<String, dynamic>')
         ..annotations.add(code.refer('override'))
-        ..body = code
-            .refer('_\$${input.name.toDartClassname()}ToJson')
-            .call([code.refer('this')]).code
+        ..body =
+            code.refer('_\$${classname}ToJson').call([code.refer('this')]).code
         ..lambda = true;
     });
   }
@@ -381,23 +380,93 @@ extension InputObjectTypesGenerator on Generator {
   }
 }
 
-/// Generate output object types
-extension OutputObjectTypesGenerator on Generator {
-  /// Generate output object types
-  void generateOutputObjectTypes() {
-    _builder(options.dmmf.schema.outputObjectTypes.model);
-    _builder(options.dmmf.schema.outputObjectTypes.prisma);
-  }
-
-  /// output object types builder
-  void _builder(Iterable<dmmf.OutputType>? types) {
-    // If there are no types, skip it.
+/// Generate scalar models
+extension ScalarModulesGenerator on Generator {
+  /// Generate scalar models
+  void generateScalarModels() {
+    final types = options.dmmf.schema.outputObjectTypes.model;
     if (types == null || types.isEmpty) {
       return;
     }
+    final scalarModels = types.map((e) => _filterModelNonScalarFields(e));
 
-    // library.body.addAll(types.map((e) => _buildClass(e)));
+    library.body.addAll(scalarModels.map((e) => _buildScalarModel(e)));
   }
 
-  /// Build output class
+  /// Build scalar model
+  code.Class _buildScalarModel(dmmf.OutputType model) {
+    final classname = model.name.toDartClassname();
+    return code.Class((updates) {
+      updates
+        ..name = classname
+        ..implements.add(code.refer('JsonSerializable', packages.orm))
+        ..annotations.add(code.refer('jsonSerializable', packages.orm))
+        ..methods.add(_buildToJsonMethod(classname));
+
+      // Build class fields
+      final fields = model.fields.map((e) => _buildField(e));
+      updates.fields.addAll(fields);
+
+      // Build default constructor
+      updates.constructors.add(_buildDefaultConstructor(fields));
+
+      // Build from json constructor
+      updates.constructors.add(_buildFromJsonConstructor(classname));
+    });
+  }
+
+  /// Build field
+  code.Field _buildField(dmmf.SchemaField field) {
+    return code.Field((code.FieldBuilder updates) {
+      updates
+        ..name = field.name.toDartPropertyName()
+        ..type = scalar(field.outputType, field.isNullable == true)
+        ..modifier = code.FieldModifier.final$;
+
+      // Add document comment
+      if (field.documentation != null) {
+        updates.docs.addAll(field.documentation!
+            .split('\r')
+            .map((e) => e.split('\n'))
+            .expand((e) => e)
+            .map((e) => e.trim()));
+      }
+
+      // Add JsonKey annotation
+      if (updates.name != field.name) {
+        updates.annotations.add(code.refer('JsonKey').newInstance([], {
+          'name': code.literalString(field.name, raw: true),
+        }));
+      }
+
+      // Add deprecation annotation
+      if (field.deprecation != null) {
+        updates.annotations.add(code.refer('Deprecated').newInstance([
+          code.literalString(field.deprecation!.reason),
+        ]));
+      }
+    });
+  }
+
+  /// Filter model non scalar fields
+  dmmf.OutputType _filterModelNonScalarFields(dmmf.OutputType model) {
+    return dmmf.OutputType(
+      name: model.name,
+      fields: model.fields
+          .where((e) => _isModelScalarField(model.name, e.name))
+          .toList(),
+    );
+  }
+
+  /// Chech model scalar field
+  bool _isModelScalarField(String model, String field) {
+    final enumName = '${model}ScalarFieldEnum'.toLowerCase();
+    final enums = options.dmmf.schema.enumTypes.prisma;
+    final scalarEnum = enums.firstWhere(
+      (e) => e.name.toLowerCase() == enumName,
+      orElse: () => throw Exception('Enum $enumName not found'),
+    );
+
+    return scalarEnum.values.any((e) => e.toLowerCase() == field.toLowerCase());
+  }
 }
