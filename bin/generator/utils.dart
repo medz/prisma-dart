@@ -40,12 +40,24 @@ extension DartClassname on String {
     'return',
   ].map((e) => e.toLowerCase());
 
+  /// Prisma where reversed keywords
+  static final Iterable<String> _whereReservedKeywords = [
+    'and',
+    'or',
+    'not',
+  ].map((e) => e.toUpperCase());
+
   /// Convert to dart class name
   String toDartClassname() => toDartPropertyName().pascalCase;
 
   /// Convert to dart property name
-  String toDartPropertyName() =>
-      withoutDartReserved().toDartPublicName().camelCase;
+  String toDartPropertyName() {
+    if (_whereReservedKeywords.contains(this)) {
+      return this;
+    }
+
+    return withoutDartReserved().toDartPublicName().camelCase;
+  }
 
   /// Fix dart reserved keyword
   String withoutDartReserved() {

@@ -16,6 +16,12 @@ model User {
   name      String   @unique
   createdAt DateTime @default(now())
   posts     Post[]
+  role      UserType @default(user)
+}
+
+enum UserType {
+  user @map("user1")
+  admin @map("user2")
 }
 
 model Post {

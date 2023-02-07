@@ -45,6 +45,8 @@ class Generator {
         if (result['method'] == 'getManifest') {
           _onManifest(result['id']);
         } else if (result['method'] == 'generate') {
+          File('dmmf.json')
+              .writeAsStringSync(convert.json.encode(result['params']));
           final options = GeneratorOptions.fromJson(result['params']);
           final generator = Generator._internal(
             info: info,
@@ -95,6 +97,7 @@ class Generator {
   void generate() {
     generateEnum();
     generateInputObjectTypes();
+    generateOutputObjectTypes();
     defineDirectives();
     writeLibrary();
   }
@@ -243,19 +246,23 @@ extension InputObjectTypesGenerator on Generator {
   /// Build class
   code.Class _buildClass(dmmf.InputType input) {
     return code.Class((code.ClassBuilder updates) {
+      final classname = input.name.toDartClassname();
       updates
-        ..name = input.name.toDartClassname()
+        ..name = classname
         ..annotations.add(code.refer('jsonSerializable', packages.orm))
         ..implements.add(code.refer('JsonSerializable', packages.orm))
-        ..fields.addAll(input.fields.map((e) => _buildField(e)))
         ..methods.add(_buildToJsonMethod(input));
+
+      // Build fields & add fields.
+      final fields = input.fields.map((e) => _buildField(e));
+      updates.fields.addAll(fields);
 
       // Build constructors
       updates.constructors.addAll([
         // Default constructor
-        _buildDefaultConstructor(updates.fields.build()),
+        _buildDefaultConstructor(fields),
         // From json constructor
-        _buildFromJsonConstructor(),
+        _buildFromJsonConstructor(classname),
       ]);
     });
   }
@@ -355,7 +362,7 @@ extension InputObjectTypesGenerator on Generator {
   }
 
   /// Build from json constructor
-  code.Constructor _buildFromJsonConstructor() {
+  code.Constructor _buildFromJsonConstructor(String classname) {
     return code.Constructor((code.ConstructorBuilder updates) {
       updates
         ..name = 'fromJson'
@@ -367,9 +374,30 @@ extension InputObjectTypesGenerator on Generator {
             ..type = code.refer('Map<String, dynamic>');
         }))
         ..body = code
-            .refer('_\$${updates.name}FromJson')
+            .refer('_\$${classname}FromJson')
             .call([code.refer('json')]).code
         ..lambda = true;
     });
   }
+}
+
+/// Generate output object types
+extension OutputObjectTypesGenerator on Generator {
+  /// Generate output object types
+  void generateOutputObjectTypes() {
+    _builder(options.dmmf.schema.outputObjectTypes.model);
+    _builder(options.dmmf.schema.outputObjectTypes.prisma);
+  }
+
+  /// output object types builder
+  void _builder(Iterable<dmmf.OutputType>? types) {
+    // If there are no types, skip it.
+    if (types == null || types.isEmpty) {
+      return;
+    }
+
+    // library.body.addAll(types.map((e) => _buildClass(e)));
+  }
+
+  /// Build output class
 }
