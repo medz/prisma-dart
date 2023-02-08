@@ -22,17 +22,17 @@ class ModelDelegate<T> {
         _transaction = transaction;
 
   /// Executes a GraphQL query.
-  Future<Map<String, dynamic>?> $query(GraphQLField field) =>
-      _execute('query', field);
+  Future<Map<String, dynamic>?> $query(Iterable<GraphQLField> fields) =>
+      _execute('query', fields);
 
   /// Executes a GraphQL mutation.
-  Future<Map<String, dynamic>?> $mutation(GraphQLField field) =>
-      _execute('mutation', field);
+  Future<Map<String, dynamic>?> $mutation(Iterable<GraphQLField> fields) =>
+      _execute('mutation', fields);
 
   /// Common GraphQL execute method.
   Future<Map<String, dynamic>?> _execute(
-      String operation, GraphQLField field) async {
-    final query = GraphQLField(operation, fields: [field]).toSdl();
+      String operation, Iterable<GraphQLField> fields) async {
+    final query = GraphQLField(operation, fields: fields).toSdl();
     final result = await _engine.request(
       query: query,
       headers: _headers,
@@ -41,6 +41,6 @@ class ModelDelegate<T> {
 
     // TODO: GraphQL error handling
 
-    return result.data?[operation];
+    return result.data;
   }
 }

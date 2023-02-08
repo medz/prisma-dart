@@ -634,7 +634,25 @@ extension ModelFluentGenerator on Generator {
 
       // If output is a list, return the list results.
     } else if (_isModelListOutputType(field.outputType)) {
-      return _buildModelListResultsCompiler(field);
+      return _buildModelResultsCompiler(field);
+
+      // If output is `*GroupByOutputType`, return the group by results.
+    } else if (field.outputType.isList &&
+        field.outputType.type.endsWith('GroupByOutputType')) {
+      final type = _findPrismaOutputType(field.outputType.type);
+      final fields = type.fields
+          .where((element) =>
+              element.outputType.location == dmmf.FieldLocation.scalar)
+          .map((e) => e.name);
+
+      return _buildModelResultsCompiler(field, fields: fields);
+
+      // If output is `AffectedRowsOutput`, return the affected rows.
+    } else if (field.outputType.type == 'AffectedRowsOutput') {
+      final type = _findPrismaOutputType(field.outputType.type);
+      final fields = type.fields.map((e) => e.name);
+
+      return _buildModelResultsCompiler(field, fields: fields);
     }
 
     return [
@@ -644,6 +662,13 @@ extension ModelFluentGenerator on Generator {
     ];
   }
 
+  /// Find prisma output type
+  dmmf.OutputType _findPrismaOutputType(String name) {
+    final types = options.dmmf.schema.outputObjectTypes.prisma;
+
+    return types.firstWhere((e) => e.name == name);
+  }
+
   /// Is model fluent output type
   bool _isModelListOutputType(dmmf.SchemaType outputType) {
     final models = options.dmmf.schema.outputObjectTypes.model;
@@ -651,51 +676,80 @@ extension ModelFluentGenerator on Generator {
         outputType.isList;
   }
 
-  /// Build model list results compiler
-  Iterable<code.Expression> _buildModelListResultsCompiler(
-      dmmf.SchemaField field) {
+  /// Build model results compiler
+  Iterable<code.Expression> _buildModelResultsCompiler(
+    dmmf.SchemaField field, {
+    Iterable<String>? fields,
+  }) {
     final expressions = <code.Expression>[];
+
     final modelScalarEnumName =
         _buildModelScalarFieldEnumName(field.outputType.type).toDartClassname();
+    final modelScalarFields = code
+        .refer(modelScalarEnumName)
+        .property('values')
+        .property('toGraphQLFields')
+        .call([]);
+    final localMapCompiler = code.Method((updates) {
+      updates.requiredParameters.add(code.Parameter((updates) {
+        updates.name = 'e';
+      }));
+      updates.body = code
+          .refer('GraphQLField', packages.graphql)
+          .newInstance([code.refer('e')]).code;
+      updates.lambda = true;
+    }).closure;
+    final localFields = code
+        .literalConstList(fields?.toList() ?? [])
+        .property('map')
+        .call([localMapCompiler]);
 
-    expressions.add(code.declareFinal('fields').assign(
-          code
-              .refer(modelScalarEnumName)
-              .property('values')
-              .property('toGraphQLFields')
-              .call([]),
-        ));
+    final fieldsExpression =
+        (fields == null || fields.isEmpty) ? modelScalarFields : localFields;
+
+    expressions.add(code.declareFinal('fields').assign(fieldsExpression));
+
+    code.Reference type = code.refer('Map');
+    if (field.outputType.isList) {
+      type = code.TypeReference((updates) {
+        updates.symbol = 'Iterable';
+        updates.types.add(type);
+      });
+    }
 
     // Build compiler expression
     final compiler = code.Method((updates) {
       updates.name = 'compiler';
       updates.requiredParameters.add(code.Parameter((updates) {
         updates.name = field.name.toDartPropertyName();
-        updates.type = code.TypeReference((updates) {
-          updates.symbol = 'Iterable';
-          updates.types.add(code.refer('Map'));
-        });
+        updates.type = type;
       }));
 
-      final compiler = code.Method((updates) {
-        updates.requiredParameters.add(code.Parameter((updates) {
-          updates.name = 'post';
-          updates.type = code.refer('Map');
-        }));
-        updates.lambda = true;
-        updates.body = code
-            .refer(field.outputType.type.toDartClassname())
-            .newInstanceNamed('fromJson', [
-          code.refer('post').property('cast').call([]),
-        ]).code;
-      });
+      final serializer = code
+          .refer(field.outputType.type.toDartClassname())
+          .newInstanceNamed('fromJson', [
+        code.refer(field.name.toDartPropertyName()).property('cast').call([]),
+      ]).code;
+      updates.body = serializer;
 
-      updates.body = code
-          .refer(field.name.toDartPropertyName())
-          .property('map')
-          .call([compiler.closure]).code;
+      if (field.outputType.isList) {
+        final compiler = code.Method((updates) {
+          updates.requiredParameters.add(code.Parameter((updates) {
+            updates.name = field.name.toDartPropertyName();
+            updates.type = code.refer('Map');
+          }));
+          updates.lambda = true;
+          updates.body = serializer;
+        });
+        updates.body = code
+            .refer(field.name.toDartPropertyName())
+            .property('map')
+            .call([compiler.closure]).code;
+      }
+
       updates.lambda = true;
     });
+
     expressions.add(compiler.closure);
 
     final then = code.Method((updates) {
@@ -707,17 +761,13 @@ extension ModelFluentGenerator on Generator {
       final compiler = code.refer('compiler').call([code.refer('json')]);
       final thrown = code.refer('Exception').newInstance([
         code.literalString('Unable to parse response'),
-      ]);
-      final type = code.TypeReference((updates) {
-        updates.symbol = 'Iterable';
-        updates.types.add(code.refer('Map'));
-      });
+      ]).thrown;
 
       updates.body = code
           .refer('json')
           .isA(type)
-          .conditional(
-              compiler, field.isNullable == true ? code.literalNull : thrown)
+          .conditional(compiler,
+              _isOperationReturnTypeNullable(field) ? code.literalNull : thrown)
           .code;
     });
 
@@ -751,7 +801,7 @@ extension ModelFluentGenerator on Generator {
         .refer(field.outputType.type.toDartClassname())
         .property('fromJson')
         .call([json]);
-    final thrown = code.refer('Exception').call([
+    final thrown = code.refer('Exception').newInstance([
       code.literalString('Not found ${field.outputType.type}'),
     ]).thrown;
 
@@ -763,8 +813,8 @@ extension ModelFluentGenerator on Generator {
       updates.body = code
           .refer('json')
           .isA(code.refer('Map'))
-          .conditional(
-              serializer, field.isNullable == true ? code.literalNull : thrown)
+          .conditional(serializer,
+              _isOperationReturnTypeNullable(field) ? code.literalNull : thrown)
           .code;
       updates.lambda = true;
     });
@@ -817,10 +867,7 @@ extension ModelDelegateGenerator on Generator {
       if (gqlOperation == null) continue;
 
       final field = _findQueryOrMutationField(gqlOperation);
-      if (field == null ||
-          !_isReturnScalarModelOperation(field, mapping.model)) {
-        continue;
-      }
+      if (field == null) continue;
 
       updates.methods.add(_modelDelegateMethodBuilder(
         operation,
@@ -837,26 +884,11 @@ extension ModelDelegateGenerator on Generator {
       updates.returns = _modelDelegateMethodReturnTypeBuilder(field);
       updates.optionalParameters
           .addAll(field.args.map((e) => _buildOperationParameter(e)));
-      updates.body = code.Block((updates) => _modelDelegateMethodBodyBuilder(
+      updates.body = code.Block((updates) => _modelFluentMethodBodyBuilder(
             updates,
             field,
           ));
     });
-  }
-
-  /// Model delegate method body builder
-  void _modelDelegateMethodBodyBuilder(
-      code.BlockBuilder updates, dmmf.SchemaField field) {
-    // Build args
-    final args =
-        field.args.map((e) => code.refer('GraphQLArg', packages.graphql).call([
-              code.literalString(e.name, raw: true),
-              code.refer(e.name.toDartPropertyName()),
-            ]));
-    updates.addExpression(
-        code.declareFinal('args').assign(code.literalList(args)));
-
-    // build fields update function
   }
 
   /// Build operation parameter
@@ -873,6 +905,10 @@ extension ModelDelegateGenerator on Generator {
   code.Reference _modelDelegateMethodReturnTypeBuilder(dmmf.SchemaField field) {
     final type =
         scalar(field.outputType, _isOperationReturnTypeNullable(field));
+
+    if (field.outputType.type.startsWith('Aggregate')) {
+      return type;
+    }
 
     return code.TypeReference((updates) {
       updates
@@ -899,11 +935,6 @@ extension ModelDelegateGenerator on Generator {
     if (field.name.toLowerCase().endsWith('orthrow')) return false;
 
     return field.isNullable == true;
-  }
-
-  /// Is return scalar model operation
-  bool _isReturnScalarModelOperation(dmmf.SchemaField? field, String model) {
-    return field?.outputType.type == model;
   }
 
   /// Find query or mutation field
