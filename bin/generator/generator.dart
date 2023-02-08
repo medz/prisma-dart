@@ -98,6 +98,7 @@ class Generator {
     generateEnum();
     generateInputObjectTypes();
     generateScalarModels();
+    generateModelFluent();
     generateModelDelegate();
     defineDirectives();
     writeLibrary();
@@ -504,7 +505,7 @@ extension ScalarModulesGenerator on Generator {
 
   /// Chech model scalar field
   bool _isModelScalarField(String model, String field) {
-    final enumName = '${model}ScalarFieldEnum'.toLowerCase();
+    final enumName = _buildModelScalarFieldEnumName(model).toLowerCase();
     final enums = options.dmmf.schema.enumTypes.prisma;
     final scalarEnum = enums.firstWhere(
       (e) => e.name.toLowerCase() == enumName,
@@ -512,6 +513,277 @@ extension ScalarModulesGenerator on Generator {
     );
 
     return scalarEnum.values.any((e) => e.toLowerCase() == field.toLowerCase());
+  }
+
+  /// Build model scalar field enum name
+  String _buildModelScalarFieldEnumName(String model) =>
+      '${model}ScalarFieldEnum';
+}
+
+/// Model fluent generator
+extension ModelFluentGenerator on Generator {
+  /// Generate model fluent
+  void generateModelFluent() {
+    final models = options.dmmf.schema.outputObjectTypes.model;
+    if (models != null) {
+      library.body.addAll(models.map((e) => _buildModelFluent(e)));
+    }
+  }
+
+  /// Build model fluent
+  code.Class _buildModelFluent(dmmf.OutputType model) {
+    final fields = model.fields
+        .where((element) => !_isModelScalarField(model.name, element.name));
+
+    return code.Class((updates) {
+      updates.name = _buildModelFluentName(model.name);
+      updates.methods.addAll(fields.map((e) => _buildFluentMethod(e)));
+      updates.extend = code.TypeReference((updates) {
+        updates.symbol = 'PrismaFluent';
+        updates.url = packages.orm;
+        updates.types.add(code.refer('T'));
+      });
+      updates.types.add(code.refer('T'));
+
+      // Build default constructor
+      updates.constructors.add(code.Constructor((updates) {
+        updates.constant = true;
+
+        // `original` parameter
+        updates.requiredParameters.addAll([
+          code.Parameter((updates) {
+            updates.name = 'original';
+            updates.toSuper = true;
+          }),
+        ]);
+
+        // `$query` parameter
+        updates.requiredParameters.addAll([
+          code.Parameter((updates) {
+            updates.name = r'$query';
+            updates.toSuper = true;
+          }),
+        ]);
+      }));
+    });
+  }
+
+  /// Build fluent method
+  code.Method _buildFluentMethod(dmmf.SchemaField field) {
+    return code.Method((updates) {
+      updates.name = field.name.toDartPropertyName();
+      updates.returns = _modelDelegateMethodReturnTypeBuilder(field);
+      updates.optionalParameters
+          .addAll(field.args.map((e) => _buildOperationParameter(e)));
+      updates.body = code.Block(
+          (updates) => _modelFluentMethodBodyBuilder(updates, field));
+    });
+  }
+
+  /// Model Fluent method body builder
+  void _modelFluentMethodBodyBuilder(
+      code.BlockBuilder updates, dmmf.SchemaField field) {
+    final args =
+        field.args.map((e) => code.refer('GraphQLArg', packages.graphql).call([
+              code.literalString(e.name, raw: true),
+              code.refer(e.name.toDartPropertyName()),
+            ]));
+    if (args.isNotEmpty) {
+      updates.addExpression(
+          code.declareFinal('args').assign(code.literalList(args)));
+    }
+
+    final query = code
+        .refer('PrismaFluent', packages.orm)
+        .property('queryBuilder')
+        .call([], {
+      'query': code.Method((updates) {
+        updates.requiredParameters.add(code.Parameter((updates) {
+          updates.name = 'fields';
+        }));
+
+        final namedArguments = {
+          'fields': code.refer('fields'),
+        };
+        if (args.isNotEmpty) {
+          namedArguments['args'] = code.refer('args');
+        }
+
+        updates.body = code.refer(r'$query').call([
+          code.literalList([
+            code.refer('GraphQLField', packages.graphql).call(
+                [code.literalString(field.name, raw: true)], namedArguments),
+          ])
+        ]).code;
+
+        updates.lambda = true;
+      }).closure,
+      'key': code.literalString(field.name, raw: true),
+    });
+    updates.addExpression(code.declareFinal('query').assign(query));
+
+    _buildModelCompiler(field)
+        .forEach((element) => updates.addExpression(element));
+  }
+
+  /// Build model compiler
+  Iterable<code.Expression> _buildModelCompiler(dmmf.SchemaField field) {
+    // If the output type is a model, return a model fluent.
+    if (_isModelFluentOutputType(field.outputType)) {
+      return _buildModelFluentCompiler(field);
+
+      // If output is a list, return the list results.
+    } else if (_isModelListOutputType(field.outputType)) {
+      return _buildModelListResultsCompiler(field);
+    }
+
+    return [
+      code.refer(field.outputType.type.toDartClassname()).newInstance([
+        code.refer('query'),
+      ]).returned,
+    ];
+  }
+
+  /// Is model fluent output type
+  bool _isModelListOutputType(dmmf.SchemaType outputType) {
+    final models = options.dmmf.schema.outputObjectTypes.model;
+    return models?.any((e) => e.name == outputType.type) == true &&
+        outputType.isList;
+  }
+
+  /// Build model list results compiler
+  Iterable<code.Expression> _buildModelListResultsCompiler(
+      dmmf.SchemaField field) {
+    final expressions = <code.Expression>[];
+    final modelScalarEnumName =
+        _buildModelScalarFieldEnumName(field.outputType.type).toDartClassname();
+
+    expressions.add(code.declareFinal('fields').assign(
+          code
+              .refer(modelScalarEnumName)
+              .property('values')
+              .property('toGraphQLFields')
+              .call([]),
+        ));
+
+    // Build compiler expression
+    final compiler = code.Method((updates) {
+      updates.name = 'compiler';
+      updates.requiredParameters.add(code.Parameter((updates) {
+        updates.name = field.name.toDartPropertyName();
+        updates.type = code.TypeReference((updates) {
+          updates.symbol = 'Iterable';
+          updates.types.add(code.refer('Map'));
+        });
+      }));
+
+      final compiler = code.Method((updates) {
+        updates.requiredParameters.add(code.Parameter((updates) {
+          updates.name = 'post';
+          updates.type = code.refer('Map');
+        }));
+        updates.lambda = true;
+        updates.body = code
+            .refer(field.outputType.type.toDartClassname())
+            .newInstanceNamed('fromJson', [
+          code.refer('post').property('cast').call([]),
+        ]).code;
+      });
+
+      updates.body = code
+          .refer(field.name.toDartPropertyName())
+          .property('map')
+          .call([compiler.closure]).code;
+      updates.lambda = true;
+    });
+    expressions.add(compiler.closure);
+
+    final then = code.Method((updates) {
+      updates.requiredParameters.add(code.Parameter((updates) {
+        updates.name = 'json';
+      }));
+      updates.lambda = true;
+
+      final compiler = code.refer('compiler').call([code.refer('json')]);
+      final thrown = code.refer('Exception').newInstance([
+        code.literalString('Unable to parse response'),
+      ]);
+      final type = code.TypeReference((updates) {
+        updates.symbol = 'Iterable';
+        updates.types.add(code.refer('Map'));
+      });
+
+      updates.body = code
+          .refer('json')
+          .isA(type)
+          .conditional(
+              compiler, field.isNullable == true ? code.literalNull : thrown)
+          .code;
+    });
+
+    final returns = code
+        .refer('query')
+        .call([code.refer('fields')])
+        .property('then')
+        .call([then.closure]);
+    expressions.add(returns.returned);
+
+    return expressions;
+  }
+
+  /// Build model fluent compiler
+  Iterable<code.Expression> _buildModelFluentCompiler(dmmf.SchemaField field) {
+    final expressions = <code.Expression>[];
+
+    final modelScalarEnumName =
+        _buildModelScalarFieldEnumName(field.outputType.type).toDartClassname();
+    final fields = code
+        .refer(modelScalarEnumName)
+        .property('values')
+        .property('toGraphQLFields')
+        .call([]);
+    final query = code.refer('query').call([fields]);
+    final json = code.refer('json').property('cast').call([], {}, [
+      code.refer('String'),
+      code.refer('dynamic'),
+    ]);
+    final serializer = code
+        .refer(field.outputType.type.toDartClassname())
+        .property('fromJson')
+        .call([json]);
+    final thrown = code.refer('Exception').call([
+      code.literalString('Not found ${field.outputType.type}'),
+    ]).thrown;
+
+    final then = code.Method((updates) {
+      updates.requiredParameters.add(code.Parameter((updates) {
+        updates.name = 'json';
+      }));
+
+      updates.body = code
+          .refer('json')
+          .isA(code.refer('Map'))
+          .conditional(
+              serializer, field.isNullable == true ? code.literalNull : thrown)
+          .code;
+      updates.lambda = true;
+    });
+    final future = query.property('then').call([then.closure]);
+
+    expressions.add(code.declareFinal('future').assign(future));
+
+    final returnType = _modelDelegateMethodReturnTypeBuilder(field);
+    expressions.add(returnType.newInstance([
+      code.refer('future'),
+      code.refer('query'),
+    ]).returned);
+
+    return expressions;
+  }
+
+  /// Build model fluent name
+  String _buildModelFluentName(String model) {
+    return '${model}Fluent'.toDartClassname();
   }
 }
 
@@ -603,10 +875,22 @@ extension ModelDelegateGenerator on Generator {
         scalar(field.outputType, _isOperationReturnTypeNullable(field));
 
     return code.TypeReference((updates) {
-      updates.symbol = 'PrismaFluent';
-      updates.url = packages.orm;
-      updates.types.add(type);
+      updates
+        ..symbol = 'Future'
+        ..types.add(type);
+
+      if (_isModelFluentOutputType(field.outputType)) {
+        updates.symbol = _buildModelFluentName(field.outputType.type);
+      }
     });
+  }
+
+  /// Is model fluent output type
+  bool _isModelFluentOutputType(dmmf.SchemaType outputType) {
+    final models = options.dmmf.schema.outputObjectTypes.model;
+
+    return models?.any((e) => e.name == outputType.type) == true &&
+        !outputType.isList;
   }
 
   /// Return type is nullable.

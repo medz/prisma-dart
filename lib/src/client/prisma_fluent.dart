@@ -1,5 +1,10 @@
 import 'dart:async';
 
+import '../graphql/field.dart';
+
+typedef PrismaFluentQuery = Future<Object?> Function(
+    Iterable<GraphQLField> fields);
+
 /// Prisma Model fluent.
 ///
 /// This class is used to wrap the result of a Prisma Model query.
@@ -23,9 +28,23 @@ import 'dart:async';
 /// final idMax = await fluent.$max().id();
 /// ```
 class PrismaFluent<T> implements Future<T> {
-  final Future<T> _original;
+  /// Query Builder
+  static PrismaFluentQuery queryBuilder({
+    required PrismaFluentQuery query,
+    String? key,
+  }) {
+    return (Iterable<GraphQLField> fields) async {
+      final result = await query(fields);
+      if (key == null) return result;
 
-  const PrismaFluent(Future<T> original) : _original = original;
+      return result is Map ? result[key] : null;
+    };
+  }
+
+  final Future<T> _original;
+  final PrismaFluentQuery $query;
+
+  const PrismaFluent(Future<T> original, this.$query) : _original = original;
 
   @override
   Stream<T> asStream() => _original.asStream();
@@ -37,7 +56,7 @@ class PrismaFluent<T> implements Future<T> {
       return _original.catchError(onError, test: test) as PrismaFluent<T>;
     }
 
-    return PrismaFluent(_original.catchError(onError, test: test));
+    return PrismaFluent(_original.catchError(onError, test: test), $query);
   }
 
   @override
@@ -47,7 +66,7 @@ class PrismaFluent<T> implements Future<T> {
       return _original.then(onValue, onError: onError) as PrismaFluent<R>;
     }
 
-    return PrismaFluent(_original.then(onValue, onError: onError));
+    return PrismaFluent(_original.then(onValue, onError: onError), $query);
   }
 
   @override
@@ -57,7 +76,8 @@ class PrismaFluent<T> implements Future<T> {
       return _original.timeout(timeLimit, onTimeout: onTimeout)
           as PrismaFluent<T>;
     }
-    return PrismaFluent(_original.timeout(timeLimit, onTimeout: onTimeout));
+    return PrismaFluent(
+        _original.timeout(timeLimit, onTimeout: onTimeout), $query);
   }
 
   @override
@@ -65,6 +85,6 @@ class PrismaFluent<T> implements Future<T> {
     if (_original is PrismaFluent<T>) {
       return _original.whenComplete(action) as PrismaFluent<T>;
     }
-    return PrismaFluent(_original.whenComplete(action));
+    return PrismaFluent(_original.whenComplete(action), $query);
   }
 }
