@@ -1,13 +1,14 @@
+
 import 'dart:convert';
 
-import '../runtime/json_serializable.dart';
-import '../runtime/prisma_null.dart';
+import '../client/json_serializable.dart';
+import '../client/prisma_null.dart';
 
 /// GraphQL variable SDL builder.
 ///
 /// Example:
 /// ```dart
-/// final veriable = GraphQLArg('id', 1, isRequired: true);
+/// final veriable = GraphQLArg('id', 1);
 ///
 /// print(veriable); // id: 1
 /// ```
@@ -16,14 +17,9 @@ class GraphQLArg {
   final String key;
 
   /// Veriable value
-  final dynamic value;
+  final Object? value;
 
-  /// Veriable is required
-  final bool isRequired;
-
-  const GraphQLArg(this.key, this.value, {this.isRequired = false})
-      : assert(!isRequired || value != null,
-            '"$key" must be required and not null');
+  const GraphQLArg(this.key, this.value);
 
   @override
   String toString() => toSdl() ?? super.toString();
@@ -128,26 +124,13 @@ class GraphQLArg {
   }
 }
 
-/// GraphQL args.
-class GraphQLArgs {
-  final List<GraphQLArg> args;
-
-  const GraphQLArgs(this.args);
-
-  // Serizlize args to SDL.
+extension GraphQLArgsExtension on Iterable<GraphQLArg> {
+  /// Serizlize args to SDL.
   String? toSdl() {
-    final List<String> list = [];
-    for (final GraphQLArg arg in args) {
-      final String? sdl = arg.toSdl();
-      if (sdl != null) {
-        list.add(sdl);
-      }
-    }
-    if (list.isEmpty) return null;
+    final sdls = map((e) => e.toSdl())
+        .where((element) => element != null)
+        .whereType<String>();
 
-    return '(${list.join(', ')})';
+    return sdls.isEmpty ? null : '(${sdls.join(', ')})';
   }
-
-  @override
-  String toString() => toSdl() ?? super.toString();
 }

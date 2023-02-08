@@ -98,6 +98,7 @@ class Generator {
     generateEnum();
     generateInputObjectTypes();
     generateScalarModels();
+    generateModelDelegate();
     defineDirectives();
     writeLibrary();
   }
@@ -202,9 +203,48 @@ extension EnumGenerator on Generator {
 
       // Add enum to library
       library.body.add(code.Enum((code.EnumBuilder updates) {
+        final values = _enumValuesBuilder(element.values);
         updates
           ..name = element.name.toDartClassname()
-          ..values.addAll(_enumValuesBuilder(element.values));
+          ..values.addAll(values)
+          ..implements.add(code.refer('PrismaEnum', packages.orm));
+
+        /// Add `originalName` field getter
+        updates.methods.add(code.Method((updates) {
+          updates
+            ..name = 'originalName'
+            ..returns = code.refer('String').nullable
+            ..lambda = true
+            ..body = code.literalNull.code
+            ..annotations.add(code.refer('override'))
+            ..type = code.MethodType.getter;
+        }));
+
+        if (values.any((element) => element.arguments.isNotEmpty)) {
+          // Clean enum method
+          updates.methods.clear();
+
+          // Add `originalName` field.
+          updates.fields.add(code.Field((updates) {
+            updates
+              ..name = 'originalName'
+              ..type = code.refer('String').nullable
+              ..modifier = code.FieldModifier.final$
+              ..annotations.add(code.refer('override'));
+          }));
+
+          // Add constructor
+          updates.constructors.add(code.Constructor((updates) {
+            updates.constant = true;
+            updates.optionalParameters.add(code.Parameter((updates) {
+              updates
+                ..name = 'originalName'
+                ..toThis = true
+                ..named = false
+                ..required = false;
+            }));
+          }));
+        }
       }));
     }
   }
@@ -216,9 +256,13 @@ extension EnumGenerator on Generator {
         updates.name = e.toDartPropertyName();
 
         if (updates.name != e) {
+          // Add annotation
           updates.annotations.add(
             code.refer('JsonValue').newInstance([code.literalString(e)]),
           );
+
+          // Add original name argument
+          updates.arguments.add(code.literalString(e, raw: true));
         }
       });
     });
@@ -468,5 +512,141 @@ extension ScalarModulesGenerator on Generator {
     );
 
     return scalarEnum.values.any((e) => e.toLowerCase() == field.toLowerCase());
+  }
+}
+
+/// Model delegate generator
+extension ModelDelegateGenerator on Generator {
+  /// Generate model delegate
+  void generateModelDelegate() {
+    final modelOperations = options.dmmf.mappings.modelOperations;
+    library.body.addAll(modelOperations.map((e) => _buildModelDelegate(e)));
+  }
+
+  /// Build model delegate
+  code.Extension _buildModelDelegate(dmmf.ModelMapping mapping) {
+    return code.Extension((e) => _modelDelegateClassBuilder(e, mapping));
+  }
+
+  /// Model delegate extension builder
+  void _modelDelegateClassBuilder(
+      code.ExtensionBuilder updates, dmmf.ModelMapping mapping) {
+    updates.name = _generateModelDelegateName(mapping.model);
+    updates.on = code.TypeReference((updates) {
+      updates.symbol = 'ModelDelegate';
+      updates.url = packages.orm;
+      updates.types.add(code.refer(mapping.model.toDartClassname()));
+    });
+
+    final json = mapping.toJson().cast<String, String?>();
+    for (final operation in mapping.operations) {
+      final gqlOperation = json[operation];
+
+      if (gqlOperation == null) continue;
+
+      final field = _findQueryOrMutationField(gqlOperation);
+      if (field == null ||
+          !_isReturnScalarModelOperation(field, mapping.model)) {
+        continue;
+      }
+
+      updates.methods.add(_modelDelegateMethodBuilder(
+        operation,
+        field,
+      ));
+    }
+  }
+
+  /// Model delegate method builder
+  code.Method _modelDelegateMethodBuilder(
+      String operation, dmmf.SchemaField field) {
+    return code.Method((updates) {
+      updates.name = operation.toDartPropertyName();
+      updates.returns = _modelDelegateMethodReturnTypeBuilder(field);
+      updates.optionalParameters
+          .addAll(field.args.map((e) => _buildOperationParameter(e)));
+      updates.body = code.Block((updates) => _modelDelegateMethodBodyBuilder(
+            updates,
+            field,
+          ));
+    });
+  }
+
+  /// Model delegate method body builder
+  void _modelDelegateMethodBodyBuilder(
+      code.BlockBuilder updates, dmmf.SchemaField field) {
+    // Build args
+    final args =
+        field.args.map((e) => code.refer('GraphQLArg', packages.graphql).call([
+              code.literalString(e.name, raw: true),
+              code.refer(e.name.toDartPropertyName()),
+            ]));
+    updates.addExpression(
+        code.declareFinal('args').assign(code.literalList(args)));
+
+    // build fields update function
+  }
+
+  /// Build operation parameter
+  code.Parameter _buildOperationParameter(dmmf.SchemaArg arg) {
+    return code.Parameter((updates) {
+      updates.name = arg.name.toDartPropertyName();
+      updates.type = _buildFieldType(arg);
+      updates.named = true;
+      updates.required = arg.isRequired == true;
+    });
+  }
+
+  /// Model delegate method return type builder
+  code.Reference _modelDelegateMethodReturnTypeBuilder(dmmf.SchemaField field) {
+    final type =
+        scalar(field.outputType, _isOperationReturnTypeNullable(field));
+
+    return code.TypeReference((updates) {
+      updates.symbol = 'PrismaFluent';
+      updates.url = packages.orm;
+      updates.types.add(type);
+    });
+  }
+
+  /// Return type is nullable.
+  bool _isOperationReturnTypeNullable(dmmf.SchemaField field) {
+    // If ends with `OrThrow` then return type is not nullable
+    if (field.name.toLowerCase().endsWith('orthrow')) return false;
+
+    return field.isNullable == true;
+  }
+
+  /// Is return scalar model operation
+  bool _isReturnScalarModelOperation(dmmf.SchemaField? field, String model) {
+    return field?.outputType.type == model;
+  }
+
+  /// Find query or mutation field
+  dmmf.SchemaField? _findQueryOrMutationField(String operation) {
+    final types = options.dmmf.schema.outputObjectTypes.prisma;
+    final fields = types
+        .where((element) =>
+            element.name.toLowerCase() == 'query' ||
+            element.name.toLowerCase() == 'mutation')
+        .expand((e) => e.fields);
+
+    return fields.firstWhereOrNull((e) => e.name == operation);
+  }
+
+  /// Generate model delegate name
+  String _generateModelDelegateName(String model) =>
+      '${model}ModelDelegateExtension'.toDartClassname();
+}
+
+/// Iterable extensions
+extension _IterableExtensions<T> on Iterable<T> {
+  /// First where or null
+  T? firstWhereOrNull(bool Function(T element) test) {
+    for (final element in this) {
+      if (test(element)) return element;
+    }
+
+    return null;
   }
 }

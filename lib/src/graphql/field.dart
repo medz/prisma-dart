@@ -2,8 +2,8 @@ import 'arg.dart';
 
 class GraphQLField {
   final String name;
-  final GraphQLArgs? args;
-  final GraphQLFields? fields;
+  final Iterable<GraphQLArg>? args;
+  final Iterable<GraphQLField>? fields;
 
   const GraphQLField(
     this.name, {
@@ -31,19 +31,11 @@ class GraphQLField {
   }
 }
 
-class GraphQLFields {
-  final List<GraphQLField> children;
-
-  bool get isEmpty => children.isEmpty;
-
-  const GraphQLFields(this.children);
-
-  // Build GraphQL fields SDL.
+extension GraphQLFieldsExtension on Iterable<GraphQLField> {
+  /// Build GraphQL fields SDL.
   String? toSdl() {
-    final List<String> results = children.map((e) => e.toSdl()).toList();
+    final results = map((e) => e.toSdl());
 
-    if (results.isEmpty) return null;
-
-    return '{${results.join(', ')}}';
+    return results.isEmpty ? null : '{${results.join(', ')}}';
   }
 }

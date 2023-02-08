@@ -113,7 +113,13 @@ class _OutputObjectTypesBuilder {
       for (final dmmf.SchemaField field in fields) {
         if (_fieldIsSkip(field, classBuilder.name)) continue;
 
-        constructorBuilder.optionalParameters.add(code_builder.Parameter(
+        constructorBuilder.optionalParameters.updates.fields.add(code.Field((updates) {
+          updates
+            ..name = 'originalName'
+            ..type = code.refer('String').nullable
+            ..modifier = code.FieldModifier.final$
+            ..annotations.add(code.refer('override'));
+        }));(code_builder.Parameter(
             (code_builder.ParameterBuilder parameterBuilder) {
           parameterBuilder.name = languageKeywordEncode(field.name);
           parameterBuilder.named = true;

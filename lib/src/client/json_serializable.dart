@@ -34,4 +34,5 @@ const freezed = freezed_annotation.Freezed(
 
 const jsonSerializable = freezed_annotation.JsonSerializable(
   explicitToJson: true,
+  includeIfNull: false,
 );

@@ -1,10 +1,10 @@
 library prisma.runtime;
 
-// Client
 export 'src/client/prisma_client.dart';
-
-// Runtime
-export 'src/runtime/datasource.dart';
-export 'src/runtime/json_serializable.dart';
-export 'src/runtime/prisma_null.dart';
-export 'src/runtime/prisma_union.dart';
+export 'src/client/datasource.dart';
+export 'src/client/json_serializable.dart';
+export 'src/client/prisma_null.dart';
+export 'src/client/prisma_union.dart';
+export 'src/client/prisma_enum.dart';
+export 'src/client/prisma_fluent.dart';
+export 'src/client/model_delegate.dart';

@@ -129,15 +129,15 @@ class PrismaClient {
   }) async {
     final String sdl = GraphQLField(
       'mutation',
-      fields: GraphQLFields([
+      fields: [
         GraphQLField(
           'queryRaw',
-          args: GraphQLArgs([
+          args: [
             GraphQLArg('query', query),
             GraphQLArg('parameters', prismaRawParameter.encode(parameters)),
-          ]),
+          ],
         )
-      ]),
+      ],
     ).toSdl();
 
     // Request the query.
@@ -165,15 +165,12 @@ class PrismaClient {
   }) async {
     final String sdl = GraphQLField(
       'mutation',
-      fields: GraphQLFields([
-        GraphQLField(
-          'queryRaw',
-          args: GraphQLArgs([
-            GraphQLArg('query', query),
-            GraphQLArg('parameters', prismaRawParameter.encode(parameters)),
-          ]),
-        )
-      ]),
+      fields: [
+        GraphQLField('queryRaw', args: [
+          GraphQLArg('query', query),
+          GraphQLArg('parameters', prismaRawParameter.encode(parameters)),
+        ])
+      ],
     ).toSdl();
 
     // Request the query.

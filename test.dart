@@ -1,6 +1,10 @@
-import 'bin/generator/utils.dart';
+class Test {
+  const Test();
+}
 
-void main() async {
-  final a = [1, 2];
-  print(a.take(3));
+Test get test => const Test();
+
+void main() {
+  print(test == test);
+  print(test.hashCode);
 }
