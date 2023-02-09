@@ -100,6 +100,8 @@ class Generator {
     generateScalarModels();
     generateModelFluent();
     generateModelDelegate();
+    generatePrismaOutputTypes();
+    generatePrismaAggregateFluent();
     defineDirectives();
     writeLibrary();
   }
@@ -648,7 +650,8 @@ extension ModelFluentGenerator on Generator {
       return _buildModelResultsCompiler(field, fields: fields);
 
       // If output is `AffectedRowsOutput`, return the affected rows.
-    } else if (field.outputType.type == 'AffectedRowsOutput') {
+    } else if (field.outputType.type == 'AffectedRowsOutput' ||
+        field.outputType.type.endsWith('CountOutputType')) {
       final type = _findPrismaOutputType(field.outputType.type);
       final fields = type.fields.map((e) => e.name);
 
@@ -906,7 +909,7 @@ extension ModelDelegateGenerator on Generator {
     final type =
         scalar(field.outputType, _isOperationReturnTypeNullable(field));
 
-    if (field.outputType.type.startsWith('Aggregate')) {
+    if (_isAggregate(field.outputType.type)) {
       return type;
     }
 
@@ -963,5 +966,123 @@ extension _IterableExtensions<T> on Iterable<T> {
     }
 
     return null;
+  }
+}
+
+/// Prisma output type generator
+extension PrismaOutputTypeGenerator on Generator {
+  /// Json serializable prisma output types
+  static final _jsonSerializablePrismaOutputTypes = [
+    (String type) => type.endsWith('GroupByOutputType'),
+    (String type) => type == 'AffectedRowsOutput',
+    (String type) => type.endsWith('CountOutputType'),
+  ];
+
+  /// Generate prisma output types
+  void generatePrismaOutputTypes() {
+    final types = options.dmmf.schema.outputObjectTypes.prisma;
+    final models = types.where((type) => _jsonSerializablePrismaOutputTypes
+        .any((element) => element(type.name)));
+    final filitedModels = models
+        .map((e) => _withoutAggregateOutputTypeField(e))
+        .map((e) => _rebuildGroupByOutputtypeFields(e));
+
+    library.body.addAll(filitedModels.map((e) => _buildScalarModel(e)));
+  }
+
+  /// Rebuild group by output type fields
+  dmmf.OutputType _rebuildGroupByOutputtypeFields(dmmf.OutputType output) {
+    final fields = output.fields.map((e) => _rebuildGroupByOutputTypeField(e));
+
+    return dmmf.OutputType(
+      name: output.name,
+      fields: fields.toList(),
+    );
+  }
+
+  /// Rebuild group by output type field
+  dmmf.SchemaField _rebuildGroupByOutputTypeField(dmmf.SchemaField field) {
+    return dmmf.SchemaField(
+      name: field.name,
+      isNullable: true,
+      outputType: field.outputType,
+      args: field.args,
+      deprecation: field.deprecation,
+      documentation: field.documentation,
+    );
+  }
+
+  /// Without count aggregate output type field
+  dmmf.OutputType _withoutAggregateOutputTypeField(dmmf.OutputType output) {
+    final fields = output.fields.where(
+        (element) => !element.outputType.type.endsWith('AggregateOutputType'));
+
+    return dmmf.OutputType(
+      name: output.name,
+      fields: fields.toList(),
+    );
+  }
+}
+
+/// Prisma Aggregation fluent generator
+extension PrismaAggregationFluentGenerate on Generator {
+  /// Generate prisma aggregation fluent
+  void generatePrismaAggregateFluent() {
+    final types = options.dmmf.schema.outputObjectTypes.prisma
+        .where((element) => _isAggregate(element.name));
+
+    library.body.addAll(types.map((e) => _buildAggregateFluent(e)));
+  }
+
+  /// Is aggregate output type
+  bool _isAggregate(String type) {
+    return type.endsWith('AggregateOutputType') || type.startsWith('Aggregate');
+  }
+
+  /// Build aggregate fluent
+  code.Class _buildAggregateFluent(dmmf.OutputType output) {
+    Iterable<dmmf.SchemaField> fields = output.fields;
+    if (output.name.startsWith('Aggregate')) {
+      fields = fields.map((e) => dmmf.SchemaField(
+            name: e.name,
+            isNullable: false,
+            outputType: e.outputType,
+            args: e.args,
+            deprecation: e.deprecation,
+            documentation: e.documentation,
+          ));
+    }
+
+    return code.Class((updates) {
+      updates
+        ..name = output.name.toDartClassname()
+        ..fields.addAll(_buildAggregateFluentFields())
+        ..constructors.add(_buildAggregateFluentConstructor())
+        ..methods.addAll(fields.map((e) => _buildFluentMethod(e)));
+    });
+  }
+
+  /// Build aggregate fluent fields
+  Iterable<code.Field> _buildAggregateFluentFields() {
+    return [
+      code.Field((updates) {
+        updates.name = r'$query';
+        updates.type = code.refer('PrismaFluentQuery', packages.orm);
+        updates.modifier = code.FieldModifier.final$;
+      })
+    ];
+  }
+
+  /// Build aggregate fluent constructor
+  code.Constructor _buildAggregateFluentConstructor() {
+    return code.Constructor((updates) {
+      updates.requiredParameters.add(
+        code.Parameter((updates) {
+          updates.name = r'$query';
+          updates.toThis = true;
+        }),
+      );
+      updates.constant = true;
+    });
   }
 }

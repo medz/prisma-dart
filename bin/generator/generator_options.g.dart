@@ -43,25 +43,42 @@ _$_GeneratorConfig _$$_GeneratorConfigFromJson(Map<String, dynamic> json) =>
       config: Map<String, String>.from(json['config'] as Map),
     );
 
-Map<String, dynamic> _$$_GeneratorConfigToJson(_$_GeneratorConfig instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'output': instance.output?.toJson(),
-      'isCustomOutput': instance.isCustomOutput,
-      'provider': instance.provider.toJson(),
-      'config': instance.config,
-    };
+Map<String, dynamic> _$$_GeneratorConfigToJson(_$_GeneratorConfig instance) {
+  final val = <String, dynamic>{
+    'name': instance.name,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('output', instance.output?.toJson());
+  writeNotNull('isCustomOutput', instance.isCustomOutput);
+  val['provider'] = instance.provider.toJson();
+  val['config'] = instance.config;
+  return val;
+}
 
 _$_EnvValue _$$_EnvValueFromJson(Map<String, dynamic> json) => _$_EnvValue(
       fromEnvVar: json['fromEnvVar'] as String?,
       value: json['value'] as String?,
     );
 
-Map<String, dynamic> _$$_EnvValueToJson(_$_EnvValue instance) =>
-    <String, dynamic>{
-      'fromEnvVar': instance.fromEnvVar,
-      'value': instance.value,
-    };
+Map<String, dynamic> _$$_EnvValueToJson(_$_EnvValue instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('fromEnvVar', instance.fromEnvVar);
+  writeNotNull('value', instance.value);
+  return val;
+}
 
 _$_Datasource _$$_DatasourceFromJson(Map<String, dynamic> json) =>
     _$_Datasource(

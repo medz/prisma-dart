@@ -1,4 +1,7 @@
+import 'json_serializable.dart';
+
 /// Prisma Union 2
+@jsonSerializable
 class PrismaUnion2<T1, T2> {
   final T1? $1;
   final T2? $2;
@@ -20,6 +23,7 @@ class PrismaUnion2<T1, T2> {
 }
 
 /// Prisma Union 3
+@jsonSerializable
 class PrismaUnion3<T1, T2, T3> extends PrismaUnion2<T1, T2> {
   final T3? $3;
 
