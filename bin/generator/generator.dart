@@ -629,7 +629,12 @@ extension ModelFluentGenerator on Generator {
           namedArguments['args'] = code.refer('args');
         }
 
-        updates.body = code.refer(r'$query').call([
+        String queryName = r'$query';
+        if (_fieldIsMutation(field)) {
+          queryName = r'$mutation';
+        }
+
+        updates.body = code.refer(queryName).call([
           code.literalList([
             code.refer('GraphQLField', packages.graphql).call(
                 [code.literalString(field.name, raw: true)], namedArguments),
@@ -644,6 +649,18 @@ extension ModelFluentGenerator on Generator {
 
     _buildModelCompiler(field)
         .forEach((element) => updates.addExpression(element));
+  }
+
+  /// Check field is mutation
+  bool _fieldIsMutation(dmmf.SchemaField field) {
+    final types = options.dmmf.schema.outputObjectTypes.prisma;
+    final type = types.firstWhere(
+      (e) => e.name.toLowerCase() == 'mutation',
+      orElse: () => throw Exception('Type "mutation" not found'),
+    );
+
+    return type.fields
+        .any((e) => e.name.toLowerCase() == field.name.toLowerCase());
   }
 
   /// Build model compiler
