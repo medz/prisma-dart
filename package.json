@@ -2,6 +2,6 @@
   "private": true,
   "name": "prisma-dart",
   "dependencies": {
-    "prisma": "^4.8.1"
+    "prisma": "^4.10.1"
   }
 }
