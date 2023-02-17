@@ -1,4 +1,5 @@
 // See: https://github.com/prisma/prisma/blob/main/packages/generator-helper/src/dmmf.ts
+library prisma.dmmf;
 
 import 'dart:convert';
 
@@ -6,8 +7,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'dmmf.g.dart';
 
+const json = JsonSerializable(
+    createFactory: true, createToJson: true, explicitToJson: true);
+
 /// Prisma DMMF document.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class Document {
   /// Create a new DMMF document.
   const Document({
@@ -38,7 +42,7 @@ class Document {
 }
 
 /// Prisma DMMF mapping.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class Mappings {
   /// Create a new DMMF mapping.
   const Mappings({
@@ -65,7 +69,7 @@ class Mappings {
 }
 
 /// Other operation mapping.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class OtherOperationMappings {
   /// Read operations
   final List<String> read;
@@ -109,7 +113,7 @@ Object? _oneSuffixReader(Map json, String key) {
 }
 
 /// Model operation mapping.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class ModelMapping {
   /// Model name
   final String model;
@@ -209,7 +213,7 @@ class ModelMapping {
 }
 
 /// Datemodel.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class Datamodel {
   /// Models.
   final List<Model> models;
@@ -240,7 +244,7 @@ class Datamodel {
 }
 
 /// Model Document.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class Model {
   /// Model name.
   final String name;
@@ -299,7 +303,7 @@ class Model {
 
 /// Field document.
 /// @See https://github.com/prisma/prisma/blob/main/packages/generator-helper/src/dmmf.ts#L88
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class Field {
   /// Field kind.
   final FieldKind kind;
@@ -414,7 +418,7 @@ enum FieldKind {
 }
 
 /// Field primary key.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class PrimaryKey {
   /// Prisma key name.
   final String? name;
@@ -441,7 +445,7 @@ class PrimaryKey {
 }
 
 /// Unique Index
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class UniqueIndex {
   /// Unique index name.
   final String? name;
@@ -468,7 +472,7 @@ class UniqueIndex {
 }
 
 /// Datamodel enum.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class DatamodelEnum {
   /// Enum name.
   final String name;
@@ -503,7 +507,7 @@ class DatamodelEnum {
 }
 
 /// Enum value.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class EnumValue {
   /// Enum value name.
   final String name;
@@ -530,7 +534,7 @@ class EnumValue {
 }
 
 /// Schema Document.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class Schema {
   /// Root query type.
   final String? rootQueryType;
@@ -568,7 +572,7 @@ class Schema {
 }
 
 /// Input object types.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class InputObjectTypes {
   /// For now there are no `model` [InputType].
   final List<InputType>? model;
@@ -595,7 +599,7 @@ class InputObjectTypes {
 }
 
 /// Input type.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class InputType {
   /// Type name
   final String name;
@@ -630,7 +634,7 @@ class InputType {
 }
 
 /// Input constraints.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class InputConstraints {
   /// Max field number.
   final int? maxNumFields;
@@ -657,7 +661,7 @@ class InputConstraints {
 }
 
 /// Output object types.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class OutputObjectTypes {
   /// For mode namespace output types.
   final List<OutputType>? model;
@@ -684,7 +688,7 @@ class OutputObjectTypes {
 }
 
 /// Output type.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class OutputType {
   /// Type name.
   final String name;
@@ -715,7 +719,7 @@ class OutputType {
 }
 
 /// Enum types.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class EnumTypes {
   /// For mode namespace enum types.
   final List<SchemaEnum>? model;
@@ -742,7 +746,7 @@ class EnumTypes {
 }
 
 /// Schema enum.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class SchemaEnum {
   /// Enum name.
   final String name;
@@ -769,7 +773,7 @@ class SchemaEnum {
 }
 
 /// Schema arg.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class SchemaArg {
   /// Arg name.
   final String name;
@@ -812,7 +816,7 @@ class SchemaArg {
 }
 
 /// Schema arg input type.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class SchemaType {
   /// Input type is a list.
   final bool isList;
@@ -871,7 +875,7 @@ enum FieldLocation {
 }
 
 /// Deprecation info.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class Deprecation {
   /// Since version.
   final String sinceVersion;
@@ -902,7 +906,7 @@ class Deprecation {
 }
 
 /// Schema field.
-@JsonSerializable(createFactory: true, createToJson: true, explicitToJson: true)
+@json
 class SchemaField {
   /// Field name.
   final String name;

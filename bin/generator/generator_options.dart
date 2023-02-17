@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
+import 'package:orm/dmmf.dart' show Document;
 
 part 'generator_options.g.dart';
 

@@ -6,7 +6,7 @@ import 'package:code_builder/code_builder.dart' as code;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:path/path.dart' as path;
-import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
+import 'package:orm/dmmf.dart' as dmmf;
 
 import 'generator_options.dart';
 import 'packages.dart' as packages;
