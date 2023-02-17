@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.0.0-beta.1](https://github.com/odroe/prisma-dart/compare/3.0.0-beta.1...v4.0.0-beta.1) (2023-02-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* dump code_builder to 4.4.0 version
+
+### Bug Fixes
+
+* **generate:** fixed model delegate resolve GraphQL top-level field ([35ebc6a](https://github.com/odroe/prisma-dart/commit/35ebc6ad46fa3fcde6adaf64d252d5dca7c4272d))
+
+
+### Miscellaneous Chores
+
+* dump code_builder to 4.4.0 version ([6668619](https://github.com/odroe/prisma-dart/commit/6668619e1d62ea1a7b6a7b607df7cb73dc680e8d))
+
 ## 3.0.0-beta+3
 
 ### Bug Fixes
