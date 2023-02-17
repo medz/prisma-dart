@@ -46,8 +46,6 @@ class Generator {
         if (result['method'] == 'getManifest') {
           _onManifest(result['id']);
         } else if (result['method'] == 'generate') {
-          File('dmmf.json')
-              .writeAsStringSync(convert.json.encode(result['params']));
           final options = GeneratorOptions.fromJson(result['params']);
           final generator = Generator._internal(
             info: info,
@@ -120,7 +118,8 @@ extension LibraryDirectives on Generator {
 
   /// Import packages
   void _imports() {
-    library.directives.add(code.Directive.import(packages.jsonSerializable));
+    library.directives.add(
+        code.Directive.import('package:json_annotation/json_annotation.dart'));
   }
 
   /// parts
@@ -200,10 +199,10 @@ extension EnumGenerator on Generator {
     for (final element in enums) {
       // If the enum name is in the ignore list, skip it.
       if (_ignoreEnumNames.contains(element.name.toLowerCase())) {
-        library.directives.add(code.Directive.export(
-          packages.orm,
-          show: [element.name],
-        ));
+        // library.directives.add(code.Directive.export(
+        //   packages.orm,
+        //   show: [element.name],
+        // ));
         continue;
       }
 
@@ -697,8 +696,7 @@ extension ModelFluentGenerator on Generator {
         updates.name = 'value';
       }));
 
-      updates.body =
-          code.refer(enumDecodeName, packages.jsonSerializable).call([
+      updates.body = code.refer(enumDecodeName).call([
         code.refer(enumName),
         code.refer('value'),
       ]).code;
@@ -1193,9 +1191,7 @@ extension DatasourcesClassGenerator on Generator {
         ..constructors.add(_buildDatasourcesConstructor(datasources))
         ..methods.add(_buildDatasourcesToJsonMethod())
         ..implements.add(code.refer('JsonSerializable', packages.orm));
-      updates.annotations.add(code
-          .refer('JsonSerializable', packages.jsonSerializable)
-          .newInstance([], {
+      updates.annotations.add(code.refer('JsonSerializable').newInstance([], {
         'createFactory': code.literalFalse,
         'createToJson': code.literalTrue,
         'includeIfNull': code.literalFalse,
