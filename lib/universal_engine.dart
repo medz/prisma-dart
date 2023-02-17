@@ -32,6 +32,7 @@ class UniversalEngine implements Engine {
   final Map<String, String>? headers;
 
   /// Prisma Emitter.
+  @override
   final Logger logger;
 
   /// Create a new instance of [UniversalEngine].

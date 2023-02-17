@@ -7,37 +7,51 @@ import '../graphql/field.dart';
 import 'prisma_raw_codec.dart';
 
 /// Prisma transaction function.
-typedef PrismaTransactionCallback<T> = FutureOr<T> Function(
-    PrismaClient transaction);
+typedef PrismaTransactionCallback<T, Client extends BasePrismaClient<Client>>
+    = FutureOr<T> Function(Client transaction);
 
 /// Prisma client base class
-class PrismaClient {
+abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   /// Finalizer
   static final Finalizer<Engine> finalizer =
       Finalizer<Engine>((engine) => engine.stop());
 
+  /// Create a new instance of [BasePrismaClient].
+  BasePrismaClient(
+    Engine engine, {
+    QueryEngineRequestHeaders? headers,
+    TransactionInfo? transaction,
+  })  : _transaction = transaction,
+        _headers = headers,
+        _engine = engine {
+    finalizer.attach(this, engine, detach: this);
+  }
+
   /// The prisma engine.
-  final Engine $engine;
+  final Engine _engine;
 
   /// Query engine request headers.
-  final QueryEngineRequestHeaders? $headers;
+  final QueryEngineRequestHeaders? _headers;
 
-  /// Create a new prisma client for the given engine.
-  PrismaClient.fromEngine(this.$engine, {QueryEngineRequestHeaders? headers})
-      : $headers = headers {
-    finalizer.attach(this, $engine, detach: this);
-  }
+  /// Transaction info.
+  final TransactionInfo? _transaction;
+
+  /// Copy the client with new headers.
+  Client copyWith({
+    QueryEngineRequestHeaders? headers,
+    TransactionInfo? transaction,
+  });
 
   /// Connect to the prisma engine.
   Future<void> $connect() {
-    finalizer.attach(this, $engine, detach: this);
+    finalizer.attach(this, _engine, detach: this);
 
-    return $engine.start();
+    return _engine.start();
   }
 
   /// Disconnect from the prisma engine.
   Future<void> $disconnect() async {
-    await $engine.stop();
+    await _engine.stop();
     finalizer.detach(this);
   }
 
@@ -57,19 +71,19 @@ class PrismaClient {
   /// });
   /// ```
   Future<T> $transaction<T>(
-    PrismaTransactionCallback<T> callback, {
+    PrismaTransactionCallback<T, BasePrismaClient<Client>> callback, {
     TransactionHeaders? headers,
     Duration timeout = const Duration(seconds: 5),
     Duration maxWait = const Duration(seconds: 2),
     IsolationLevel? isolationLevel,
   }) async {
     // If the client is a transaction, use it.
-    if ($headers?.transactionId != null) {
+    if (_headers?.transactionId != null || _transaction != null) {
       return callback(this);
     }
 
     // Request a new transaction.
-    final TransactionInfo transactionInfo = await $engine.startTransaction(
+    final TransactionInfo transactionInfo = await _engine.startTransaction(
       headers: headers,
       timeout: timeout,
       maxWait: maxWait,
@@ -77,24 +91,24 @@ class PrismaClient {
     );
 
     // Create a new client for the transaction.
-    final PrismaClient transactionClient = PrismaClient.fromEngine(
-      $engine,
+    final Client client = copyWith(
       headers: QueryEngineRequestHeaders(
         transactionId: transactionInfo.id,
         traceparent: headers?.traceparent,
       ),
+      transaction: transactionInfo,
     );
 
     // Execute the transaction.
     try {
-      final T result = await callback(transactionClient);
-      await $engine.commitTransaction(
+      final T result = await callback(client);
+      await _engine.commitTransaction(
         headers: headers,
         info: transactionInfo,
       );
       return result;
     } catch (e) {
-      await $engine.rollbackTransaction(
+      await _engine.rollbackTransaction(
         headers: headers,
         info: transactionInfo,
       );
@@ -115,7 +129,7 @@ class PrismaClient {
   /// });
   /// ```
   void $on(Event event, Listener listener) =>
-      $engine.logger.on(event, listener);
+      _engine.logger.on(event, listener);
 
   /// Query raw SQL.
   ///
@@ -141,9 +155,10 @@ class PrismaClient {
     ).toSdl();
 
     // Request the query.
-    final GraphQLResult result = await $engine.request(
+    final GraphQLResult result = await _engine.request(
       query: sdl,
-      headers: $headers,
+      headers: _headers,
+      transaction: _transaction,
     );
 
     // Get query result.
@@ -174,9 +189,10 @@ class PrismaClient {
     ).toSdl();
 
     // Request the query.
-    final GraphQLResult result = await $engine.request(
+    final GraphQLResult result = await _engine.request(
       query: sdl,
-      headers: $headers,
+      headers: _headers,
+      transaction: _transaction,
     );
 
     return result.data?['executeRaw'];

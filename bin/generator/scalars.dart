@@ -18,6 +18,8 @@ final Map<String, Reference> scalarReferneces = {
   }),
   'unsupported': refer('dynamic'),
   'null': refer('PrismaNull', packages.orm),
+  'datetime': refer('DateTime'),
+  'date': refer('DateTime'),
 }.map((key, value) => MapEntry(key.toLowerCase(), value));
 
 Reference scalar(SchemaType schemaType, [bool isNullable = false]) {

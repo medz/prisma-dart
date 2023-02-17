@@ -102,6 +102,7 @@ class Generator {
     generateModelDelegate();
     generatePrismaOutputTypes();
     generatePrismaAggregateFluent();
+    generateDatasourcesClass();
     defineDirectives();
     writeLibrary();
   }
@@ -713,6 +714,36 @@ extension ModelFluentGenerator on Generator {
 
   /// Build model scalar compiler
   Iterable<code.Expression> _buildModelScalarCompiler(dmmf.SchemaField field) {
+    final typeName = field.outputType.type.toLowerCase().trim();
+    if (typeName == 'datetime' || typeName == 'date') {
+      final fn = code.Method((updates) {
+        updates.requiredParameters.add(code.Parameter((updates) {
+          updates.name = 'value';
+        }));
+
+        final parse = code.refer('DateTime').property('parse').call([
+          code.refer('value'),
+        ]);
+
+        updates.lambda = true;
+        updates.body = parse.code;
+        if (field.isNullable == true) {
+          updates.body = code
+              .refer('value')
+              .isA(code.refer('String'))
+              .conditional(parse, code.literalNull)
+              .code;
+        }
+      });
+
+      final query = code
+          .refer('query')
+          .call([code.literalConstList([])])
+          .property('then')
+          .call([fn.closure]);
+      return [query.returned];
+    }
+
     final type = _modelDelegateMethodReturnTypeBuilder(field);
     final query =
         code.refer('query').call([code.literalConstList([])]).asA(type);
@@ -1138,6 +1169,78 @@ extension PrismaAggregationFluentGenerate on Generator {
         }),
       );
       updates.constant = true;
+    });
+  }
+}
+
+/// Datasources class generator
+extension DatasourcesClassGenerator on Generator {
+  /// Generate datasources class
+  void generateDatasourcesClass() {
+    final datasources = options.datasources;
+
+    library.body.add(_buildDatasourcesClass(datasources));
+  }
+
+  /// Build datasources class
+  code.Class _buildDatasourcesClass(Iterable<Datasource> datasources) {
+    return code.Class((updates) {
+      updates
+        ..name = 'Datasources'
+        ..fields.addAll(_buildDatasourcesFields(datasources))
+        ..constructors.add(_buildDatasourcesConstructor(datasources))
+        ..methods.add(_buildDatasourcesToJsonMethod())
+        ..implements.add(code.refer('JsonSerializable', packages.orm));
+      updates.annotations.add(code
+          .refer('JsonSerializable', packages.jsonSerializable)
+          .newInstance([], {
+        'createFactory': code.literalFalse,
+        'createToJson': code.literalTrue,
+      }));
+    });
+  }
+
+  /// Build datasources fields
+  Iterable<code.Field> _buildDatasourcesFields(
+      Iterable<Datasource> datasources) {
+    return datasources.map((e) => code.Field((updates) {
+          updates
+            ..name = e.name
+            ..type = code.refer('String').nullable
+            ..modifier = code.FieldModifier.final$;
+        }));
+  }
+
+  /// Build datasources constructor
+  code.Constructor _buildDatasourcesConstructor(
+      Iterable<Datasource> datasources) {
+    return code.Constructor((updates) {
+      updates.optionalParameters.addAll(
+        datasources.map((e) => code.Parameter((updates) {
+              updates.name = e.name;
+              updates.toThis = true;
+              updates.required = false;
+              updates.named = true;
+
+              if (e.url.value != null) {
+                updates.defaultTo =
+                    code.literalString(e.url.value!, raw: true).code;
+              }
+            })),
+      );
+      updates.constant = true;
+    });
+  }
+
+  /// Build datasources to json method
+  code.Method _buildDatasourcesToJsonMethod() {
+    return code.Method((updates) {
+      updates.name = 'toJson';
+      updates.returns = code.refer('Map<String, dynamic>');
+      updates.body =
+          code.refer('_\$DatasourcesToJson').call([code.refer('this')]).code;
+      updates.lambda = true;
+      updates.annotations.add(code.refer('override'));
     });
   }
 }
