@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_annotation_target
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart' show Document;
 
@@ -45,7 +43,7 @@ class GeneratorConfig {
     this.isCustomOutput,
     required this.provider,
     required this.config,
-  })
+  });
 
   factory GeneratorConfig.fromJson(Map<String, dynamic> json) =>
       _$GeneratorConfigFromJson(json);
@@ -68,9 +66,9 @@ class EnvValue {
 @json
 class Datasource {
   final String name;
-    final String provider;
-    final String activeProvider;
-    final EnvValue url;
+  final String provider;
+  final String activeProvider;
+  final EnvValue url;
 
   const Datasource({
     required this.name,
