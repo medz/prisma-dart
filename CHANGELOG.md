@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2-beta+0](https://github.com/odroe/prisma-dart/compare/3.0.1-beta+0...v3.0.2-beta+0) (2023-02-17)
+
+
+### Bug Fixes
+
+* **engines:** fixed data proxy engine ([36c1575](https://github.com/odroe/prisma-dart/commit/36c15755ba013a4158cb15832a49abff87d9f18a))
+
 ## 3.0.1-beta+0
 
 No changes.
