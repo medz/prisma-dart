@@ -1,16 +1,19 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart' as json_annotation;
 
 import 'json_serializable.dart' as internal;
 
 part 'prisma_null.g.dart';
-part 'prisma_null.freezed.dart';
 
-@freezed
-class PrismaNull with _$PrismaNull implements internal.JsonSerializable {
-  const factory PrismaNull() = _PrismaNull;
+@internal.jsonSerializable
+class PrismaNull implements internal.JsonSerializable {
+  const PrismaNull(this.$type);
+
+  @json_annotation.JsonKey(name: '__typename')
+  final String $type;
 
   factory PrismaNull.fromJson(Map<String, dynamic> json) =>
       _$PrismaNullFromJson(json);
-}
 
-typedef PrismaNullable<T> = T?;
+  @override
+  Map<String, dynamic> toJson() => _$PrismaNullToJson(this);
+}

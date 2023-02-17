@@ -1,5 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart'
-    as freezed_annotation;
+import 'package:json_annotation/json_annotation.dart' as json_annotation;
 
 /// JSON serializable.
 abstract class JsonSerializable {
@@ -22,17 +21,7 @@ dynamic dateTimeToJson(dynamic value) {
   return value;
 }
 
-const freezed = freezed_annotation.Freezed(
-  copyWith: false,
-  equal: false,
-  fromJson: true,
-  toJson: true,
-  toStringOverride: false,
-  makeCollectionsUnmodifiable: false,
-  genericArgumentFactories: false,
-);
-
-const jsonSerializable = freezed_annotation.JsonSerializable(
+const jsonSerializable = json_annotation.JsonSerializable(
   explicitToJson: true,
   includeIfNull: false,
 );

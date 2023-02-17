@@ -8,68 +8,49 @@ part of prisma.client;
 
 UserWhereInput _$UserWhereInputFromJson(Map<String, dynamic> json) =>
     UserWhereInput(
-      AND: json['AND'] == null
-          ? null
-          : UserWhereInput.fromJson(json['AND'] as Map<String, dynamic>),
-      OR: (json['OR'] as List<dynamic>?)
-          ?.map((e) => UserWhereInput.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      NOT: json['NOT'] == null
-          ? null
-          : UserWhereInput.fromJson(json['NOT'] as Map<String, dynamic>),
-      id: json['id'] == null
-          ? null
-          : IntFilter.fromJson(json['id'] as Map<String, dynamic>),
-      name: json['name'] == null
-          ? null
-          : StringFilter.fromJson(json['name'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTimeFilter.fromJson(json['createdAt'] as Map<String, dynamic>),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTimeFilter.fromJson(json['updatedAt'] as Map<String, dynamic>),
+      AND: json['AND'],
+      OR: json['OR'],
+      NOT: json['NOT'],
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserWhereInputToJson(UserWhereInput instance) =>
     <String, dynamic>{
-      'AND': instance.AND?.toJson(),
-      'OR': instance.OR?.map((e) => e.toJson()).toList(),
-      'NOT': instance.NOT?.toJson(),
-      'id': instance.id?.toJson(),
-      'name': instance.name?.toJson(),
-      'createdAt': instance.createdAt?.toJson(),
-      'updatedAt': instance.updatedAt?.toJson(),
+      'AND': instance.AND,
+      'OR': instance.OR,
+      'NOT': instance.NOT,
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserOrderByWithRelationInput _$UserOrderByWithRelationInputFromJson(
         Map<String, dynamic> json) =>
     UserOrderByWithRelationInput(
-      id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
-      name: $enumDecodeNullable(_$SortOrderEnumMap, json['name']),
-      createdAt: $enumDecodeNullable(_$SortOrderEnumMap, json['createdAt']),
-      updatedAt: $enumDecodeNullable(_$SortOrderEnumMap, json['updatedAt']),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserOrderByWithRelationInputToJson(
         UserOrderByWithRelationInput instance) =>
     <String, dynamic>{
-      'id': _$SortOrderEnumMap[instance.id],
-      'name': _$SortOrderEnumMap[instance.name],
-      'createdAt': _$SortOrderEnumMap[instance.createdAt],
-      'updatedAt': _$SortOrderEnumMap[instance.updatedAt],
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
-
-const _$SortOrderEnumMap = {
-  SortOrder.asc: 'asc',
-  SortOrder.desc: 'desc',
-};
 
 UserWhereUniqueInput _$UserWhereUniqueInputFromJson(
         Map<String, dynamic> json) =>
     UserWhereUniqueInput(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
+      id: json['id'],
+      name: json['name'],
     );
 
 Map<String, dynamic> _$UserWhereUniqueInputToJson(
@@ -82,120 +63,76 @@ Map<String, dynamic> _$UserWhereUniqueInputToJson(
 UserOrderByWithAggregationInput _$UserOrderByWithAggregationInputFromJson(
         Map<String, dynamic> json) =>
     UserOrderByWithAggregationInput(
-      id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
-      name: $enumDecodeNullable(_$SortOrderEnumMap, json['name']),
-      createdAt: $enumDecodeNullable(_$SortOrderEnumMap, json['createdAt']),
-      updatedAt: $enumDecodeNullable(_$SortOrderEnumMap, json['updatedAt']),
-      $count: json['_count'] == null
-          ? null
-          : UserCountOrderByAggregateInput.fromJson(
-              json['_count'] as Map<String, dynamic>),
-      $avg: json['_avg'] == null
-          ? null
-          : UserAvgOrderByAggregateInput.fromJson(
-              json['_avg'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : UserMaxOrderByAggregateInput.fromJson(
-              json['_max'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : UserMinOrderByAggregateInput.fromJson(
-              json['_min'] as Map<String, dynamic>),
-      $sum: json['_sum'] == null
-          ? null
-          : UserSumOrderByAggregateInput.fromJson(
-              json['_sum'] as Map<String, dynamic>),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      $count: json['_count'],
+      $avg: json['_avg'],
+      $max: json['_max'],
+      $min: json['_min'],
+      $sum: json['_sum'],
     );
 
 Map<String, dynamic> _$UserOrderByWithAggregationInputToJson(
         UserOrderByWithAggregationInput instance) =>
     <String, dynamic>{
-      'id': _$SortOrderEnumMap[instance.id],
-      'name': _$SortOrderEnumMap[instance.name],
-      'createdAt': _$SortOrderEnumMap[instance.createdAt],
-      'updatedAt': _$SortOrderEnumMap[instance.updatedAt],
-      '_count': instance.$count?.toJson(),
-      '_avg': instance.$avg?.toJson(),
-      '_max': instance.$max?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_sum': instance.$sum?.toJson(),
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      '_count': instance.$count,
+      '_avg': instance.$avg,
+      '_max': instance.$max,
+      '_min': instance.$min,
+      '_sum': instance.$sum,
     };
 
 UserScalarWhereWithAggregatesInput _$UserScalarWhereWithAggregatesInputFromJson(
         Map<String, dynamic> json) =>
     UserScalarWhereWithAggregatesInput(
-      AND: json['AND'] == null
-          ? null
-          : UserScalarWhereWithAggregatesInput.fromJson(
-              json['AND'] as Map<String, dynamic>),
-      OR: (json['OR'] as List<dynamic>?)
-          ?.map((e) => UserScalarWhereWithAggregatesInput.fromJson(
-              e as Map<String, dynamic>))
-          .toList(),
-      NOT: json['NOT'] == null
-          ? null
-          : UserScalarWhereWithAggregatesInput.fromJson(
-              json['NOT'] as Map<String, dynamic>),
-      id: json['id'] == null
-          ? null
-          : IntWithAggregatesFilter.fromJson(
-              json['id'] as Map<String, dynamic>),
-      name: json['name'] == null
-          ? null
-          : StringWithAggregatesFilter.fromJson(
-              json['name'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTimeWithAggregatesFilter.fromJson(
-              json['createdAt'] as Map<String, dynamic>),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTimeWithAggregatesFilter.fromJson(
-              json['updatedAt'] as Map<String, dynamic>),
+      AND: json['AND'],
+      OR: json['OR'],
+      NOT: json['NOT'],
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserScalarWhereWithAggregatesInputToJson(
         UserScalarWhereWithAggregatesInput instance) =>
     <String, dynamic>{
-      'AND': instance.AND?.toJson(),
-      'OR': instance.OR?.map((e) => e.toJson()).toList(),
-      'NOT': instance.NOT?.toJson(),
-      'id': instance.id?.toJson(),
-      'name': instance.name?.toJson(),
-      'createdAt': instance.createdAt?.toJson(),
-      'updatedAt': instance.updatedAt?.toJson(),
+      'AND': instance.AND,
+      'OR': instance.OR,
+      'NOT': instance.NOT,
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserCreateInput _$UserCreateInputFromJson(Map<String, dynamic> json) =>
     UserCreateInput(
       name: json['name'] as String,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserCreateInputToJson(UserCreateInput instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserUncheckedCreateInput _$UserUncheckedCreateInputFromJson(
         Map<String, dynamic> json) =>
     UserUncheckedCreateInput(
-      id: json['id'] as int?,
+      id: json['id'],
       name: json['name'] as String,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserUncheckedCreateInputToJson(
@@ -203,129 +140,85 @@ Map<String, dynamic> _$UserUncheckedCreateInputToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserUpdateInput _$UserUpdateInputFromJson(Map<String, dynamic> json) =>
     UserUpdateInput(
-      name: json['name'] == null
-          ? null
-          : StringFieldUpdateOperationsInput.fromJson(
-              json['name'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['createdAt'] as Map<String, dynamic>),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['updatedAt'] as Map<String, dynamic>),
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserUpdateInputToJson(UserUpdateInput instance) =>
     <String, dynamic>{
-      'name': instance.name?.toJson(),
-      'createdAt': instance.createdAt?.toJson(),
-      'updatedAt': instance.updatedAt?.toJson(),
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserUncheckedUpdateInput _$UserUncheckedUpdateInputFromJson(
         Map<String, dynamic> json) =>
     UserUncheckedUpdateInput(
-      id: json['id'] == null
-          ? null
-          : IntFieldUpdateOperationsInput.fromJson(
-              json['id'] as Map<String, dynamic>),
-      name: json['name'] == null
-          ? null
-          : StringFieldUpdateOperationsInput.fromJson(
-              json['name'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['createdAt'] as Map<String, dynamic>),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['updatedAt'] as Map<String, dynamic>),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserUncheckedUpdateInputToJson(
         UserUncheckedUpdateInput instance) =>
     <String, dynamic>{
-      'id': instance.id?.toJson(),
-      'name': instance.name?.toJson(),
-      'createdAt': instance.createdAt?.toJson(),
-      'updatedAt': instance.updatedAt?.toJson(),
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserUpdateManyMutationInput _$UserUpdateManyMutationInputFromJson(
         Map<String, dynamic> json) =>
     UserUpdateManyMutationInput(
-      name: json['name'] == null
-          ? null
-          : StringFieldUpdateOperationsInput.fromJson(
-              json['name'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['createdAt'] as Map<String, dynamic>),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['updatedAt'] as Map<String, dynamic>),
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserUpdateManyMutationInputToJson(
         UserUpdateManyMutationInput instance) =>
     <String, dynamic>{
-      'name': instance.name?.toJson(),
-      'createdAt': instance.createdAt?.toJson(),
-      'updatedAt': instance.updatedAt?.toJson(),
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserUncheckedUpdateManyInput _$UserUncheckedUpdateManyInputFromJson(
         Map<String, dynamic> json) =>
     UserUncheckedUpdateManyInput(
-      id: json['id'] == null
-          ? null
-          : IntFieldUpdateOperationsInput.fromJson(
-              json['id'] as Map<String, dynamic>),
-      name: json['name'] == null
-          ? null
-          : StringFieldUpdateOperationsInput.fromJson(
-              json['name'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['createdAt'] as Map<String, dynamic>),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTimeFieldUpdateOperationsInput.fromJson(
-              json['updatedAt'] as Map<String, dynamic>),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserUncheckedUpdateManyInputToJson(
         UserUncheckedUpdateManyInput instance) =>
     <String, dynamic>{
-      'id': instance.id?.toJson(),
-      'name': instance.name?.toJson(),
-      'createdAt': instance.createdAt?.toJson(),
-      'updatedAt': instance.updatedAt?.toJson(),
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 IntFilter _$IntFilterFromJson(Map<String, dynamic> json) => IntFilter(
-      equals: json['equals'] as int?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      notIn: (json['notIn'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      lt: json['lt'] as int?,
-      lte: json['lte'] as int?,
-      gt: json['gt'] as int?,
-      gte: json['gte'] as int?,
-      not: json['not'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['not'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
     );
 
 Map<String, dynamic> _$IntFilterToJson(IntFilter instance) => <String, dynamic>{
@@ -336,24 +229,21 @@ Map<String, dynamic> _$IntFilterToJson(IntFilter instance) => <String, dynamic>{
       'lte': instance.lte,
       'gt': instance.gt,
       'gte': instance.gte,
-      'not': instance.not?.toJson(),
+      'not': instance.not,
     };
 
 StringFilter _$StringFilterFromJson(Map<String, dynamic> json) => StringFilter(
-      equals: json['equals'] as String?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      notIn:
-          (json['notIn'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      lt: json['lt'] as String?,
-      lte: json['lte'] as String?,
-      gt: json['gt'] as String?,
-      gte: json['gte'] as String?,
-      contains: json['contains'] as String?,
-      startsWith: json['startsWith'] as String?,
-      endsWith: json['endsWith'] as String?,
-      not: json['not'] == null
-          ? null
-          : NestedStringFilter.fromJson(json['not'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      contains: json['contains'],
+      startsWith: json['startsWith'],
+      endsWith: json['endsWith'],
+      not: json['not'],
     );
 
 Map<String, dynamic> _$StringFilterToJson(StringFilter instance) =>
@@ -368,148 +258,127 @@ Map<String, dynamic> _$StringFilterToJson(StringFilter instance) =>
       'contains': instance.contains,
       'startsWith': instance.startsWith,
       'endsWith': instance.endsWith,
-      'not': instance.not?.toJson(),
+      'not': instance.not,
     };
 
 DateTimeFilter _$DateTimeFilterFromJson(Map<String, dynamic> json) =>
     DateTimeFilter(
-      equals: json['equals'] == null
-          ? null
-          : DateTime.parse(json['equals'] as String),
-      in$: (json['in'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      notIn: (json['notIn'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      lt: json['lt'] == null ? null : DateTime.parse(json['lt'] as String),
-      lte: json['lte'] == null ? null : DateTime.parse(json['lte'] as String),
-      gt: json['gt'] == null ? null : DateTime.parse(json['gt'] as String),
-      gte: json['gte'] == null ? null : DateTime.parse(json['gte'] as String),
-      not: json['not'] == null
-          ? null
-          : NestedDateTimeFilter.fromJson(json['not'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
     );
 
 Map<String, dynamic> _$DateTimeFilterToJson(DateTimeFilter instance) =>
     <String, dynamic>{
-      'equals': instance.equals?.toIso8601String(),
-      'in': instance.in$?.map((e) => e.toIso8601String()).toList(),
-      'notIn': instance.notIn?.map((e) => e.toIso8601String()).toList(),
-      'lt': instance.lt?.toIso8601String(),
-      'lte': instance.lte?.toIso8601String(),
-      'gt': instance.gt?.toIso8601String(),
-      'gte': instance.gte?.toIso8601String(),
-      'not': instance.not?.toJson(),
+      'equals': instance.equals,
+      'in': instance.in$,
+      'notIn': instance.notIn,
+      'lt': instance.lt,
+      'lte': instance.lte,
+      'gt': instance.gt,
+      'gte': instance.gte,
+      'not': instance.not,
     };
 
 UserCountOrderByAggregateInput _$UserCountOrderByAggregateInputFromJson(
         Map<String, dynamic> json) =>
     UserCountOrderByAggregateInput(
-      id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
-      name: $enumDecodeNullable(_$SortOrderEnumMap, json['name']),
-      createdAt: $enumDecodeNullable(_$SortOrderEnumMap, json['createdAt']),
-      updatedAt: $enumDecodeNullable(_$SortOrderEnumMap, json['updatedAt']),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserCountOrderByAggregateInputToJson(
         UserCountOrderByAggregateInput instance) =>
     <String, dynamic>{
-      'id': _$SortOrderEnumMap[instance.id],
-      'name': _$SortOrderEnumMap[instance.name],
-      'createdAt': _$SortOrderEnumMap[instance.createdAt],
-      'updatedAt': _$SortOrderEnumMap[instance.updatedAt],
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserAvgOrderByAggregateInput _$UserAvgOrderByAggregateInputFromJson(
         Map<String, dynamic> json) =>
     UserAvgOrderByAggregateInput(
-      id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+      id: json['id'],
     );
 
 Map<String, dynamic> _$UserAvgOrderByAggregateInputToJson(
         UserAvgOrderByAggregateInput instance) =>
     <String, dynamic>{
-      'id': _$SortOrderEnumMap[instance.id],
+      'id': instance.id,
     };
 
 UserMaxOrderByAggregateInput _$UserMaxOrderByAggregateInputFromJson(
         Map<String, dynamic> json) =>
     UserMaxOrderByAggregateInput(
-      id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
-      name: $enumDecodeNullable(_$SortOrderEnumMap, json['name']),
-      createdAt: $enumDecodeNullable(_$SortOrderEnumMap, json['createdAt']),
-      updatedAt: $enumDecodeNullable(_$SortOrderEnumMap, json['updatedAt']),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserMaxOrderByAggregateInputToJson(
         UserMaxOrderByAggregateInput instance) =>
     <String, dynamic>{
-      'id': _$SortOrderEnumMap[instance.id],
-      'name': _$SortOrderEnumMap[instance.name],
-      'createdAt': _$SortOrderEnumMap[instance.createdAt],
-      'updatedAt': _$SortOrderEnumMap[instance.updatedAt],
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserMinOrderByAggregateInput _$UserMinOrderByAggregateInputFromJson(
         Map<String, dynamic> json) =>
     UserMinOrderByAggregateInput(
-      id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
-      name: $enumDecodeNullable(_$SortOrderEnumMap, json['name']),
-      createdAt: $enumDecodeNullable(_$SortOrderEnumMap, json['createdAt']),
-      updatedAt: $enumDecodeNullable(_$SortOrderEnumMap, json['updatedAt']),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserMinOrderByAggregateInputToJson(
         UserMinOrderByAggregateInput instance) =>
     <String, dynamic>{
-      'id': _$SortOrderEnumMap[instance.id],
-      'name': _$SortOrderEnumMap[instance.name],
-      'createdAt': _$SortOrderEnumMap[instance.createdAt],
-      'updatedAt': _$SortOrderEnumMap[instance.updatedAt],
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserSumOrderByAggregateInput _$UserSumOrderByAggregateInputFromJson(
         Map<String, dynamic> json) =>
     UserSumOrderByAggregateInput(
-      id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+      id: json['id'],
     );
 
 Map<String, dynamic> _$UserSumOrderByAggregateInputToJson(
         UserSumOrderByAggregateInput instance) =>
     <String, dynamic>{
-      'id': _$SortOrderEnumMap[instance.id],
+      'id': instance.id,
     };
 
 IntWithAggregatesFilter _$IntWithAggregatesFilterFromJson(
         Map<String, dynamic> json) =>
     IntWithAggregatesFilter(
-      equals: json['equals'] as int?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      notIn: (json['notIn'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      lt: json['lt'] as int?,
-      lte: json['lte'] as int?,
-      gt: json['gt'] as int?,
-      gte: json['gte'] as int?,
-      not: json['not'] == null
-          ? null
-          : NestedIntWithAggregatesFilter.fromJson(
-              json['not'] as Map<String, dynamic>),
-      $count: json['_count'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_count'] as Map<String, dynamic>),
-      $avg: json['_avg'] == null
-          ? null
-          : NestedFloatFilter.fromJson(json['_avg'] as Map<String, dynamic>),
-      $sum: json['_sum'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_sum'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_max'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
+      $count: json['_count'],
+      $avg: json['_avg'],
+      $sum: json['_sum'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$IntWithAggregatesFilterToJson(
@@ -522,41 +391,31 @@ Map<String, dynamic> _$IntWithAggregatesFilterToJson(
       'lte': instance.lte,
       'gt': instance.gt,
       'gte': instance.gte,
-      'not': instance.not?.toJson(),
-      '_count': instance.$count?.toJson(),
-      '_avg': instance.$avg?.toJson(),
-      '_sum': instance.$sum?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      'not': instance.not,
+      '_count': instance.$count,
+      '_avg': instance.$avg,
+      '_sum': instance.$sum,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 StringWithAggregatesFilter _$StringWithAggregatesFilterFromJson(
         Map<String, dynamic> json) =>
     StringWithAggregatesFilter(
-      equals: json['equals'] as String?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      notIn:
-          (json['notIn'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      lt: json['lt'] as String?,
-      lte: json['lte'] as String?,
-      gt: json['gt'] as String?,
-      gte: json['gte'] as String?,
-      contains: json['contains'] as String?,
-      startsWith: json['startsWith'] as String?,
-      endsWith: json['endsWith'] as String?,
-      not: json['not'] == null
-          ? null
-          : NestedStringWithAggregatesFilter.fromJson(
-              json['not'] as Map<String, dynamic>),
-      $count: json['_count'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_count'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : NestedStringFilter.fromJson(json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : NestedStringFilter.fromJson(json['_max'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      contains: json['contains'],
+      startsWith: json['startsWith'],
+      endsWith: json['endsWith'],
+      not: json['not'],
+      $count: json['_count'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$StringWithAggregatesFilterToJson(
@@ -572,63 +431,48 @@ Map<String, dynamic> _$StringWithAggregatesFilterToJson(
       'contains': instance.contains,
       'startsWith': instance.startsWith,
       'endsWith': instance.endsWith,
-      'not': instance.not?.toJson(),
-      '_count': instance.$count?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      'not': instance.not,
+      '_count': instance.$count,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 DateTimeWithAggregatesFilter _$DateTimeWithAggregatesFilterFromJson(
         Map<String, dynamic> json) =>
     DateTimeWithAggregatesFilter(
-      equals: json['equals'] == null
-          ? null
-          : DateTime.parse(json['equals'] as String),
-      in$: (json['in'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      notIn: (json['notIn'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      lt: json['lt'] == null ? null : DateTime.parse(json['lt'] as String),
-      lte: json['lte'] == null ? null : DateTime.parse(json['lte'] as String),
-      gt: json['gt'] == null ? null : DateTime.parse(json['gt'] as String),
-      gte: json['gte'] == null ? null : DateTime.parse(json['gte'] as String),
-      not: json['not'] == null
-          ? null
-          : NestedDateTimeWithAggregatesFilter.fromJson(
-              json['not'] as Map<String, dynamic>),
-      $count: json['_count'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_count'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : NestedDateTimeFilter.fromJson(json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : NestedDateTimeFilter.fromJson(json['_max'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
+      $count: json['_count'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$DateTimeWithAggregatesFilterToJson(
         DateTimeWithAggregatesFilter instance) =>
     <String, dynamic>{
-      'equals': instance.equals?.toIso8601String(),
-      'in': instance.in$?.map((e) => e.toIso8601String()).toList(),
-      'notIn': instance.notIn?.map((e) => e.toIso8601String()).toList(),
-      'lt': instance.lt?.toIso8601String(),
-      'lte': instance.lte?.toIso8601String(),
-      'gt': instance.gt?.toIso8601String(),
-      'gte': instance.gte?.toIso8601String(),
-      'not': instance.not?.toJson(),
-      '_count': instance.$count?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      'equals': instance.equals,
+      'in': instance.in$,
+      'notIn': instance.notIn,
+      'lt': instance.lt,
+      'lte': instance.lte,
+      'gt': instance.gt,
+      'gte': instance.gte,
+      'not': instance.not,
+      '_count': instance.$count,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 StringFieldUpdateOperationsInput _$StringFieldUpdateOperationsInputFromJson(
         Map<String, dynamic> json) =>
     StringFieldUpdateOperationsInput(
-      set$: json['set'] as String?,
+      set$: json['set'],
     );
 
 Map<String, dynamic> _$StringFieldUpdateOperationsInputToJson(
@@ -640,23 +484,23 @@ Map<String, dynamic> _$StringFieldUpdateOperationsInputToJson(
 DateTimeFieldUpdateOperationsInput _$DateTimeFieldUpdateOperationsInputFromJson(
         Map<String, dynamic> json) =>
     DateTimeFieldUpdateOperationsInput(
-      set$: json['set'] == null ? null : DateTime.parse(json['set'] as String),
+      set$: json['set'],
     );
 
 Map<String, dynamic> _$DateTimeFieldUpdateOperationsInputToJson(
         DateTimeFieldUpdateOperationsInput instance) =>
     <String, dynamic>{
-      'set': instance.set$?.toIso8601String(),
+      'set': instance.set$,
     };
 
 IntFieldUpdateOperationsInput _$IntFieldUpdateOperationsInputFromJson(
         Map<String, dynamic> json) =>
     IntFieldUpdateOperationsInput(
-      set$: json['set'] as int?,
-      increment: json['increment'] as int?,
-      decrement: json['decrement'] as int?,
-      multiply: json['multiply'] as int?,
-      divide: json['divide'] as int?,
+      set$: json['set'],
+      increment: json['increment'],
+      decrement: json['decrement'],
+      multiply: json['multiply'],
+      divide: json['divide'],
     );
 
 Map<String, dynamic> _$IntFieldUpdateOperationsInputToJson(
@@ -671,16 +515,14 @@ Map<String, dynamic> _$IntFieldUpdateOperationsInputToJson(
 
 NestedIntFilter _$NestedIntFilterFromJson(Map<String, dynamic> json) =>
     NestedIntFilter(
-      equals: json['equals'] as int?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      notIn: (json['notIn'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      lt: json['lt'] as int?,
-      lte: json['lte'] as int?,
-      gt: json['gt'] as int?,
-      gte: json['gte'] as int?,
-      not: json['not'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['not'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
     );
 
 Map<String, dynamic> _$NestedIntFilterToJson(NestedIntFilter instance) =>
@@ -692,25 +534,22 @@ Map<String, dynamic> _$NestedIntFilterToJson(NestedIntFilter instance) =>
       'lte': instance.lte,
       'gt': instance.gt,
       'gte': instance.gte,
-      'not': instance.not?.toJson(),
+      'not': instance.not,
     };
 
 NestedStringFilter _$NestedStringFilterFromJson(Map<String, dynamic> json) =>
     NestedStringFilter(
-      equals: json['equals'] as String?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      notIn:
-          (json['notIn'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      lt: json['lt'] as String?,
-      lte: json['lte'] as String?,
-      gt: json['gt'] as String?,
-      gte: json['gte'] as String?,
-      contains: json['contains'] as String?,
-      startsWith: json['startsWith'] as String?,
-      endsWith: json['endsWith'] as String?,
-      not: json['not'] == null
-          ? null
-          : NestedStringFilter.fromJson(json['not'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      contains: json['contains'],
+      startsWith: json['startsWith'],
+      endsWith: json['endsWith'],
+      not: json['not'],
     );
 
 Map<String, dynamic> _$NestedStringFilterToJson(NestedStringFilter instance) =>
@@ -725,72 +564,51 @@ Map<String, dynamic> _$NestedStringFilterToJson(NestedStringFilter instance) =>
       'contains': instance.contains,
       'startsWith': instance.startsWith,
       'endsWith': instance.endsWith,
-      'not': instance.not?.toJson(),
+      'not': instance.not,
     };
 
 NestedDateTimeFilter _$NestedDateTimeFilterFromJson(
         Map<String, dynamic> json) =>
     NestedDateTimeFilter(
-      equals: json['equals'] == null
-          ? null
-          : DateTime.parse(json['equals'] as String),
-      in$: (json['in'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      notIn: (json['notIn'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      lt: json['lt'] == null ? null : DateTime.parse(json['lt'] as String),
-      lte: json['lte'] == null ? null : DateTime.parse(json['lte'] as String),
-      gt: json['gt'] == null ? null : DateTime.parse(json['gt'] as String),
-      gte: json['gte'] == null ? null : DateTime.parse(json['gte'] as String),
-      not: json['not'] == null
-          ? null
-          : NestedDateTimeFilter.fromJson(json['not'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
     );
 
 Map<String, dynamic> _$NestedDateTimeFilterToJson(
         NestedDateTimeFilter instance) =>
     <String, dynamic>{
-      'equals': instance.equals?.toIso8601String(),
-      'in': instance.in$?.map((e) => e.toIso8601String()).toList(),
-      'notIn': instance.notIn?.map((e) => e.toIso8601String()).toList(),
-      'lt': instance.lt?.toIso8601String(),
-      'lte': instance.lte?.toIso8601String(),
-      'gt': instance.gt?.toIso8601String(),
-      'gte': instance.gte?.toIso8601String(),
-      'not': instance.not?.toJson(),
+      'equals': instance.equals,
+      'in': instance.in$,
+      'notIn': instance.notIn,
+      'lt': instance.lt,
+      'lte': instance.lte,
+      'gt': instance.gt,
+      'gte': instance.gte,
+      'not': instance.not,
     };
 
 NestedIntWithAggregatesFilter _$NestedIntWithAggregatesFilterFromJson(
         Map<String, dynamic> json) =>
     NestedIntWithAggregatesFilter(
-      equals: json['equals'] as int?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      notIn: (json['notIn'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      lt: json['lt'] as int?,
-      lte: json['lte'] as int?,
-      gt: json['gt'] as int?,
-      gte: json['gte'] as int?,
-      not: json['not'] == null
-          ? null
-          : NestedIntWithAggregatesFilter.fromJson(
-              json['not'] as Map<String, dynamic>),
-      $count: json['_count'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_count'] as Map<String, dynamic>),
-      $avg: json['_avg'] == null
-          ? null
-          : NestedFloatFilter.fromJson(json['_avg'] as Map<String, dynamic>),
-      $sum: json['_sum'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_sum'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_max'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
+      $count: json['_count'],
+      $avg: json['_avg'],
+      $sum: json['_sum'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$NestedIntWithAggregatesFilterToJson(
@@ -803,30 +621,24 @@ Map<String, dynamic> _$NestedIntWithAggregatesFilterToJson(
       'lte': instance.lte,
       'gt': instance.gt,
       'gte': instance.gte,
-      'not': instance.not?.toJson(),
-      '_count': instance.$count?.toJson(),
-      '_avg': instance.$avg?.toJson(),
-      '_sum': instance.$sum?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      'not': instance.not,
+      '_count': instance.$count,
+      '_avg': instance.$avg,
+      '_sum': instance.$sum,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 NestedFloatFilter _$NestedFloatFilterFromJson(Map<String, dynamic> json) =>
     NestedFloatFilter(
-      equals: (json['equals'] as num?)?.toDouble(),
-      in$: (json['in'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
-      notIn: (json['notIn'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
-      lt: (json['lt'] as num?)?.toDouble(),
-      lte: (json['lte'] as num?)?.toDouble(),
-      gt: (json['gt'] as num?)?.toDouble(),
-      gte: (json['gte'] as num?)?.toDouble(),
-      not: json['not'] == null
-          ? null
-          : NestedFloatFilter.fromJson(json['not'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
     );
 
 Map<String, dynamic> _$NestedFloatFilterToJson(NestedFloatFilter instance) =>
@@ -838,36 +650,26 @@ Map<String, dynamic> _$NestedFloatFilterToJson(NestedFloatFilter instance) =>
       'lte': instance.lte,
       'gt': instance.gt,
       'gte': instance.gte,
-      'not': instance.not?.toJson(),
+      'not': instance.not,
     };
 
 NestedStringWithAggregatesFilter _$NestedStringWithAggregatesFilterFromJson(
         Map<String, dynamic> json) =>
     NestedStringWithAggregatesFilter(
-      equals: json['equals'] as String?,
-      in$: (json['in'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      notIn:
-          (json['notIn'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      lt: json['lt'] as String?,
-      lte: json['lte'] as String?,
-      gt: json['gt'] as String?,
-      gte: json['gte'] as String?,
-      contains: json['contains'] as String?,
-      startsWith: json['startsWith'] as String?,
-      endsWith: json['endsWith'] as String?,
-      not: json['not'] == null
-          ? null
-          : NestedStringWithAggregatesFilter.fromJson(
-              json['not'] as Map<String, dynamic>),
-      $count: json['_count'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_count'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : NestedStringFilter.fromJson(json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : NestedStringFilter.fromJson(json['_max'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      contains: json['contains'],
+      startsWith: json['startsWith'],
+      endsWith: json['endsWith'],
+      not: json['not'],
+      $count: json['_count'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$NestedStringWithAggregatesFilterToJson(
@@ -883,90 +685,60 @@ Map<String, dynamic> _$NestedStringWithAggregatesFilterToJson(
       'contains': instance.contains,
       'startsWith': instance.startsWith,
       'endsWith': instance.endsWith,
-      'not': instance.not?.toJson(),
-      '_count': instance.$count?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      'not': instance.not,
+      '_count': instance.$count,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 NestedDateTimeWithAggregatesFilter _$NestedDateTimeWithAggregatesFilterFromJson(
         Map<String, dynamic> json) =>
     NestedDateTimeWithAggregatesFilter(
-      equals: json['equals'] == null
-          ? null
-          : DateTime.parse(json['equals'] as String),
-      in$: (json['in'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      notIn: (json['notIn'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-      lt: json['lt'] == null ? null : DateTime.parse(json['lt'] as String),
-      lte: json['lte'] == null ? null : DateTime.parse(json['lte'] as String),
-      gt: json['gt'] == null ? null : DateTime.parse(json['gt'] as String),
-      gte: json['gte'] == null ? null : DateTime.parse(json['gte'] as String),
-      not: json['not'] == null
-          ? null
-          : NestedDateTimeWithAggregatesFilter.fromJson(
-              json['not'] as Map<String, dynamic>),
-      $count: json['_count'] == null
-          ? null
-          : NestedIntFilter.fromJson(json['_count'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : NestedDateTimeFilter.fromJson(json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : NestedDateTimeFilter.fromJson(json['_max'] as Map<String, dynamic>),
+      equals: json['equals'],
+      in$: json['in'],
+      notIn: json['notIn'],
+      lt: json['lt'],
+      lte: json['lte'],
+      gt: json['gt'],
+      gte: json['gte'],
+      not: json['not'],
+      $count: json['_count'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$NestedDateTimeWithAggregatesFilterToJson(
         NestedDateTimeWithAggregatesFilter instance) =>
     <String, dynamic>{
-      'equals': instance.equals?.toIso8601String(),
-      'in': instance.in$?.map((e) => e.toIso8601String()).toList(),
-      'notIn': instance.notIn?.map((e) => e.toIso8601String()).toList(),
-      'lt': instance.lt?.toIso8601String(),
-      'lte': instance.lte?.toIso8601String(),
-      'gt': instance.gt?.toIso8601String(),
-      'gte': instance.gte?.toIso8601String(),
-      'not': instance.not?.toJson(),
-      '_count': instance.$count?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      'equals': instance.equals,
+      'in': instance.in$,
+      'notIn': instance.notIn,
+      'lt': instance.lt,
+      'lte': instance.lte,
+      'gt': instance.gt,
+      'gte': instance.gte,
+      'not': instance.not,
+      '_count': instance.$count,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 AggregateUser _$AggregateUserFromJson(Map<String, dynamic> json) =>
     AggregateUser(
-      $count: json['_count'] == null
-          ? null
-          : UserCountAggregateOutputType.fromJson(
-              json['_count'] as Map<String, dynamic>),
-      $avg: json['_avg'] == null
-          ? null
-          : UserAvgAggregateOutputType.fromJson(
-              json['_avg'] as Map<String, dynamic>),
-      $sum: json['_sum'] == null
-          ? null
-          : UserSumAggregateOutputType.fromJson(
-              json['_sum'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : UserMinAggregateOutputType.fromJson(
-              json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : UserMaxAggregateOutputType.fromJson(
-              json['_max'] as Map<String, dynamic>),
+      $count: json['_count'],
+      $avg: json['_avg'],
+      $sum: json['_sum'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$AggregateUserToJson(AggregateUser instance) =>
     <String, dynamic>{
-      '_count': instance.$count?.toJson(),
-      '_avg': instance.$avg?.toJson(),
-      '_sum': instance.$sum?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      '_count': instance.$count,
+      '_avg': instance.$avg,
+      '_sum': instance.$sum,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 UserGroupByOutputType _$UserGroupByOutputTypeFromJson(
@@ -976,26 +748,11 @@ UserGroupByOutputType _$UserGroupByOutputTypeFromJson(
       name: json['name'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      $count: json['_count'] == null
-          ? null
-          : UserCountAggregateOutputType.fromJson(
-              json['_count'] as Map<String, dynamic>),
-      $avg: json['_avg'] == null
-          ? null
-          : UserAvgAggregateOutputType.fromJson(
-              json['_avg'] as Map<String, dynamic>),
-      $sum: json['_sum'] == null
-          ? null
-          : UserSumAggregateOutputType.fromJson(
-              json['_sum'] as Map<String, dynamic>),
-      $min: json['_min'] == null
-          ? null
-          : UserMinAggregateOutputType.fromJson(
-              json['_min'] as Map<String, dynamic>),
-      $max: json['_max'] == null
-          ? null
-          : UserMaxAggregateOutputType.fromJson(
-              json['_max'] as Map<String, dynamic>),
+      $count: json['_count'],
+      $avg: json['_avg'],
+      $sum: json['_sum'],
+      $min: json['_min'],
+      $max: json['_max'],
     );
 
 Map<String, dynamic> _$UserGroupByOutputTypeToJson(
@@ -1005,11 +762,11 @@ Map<String, dynamic> _$UserGroupByOutputTypeToJson(
       'name': instance.name,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
-      '_count': instance.$count?.toJson(),
-      '_avg': instance.$avg?.toJson(),
-      '_sum': instance.$sum?.toJson(),
-      '_min': instance.$min?.toJson(),
-      '_max': instance.$max?.toJson(),
+      '_count': instance.$count,
+      '_avg': instance.$avg,
+      '_sum': instance.$sum,
+      '_min': instance.$min,
+      '_max': instance.$max,
     };
 
 AffectedRowsOutput _$AffectedRowsOutputFromJson(Map<String, dynamic> json) =>
@@ -1045,7 +802,7 @@ Map<String, dynamic> _$UserCountAggregateOutputTypeToJson(
 UserAvgAggregateOutputType _$UserAvgAggregateOutputTypeFromJson(
         Map<String, dynamic> json) =>
     UserAvgAggregateOutputType(
-      id: (json['id'] as num?)?.toDouble(),
+      id: json['id'],
     );
 
 Map<String, dynamic> _$UserAvgAggregateOutputTypeToJson(
@@ -1057,7 +814,7 @@ Map<String, dynamic> _$UserAvgAggregateOutputTypeToJson(
 UserSumAggregateOutputType _$UserSumAggregateOutputTypeFromJson(
         Map<String, dynamic> json) =>
     UserSumAggregateOutputType(
-      id: json['id'] as int?,
+      id: json['id'],
     );
 
 Map<String, dynamic> _$UserSumAggregateOutputTypeToJson(
@@ -1069,14 +826,10 @@ Map<String, dynamic> _$UserSumAggregateOutputTypeToJson(
 UserMinAggregateOutputType _$UserMinAggregateOutputTypeFromJson(
         Map<String, dynamic> json) =>
     UserMinAggregateOutputType(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserMinAggregateOutputTypeToJson(
@@ -1084,21 +837,17 @@ Map<String, dynamic> _$UserMinAggregateOutputTypeToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 UserMaxAggregateOutputType _$UserMaxAggregateOutputTypeFromJson(
         Map<String, dynamic> json) =>
     UserMaxAggregateOutputType(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
+      id: json['id'],
+      name: json['name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
 
 Map<String, dynamic> _$UserMaxAggregateOutputTypeToJson(
@@ -1106,8 +855,8 @@ Map<String, dynamic> _$UserMaxAggregateOutputTypeToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 User _$UserFromJson(Map<String, dynamic> json) => User(

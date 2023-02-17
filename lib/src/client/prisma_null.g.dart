@@ -6,8 +6,11 @@ part of 'prisma_null.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PrismaNull _$$_PrismaNullFromJson(Map<String, dynamic> json) =>
-    _$_PrismaNull();
+PrismaNull _$PrismaNullFromJson(Map<String, dynamic> json) => PrismaNull(
+      json['__typename'] as String,
+    );
 
-Map<String, dynamic> _$$_PrismaNullToJson(_$_PrismaNull instance) =>
-    <String, dynamic>{};
+Map<String, dynamic> _$PrismaNullToJson(PrismaNull instance) =>
+    <String, dynamic>{
+      '__typename': instance.$type,
+    };
