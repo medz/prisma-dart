@@ -1357,7 +1357,7 @@ extension SaySomethingModelDelegateExtension
       )
     ];
     final query = _i1.PrismaFluent.queryBuilder(
-      query: (fields) => $query([
+      query: (fields) => $mutation([
         _i2.GraphQLField(
           r'createOneSaySomething',
           fields: fields,
@@ -1391,7 +1391,7 @@ extension SaySomethingModelDelegateExtension
       ),
     ];
     final query = _i1.PrismaFluent.queryBuilder(
-      query: (fields) => $query([
+      query: (fields) => $mutation([
         _i2.GraphQLField(
           r'updateOneSaySomething',
           fields: fields,
@@ -1425,7 +1425,7 @@ extension SaySomethingModelDelegateExtension
       ),
     ];
     final query = _i1.PrismaFluent.queryBuilder(
-      query: (fields) => $query([
+      query: (fields) => $mutation([
         _i2.GraphQLField(
           r'updateManySaySomething',
           fields: fields,
@@ -1462,7 +1462,7 @@ extension SaySomethingModelDelegateExtension
       ),
     ];
     final query = _i1.PrismaFluent.queryBuilder(
-      query: (fields) => $query([
+      query: (fields) => $mutation([
         _i2.GraphQLField(
           r'upsertOneSaySomething',
           fields: fields,
@@ -1490,7 +1490,7 @@ extension SaySomethingModelDelegateExtension
       )
     ];
     final query = _i1.PrismaFluent.queryBuilder(
-      query: (fields) => $query([
+      query: (fields) => $mutation([
         _i2.GraphQLField(
           r'deleteOneSaySomething',
           fields: fields,
@@ -1517,7 +1517,7 @@ extension SaySomethingModelDelegateExtension
       )
     ];
     final query = _i1.PrismaFluent.queryBuilder(
-      query: (fields) => $query([
+      query: (fields) => $mutation([
         _i2.GraphQLField(
           r'deleteManySaySomething',
           fields: fields,

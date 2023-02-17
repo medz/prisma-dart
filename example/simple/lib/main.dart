@@ -10,16 +10,14 @@ final prisma = PrismaClient(
 );
 
 void main() async {
-  await prisma.$connect();
-  await Future.delayed(Duration(seconds: 3600));
   try {
-    SaySomething? result;
+    SaySomething? result = await prisma.saySomething.findFirst();
     result ??= await prisma.saySomething.create(
       data: SaySomethingCreateInput(text: 'Hello World!'),
     );
 
-    print(result.text);
+    print(result.toJson());
   } finally {
-    // await prisma.$disconnect();
+    await prisma.$disconnect();
   }
 }

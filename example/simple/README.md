@@ -9,20 +9,20 @@ This example shows how to use Prisma ORM for Dart.
 dart pub get
 
 # Generate Prisma Client
-dart run orm generate
+npx prisma generate
 dart run build_runner build
 ```
 
 ## Run
 
 ```bash
-dart run bin/simple.dart
+dart run lib/main.dart
 ```
 
 ## Output
 
 ```bash
-$ dart run bin/simple.dart
+$ dart run lib/simple.dart
 
-Hello World
+{id: 1, createdAt: 2023-02-17T14:11:10.213Z, updatedAt: 2023-02-17T14:11:10.213Z, text: Hello World!}
 ```

@@ -317,10 +317,10 @@ packages:
     dependency: "direct main"
     description:
       name: orm
-      sha256: "3221a3835969caa47759c3683ad20caaa7047548ee5771390feb71cd43d6ba88"
+      sha256: c92b3295889907051ebe161d9a848dee99f5937af2e4f82e3e10374d8c63522c
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0-beta.2"
+    version: "3.0.1-beta+0"
   package_config:
     dependency: transitive
     description:
