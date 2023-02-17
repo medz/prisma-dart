@@ -793,8 +793,26 @@ extension ModelFluentGenerator on Generator {
         .property('map')
         .call([localMapCompiler]);
 
-    final fieldsExpression =
+    code.Expression fieldsExpression =
         (fields == null || fields.isEmpty) ? modelScalarFields : localFields;
+
+    if (field.name.toLowerCase().startsWith('groupby')) {
+      final enumMapCompiler = code.Method((updates) {
+        updates.requiredParameters.add(code.Parameter((updates) {
+          updates.name = 'e';
+        }));
+        updates.body =
+            code.refer('GraphQLField', packages.graphql).newInstance([
+          code
+              .refer('e')
+              .property('originalName')
+              .ifNullThen(code.refer('e').property('name'))
+        ]).code;
+        updates.lambda = true;
+      }).closure;
+      fieldsExpression =
+          code.refer('by').property('map').call([enumMapCompiler]);
+    }
 
     expressions.add(code.declareFinal('fields').assign(fieldsExpression));
 
@@ -847,17 +865,21 @@ extension ModelFluentGenerator on Generator {
       }));
       updates.lambda = true;
 
-      final compiler = code.refer('compiler').call([code.refer('json')]);
+      final call = field.outputType.isList
+          ? code.refer('json').property('cast').call([])
+          : code.refer('json');
+
+      final compiler = code.refer('compiler').call([call]);
       final thrown = code.refer('Exception').newInstance([
         code.literalString('Unable to parse response'),
       ]).thrown;
 
-      updates.body = code
-          .refer('json')
-          .isA(type)
-          .conditional(compiler,
-              _isOperationReturnTypeNullable(field) ? code.literalNull : thrown)
-          .code;
+      final other =
+          _isOperationReturnTypeNullable(field) ? code.literalNull : thrown;
+      final $type = field.outputType.isList ? code.refer('Iterable') : type;
+
+      updates.body =
+          code.refer('json').isA($type).conditional(compiler, other).code;
     });
 
     final returns = code
