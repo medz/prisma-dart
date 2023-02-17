@@ -30,6 +30,10 @@ void main() async {
 
     final aggregate = prisma.user.aggregate();
     print(await aggregate.$count().id());
+    print(await aggregate.$avg().id());
+    print(await aggregate.$min().name());
+    print(await aggregate.$max().role());
+    print(await aggregate.$max().createdAt());
   } finally {
     await prisma.$disconnect();
   }

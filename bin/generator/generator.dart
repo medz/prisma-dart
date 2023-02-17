@@ -744,9 +744,21 @@ extension ModelFluentGenerator on Generator {
       return [query.returned];
     }
 
-    final type = _modelDelegateMethodReturnTypeBuilder(field);
-    final query =
-        code.refer('query').call([code.literalConstList([])]).asA(type);
+    final type = scalar(field.outputType);
+    final fn = code.Method((updates) {
+      updates.requiredParameters.add(code.Parameter((updates) {
+        updates.name = 'value';
+      }));
+
+      updates.body = code.refer('value').asA(type).code;
+      updates.lambda = true;
+    });
+
+    final query = code
+        .refer('query')
+        .call([code.literalConstList([])])
+        .property('then')
+        .call([fn.closure]);
 
     return [query.returned];
   }
