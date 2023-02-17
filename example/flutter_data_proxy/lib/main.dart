@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'prisma_client.dart';
 
+final prisma = PrismaClient();
+
 void main() {
   runApp(const MyApp());
 }
@@ -29,15 +31,7 @@ class Users extends StatefulWidget {
 }
 
 class _UsersState extends State<Users> {
-  late PrismaClient prisma;
   final List<User> users = [];
-
-  /// Create a Prisma client.
-  @override
-  void initState() {
-    super.initState();
-    prisma = createPrismaClient();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +45,9 @@ class _UsersState extends State<Users> {
             onPressed: () async {
               // Fetch users.
               final users = await prisma.user.findMany(
-                orderBy:
-                    const FindManyUserOrderBy.withUserOrderByWithRelationInput(
-                  UserOrderByWithRelationInput(
-                    id: SortOrder.asc,
-                  ),
-                ),
+                orderBy: const [
+                  UserOrderByWithRelationInput(createdAt: SortOrder.desc)
+                ],
               );
               // Update the state.
               setState(() {
@@ -87,11 +78,7 @@ class _UsersState extends State<Users> {
 
           // Create a new user.
           final user = await prisma.user.create(
-            data: CreateOneUserData.withUserUncheckedCreateInput(
-              UserUncheckedCreateInput(
-                name: name,
-              ),
-            ),
+            data: UserCreateInput(name: name),
           );
           // Update the state.
           setState(() {
