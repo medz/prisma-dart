@@ -10,5 +10,5 @@ jobs:
       - uses: google-github-actions/release-please-action@v3
         with:
           release-type: dart
-          default-branch: main
+          default-branch: stable
           package-name: orm
