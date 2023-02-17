@@ -19,6 +19,12 @@ updates:
     labels:
       - docs
 
+  # `orm` package npm
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+
   # `orm` package
   - package-ecosystem: pub
     directory: /
