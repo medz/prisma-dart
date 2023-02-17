@@ -24,7 +24,7 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   })  : _transaction = transaction,
         _headers = headers,
         _engine = engine {
-    finalizer.attach(this, engine, detach: this);
+    // finalizer.attach(this, engine, detach: this);
   }
 
   /// The prisma engine.

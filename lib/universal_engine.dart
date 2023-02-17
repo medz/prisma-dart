@@ -54,7 +54,8 @@ class UniversalEngine implements Engine {
     required String query,
     QueryEngineRequestHeaders? headers,
     TransactionInfo? transaction,
-  }) {
+  }) async {
+    await start();
     logger.emit(Event.query, QueryPayload(query: query));
 
     final url = resolveRequestEndpoint();
@@ -92,7 +93,8 @@ class UniversalEngine implements Engine {
     Duration timeout = const Duration(seconds: 5),
     Duration maxWait = const Duration(seconds: 2),
     TransactionIsolationLevel? isolationLevel,
-  }) {
+  }) async {
+    await start();
     final url = resolveStartTransactionEndpoint();
     final body = convert.json.encode({
       'max_wait': timeout.inMilliseconds,
@@ -132,7 +134,8 @@ class UniversalEngine implements Engine {
 
   @override
   Future<void> commitTransaction(
-      {required TransactionInfo info, TransactionHeaders? headers}) {
+      {required TransactionInfo info, TransactionHeaders? headers}) async {
+    await start();
     final url = resolveCommitTransactionEndpoint(info);
 
     return _otherTransaction(url, gerund: 'committing');
@@ -152,7 +155,8 @@ class UniversalEngine implements Engine {
 
   @override
   Future<void> rollbackTransaction(
-      {required TransactionInfo info, TransactionHeaders? headers}) {
+      {required TransactionInfo info, TransactionHeaders? headers}) async {
+    await start();
     final url = resolveRollbackTransactionEndpoint(info);
 
     return _otherTransaction(url, gerund: 'rolling back');

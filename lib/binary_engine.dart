@@ -214,7 +214,6 @@ class BinaryEngine extends UniversalEngine implements Engine {
           final message = Error.safeToString(e);
           logger.emit(Event.error, Payload(message: message));
         }
-        throw Exception('Cannot parse the query engine log');
       },
     );
   }
