@@ -11,4 +11,4 @@ jobs:
         with:
           release-type: dart
           default-branch: main
-          command: github-release
+          package-name: orm
