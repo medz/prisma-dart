@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1-beta+0
+
+No changes.
+
 ## 3.0.0-beta+3
 
 ### Bug Fixes
