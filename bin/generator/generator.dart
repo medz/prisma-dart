@@ -356,15 +356,31 @@ extension InputObjectTypesGenerator on Generator {
       return scalar(field.inputTypes.first, !field.isRequired);
     }
 
-    // Build union type
-    final reference = code.TypeReference((code.TypeReferenceBuilder updates) {
-      updates
-        ..symbol = 'PrismaUnion${types.length}'
-        ..url = packages.orm
-        ..types.addAll(types.map((e) => scalar(e, false)));
-    });
+    // Find list type
+    final listTypes = types.where((e) => e.isList);
+    if (listTypes.isNotEmpty) {
+      return scalar(listTypes.first, !field.isRequired);
+    }
 
-    return field.isRequired ? reference : reference.nullable;
+    // find non scalar type
+    final nonScalarTypes =
+        types.where((e) => e.location != dmmf.FieldLocation.scalar);
+    if (nonScalarTypes.isNotEmpty) {
+      return scalar(nonScalarTypes.first, !field.isRequired);
+    }
+
+    return scalar(types.first, !field.isRequired);
+
+    // TODO: Build union type
+    // Build union type
+    // final reference = code.TypeReference((code.TypeReferenceBuilder updates) {
+    //   updates
+    //     ..symbol = 'PrismaUnion${types.length}'
+    //     ..url = packages.orm
+    //     ..types.addAll(types.map((e) => scalar(e, false)));
+    // });
+
+    // return field.isRequired ? reference : reference.nullable;
   }
 
   /// Build to json method
@@ -656,13 +672,52 @@ extension ModelFluentGenerator on Generator {
       final fields = type.fields.map((e) => e.name);
 
       return _buildModelResultsCompiler(field, fields: fields);
+    } else if (field.outputType.location == dmmf.FieldLocation.scalar) {
+      return _buildModelScalarCompiler(field);
+    } else if (field.outputType.location == dmmf.FieldLocation.enumTypes) {
+      return _buildModelEnumCompiler(field);
     }
-
     return [
       code.refer(field.outputType.type.toDartClassname()).newInstance([
         code.refer('query'),
       ]).returned,
     ];
+  }
+
+  /// Build model enum compiler
+  Iterable<code.Expression> _buildModelEnumCompiler(dmmf.SchemaField field) {
+    final enumDecodeName =
+        field.isNullable == true ? r'$enumDecodeNullable' : r'$enumDecode';
+    final enumName = '_\$${field.outputType.type.toDartClassname()}EnumMap';
+    final fn = code.Method((updates) {
+      updates.requiredParameters.add(code.Parameter((updates) {
+        updates.name = 'value';
+      }));
+
+      updates.body =
+          code.refer(enumDecodeName, packages.jsonSerializable).call([
+        code.refer(enumName),
+        code.refer('value'),
+      ]).code;
+      updates.lambda = true;
+    });
+
+    final query = code
+        .refer('query')
+        .call([code.literalConstList([])])
+        .property('then')
+        .call([fn.closure]);
+
+    return [query.returned];
+  }
+
+  /// Build model scalar compiler
+  Iterable<code.Expression> _buildModelScalarCompiler(dmmf.SchemaField field) {
+    final type = _modelDelegateMethodReturnTypeBuilder(field);
+    final query =
+        code.refer('query').call([code.literalConstList([])]).asA(type);
+
+    return [query.returned];
   }
 
   /// Find prisma output type
