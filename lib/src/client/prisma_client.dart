@@ -75,7 +75,7 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
     TransactionHeaders? headers,
     Duration timeout = const Duration(seconds: 5),
     Duration maxWait = const Duration(seconds: 2),
-    IsolationLevel? isolationLevel,
+    TransactionIsolationLevel? isolationLevel,
   }) async {
     // If the client is a transaction, use it.
     if (_headers?.transactionId != null || _transaction != null) {

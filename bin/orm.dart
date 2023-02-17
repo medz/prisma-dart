@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_style/dart_style.dart';
 
 import 'generator/generator.dart';
 import 'generator/prisma_info.dart';
@@ -47,6 +48,7 @@ void main(Iterable<String> args) async {
   try {
     generator.generate();
   } catch (e, s) {
+    if (e is FormatterException) print(e.message(color: true));
     print(s);
     throw Error.safeToString(e);
   }

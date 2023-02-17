@@ -1,7 +1,8 @@
+import '../client/prisma_enum.dart';
 import 'case_insensitive_map.dart';
 
 /// Isolation level.
-enum IsolationLevel {
+enum TransactionIsolationLevel implements PrismaEnum {
   /// Read uncommitted.
   readUncommitted('ReadUncommitted'),
 
@@ -18,10 +19,11 @@ enum IsolationLevel {
   snapshot('Snapshot');
 
   /// String representation.
-  final String value;
+  @override
+  final String originalName;
 
-  /// Creates a new instance of [IsolationLevel].
-  const IsolationLevel(this.value);
+  /// Creates a new instance of [TransactionIsolationLevel].
+  const TransactionIsolationLevel(this.originalName);
 }
 
 /// Transaction Info.

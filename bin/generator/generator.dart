@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:code_builder/code_builder.dart' as code;
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:path/path.dart' as path;
 import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
@@ -103,6 +104,7 @@ class Generator {
     generatePrismaOutputTypes();
     generatePrismaAggregateFluent();
     generateDatasourcesClass();
+    generatePrismaClient();
     defineDirectives();
     writeLibrary();
   }
@@ -1196,6 +1198,7 @@ extension DatasourcesClassGenerator on Generator {
           .newInstance([], {
         'createFactory': code.literalFalse,
         'createToJson': code.literalTrue,
+        'includeIfNull': code.literalFalse,
       }));
     });
   }
@@ -1242,5 +1245,319 @@ extension DatasourcesClassGenerator on Generator {
       updates.lambda = true;
       updates.annotations.add(code.refer('override'));
     });
+  }
+}
+
+/// Prisma client generator
+extension PrismaClientGenerator on Generator {
+  static const String className = 'PrismaClient';
+
+  /// Generate prisma client
+  void generatePrismaClient() {
+    library.body.add(code.Class((updates) {
+      updates.name = className;
+      updates.extend = code.TypeReference((updates) {
+        updates.symbol = 'BasePrismaClient';
+        updates.url = packages.orm;
+        updates.types.add(code.refer(className));
+      });
+      updates.fields.addAll(_buildPrismaClientFields());
+      updates.constructors.addAll(_buildPrismaClientConstructors());
+      updates.methods.add(_buildPrismaClientCopyWithMethod());
+      updates.methods.addAll(_buildPrismaClientModelDelegates());
+    }));
+  }
+
+  /// Build prisma client Model delegates
+  Iterable<code.Method> _buildPrismaClientModelDelegates() {
+    final models = options.dmmf.mappings.modelOperations.map((e) => e.model);
+    return models.map((e) => _buildPrismaClientModelDelegate(e));
+  }
+
+  /// Build prisma client Model delegate
+  code.Method _buildPrismaClientModelDelegate(String model) {
+    return code.Method((updates) {
+      final type = code.TypeReference((updates) {
+        updates.symbol = 'ModelDelegate';
+        updates.url = packages.orm;
+        updates.types.add(code.refer(model.toDartClassname()));
+      });
+
+      updates.name = model.toDartPropertyName();
+      updates.returns = type;
+      updates.type = code.MethodType.getter;
+
+      updates.body = type.newInstance([
+        code.refer('_engine')
+      ], {
+        'headers': code.refer('_headers'),
+        'transaction': code.refer('_transaction'),
+      }).code;
+      updates.lambda = true;
+    });
+  }
+
+  /// Build prisma client copy with method
+  code.Method _buildPrismaClientCopyWithMethod() {
+    return code.Method((updates) {
+      updates.name = 'copyWith';
+      updates.returns = code.refer(className);
+      updates.annotations.add(code.refer('override'));
+      updates.optionalParameters.add(code.Parameter((updates) {
+        updates.name = 'headers';
+        updates.named = true;
+        updates.type = code
+            .refer('QueryEngineRequestHeaders', packages.engineCore)
+            .nullable;
+      }));
+      updates.optionalParameters.add(code.Parameter((updates) {
+        updates.name = 'transaction';
+        updates.named = true;
+        updates.type =
+            code.refer('TransactionInfo', packages.engineCore).nullable;
+      }));
+      updates.body = code.refer(className).newInstanceNamed('_internal', [
+        code.refer('_engine'),
+      ], {
+        'headers': code.refer('headers').ifNullThen(code.refer('_headers')),
+        'transaction':
+            code.refer('transaction').ifNullThen(code.refer('_transaction')),
+      }).code;
+      updates.lambda = true;
+    });
+  }
+
+  /// Build prisma client fields
+  Iterable<code.Field> _buildPrismaClientFields() {
+    return [
+      // Build `_engine` field
+      code.Field((updates) {
+        updates
+          ..name = '_engine'
+          ..type = code.refer('Engine', packages.engineCore)
+          ..modifier = code.FieldModifier.final$;
+      }),
+      // build `_headers` field
+      code.Field((updates) {
+        updates
+          ..name = '_headers'
+          ..type = code
+              .refer('QueryEngineRequestHeaders', packages.engineCore)
+              .nullable
+          ..modifier = code.FieldModifier.final$;
+      }),
+      // build `_transaction` field
+      code.Field((updates) {
+        updates
+          ..name = '_transaction'
+          ..type = code.refer('TransactionInfo', packages.engineCore).nullable
+          ..modifier = code.FieldModifier.final$;
+      }),
+    ];
+  }
+
+  /// Build prisma client constructors
+  Iterable<code.Constructor> _buildPrismaClientConstructors() {
+    return [
+      _buildPrismaClientInternalConstructor(),
+      _buildPrismaClientDefaultConstructor(),
+    ];
+  }
+
+  /// Build prisma client Internal constructor
+  code.Constructor _buildPrismaClientInternalConstructor() {
+    return code.Constructor((updates) {
+      updates.name = '_internal';
+      updates.requiredParameters.add(code.Parameter((updates) {
+        updates.name = 'engine';
+        updates.toThis = false;
+        updates.type = code.refer('Engine', packages.engineCore);
+      }));
+      updates.optionalParameters.add(code.Parameter((updates) {
+        updates.name = 'headers';
+        updates.named = true;
+        updates.toThis = false;
+        updates.type = code
+            .refer('QueryEngineRequestHeaders', packages.engineCore)
+            .nullable;
+      }));
+      updates.optionalParameters.add(code.Parameter((updates) {
+        updates.name = 'transaction';
+        updates.named = true;
+        updates.toThis = false;
+        updates.type =
+            code.refer('TransactionInfo', packages.engineCore).nullable;
+      }));
+
+      updates.initializers
+          .add(code.refer('_engine').assign(code.refer('engine')).code);
+      updates.initializers
+          .add(code.refer('_headers').assign(code.refer('headers')).code);
+      updates.initializers.add(
+          code.refer('_transaction').assign(code.refer('transaction')).code);
+      updates.initializers.add(code.refer('super').call(
+        [
+          code.refer('engine'),
+        ],
+        {
+          'headers': code.refer('headers'),
+          'transaction': code.refer('transaction'),
+        },
+      ).code);
+    });
+  }
+
+  /// Build prisma client default constructor
+  code.Constructor _buildPrismaClientDefaultConstructor() {
+    return code.Constructor((updates) {
+      updates.factory = true;
+      updates.optionalParameters
+          .addAll(_buildPrismaClientDefaultConstructorParams());
+      updates.body = _buildPrismaClientDefaultConstructorBody();
+    });
+  }
+
+  /// Build prisma client default constructor params
+  Iterable<code.Parameter> _buildPrismaClientDefaultConstructorParams() {
+    return [
+      // Build `datasources` param
+      code.Parameter((updates) {
+        updates.name = 'datasources';
+        updates.named = true;
+        updates.type = code.refer('Datasources').nullable;
+      }),
+      // Build `stdout` param
+      code.Parameter((updates) {
+        updates.name = 'stdout';
+        updates.named = true;
+        updates.type = code.TypeReference((updates) {
+          updates.symbol = 'Iterable';
+          updates.types.add(code.refer('Event', packages.logger));
+        }).nullable;
+      }),
+      // Build `event` param
+      code.Parameter((updates) {
+        updates.name = 'event';
+        updates.named = true;
+        updates.type = code.TypeReference((updates) {
+          updates.symbol = 'Iterable';
+          updates.types.add(code.refer('Event', packages.logger));
+        }).nullable;
+      }),
+    ];
+  }
+
+  /// Build prisma client default constructor body
+  code.Block _buildPrismaClientDefaultConstructorBody() {
+    return code.Block((updates) {
+      updates.addExpression(_buildLoggerVariable());
+      updates.addExpression(_buildEngineVariable());
+      updates.addExpression(_buildPrismaClientReturn());
+    });
+  }
+
+  /// Build logger variable
+  code.Expression _buildLoggerVariable() {
+    final logger = code.refer('Logger', packages.logger).newInstance([], {
+      'stdout': code.refer('stdout'),
+      'event': code.refer('event'),
+    });
+
+    return code.declareFinal('logger').assign(logger);
+  }
+
+  /// Build engine variable
+  code.Expression _buildEngineVariable() {
+    final engine =
+        options.dataProxy ? _buildDataProxyEngine() : _buildBinaryEngine();
+
+    return code.declareFinal('engine').assign(engine);
+  }
+
+  /// Build binary engine
+  code.Expression _buildBinaryEngine() {
+    return code.refer('BinaryEngine', packages.binaryEngine).newInstance([], {
+      'logger': code.refer('logger'),
+      'schema': _buildBase64EncodedSchema(),
+      'datasources': _buildDatasourcesToJson(),
+      'executable': _findBinaryEngineExecutable(),
+    });
+  }
+
+  /// Build base64 encoded schema
+  code.Expression _buildBase64EncodedSchema() {
+    final schema = options.datamodel;
+    final encoded = convert.base64.encode(convert.utf8.encode(schema));
+
+    return code.literalString(encoded, raw: true);
+  }
+
+  /// Build datasources to json
+  code.Expression _buildDatasourcesToJson() {
+    return code
+        .refer('datasources')
+        .nullSafeProperty('toJson')
+        .call([])
+        .property('cast')
+        .call([])
+        .ifNullThen(code.literalConstMap({}));
+  }
+
+  /// Find binary engine executable
+  code.Expression _findBinaryEngineExecutable() {
+    final executable = options.binaryPaths['queryEngine']?[info.platform];
+    if (executable == null) {
+      throw Exception(
+          'Could not find query engine for platform ${info.platform}');
+    }
+
+    return code.literalString(executable, raw: true);
+  }
+
+  /// Build prisma client return
+  code.Expression _buildPrismaClientReturn() {
+    return code
+        .refer(className)
+        .newInstanceNamed('_internal', [code.refer('engine')]).returned;
+  }
+
+  /// Build data proxy engine
+  code.Expression _buildDataProxyEngine() {
+    return code
+        .refer('DataProxyEngine', packages.dataProxyengine)
+        .newInstance([], {
+      'logger': code.refer('logger'),
+      'schema': _buildBase64EncodedSchema(),
+      'hash': _buildSchameHash(),
+      'version': code.literalString(info.version),
+      'endpoint': _buildDataProxyEndpoint(),
+    });
+  }
+
+  /// Build schema hash
+  code.Expression _buildSchameHash() {
+    final schema = options.datamodel;
+    final encoded = convert.base64.encode(convert.utf8.encode(schema));
+    final digest = crypto.sha256.convert(convert.utf8.encode(encoded));
+
+    return code.literalString(digest.toString(), raw: true);
+  }
+
+  /// Build data proxy endpoint
+  code.Expression _buildDataProxyEndpoint() {
+    final datasource = options.datasources.first;
+
+    final other = datasource.url.value != null
+        ? code.literalString(datasource.url.value!, raw: true)
+        : code.refer('String').property('fromEnvironment').call([
+            code.literalString(datasource.url.fromEnvVar!, raw: true),
+          ]);
+
+    final param = code
+        .refer('datasources')
+        .nullSafeProperty(datasource.name)
+        .ifNullThen(other);
+
+    return code.refer('Uri').property('parse').call([param]);
   }
 }

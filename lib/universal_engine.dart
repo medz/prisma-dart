@@ -91,13 +91,13 @@ class UniversalEngine implements Engine {
     TransactionHeaders? headers,
     Duration timeout = const Duration(seconds: 5),
     Duration maxWait = const Duration(seconds: 2),
-    IsolationLevel? isolationLevel,
+    TransactionIsolationLevel? isolationLevel,
   }) {
     final url = resolveStartTransactionEndpoint();
     final body = convert.json.encode({
       'max_wait': timeout.inMilliseconds,
       'timeout': maxWait.inMilliseconds,
-      'isolation_level': isolationLevel?.value,
+      'isolation_level': isolationLevel?.originalName,
     });
     final wrappedHeaders = headersWrapper(headers: [this.headers, headers]);
 

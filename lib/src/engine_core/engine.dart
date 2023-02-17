@@ -26,7 +26,7 @@ abstract class Engine {
     TransactionHeaders? headers,
     Duration timeout = const Duration(seconds: 5),
     Duration maxWait = const Duration(seconds: 2),
-    IsolationLevel? isolationLevel,
+    TransactionIsolationLevel? isolationLevel,
   });
 
   /// Commits a transaction.
