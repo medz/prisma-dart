@@ -10,7 +10,8 @@ void getAllUsers(Context context) async {
   final Response response = context.response;
 
   final Iterable<User> users = await prisma.user.findMany();
-  response.json(users);
+  final result = users.map((user) => user.toJson()).toList();
+  response.json(result);
 }
 
 void createUser(Context context) async {
@@ -18,7 +19,7 @@ void createUser(Context context) async {
   final Request request = context.request;
   final Response response = context.response;
 
-  final Map<String, dynamic> body = await request.json();
+  final Map<String, dynamic> body = await request.json;
   final String name = body['name'] as String;
 
   final User? exists = await prisma.user.findFirst(
@@ -46,15 +47,11 @@ void getUser(Context context) async {
   final Response response = context.response;
 
   final int id = int.parse(request.param('id') as String);
-  final User? user = await prisma.user.findUnique(
+  final User user = await prisma.user.findUniqueOrThrow(
     where: UserWhereUniqueInput(id: id),
   );
 
-  if (user == null) {
-    throw HttpException.notFound('User not found');
-  }
-
-  response.json(user);
+  response.json(user.toJson());
 }
 
 void updateUser(Context context) async {
@@ -63,12 +60,12 @@ void updateUser(Context context) async {
   final Response response = context.response;
 
   final int id = int.parse(request.param('id') as String);
-  final Map<String, dynamic> body = await request.json();
+  final Map<String, dynamic> body = await request.json;
   final User? user = await prisma.user.update(
     where: UserWhereUniqueInput(id: id),
     data: UserUpdateInput(
       name: StringFieldUpdateOperationsInput(
-        set$: body['name'] as String,
+        set: body['name'] as String,
       ),
     ),
   );
@@ -77,7 +74,7 @@ void updateUser(Context context) async {
     throw HttpException.notFound('User not found');
   }
 
-  response.json(user);
+  response.json(user.toJson());
 }
 
 void deleteUser(Context context) async {

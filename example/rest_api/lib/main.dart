@@ -11,7 +11,7 @@ Future<void> main() async {
 
   // Spry Interceptor.
   spry.use(Interceptor(
-    handler: ExceptionHandler.json(codec: json),
+    handler: ExceptionHandler.json(),
   ));
 
   // Inject Prisma client and set json middleware.

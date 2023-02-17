@@ -1,18 +1,1 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-dart"
-}
-
-datasource db {
-  provider = "sqlite"
-  url      = "file:./db.sqlite"
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+../../../prisma/schema.prisma
