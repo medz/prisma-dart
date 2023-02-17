@@ -41,7 +41,7 @@ class DataProxyEngine extends UniversalEngine implements Engine {
         'endpoint',
         'The endpoint must be a prisma:// protocol.',
       );
-    } else if (super.endpoint.queryParameters.containsKey(_tokenName)) {
+    } else if (!super.endpoint.queryParameters.containsKey(_tokenName)) {
       throw ArgumentError.value(
         super.endpoint,
         'endpoint',
@@ -80,7 +80,7 @@ class DataProxyEngine extends UniversalEngine implements Engine {
 
     final response = await http.put(url, headers: headers, body: schema);
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 201) {
       final message = 'Error while updating schema: ${response.body}';
       logger.emit(Event.warn, Payload(message: message));
       throw Exception(message);
@@ -114,5 +114,31 @@ class DataProxyEngine extends UniversalEngine implements Engine {
 
     logger.emit(Event.error, Payload(message: 'No Data Proxy endpoint found.'));
     throw Exception('No Data Proxy endpoint found.');
+  }
+
+  @override
+  Future<GraphQLResult> request(
+      {required String query,
+      QueryEngineRequestHeaders? headers,
+      TransactionInfo? transaction}) async {
+    final result = await super.request(
+      query: query,
+      headers: headers,
+      transaction: transaction,
+    );
+
+    if (result['enginenotstarted'] is Map &&
+        result['enginenotstarted']['reason'] == 'SchemaMissing') {
+      await updateSchema();
+      final result = super.request(
+        query: query,
+        headers: headers,
+        transaction: transaction,
+      );
+
+      return result;
+    }
+
+    return result;
   }
 }
