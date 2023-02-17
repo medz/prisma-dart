@@ -1,3 +1,11 @@
+# Changelog
+
+## 3.0.0-beta+3
+
+### Bug Fixes
+
+* generate: fixed model delegate resolve GraphQL top-level field (35ebc6a)
+
 ## 2.6.2
 
 1. Fixed `DateTime` to `String` must be ISO8601 format error - [#103](https://github.com/odroe/prisma-dart/issues/103)
