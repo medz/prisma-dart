@@ -185,22 +185,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  freezed:
-    dependency: "direct dev"
-    description:
-      name: freezed
-      sha256: e819441678f1679b719008ff2ff0ef045d66eed9f9ec81166ca0d9b02a187454
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.2"
-  freezed_annotation:
-    dependency: transitive
-    description:
-      name: freezed_annotation
-      sha256: aeac15850ef1b38ee368d4c53ba9a847e900bb2c53a4db3f6881cbb3cb684338
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -333,10 +317,10 @@ packages:
     dependency: "direct main"
     description:
       name: orm
-      sha256: "8859bf78468d9cee9517e5298e2ba3be161fa1efe25c4cc5ab499233fe1b3c79"
+      sha256: "3221a3835969caa47759c3683ad20caaa7047548ee5771390feb71cd43d6ba88"
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.2"
+    version: "3.0.0-beta.2"
   package_config:
     dependency: transitive
     description:
@@ -369,14 +353,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
-  prisma_get_platform:
-    dependency: transitive
-    description:
-      name: prisma_get_platform
-      sha256: f439f4f176f62f1123080ad6467b5e40df686a59c14e3e346e5e7924379c6372
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   pub_semver:
     dependency: transitive
     description:
@@ -393,14 +369,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
-  rc:
+  recase:
     dependency: transitive
     description:
-      name: rc
-      sha256: b496ef96351924b387ceec18d1aed7415336b8b5a74a16632fbd9227682901c1
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2"
+    version: "4.1.0"
   retry:
     dependency: transitive
     description:

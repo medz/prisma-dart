@@ -1,22 +1,25 @@
+import 'package:orm/logger.dart';
+
 import 'prisma_client.dart';
 
-final PrismaClient prisma = createPrismaClient();
+final prisma = PrismaClient(
+  stdout: Event.values,
+  datasources: Datasources(
+    db: 'file:./prisma/db.sqlite',
+  ),
+);
 
 void main() async {
+  await prisma.$connect();
+  await Future.delayed(Duration(seconds: 3600));
   try {
-    SaySomething? result = await prisma.saySomething.findFirst();
+    SaySomething? result;
     result ??= await prisma.saySomething.create(
-      data: CreateOneSaySomethingData.withSaySomethingUncheckedCreateInput(
-        SaySomethingUncheckedCreateInput(
-          text: 'Hello World',
-        ),
-      ),
+      data: SaySomethingCreateInput(text: 'Hello World!'),
     );
 
     print(result.text);
-  } catch (e) {
-    print(e);
   } finally {
-    await prisma.$disconnect();
+    // await prisma.$disconnect();
   }
 }
