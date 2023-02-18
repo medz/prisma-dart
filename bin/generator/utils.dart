@@ -1,7 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:recase/recase.dart';
 
-extension DartClassname on String {
+extension DartStyleName on String {
   /// Dart property reserved keywords
   static final Iterable<String> _reservedKeywords = [
     'in',
