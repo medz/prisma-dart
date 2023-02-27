@@ -685,8 +685,7 @@ extension ModelFluentGenerator on Generator {
       return _buildModelResultsCompiler(field, fields: fields);
 
       // If output is `AffectedRowsOutput`, return the affected rows.
-    } else if (field.outputType.type == 'AffectedRowsOutput' ||
-        field.outputType.type.endsWith('CountOutputType')) {
+    } else if (field.outputType.type == 'AffectedRowsOutput') {
       final type = _findPrismaOutputType(field.outputType.type);
       final fields = type.fields.map((e) => e.name);
 
@@ -1063,9 +1062,9 @@ extension ModelDelegateGenerator on Generator {
 
   /// Is model fluent output type
   bool _isModelFluentOutputType(dmmf.SchemaType outputType) {
-    final models = options.dmmf.schema.outputObjectTypes.model;
-
-    return models?.any((e) => e.name == outputType.type) == true &&
+    return options.dmmf.schema.outputObjectTypes.model
+                ?.any((e) => e.name == outputType.type) ==
+            true &&
         !outputType.isList;
   }
 
@@ -1112,7 +1111,6 @@ extension PrismaOutputTypeGenerator on Generator {
   static final _jsonSerializablePrismaOutputTypes = [
     (String type) => type.endsWith('GroupByOutputType'),
     (String type) => type == 'AffectedRowsOutput',
-    (String type) => type.endsWith('CountOutputType'),
   ];
 
   /// Generate prisma output types
@@ -1173,7 +1171,9 @@ extension PrismaAggregationFluentGenerate on Generator {
 
   /// Is aggregate output type
   bool _isAggregate(String type) {
-    return type.endsWith('AggregateOutputType') || type.startsWith('Aggregate');
+    return type.endsWith('AggregateOutputType') ||
+        type.startsWith('Aggregate') ||
+        type.endsWith('CountOutputType');
   }
 
   /// Build aggregate fluent
