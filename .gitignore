@@ -2,7 +2,7 @@
 .dart_tool/
 .packages
 node_modules/
-docs/.vitepress/
+docs/.vitepress/*
 !docs/.vitepress/config.ts
 
 # Omit committing pubspec.lock for library packages; see
