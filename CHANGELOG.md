@@ -1,17 +1,10 @@
 # Changelog
 
-## [3.0.0](https://github.com/odroe/prisma-dart/compare/3.0.1-beta+0...v3.0.0) (2023-02-27)
+## 3.0.0
 
+🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v3.0.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/3.0.0) about the release. 🌟
 
-### Features
-
-* **generator:** add $count fluent API ([8cc1836](https://github.com/odroe/prisma-dart/commit/8cc183625cf178bf9cabe1f7d239145f4fab2b2a))
-
-
-### Bug Fixes
-
-* **engines:** fixed data proxy engine ([36c1575](https://github.com/odroe/prisma-dart/commit/36c15755ba013a4158cb15832a49abff87d9f18a))
-* Fix read variable from environment not using const ([5d07afe](https://github.com/odroe/prisma-dart/commit/5d07afe005489e329484bf9315d6d6b3de66b3e9))
+> **Note**: Migration from 2.x to 3.x guide is available [here](https://prisma.pub/docs/migration-from-2.html).
 
 ## 3.0.1-beta+0
 
