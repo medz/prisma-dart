@@ -1594,11 +1594,15 @@ extension PrismaClientGenerator on Generator {
   code.Expression _buildDataProxyEndpoint() {
     final datasource = options.datasources.first;
 
+    // `const String.fromEnvironment('DATABASE_URL')`
+    final fromEnvironment =
+        code.refer('String').constInstanceNamed('fromEnvironment', [
+      code.literalString(datasource.url.fromEnvVar!, raw: true),
+    ]);
+
     final other = datasource.url.value != null
         ? code.literalString(datasource.url.value!, raw: true)
-        : code.refer('String').property('fromEnvironment').call([
-            code.literalString(datasource.url.fromEnvVar!, raw: true),
-          ]);
+        : fromEnvironment;
 
     final param = code
         .refer('datasources')
