@@ -12,4 +12,3 @@ jobs:
           release-type: dart
           default-branch: main
           package-name: orm
-          release-as: 3.0.0
