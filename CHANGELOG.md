@@ -2,6 +2,10 @@
 
 ## 3.0.0
 
+🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v3.0.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/3.0.0) about the release. 🌟
+
+> **Note**: Migration from 2.x to 3.x guide is available [here](https://prisma.pub/docs/migration-from-2).
+
 ## 3.0.1-beta+0
 
 No changes.
