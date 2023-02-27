@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.0.0](https://github.com/odroe/prisma-dart/compare/3.0.1-beta+0...v3.0.0) (2023-02-27)
+
+
+### Features
+
+* **generator:** add $count fluent API ([8cc1836](https://github.com/odroe/prisma-dart/commit/8cc183625cf178bf9cabe1f7d239145f4fab2b2a))
+
+
+### Bug Fixes
+
+* **engines:** fixed data proxy engine ([36c1575](https://github.com/odroe/prisma-dart/commit/36c15755ba013a4158cb15832a49abff87d9f18a))
+* Fix read variable from environment not using const ([5d07afe](https://github.com/odroe/prisma-dart/commit/5d07afe005489e329484bf9315d6d6b3de66b3e9))
+
 ## 3.0.1-beta+0
 
 No changes.
