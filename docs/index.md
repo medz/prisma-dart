@@ -11,7 +11,7 @@ hero:
     actions:
         - theme: brand
           text: ⚡️ Get Started
-          link: /getting-started
+          link: /docs/getting-started
         - theme: alt
           text: ♥︎ Sponsor
           link: https://opencollective.com/prisma-dart

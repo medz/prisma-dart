@@ -2,12 +2,12 @@
 .dart_tool/
 .packages
 node_modules/
+.vitepress/
+!.vitepress/**.ts
 
 # Omit committing pubspec.lock for library packages; see
 # https://dart.dev/guides/libraries/private-files#pubspeclock.
 pubspec.lock
 
 # Development files or directories.
-/prisma/development.dart
-/lib/prisma_configurator.dart
 /lib/prisma_client.*
