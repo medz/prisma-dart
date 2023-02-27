@@ -4,7 +4,7 @@ export default defineConfig({
     title: "Prisma client Dart",
     description: "Next-generation ORM for Dart & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB",
 
-    cleanUrls: true,
+    cleanUrls: false,
     lastUpdated: true,
 
     head: [
