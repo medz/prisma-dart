@@ -6,7 +6,7 @@ Prisma (for Dart) is a **next-generation ORM** for Dart and Flutter.
 - **Type-safe**: Prisma Client is a query builder that’s tailored to your schema. We designed its API to be intuitive, both for SQL veterans and developers brand new to databases. The auto-completion helps you figure out your query without the need for documentation.
 - **Human-readable**: Prisma schema is intuitive and lets you declare your database tables in a human-readable way — making your data modeling experience a delight. You define your models by hand or introspect them from an existing database.
 
-👉 [Learn how to use Prisma ORM for Dart in your project](https://prisma.pub/docs/getting-started).
+👉 [Learn how to use Prisma ORM for Dart in your project](https://prisma.pub/docs/getting-started.html).
 
 ## Instanciation
 
@@ -23,11 +23,11 @@ You can find the Prisma ORM for Dart [on the website](https://prisma.pub).
 
 The documentation is divided into the following sections:
 
- * [Getting Started](https://prisma.pub/docs/getting-started)
- * [Configuration](https://prisma.pub/docs/configuration)
- * [Logging](https://prisma.pub/docs/logging)
- * [CRUD](https://prisma.pub/docs/crud)
- * [Fluent API](https://prisma.pub/docs/fluent-api)
+ * [Getting Started](https://prisma.pub/docs/getting-started.html)
+ * [Configuration](https://prisma.pub/docs/configuration.html)
+ * [Logging](https://prisma.pub/docs/logging.html)
+ * [CRUD](https://prisma.pub/docs/crud.html)
+ * [Fluent API](https://prisma.pub/docs/fluent-api.html)
 
 > You can improve it by sending pull requests to [`docs` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/docs).
 
