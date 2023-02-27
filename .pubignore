@@ -8,3 +8,5 @@ example/*
 graphs/
 dev_test/
 node_modules/
+package-lock.json
+package.json
