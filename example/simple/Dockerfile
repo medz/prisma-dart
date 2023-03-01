@@ -1,36 +1,62 @@
-FROM dart:stable as build
+FROM dart:latest as builder
+
+RUN set -eux; \
+    case "$(dpkg --print-architecture)" in \
+        amd64) \
+            TRIPLET="x86_64-linux-gnu" ;; \
+        armhf) \
+            TRIPLET="arm-linux-gnueabihf" ;; \
+        arm64) \
+            TRIPLET="aarch64-linux-gnu" ;; \
+        *) \
+            echo "Unsupported architecture" ; \
+            exit 5;; \
+    esac; \
+    FILES="/lib/${TRIPLET}/libz.so.1 \
+    /lib/${TRIPLET}/libgcc_s.so.1 \
+    /usr/lib/${TRIPLET}/libssl.so.1.1 \
+    /usr/lib/${TRIPLET}/libcrypto.so.1.1"; \
+    for f in $FILES; do \
+        dir=$(dirname "$f"); \
+        mkdir -p "/runtime$dir"; \
+        cp --archive --link --dereference --no-target-directory "$f" "/runtime$f"; \
+    done
+
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
+apt-get install -y nodejs
 
 # Set the working directory
 WORKDIR /app
 
-# Copy dart project files and install dependencies
+# Copy source files
 COPY . .
+
+# Install pub dependencies
 RUN dart pub get
 
-# Delete prisma configurator
-RUN rm -rf lib/prisma_configurator.dart
+# Install prisma and install dependencies
+RUN npm install prisma &&\
+npm install
 
-# Precache query engine
-ENV PRISMA_QUERY_ENGINE_BINARY=/app/query-engine
-RUN dart run orm precache --type=query
+# Generate prisma client
+RUN npx prisma generate
 
-# Generate Prisma client
-RUN dart run orm generate
-RUN dart run build_runner build --delete-conflicting-outputs
+# Display prisma query engines
+RUN ls node_modules/prisma
 
-# Build simple app execable
-RUN dart compile exe lib/main.dart -o /app/simple
+# Build the app
+RUN dart compile exe lib/main.dart -o app.exe
 
-# Build a small image
 FROM scratch
 
-# Copy dart runtime
-COPY --from=build /runtime/ /
-COPY --from=build /app/simple /app/simple
-COPY --from=build /app/query-engine /app/query-engine
+COPY --from=builder /runtime/ /
+COPY --from=builder /app/app.exe /app.exe
+COPY --from=builder /app/prisma /prisma
 
-# Copy SQLite database file
-COPY ./db.sqlite /app/db.sqlite
-ENV DATABASE_URL="file:/app/db.sqlite"
+# Copy the Prisma query engines
+# node_modules/prisma/query-engine-<platform>
+COPY --from=builder /app/node_modules/prisma/query-engine-* /prisma/
 
-CMD ["/app/simple"]
+# Run the app
+CMD ["/app.exe"]
