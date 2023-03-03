@@ -6,9 +6,9 @@ Prisma client Dart requires no other configuration, just configure the data mode
 
 Prisma client Dart depends on Node's package management tool, because it needs to interact with Prisma CLI, so you need to choose a Node package management tool, currently supported package management tools are:
 
--npm
+- npm
 - yarn
--pnpm
+- pnpm
 
 You can configure it in the `schema.prisma` file:
 
@@ -64,6 +64,7 @@ final prisma = PrismaClient(
    ),
 );
 ```
+
 ```bash
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA" bin/main.exe
 ```
