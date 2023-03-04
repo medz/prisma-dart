@@ -14,7 +14,7 @@ hero:
           link: /docs/getting-started
         - theme: alt
           text: ♥︎ Sponsor
-          link: https://opencollective.com/prisma-dart
+          link: https://opencollective.com/openodroe
         - theme: alt
           text: View on GitHub
           link: https://github.com/odroe/prisma-dart
