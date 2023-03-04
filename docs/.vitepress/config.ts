@@ -38,7 +38,7 @@ export default defineConfig({
         nav: [
             { text: "Documentation", link: '/docs/' },
             { text: "API reference", link: 'https://pub.dev/documentation/orm' },
-            { text: "♥︎ Sponsor", link: "https://opencollective.com/prisma-dart" },
+            { text: "♥︎ Sponsor", link: "https://opencollective.com/openodroe" },
         ],
 
         sidebar: {
