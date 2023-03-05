@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/odroe/prisma-dart/compare/3.0.0...v3.0.1) (2023-03-05)
+
+
+### Bug Fixes
+
+* **client:** fixed prisma transaction type ([2cf52ad](https://github.com/odroe/prisma-dart/commit/2cf52add55538b00659d3460f17e38035d7da4b3))
+
 ## 3.0.0
 
 🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v3.0.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/3.0.0) about the release. 🌟
