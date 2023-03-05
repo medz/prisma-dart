@@ -71,7 +71,7 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   /// });
   /// ```
   Future<T> $transaction<T>(
-    PrismaTransactionCallback<T, BasePrismaClient<Client>> callback, {
+    PrismaTransactionCallback<T, Client> callback, {
     TransactionHeaders? headers,
     Duration timeout = const Duration(seconds: 5),
     Duration maxWait = const Duration(seconds: 2),
@@ -79,7 +79,7 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   }) async {
     // If the client is a transaction, use it.
     if (_headers?.transactionId != null || _transaction != null) {
-      return callback(this);
+      return callback(this as Client);
     }
 
     // Request a new transaction.
