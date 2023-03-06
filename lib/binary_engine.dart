@@ -126,6 +126,8 @@ class BinaryEngine extends UniversalEngine implements Engine {
 
   /// Resolve rust log level.
   String get _rustLogLevel {
+    if (logger.definitions.isEmpty) return Event.info.name;
+
     return logger.definitions.map((e) => e.event).reduce((value, element) {
       if (element == Event.query) return element;
       if (element == Event.info || value == Event.info) return Event.info;
