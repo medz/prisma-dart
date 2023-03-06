@@ -18,6 +18,32 @@ generator client {
 }
 ```
 
+`--package-manager` is optional, the default value is `npm`, It also has an alias `-p`:
+
+```prisma
+generator client {
+   provider = "dart run orm -p <package-manager>"
+}
+```
+
+### Node package manager executable
+
+If you have multiple versions of the Node package manager installed, or if you don't have the Node package manager installed globally. Please use the `-e` parameter to tell the generator:
+
+```prisma
+generator client {
+   provider = "dart run orm -e <executable>"
+}
+```
+
+Example:
+
+```prisma
+generator client {
+   provider = "dart run orm -e node_modules/.bin/pnpm"
+}
+```
+
 ## About database connection
 
 After the Prisma CLI initializes the project, there will be a `.env` file, which contains the configuration of the database connection. You can configure the database connection in this file:
