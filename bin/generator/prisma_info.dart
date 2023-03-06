@@ -18,7 +18,14 @@ class PrismaInfo {
 
     final result = Process.runSync(
       pm.toExecutable(),
-      ['exec', if (pm.isNpm) '--', 'prisma', 'version', '--json'],
+      [
+        'exec',
+        if (pm.isNpm) '--',
+        'prisma',
+        'version',
+        if (pm.isYarn) '--',
+        '--json'
+      ],
       stdoutEncoding: convert.utf8,
     );
 
@@ -47,6 +54,7 @@ class NodePackageManager {
 
   Iterable<String> get paths sync* {
     yield Directory.current.path;
+    yield join(Directory.current.path, 'node_modules', '.bin');
     yield* Platform.environment['PATH']?.split(separator) ?? [];
   }
 
@@ -60,6 +68,7 @@ class NodePackageManager {
     for (final path in paths) {
       for (final executable in executables) {
         final full = join(path.trim(), executable);
+        print(full);
         if (File(full).existsSync()) {
           return full;
         }
@@ -70,4 +79,5 @@ class NodePackageManager {
   }
 
   bool get isNpm => basename(toExecutable()).toLowerCase().startsWith('npm');
+  bool get isYarn => basename(toExecutable()).toLowerCase().startsWith('yarn');
 }
