@@ -45,11 +45,11 @@ class NodePackageManager {
   const NodePackageManager(this.packageManager);
 
   Iterable<String> get executables sync* {
-    yield packageManager;
     yield '$packageManager.cmd';
     yield '$packageManager.ps1';
     yield '$packageManager.bat';
     yield '$packageManager.exe';
+    yield packageManager;
   }
 
   Iterable<String> get paths sync* {
