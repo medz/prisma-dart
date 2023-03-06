@@ -4,6 +4,11 @@ The quickstart will help create a new project from scratch so you can start usin
 
 If you already have a project, please start with [2. Install Prisma CLI](#_2-install-prisma-cli).
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kMKyA_KEwV0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+> - [Watch at YouYube](https://www.youtube.com/embed/kMKyA_KEwV0)
+> - [Watch at Bilibili](https://www.bilibili.com/video/BV1224y1t7Z5/)
+
 ## 1. Create a new Dart project
 
 First, you need to create a new Dart project. If you are not familiar with Dart, you can refer to [Official Dart Documentation](https://dart.dev/get-dart).
