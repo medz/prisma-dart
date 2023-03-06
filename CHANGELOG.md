@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.2](https://github.com/odroe/prisma-dart/compare/v3.0.1...v3.0.2) (2023-03-06)
+
+
+### Bug Fixes
+
+* **engine:** fixed logger definitions is empty throw error ([4dc62f1](https://github.com/odroe/prisma-dart/commit/4dc62f1ebe2cde209d12ec5fc9044952201d722c))
+* **generator:** fixed Windows  system cannot find the file specified ([6446739](https://github.com/odroe/prisma-dart/commit/64467396e6d1b6253f0e5b0bbc7f9f73a05257dc))
+
 ## [3.0.1](https://github.com/odroe/prisma-dart/compare/3.0.0...v3.0.1) (2023-03-05)
 
 
