@@ -33,6 +33,12 @@ export default defineConfig({
   themeConfig: {
     logo: "/prisma-dart.svg",
 
+    algolia: {
+      appId: "0HCH0SFS0X",
+      apiKey: "c96ed825981886ede2c3d0c292c01182",
+      indexName: "prismapub",
+    },
+
     socialLinks: [
       { icon: "twitter", link: "https://twitter.com/odroeinc" },
       { icon: "github", link: "https://github.com/odroe/prisma-dart" },
