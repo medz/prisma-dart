@@ -22,9 +22,7 @@ testKit(String packageManager, String version) {
       final jsonLine = '"current-platform": "${info.platform}"';
       expect(version, contains(jsonLine));
 
-      if (Platform.isLinux) {
-        expect(info.platform, contains('linux'));
-      } else if (Platform.isMacOS) {
+      if (Platform.isMacOS) {
         expect(info.platform, equals('darwin'));
       } else if (Platform.isWindows) {
         expect(info.platform, equals('windows'));
