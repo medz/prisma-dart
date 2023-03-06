@@ -35,7 +35,7 @@ export default defineConfig({
 
     algolia: {
       appId: "0HCH0SFS0X",
-      apiKey: "c96ed825981886ede2c3d0c292c01182",
+      apiKey: "f075d8843b7e9649a9e017dafe482e0c",
       indexName: "prismapub",
     },
 
