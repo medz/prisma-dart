@@ -11,14 +11,6 @@ updates:
     schedule:
       interval: daily
 
-  # Documentation
-  - package-ecosystem: npm
-    directory: /docs
-    schedule:
-      interval: daily
-    labels:
-      - docs
-
   # `orm` package npm
   - package-ecosystem: npm
     directory: /
@@ -54,9 +46,3 @@ updates:
       interval: daily
     labels:
       - "example"
-
-  # Prisma get platform
-  - package-ecosystem: pub
-    directory: /packages/prisma_get_platform
-    schedule:
-      interval: daily
