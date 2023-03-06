@@ -68,7 +68,6 @@ class NodePackageManager {
     for (final path in paths) {
       for (final executable in executables) {
         final full = join(path.trim(), executable);
-        print(full);
         if (File(full).existsSync()) {
           return full;
         }
