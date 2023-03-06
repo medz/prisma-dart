@@ -12,19 +12,51 @@ Prisma client Dart depends on Node's package management tool, because it needs t
 
 You can configure it in the `schema.prisma` file:
 
-```prisma
+::: code-group
+
+```prisma [npm]
 generator client {
-   provider = "dart run orm --package-manager <package-manager>"
+   provider = "dart run orm --package-manager npm"
 }
 ```
+
+```prisma [yarn]
+generator client {
+   provider = "dart run orm --package-manager yarn"
+}
+```
+
+```prisma [pnpm]
+generator client {
+   provider = "dart run orm --package-manager pnpm"
+}
+```
+
+:::
 
 `--package-manager` is optional, the default value is `npm`, It also has an alias `-p`:
 
-```prisma
+::: code-group
+
+```prisma [npm]
 generator client {
-   provider = "dart run orm -p <package-manager>"
+   provider = "dart run orm -p npm"
 }
 ```
+
+```prisma [yarn]
+generator client {
+   provider = "dart run orm -p yarn"
+}
+```
+
+```prisma [pnpm]
+generator client {
+   provider = "dart run orm -p pnpm"
+}
+```
+
+:::
 
 ### Node package manager executable
 

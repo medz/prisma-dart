@@ -18,11 +18,12 @@ generator client {
 Update your `PrismaClient` parameters to use the new `PrismaClient` constructor.
 
 ```diff
-final prisma = PrismaClient(
+final prisma = PrismaClient( // [!code  --]
 -   log: ...,
 +   stdout: ...,
 +   event: ...,
 );
+```
 
 ### If You is `2.6` version
 
