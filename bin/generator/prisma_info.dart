@@ -23,7 +23,7 @@ class PrismaInfo {
         if (pm.isNpm) '--',
         'prisma',
         'version',
-        if (pm.isYarn) '--',
+        if (pm.isYarn && !Platform.isWindows) '--',
         '--json'
       ],
       stdoutEncoding: convert.utf8,
