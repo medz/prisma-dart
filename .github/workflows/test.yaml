@@ -19,11 +19,5 @@ jobs:
           cache: "npm"
       - uses: dart-lang/setup-dart@v1
       - run: dart pub get
-      - run:
-          if: matrix.os == 'windows-latest'
-          name: Run Prisma info
-          run: dart test test\generator\prisma_info_test.dart
-      - run:
-          if: matrix.os == 'ubuntu-latest'
-          name: Run tests
-          run: dart test
+      - run: npm ci
+      - run: dart test
