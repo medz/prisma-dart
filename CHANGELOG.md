@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.0](https://github.com/odroe/prisma-dart/compare/v3.0.2...v3.1.0) (2023-03-07)
+
+
+### Features
+
+* **generator:** Only support npm ([41adccb](https://github.com/odroe/prisma-dart/commit/41adccbfa2c18808727adb0fa433924b3d8cb20e))
+
+
+### Bug Fixes
+
+* **generator:** fix node package manager find index ([a50d88f](https://github.com/odroe/prisma-dart/commit/a50d88fd3fb21cd62176a6a7e3bd08371c43494d))
+* **generator:** fix node package manager not found on Windows ([a233f59](https://github.com/odroe/prisma-dart/commit/a233f59b2da11293b84c6291d0bddfcd8869399f))
+* **generator:** fix parse prisma version error on Windows ([7b16821](https://github.com/odroe/prisma-dart/commit/7b168215dda0cb6e0d1f1c38d7017b271e09ac8a))
+* **generator:** fix yarn query Prisma version is not json output ([34b116c](https://github.com/odroe/prisma-dart/commit/34b116ca56166ac3b83b48f2df56cad5b3bedbb4))
+
 ## [3.0.2](https://github.com/odroe/prisma-dart/compare/v3.0.1...v3.0.2) (2023-03-06)
 
 
