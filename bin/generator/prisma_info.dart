@@ -3,6 +3,40 @@ import 'dart:convert' as convert;
 
 import 'package:path/path.dart';
 
+final _separator = Platform.isWindows ? ';' : ':';
+
+Iterable<String> get _globalPaths sync* {
+  yield Directory.current.path;
+  yield join(Directory.current.path, 'node_modules', '.bin');
+  yield* Platform.environment['PATH']?.split(_separator) ?? const <String>[];
+}
+
+const Iterable<String> _extensions = <String>[
+  'cmd', // Windows CMD
+  'ps1', // Windows PowerShell
+  'bat', // Windows Batch
+  'exe', // Windows Executable
+  'sh', // Shell Script
+];
+
+String findNodePackageManagerExecutable(String packageManager) {
+  if (File(packageManager).existsSync()) {
+    return packageManager;
+  }
+
+  return _globalPaths.expand((path) sync* {
+    // Generate all possible executable paths.
+    yield* _extensions
+        .map((extension) => join(path, '$packageManager.$extension'));
+
+    // Generate without extension executable paths.
+    yield join(path, packageManager);
+  }).firstWhere((executable) => File(executable).existsSync(), orElse: () {
+    // If no executable was found, throw an error.
+    throw StateError('Unable to find $packageManager executable.');
+  });
+}
+
 class PrismaInfo {
   /// Prisma version
   final String version;
@@ -14,18 +48,9 @@ class PrismaInfo {
 
   /// Lookup the Prisma version and platform.
   factory PrismaInfo.lookup(String packageManager) {
-    final pm = NodePackageManager(packageManager.trim());
-
     final result = Process.runSync(
-      pm.toExecutable(),
-      [
-        'exec',
-        if (pm.isNpm) '--',
-        'prisma',
-        'version',
-        if (pm.isYarn && !Platform.isWindows) '--',
-        '--json'
-      ],
+      findNodePackageManagerExecutable(packageManager),
+      ['exec', 'prisma', '--', 'version', '--json'],
       stdoutEncoding: convert.utf8,
     );
 
@@ -35,48 +60,4 @@ class PrismaInfo {
 
     return PrismaInfo._(map['prisma'], map['current-platform']);
   }
-}
-
-class NodePackageManager {
-  static final separator = Platform.isWindows ? ';' : ':';
-
-  final String packageManager;
-
-  const NodePackageManager(this.packageManager);
-
-  Iterable<String> get executables sync* {
-    yield '$packageManager.cmd';
-    yield '$packageManager.ps1';
-    yield '$packageManager.bat';
-    yield '$packageManager.exe';
-    yield packageManager;
-  }
-
-  Iterable<String> get paths sync* {
-    yield Directory.current.path;
-    yield join(Directory.current.path, 'node_modules', '.bin');
-    yield* Platform.environment['PATH']?.split(separator) ?? [];
-  }
-
-  /// Find the executable for the package manager full path.
-  String toExecutable() {
-    // If the package manager is already an executable, return it.
-    if (File(packageManager).existsSync()) {
-      return packageManager;
-    }
-
-    for (final path in paths) {
-      for (final executable in executables) {
-        final full = join(path.trim(), executable);
-        if (File(full).existsSync()) {
-          return full;
-        }
-      }
-    }
-
-    throw StateError('Unable to find $packageManager executable.');
-  }
-
-  bool get isNpm => basename(toExecutable()).toLowerCase().startsWith('npm');
-  bool get isYarn => basename(toExecutable()).toLowerCase().startsWith('yarn');
 }

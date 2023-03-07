@@ -33,7 +33,7 @@ testKit(String packageManager, String version) {
 
 void main() {
   final String version = Process.runSync(
-    Platform.isWindows ? 'npm.cmd' : 'npm',
+    findNodePackageManagerExecutable('npm'),
     ['exec', '--', 'prisma', 'version', '--json'],
     stdoutEncoding: utf8,
   ).stdout;
