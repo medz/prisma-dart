@@ -3,8 +3,13 @@ on:
   - push
   - pull_request
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -14,4 +19,12 @@ jobs:
       - uses: dart-lang/setup-dart@v1
       - run: dart pub get
       - run: npm ci
-      - run: dart test
+      - name: Pick test directory
+        id: pick
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            echo "directory=test_windows" >> $GITHUB_OUTPUT
+          else
+            echo "directory=test" >> $GITHUB_OUTPUT
+          fi
+      - run: dart test ${{ steps.pick.outputs.directory }}
