@@ -54,6 +54,8 @@ class PrismaInfo {
       stdoutEncoding: convert.utf8,
     ).stdout;
 
+    print(result);
+
     final entries = result
         .split('\n')
         .where((element) => element.trim().isNotEmpty)
@@ -61,6 +63,7 @@ class PrismaInfo {
         .where((element) => element.length == 2)
         .map((e) => MapEntry(e[0], e[1]))
         .map((e) => MapEntry(e.key.trim().toLowerCase(), e.value.trim()));
+    print(entries);
     final json = Map.fromEntries(entries);
 
     return PrismaInfo._(json['prisma']!, json['current platform']!);
