@@ -48,16 +48,21 @@ class PrismaInfo {
 
   /// Lookup the Prisma version and platform.
   factory PrismaInfo.lookup(String packageManager) {
-    final result = Process.runSync(
+    final String result = Process.runSync(
       findNodePackageManagerExecutable(packageManager),
-      ['exec', 'prisma', '--', 'version', '--json'],
+      ['exec', 'prisma', 'version'],
       stdoutEncoding: convert.utf8,
-    );
+    ).stdout;
 
-    // Find JSON block.
-    final json = result.stdout.toString().split('{').last.split('}').first;
-    final map = convert.json.decode('{$json}');
+    final entries = result
+        .split('\n')
+        .where((element) => element.trim().isNotEmpty)
+        .map((e) => e.split(':'))
+        .where((element) => element.length == 2)
+        .map((e) => MapEntry(e[0], e[1]))
+        .map((e) => MapEntry(e.key.trim().toLowerCase(), e.value.trim()));
+    final json = Map.fromEntries(entries);
 
-    return PrismaInfo._(map['prisma'], map['current-platform']);
+    return PrismaInfo._(json['prisma']!, json['current platform']!);
   }
 }
