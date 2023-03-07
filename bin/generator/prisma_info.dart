@@ -19,21 +19,20 @@ const Iterable<String> _extensions = <String>[
   'sh', // Shell Script
 ];
 
-String findNodePackageManagerExecutable(String packageManager) {
-  if (File(packageManager).existsSync()) {
-    return packageManager;
+String findNpmExecutable(String executable) {
+  if (File(executable).existsSync()) {
+    return executable;
   }
 
   return _globalPaths.expand((path) sync* {
     // Generate all possible executable paths.
-    yield* _extensions
-        .map((extension) => join(path, '$packageManager.$extension'));
+    yield* _extensions.map((extension) => join(path, '$executable.$extension'));
 
     // Generate without extension executable paths.
-    yield join(path, packageManager);
+    yield join(path, executable);
   }).firstWhere((executable) => File(executable).existsSync(), orElse: () {
     // If no executable was found, throw an error.
-    throw StateError('Unable to find $packageManager executable.');
+    throw StateError('Unable to find NPM executable.');
   });
 }
 
@@ -47,14 +46,12 @@ class PrismaInfo {
   const PrismaInfo._(this.version, this.platform);
 
   /// Lookup the Prisma version and platform.
-  factory PrismaInfo.lookup(String packageManager) {
+  factory PrismaInfo.lookup(String excutable) {
     final String result = Process.runSync(
-      findNodePackageManagerExecutable(packageManager),
+      findNpmExecutable(excutable),
       ['exec', 'prisma', 'version'],
       stdoutEncoding: convert.utf8,
     ).stdout;
-
-    print(result);
 
     final entries = result
         .split('\n')
@@ -63,7 +60,6 @@ class PrismaInfo {
         .where((element) => element.length == 2)
         .map((e) => MapEntry(e[0], e[1]))
         .map((e) => MapEntry(e.key.trim().toLowerCase(), e.value.trim()));
-    print(entries);
     final json = Map.fromEntries(entries);
 
     return PrismaInfo._(json['prisma']!, json['current platform']!);

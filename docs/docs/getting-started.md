@@ -21,21 +21,9 @@ dart create hello
 
 Prisma CLI is a command-line tool officially provided by Prisma for managing Prisma projects. It helps you generate Prisma clients, generate the models required by Prisma clients, and perform database migrations.
 
-::: code-group
-
-```bash [npm]
+```bash
 npm i prisma
 ```
-
-```bash [yarn]
-yarn add prisma
-```
-
-```bash [pnpm]
-pnpm add prisma
-```
-
-:::
 
 > Since Prisma CLI is a Node.js application, you need to have Node.js installed. If you are not familiar with Node.js, you can refer to [Node.js official documentation](https://nodejs.org/).
 >
@@ -45,21 +33,9 @@ pnpm add prisma
 
 A Prisma project is a project that contains the Prisma client and the models required by the Prisma client. You can initialize a Prisma project using the Prisma CLI.
 
-::: code-group
-
-```bash [npm]
+```bash
 npx prisma init
 ```
-
-```bash [yarn]
-yarn prisma init
-```
-
-```bash [pnpm]
-pnpx prisma init
-```
-
-:::
 
 You will get a `.env` file that contains configuration information for the Prisma project.
 
@@ -112,21 +88,9 @@ model User {
 
 ## 7. Push the model to the database
 
-::: code-group
-
-```bash [npm]
+```bash
 npx prisma db push
 ```
-
-```bash [yarn]
-yarn prisma db push
-```
-
-```bash [pnpm]
-pnpx prisma db push
-```
-
-:::
 
 ## 8. Install `build_runner` and `json_serializable`
 
@@ -138,23 +102,8 @@ dart pub add json_annotation # optional, but recommended
 
 ## 9. Generate Prisma client
 
-::: code-group
-
-```bash [npm]
-npx prisma generate
-```
-
-```bash [yarn]
-yarn prisma generate
-```
-
-```bash [pnpm]
-pnpx prisma generate
-```
-
-:::
-
 ```bash
+npx prisma generate
 dart run build_runner build
 ```
 

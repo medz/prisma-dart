@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./prisma.sqlite"
 }
 
 model User {
@@ -15,12 +15,6 @@ model User {
   name      String   @unique
   createdAt DateTime @default(now())
   posts     Post[]
-  role      UserType @default(user)
-}
-
-enum UserType {
-  user @map("user1")
-  admin @map("user2")
 }
 
 model Post {

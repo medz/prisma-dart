@@ -2,79 +2,41 @@
 
 Prisma client Dart requires no other configuration, just configure the data model in the `schema.prisma` file, but there are always some options!
 
-## Choose Node's package management tool
+## NPM executable
 
-Prisma client Dart depends on Node's package management tool, because it needs to interact with Prisma CLI, so you need to choose a Node package management tool, currently supported package management tools are:
+By default, you are not required to specify the path to the npm executable. We will search in the global `$PATH`.
 
-- npm
-- yarn
-- pnpm
+If your NPM is not installed globally (after installing NodeJS globally, NPM is available globally), then you need to tell the generator the path of NPM:
 
-You can configure it in the `schema.prisma` file:
+```prisma
+generator client {
+   provider = "dart run orm --npm=<path>"
+}
+```
+
+## Prisma client output
+
+By default, the generated Prisma client Dart code will be placed in the `lib/prisma_client.dart` file.
+
+You can change the output path by configuring the `output` option:
 
 ::: code-group
 
-```prisma [npm]
+```prisma [Generage into directory]
 generator client {
-   provider = "dart run orm --package-manager npm"
+   provider = "dart run orm"
+   output = "../lib/generated" // Output path is `lib/generated/prisma_client.dart`
 }
 ```
 
-```prisma [yarn]
+```prisma [Generage into file]
 generator client {
-   provider = "dart run orm --package-manager yarn"
-}
-```
-
-```prisma [pnpm]
-generator client {
-   provider = "dart run orm --package-manager pnpm"
+   provider = "dart run orm"
+   output = "../lib/custom_generated.dart" // Output path is `lib/custom_generated.dart
 }
 ```
 
 :::
-
-`--package-manager` is optional, the default value is `npm`, It also has an alias `-p`:
-
-::: code-group
-
-```prisma [npm]
-generator client {
-   provider = "dart run orm -p npm"
-}
-```
-
-```prisma [yarn]
-generator client {
-   provider = "dart run orm -p yarn"
-}
-```
-
-```prisma [pnpm]
-generator client {
-   provider = "dart run orm -p pnpm"
-}
-```
-
-:::
-
-### Node package manager executable
-
-If you have multiple versions of the Node package manager installed, or if you don't have the Node package manager installed globally. Please use the `-e` parameter to tell the generator:
-
-```prisma
-generator client {
-   provider = "dart run orm -e <executable>"
-}
-```
-
-Example:
-
-```prisma
-generator client {
-   provider = "dart run orm -e node_modules/.bin/pnpm"
-}
-```
 
 ## About database connection
 
