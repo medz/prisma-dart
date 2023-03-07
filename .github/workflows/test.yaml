@@ -17,14 +17,6 @@ jobs:
           node-version: latest
           cache: "npm"
       - uses: dart-lang/setup-dart@v1
-      - run: dart pub get
       - run: npm ci
-      - name: Pick test directory
-        id: pick
-        run: |
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            echo "directory=test_windows" >> $GITHUB_OUTPUT
-          else
-            echo "directory=test" >> $GITHUB_OUTPUT
-          fi
-      - run: dart test ${{ steps.pick.outputs.directory }}
+      - run: dart pub get
+      - run: dart test
