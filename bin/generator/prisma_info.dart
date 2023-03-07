@@ -3,6 +3,39 @@ import 'dart:convert' as convert;
 
 import 'package:path/path.dart';
 
+final _separator = Platform.isWindows ? ';' : ':';
+
+Iterable<String> get _globalPaths sync* {
+  yield Directory.current.path;
+  yield join(Directory.current.path, 'node_modules', '.bin');
+  yield* Platform.environment['PATH']?.split(_separator) ?? const <String>[];
+}
+
+const Iterable<String> _extensions = <String>[
+  'cmd', // Windows CMD
+  'ps1', // Windows PowerShell
+  'bat', // Windows Batch
+  'exe', // Windows Executable
+  'sh', // Shell Script
+];
+
+String findNpmExecutable(String executable) {
+  if (File(executable).existsSync()) {
+    return executable;
+  }
+
+  return _globalPaths.expand((path) sync* {
+    // Generate all possible executable paths.
+    yield* _extensions.map((extension) => join(path, '$executable.$extension'));
+
+    // Generate without extension executable paths.
+    yield join(path, executable);
+  }).firstWhere((executable) => File(executable).existsSync(), orElse: () {
+    // If no executable was found, throw an error.
+    throw StateError('Unable to find NPM executable.');
+  });
+}
+
 class PrismaInfo {
   /// Prisma version
   final String version;
@@ -13,61 +46,22 @@ class PrismaInfo {
   const PrismaInfo._(this.version, this.platform);
 
   /// Lookup the Prisma version and platform.
-  factory PrismaInfo.lookup(String packageManager) {
-    final pm = NodePackageManager(packageManager.trim());
-
-    final result = Process.runSync(
-      pm.toExecutable(),
-      ['exec', if (pm.isNpm) '--', 'prisma', 'version', '--json'],
+  factory PrismaInfo.lookup(String excutable) {
+    final String result = Process.runSync(
+      findNpmExecutable(excutable),
+      ['exec', 'prisma', 'version'],
       stdoutEncoding: convert.utf8,
-    );
+    ).stdout;
 
-    // Find JSON block.
-    final json = result.stdout.toString().split('{').last.split('}').first;
-    final map = convert.json.decode('{$json}');
+    final entries = result
+        .split('\n')
+        .where((element) => element.trim().isNotEmpty)
+        .map((e) => e.split(':'))
+        .where((element) => element.length == 2)
+        .map((e) => MapEntry(e[0], e[1]))
+        .map((e) => MapEntry(e.key.trim().toLowerCase(), e.value.trim()));
+    final json = Map.fromEntries(entries);
 
-    return PrismaInfo._(map['prisma'], map['current-platform']);
+    return PrismaInfo._(json['prisma']!, json['current platform']!);
   }
-}
-
-class NodePackageManager {
-  static final separator = Platform.isWindows ? ';' : ':';
-
-  final String packageManager;
-
-  const NodePackageManager(this.packageManager);
-
-  Iterable<String> get executables sync* {
-    yield packageManager;
-    yield '$packageManager.cmd';
-    yield '$packageManager.ps1';
-    yield '$packageManager.bat';
-    yield '$packageManager.exe';
-  }
-
-  Iterable<String> get paths sync* {
-    yield Directory.current.path;
-    yield* Platform.environment['PATH']?.split(separator) ?? [];
-  }
-
-  /// Find the executable for the package manager full path.
-  String toExecutable() {
-    // If the package manager is already an executable, return it.
-    if (File(packageManager).existsSync()) {
-      return packageManager;
-    }
-
-    for (final path in paths) {
-      for (final executable in executables) {
-        final full = join(path.trim(), executable);
-        if (File(full).existsSync()) {
-          return full;
-        }
-      }
-    }
-
-    throw StateError('Unable to find $packageManager executable.');
-  }
-
-  bool get isNpm => basename(toExecutable()).toLowerCase().startsWith('npm');
 }

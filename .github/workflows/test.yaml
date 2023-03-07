@@ -3,10 +3,20 @@ on:
   - push
   - pull_request
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: "npm"
       - uses: dart-lang/setup-dart@v1
+      - run: npm ci
       - run: dart pub get
       - run: dart test

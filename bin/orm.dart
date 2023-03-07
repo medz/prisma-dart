@@ -12,20 +12,10 @@ import 'generator/prisma_info.dart';
 void main(Iterable<String> args) async {
   final parase = ArgParser();
 
-  // Register the `package-manager` option.
   parase.addOption(
-    'package-manager',
-    abbr: 'p',
-    help: 'The NodeJS package manager to use.',
-    allowed: ['npm', 'yarn', 'pnpm'],
+    'npm',
     defaultsTo: 'npm',
-  );
-
-  // Register the `pm-path` option.
-  parase.addOption(
-    'package-manager-executable',
-    abbr: 'e',
-    help: 'The path to the NodeJS package manager executable.',
+    help: 'The npm executable.',
   );
 
   // Register the `help` option.
@@ -42,10 +32,7 @@ void main(Iterable<String> args) async {
   // Print the help information if requested.
   if (results['help'] as bool) return stdout.writeln(parase.usage);
 
-  final executable = results['package-manager-executable'] as String?;
-  final pm = executable ?? results['package-manager'] as String;
-  final info = PrismaInfo.lookup(pm);
-
+  final info = PrismaInfo.lookup(results['npm']);
   final completer = Completer<Generator>();
   Library((LibraryBuilder updates) {
     updates.name = 'prisma.client';
