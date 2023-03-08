@@ -19,7 +19,7 @@ dependencies:
 
 ## Sponsors
 
-Prisma ORM for Dart is an 「[BSD-3 Clause licensed」](LICENSE)」 open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring Odroe development](https://github.com/sponsors/odroe).
+Prisma ORM for Dart is an [BSD-3 Clause licensed](LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring Odroe development](https://github.com/sponsors/odroe).
 
 <p align="center">
   <a target="_blank" href="https://github.com/sponsors/odroe#sponsors">
