@@ -1,5 +1,6 @@
 import 'package:orm/engine_core.dart';
 import 'package:orm/graphql.dart';
+import 'package:orm/src/exceptions.dart';
 
 /// Model delegate
 class ModelDelegate<T> {
@@ -30,7 +31,7 @@ class ModelDelegate<T> {
       _execute('mutation', fields);
 
   /// Common GraphQL execute method.
-  Future<Map<String, dynamic>?> _execute(
+  Future<Map<String, dynamic>> _execute(
       String operation, Iterable<GraphQLField> fields) async {
     final query = GraphQLField(operation, fields: fields).toSdl();
     final result = await _engine.request(
@@ -39,8 +40,31 @@ class ModelDelegate<T> {
       transaction: _transaction,
     );
 
-    // TODO: GraphQL error handling
+    final exceptions = result.errors?.map((e) => e.toException(_engine));
+    if (exceptions != null && exceptions.isNotEmpty) {
+      throw _generateThrownException(exceptions);
 
-    return result.data;
+      // If data is null, throw an exception.
+    } else if (result.data == null) {
+      throw PrismaUnknownException(_engine);
+    }
+
+    return result.data!;
+  }
+
+  /// Returns thrown exception.
+  PrismaException _generateThrownException(
+      Iterable<PrismaRequestException> exceptions) {
+    // If exceptions only contains one exception, throw it.
+    if (exceptions.length == 1) {
+      return exceptions.first;
+    }
+
+    // Otherwise, throw a [MultiplePrismaRequestException].
+    return MultiplePrismaRequestException(
+      engine: _engine,
+      message: 'Multiple exceptions occurred',
+      exceptions: exceptions,
+    );
   }
 }

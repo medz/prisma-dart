@@ -10,6 +10,7 @@ import 'engine_core.dart';
 import 'logger.dart';
 import 'src/_internal/engines/headers_wrapper.dart';
 import 'src/_internal/engines/stringify_query.dart';
+import 'src/exceptions.dart';
 
 /// Create RetryOptions with exponential backoff.
 const retry.RetryOptions _retryOptions = retry.RetryOptions(
@@ -72,12 +73,13 @@ class UniversalEngine implements Engine {
       final json =
           (convert.json.decode(response.body) as Map).cast<String, dynamic>();
 
-      // TODO: Handle errors.
-
       return GraphQLResult.fromJson(json);
     }
 
-    return withRetry<GraphQLResult>(fn, gerund: 'querying');
+    return withRetry<GraphQLResult>(
+      fn,
+      gerund: 'querying',
+    );
   }
 
   /// Resolve start transaction endpoint.
@@ -109,10 +111,11 @@ class UniversalEngine implements Engine {
 
       final response =
           await http.post(url, headers: wrappedHeaders, body: body);
+      _tryThrowExceptionFromStatusCode(response.statusCode);
+
       final json =
           (convert.json.decode(response.body) as Map).cast<String, dynamic>();
-
-      // TODO Error handling
+      _tryThrowPrismaException(json);
 
       return TransactionInfo.fromJson(json);
     }
@@ -179,41 +182,18 @@ class UniversalEngine implements Engine {
     FutureOr<bool> Function(Exception)? retryIf,
     FutureOr<void> Function(Exception)? onRetry,
   }) {
-    int attempt = 0;
-
-    // Create a logger.
-    void logger(Uri uri) => this
-        .logger
-        .emit(Event.info, Payload(message: 'Calling $uri (n=$attempt)'));
-
-    // Create a retry function.
-    Future<T> callback() {
-      if (attempt > 0) {
-        this.logger.emit(
-            Event.warn,
-            Payload(
-                message:
-                    'Retrying after ${_retryOptions.delay(attempt).inMilliseconds}ms'));
-      }
-
-      attempt++;
-      return fn(logger);
-    }
+    final retry = _InternalRetry(
+      gerund: gerund,
+      emit: logger.emit,
+      fn: fn,
+      retryIf: retryIf,
+      onRetry: onRetry,
+    );
 
     return _retryOptions.retry<T>(
-      callback,
-      retryIf: retryIf,
-      onRetry: (e) async {
-        this.logger.emit(
-              Event.warn,
-              Payload(
-                message:
-                    'Attempt $attempt/${_retryOptions.maxAttempts} failed for $gerund: $e',
-              ),
-            );
-
-        return await onRetry?.call(e);
-      },
+      retry,
+      retryIf: retry.retryIf,
+      onRetry: retry.onRetry,
     );
   }
 
@@ -221,16 +201,116 @@ class UniversalEngine implements Engine {
   Future<void> _otherTransaction(
     Uri url, {
     required String gerund,
-  }) async {
-    // Create a retry function.
-    Future<void> fn(void Function(Uri) logger) async {
+  }) {
+    return withRetry(gerund: '$gerund transaction', (logger) async {
       logger(url);
 
-      await http.post(url);
+      final response = await http.post(url);
 
-      // TODO: Handle errors.
+      _tryThrowExceptionFromStatusCode(response.statusCode);
+      _tryThrowPrismaException(_tryDecodeJson(response.body));
+    });
+  }
+
+  /// Try to decode json, if failed, return a Map.
+  Map<String, dynamic> _tryDecodeJson(String body) {
+    try {
+      return (convert.json.decode(body) as Map).cast<String, dynamic>();
+    } catch (e) {
+      return const <String, dynamic>{};
+    }
+  }
+
+  /// Try throw an [PrismaException] from the [json].
+  void _tryThrowPrismaException(Map<String, dynamic> json) {
+    final errors = json['errors'];
+    if (errors != null && errors is Iterable && errors.isEmpty) {
+      final exceptions =
+          errors.map((e) => GraphQLError.fromJson(json).toException(this));
+
+      if (exceptions.length == 1) {
+        final exception = exceptions.first;
+        logger.emit(Event.error, Payload(message: exception.message));
+
+        throw exception;
+      }
+
+      throw MultiplePrismaRequestException(
+        message: 'Multiple exceptions occurred',
+        engine: this,
+        exceptions: exceptions,
+      );
+    }
+  }
+
+  /// Try throw exception from http status code
+  void _tryThrowExceptionFromStatusCode(int statusCode) {
+    if (statusCode >= 400) {
+      throw PrismaException(
+        message: 'Request failed with status code $statusCode',
+        engine: this,
+      );
+    }
+  }
+}
+
+/// Internel retry
+class _InternalRetry<T> {
+  int attempts = 0;
+  final String gerund;
+  final void Function(Event event, Payload payload) _emit;
+  final Future<T> Function(void Function(Uri uri) logger) _fn;
+  final FutureOr<bool> Function(Exception)? _retryIf;
+  final FutureOr<void> Function(Exception)? _onRetry;
+
+  _InternalRetry({
+    required this.gerund,
+    required void Function(Event event, Payload payload) emit,
+    required Future<T> Function(void Function(Uri uri) logger) fn,
+    FutureOr<bool> Function(Exception)? retryIf,
+    FutureOr<void> Function(Exception)? onRetry,
+  })  : _emit = emit,
+        _fn = fn,
+        _retryIf = retryIf,
+        _onRetry = onRetry;
+
+  void logger(Uri uri) {
+    _emit(
+      Event.info,
+      Payload(message: 'Calling $uri (n=$attempts)'),
+    );
+  }
+
+  Future<T> call() {
+    if (attempts > 0) {
+      _emit(
+        Event.warn,
+        Payload(
+          message:
+              'Retrying after ${_retryOptions.delay(attempts).inMilliseconds}ms',
+        ),
+      );
     }
 
-    await withRetry<void>(fn, gerund: '$gerund transaction');
+    attempts++;
+    return _fn(logger);
+  }
+
+  FutureOr<bool> retryIf(Exception e) {
+    if (e is PrismaException) return false;
+
+    return _retryIf?.call(e) ?? true;
+  }
+
+  FutureOr<void> onRetry(Exception e) {
+    _emit(
+      Event.warn,
+      Payload(
+        message:
+            'Attempt $attempts/${_retryOptions.maxAttempts} failed for $gerund: $e',
+      ),
+    );
+
+    return _onRetry?.call(e);
   }
 }

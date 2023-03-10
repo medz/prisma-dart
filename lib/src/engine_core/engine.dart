@@ -1,5 +1,5 @@
 import '../logger/logger.dart';
-import 'graphql_result.dart';
+import '../graphql/result.dart';
 import 'query_engine_request_headers.dart';
 import 'transaction.dart';
 

@@ -9,6 +9,7 @@ import 'package:retry/retry.dart';
 
 import 'engine_core.dart';
 import 'logger.dart';
+import 'src/exceptions.dart';
 import 'universal_engine.dart';
 
 /// Prisma binary query engine.
@@ -76,8 +77,9 @@ class BinaryEngine extends UniversalEngine implements Engine {
       }
     }
 
-    throw Exception(
-        'Cannot find the query engine binary (Basename: $basename)');
+    throw PrismaInitializationException(
+        message: 'Cannot find the query engine binary (Basename: $basename)',
+        engine: this);
   }
 
   /// Generate search directories.
@@ -187,7 +189,10 @@ class BinaryEngine extends UniversalEngine implements Engine {
     // Wait for ready.
     final ready = await _waitPrismaServerReady();
     if (!ready) {
-      throw Exception('Cannot start the query engine');
+      throw throw PrismaInitializationException(
+        message: 'Cannot start the query engine',
+        engine: this,
+      );
     }
 
     return process;
@@ -223,7 +228,7 @@ class BinaryEngine extends UniversalEngine implements Engine {
   /// Stop the binary query engine.
   @override
   Future<void> stop() async {
-    if (process?.kill() == true) {
+    if (process != null && process?.kill() == true) {
       final exitCode = await process!.exitCode;
       logger.emit(Event.info,
           Payload(message: 'Stopped the query engine (Exit code: $exitCode)'));
@@ -245,7 +250,10 @@ class BinaryEngine extends UniversalEngine implements Engine {
         if (json['status'].toString().toLowerCase() == 'ok') return true;
       }
 
-      throw Exception('Prisma server is not ready');
+      throw Exception();
+    }, onRetry: (e) async {
+      throw PrismaInitializationException(
+          message: 'Prisma server is not ready', engine: this);
     });
   }
 
