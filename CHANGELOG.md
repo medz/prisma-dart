@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.1](https://github.com/odroe/prisma-dart/compare/v3.1.0...v3.1.1) (2023-03-10)
+
+
+### Bug Fixes
+
+* **client:** Fix missing error handler ([8a32b6d](https://github.com/odroe/prisma-dart/commit/8a32b6d86064303d29b2c208ea22371cd1975dbd))
+* **generate:** Fix datasource failed to generate dataproxy client. ([8c5b7d7](https://github.com/odroe/prisma-dart/commit/8c5b7d79af750b7a6f9c4eaac0cc022fbbaafc13))
+
 ## [3.1.0](https://github.com/odroe/prisma-dart/compare/v3.0.2...v3.1.0) (2023-03-07)
 
 
