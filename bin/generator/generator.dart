@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart' as code;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
+import 'package:orm/orm.dart' as orm;
 import 'package:path/path.dart' as path;
 import 'package:orm/dmmf.dart' as dmmf;
 
@@ -1594,20 +1595,23 @@ extension PrismaClientGenerator on Generator {
   code.Expression _buildDataProxyEndpoint() {
     final datasource = options.datasources.first;
 
-    // `const String.fromEnvironment('DATABASE_URL')`
-    final fromEnvironment =
-        code.refer('String').constInstanceNamed('fromEnvironment', [
-      code.literalString(datasource.url.fromEnvVar!, raw: true),
-    ]);
-
-    final other = datasource.url.value != null
-        ? code.literalString(datasource.url.value!, raw: true)
-        : fromEnvironment;
+    late code.Expression url;
+    if (datasource.url.fromEnvVar == null && datasource.url.value == null) {
+      throw orm.PrismaInitializationException(
+        message: 'No datasource url provided',
+      );
+    } else if (datasource.url.fromEnvVar != null) {
+      url = code.refer('String').constInstanceNamed('fromEnvironment', [
+        code.literalString(datasource.url.fromEnvVar!, raw: true),
+      ]);
+    } else if (datasource.url.value != null) {
+      url = code.literalString(datasource.url.value!, raw: true);
+    }
 
     final param = code
         .refer('datasources')
         .nullSafeProperty(datasource.name)
-        .ifNullThen(other);
+        .ifNullThen(url);
 
     return code.refer('Uri').property('parse').call([param]);
   }
