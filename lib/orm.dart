@@ -8,3 +8,4 @@ export 'src/client/prisma_enum.dart';
 export 'src/client/prisma_fluent.dart';
 export 'src/client/model_delegate.dart';
 export 'engine_core.dart' show TransactionIsolationLevel;
+export 'src/exceptions.dart';

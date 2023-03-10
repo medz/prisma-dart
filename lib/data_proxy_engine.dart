@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'logger.dart';
 import 'engine_core.dart';
+import 'src/exceptions.dart';
 import 'universal_engine.dart';
 
 /// Prisma Data Proxy api key name.
@@ -36,16 +37,14 @@ class DataProxyEngine extends UniversalEngine implements Engine {
   @override
   Uri get endpoint {
     if (!super.endpoint.isScheme('prisma')) {
-      throw ArgumentError.value(
-        super.endpoint,
-        'endpoint',
-        'The endpoint must be a prisma:// protocol.',
+      throw PrismaInitializationException(
+        message: 'The endpoint must be a prisma:// protocol.',
+        engine: this,
       );
     } else if (!super.endpoint.queryParameters.containsKey(_tokenName)) {
-      throw ArgumentError.value(
-        super.endpoint,
-        'endpoint',
-        'The endpoint must not contain an "$_tokenName" query parameter.',
+      throw PrismaInitializationException(
+        message: 'The endpoint must contain a "$_tokenName" query parameter.',
+        engine: this,
       );
     }
 
@@ -78,12 +77,13 @@ class DataProxyEngine extends UniversalEngine implements Engine {
     logger.emit(
         Event.info, Payload(message: 'Calling $url for schema update...'));
 
-    final response = await http.put(url, headers: headers, body: schema);
-
+    final response =
+        await http.put(url, headers: headers, body: schema.codeUnits);
     if (response.statusCode != 201) {
       final message = 'Error while updating schema: ${response.body}';
       logger.emit(Event.warn, Payload(message: message));
-      throw Exception(message);
+
+      throw PrismaRequestException(message: message, engine: this);
     }
 
     logger.emit(
@@ -112,8 +112,10 @@ class DataProxyEngine extends UniversalEngine implements Engine {
       }
     }
 
+    final message = 'No Data Proxy endpoint found.';
     logger.emit(Event.error, Payload(message: 'No Data Proxy endpoint found.'));
-    throw Exception('No Data Proxy endpoint found.');
+
+    throw PrismaInitializationException(message: message, engine: this);
   }
 
   @override
@@ -121,24 +123,78 @@ class DataProxyEngine extends UniversalEngine implements Engine {
       {required String query,
       QueryEngineRequestHeaders? headers,
       TransactionInfo? transaction}) async {
-    final result = await super.request(
+    GraphQLResult result = await super.request(
       query: query,
       headers: headers,
       transaction: transaction,
     );
 
-    if (result['enginenotstarted'] is Map &&
-        result['enginenotstarted']['reason'] == 'SchemaMissing') {
+    if (result.orginal['EngineNotStarted'] is Map &&
+        result.orginal['EngineNotStarted']['reason'] == 'SchemaMissing') {
       await updateSchema();
-      final result = super.request(
+      result = await super.request(
         query: query,
         headers: headers,
         transaction: transaction,
       );
-
-      return result;
     }
 
+    tryThrowDataProxyErrors(result.orginal);
+
     return result;
+  }
+
+  /// Try throw a [PrismaRequestException] from a [GraphQLResult].
+  void tryThrowDataProxyErrors(Map<String, dynamic> json) {
+    if (json.containsKey('InteractiveTransactionMisrouted')) {
+      final Map<String, String> messages = {
+        'IDParseError': 'Could not parse interactive transaction ID',
+        'NoQueryEngineFoundError':
+            'Could not find Query Engine for the specified host and transaction ID',
+        'TransactionStartError': 'Could not start interactive transaction',
+      };
+      throw PrismaRequestException(
+        message: messages[json['InteractiveTransactionMisrouted']['reason']]!,
+        engine: this,
+      );
+    } else if (json.containsKey('InvalidRequestError')) {
+      throw PrismaRequestException(
+        message: json['InvalidRequestError']['reason']!,
+        engine: this,
+      );
+    } else if (json.containsKey('EngineNotStarted')) {
+      final engineNotStarted = json['EngineNotStarted'];
+      if (engineNotStarted is! Map) {
+        return;
+      } else if (engineNotStarted['reason'] == 'SchemaMissing') {
+        throw PrismaException(
+          message: 'Data Proxy: ${engineNotStarted['reason']}',
+          engine: this,
+        );
+      } else if (engineNotStarted['reason'] == 'EngineVersionNotSupported') {
+        throw PrismaInitializationException(
+          message: 'Data Proxy: ${engineNotStarted['reason']}',
+          engine: this,
+        );
+      }
+
+      final Map<String, dynamic> reason = engineNotStarted['reason'];
+      if (reason.containsKey('EngineStartupError')) {
+        throw PrismaInitializationException(
+          message: 'Data Proxy: ${reason['EngineStartupError']['msg']}',
+          engine: this,
+        );
+      } else if (reason.containsKey('KnownEngineStartupError')) {
+        throw PrismaInitializationException(
+          message: 'Data Proxy: ${reason['KnownEngineStartupError']['msg']}',
+          engine: this,
+        );
+      } else if (reason.containsKey('HealthcheckTimeout')) {
+        throw PrismaInitializationException(
+          message: 'Data Proxy: Healthcheck timeout',
+          engine: this,
+        );
+      }
+    }
   }
 }
