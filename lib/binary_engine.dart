@@ -187,15 +187,14 @@ class BinaryEngine extends UniversalEngine implements Engine {
     _listenStdout(process);
 
     // Wait for ready.
-    final ready = await _waitPrismaServerReady();
-    if (!ready) {
-      throw throw PrismaInitializationException(
-        message: 'Cannot start the query engine',
-        engine: this,
-      );
+    if (await _waitPrismaServerReady()) {
+      return process;
     }
 
-    return process;
+    throw PrismaInitializationException(
+      message: 'Cannot start the query engine',
+      engine: this,
+    );
   }
 
   /// Listen stdout.
