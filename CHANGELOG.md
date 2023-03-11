@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.2](https://github.com/odroe/prisma-dart/compare/v3.1.1...v3.1.2) (2023-03-11)
+
+
+### Bug Fixes
+
+* Fix and optimize startup ([253fb16](https://github.com/odroe/prisma-dart/commit/253fb16dd4d9e3c8b1f917e8d3c1246f95ad61d0))
+
 ## [3.1.1](https://github.com/odroe/prisma-dart/compare/v3.1.0...v3.1.1) (2023-03-10)
 
 
