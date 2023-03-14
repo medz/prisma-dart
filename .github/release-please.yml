@@ -1,2 +1,2 @@
 handleGHRelease: true
-manifest: true
+manifest: false
