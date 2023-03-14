@@ -704,7 +704,8 @@ extension ModelFluentGenerator on Generator {
   }
 
   /// Build model enum compiler
-  Iterable<code.Expression> _buildModelEnumCompiler(dmmf.SchemaField field) {
+  Iterable<code.Expression> _buildModelEnumCompiler(
+      dmmf.SchemaField field) sync* {
     final enumDecodeName =
         field.isNullable == true ? r'$enumDecodeNullable' : r'$enumDecode';
     final enumName = '_\$${field.outputType.type.toDartClassname()}EnumMap';
@@ -720,13 +721,12 @@ extension ModelFluentGenerator on Generator {
       updates.lambda = true;
     });
 
-    final query = code
+    yield code
         .refer('query')
         .call([code.literalConstList([])])
         .property('then')
-        .call([fn.closure]);
-
-    return [query.returned];
+        .call([fn.closure])
+        .returned;
   }
 
   /// Build model scalar compiler
