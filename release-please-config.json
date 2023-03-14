@@ -1,7 +1,5 @@
 {
-  "$schema": "https://github.com/googleapis/release-please/raw/main/schemas/config.json",
-  "release-type": "dart",
-  "packages": {
-    ".": {}
-  }
+  "$schema": "https://github.com/googleapis/repo-automation-bots/raw/main/packages/release-please/src/config-schema.json",
+  "releaseType": "dart",
+  "initialVersion": "3.1.2"
 }
