@@ -1,5 +1,7 @@
 {
   "$schema": "https://github.com/googleapis/repo-automation-bots/raw/main/packages/release-please/src/config-schema.json",
   "releaseType": "dart",
-  "initialVersion": "3.1.2"
+  "manifest": true,
+  "handleGHRelease": true,
+  "pullRequestTitlePattern": "chore: release {{version}}"
 }
