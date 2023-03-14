@@ -44,9 +44,12 @@ void main(Iterable<String> args) async {
   try {
     generator.generate();
   } catch (e, s) {
-    if (e is FormatterException) print(e.message(color: true));
+    if (e is FormatterException) {
+      print(e.message(color: true));
+    }
     print(s);
-    throw Error.safeToString(e);
+
+    rethrow;
   }
 
   // Done.
