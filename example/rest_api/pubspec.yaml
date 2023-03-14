@@ -14,6 +14,6 @@ dev_dependencies:
 dependencies:
   orm: ^3.0.1-beta+0
   spry: ^0.4.0
-  spry_interceptor: ^0.2.0
+  spry_interceptor: ^0.3.0
   spry_json: ^0.3.0
   spry_router: ^0.4.1
