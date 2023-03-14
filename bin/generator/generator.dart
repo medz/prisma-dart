@@ -283,6 +283,22 @@ extension InputObjectTypesGenerator on Generator {
     _builder(options.dmmf.schema.inputObjectTypes.prisma);
   }
 
+  /// Mutate input object types
+  bool get mutableInputProperties {
+    switch (options.generator.config['mutableInputProperties']
+        ?.toLowerCase()
+        .trim()) {
+      case null:
+      case 'false':
+      case 'null':
+      case 'nil':
+      case '0':
+        return false;
+      default:
+        return true;
+    }
+  }
+
   /// input object types builder
   void _builder(Iterable<dmmf.InputType>? types) {
     // If there are no types, skip it.
@@ -323,7 +339,9 @@ extension InputObjectTypesGenerator on Generator {
       updates
         ..name = field.name.toDartPropertyName()
         ..type = _buildFieldType(field)
-        ..modifier = code.FieldModifier.final$;
+        ..modifier = mutableInputProperties
+            ? code.FieldModifier.var$
+            : code.FieldModifier.final$;
 
       // Add document comment
       if (field.comment != null) {
@@ -404,7 +422,7 @@ extension InputObjectTypesGenerator on Generator {
   /// Build default constructor
   code.Constructor _buildDefaultConstructor(Iterable<code.Field> fields) {
     return code.Constructor((code.ConstructorBuilder updates) {
-      updates.constant = true;
+      updates.constant = !mutableInputProperties;
       updates.optionalParameters.addAll(fields.map((e) {
         return code.Parameter((code.ParameterBuilder updates) {
           updates

@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "dart run orm"
+  provider               = "dart run orm"
+  mutableInputProperties = false
 }
 
 datasource db {
