@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.3](https://github.com/odroe/prisma-dart/compare/orm-v3.1.2...orm-v3.1.3) (2023-03-14)
+
+
+### Bug Fixes
+
+* **generator:** main rethrow error ([c536887](https://github.com/odroe/prisma-dart/commit/c536887de018f1f30c6712d670a78ee6b3772da4))
+
 ## [3.1.2](https://github.com/odroe/prisma-dart/compare/v3.1.1...v3.1.2) (2023-03-11)
 
 
