@@ -22,6 +22,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    commit-message:
+      prefix: "fix"
 
   # Simple example
   - package-ecosystem: pub
