@@ -76,10 +76,7 @@ class UniversalEngine implements Engine {
       return GraphQLResult.fromJson(json);
     }
 
-    return withRetry<GraphQLResult>(
-      fn,
-      gerund: 'querying',
-    );
+    return withRetry<GraphQLResult>(fn, gerund: 'querying');
   }
 
   /// Resolve start transaction endpoint.
@@ -284,7 +281,7 @@ class _InternalRetry<T> {
   Future<T> call() {
     if (attempts > 0) {
       _emit(
-        Event.warn,
+        Event.info,
         Payload(
           message:
               'Retrying after ${_retryOptions.delay(attempts).inMilliseconds}ms',
@@ -297,9 +294,11 @@ class _InternalRetry<T> {
   }
 
   FutureOr<bool> retryIf(Exception e) {
-    if (e is PrismaException) return false;
+    if (_retryIf != null) {
+      return _retryIf!(e);
+    }
 
-    return _retryIf?.call(e) ?? true;
+    return e is! PrismaException;
   }
 
   FutureOr<void> onRetry(Exception e) {
