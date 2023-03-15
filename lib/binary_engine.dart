@@ -240,8 +240,16 @@ class BinaryEngine extends UniversalEngine implements Engine {
     return withRetry<bool>(
       _createEngineStatusValidator(),
       gerund: 'status',
-      retryIf: (e) => e is PrismaInitializationException,
+      retryIf: _prismaBinaryEngineStatusRetryIf,
     );
+  }
+
+  /// Prisma binary engine status retry if
+  bool _prismaBinaryEngineStatusRetryIf(Exception e) {
+    if (e is PrismaInitializationException) return true;
+    if (e is PrismaException) return false;
+
+    return true;
   }
 
   /// Create binary engine status validator.
