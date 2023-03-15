@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.4](https://github.com/odroe/prisma-dart/compare/orm-v3.1.3...orm-v3.1.4) (2023-03-15)
+
+
+### Bug Fixes
+
+* fix retry strategy not as expected ([d327bcb](https://github.com/odroe/prisma-dart/commit/d327bcb492fbbffcb8566728ed2e98c10960400e)), closes [#161](https://github.com/odroe/prisma-dart/issues/161)
+
 ## [3.1.3](https://github.com/odroe/prisma-dart/compare/orm-v3.1.2...orm-v3.1.3) (2023-03-14)
 
 
