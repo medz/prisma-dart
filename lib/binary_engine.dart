@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
-import 'package:retry/retry.dart';
 
 import 'engine_core.dart';
 import 'logger.dart';
@@ -238,22 +237,31 @@ class BinaryEngine extends UniversalEngine implements Engine {
 
   /// Wait the prisma server ready.
   Future<bool> _waitPrismaServerReady() {
+    return withRetry<bool>(
+      _createEngineStatusValidator(),
+      gerund: 'status',
+      retryIf: (e) => e is PrismaInitializationException,
+    );
+  }
+
+  /// Create binary engine status validator.
+  Future<bool> Function(void Function(Uri) logger)
+      _createEngineStatusValidator() {
     final url = endpoint.replace(
       pathSegments: [...endpoint.pathSegments, 'status'],
     );
 
-    return retry<bool>(() async {
+    return (void Function(Uri) logger) async {
+      logger(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final json = convert.json.decode(response.body);
         if (json['status'].toString().toLowerCase() == 'ok') return true;
       }
 
-      throw Exception();
-    }, onRetry: (e) async {
       throw PrismaInitializationException(
           message: 'Prisma server is not ready', engine: this);
-    });
+    };
   }
 
   /// Request the query engine endpoint.
