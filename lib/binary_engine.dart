@@ -189,6 +189,7 @@ class BinaryEngine extends UniversalEngine implements Engine {
     if (await _waitPrismaServerReady()) {
       return process;
     }
+    process.kill();
 
     throw PrismaInitializationException(
       message: 'Cannot start the query engine',
