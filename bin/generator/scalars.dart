@@ -24,8 +24,7 @@ final Map<String, Reference> scalarReferneces = {
 
 Reference scalar(SchemaType schemaType, [bool isNullable = false]) {
   final String type = schemaType.type.toLowerCase();
-  Reference reference =
-      scalarReferneces[type] ?? _resolvePrismaScalar(schemaType);
+  Reference reference = scalarReferneces[type] ?? _resolvePrismaScalar(schemaType);
 
   // If the type is list, then return a list of the type.
   if (schemaType.isList) {
@@ -42,7 +41,7 @@ Reference scalar(SchemaType schemaType, [bool isNullable = false]) {
 Reference _resolvePrismaScalar(SchemaType schemaType) {
   String symbol = schemaType.type;
   if (schemaType.location != FieldLocation.scalar) {
-    symbol = symbol.toDartClassname();
+    symbol = symbol.toDartClassName();
   }
 
   return refer(symbol);
