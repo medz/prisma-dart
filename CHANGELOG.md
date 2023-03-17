@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.5](https://github.com/odroe/prisma-dart/compare/orm-v3.1.4...orm-v3.1.5) (2023-03-17)
+
+
+### Bug Fixes
+
+* **engine:** binary engine failed to clean up process, Thx [@blopker](https://github.com/blopker) ([afc29a7](https://github.com/odroe/prisma-dart/commit/afc29a7c80e767c49b0bf8345ce095dc389e5851))
+* Missing Dart reserved keywords, Thx [@nikosportolos](https://github.com/nikosportolos) ([78c467b](https://github.com/odroe/prisma-dart/commit/78c467b4ce9811465a9791d5f5376011620ff130))
+
 ## [3.1.4](https://github.com/odroe/prisma-dart/compare/orm-v3.1.3...orm-v3.1.4) (2023-03-15)
 
 
