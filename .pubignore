@@ -1,12 +1,5 @@
-.github
-test/
 docs/
-prisma/
-lib/prisma_*
-example/*
+example/
 !example/README.md
 graphs/
-dev_test/
-node_modules/
-package-lock.json
-package.json
+dev.dart

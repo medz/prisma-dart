@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:orm/engine_core.dart';
 import 'package:orm/graphql.dart';
 import 'package:orm/src/exceptions.dart';
@@ -23,10 +24,12 @@ class ModelDelegate<T> {
         _transaction = transaction;
 
   /// Executes a GraphQL query.
+  @internal
   Future<Map<String, dynamic>?> $query(Iterable<GraphQLField> fields) =>
       _execute('query', fields);
 
   /// Executes a GraphQL mutation.
+  @internal
   Future<Map<String, dynamic>?> $mutation(Iterable<GraphQLField> fields) =>
       _execute('mutation', fields);
 

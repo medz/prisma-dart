@@ -5,96 +5,48 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart' as code;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
-import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
 import 'package:orm/orm.dart' as orm;
 import 'package:path/path.dart' as path;
+import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
+import 'package:prisma_generator_helper/prisma_generator_helper.dart';
 
-import 'generator_options.dart';
 import 'packages.dart' as packages;
 import 'prisma_info.dart';
 import 'scalars.dart';
 import 'utils.dart';
 
-class Generator {
-  final PrismaInfo info;
-  final int generatorId;
-  final GeneratorOptions options;
-  final code.LibraryBuilder library;
+class PrismaDartClientGenerator extends Generator {
+  /// Prisma info
+  late final PrismaInfo info;
 
-  Generator._internal({
-    required this.info,
-    required this.generatorId,
-    required this.options,
-    required this.library,
-  });
+  /// The library builder.
+  final code.LibraryBuilder library = code.LibraryBuilder();
 
-  static Future<Generator> create({
-    required PrismaInfo info,
-    required code.LibraryBuilder library,
-  }) async {
-    final buffer = StringBuffer();
-    final completer = Completer<Generator>();
+  /// Generator options.
+  late GeneratorOptions options;
 
-    final subscription = stdin.transform(convert.utf8.decoder).listen((event) {
-      buffer.write(event);
-      // Try to parse event to JSON.
-      //
-      // If it fails, add it to the buffer and wait for the next event.
-      try {
-        final result = convert.json.decode(buffer.toString());
-        buffer.clear();
+  @override
+  FutureOr<GeneratorManifest?> onManifest(GeneratorConfig config) {
+    // Sets the prisma info
+    info = PrismaInfo.lookup(resolveNpm(config.config));
 
-        if (result['method'] == 'getManifest') {
-          _onManifest(result['id']);
-        } else if (result['method'] == 'generate') {
-          final options = GeneratorOptions.fromJson(result['params']);
-          final generator = Generator._internal(
-            info: info,
-            generatorId: result['id'],
-            options: options,
-            library: library,
-          );
-
-          completer.complete(generator);
-        }
-      } catch (_) {
-        // noop
-      }
-    });
-
-    final generator = await completer.future;
-    await subscription.cancel();
-
-    return generator;
+    return GeneratorManifest(
+      prettyName: 'Prisma Dart Client',
+      defaultOutput: path.joinAll([
+        '..',
+        'lib',
+        'src',
+        'generated',
+        'prisma',
+      ]),
+      requiresEngines: [EngineType.queryEngine],
+    );
   }
 
-  static void _onManifest(int id) {
-    final result = {
-      'manifest': {
-        "prettyName": "Prisma Dart Client",
-        "defaultOutput": "../lib/prisma_client.dart",
-        "requiresEngines": ["queryEngine"],
-      }
-    };
-    final message = convert.json.encode({
-      "jsonrpc": "2.0",
-      'result': result,
-      'id': id,
-    });
+  @override
+  void onGenerate(GeneratorOptions options) {
+    this.options = options;
 
-    stderr.writeln(message);
-  }
-
-  Future<void> done() async {
-    final message = convert.json.encode({
-      "jsonrpc": "2.0",
-      'result': null,
-      'id': generatorId,
-    });
-    stderr.writeln(message);
-  }
-
-  void generate() {
     generateEnum();
     generateInputObjectTypes();
     generateScalarModels();
@@ -107,10 +59,18 @@ class Generator {
     defineDirectives();
     writeLibrary();
   }
+
+  /// Resolve Node.js package manager of [Map].
+  String resolveNpm(Map<String, dynamic> config) {
+    final lowerCased =
+        config.map((key, value) => MapEntry(key.toLowerCase(), value));
+
+    return lowerCased.containsKey('npm') ? config['npm'] as String : 'npm';
+  }
 }
 
 /// directives for the library
-extension LibraryDirectives on Generator {
+extension LibraryDirectives on PrismaDartClientGenerator {
   /// Define the library directives
   void defineDirectives() {
     _imports();
@@ -135,7 +95,7 @@ extension LibraryDirectives on Generator {
 }
 
 // Write the library to a file.
-extension WriteLibrary on Generator {
+extension WriteLibrary on PrismaDartClientGenerator {
   /// Dart emitter
   static final emitter = code.DartEmitter(
     allocator: code.Allocator.simplePrefixing(),
@@ -180,7 +140,7 @@ extension WriteLibrary on Generator {
 }
 
 /// Enum generator
-extension EnumGenerator on Generator {
+extension EnumGenerator on PrismaDartClientGenerator {
   /// Ignore enum names
   static final Iterable<String> _ignoreEnumNames = [
     'TransactionIsolationLevel',
@@ -276,7 +236,7 @@ extension EnumGenerator on Generator {
 }
 
 /// Input object types generator
-extension InputObjectTypesGenerator on Generator {
+extension InputObjectTypesGenerator on PrismaDartClientGenerator {
   /// Generate input object types
   void generateInputObjectTypes() {
     _builder(options.dmmf.schema.inputObjectTypes.model);
@@ -490,7 +450,7 @@ extension InputObjectTypesGenerator on Generator {
 }
 
 /// Generate scalar models
-extension ScalarModulesGenerator on Generator {
+extension ScalarModulesGenerator on PrismaDartClientGenerator {
   /// Generate scalar models
   void generateScalarModels() {
     final types = options.dmmf.schema.outputObjectTypes.model;
@@ -596,7 +556,7 @@ extension ScalarModulesGenerator on Generator {
 }
 
 /// Model fluent generator
-extension ModelFluentGenerator on Generator {
+extension ModelFluentGenerator on PrismaDartClientGenerator {
   /// Generate model fluent
   void generateModelFluent() {
     final models = options.dmmf.schema.outputObjectTypes.model;
@@ -1074,7 +1034,7 @@ extension ModelFluentGenerator on Generator {
 }
 
 /// Model delegate generator
-extension ModelDelegateGenerator on Generator {
+extension ModelDelegateGenerator on PrismaDartClientGenerator {
   /// Generate model delegate
   void generateModelDelegate() {
     final modelOperations = options.dmmf.mappings.modelOperations;
@@ -1224,7 +1184,7 @@ extension _IterableExtensions<T> on Iterable<T> {
 }
 
 /// Prisma output type generator
-extension PrismaOutputTypeGenerator on Generator {
+extension PrismaOutputTypeGenerator on PrismaDartClientGenerator {
   /// Json serializable prisma output types
   static final _jsonSerializablePrismaOutputTypes = [
     (String type) => type.endsWith('GroupByOutputType'),
@@ -1285,7 +1245,7 @@ extension PrismaOutputTypeGenerator on Generator {
 }
 
 /// Prisma Aggregation fluent generator
-extension PrismaAggregationFluentGenerate on Generator {
+extension PrismaAggregationFluentGenerate on PrismaDartClientGenerator {
   /// Generate prisma aggregation fluent
   void generatePrismaAggregateFluent() {
     final types = options.dmmf.schema.outputObjectTypes.prisma
@@ -1350,7 +1310,7 @@ extension PrismaAggregationFluentGenerate on Generator {
 }
 
 /// Datasources class generator
-extension DatasourcesClassGenerator on Generator {
+extension DatasourcesClassGenerator on PrismaDartClientGenerator {
   /// Generate datasources class
   void generateDatasourcesClass() {
     final datasources = options.datasources;
@@ -1359,7 +1319,7 @@ extension DatasourcesClassGenerator on Generator {
   }
 
   /// Build datasources class
-  code.Class _buildDatasourcesClass(Iterable<Datasource> datasources) {
+  code.Class _buildDatasourcesClass(Iterable<DataSource> datasources) {
     return code.Class((updates) {
       updates
         ..name = 'Datasources'
@@ -1377,7 +1337,7 @@ extension DatasourcesClassGenerator on Generator {
 
   /// Build datasources fields
   Iterable<code.Field> _buildDatasourcesFields(
-      Iterable<Datasource> datasources) {
+      Iterable<DataSource> datasources) {
     return datasources.map((e) => code.Field((updates) {
           updates
             ..name = e.name
@@ -1388,7 +1348,7 @@ extension DatasourcesClassGenerator on Generator {
 
   /// Build datasources constructor
   code.Constructor _buildDatasourcesConstructor(
-      Iterable<Datasource> datasources) {
+      Iterable<DataSource> datasources) {
     return code.Constructor((updates) {
       updates.optionalParameters.addAll(
         datasources.map((e) => code.Parameter((updates) {
@@ -1421,7 +1381,7 @@ extension DatasourcesClassGenerator on Generator {
 }
 
 /// Prisma client generator
-extension PrismaClientGenerator on Generator {
+extension PrismaClientGenerator on PrismaDartClientGenerator {
   static const String className = 'PrismaClient';
 
   /// Generate prisma client
@@ -1677,7 +1637,7 @@ extension PrismaClientGenerator on Generator {
 
   /// Find binary engine executable
   code.Expression _findBinaryEngineExecutable() {
-    final executable = options.binaryPaths['queryEngine']?[info.platform];
+    final executable = options.binaryPaths?.queryEngine?[info.platform];
     if (executable == null) {
       throw Exception(
           'Could not find query engine for platform ${info.platform}');
