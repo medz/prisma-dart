@@ -2,7 +2,7 @@
 
 Prisma client Dart requires no other configuration, just configure the data model in the `schema.prisma` file, but there are always some options!
 
-## NPM executable
+## Node package manager
 
 By default, you are not required to specify the path to the npm executable. We will search in the global `$PATH`.
 
@@ -10,13 +10,30 @@ If your NPM is not installed globally (after installing NodeJS globally, NPM is 
 
 ```prisma
 generator client {
-   provider = "dart run orm --npm=<path>"
+   provider = "dart run orm"
+   npm      = "/path/to/npm"
+}
+```
+
+### Other package managers
+
+If you are using a package manager other than NPM, you can specify the path to the executable or the package manager name:
+
+```prisma
+/// Yarn
+generator client {
+   provider = "dart run orm"
+   npm      = "yarn"
+}
+
+/// PNPM
+generator client {
+   provider = "dart run orm"
+   npm      = "pnpm"
 }
 ```
 
 ## Prisma client output
-
-By default, the generated Prisma client Dart code will be placed in the `lib/prisma_client.dart` file.
 
 You can change the output path by configuring the `output` option:
 

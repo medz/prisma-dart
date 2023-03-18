@@ -112,7 +112,7 @@ dart run build_runner build
 ```dart
 import 'package:orm/logger.dart';
 
-import 'prisma_client.dart';
+import 'src/generated/prisma/prisma_client.dart';
 
 final prisma = PrismaClient(
    stdout: Event.values, // print all events to the console
