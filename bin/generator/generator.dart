@@ -119,13 +119,16 @@ extension LibraryDirectives on Generator {
 
   /// Import packages
   void _imports() {
-    library.directives.add(code.Directive.import('package:json_annotation/json_annotation.dart'));
+    library.directives.add(
+        code.Directive.import('package:json_annotation/json_annotation.dart'));
   }
 
   /// parts
   void _parts() {
     final basename = path.basename(_resolveOutputPath());
-    final part = basename.endsWith('.dart') ? basename.substring(0, basename.length - 5) : basename;
+    final part = basename.endsWith('.dart')
+        ? basename.substring(0, basename.length - 5)
+        : basename;
 
     library.directives.add(code.Directive.part('$part.g.dart'));
   }
@@ -324,7 +327,11 @@ extension InputObjectTypesGenerator on Generator {
 
       // Add document comment
       if (field.comment != null) {
-        updates.docs.addAll(field.comment!.split('\r').map((e) => e.split('\n')).expand((e) => e).map((e) => e.trim()));
+        updates.docs.addAll(field.comment!
+            .split('\r')
+            .map((e) => e.split('\n'))
+            .expand((e) => e)
+            .map((e) => e.trim()));
       }
 
       // Add JsonKey annotation
@@ -359,7 +366,8 @@ extension InputObjectTypesGenerator on Generator {
     }
 
     // find non scalar type
-    final nonScalarTypes = types.where((e) => e.location != dmmf.FieldLocation.scalar);
+    final nonScalarTypes =
+        types.where((e) => e.location != dmmf.FieldLocation.scalar);
     if (nonScalarTypes.isNotEmpty) {
       return scalar(nonScalarTypes.first, !field.isRequired);
     }
@@ -387,7 +395,8 @@ extension InputObjectTypesGenerator on Generator {
         ..name = 'toJson'
         ..returns = code.refer('Map<String, dynamic>')
         ..annotations.add(code.refer('override'))
-        ..body = code.refer('_\$${classname}ToJson').call([code.refer('this')]).code
+        ..body =
+            code.refer('_\$${classname}ToJson').call([code.refer('this')]).code
         ..lambda = true;
     });
   }
@@ -423,12 +432,15 @@ extension InputObjectTypesGenerator on Generator {
       updates
         ..name = 'fromJson'
         ..factory = true
-        ..requiredParameters.add(code.Parameter((code.ParameterBuilder updates) {
+        ..requiredParameters
+            .add(code.Parameter((code.ParameterBuilder updates) {
           updates
             ..name = 'json'
             ..type = code.refer('Map<String, dynamic>');
         }))
-        ..body = code.refer('_\$${classname}FromJson').call([code.refer('json')]).code
+        ..body = code
+            .refer('_\$${classname}FromJson')
+            .call([code.refer('json')]).code
         ..lambda = true;
     });
   }
@@ -479,8 +491,11 @@ extension ScalarModulesGenerator on Generator {
 
       // Add document comment
       if (field.documentation != null) {
-        updates.docs
-            .addAll(field.documentation!.split('\r').map((e) => e.split('\n')).expand((e) => e).map((e) => e.trim()));
+        updates.docs.addAll(field.documentation!
+            .split('\r')
+            .map((e) => e.split('\n'))
+            .expand((e) => e)
+            .map((e) => e.trim()));
       }
 
       // Add JsonKey annotation
@@ -503,7 +518,9 @@ extension ScalarModulesGenerator on Generator {
   dmmf.OutputType _filterModelNonScalarFields(dmmf.OutputType model) {
     return dmmf.OutputType(
       name: model.name,
-      fields: model.fields.where((e) => _isModelScalarField(model.name, e.name)).toList(),
+      fields: model.fields
+          .where((e) => _isModelScalarField(model.name, e.name))
+          .toList(),
     );
   }
 
@@ -520,7 +537,8 @@ extension ScalarModulesGenerator on Generator {
   }
 
   /// Build model scalar field enum name
-  String _buildModelScalarFieldEnumName(String model) => '${model}ScalarFieldEnum';
+  String _buildModelScalarFieldEnumName(String model) =>
+      '${model}ScalarFieldEnum';
 }
 
 /// Model fluent generator
@@ -535,7 +553,8 @@ extension ModelFluentGenerator on Generator {
 
   /// Build model fluent
   code.Class _buildModelFluent(dmmf.OutputType model) {
-    final fields = model.fields.where((element) => !_isModelScalarField(model.name, element.name));
+    final fields = model.fields
+        .where((element) => !_isModelScalarField(model.name, element.name));
 
     return code.Class((updates) {
       updates.name = _buildModelFluentName(model.name);
@@ -575,22 +594,30 @@ extension ModelFluentGenerator on Generator {
     return code.Method((updates) {
       updates.name = field.name.toDartPropertyName();
       updates.returns = _modelDelegateMethodReturnTypeBuilder(field);
-      updates.optionalParameters.addAll(field.args.map((e) => _buildOperationParameter(e)));
-      updates.body = code.Block((updates) => _modelFluentMethodBodyBuilder(updates, field));
+      updates.optionalParameters
+          .addAll(field.args.map((e) => _buildOperationParameter(e)));
+      updates.body = code.Block(
+          (updates) => _modelFluentMethodBodyBuilder(updates, field));
     });
   }
 
   /// Model Fluent method body builder
-  void _modelFluentMethodBodyBuilder(code.BlockBuilder updates, dmmf.SchemaField field) {
-    final args = field.args.map((e) => code.refer('GraphQLArg', packages.graphql).call([
-          code.literalString(e.name, raw: true),
-          code.refer(e.name.toDartPropertyName()),
-        ]));
+  void _modelFluentMethodBodyBuilder(
+      code.BlockBuilder updates, dmmf.SchemaField field) {
+    final args =
+        field.args.map((e) => code.refer('GraphQLArg', packages.graphql).call([
+              code.literalString(e.name, raw: true),
+              code.refer(e.name.toDartPropertyName()),
+            ]));
     if (args.isNotEmpty) {
-      updates.addExpression(code.declareFinal('args').assign(code.literalList(args)));
+      updates.addExpression(
+          code.declareFinal('args').assign(code.literalList(args)));
     }
 
-    final query = code.refer('PrismaFluent', packages.orm).property('queryBuilder').call([], {
+    final query = code
+        .refer('PrismaFluent', packages.orm)
+        .property('queryBuilder')
+        .call([], {
       'query': code.Method((updates) {
         updates.requiredParameters.add(code.Parameter((updates) {
           updates.name = 'fields';
@@ -610,9 +637,8 @@ extension ModelFluentGenerator on Generator {
 
         updates.body = code.refer(queryName).call([
           code.literalList([
-            code
-                .refer('GraphQLField', packages.graphql)
-                .call([code.literalString(field.name, raw: true)], namedArguments),
+            code.refer('GraphQLField', packages.graphql).call(
+                [code.literalString(field.name, raw: true)], namedArguments),
           ])
         ]).code;
 
@@ -622,7 +648,8 @@ extension ModelFluentGenerator on Generator {
     });
     updates.addExpression(code.declareFinal('query').assign(query));
 
-    _buildModelCompiler(field).forEach((element) => updates.addExpression(element));
+    _buildModelCompiler(field)
+        .forEach((element) => updates.addExpression(element));
   }
 
   /// Check field is mutation
@@ -633,7 +660,8 @@ extension ModelFluentGenerator on Generator {
       orElse: () => throw Exception('Type "mutation" not found'),
     );
 
-    return type.fields.any((e) => e.name.toLowerCase() == field.name.toLowerCase());
+    return type.fields
+        .any((e) => e.name.toLowerCase() == field.name.toLowerCase());
   }
 
   /// Build model compiler
@@ -647,10 +675,13 @@ extension ModelFluentGenerator on Generator {
       return _buildModelResultsCompiler(field);
 
       // If output is `*GroupByOutputType`, return the group by results.
-    } else if (field.outputType.isList && field.outputType.type.endsWith('GroupByOutputType')) {
+    } else if (field.outputType.isList &&
+        field.outputType.type.endsWith('GroupByOutputType')) {
       final type = _findPrismaOutputType(field.outputType.type);
-      final fields =
-          type.fields.where((element) => element.outputType.location == dmmf.FieldLocation.scalar).map((e) => e.name);
+      final fields = type.fields
+          .where((element) =>
+              element.outputType.location == dmmf.FieldLocation.scalar)
+          .map((e) => e.name);
 
       return _buildModelResultsCompiler(field, fields: fields);
 
@@ -673,8 +704,10 @@ extension ModelFluentGenerator on Generator {
   }
 
   /// Build model enum compiler
-  Iterable<code.Expression> _buildModelEnumCompiler(dmmf.SchemaField field) sync* {
-    final enumDecodeName = field.isNullable == true ? r'$enumDecodeNullable' : r'$enumDecode';
+  Iterable<code.Expression> _buildModelEnumCompiler(
+      dmmf.SchemaField field) sync* {
+    final enumDecodeName =
+        field.isNullable == true ? r'$enumDecodeNullable' : r'$enumDecode';
     final enumName = '_\$${field.outputType.type.toDartClassName()}EnumMap';
     final fn = code.Method((updates) {
       updates.requiredParameters.add(code.Parameter((updates) {
@@ -688,7 +721,12 @@ extension ModelFluentGenerator on Generator {
       updates.lambda = true;
     });
 
-    yield code.refer('query').call([code.literalConstList([])]).property('then').call([fn.closure]).returned;
+    yield code
+        .refer('query')
+        .call([code.literalConstList([])])
+        .property('then')
+        .call([fn.closure])
+        .returned;
   }
 
   /// Build model scalar compiler
@@ -707,11 +745,19 @@ extension ModelFluentGenerator on Generator {
         updates.lambda = true;
         updates.body = parse.code;
         if (field.isNullable == true) {
-          updates.body = code.refer('value').isA(code.refer('String')).conditional(parse, code.literalNull).code;
+          updates.body = code
+              .refer('value')
+              .isA(code.refer('String'))
+              .conditional(parse, code.literalNull)
+              .code;
         }
       });
 
-      final query = code.refer('query').call([code.literalConstList([])]).property('then').call([fn.closure]);
+      final query = code
+          .refer('query')
+          .call([code.literalConstList([])])
+          .property('then')
+          .call([fn.closure]);
       return [query.returned];
     }
 
@@ -725,7 +771,11 @@ extension ModelFluentGenerator on Generator {
       updates.lambda = true;
     });
 
-    final query = code.refer('query').call([code.literalConstList([])]).property('then').call([fn.closure]);
+    final query = code
+        .refer('query')
+        .call([code.literalConstList([])])
+        .property('then')
+        .call([fn.closure]);
 
     return [query.returned];
   }
@@ -740,7 +790,8 @@ extension ModelFluentGenerator on Generator {
   /// Is model fluent output type
   bool _isModelListOutputType(dmmf.SchemaType outputType) {
     final models = options.dmmf.schema.outputObjectTypes.model;
-    return models?.any((e) => e.name == outputType.type) == true && outputType.isList;
+    return models?.any((e) => e.name == outputType.type) == true &&
+        outputType.isList;
   }
 
   /// Build model results compiler
@@ -750,30 +801,46 @@ extension ModelFluentGenerator on Generator {
   }) {
     final expressions = <code.Expression>[];
 
-    final modelScalarEnumName = _buildModelScalarFieldEnumName(field.outputType.type).toDartClassName();
-    final modelScalarFields = code.refer(modelScalarEnumName).property('values').property('toGraphQLFields').call([]);
+    final modelScalarEnumName =
+        _buildModelScalarFieldEnumName(field.outputType.type).toDartClassName();
+    final modelScalarFields = code
+        .refer(modelScalarEnumName)
+        .property('values')
+        .property('toGraphQLFields')
+        .call([]);
     final localMapCompiler = code.Method((updates) {
       updates.requiredParameters.add(code.Parameter((updates) {
         updates.name = 'e';
       }));
-      updates.body = code.refer('GraphQLField', packages.graphql).newInstance([code.refer('e')]).code;
+      updates.body = code
+          .refer('GraphQLField', packages.graphql)
+          .newInstance([code.refer('e')]).code;
       updates.lambda = true;
     }).closure;
-    final localFields = code.literalConstList(fields?.toList() ?? []).property('map').call([localMapCompiler]);
+    final localFields = code
+        .literalConstList(fields?.toList() ?? [])
+        .property('map')
+        .call([localMapCompiler]);
 
-    code.Expression fieldsExpression = (fields == null || fields.isEmpty) ? modelScalarFields : localFields;
+    code.Expression fieldsExpression =
+        (fields == null || fields.isEmpty) ? modelScalarFields : localFields;
 
     if (field.name.toLowerCase().startsWith('groupby')) {
       final enumMapCompiler = code.Method((updates) {
         updates.requiredParameters.add(code.Parameter((updates) {
           updates.name = 'e';
         }));
-        updates.body = code
-            .refer('GraphQLField', packages.graphql)
-            .newInstance([code.refer('e').property('originalName').ifNullThen(code.refer('e').property('name'))]).code;
+        updates.body =
+            code.refer('GraphQLField', packages.graphql).newInstance([
+          code
+              .refer('e')
+              .property('originalName')
+              .ifNullThen(code.refer('e').property('name'))
+        ]).code;
         updates.lambda = true;
       }).closure;
-      fieldsExpression = code.refer('by').property('map').call([enumMapCompiler]);
+      fieldsExpression =
+          code.refer('by').property('map').call([enumMapCompiler]);
     }
 
     expressions.add(code.declareFinal('fields').assign(fieldsExpression));
@@ -794,7 +861,9 @@ extension ModelFluentGenerator on Generator {
         updates.type = type;
       }));
 
-      final serializer = code.refer(field.outputType.type.toDartClassName()).newInstanceNamed('fromJson', [
+      final serializer = code
+          .refer(field.outputType.type.toDartClassName())
+          .newInstanceNamed('fromJson', [
         code.refer(field.name.toDartPropertyName()).property('cast').call([]),
       ]).code;
       updates.body = serializer;
@@ -808,7 +877,10 @@ extension ModelFluentGenerator on Generator {
           updates.lambda = true;
           updates.body = serializer;
         });
-        updates.body = code.refer(field.name.toDartPropertyName()).property('map').call([compiler.closure]).code;
+        updates.body = code
+            .refer(field.name.toDartPropertyName())
+            .property('map')
+            .call([compiler.closure]).code;
       }
 
       updates.lambda = true;
@@ -822,20 +894,28 @@ extension ModelFluentGenerator on Generator {
       }));
       updates.lambda = true;
 
-      final call = field.outputType.isList ? code.refer('json').property('cast').call([]) : code.refer('json');
+      final call = field.outputType.isList
+          ? code.refer('json').property('cast').call([])
+          : code.refer('json');
 
       final compiler = code.refer('compiler').call([call]);
       final thrown = code.refer('Exception').newInstance([
         code.literalString('Unable to parse response'),
       ]).thrown;
 
-      final other = _isOperationReturnTypeNullable(field) ? code.literalNull : thrown;
+      final other =
+          _isOperationReturnTypeNullable(field) ? code.literalNull : thrown;
       final $type = field.outputType.isList ? code.refer('Iterable') : type;
 
-      updates.body = code.refer('json').isA($type).conditional(compiler, other).code;
+      updates.body =
+          code.refer('json').isA($type).conditional(compiler, other).code;
     });
 
-    final returns = code.refer('query').call([code.refer('fields')]).property('then').call([then.closure]);
+    final returns = code
+        .refer('query')
+        .call([code.refer('fields')])
+        .property('then')
+        .call([then.closure]);
     expressions.add(returns.returned);
 
     return expressions;
@@ -845,14 +925,22 @@ extension ModelFluentGenerator on Generator {
   Iterable<code.Expression> _buildModelFluentCompiler(dmmf.SchemaField field) {
     final expressions = <code.Expression>[];
 
-    final modelScalarEnumName = _buildModelScalarFieldEnumName(field.outputType.type).toDartClassName();
-    final fields = code.refer(modelScalarEnumName).property('values').property('toGraphQLFields').call([]);
+    final modelScalarEnumName =
+        _buildModelScalarFieldEnumName(field.outputType.type).toDartClassName();
+    final fields = code
+        .refer(modelScalarEnumName)
+        .property('values')
+        .property('toGraphQLFields')
+        .call([]);
     final query = code.refer('query').call([fields]);
     final json = code.refer('json').property('cast').call([], {}, [
       code.refer('String'),
       code.refer('dynamic'),
     ]);
-    final serializer = code.refer(field.outputType.type.toDartClassName()).property('fromJson').call([json]);
+    final serializer = code
+        .refer(field.outputType.type.toDartClassName())
+        .property('fromJson')
+        .call([json]);
     final thrown = code.refer('Exception').newInstance([
       code.literalString('Not found ${field.outputType.type}'),
     ]).thrown;
@@ -865,7 +953,8 @@ extension ModelFluentGenerator on Generator {
       updates.body = code
           .refer('json')
           .isA(code.refer('Map'))
-          .conditional(serializer, _isOperationReturnTypeNullable(field) ? code.literalNull : thrown)
+          .conditional(serializer,
+              _isOperationReturnTypeNullable(field) ? code.literalNull : thrown)
           .code;
       updates.lambda = true;
     });
@@ -902,7 +991,8 @@ extension ModelDelegateGenerator on Generator {
   }
 
   /// Model delegate extension builder
-  void _modelDelegateClassBuilder(code.ExtensionBuilder updates, dmmf.ModelMapping mapping) {
+  void _modelDelegateClassBuilder(
+      code.ExtensionBuilder updates, dmmf.ModelMapping mapping) {
     updates.name = _generateModelDelegateName(mapping.model);
     updates.on = code.TypeReference((updates) {
       updates.symbol = 'ModelDelegate';
@@ -927,11 +1017,13 @@ extension ModelDelegateGenerator on Generator {
   }
 
   /// Model delegate method builder
-  code.Method _modelDelegateMethodBuilder(String operation, dmmf.SchemaField field) {
+  code.Method _modelDelegateMethodBuilder(
+      String operation, dmmf.SchemaField field) {
     return code.Method((updates) {
       updates.name = operation.toDartPropertyName();
       updates.returns = _modelDelegateMethodReturnTypeBuilder(field);
-      updates.optionalParameters.addAll(field.args.map((e) => _buildOperationParameter(e)));
+      updates.optionalParameters
+          .addAll(field.args.map((e) => _buildOperationParameter(e)));
       updates.body = code.Block((updates) => _modelFluentMethodBodyBuilder(
             updates,
             field,
@@ -951,7 +1043,8 @@ extension ModelDelegateGenerator on Generator {
 
   /// Model delegate method return type builder
   code.Reference _modelDelegateMethodReturnTypeBuilder(dmmf.SchemaField field) {
-    final type = scalar(field.outputType, _isOperationReturnTypeNullable(field));
+    final type =
+        scalar(field.outputType, _isOperationReturnTypeNullable(field));
 
     if (_isAggregate(field.outputType.type)) {
       return type;
@@ -970,7 +1063,9 @@ extension ModelDelegateGenerator on Generator {
 
   /// Is model fluent output type
   bool _isModelFluentOutputType(dmmf.SchemaType outputType) {
-    return options.dmmf.schema.outputObjectTypes.model?.any((e) => e.name == outputType.type) == true &&
+    return options.dmmf.schema.outputObjectTypes.model
+                ?.any((e) => e.name == outputType.type) ==
+            true &&
         !outputType.isList;
   }
 
@@ -986,14 +1081,17 @@ extension ModelDelegateGenerator on Generator {
   dmmf.SchemaField? _findQueryOrMutationField(String operation) {
     final types = options.dmmf.schema.outputObjectTypes.prisma;
     final fields = types
-        .where((element) => element.name.toLowerCase() == 'query' || element.name.toLowerCase() == 'mutation')
+        .where((element) =>
+            element.name.toLowerCase() == 'query' ||
+            element.name.toLowerCase() == 'mutation')
         .expand((e) => e.fields);
 
     return fields.firstWhereOrNull((e) => e.name == operation);
   }
 
   /// Generate model delegate name
-  String _generateModelDelegateName(String model) => '${model}ModelDelegateExtension'.toDartClassName();
+  String _generateModelDelegateName(String model) =>
+      '${model}ModelDelegateExtension'.toDartClassName();
 }
 
 /// Iterable extensions
@@ -1019,9 +1117,11 @@ extension PrismaOutputTypeGenerator on Generator {
   /// Generate prisma output types
   void generatePrismaOutputTypes() {
     final types = options.dmmf.schema.outputObjectTypes.prisma;
-    final models = types.where((type) => _jsonSerializablePrismaOutputTypes.any((element) => element(type.name)));
-    final filitedModels =
-        models.map((e) => _withoutAggregateOutputTypeField(e)).map((e) => _rebuildGroupByOutputtypeFields(e));
+    final models = types.where((type) => _jsonSerializablePrismaOutputTypes
+        .any((element) => element(type.name)));
+    final filitedModels = models
+        .map((e) => _withoutAggregateOutputTypeField(e))
+        .map((e) => _rebuildGroupByOutputtypeFields(e));
 
     library.body.addAll(filitedModels.map((e) => _buildScalarModel(e)));
   }
@@ -1050,7 +1150,8 @@ extension PrismaOutputTypeGenerator on Generator {
 
   /// Without count aggregate output type field
   dmmf.OutputType _withoutAggregateOutputTypeField(dmmf.OutputType output) {
-    final fields = output.fields.where((element) => !element.outputType.type.endsWith('AggregateOutputType'));
+    final fields = output.fields.where(
+        (element) => !element.outputType.type.endsWith('AggregateOutputType'));
 
     return dmmf.OutputType(
       name: output.name,
@@ -1063,14 +1164,17 @@ extension PrismaOutputTypeGenerator on Generator {
 extension PrismaAggregationFluentGenerate on Generator {
   /// Generate prisma aggregation fluent
   void generatePrismaAggregateFluent() {
-    final types = options.dmmf.schema.outputObjectTypes.prisma.where((element) => _isAggregate(element.name));
+    final types = options.dmmf.schema.outputObjectTypes.prisma
+        .where((element) => _isAggregate(element.name));
 
     library.body.addAll(types.map((e) => _buildAggregateFluent(e)));
   }
 
   /// Is aggregate output type
   bool _isAggregate(String type) {
-    return type.endsWith('AggregateOutputType') || type.startsWith('Aggregate') || type.endsWith('CountOutputType');
+    return type.endsWith('AggregateOutputType') ||
+        type.startsWith('Aggregate') ||
+        type.endsWith('CountOutputType');
   }
 
   /// Build aggregate fluent
@@ -1148,7 +1252,8 @@ extension DatasourcesClassGenerator on Generator {
   }
 
   /// Build datasources fields
-  Iterable<code.Field> _buildDatasourcesFields(Iterable<Datasource> datasources) {
+  Iterable<code.Field> _buildDatasourcesFields(
+      Iterable<Datasource> datasources) {
     return datasources.map((e) => code.Field((updates) {
           updates
             ..name = e.name
@@ -1158,7 +1263,8 @@ extension DatasourcesClassGenerator on Generator {
   }
 
   /// Build datasources constructor
-  code.Constructor _buildDatasourcesConstructor(Iterable<Datasource> datasources) {
+  code.Constructor _buildDatasourcesConstructor(
+      Iterable<Datasource> datasources) {
     return code.Constructor((updates) {
       updates.optionalParameters.addAll(
         datasources.map((e) => code.Parameter((updates) {
@@ -1168,7 +1274,8 @@ extension DatasourcesClassGenerator on Generator {
               updates.named = true;
 
               if (e.url.value != null) {
-                updates.defaultTo = code.literalString(e.url.value!, raw: true).code;
+                updates.defaultTo =
+                    code.literalString(e.url.value!, raw: true).code;
               }
             })),
       );
@@ -1181,7 +1288,8 @@ extension DatasourcesClassGenerator on Generator {
     return code.Method((updates) {
       updates.name = 'toJson';
       updates.returns = code.refer('Map<String, dynamic>');
-      updates.body = code.refer('_\$DatasourcesToJson').call([code.refer('this')]).code;
+      updates.body =
+          code.refer('_\$DatasourcesToJson').call([code.refer('this')]).code;
       updates.lambda = true;
       updates.annotations.add(code.refer('override'));
     });
@@ -1246,18 +1354,22 @@ extension PrismaClientGenerator on Generator {
       updates.optionalParameters.add(code.Parameter((updates) {
         updates.name = 'headers';
         updates.named = true;
-        updates.type = code.refer('QueryEngineRequestHeaders', packages.engineCore).nullable;
+        updates.type = code
+            .refer('QueryEngineRequestHeaders', packages.engineCore)
+            .nullable;
       }));
       updates.optionalParameters.add(code.Parameter((updates) {
         updates.name = 'transaction';
         updates.named = true;
-        updates.type = code.refer('TransactionInfo', packages.engineCore).nullable;
+        updates.type =
+            code.refer('TransactionInfo', packages.engineCore).nullable;
       }));
       updates.body = code.refer(className).newInstanceNamed('_internal', [
         code.refer('_engine'),
       ], {
         'headers': code.refer('headers').ifNullThen(code.refer('_headers')),
-        'transaction': code.refer('transaction').ifNullThen(code.refer('_transaction')),
+        'transaction':
+            code.refer('transaction').ifNullThen(code.refer('_transaction')),
       }).code;
       updates.lambda = true;
     });
@@ -1277,7 +1389,9 @@ extension PrismaClientGenerator on Generator {
       code.Field((updates) {
         updates
           ..name = '_headers'
-          ..type = code.refer('QueryEngineRequestHeaders', packages.engineCore).nullable
+          ..type = code
+              .refer('QueryEngineRequestHeaders', packages.engineCore)
+              .nullable
           ..modifier = code.FieldModifier.final$;
       }),
       // build `_transaction` field
@@ -1311,18 +1425,24 @@ extension PrismaClientGenerator on Generator {
         updates.name = 'headers';
         updates.named = true;
         updates.toThis = false;
-        updates.type = code.refer('QueryEngineRequestHeaders', packages.engineCore).nullable;
+        updates.type = code
+            .refer('QueryEngineRequestHeaders', packages.engineCore)
+            .nullable;
       }));
       updates.optionalParameters.add(code.Parameter((updates) {
         updates.name = 'transaction';
         updates.named = true;
         updates.toThis = false;
-        updates.type = code.refer('TransactionInfo', packages.engineCore).nullable;
+        updates.type =
+            code.refer('TransactionInfo', packages.engineCore).nullable;
       }));
 
-      updates.initializers.add(code.refer('_engine').assign(code.refer('engine')).code);
-      updates.initializers.add(code.refer('_headers').assign(code.refer('headers')).code);
-      updates.initializers.add(code.refer('_transaction').assign(code.refer('transaction')).code);
+      updates.initializers
+          .add(code.refer('_engine').assign(code.refer('engine')).code);
+      updates.initializers
+          .add(code.refer('_headers').assign(code.refer('headers')).code);
+      updates.initializers.add(
+          code.refer('_transaction').assign(code.refer('transaction')).code);
       updates.initializers.add(code.refer('super').call(
         [
           code.refer('engine'),
@@ -1339,7 +1459,8 @@ extension PrismaClientGenerator on Generator {
   code.Constructor _buildPrismaClientDefaultConstructor() {
     return code.Constructor((updates) {
       updates.factory = true;
-      updates.optionalParameters.addAll(_buildPrismaClientDefaultConstructorParams());
+      updates.optionalParameters
+          .addAll(_buildPrismaClientDefaultConstructorParams());
       updates.body = _buildPrismaClientDefaultConstructorBody();
     });
   }
@@ -1395,7 +1516,8 @@ extension PrismaClientGenerator on Generator {
 
   /// Build engine variable
   code.Expression _buildEngineVariable() {
-    final engine = options.dataProxy ? _buildDataProxyEngine() : _buildBinaryEngine();
+    final engine =
+        options.dataProxy ? _buildDataProxyEngine() : _buildBinaryEngine();
 
     return code.declareFinal('engine').assign(engine);
   }
@@ -1433,7 +1555,8 @@ extension PrismaClientGenerator on Generator {
   code.Expression _findBinaryEngineExecutable() {
     final executable = options.binaryPaths['queryEngine']?[info.platform];
     if (executable == null) {
-      throw Exception('Could not find query engine for platform ${info.platform}');
+      throw Exception(
+          'Could not find query engine for platform ${info.platform}');
     }
 
     return code.literalString(executable, raw: true);
@@ -1441,12 +1564,16 @@ extension PrismaClientGenerator on Generator {
 
   /// Build prisma client return
   code.Expression _buildPrismaClientReturn() {
-    return code.refer(className).newInstanceNamed('_internal', [code.refer('engine')]).returned;
+    return code
+        .refer(className)
+        .newInstanceNamed('_internal', [code.refer('engine')]).returned;
   }
 
   /// Build data proxy engine
   code.Expression _buildDataProxyEngine() {
-    return code.refer('DataProxyEngine', packages.dataProxyengine).newInstance([], {
+    return code
+        .refer('DataProxyEngine', packages.dataProxyengine)
+        .newInstance([], {
       'logger': code.refer('logger'),
       'schema': _buildBase64EncodedSchema(),
       'hash': _buildSchameHash(),
@@ -1481,7 +1608,10 @@ extension PrismaClientGenerator on Generator {
       url = code.literalString(datasource.url.value!, raw: true);
     }
 
-    final param = code.refer('datasources').nullSafeProperty(datasource.name).ifNullThen(url);
+    final param = code
+        .refer('datasources')
+        .nullSafeProperty(datasource.name)
+        .ifNullThen(url);
 
     return code.refer('Uri').property('parse').call([param]);
   }
