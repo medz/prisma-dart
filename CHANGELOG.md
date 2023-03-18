@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/odroe/prisma-dart/compare/orm-v3.1.5...orm-v3.2.0) (2023-03-18)
+
+
+### Features
+
+* Migrate to generator helper ([35486f4](https://github.com/odroe/prisma-dart/commit/35486f49fa89195886a309021360f7f6d2dd20fc))
+
 ## [3.1.5](https://github.com/odroe/prisma-dart/compare/orm-v3.1.4...orm-v3.1.5) (2023-03-17)
 
 
