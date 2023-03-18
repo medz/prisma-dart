@@ -3,3 +3,4 @@ example/
 !example/README.md
 graphs/
 dev.dart
+node_modules/
