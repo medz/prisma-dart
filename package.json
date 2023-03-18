@@ -2,7 +2,6 @@
   "private": true,
   "name": "prisma-dart",
   "dependencies": {
-    "@prisma/client": "^4.11.0",
     "prisma": "^4.11.0",
     "vitepress": "^1.0.0-alpha.60"
   },

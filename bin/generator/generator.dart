@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart' as code;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
-import 'package:orm/dmmf.dart' as dmmf;
+import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
 import 'package:orm/orm.dart' as orm;
 import 'package:path/path.dart' as path;
 
@@ -356,23 +356,66 @@ extension InputObjectTypesGenerator on Generator {
 
     // If the types is a single type, return it.
     if (types.length == 1) {
-      return scalar(field.inputTypes.first, !field.isRequired);
+      final type = field.inputTypes.first.type.when<String>(
+        string: (value) => value,
+        input: (type) => type.name,
+        enum_: (type) => type.name,
+      );
+
+      return scalar(
+        type,
+        location: field.inputTypes.first.location,
+        isNullable: !field.isRequired,
+        isList: field.inputTypes.first.isList,
+      );
     }
 
     // Find list type
     final listTypes = types.where((e) => e.isList);
     if (listTypes.isNotEmpty) {
-      return scalar(listTypes.first, !field.isRequired);
+      final type = listTypes.first.type.when<String>(
+        string: (value) => value,
+        input: (type) => type.name,
+        enum_: (type) => type.name,
+      );
+
+      return scalar(
+        type,
+        location: listTypes.first.location,
+        isNullable: !field.isRequired,
+        isList: listTypes.first.isList,
+      );
     }
 
     // find non scalar type
     final nonScalarTypes =
         types.where((e) => e.location != dmmf.FieldLocation.scalar);
     if (nonScalarTypes.isNotEmpty) {
-      return scalar(nonScalarTypes.first, !field.isRequired);
+      final type = nonScalarTypes.first.type.when<String>(
+        string: (value) => value,
+        input: (type) => type.name,
+        enum_: (type) => type.name,
+      );
+      return scalar(
+        type,
+        location: nonScalarTypes.first.location,
+        isList: nonScalarTypes.first.isList,
+        isNullable: !field.isRequired,
+      );
     }
 
-    return scalar(types.first, !field.isRequired);
+    final type = types.first.type.when<String>(
+      string: (value) => value,
+      input: (type) => type.name,
+      enum_: (type) => type.name,
+    );
+
+    return scalar(
+      type,
+      location: types.first.location,
+      isList: types.first.isList,
+      isNullable: !field.isRequired,
+    );
 
     // TODO: Build union type
     // Build union type
@@ -451,9 +494,8 @@ extension ScalarModulesGenerator on Generator {
   /// Generate scalar models
   void generateScalarModels() {
     final types = options.dmmf.schema.outputObjectTypes.model;
-    if (types == null || types.isEmpty) {
-      return;
-    }
+    if (types.isEmpty) return;
+
     final scalarModels = types.map((e) => _filterModelNonScalarFields(e));
 
     library.body.addAll(scalarModels.map((e) => _buildScalarModel(e)));
@@ -484,9 +526,21 @@ extension ScalarModulesGenerator on Generator {
   /// Build field
   code.Field _buildField(dmmf.SchemaField field) {
     return code.Field((code.FieldBuilder updates) {
+      final typeName = field.outputType.type.when<String>(
+        string: (value) => value,
+        enum_: (type) => type.name,
+        outputObjectTypes: (type) => type.name,
+      );
+      final type = scalar(
+        typeName,
+        isList: field.outputType.isList,
+        isNullable: field.isNullable == true,
+        location: field.outputType.location,
+      );
+
       updates
         ..name = field.name.toDartPropertyName()
-        ..type = scalar(field.outputType, field.isNullable == true)
+        ..type = type
         ..modifier = code.FieldModifier.final$;
 
       // Add document comment
@@ -546,9 +600,8 @@ extension ModelFluentGenerator on Generator {
   /// Generate model fluent
   void generateModelFluent() {
     final models = options.dmmf.schema.outputObjectTypes.model;
-    if (models != null) {
-      library.body.addAll(models.map((e) => _buildModelFluent(e)));
-    }
+
+    library.body.addAll(models.map((e) => _buildModelFluent(e)));
   }
 
   /// Build model fluent
@@ -666,6 +719,13 @@ extension ModelFluentGenerator on Generator {
 
   /// Build model compiler
   Iterable<code.Expression> _buildModelCompiler(dmmf.SchemaField field) {
+    // Output type name.
+    final outputTypeName = field.outputType.type.when<String>(
+      string: (value) => value,
+      enum_: (value) => value.name,
+      outputObjectTypes: (value) => value.name,
+    );
+
     // If the output type is a model, return a model fluent.
     if (_isModelFluentOutputType(field.outputType)) {
       return _buildModelFluentCompiler(field);
@@ -673,10 +733,8 @@ extension ModelFluentGenerator on Generator {
       // If output is a list, return the list results.
     } else if (_isModelListOutputType(field.outputType)) {
       return _buildModelResultsCompiler(field);
-
-      // If output is `*GroupByOutputType`, return the group by results.
     } else if (field.outputType.isList &&
-        field.outputType.type.endsWith('GroupByOutputType')) {
+        outputTypeName.endsWith('GroupByOutputType')) {
       final type = _findPrismaOutputType(field.outputType.type);
       final fields = type.fields
           .where((element) =>
@@ -686,7 +744,7 @@ extension ModelFluentGenerator on Generator {
       return _buildModelResultsCompiler(field, fields: fields);
 
       // If output is `AffectedRowsOutput`, return the affected rows.
-    } else if (field.outputType.type == 'AffectedRowsOutput') {
+    } else if (outputTypeName == 'AffectedRowsOutput') {
       final type = _findPrismaOutputType(field.outputType.type);
       final fields = type.fields.map((e) => e.name);
 
@@ -696,8 +754,9 @@ extension ModelFluentGenerator on Generator {
     } else if (field.outputType.location == dmmf.FieldLocation.enumTypes) {
       return _buildModelEnumCompiler(field);
     }
+
     return [
-      code.refer(field.outputType.type.toDartClassName()).newInstance([
+      code.refer(outputTypeName.toDartClassName()).newInstance([
         code.refer('query'),
       ]).returned,
     ];
@@ -706,9 +765,15 @@ extension ModelFluentGenerator on Generator {
   /// Build model enum compiler
   Iterable<code.Expression> _buildModelEnumCompiler(
       dmmf.SchemaField field) sync* {
+    final outputTypeName = field.outputType.type.when<String>(
+      string: (value) => value,
+      enum_: (value) => value.name,
+      outputObjectTypes: (value) => value.name,
+    );
+
     final enumDecodeName =
         field.isNullable == true ? r'$enumDecodeNullable' : r'$enumDecode';
-    final enumName = '_\$${field.outputType.type.toDartClassName()}EnumMap';
+    final enumName = '_\$${outputTypeName.toDartClassName()}EnumMap';
     final fn = code.Method((updates) {
       updates.requiredParameters.add(code.Parameter((updates) {
         updates.name = 'value';
@@ -731,7 +796,13 @@ extension ModelFluentGenerator on Generator {
 
   /// Build model scalar compiler
   Iterable<code.Expression> _buildModelScalarCompiler(dmmf.SchemaField field) {
-    final typeName = field.outputType.type.toLowerCase().trim();
+    final outputTypeName = field.outputType.type.when<String>(
+      string: (value) => value,
+      enum_: (value) => value.name,
+      outputObjectTypes: (value) => value.name,
+    );
+    final typeName = outputTypeName.toLowerCase().trim();
+
     if (typeName == 'datetime' || typeName == 'date') {
       final fn = code.Method((updates) {
         updates.requiredParameters.add(code.Parameter((updates) {
@@ -761,7 +832,12 @@ extension ModelFluentGenerator on Generator {
       return [query.returned];
     }
 
-    final type = scalar(field.outputType);
+    final type = scalar(
+      outputTypeName,
+      location: field.outputType.location,
+      isList: field.outputType.isList,
+      isNullable: field.isNullable == true,
+    );
     final fn = code.Method((updates) {
       updates.requiredParameters.add(code.Parameter((updates) {
         updates.name = 'value';
@@ -781,17 +857,27 @@ extension ModelFluentGenerator on Generator {
   }
 
   /// Find prisma output type
-  dmmf.OutputType _findPrismaOutputType(String name) {
+  dmmf.OutputType _findPrismaOutputType(dmmf.TypeRefType type) {
     final types = options.dmmf.schema.outputObjectTypes.prisma;
+    final name = type.when<String>(
+      string: (name) => name,
+      enum_: (type) => type.name,
+      outputObjectTypes: (type) => type.name,
+    );
 
     return types.firstWhere((e) => e.name == name);
   }
 
   /// Is model fluent output type
-  bool _isModelListOutputType(dmmf.SchemaType outputType) {
+  bool _isModelListOutputType(dmmf.TypeRef outputType) {
     final models = options.dmmf.schema.outputObjectTypes.model;
-    return models?.any((e) => e.name == outputType.type) == true &&
-        outputType.isList;
+    final name = outputType.type.when<String>(
+      string: (name) => name,
+      enum_: (type) => type.name,
+      outputObjectTypes: (type) => type.name,
+    );
+
+    return outputType.isList && models.any((element) => element.name == name);
   }
 
   /// Build model results compiler
@@ -799,10 +885,15 @@ extension ModelFluentGenerator on Generator {
     dmmf.SchemaField field, {
     Iterable<String>? fields,
   }) {
+    final outputTypeName = field.outputType.type.when<String>(
+      string: (value) => value,
+      enum_: (value) => value.name,
+      outputObjectTypes: (value) => value.name,
+    );
     final expressions = <code.Expression>[];
 
     final modelScalarEnumName =
-        _buildModelScalarFieldEnumName(field.outputType.type).toDartClassName();
+        _buildModelScalarFieldEnumName(outputTypeName).toDartClassName();
     final modelScalarFields = code
         .refer(modelScalarEnumName)
         .property('values')
@@ -862,7 +953,7 @@ extension ModelFluentGenerator on Generator {
       }));
 
       final serializer = code
-          .refer(field.outputType.type.toDartClassName())
+          .refer(outputTypeName.toDartClassName())
           .newInstanceNamed('fromJson', [
         code.refer(field.name.toDartPropertyName()).property('cast').call([]),
       ]).code;
@@ -923,10 +1014,15 @@ extension ModelFluentGenerator on Generator {
 
   /// Build model fluent compiler
   Iterable<code.Expression> _buildModelFluentCompiler(dmmf.SchemaField field) {
+    final outputTypeName = field.outputType.type.when<String>(
+      string: (value) => value,
+      enum_: (value) => value.name,
+      outputObjectTypes: (value) => value.name,
+    );
     final expressions = <code.Expression>[];
 
     final modelScalarEnumName =
-        _buildModelScalarFieldEnumName(field.outputType.type).toDartClassName();
+        _buildModelScalarFieldEnumName(outputTypeName).toDartClassName();
     final fields = code
         .refer(modelScalarEnumName)
         .property('values')
@@ -938,7 +1034,7 @@ extension ModelFluentGenerator on Generator {
       code.refer('dynamic'),
     ]);
     final serializer = code
-        .refer(field.outputType.type.toDartClassName())
+        .refer(outputTypeName.toDartClassName())
         .property('fromJson')
         .call([json]);
     final thrown = code.refer('Exception').newInstance([
@@ -1001,7 +1097,13 @@ extension ModelDelegateGenerator on Generator {
     });
 
     final json = mapping.toJson().cast<String, String?>();
-    for (final operation in mapping.operations) {
+    final operations = json.keys
+        .where((element) =>
+            element.toLowerCase() != 'model' ||
+            element.toLowerCase() != 'plural')
+        .where((element) => json[element] != null);
+
+    for (final operation in operations) {
       final gqlOperation = json[operation];
 
       if (gqlOperation == null) continue;
@@ -1043,10 +1145,19 @@ extension ModelDelegateGenerator on Generator {
 
   /// Model delegate method return type builder
   code.Reference _modelDelegateMethodReturnTypeBuilder(dmmf.SchemaField field) {
-    final type =
-        scalar(field.outputType, _isOperationReturnTypeNullable(field));
+    final outoutTypeName = field.outputType.type.when<String>(
+      string: (value) => value,
+      enum_: (value) => value.name,
+      outputObjectTypes: (value) => value.name,
+    );
+    final type = scalar(
+      outoutTypeName,
+      location: field.outputType.location,
+      isNullable: _isOperationReturnTypeNullable(field),
+      isList: field.outputType.isList,
+    );
 
-    if (_isAggregate(field.outputType.type)) {
+    if (_isAggregate(outoutTypeName)) {
       return type;
     }
 
@@ -1056,17 +1167,23 @@ extension ModelDelegateGenerator on Generator {
         ..types.add(type);
 
       if (_isModelFluentOutputType(field.outputType)) {
-        updates.symbol = _buildModelFluentName(field.outputType.type);
+        updates.symbol = _buildModelFluentName(outoutTypeName);
       }
     });
   }
 
   /// Is model fluent output type
-  bool _isModelFluentOutputType(dmmf.SchemaType outputType) {
+  bool _isModelFluentOutputType(dmmf.TypeRef outputType) {
+    if (outputType.isList) return false;
+
+    final outputTypeName = outputType.type.when<String>(
+      string: (value) => value,
+      enum_: (value) => value.name,
+      outputObjectTypes: (value) => value.name,
+    );
+
     return options.dmmf.schema.outputObjectTypes.model
-                ?.any((e) => e.name == outputType.type) ==
-            true &&
-        !outputType.isList;
+        .any((element) => outputTypeName == element.name);
   }
 
   /// Return type is nullable.
@@ -1150,8 +1267,15 @@ extension PrismaOutputTypeGenerator on Generator {
 
   /// Without count aggregate output type field
   dmmf.OutputType _withoutAggregateOutputTypeField(dmmf.OutputType output) {
-    final fields = output.fields.where(
-        (element) => !element.outputType.type.endsWith('AggregateOutputType'));
+    final fields = output.fields.where((element) {
+      final name = element.outputType.type.when<String>(
+        string: (value) => value,
+        enum_: (value) => value.name,
+        outputObjectTypes: (value) => value.name,
+      );
+
+      return !name.endsWith('AggregateOutputType');
+    });
 
     return dmmf.OutputType(
       name: output.name,
