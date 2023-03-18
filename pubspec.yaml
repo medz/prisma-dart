@@ -8,13 +8,12 @@ funding:
   - https://ko-fi.com/odroe
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: ">=2.18.0 <3.0.0"
 
 executables:
   prisma: orm
 
 dependencies:
-  archive: ^3.3.1
   args: ^2.3.1
   code_builder: ^4.4.0
   crypto: ^3.0.2
@@ -23,6 +22,7 @@ dependencies:
   json_annotation: ^4.8.0
   meta: ^1.9.0
   path: ^1.8.2
+  prisma_dmmf: ^1.0.1
   recase: ^4.1.0
   retry: ^3.1.0
 

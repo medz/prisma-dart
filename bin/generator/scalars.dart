@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:orm/dmmf.dart';
+import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 import 'packages.dart' as packages;
 import 'utils.dart';
@@ -22,13 +22,17 @@ final Map<String, Reference> scalarReferneces = {
   'date': refer('DateTime'),
 }.map((key, value) => MapEntry(key.toLowerCase(), value));
 
-Reference scalar(SchemaType schemaType, [bool isNullable = false]) {
-  final String type = schemaType.type.toLowerCase();
-  Reference reference =
-      scalarReferneces[type] ?? _resolvePrismaScalar(schemaType);
+Reference scalar(
+  String type, {
+  required FieldLocation location,
+  bool isNullable = false,
+  bool isList = false,
+}) {
+  Reference reference = scalarReferneces[type.toLowerCase()] ??
+      _resolvePrismaScalar(type, location);
 
   // If the type is list, then return a list of the type.
-  if (schemaType.isList) {
+  if (isList) {
     reference = TypeReference((TypeReferenceBuilder updates) {
       updates.symbol = 'Iterable';
       updates.types.add(reference);
@@ -39,11 +43,7 @@ Reference scalar(SchemaType schemaType, [bool isNullable = false]) {
 }
 
 /// Resolve prisma type
-Reference _resolvePrismaScalar(SchemaType schemaType) {
-  String symbol = schemaType.type;
-  if (schemaType.location != FieldLocation.scalar) {
-    symbol = symbol.toDartClassName();
-  }
-
-  return refer(symbol);
+Reference _resolvePrismaScalar(String type, FieldLocation location) {
+  return refer(
+      location == FieldLocation.scalar ? type : type.toDartClassName());
 }

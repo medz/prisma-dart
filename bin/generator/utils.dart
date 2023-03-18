@@ -75,6 +75,7 @@ const Iterable<String> reservedPropertyKeywords = [
   'get',
   'hide',
   'in',
+  'is',
   'implements',
   'import',
   'interface',
