@@ -80,7 +80,12 @@ extension LibraryDirectives on PrismaDartClientGenerator {
   /// Import packages
   void _imports() {
     library.directives.add(
-        code.Directive.import('package:json_annotation/json_annotation.dart'));
+      code.Directive.import('package:json_annotation/json_annotation.dart'),
+    );
+    library.directives.add(
+      code.Directive.import('package:orm/orm.dart',
+          show: ['DateTimeJsonConverter']),
+    );
   }
 
   /// parts

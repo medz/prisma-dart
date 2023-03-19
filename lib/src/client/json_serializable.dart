@@ -6,22 +6,27 @@ abstract class JsonSerializable {
   Map<String, dynamic> toJson();
 }
 
-/// Date time toJson serializer.
-dynamic dateTimeToJson(dynamic value) {
-  if (value is DateTime) {
-    return value.isUtc
-        ? value.toIso8601String()
-        : value.toUtc().toIso8601String();
-  } else if (value is Iterable) {
-    return value.map(dateTimeToJson);
-  } else if (value is Map) {
-    return value.map((k, v) => MapEntry(k, dateTimeToJson(v)));
+class DateTimeJsonConverter
+    implements json_annotation.JsonConverter<DateTime, String> {
+  const DateTimeJsonConverter();
+
+  @override
+  DateTime fromJson(String json) {
+    return DateTime.parse(json);
   }
 
-  return value;
+  @override
+  String toJson(DateTime object) {
+    return object.isUtc
+        ? object.toIso8601String()
+        : object.toUtc().toIso8601String();
+  }
 }
 
 const jsonSerializable = json_annotation.JsonSerializable(
   explicitToJson: true,
   includeIfNull: false,
+  converters: [
+    DateTimeJsonConverter(),
+  ],
 );
