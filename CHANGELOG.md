@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.2](https://github.com/odroe/prisma-dart/compare/orm-v3.2.1...orm-v3.2.2) (2023-03-19)
+
+
+### Bug Fixes
+
+* **generator:** DateTime not convert to UTC ([5f1f28b](https://github.com/odroe/prisma-dart/commit/5f1f28b90852e9c8654e1ed00d3a8f6d91404bdd))
+* Read Dart reserved keyword from analyzer ([f6a2b45](https://github.com/odroe/prisma-dart/commit/f6a2b45ff6c596d026edbac65fa607eac06b8e16))
+
 ## [3.2.1](https://github.com/odroe/prisma-dart/compare/orm-v3.2.0...orm-v3.2.1) (2023-03-19)
 
 
