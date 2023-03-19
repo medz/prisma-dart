@@ -2,7 +2,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:test/test.dart';
 import 'package:prisma_dmmf/prisma_dmmf.dart';
 
-import '../../bin/generator/scalars.dart';
+import '../../bin/src/scalars.dart';
 
 void main() {
   test('scalar', () {

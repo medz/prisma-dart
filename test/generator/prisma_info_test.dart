@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:test/test.dart';
 
-import '../../bin/generator/prisma_info.dart';
+import '../../bin/src/prisma_info.dart';
 
 void main() {
   late String version;

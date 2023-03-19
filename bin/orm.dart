@@ -1,6 +1,6 @@
 /// Prisma Dart client generator
 library prisma.generator;
 
-import 'generator/generator.dart';
+import 'src/generator.dart';
 
 main() => PrismaDartClientGenerator().listen();

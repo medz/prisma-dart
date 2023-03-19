@@ -2,7 +2,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:recase/recase.dart';
 import 'package:test/test.dart';
 
-import '../../bin/generator/utils.dart';
+import '../../bin/src/utils.dart';
 
 void main() {
   group('DartStyleName', () {
