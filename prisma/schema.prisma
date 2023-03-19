@@ -7,18 +7,19 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./prisma.sqlite"
+  url      = env("DATABASE_URL")
+  // url      = "file:./prisma.sqlite"
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @map("_id")
   name      String   @unique
   createdAt DateTime @default(now())
   posts     Post[]
 }
 
 model Post {
-  id         Int      @id @default(autoincrement())
+  id         Int      @id @map("_id")
   title      String?
   authorId   Int
   content    String

@@ -66,6 +66,7 @@ const Iterable<String> reservedPropertyKeywords = [
   'await',
   'covariant',
   'deferred',
+  "default",
   'dynamic',
   'export',
   'extension',
