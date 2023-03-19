@@ -4,8 +4,8 @@ version: 3.2.1
 homepage: https://prisma.pub
 repository: https://github.com/odroe/prisma-dart
 funding:
+  - https://github.com/sponsors/odroe
   - https://opencollective.com/prisma-dart
-  - https://ko-fi.com/odroe
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -14,20 +14,23 @@ executables:
   prisma: orm
 
 dependencies:
-  analyzer: ^5.8.0
-  args: ^2.3.1
-  code_builder: ^4.4.0
+  # Common dependencies
   crypto: ^3.0.2
-  dart_style: ^2.2.3
   http: ^0.13.5
   json_annotation: ^4.8.0
   meta: ^1.9.0
   path: ^1.8.2
   prisma_dmmf: ^1.0.2
   prisma_generator_helper: ^1.0.0
-  recase: ^4.1.0
   retry: ^3.1.0
 
+  # CLI dependencies
+  analyzer: ^5.8.0
+  code_builder: ^4.4.0
+  dart_style: ^2.2.3
+  recase: ^4.1.0
+
+# Devlopment dependencies
 dev_dependencies:
   build_runner: ^2.2.0
   json_serializable: ^6.6.1

@@ -1,5 +1,36 @@
-# Examples of Prisma ORM for Dart
+# Example
 
-- [Simple](https://github.com/odroe/prisma-dart/tree/main/example/simple) - Simple example of Prisma ORM for Dart
-- [RESUful API (with `spry`)](https://github.com/odroe/prisma-dart/tree/main/example/rest_api) - Example of a Rest API with Prisma ORM for Dart and [`spry`](https://spry.fun)
-- [Flutter (Using `Data Proxy`)](https://github.com/odroe/prisma-dart/tree/main/example/flutter_data_proxy) - Example of a Flutter app using Prisma ORM for Dart and [`Data Proxy`](https://www.prisma.io/docs/data-platform/data-proxy)
+The example is a simple command-line application that uses the `orm` package to
+connect to a database and perform some basic operations.
+
+## Git clone the repository
+
+```bash
+git clone https://github.com/odroe/prisma-dart &&
+cd prisma-dart
+```
+
+## Install dependencies
+
+```bash
+npm install
+dart pub get
+```
+
+## Generate client and push database schema
+
+```bash
+npx prisma db push
+dart run build_runner build
+```
+
+## Run the example
+
+```bash
+dart run example/main.dart
+```
+
+### Documentation
+
+- [Prisma Official Documentation](https://www.prisma.io/docs/)
+- [The `orm` package (Prisma ORM for Dart)](https://prisma.pub/)

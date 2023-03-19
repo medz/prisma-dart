@@ -25,38 +25,3 @@ RUN set -eux; \
 # Install Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
 apt-get install -y nodejs
-
-# Set the working directory
-WORKDIR /app
-
-# Copy source files
-COPY . .
-
-# Install pub dependencies
-RUN dart pub get
-
-# Install prisma and install dependencies
-RUN npm install prisma &&\
-npm install
-
-# Generate prisma client
-RUN npx prisma generate
-
-# Display prisma query engines
-RUN ls node_modules/prisma
-
-# Build the app
-RUN dart compile exe lib/main.dart -o app.exe
-
-FROM scratch
-
-COPY --from=builder /runtime/ /
-COPY --from=builder /app/app.exe /app.exe
-COPY --from=builder /app/prisma /prisma
-
-# Copy the Prisma query engines
-# node_modules/prisma/query-engine-<platform>
-COPY --from=builder /app/node_modules/prisma/query-engine-* /prisma/
-
-# Run the app
-CMD ["/app.exe"]

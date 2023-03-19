@@ -24,27 +24,3 @@ updates:
       interval: daily
     commit-message:
       prefix: "fix"
-
-  # Simple example
-  - package-ecosystem: pub
-    directory: /example/simple
-    schedule:
-      interval: daily
-    labels:
-      - "example"
-
-  # RESTful example
-  - package-ecosystem: pub
-    directory: /example/rest_api
-    schedule:
-      interval: daily
-    labels:
-      - "example"
-
-  # Flutter example
-  - package-ecosystem: pub
-    directory: /example/flutter_data_proxy
-    schedule:
-      interval: daily
-    labels:
-      - "example"

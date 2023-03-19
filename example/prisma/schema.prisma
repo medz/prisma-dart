@@ -3,16 +3,16 @@
 
 generator client {
   provider = "dart run orm"
+  output   = "."
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./db.sqlite"
+  url      = "file:./prisma.sqlite"
 }
 
-model SaySomething {
-  id        Int      @id @default(autoincrement())
+model User {
+  id        String   @id @map("_id")
+  name      String   @unique
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  text      String
 }

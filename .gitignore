@@ -10,5 +10,5 @@ docs/.vitepress/*
 pubspec.lock
 
 # Development files or directories.
-lib/src/generated/
-prisma/prisma.sqlite
+example/prisma/*
+!example/prisma/schema.prisma

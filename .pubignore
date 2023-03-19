@@ -1,6 +1,5 @@
 docs/
-example/
-!example/README.md
 graphs/
-dev.dart
 node_modules/
+example/prisma/*
+!example/prisma/schema.prisma
