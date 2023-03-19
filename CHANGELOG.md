@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/odroe/prisma-dart/compare/orm-v3.2.0...orm-v3.2.1) (2023-03-19)
+
+
+### Bug Fixes
+
+* fix not convert `default` of property key, Thx [@gzlock](https://github.com/gzlock) ([8adab24](https://github.com/odroe/prisma-dart/commit/8adab240aceea8e7922b2197f1dc67dd67a3251b)), closes [#172](https://github.com/odroe/prisma-dart/issues/172)
+
 ## [3.2.0](https://github.com/odroe/prisma-dart/compare/orm-v3.1.5...orm-v3.2.0) (2023-03-18)
 
 
