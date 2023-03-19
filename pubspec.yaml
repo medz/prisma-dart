@@ -14,6 +14,7 @@ executables:
   prisma: orm
 
 dependencies:
+  analyzer: ^5.8.0
   args: ^2.3.1
   code_builder: ^4.4.0
   crypto: ^3.0.2

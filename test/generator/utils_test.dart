@@ -13,10 +13,7 @@ void main() {
       expect('a_b_c'.toDartClassName(), 'ABC');
       expect('_a'.toDartClassName(), r'$a');
 
-      for (final keyword in reservedClassKeywords) {
-        expect(keyword.toDartClassName(), '\$${keyword.pascalCase}');
-      }
-      for (final keyword in whereReservedKeywords) {
+      for (final keyword in DartStyleName.prismaWhereReservedKeywords) {
         expect(keyword.toDartClassName(), keyword.pascalCase);
       }
     });
@@ -28,11 +25,12 @@ void main() {
       expect('a_b_c'.toDartPropertyName(), 'aBC');
       expect('_a'.toDartPropertyName(), r'$a');
 
-      for (final keyword in reservedPropertyKeywords) {
+      for (final keyword in DartStyleName.dartReservedPropertyKeywords) {
         expect(keyword.toDartPropertyName(), '\$${keyword.camelCase}');
       }
-      for (final keyword in whereReservedKeywords) {
-        expect(keyword.toDartPropertyName(), keyword.camelCase);
+
+      for (final keyword in DartStyleName.prismaWhereReservedKeywords) {
+        expect(keyword.toDartPropertyName(), keyword);
       }
     });
   });
