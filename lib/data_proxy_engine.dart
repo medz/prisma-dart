@@ -1,5 +1,7 @@
 library prisma.engine.data_proxy;
 
+import 'dart:convert' as convert;
+
 import 'package:http/http.dart' as http;
 
 import 'logger.dart';
@@ -80,7 +82,8 @@ class DataProxyEngine extends UniversalEngine implements Engine {
     final response =
         await http.put(url, headers: headers, body: schema.codeUnits);
     if (response.statusCode != 201) {
-      final message = 'Error while updating schema: ${response.body}';
+      final message =
+          'Error while updating schema: ${convert.utf8.decode(response.bodyBytes)}';
       logger.emit(Event.warn, Payload(message: message));
 
       throw PrismaRequestException(message: message, engine: this);

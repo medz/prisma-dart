@@ -6,7 +6,7 @@
     "vitepress": "^1.0.0-alpha.60"
   },
   "scripts": {
-    "prisma:engine": "DATABASE_URL=postgres://seven@localhost:5432/prisma-dart?schema=public node_modules/prisma/query-engine-darwin -m -g -r --datamodel-path prisma/schema.prisma -p 8080",
+    "prisma:engine": "DATABASE_URL=postgres://seven@localhost:5432/prisma-dart?schema=public node_modules/prisma/query-engine-darwin -m -g -r --datamodel-path example/prisma/schema.prisma -p 8080",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"

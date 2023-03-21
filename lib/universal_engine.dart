@@ -71,7 +71,8 @@ class UniversalEngine implements Engine {
       final response =
           await http.post(url, headers: wrappedHeaders, body: body);
       final json =
-          (convert.json.decode(response.body) as Map).cast<String, dynamic>();
+          (convert.json.decode(convert.utf8.decode(response.bodyBytes)) as Map)
+              .cast<String, dynamic>();
 
       return GraphQLResult.fromJson(json);
     }
@@ -111,7 +112,8 @@ class UniversalEngine implements Engine {
       _tryThrowExceptionFromStatusCode(response.statusCode);
 
       final json =
-          (convert.json.decode(response.body) as Map).cast<String, dynamic>();
+          (convert.json.decode(convert.utf8.decode(response.bodyBytes)) as Map)
+              .cast<String, dynamic>();
       _tryThrowPrismaException(json);
 
       return TransactionInfo.fromJson(json);
@@ -205,7 +207,8 @@ class UniversalEngine implements Engine {
       final response = await http.post(url);
 
       _tryThrowExceptionFromStatusCode(response.statusCode);
-      _tryThrowPrismaException(_tryDecodeJson(response.body));
+      _tryThrowPrismaException(
+          _tryDecodeJson(convert.utf8.decode(response.bodyBytes)));
     });
   }
 

@@ -34,7 +34,7 @@ void main() async {
 
     // Create a user
     final created = await prisma.user.create(
-      data: UserCreateInput(id: 'seven', name: 'Seven Du'),
+      data: UserCreateInput(id: 'seven', name: 'Seven(世伟) Du(杜)'),
     );
     print('------------------ create user ------------------');
     print(

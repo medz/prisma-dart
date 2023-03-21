@@ -264,7 +264,8 @@ class BinaryEngine extends UniversalEngine implements Engine {
       logger(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        final json = convert.json.decode(response.body);
+        final json =
+            convert.json.decode(convert.utf8.decode(response.bodyBytes));
         if (json['status'].toString().toLowerCase() == 'ok') return true;
       }
 
