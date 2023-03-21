@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.3](https://github.com/odroe/prisma-dart/compare/orm-v3.2.2...orm-v3.2.3) (2023-03-21)
+
+
+### Bug Fixes
+
+* Fix decoding special characters ([8d75d2a](https://github.com/odroe/prisma-dart/commit/8d75d2a24eeeb9487ec3823eb9e6a4df4f389459))
+
 ## [3.2.2](https://github.com/odroe/prisma-dart/compare/orm-v3.2.1...orm-v3.2.2) (2023-03-19)
 
 
