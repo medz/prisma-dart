@@ -97,8 +97,8 @@ class UniversalEngine implements Engine {
     await start();
     final url = resolveStartTransactionEndpoint();
     final body = convert.json.encode({
-      'max_wait': timeout.inMilliseconds,
-      'timeout': maxWait.inMilliseconds,
+      'max_wait': maxWait.inMilliseconds,
+      'timeout': timeout.inMilliseconds,
       'isolation_level': isolationLevel?.originalName,
     });
     final wrappedHeaders = headersWrapper(headers: [this.headers, headers]);
