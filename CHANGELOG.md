@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.4](https://github.com/odroe/prisma-dart/compare/orm-v3.2.3...orm-v3.2.4) (2023-03-26)
+
+
+### Bug Fixes
+
+* **engine:** maxWait and timeout were passed incorrectly ([f4627b0](https://github.com/odroe/prisma-dart/commit/f4627b053e5c7399a4f142b71b631c3049249d82)), closes [#178](https://github.com/odroe/prisma-dart/issues/178)
+
 ## [3.2.3](https://github.com/odroe/prisma-dart/compare/orm-v3.2.2...orm-v3.2.3) (2023-03-21)
 
 
