@@ -80,7 +80,7 @@ class PrismaRawParameterEncoder extends Converter<Object?, Object?> {
     } else if (input is double) {
       return PrismaTypedParameter.fromDouble(input);
     } else if (input is Iterable) {
-      return input.map((e) => convert(e));
+      return input.map((e) => convert(e)).toList();
     } else if (input is Map) {
       return input.map((key, value) => MapEntry(key, convert(value)));
     }
