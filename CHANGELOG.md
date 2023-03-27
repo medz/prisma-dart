@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.6](https://github.com/odroe/prisma-dart/compare/orm-v3.2.5...orm-v3.2.6) (2023-03-27)
+
+
+### Bug Fixes
+
+* **engine:** Fix ignored errors ([fe8c89f](https://github.com/odroe/prisma-dart/commit/fe8c89f2a1975ce2d67f89edc9c623756f6eb29b))
+
 ## [3.2.5](https://github.com/odroe/prisma-dart/compare/orm-v3.2.4...orm-v3.2.5) (2023-03-27)
 
 
