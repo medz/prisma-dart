@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.2.5](https://github.com/odroe/prisma-dart/compare/orm-v3.2.4...orm-v3.2.5) (2023-03-27)
+
+
+### Bug Fixes
+
+* **engine:** Fix raw query always returning null, Thx [@craiglabenz](https://github.com/craiglabenz) ([efb15a6](https://github.com/odroe/prisma-dart/commit/efb15a69414464f8ab1820706b1fac851529a780)), closes [#177](https://github.com/odroe/prisma-dart/issues/177)
+* **engine:** Fix the order of throwing exceptions in transaction, Thx @PeterMX ([f0b86bd](https://github.com/odroe/prisma-dart/commit/f0b86bdf5c13f5400797d7b2a8593c5960b14a34)), closes [#181](https://github.com/odroe/prisma-dart/issues/181)
+* **engine:** Prioritize checking for transaction errors, Thx @PeterMX ([b3bedce](https://github.com/odroe/prisma-dart/commit/b3bedce971fa767369d0a7a9449091e1ceee404a))
+
 ## [3.2.4](https://github.com/odroe/prisma-dart/compare/orm-v3.2.3...orm-v3.2.4) (2023-03-26)
 
 
