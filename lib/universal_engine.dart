@@ -70,9 +70,12 @@ class UniversalEngine implements Engine {
 
       final response =
           await http.post(url, headers: wrappedHeaders, body: body);
+      _tryThrowExceptionFromStatusCode(response.statusCode);
+
       final json =
           (convert.json.decode(convert.utf8.decode(response.bodyBytes)) as Map)
               .cast<String, dynamic>();
+      _tryThrowPrismaException(json);
 
       return GraphQLResult.fromJson(json);
     }
@@ -224,9 +227,9 @@ class UniversalEngine implements Engine {
   /// Try throw an [PrismaException] from the [json].
   void _tryThrowPrismaException(Map<String, dynamic> json) {
     final errors = json['errors'];
-    if (errors != null && errors is Iterable && errors.isEmpty) {
+    if (errors != null && errors is Iterable && errors.isNotEmpty) {
       final exceptions =
-          errors.map((e) => GraphQLError.fromJson(json).toException(this));
+          errors.map((e) => GraphQLError.fromJson(e).toException(this));
 
       if (exceptions.length == 1) {
         final exception = exceptions.first;

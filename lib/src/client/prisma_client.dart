@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import '../../engine_core.dart';
 import '../../logger.dart';
@@ -148,7 +149,8 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
           'queryRaw',
           args: [
             GraphQLArg('query', query),
-            GraphQLArg('parameters', prismaRawParameter.encode(parameters)),
+            GraphQLArg('parameters',
+                json.encode(prismaRawParameter.encode(parameters))),
           ],
         )
       ],
@@ -174,16 +176,17 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   /// ```dart
   /// final int affectedRows = await prisma.$executeRaw('DELETE FROM User');
   /// ```
-  Future<int> $executeRaw(
+  Future<dynamic> $executeRaw(
     String query, {
     Iterable<dynamic> parameters = const [],
   }) async {
     final String sdl = GraphQLField(
       'mutation',
       fields: [
-        GraphQLField('queryRaw', args: [
+        GraphQLField('executeRaw', args: [
           GraphQLArg('query', query),
-          GraphQLArg('parameters', prismaRawParameter.encode(parameters)),
+          GraphQLArg(
+              'parameters', json.encode(prismaRawParameter.encode(parameters))),
         ])
       ],
     ).toSdl();

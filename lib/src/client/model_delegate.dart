@@ -43,31 +43,10 @@ class ModelDelegate<T> {
       transaction: _transaction,
     );
 
-    final exceptions = result.errors?.map((e) => e.toException(_engine));
-    if (exceptions != null && exceptions.isNotEmpty) {
-      throw _generateThrownException(exceptions);
-
-      // If data is null, throw an exception.
-    } else if (result.data == null) {
+    if (result.data == null) {
       throw PrismaUnknownException(_engine);
     }
 
     return result.data!;
-  }
-
-  /// Returns thrown exception.
-  PrismaException _generateThrownException(
-      Iterable<PrismaRequestException> exceptions) {
-    // If exceptions only contains one exception, throw it.
-    if (exceptions.length == 1) {
-      return exceptions.first;
-    }
-
-    // Otherwise, throw a [MultiplePrismaRequestException].
-    return MultiplePrismaRequestException(
-      engine: _engine,
-      message: 'Multiple exceptions occurred',
-      exceptions: exceptions,
-    );
   }
 }
