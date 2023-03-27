@@ -224,9 +224,8 @@ class UniversalEngine implements Engine {
 
   /// Try throw an [PrismaException] from the [json].
   void _tryThrowPrismaException(Map<String, dynamic> json) {
-    if (json['meta']?['error'] != null && json['meta']['error'] is Map) {
-      final exception =
-          GraphQLError.fromJson(json['meta']['error']).toException(this);
+    if (json['error_code'] != null && json['error_code'] is String && json['error_code'].isNotEmpty) {
+      final exception = GraphQLError.fromJson(json).toException(this);
 
       logger.emit(Event.error, Payload(message: exception.message));
       throw exception;
