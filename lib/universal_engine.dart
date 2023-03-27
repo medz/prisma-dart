@@ -109,12 +109,11 @@ class UniversalEngine implements Engine {
 
       final response =
           await http.post(url, headers: wrappedHeaders, body: body);
-      _tryThrowExceptionFromStatusCode(response.statusCode);
-
       final json =
           (convert.json.decode(convert.utf8.decode(response.bodyBytes)) as Map)
               .cast<String, dynamic>();
       _tryThrowPrismaException(json);
+      _tryThrowExceptionFromStatusCode(response.statusCode);
 
       return TransactionInfo.fromJson(json);
     }
@@ -206,9 +205,9 @@ class UniversalEngine implements Engine {
 
       final response = await http.post(url);
 
-      _tryThrowExceptionFromStatusCode(response.statusCode);
       _tryThrowPrismaException(
           _tryDecodeJson(convert.utf8.decode(response.bodyBytes)));
+      _tryThrowExceptionFromStatusCode(response.statusCode);
     });
   }
 
