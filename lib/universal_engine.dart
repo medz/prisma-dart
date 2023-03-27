@@ -70,12 +70,11 @@ class UniversalEngine implements Engine {
 
       final response =
           await http.post(url, headers: wrappedHeaders, body: body);
-      _tryThrowExceptionFromStatusCode(response.statusCode);
-
       final json =
           (convert.json.decode(convert.utf8.decode(response.bodyBytes)) as Map)
               .cast<String, dynamic>();
       _tryThrowPrismaException(json);
+      _tryThrowExceptionFromStatusCode(response.statusCode);
 
       return GraphQLResult.fromJson(json);
     }
@@ -112,12 +111,11 @@ class UniversalEngine implements Engine {
 
       final response =
           await http.post(url, headers: wrappedHeaders, body: body);
-      _tryThrowExceptionFromStatusCode(response.statusCode);
-
       final json =
           (convert.json.decode(convert.utf8.decode(response.bodyBytes)) as Map)
               .cast<String, dynamic>();
       _tryThrowPrismaException(json);
+      _tryThrowExceptionFromStatusCode(response.statusCode);
 
       return TransactionInfo.fromJson(json);
     }
@@ -209,9 +207,9 @@ class UniversalEngine implements Engine {
 
       final response = await http.post(url);
 
-      _tryThrowExceptionFromStatusCode(response.statusCode);
       _tryThrowPrismaException(
           _tryDecodeJson(convert.utf8.decode(response.bodyBytes)));
+      _tryThrowExceptionFromStatusCode(response.statusCode);
     });
   }
 
@@ -226,6 +224,14 @@ class UniversalEngine implements Engine {
 
   /// Try throw an [PrismaException] from the [json].
   void _tryThrowPrismaException(Map<String, dynamic> json) {
+    if (json['meta']?['error'] != null && json['meta']['error'] is Map) {
+      final exception =
+          GraphQLError.fromJson(json['meta']['error']).toException(this);
+
+      logger.emit(Event.error, Payload(message: exception.message));
+      throw exception;
+    }
+
     final errors = json['errors'];
     if (errors != null && errors is Iterable && errors.isNotEmpty) {
       final exceptions =
