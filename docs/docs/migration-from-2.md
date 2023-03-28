@@ -9,7 +9,7 @@ Update your `prisma/schema.prisma` file to use the new `generator` syntax.
 ```diff
 generator client {
 -  provider = "prisma-client-dart"
-+  provider = "dart run rom"
++  provider = "dart run orm"
 }
 ```
 
