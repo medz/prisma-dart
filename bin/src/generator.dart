@@ -45,8 +45,10 @@ class PrismaDartClientGenerator extends Generator {
 
   @override
   void onGenerate(GeneratorOptions options) {
+    // 1. Read the options
     this.options = options;
 
+    // 2. Generate the different classes
     generateEnum();
     generateInputObjectTypes();
     generateScalarModels();
@@ -57,15 +59,21 @@ class PrismaDartClientGenerator extends Generator {
     generateDatasourcesClass();
     generatePrismaClient();
     defineDirectives();
+
+    // 3. Write the library to the file system
     writeLibrary();
   }
 
-  /// Resolve Node.js package manager of [Map].
+  /// Resolve the NPM executable, defaulting to "npm"
   String resolveNpm(Map<String, dynamic> config) {
-    final lowerCased =
+    // Get the config, making all keys lowercase.
+    final lowerCasedConfig =
         config.map((key, value) => MapEntry(key.toLowerCase(), value));
 
-    return lowerCased.containsKey('npm') ? config['npm'] as String : 'npm';
+    // Return the NPM executable, or default to "npm".
+    return lowerCasedConfig.containsKey('npm')
+        ? lowerCasedConfig['npm'] as String
+        : 'npm';
   }
 }
 
@@ -73,12 +81,12 @@ class PrismaDartClientGenerator extends Generator {
 extension LibraryDirectives on PrismaDartClientGenerator {
   /// Define the library directives
   void defineDirectives() {
-    _imports();
-    _parts();
+    _importDirectives();
+    _partDirectives();
   }
 
   /// Import packages
-  void _imports() {
+  void _importDirectives() {
     library.directives.add(
       code.Directive.import('package:json_annotation/json_annotation.dart'),
     );
@@ -88,8 +96,8 @@ extension LibraryDirectives on PrismaDartClientGenerator {
     );
   }
 
-  /// parts
-  void _parts() {
+  /// Parts
+  void _partDirectives() {
     final basename = path.basename(_resolveOutputPath());
     final part = basename.endsWith('.dart')
         ? basename.substring(0, basename.length - 5)
@@ -115,6 +123,7 @@ extension WriteLibrary on PrismaDartClientGenerator {
   void writeLibrary() {
     final library = this.library.build();
     final original = library.accept(emitter);
+
     final formatted = formatter.format(original.toString());
 
     // Create output file.
@@ -151,6 +160,8 @@ extension EnumGenerator on PrismaDartClientGenerator {
     'TransactionIsolationLevel',
   ].map((e) => e.toLowerCase());
 
+  /// Generates the enums for the prisma and model enum types
+  /// Called in the generate() function
   void generateEnum() {
     _enumsBuilder(options.dmmf.schema.enumTypes.prisma);
     _enumsBuilder(options.dmmf.schema.enumTypes.model);
