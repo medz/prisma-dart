@@ -3,7 +3,7 @@
   "name": "prisma-dart",
   "dependencies": {
     "prisma": "^4.12.0",
-    "vitepress": "^1.0.0-alpha.63"
+    "vitepress": "^1.0.0-alpha.64"
   },
   "scripts": {
     "prisma:engine": "DATABASE_URL=postgres://seven@localhost:5432/prisma-dart?schema=public node_modules/prisma/query-engine-darwin -m -g -r --datamodel-path example/prisma/schema.prisma -p 8080",
