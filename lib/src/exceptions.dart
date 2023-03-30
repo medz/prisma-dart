@@ -5,7 +5,7 @@ class PrismaException implements Exception {
   /// The exception message.
   final String message;
 
-  /// Current thrown the exception engine.
+  /// Engine that threw the exception.
   final Engine? engine;
 
   const PrismaException({

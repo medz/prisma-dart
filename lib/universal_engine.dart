@@ -223,13 +223,24 @@ class UniversalEngine implements Engine {
   }
 
   /// Try throw an [PrismaException] from the [json].
+  /// This function parses the JSON response from the Prisma server and throws a
+  /// PrismaException if the response contains an error.
+
   void _tryThrowPrismaException(Map<String, dynamic> json) {
-    if (json['error_code'] != null && json['error_code'] is String && json['error_code'].isNotEmpty) {
+    // If the response contains an error code, turn it into a PrismaException
+    // and throw it.
+
+    if (json['error_code'] != null &&
+        json['error_code'] is String &&
+        json['error_code'].isNotEmpty) {
       final exception = GraphQLError.fromJson(json).toException(this);
 
       logger.emit(Event.error, Payload(message: exception.message));
       throw exception;
     }
+
+    // If the response contains multiple errors, turn them into
+    // PrismaExceptions and throw them as a MultiplePrismaRequestException.
 
     final errors = json['errors'];
     if (errors != null && errors is Iterable && errors.isNotEmpty) {
@@ -262,7 +273,7 @@ class UniversalEngine implements Engine {
   }
 }
 
-/// Internel retry
+/// Internal retry
 class _InternalRetry<T> {
   int attempts = 0;
   final String gerund;
@@ -282,26 +293,9 @@ class _InternalRetry<T> {
         _retryIf = retryIf,
         _onRetry = onRetry;
 
-  void logger(Uri uri) {
-    _emit(
-      Event.info,
-      Payload(message: 'Calling $uri (n=$attempts)'),
-    );
-  }
-
-  Future<T> call() {
-    if (attempts > 0) {
-      _emit(
-        Event.info,
-        Payload(
-          message:
-              'Retrying after ${_retryOptions.delay(attempts).inMilliseconds}ms',
-        ),
-      );
-    }
-
-    attempts++;
-    return _fn(logger);
+  Future<T> call() async {
+    await _doRetry();
+    return await _fn(logger);
   }
 
   FutureOr<bool> retryIf(Exception e) {
@@ -322,5 +316,26 @@ class _InternalRetry<T> {
     );
 
     return _onRetry?.call(e);
+  }
+
+  void logger(Uri uri) {
+    _emit(
+      Event.info,
+      Payload(message: 'Calling $uri (n=$attempts)'),
+    );
+  }
+
+  Future<void> _doRetry() async {
+    if (attempts > 0) {
+      _emit(
+        Event.info,
+        Payload(
+          message:
+              'Retrying after ${_retryOptions.delay(attempts).inMilliseconds}ms',
+        ),
+      );
+    }
+
+    attempts++;
   }
 }
