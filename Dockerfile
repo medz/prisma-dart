@@ -28,6 +28,5 @@ RUN set -eux; \
 
 # Install Node.js and clean up
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
-apt-get install -y nodejs &&
-rm -rf /var/lib/apt/lists/* &&\
-npm cache clean --force
+apt-get install -y nodejs &&\
+apt-get clean
