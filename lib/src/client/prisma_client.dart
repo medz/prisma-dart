@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import '../../engine_core.dart';
 import '../../logger.dart';
+import '../exceptions.dart';
 import '../graphql/arg.dart';
 import '../graphql/field.dart';
 import 'prisma_raw_codec.dart';
@@ -54,6 +55,92 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   Future<void> $disconnect() async {
     await _engine.stop();
     finalizer.detach(this);
+  }
+
+  /// Start a new transaction.
+  Future<Client> $startTransaction({
+    TransactionHeaders? headers,
+    Duration timeout = const Duration(seconds: 5),
+    Duration maxWait = const Duration(seconds: 2),
+    TransactionIsolationLevel? isolationLevel,
+  }) async {
+    // If the client is a transaction, use it.
+    if (_transaction != null) {
+      return this as Client;
+    }
+
+    // Request a new transaction.
+    final TransactionInfo transactionInfo = await _engine.startTransaction(
+      headers: headers,
+      timeout: timeout,
+      maxWait: maxWait,
+      isolationLevel: isolationLevel,
+    );
+
+    return copyWith(
+      headers: QueryEngineRequestHeaders(
+        transactionId: transactionInfo.id,
+        traceparent: headers?.traceparent,
+      ),
+      transaction: transactionInfo,
+    );
+  }
+
+  /// Commit the current transaction.
+  Future<void> $commitTransaction() async {
+    _validateTransactionState();
+
+    // Commit the transaction.
+    await _engine.commitTransaction(
+      info: _transaction!,
+      headers: _headers,
+    );
+
+    // Set the transaction to committed.
+    _transaction!['isCommitted'] = true;
+  }
+
+  /// Rollback the current transaction.
+  Future<void> $rollbackTransaction() async {
+    _validateTransactionState();
+
+    // Rollback the transaction.
+    await _engine.rollbackTransaction(
+      info: _transaction!,
+      headers: _headers,
+    );
+
+    // Set the transaction to rolled back.
+    _transaction!['isRolledBack'] = true;
+  }
+
+  /// Validate transaction state.
+  void _validateTransactionState() {
+    // If the client is not a transaction, do nothing.
+    if (_transaction == null) {
+      throw PrismaException(
+        message: 'Cannot execute a query outside of a transaction.',
+        engine: _engine,
+      );
+    }
+
+    // If the client is committed, throw an error.
+    if (_transaction!['isCommitted'] == true) {
+      throw PrismaException(
+        message:
+            'Cannot execute a query in a transaction that is already committed.',
+        engine: _engine,
+      );
+    }
+
+    // If the client is rolled back, throw an error.
+    if (_transaction!['isRolledBack'] == true) {
+      throw PrismaException(
+        message:
+            'Cannot execute a query in a transaction that is already rolled back.',
+        engine: _engine,
+      );
+    }
   }
 
   /// Interactive transactions.
