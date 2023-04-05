@@ -29,3 +29,6 @@ RUN set -eux; \
 # Install Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
 apt-get install -y nodejs
+
+## Global install of Prisma CLI
+RUN npm install -g prisma
