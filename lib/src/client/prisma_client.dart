@@ -166,7 +166,7 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
     TransactionIsolationLevel? isolationLevel,
   }) async {
     // If the client is a transaction, use it.
-    if (_headers?.transactionId != null || _transaction != null) {
+    if (_transaction != null) {
       return callback(this as Client);
     }
 
