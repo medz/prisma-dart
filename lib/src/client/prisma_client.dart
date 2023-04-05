@@ -18,6 +18,9 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   static final Finalizer<Engine> finalizer =
       Finalizer<Engine>((engine) => engine.stop());
 
+  /// Finalizer is registered.
+  static bool _finalizerRegistered = false;
+
   /// Create a new instance of [BasePrismaClient].
   BasePrismaClient(
     Engine engine, {
@@ -26,7 +29,10 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
   })  : _transaction = transaction,
         _headers = headers,
         _engine = engine {
-    // finalizer.attach(this, engine, detach: this);
+    if (_finalizerRegistered != true) {
+      _finalizerRegistered = true;
+      finalizer.attach(this, engine, detach: this);
+    }
   }
 
   /// The prisma engine.
@@ -46,8 +52,6 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
 
   /// Connect to the prisma engine.
   Future<void> $connect() {
-    finalizer.attach(this, _engine, detach: this);
-
     return _engine.start();
   }
 
