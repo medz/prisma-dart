@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.3.0](https://github.com/odroe/prisma-dart/compare/orm-v3.2.6...orm-v3.3.0) (2023-04-05)
+
+
+### Features
+
+* **runtime:** Exposing lower level transaction primitives, Thx [@craiglabenz](https://github.com/craiglabenz) ([1c31841](https://github.com/odroe/prisma-dart/commit/1c31841f5a553a6e6c277a6186d970fffd9db512)), closes [#193](https://github.com/odroe/prisma-dart/issues/193)
+
+
+### Bug Fixes
+
+* **runtime:** Fix repeat attach engine in finalizer ([a5890b7](https://github.com/odroe/prisma-dart/commit/a5890b7afb2c382179cd867ff27babc201a218fc))
+* **runtime:** Fix the engine stop caused by calling `$disconnect` outside of transaction ([4448438](https://github.com/odroe/prisma-dart/commit/4448438a13d001ef1edc9871214da9c2f64178e3))
+* **runtime:** Remove deprecated transactionId ([2606456](https://github.com/odroe/prisma-dart/commit/260645676f373b6598654811f40137bb49e9bfbf))
+
 ## [3.2.6](https://github.com/odroe/prisma-dart/compare/orm-v3.2.5...orm-v3.2.6) (2023-03-27)
 
 
