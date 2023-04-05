@@ -57,6 +57,10 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
 
   /// Disconnect from the prisma engine.
   Future<void> $disconnect() async {
+    if (_transaction != null) {
+      return;
+    }
+
     await _engine.stop();
     finalizer.detach(this);
   }
