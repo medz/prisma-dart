@@ -26,9 +26,8 @@ RUN set -eux; \
         cp --archive --link --dereference --no-target-directory "$f" "/runtime$f"; \
     done
 
-# Install Node.js
+# Install Node.js and clean up
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
-apt-get install -y nodejs
-
-## Global install of Prisma CLI
-RUN npm install -g prisma
+apt-get install -y nodejs &&
+rm -rf /var/lib/apt/lists/* &&\
+npm cache clean --force
