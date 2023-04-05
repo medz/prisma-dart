@@ -1,4 +1,8 @@
-FROM dart:latest as builder
+FROM dart:latest
+
+LABEL org.opencontainers.image.source=https://github.com/odroe/prisma-dart
+LABEL org.opencontainers.image.description="Prisma ORM for Dart builder"
+LABEL org.opencontainers.image.licenses=BSD-3-Clause
 
 RUN set -eux; \
     case "$(dpkg --print-architecture)" in \
