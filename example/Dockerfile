@@ -1,4 +1,8 @@
-FROM ghcr.io/odroe/prisma-dart:main AS builder
+# Select amd64 image
+FROM dart:latest as builder
+
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
+apt-get install -y nodejs
 
 # Sets the working directory to /app
 WORKDIR /app
@@ -35,12 +39,16 @@ FROM scratch
 
 # Copy runtime dependencies
 COPY --from=builder /runtime /
+COPY --from=odroe/prisma-dart:amd64 /runtime /
 
 # Copy executable
 COPY --from=builder /app/app.exe /app.exe
 
 # Copy SQLite database
 COPY --from=builder /app/prisma/prisma.sqlite /prisma/prisma.sqlite
+
+# Copy Prisma Engine
+COPY --from=builder /app/node_modules/prisma/query-engine-* /
 
 # Run the executable
 CMD ["/app.exe"]
