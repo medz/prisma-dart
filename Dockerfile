@@ -1,9 +1,10 @@
-FROM dart:latest
+FROM debian:bullseye-slim
 
-LABEL org.opencontainers.image.source=https://github.com/odroe/prisma-dart
-LABEL org.opencontainers.image.description="Prisma ORM for Dart builder"
-LABEL org.opencontainers.image.licenses=BSD-3-Clause
-
+# tags:
+#  - amd64
+#  - arm64
+#  - armhf
+# usage: COPY --from=odroe/prisma-dart:{tag} /runtime/ /
 RUN set -eux; \
     case "$(dpkg --print-architecture)" in \
         amd64) \
@@ -25,8 +26,3 @@ RUN set -eux; \
         mkdir -p "/runtime$dir"; \
         cp --archive --link --dereference --no-target-directory "$f" "/runtime$f"; \
     done
-
-# Install Node.js and clean up
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
-apt-get install -y nodejs &&\
-apt-get clean
