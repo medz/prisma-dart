@@ -26,11 +26,11 @@ Unlike Dart other connected databases, Prisma is a sane ORM.
 
   Prisma ORM supports multiple databases, and you can migrate between different databases without modifying the code.
 
-## What About Priama client Dart?
+## What About Prisma client Dart?
 
-Priama client Dart is the Dart version of (Prisma ORM)(https://www.prisma.io), which is an ORM and also a Dart client for Prisma engines.
+Prisma client Dart is the Dart version of (Prisma ORM)(https://www.prisma.io), which is an ORM and also a Dart client for Prisma engines.
 
-There are significant differences between Prisma client Dart and Prisma client JS/TS, but their APIs are as consistent as possible. From this, we can reuse most of the documentation content in [Priama Documentation](https://www.prisma.io/docs/).
+There are significant differences between Prisma client Dart and Prisma client JS/TS, but their APIs are as consistent as possible. From this, we can reuse most of the documentation content in [Prisma Documentation](https://www.prisma.io/docs/).
 
 ## Does it have any flaws?
 
