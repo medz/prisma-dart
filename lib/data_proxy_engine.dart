@@ -12,7 +12,7 @@ import 'universal_engine.dart';
 /// Prisma Data Proxy api key name.
 const String _tokenName = 'api_key';
 
-/// Priama Data Proxy Engine.
+/// Prisma Data Proxy Engine.
 ///
 /// The Data Proxy Engine is a wrapper around the Prisma Data Proxy.
 class DataProxyEngine extends UniversalEngine implements Engine {
