@@ -47,6 +47,7 @@ class PrismaTypedParameter {
     if (json.containsKey('prisma__type') && json.containsKey('prisma__value')) {
       return PrismaTypedParameter.fromJson(json);
     }
+
     return null;
   }
 
@@ -55,8 +56,9 @@ class PrismaTypedParameter {
     if (value == null) {
       return null;
     } else if (value is DateTime) {
-      return value.toIso8601String();
+      return value.toUtc().toIso8601String();
     }
+
     return value.toString();
   }
 }
@@ -122,16 +124,12 @@ class PrismaRawParameterDecoder extends Converter<Object?, Object?> {
 
   /// Decode a JSON compatible value to a parameter.
   Object? _decodeParameter(String type, String? value) {
-    if (value == null) {
-      return null;
-    }
+    if (value == null) return null;
+
     type = type.toLowerCase().trim();
     final parse = _typedParameterParsers[type];
-    if (parse != null) {
-      return parse(value);
-    }
 
-    return value;
+    return parse == null ? value : parse(value);
   }
 
   /// Typed parameter to parses.
