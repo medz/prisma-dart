@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/odroe/prisma-dart/compare/orm-v3.3.0...orm-v3.3.1) (2023-05-23)
+
+
+### Bug Fixes
+
+* RAW parameter decoder ([cba5e9e](https://github.com/odroe/prisma-dart/commit/cba5e9ea886479075d33b0e001b6aac83eae8fcb))
+
 ## [3.3.0](https://github.com/odroe/prisma-dart/compare/orm-v3.2.6...orm-v3.3.0) (2023-04-05)
 
 
