@@ -328,11 +328,23 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
 
   /// Build field type
   code.Reference _buildFieldType(dmmf.SchemaArg field) {
-    final types = field.inputTypes;
+    /// TODO: bug https://github.com/odroe/prisma-dart/issues/209
+    withoutJsonValueInput(String name) {
+      if (name == 'NullableJsonNullValueInput') return false;
+      if (name == 'JsonNullValueInput') return false;
+
+      return true;
+    }
+
+    final types = field.inputTypes.where((element) => element.type.when<bool>(
+          string: withoutJsonValueInput,
+          input: (input) => withoutJsonValueInput(input.name),
+          enum_: (enum_) => withoutJsonValueInput(enum_.name),
+        ));
 
     // If the types is a single type, return it.
     if (types.length == 1) {
-      final type = field.inputTypes.first.type.when<String>(
+      final type = types.first.type.when<String>(
         string: (value) => value,
         input: (type) => type.name,
         enum_: (type) => type.name,
@@ -340,7 +352,7 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
 
       return scalar(
         type,
-        location: field.inputTypes.first.location,
+        location: types.first.location,
         isNullable: !field.isRequired,
         isList: field.inputTypes.first.isList,
       );
