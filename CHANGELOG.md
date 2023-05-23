@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.2](https://github.com/odroe/prisma-dart/compare/orm-v3.3.1...orm-v3.3.2) (2023-05-23)
+
+
+### Bug Fixes
+
+* **generator:** Json field short input type selection ([dd904d7](https://github.com/odroe/prisma-dart/commit/dd904d75d23b6a36f501f63d030d3bb04c72d3a5))
+
 ## [3.3.1](https://github.com/odroe/prisma-dart/compare/orm-v3.3.0...orm-v3.3.1) (2023-05-23)
 
 
