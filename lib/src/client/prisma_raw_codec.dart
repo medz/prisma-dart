@@ -6,7 +6,7 @@ class PrismaTypedParameter {
   final String type;
 
   /// The parameter value.
-  final String value;
+  final String? value;
 
   /// Create a new instance of [PrismaTypedParameter].
   const PrismaTypedParameter(this.type, this.value);
@@ -15,7 +15,7 @@ class PrismaTypedParameter {
   factory PrismaTypedParameter.fromJson(Map<String, dynamic> json) {
     return PrismaTypedParameter(
       json['prisma__type'] as String,
-      json['prisma__value'] as String,
+      _toString(json['prisma__value']),
     );
   }
 
@@ -43,11 +43,21 @@ class PrismaTypedParameter {
   }
 
   /// Try parse the paramter value.
-  static PrismaTypedParameter? tryParse(Map<String, String> json) {
+  static PrismaTypedParameter? tryParse(Map<String, dynamic> json) {
     if (json.containsKey('prisma__type') && json.containsKey('prisma__value')) {
       return PrismaTypedParameter.fromJson(json);
     }
     return null;
+  }
+
+  /// Converts a dynamic value to a string.
+  static String? _toString(dynamic value) {
+    if (value == null) {
+      return null;
+    } else if (value is DateTime) {
+      return value.toIso8601String();
+    }
+    return value.toString();
   }
 }
 
@@ -111,7 +121,10 @@ class PrismaRawParameterDecoder extends Converter<Object?, Object?> {
   }
 
   /// Decode a JSON compatible value to a parameter.
-  Object _decodeParameter(String type, String value) {
+  Object? _decodeParameter(String type, String? value) {
+    if (value == null) {
+      return null;
+    }
     type = type.toLowerCase().trim();
     final parse = _typedParameterParsers[type];
     if (parse != null) {
