@@ -13,7 +13,7 @@ final Map<String, Reference> scalarReferences = {
   'int': refer('int'),
   'bigint': refer('BigInt'),
   'boolean': refer('bool'),
-  'json': refer('dynamic'),
+  'json': refer('Object'),
   'bytes': TypeReference((TypeReferenceBuilder updates) {
     updates.symbol = 'List';
     updates.types.add(Reference('int'));
