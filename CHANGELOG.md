@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.2](https://github.com/odroe/prisma-dart/compare/orm-v3.4.1...orm-v3.4.2) (2023-05-30)
+
+
+### Bug Fixes
+
+* **generator:** Fixed field kind enum type origin value ([bc508a0](https://github.com/odroe/prisma-dart/commit/bc508a0aa21bcf319faaabfc82e3025afe7a3ab5)), closes [#225](https://github.com/odroe/prisma-dart/issues/225)
+
 ## 3.4.1
 
 ### BREAKING CHANGE
