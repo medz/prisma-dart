@@ -1,153 +1,140 @@
 # Changelog
 
-## [3.3.2](https://github.com/odroe/prisma-dart/compare/orm-v3.3.1...orm-v3.3.2) (2023-05-23)
+## 3.4.1
 
+### BREAKING CHANGE
+
+- Update Dart SDK to `^3.0.0`
+- **Generator**: Adapt to upstream dependencies
+
+## [3.3.2](https://github.com/odroe/prisma-dart/compare/orm-v3.3.1...orm-v3.3.2) (2023-05-23)
 
 ### Bug Fixes
 
-* **generator:** Json field short input type selection ([dd904d7](https://github.com/odroe/prisma-dart/commit/dd904d75d23b6a36f501f63d030d3bb04c72d3a5))
+- **generator:** Json field short input type selection ([dd904d7](https://github.com/odroe/prisma-dart/commit/dd904d75d23b6a36f501f63d030d3bb04c72d3a5))
 
 ## [3.3.1](https://github.com/odroe/prisma-dart/compare/orm-v3.3.0...orm-v3.3.1) (2023-05-23)
 
-
 ### Bug Fixes
 
-* RAW parameter decoder ([cba5e9e](https://github.com/odroe/prisma-dart/commit/cba5e9ea886479075d33b0e001b6aac83eae8fcb))
+- RAW parameter decoder ([cba5e9e](https://github.com/odroe/prisma-dart/commit/cba5e9ea886479075d33b0e001b6aac83eae8fcb))
 
 ## [3.3.0](https://github.com/odroe/prisma-dart/compare/orm-v3.2.6...orm-v3.3.0) (2023-04-05)
 
-
 ### Features
 
-* **runtime:** Exposing lower level transaction primitives, Thx [@craiglabenz](https://github.com/craiglabenz) ([1c31841](https://github.com/odroe/prisma-dart/commit/1c31841f5a553a6e6c277a6186d970fffd9db512)), closes [#193](https://github.com/odroe/prisma-dart/issues/193)
-
+- **runtime:** Exposing lower level transaction primitives, Thx [@craiglabenz](https://github.com/craiglabenz) ([1c31841](https://github.com/odroe/prisma-dart/commit/1c31841f5a553a6e6c277a6186d970fffd9db512)), closes [#193](https://github.com/odroe/prisma-dart/issues/193)
 
 ### Bug Fixes
 
-* **runtime:** Fix repeat attach engine in finalizer ([a5890b7](https://github.com/odroe/prisma-dart/commit/a5890b7afb2c382179cd867ff27babc201a218fc))
-* **runtime:** Fix the engine stop caused by calling `$disconnect` outside of transaction ([4448438](https://github.com/odroe/prisma-dart/commit/4448438a13d001ef1edc9871214da9c2f64178e3))
-* **runtime:** Remove deprecated transactionId ([2606456](https://github.com/odroe/prisma-dart/commit/260645676f373b6598654811f40137bb49e9bfbf))
+- **runtime:** Fix repeat attach engine in finalizer ([a5890b7](https://github.com/odroe/prisma-dart/commit/a5890b7afb2c382179cd867ff27babc201a218fc))
+- **runtime:** Fix the engine stop caused by calling `$disconnect` outside of transaction ([4448438](https://github.com/odroe/prisma-dart/commit/4448438a13d001ef1edc9871214da9c2f64178e3))
+- **runtime:** Remove deprecated transactionId ([2606456](https://github.com/odroe/prisma-dart/commit/260645676f373b6598654811f40137bb49e9bfbf))
 
 ## [3.2.6](https://github.com/odroe/prisma-dart/compare/orm-v3.2.5...orm-v3.2.6) (2023-03-27)
 
-
 ### Bug Fixes
 
-* **engine:** Fix ignored errors ([fe8c89f](https://github.com/odroe/prisma-dart/commit/fe8c89f2a1975ce2d67f89edc9c623756f6eb29b))
+- **engine:** Fix ignored errors ([fe8c89f](https://github.com/odroe/prisma-dart/commit/fe8c89f2a1975ce2d67f89edc9c623756f6eb29b))
 
 ## [3.2.5](https://github.com/odroe/prisma-dart/compare/orm-v3.2.4...orm-v3.2.5) (2023-03-27)
 
-
 ### Bug Fixes
 
-* **engine:** Fix raw query always returning null, Thx [@craiglabenz](https://github.com/craiglabenz) ([efb15a6](https://github.com/odroe/prisma-dart/commit/efb15a69414464f8ab1820706b1fac851529a780)), closes [#177](https://github.com/odroe/prisma-dart/issues/177)
-* **engine:** Fix the order of throwing exceptions in transaction, Thx @PeterMX ([f0b86bd](https://github.com/odroe/prisma-dart/commit/f0b86bdf5c13f5400797d7b2a8593c5960b14a34)), closes [#181](https://github.com/odroe/prisma-dart/issues/181)
-* **engine:** Prioritize checking for transaction errors, Thx @PeterMX ([b3bedce](https://github.com/odroe/prisma-dart/commit/b3bedce971fa767369d0a7a9449091e1ceee404a))
+- **engine:** Fix raw query always returning null, Thx [@craiglabenz](https://github.com/craiglabenz) ([efb15a6](https://github.com/odroe/prisma-dart/commit/efb15a69414464f8ab1820706b1fac851529a780)), closes [#177](https://github.com/odroe/prisma-dart/issues/177)
+- **engine:** Fix the order of throwing exceptions in transaction, Thx @PeterMX ([f0b86bd](https://github.com/odroe/prisma-dart/commit/f0b86bdf5c13f5400797d7b2a8593c5960b14a34)), closes [#181](https://github.com/odroe/prisma-dart/issues/181)
+- **engine:** Prioritize checking for transaction errors, Thx @PeterMX ([b3bedce](https://github.com/odroe/prisma-dart/commit/b3bedce971fa767369d0a7a9449091e1ceee404a))
 
 ## [3.2.4](https://github.com/odroe/prisma-dart/compare/orm-v3.2.3...orm-v3.2.4) (2023-03-26)
 
-
 ### Bug Fixes
 
-* **engine:** maxWait and timeout were passed incorrectly ([f4627b0](https://github.com/odroe/prisma-dart/commit/f4627b053e5c7399a4f142b71b631c3049249d82)), closes [#178](https://github.com/odroe/prisma-dart/issues/178)
+- **engine:** maxWait and timeout were passed incorrectly ([f4627b0](https://github.com/odroe/prisma-dart/commit/f4627b053e5c7399a4f142b71b631c3049249d82)), closes [#178](https://github.com/odroe/prisma-dart/issues/178)
 
 ## [3.2.3](https://github.com/odroe/prisma-dart/compare/orm-v3.2.2...orm-v3.2.3) (2023-03-21)
 
-
 ### Bug Fixes
 
-* Fix decoding special characters ([8d75d2a](https://github.com/odroe/prisma-dart/commit/8d75d2a24eeeb9487ec3823eb9e6a4df4f389459))
+- Fix decoding special characters ([8d75d2a](https://github.com/odroe/prisma-dart/commit/8d75d2a24eeeb9487ec3823eb9e6a4df4f389459))
 
 ## [3.2.2](https://github.com/odroe/prisma-dart/compare/orm-v3.2.1...orm-v3.2.2) (2023-03-19)
 
-
 ### Bug Fixes
 
-* **generator:** DateTime not convert to UTC ([5f1f28b](https://github.com/odroe/prisma-dart/commit/5f1f28b90852e9c8654e1ed00d3a8f6d91404bdd))
-* Read Dart reserved keyword from analyzer ([f6a2b45](https://github.com/odroe/prisma-dart/commit/f6a2b45ff6c596d026edbac65fa607eac06b8e16))
+- **generator:** DateTime not convert to UTC ([5f1f28b](https://github.com/odroe/prisma-dart/commit/5f1f28b90852e9c8654e1ed00d3a8f6d91404bdd))
+- Read Dart reserved keyword from analyzer ([f6a2b45](https://github.com/odroe/prisma-dart/commit/f6a2b45ff6c596d026edbac65fa607eac06b8e16))
 
 ## [3.2.1](https://github.com/odroe/prisma-dart/compare/orm-v3.2.0...orm-v3.2.1) (2023-03-19)
 
-
 ### Bug Fixes
 
-* fix not convert `default` of property key, Thx [@gzlock](https://github.com/gzlock) ([8adab24](https://github.com/odroe/prisma-dart/commit/8adab240aceea8e7922b2197f1dc67dd67a3251b)), closes [#172](https://github.com/odroe/prisma-dart/issues/172)
+- fix not convert `default` of property key, Thx [@gzlock](https://github.com/gzlock) ([8adab24](https://github.com/odroe/prisma-dart/commit/8adab240aceea8e7922b2197f1dc67dd67a3251b)), closes [#172](https://github.com/odroe/prisma-dart/issues/172)
 
 ## [3.2.0](https://github.com/odroe/prisma-dart/compare/orm-v3.1.5...orm-v3.2.0) (2023-03-18)
 
-
 ### Features
 
-* Migrate to generator helper ([35486f4](https://github.com/odroe/prisma-dart/commit/35486f49fa89195886a309021360f7f6d2dd20fc))
+- Migrate to generator helper ([35486f4](https://github.com/odroe/prisma-dart/commit/35486f49fa89195886a309021360f7f6d2dd20fc))
 
 ## [3.1.5](https://github.com/odroe/prisma-dart/compare/orm-v3.1.4...orm-v3.1.5) (2023-03-17)
 
-
 ### Bug Fixes
 
-* **engine:** binary engine failed to clean up process, Thx [@blopker](https://github.com/blopker) ([afc29a7](https://github.com/odroe/prisma-dart/commit/afc29a7c80e767c49b0bf8345ce095dc389e5851))
-* Missing Dart reserved keywords, Thx [@nikosportolos](https://github.com/nikosportolos) ([78c467b](https://github.com/odroe/prisma-dart/commit/78c467b4ce9811465a9791d5f5376011620ff130))
+- **engine:** binary engine failed to clean up process, Thx [@blopker](https://github.com/blopker) ([afc29a7](https://github.com/odroe/prisma-dart/commit/afc29a7c80e767c49b0bf8345ce095dc389e5851))
+- Missing Dart reserved keywords, Thx [@nikosportolos](https://github.com/nikosportolos) ([78c467b](https://github.com/odroe/prisma-dart/commit/78c467b4ce9811465a9791d5f5376011620ff130))
 
 ## [3.1.4](https://github.com/odroe/prisma-dart/compare/orm-v3.1.3...orm-v3.1.4) (2023-03-15)
 
-
 ### Bug Fixes
 
-* fix retry strategy not as expected ([d327bcb](https://github.com/odroe/prisma-dart/commit/d327bcb492fbbffcb8566728ed2e98c10960400e)), closes [#161](https://github.com/odroe/prisma-dart/issues/161)
+- fix retry strategy not as expected ([d327bcb](https://github.com/odroe/prisma-dart/commit/d327bcb492fbbffcb8566728ed2e98c10960400e)), closes [#161](https://github.com/odroe/prisma-dart/issues/161)
 
 ## [3.1.3](https://github.com/odroe/prisma-dart/compare/orm-v3.1.2...orm-v3.1.3) (2023-03-14)
 
-
 ### Bug Fixes
 
-* **generator:** main rethrow error ([c536887](https://github.com/odroe/prisma-dart/commit/c536887de018f1f30c6712d670a78ee6b3772da4))
-* **engine:** fix retry If failure, not as expected
-* **engine:** fix binary engine status retries not as expected. Thanks [@blopker](https://github.com/blopker) on [#161](https://github.com/odroe/prisma-dart/issues/161)
+- **generator:** main rethrow error ([c536887](https://github.com/odroe/prisma-dart/commit/c536887de018f1f30c6712d670a78ee6b3772da4))
+- **engine:** fix retry If failure, not as expected
+- **engine:** fix binary engine status retries not as expected. Thanks [@blopker](https://github.com/blopker) on [#161](https://github.com/odroe/prisma-dart/issues/161)
 
 ## [3.1.2](https://github.com/odroe/prisma-dart/compare/v3.1.1...v3.1.2) (2023-03-11)
 
-
 ### Bug Fixes
 
-* Fix and optimize startup ([253fb16](https://github.com/odroe/prisma-dart/commit/253fb16dd4d9e3c8b1f917e8d3c1246f95ad61d0))
+- Fix and optimize startup ([253fb16](https://github.com/odroe/prisma-dart/commit/253fb16dd4d9e3c8b1f917e8d3c1246f95ad61d0))
 
 ## [3.1.1](https://github.com/odroe/prisma-dart/compare/v3.1.0...v3.1.1) (2023-03-10)
 
-
 ### Bug Fixes
 
-* **client:** Fix missing error handler ([8a32b6d](https://github.com/odroe/prisma-dart/commit/8a32b6d86064303d29b2c208ea22371cd1975dbd))
-* **generate:** Fix datasource failed to generate dataproxy client. ([8c5b7d7](https://github.com/odroe/prisma-dart/commit/8c5b7d79af750b7a6f9c4eaac0cc022fbbaafc13))
+- **client:** Fix missing error handler ([8a32b6d](https://github.com/odroe/prisma-dart/commit/8a32b6d86064303d29b2c208ea22371cd1975dbd))
+- **generate:** Fix datasource failed to generate dataproxy client. ([8c5b7d7](https://github.com/odroe/prisma-dart/commit/8c5b7d79af750b7a6f9c4eaac0cc022fbbaafc13))
 
 ## [3.1.0](https://github.com/odroe/prisma-dart/compare/v3.0.2...v3.1.0) (2023-03-07)
 
-
 ### Features
 
-* **generator:** Only support npm ([41adccb](https://github.com/odroe/prisma-dart/commit/41adccbfa2c18808727adb0fa433924b3d8cb20e))
-
+- **generator:** Only support npm ([41adccb](https://github.com/odroe/prisma-dart/commit/41adccbfa2c18808727adb0fa433924b3d8cb20e))
 
 ### Bug Fixes
 
-* **generator:** fix node package manager find index ([a50d88f](https://github.com/odroe/prisma-dart/commit/a50d88fd3fb21cd62176a6a7e3bd08371c43494d))
-* **generator:** fix node package manager not found on Windows ([a233f59](https://github.com/odroe/prisma-dart/commit/a233f59b2da11293b84c6291d0bddfcd8869399f))
-* **generator:** fix parse prisma version error on Windows ([7b16821](https://github.com/odroe/prisma-dart/commit/7b168215dda0cb6e0d1f1c38d7017b271e09ac8a))
-* **generator:** fix yarn query Prisma version is not json output ([34b116c](https://github.com/odroe/prisma-dart/commit/34b116ca56166ac3b83b48f2df56cad5b3bedbb4))
+- **generator:** fix node package manager find index ([a50d88f](https://github.com/odroe/prisma-dart/commit/a50d88fd3fb21cd62176a6a7e3bd08371c43494d))
+- **generator:** fix node package manager not found on Windows ([a233f59](https://github.com/odroe/prisma-dart/commit/a233f59b2da11293b84c6291d0bddfcd8869399f))
+- **generator:** fix parse prisma version error on Windows ([7b16821](https://github.com/odroe/prisma-dart/commit/7b168215dda0cb6e0d1f1c38d7017b271e09ac8a))
+- **generator:** fix yarn query Prisma version is not json output ([34b116c](https://github.com/odroe/prisma-dart/commit/34b116ca56166ac3b83b48f2df56cad5b3bedbb4))
 
 ## [3.0.2](https://github.com/odroe/prisma-dart/compare/v3.0.1...v3.0.2) (2023-03-06)
 
-
 ### Bug Fixes
 
-* **engine:** fixed logger definitions is empty throw error ([4dc62f1](https://github.com/odroe/prisma-dart/commit/4dc62f1ebe2cde209d12ec5fc9044952201d722c))
-* **generator:** fixed Windows  system cannot find the file specified ([6446739](https://github.com/odroe/prisma-dart/commit/64467396e6d1b6253f0e5b0bbc7f9f73a05257dc))
+- **engine:** fixed logger definitions is empty throw error ([4dc62f1](https://github.com/odroe/prisma-dart/commit/4dc62f1ebe2cde209d12ec5fc9044952201d722c))
+- **generator:** fixed Windows system cannot find the file specified ([6446739](https://github.com/odroe/prisma-dart/commit/64467396e6d1b6253f0e5b0bbc7f9f73a05257dc))
 
 ## [3.0.1](https://github.com/odroe/prisma-dart/compare/3.0.0...v3.0.1) (2023-03-05)
 
-
 ### Bug Fixes
 
-* **client:** fixed prisma transaction type ([2cf52ad](https://github.com/odroe/prisma-dart/commit/2cf52add55538b00659d3460f17e38035d7da4b3))
+- **client:** fixed prisma transaction type ([2cf52ad](https://github.com/odroe/prisma-dart/commit/2cf52add55538b00659d3460f17e38035d7da4b3))
 
 ## 3.0.0
 
@@ -163,7 +150,7 @@ No changes.
 
 ### Bug Fixes
 
-* generate: fixed model delegate resolve GraphQL top-level field (35ebc6a)
+- generate: fixed model delegate resolve GraphQL top-level field (35ebc6a)
 
 ## 2.6.2
 
@@ -348,12 +335,12 @@ final UserCreateInput input = UserCreateInput.fromJson(...);
 
 ### Query Engines
 
- - **Data Proxy**: Remote client version updated to `4.7.1`.
- - **Binary**: Query engine version updated to `272861e07ab64f234d3ffc4094e32bd61775599c`.
+- **Data Proxy**: Remote client version updated to `4.7.1`.
+- **Binary**: Query engine version updated to `272861e07ab64f234d3ffc4094e32bd61775599c`.
 
 ### Bug Fixes
 
- - **DMMF**: The 'name' field of UniqueIndex should be nullable, not non-nullable as incorrectly defined. ([#77](https://github.com/odroe/prisma-dart/issues/76))
+- **DMMF**: The 'name' field of UniqueIndex should be nullable, not non-nullable as incorrectly defined. ([#77](https://github.com/odroe/prisma-dart/issues/76))
 
 ### Highlights
 
@@ -398,17 +385,17 @@ generator client {
 
 ## 2.4.3
 
-  * Fix `generate` command error format.
+- Fix `generate` command error format.
 
 ## 2.4.2
 
- * Fix `init` command generated SQLite database file url
+- Fix `init` command generated SQLite database file url
 
 ## 2.4.1
 
 ### Bug Fixes
 
-  * Fix JSON-RPC error code on error data is nullable - [#52](https://github.com/odroe/prisma-dart/issues/52)
+- Fix JSON-RPC error code on error data is nullable - [#52](https://github.com/odroe/prisma-dart/issues/52)
 
 ## 2.4.0
 
@@ -429,15 +416,17 @@ The `.prismarc` file in the Dart project directory was loaded by default, and no
 Previously configured Key in `pubspec.yaml` was `prismarc`, now it is `production`.
 
 Before:
+
 ```yaml
 prisma:
-    prismarc: {path}
+  prismarc: { path }
 ```
 
 after:
+
 ```yaml
 prisma:
-    production: {path}
+  production: { path }
 ```
 
 #### Development environment
@@ -561,6 +550,7 @@ The `PrismaClient` now has a finalizer that will close the underlying database c
 `generate` command now supports `--preview` option to generate client for preview features.
 
 E.g.
+
 ```bash
 # Enable finalizer feature for generated PrismaClient.
 dart run orm generate --preview=finalizer
@@ -568,10 +558,9 @@ dart run orm generate --preview=finalizer
 
 ### Fixed bugs
 
-* Runtime:
-  * Known request error meta allow nullable - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@NCavazzon#1574468691776999448](https://twitter.com/NCavazzon/status/1574468691776999448)
-  * Fixed date time not serialized - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@mizxamthegod#1574470423097610265](https://twitter.com/mizxamthegod/status/1574470423097610265)
-
+- Runtime:
+  - Known request error meta allow nullable - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@NCavazzon#1574468691776999448](https://twitter.com/NCavazzon/status/1574468691776999448)
+  - Fixed date time not serialized - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@mizxamthegod#1574470423097610265](https://twitter.com/mizxamthegod/status/1574470423097610265)
 
 ## 2.2.3
 
@@ -583,7 +572,6 @@ dart run orm generate --preview=finalizer
 2. Runtime - Fixed parse user facing error
 3. CLI - Fixed check engine version binary incomplete
 
-
 ## 2.2.2
 
 Fixed generate `schema` not working ([#29](https://github.com/odroe/prisma-dart/issues/29)
@@ -594,18 +582,19 @@ Fixed generate `schema` not working ([#29](https://github.com/odroe/prisma-dart/
 
 ### Major improvements
 
- Auto fix enum name and model name conflicts:
- ```prisma
- enum role {
-  user
-  admin
- }
+Auto fix enum name and model name conflicts:
 
- model user {
-  id Int @id @default(autoincrement())
-  role role
- }
- ```
+```prisma
+enum role {
+ user
+ admin
+}
+
+model user {
+ id Int @id @default(autoincrement())
+ role role
+}
+```
 
 Before this release, the above schema would result in a `role` enum and a `user` model. This is not valid in Dart, so we now auto fix the enum name to `Role` and the model name to `User`.
 
@@ -618,7 +607,7 @@ Before this release, the above schema would result in a `role` enum and a `user`
 
 ## Other
 
-* Update `code_builder` to `^4.3.0`.
+- Update `code_builder` to `^4.3.0`.
 
 ## 2.2.0
 
@@ -627,6 +616,7 @@ Before this release, the above schema would result in a `role` enum and a `user`
 ### Major improvements:
 
 Input object Types without `PrismaUnion` wrapper, Before:
+
 ```dart
 final User user = await prisma.user.create(
    data: PrismaUnion(
@@ -634,7 +624,9 @@ final User user = await prisma.user.create(
    ),
 );
 ```
+
 After:
+
 ```dart
 final User user = await prisma.user.create(
    data: UserCreateInput(name: 'odroe'),
@@ -662,6 +654,7 @@ final User user = await prisma.user.create(
 ### Better error message
 
 Take transaction errors as an example, before simply throwing `PrismaServerError` without any friendly prompts. Now:
+
 ```
 PrismaClientUnknownRequestError:
 Use the `prisma.$transaction()` API to run queries in a transaction.
@@ -679,6 +672,7 @@ Read more about transactions in our documentation:
 ```
 
 If the engine is not found:
+
 ```
 PrismaClientInitializationError:
   message: Could not find query engine binary for current platform "macos" in query-engine path.
@@ -701,6 +695,7 @@ Please create an issue at https://github.com/odroe/prisma-dart/issues/new
 ### `$transaction` options
 
 `prisma.$transaction` now supports the following options:
+
 ```dart
 final prisma = PrismaClient();
 await prisma.$transaction((prisma) async {
@@ -718,7 +713,7 @@ More details 👉 [Interactive transactions](https://www.prisma.io/docs/concepts
 
 1. Fixed `packageVersion` not updating with version
 2. Fixed binary query engine not automatically searching when `executable` is specified
-2. Fixed binary query engine not automatically searching when specifying `PRISMA_QUERY_ENGINE_BINARY` environment variable
+3. Fixed binary query engine not automatically searching when specifying `PRISMA_QUERY_ENGINE_BINARY` environment variable
 
 ### Engines version
 
@@ -750,12 +745,14 @@ Support custom runtime configuration.
 #### Runtime configuration
 
 Previously, use `prisma.yaml` to configure Prisma:
+
 ```yaml
 environment:
-   DATABASE_URL: postgres://user:password@localhost:5432/mydb
+  DATABASE_URL: postgres://user:password@localhost:5432/mydb
 ```
 
 Now, we have introduced a new configuration method, **Runtime Configuration** compatible with dotenv format:
+
 ```
 # .prismarc
 DATABASE_URL=postgres://user:password@localhost:5432/mydb
@@ -766,6 +763,7 @@ DATABASE_URL=${DATABASE_HOST}/mydb
 ```
 
 If you have dotenv in mind, you just need to add the database URL configuration to `.env`:
+
 ```dotenv
 DATABASE_URL=postgres://user:password@localhost:5432/mydb
 ```
@@ -775,21 +773,20 @@ For more usage of runtime configuration, please see 👉 https://pub.dev/package
 #### Custom configuration
 
 Now, you can customize your prisma project configuration in `pubspec.yaml`:
+
 ```yaml
-...
+---
 prisma:
-   prismarc: path/a/b/c/custom.prismarc
-   dotenv: path/a/b/c/custom.env
-   schema: path/a/b/c/custom.prisma
-...
+  prismarc: path/a/b/c/custom.prismarc
+  dotenv: path/a/b/c/custom.env
+  schema: path/a/b/c/custom.prisma
 ```
 
-| Parameter | Description | Default |
-|---|:---| --- |
-| `prismarc` | Custom runtime configuration path | `.prismarc` |
-| `dotenv` | Custom dotenv path | `.env` |
-| `schema` | Custom Prisma schema path | `prisma/schema.prisma` |
-
+| Parameter  | Description                       | Default                |
+| ---------- | :-------------------------------- | ---------------------- |
+| `prismarc` | Custom runtime configuration path | `.prismarc`            |
+| `dotenv`   | Custom dotenv path                | `.env`                 |
+| `schema`   | Custom Prisma schema path         | `prisma/schema.prisma` |
 
 #### Custom engine path
 
@@ -823,6 +820,7 @@ PRISMA_FMT_BINARY=path/to/custom-engines/prisma-fmt
 #### Refactored `package:orm/configure.dart`
 
 Previously, we have `package:orm/configure.dart` to configure Prisma, now we have refactored it to `package:orm/prisma.dart`:
+
 ```dart
 import 'package:orm/configure.dart';
 
@@ -830,6 +828,7 @@ print(configure('DATABASE_URL'));
 ```
 
 Now, you can use `package:orm/configure.dart` to configure Prisma:
+
 ```dart
 import 'package:orm/configure.dart';
 
