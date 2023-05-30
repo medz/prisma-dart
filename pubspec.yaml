@@ -5,7 +5,7 @@ homepage: https://prisma.pub
 repository: https://github.com/odroe/prisma-dart
 funding:
   - https://github.com/sponsors/odroe
-  - https://opencollective.com/prisma-dart
+  - https://opencollective.com/openodroe
 
 environment:
   sdk: ^3.0.0
@@ -16,18 +16,18 @@ executables:
 dependencies:
   # Library dependencies
   crypto: ^3.0.3
+  http: ^1.0.0
   json_annotation: ^4.8.1
   meta: ^1.9.1
   path: ^1.8.3
+  prisma_generator_helper: ^1.2.0
   retry: ^3.1.2
-  http: ^1.0.0
 
   # CLI dependencies
   analyzer: ^5.13.0
   code_builder: ^4.4.0
   dart_style: ^2.3.1
   recase: ^4.1.0
-  prisma_generator_helper: ^1.1.1
 
 # Devlopment dependencies
 dev_dependencies:
