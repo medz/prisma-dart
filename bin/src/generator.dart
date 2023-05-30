@@ -5,9 +5,8 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart' as code;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
-import 'package:orm/orm.dart' as orm;
 import 'package:path/path.dart' as path;
-import 'package:prisma_dmmf/prisma_dmmf.dart' as dmmf;
+import 'package:prisma_generator_helper/dmmf.dart' as dmmf;
 import 'package:prisma_generator_helper/prisma_generator_helper.dart';
 
 import 'packages.dart' as packages;
@@ -15,7 +14,7 @@ import 'prisma_info.dart';
 import 'scalars.dart';
 import 'utils.dart';
 
-class PrismaDartClientGenerator extends Generator {
+class PrismaDartClientGenerator implements Handler {
   /// Prisma info
   late final PrismaInfo info;
 
@@ -26,7 +25,7 @@ class PrismaDartClientGenerator extends Generator {
   late GeneratorOptions options;
 
   @override
-  FutureOr<GeneratorManifest?> onManifest(GeneratorConfig config) {
+  Future<GeneratorManifest> onManifest(GeneratorConfig config) async {
     // Sets the prisma info
     info = PrismaInfo.lookup(resolveNpm(config.config));
 
@@ -44,7 +43,7 @@ class PrismaDartClientGenerator extends Generator {
   }
 
   @override
-  void onGenerate(GeneratorOptions options) {
+  Future<void> onGenerate(GeneratorOptions options) async {
     // 1. Read the options
     this.options = options;
 
@@ -138,18 +137,23 @@ extension WriteLibrary on PrismaDartClientGenerator {
 
   /// Resolve the output path
   String _resolveOutputPath() {
-    if (options.generator.output?.value == null) {
-      throw Exception('Output path is not defined.');
-    }
+    final output = switch (options.generator.output) {
+      EnvValueViaName(name: final name) =>
+        bool.hasEnvironment(name) ? String.fromEnvironment(name) : null,
+      EnvValueViaValue(value: final value) => value,
+      _ => null,
+    };
 
-    final filePath = options.generator.output!.value!;
+    if (output == null) {
+      throw Exception('Output path not found');
+    }
 
     // If the path not is a dart file, add it.
-    if (!filePath.endsWith('.dart')) {
-      return path.join(filePath, 'prisma_client.dart');
+    if (!output.endsWith('.dart')) {
+      return path.join(output, 'prisma_client.dart');
     }
 
-    return filePath;
+    return output;
   }
 }
 
@@ -336,22 +340,19 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
       return true;
     }
 
-    final types = field.inputTypes.where((element) => element.type.when<bool>(
-          string: withoutJsonValueInput,
-          input: (input) => withoutJsonValueInput(input.name),
-          enum_: (enum_) => withoutJsonValueInput(enum_.name),
-        ));
+    String readArgTypeName(dmmf.ArgType arg) => switch (arg) {
+          dmmf.StringArgType(value: final value) => value,
+          dmmf.ObjectArgType(value: final input) => input.name,
+          dmmf.EnumArgType(value: final enum_) => enum_.name,
+        };
+
+    final types = field.inputTypes.where(
+        (element) => withoutJsonValueInput(readArgTypeName(element.type)));
 
     // If the types is a single type, return it.
     if (types.length == 1) {
-      final type = types.first.type.when<String>(
-        string: (value) => value,
-        input: (type) => type.name,
-        enum_: (type) => type.name,
-      );
-
       return scalar(
-        type,
+        readArgTypeName(types.first.type),
         location: types.first.location,
         isNullable: !field.isRequired,
         isList: field.inputTypes.first.isList,
@@ -361,14 +362,8 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
     // Find list type
     final listTypes = types.where((e) => e.isList);
     if (listTypes.isNotEmpty) {
-      final type = listTypes.first.type.when<String>(
-        string: (value) => value,
-        input: (type) => type.name,
-        enum_: (type) => type.name,
-      );
-
       return scalar(
-        type,
+        readArgTypeName(listTypes.first.type),
         location: listTypes.first.location,
         isNullable: !field.isRequired,
         isList: listTypes.first.isList,
@@ -379,27 +374,16 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
     final nonScalarTypes =
         types.where((e) => e.location != dmmf.FieldLocation.scalar);
     if (nonScalarTypes.isNotEmpty) {
-      final type = nonScalarTypes.first.type.when<String>(
-        string: (value) => value,
-        input: (type) => type.name,
-        enum_: (type) => type.name,
-      );
       return scalar(
-        type,
+        readArgTypeName(nonScalarTypes.first.type),
         location: nonScalarTypes.first.location,
         isList: nonScalarTypes.first.isList,
         isNullable: !field.isRequired,
       );
     }
 
-    final type = types.first.type.when<String>(
-      string: (value) => value,
-      input: (type) => type.name,
-      enum_: (type) => type.name,
-    );
-
     return scalar(
-      type,
+      readArgTypeName(types.first.type),
       location: types.first.location,
       isList: types.first.isList,
       isNullable: !field.isRequired,
@@ -517,7 +501,7 @@ extension ScalarModulesGenerator on PrismaDartClientGenerator {
       final typeName = field.outputType.type.when<String>(
         string: (value) => value,
         enum_: (type) => type.name,
-        outputObjectTypes: (type) => type.name,
+        object: (type) => type.name,
       );
       final type = scalar(
         typeName,
@@ -711,7 +695,7 @@ extension ModelFluentGenerator on PrismaDartClientGenerator {
     final outputTypeName = field.outputType.type.when<String>(
       string: (value) => value,
       enum_: (value) => value.name,
-      outputObjectTypes: (value) => value.name,
+      object: (value) => value.name,
     );
 
     // If the output type is a model, return a model fluent.
@@ -756,7 +740,7 @@ extension ModelFluentGenerator on PrismaDartClientGenerator {
     final outputTypeName = field.outputType.type.when<String>(
       string: (value) => value,
       enum_: (value) => value.name,
-      outputObjectTypes: (value) => value.name,
+      object: (value) => value.name,
     );
 
     final enumDecodeName =
@@ -787,7 +771,7 @@ extension ModelFluentGenerator on PrismaDartClientGenerator {
     final outputTypeName = field.outputType.type.when<String>(
       string: (value) => value,
       enum_: (value) => value.name,
-      outputObjectTypes: (value) => value.name,
+      object: (value) => value.name,
     );
     final typeName = outputTypeName.toLowerCase().trim();
 
@@ -845,24 +829,24 @@ extension ModelFluentGenerator on PrismaDartClientGenerator {
   }
 
   /// Find prisma output type
-  dmmf.OutputType _findPrismaOutputType(dmmf.TypeRefType type) {
+  dmmf.OutputType _findPrismaOutputType(dmmf.OutputTypeRefType type) {
     final types = options.dmmf.schema.outputObjectTypes.prisma;
     final name = type.when<String>(
       string: (name) => name,
       enum_: (type) => type.name,
-      outputObjectTypes: (type) => type.name,
+      object: (type) => type.name,
     );
 
     return types.firstWhere((e) => e.name == name);
   }
 
   /// Is model fluent output type
-  bool _isModelListOutputType(dmmf.TypeRef outputType) {
+  bool _isModelListOutputType(dmmf.OutputTypeRef outputType) {
     final models = options.dmmf.schema.outputObjectTypes.model;
     final name = outputType.type.when<String>(
       string: (name) => name,
       enum_: (type) => type.name,
-      outputObjectTypes: (type) => type.name,
+      object: (type) => type.name,
     );
 
     return outputType.isList && models.any((element) => element.name == name);
@@ -876,7 +860,7 @@ extension ModelFluentGenerator on PrismaDartClientGenerator {
     final outputTypeName = field.outputType.type.when<String>(
       string: (value) => value,
       enum_: (value) => value.name,
-      outputObjectTypes: (value) => value.name,
+      object: (value) => value.name,
     );
     final expressions = <code.Expression>[];
 
@@ -1005,7 +989,7 @@ extension ModelFluentGenerator on PrismaDartClientGenerator {
     final outputTypeName = field.outputType.type.when<String>(
       string: (value) => value,
       enum_: (value) => value.name,
-      outputObjectTypes: (value) => value.name,
+      object: (value) => value.name,
     );
     final expressions = <code.Expression>[];
 
@@ -1136,7 +1120,7 @@ extension ModelDelegateGenerator on PrismaDartClientGenerator {
     final outoutTypeName = field.outputType.type.when<String>(
       string: (value) => value,
       enum_: (value) => value.name,
-      outputObjectTypes: (value) => value.name,
+      object: (value) => value.name,
     );
     final type = scalar(
       outoutTypeName,
@@ -1161,13 +1145,13 @@ extension ModelDelegateGenerator on PrismaDartClientGenerator {
   }
 
   /// Is model fluent output type
-  bool _isModelFluentOutputType(dmmf.TypeRef outputType) {
+  bool _isModelFluentOutputType(dmmf.OutputTypeRef outputType) {
     if (outputType.isList) return false;
 
     final outputTypeName = outputType.type.when<String>(
       string: (value) => value,
       enum_: (value) => value.name,
-      outputObjectTypes: (value) => value.name,
+      object: (value) => value.name,
     );
 
     return options.dmmf.schema.outputObjectTypes.model
@@ -1259,7 +1243,7 @@ extension PrismaOutputTypeGenerator on PrismaDartClientGenerator {
       final name = element.outputType.type.when<String>(
         string: (value) => value,
         enum_: (value) => value.name,
-        outputObjectTypes: (value) => value.name,
+        object: (value) => value.name,
       );
 
       return !name.endsWith('AggregateOutputType');
@@ -1385,9 +1369,13 @@ extension DatasourcesClassGenerator on PrismaDartClientGenerator {
               updates.required = false;
               updates.named = true;
 
-              if (e.url.value != null) {
+              final defaultTo = switch (e.url) {
+                EnvValueViaValue(value: final value) => value,
+                _ => null,
+              };
+              if (defaultTo != null) {
                 updates.defaultTo =
-                    code.literalString(e.url.value!, raw: true).code;
+                    code.literalString(defaultTo, raw: true).code;
               }
             })),
       );
@@ -1707,17 +1695,14 @@ extension PrismaClientGenerator on PrismaDartClientGenerator {
   code.Expression _buildDataProxyEndpoint() {
     final datasource = options.datasources.first;
 
-    late code.Expression url;
-    if (datasource.url.fromEnvVar == null && datasource.url.value == null) {
-      throw orm.PrismaInitializationException(
-        message: 'No datasource url provided',
-      );
-    } else if (datasource.url.fromEnvVar != null) {
-      url = code.refer('String').constInstanceNamed('fromEnvironment', [
-        code.literalString(datasource.url.fromEnvVar!, raw: true),
-      ]);
-    } else if (datasource.url.value != null) {
-      url = code.literalString(datasource.url.value!, raw: true);
+    final url = datasource.url.whenOrNull(
+        value: (value) => code.literalString(value, raw: true),
+        env: (name) =>
+            code.refer('String').constInstanceNamed('fromEnvironment', [
+              code.literalString(name, raw: true),
+            ]));
+    if (url == null) {
+      throw Exception('Could not find datasource url');
     }
 
     final param = code
