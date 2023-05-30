@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.3](https://github.com/odroe/prisma-dart/compare/orm-v3.4.2...orm-v3.4.3) (2023-05-30)
+
+
+### Bug Fixes
+
+* type 'Null' is not a subtype of type 'String' in type cast ([b28cd4e](https://github.com/odroe/prisma-dart/commit/b28cd4e620733850f98c230d2b0dee234200ab6d)), closes [#227](https://github.com/odroe/prisma-dart/issues/227)
+
 ## [3.4.2](https://github.com/odroe/prisma-dart/compare/orm-v3.4.1...orm-v3.4.2) (2023-05-30)
 
 
