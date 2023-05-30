@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:prisma_generator_helper/dmmf.dart';
 import 'package:test/test.dart';
-import 'package:prisma_dmmf/prisma_dmmf.dart';
 
 import '../../bin/src/scalars.dart';
 
