@@ -1,21 +1,39 @@
-architectures=(
-  amd64
-  arm64
-  armhf
+# Dart only support linux/amd64,linux/arm64,linux/arm/v7
+platform="linux/amd64,linux/arm64,linux/arm/v7"
+
+# Build versions, `latest` and will `pubspec.yaml` version
+versions=(
+  "latest"
+
+  # Read version from pubspec.yaml
+  $(grep "version: " pubspec.yaml | sed 's/version: //g')
 )
-repository="odroe/prisma-dart"
 
-for arch in "${architectures[@]}"; do
-  tag="${repository}:${arch}"
+# Docker hub repo
+repo="odroe/prisma-dart"
 
-  # If the image already exists, delete it
-  if docker image inspect "${tag}" &>/dev/null; then
-    docker image rm "${tag}"
+# Build name
+name="prisma-dart-buildkit"
+
+echo "Start building image: $repo"
+docker buildx create --use --bootstrap \
+  --driver docker-container \
+  --platform $platform \
+  --name $name
+
+# Build images
+for version in "${versions[@]}"; do
+  echo "Building image: $repo:$version"
+  docker buildx build \
+    --platform $platform \
+    --tag $repo:$version \
+    --builder $name \
+    --push \
+    .
+
+  # If build exit with error, exit
+  if [ $? -ne 0 ]; then
+    echo "Build image: $repo:$version failed"
+    exit 1
   fi
-
-  # Build the image
-  docker build --platform "${arch}" -t "${tag}" .
-
-  # Push the image
-  docker push "${tag}"
 done

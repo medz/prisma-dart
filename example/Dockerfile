@@ -10,17 +10,6 @@ WORKDIR /app
 # Copies the current directory contents into the container at /app
 COPY . .
 
-# Create dart pubspec.yaml
-RUN echo "name: prisma_dart" > pubspec.yaml &&\
-    echo "environment:" >> pubspec.yaml &&\
-    echo "  sdk: '>=2.18.0 <3.0.0'" >> pubspec.yaml
-
-# Install any needed packages specified in pubspec.yaml
-RUN dart pub add orm &&\
-    dart pub add json_annotation &&\
-    dart pub add json_serializable &&\
-    dart pub add build_runner
-
 # Install Prisma CLI
 RUN npm install prisma
 
@@ -39,7 +28,7 @@ FROM scratch
 
 # Copy runtime dependencies
 COPY --from=builder /runtime /
-COPY --from=odroe/prisma-dart:amd64 /runtime /
+COPY --from=odroe/prisma-dart:latest / /
 
 # Copy executable
 COPY --from=builder /app/app.exe /app.exe

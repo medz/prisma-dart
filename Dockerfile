@@ -1,10 +1,11 @@
-FROM debian:bullseye-slim
+FROM debian:bullseye-slim as builder
 
-# tags:
-#  - amd64
-#  - arm64
-#  - armhf
-# usage: COPY --from=odroe/prisma-dart:{tag} /runtime/ /
+# Architecture:
+#  - amd64 (Linux/x86_64)
+#  - armhf (Linux/armv7)
+#  - arm64 (Linux/aarch64)
+#
+# See https://github.com/dart-lang/dart-docker/blob/main/stable/bullseye/Dockerfile#L19
 RUN set -eux; \
     case "$(dpkg --print-architecture)" in \
         amd64) \
@@ -26,3 +27,10 @@ RUN set -eux; \
         mkdir -p "/runtime$dir"; \
         cp --archive --link --dereference --no-target-directory "$f" "/runtime$f"; \
     done
+
+FROM scratch
+
+# Copy the runtime libraries from the builder stage.
+#
+# Usage: COPY --from=prisma-dart:latest / /
+COPY --from=builder /runtime/ /
