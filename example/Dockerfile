@@ -21,6 +21,7 @@ RUN npx prisma generate &&\
 RUN dart compile exe main.dart -o app.exe
 
 # Push schema to database
+# Note: Only SQLite needs to be pushed
 RUN npx prisma db push
 
 # Set runtime image
@@ -34,6 +35,7 @@ COPY --from=odroe/prisma-dart:latest / /
 COPY --from=builder /app/app.exe /app.exe
 
 # Copy SQLite database
+# Note: Only SQLite needs to be copied
 COPY --from=builder /app/prisma/prisma.sqlite /prisma/prisma.sqlite
 
 # Copy Prisma Engine
