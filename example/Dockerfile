@@ -1,6 +1,6 @@
-# Select amd64 image
 FROM dart:latest as builder
 
+# Install Node.js LTS to builder
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
 apt-get install -y nodejs
 
