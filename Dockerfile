@@ -1,9 +1,9 @@
 FROM debian:bullseye-slim as builder
 
 # Architecture:
-#  - amd64 (Linux/x86_64)
-#  - armhf (Linux/armv7)
-#  - arm64 (Linux/aarch64)
+#  - amd64 (linux/amd64)
+#  - arm64 (linux/arm64)
+#  - armhf (linux/arm/v7)
 #
 # See https://github.com/dart-lang/dart-docker/blob/main/stable/bullseye/Dockerfile#L19
 RUN set -eux; \
