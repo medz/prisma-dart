@@ -1,6 +1,6 @@
-# Select amd64 image
 FROM dart:latest as builder
 
+# Install Node.js LTS to builder
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
 apt-get install -y nodejs
 
@@ -9,17 +9,6 @@ WORKDIR /app
 
 # Copies the current directory contents into the container at /app
 COPY . .
-
-# Create dart pubspec.yaml
-RUN echo "name: prisma_dart" > pubspec.yaml &&\
-    echo "environment:" >> pubspec.yaml &&\
-    echo "  sdk: '>=2.18.0 <3.0.0'" >> pubspec.yaml
-
-# Install any needed packages specified in pubspec.yaml
-RUN dart pub add orm &&\
-    dart pub add json_annotation &&\
-    dart pub add json_serializable &&\
-    dart pub add build_runner
 
 # Install Prisma CLI
 RUN npm install prisma
@@ -32,6 +21,7 @@ RUN npx prisma generate &&\
 RUN dart compile exe main.dart -o app.exe
 
 # Push schema to database
+# Note: Only SQLite needs to be pushed
 RUN npx prisma db push
 
 # Set runtime image
@@ -39,12 +29,13 @@ FROM scratch
 
 # Copy runtime dependencies
 COPY --from=builder /runtime /
-COPY --from=odroe/prisma-dart:amd64 /runtime /
+COPY --from=odroe/prisma-dart:latest / /
 
 # Copy executable
 COPY --from=builder /app/app.exe /app.exe
 
 # Copy SQLite database
+# Note: Only SQLite needs to be copied
 COPY --from=builder /app/prisma/prisma.sqlite /prisma/prisma.sqlite
 
 # Copy Prisma Engine
