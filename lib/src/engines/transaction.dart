@@ -1,4 +1,4 @@
-import '../utils/prisma_enum.dart';
+import '../prisma_enum.dart';
 
 /// Prisma ISO lation level
 ///

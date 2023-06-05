@@ -14,7 +14,7 @@ enum EngineEventType {
 }
 
 /// Prisma engine interface.
-abstract interface class Engine {
+abstract interface class Engine<T> {
   /// Starts the engine.
   Future<void> start();
 
@@ -22,7 +22,7 @@ abstract interface class Engine {
   Future<void> stop();
 
   /// Requests a query execution.
-  Future<dynamic> request<T>(
+  Future<dynamic> request<R>(
     EngineQuery query, {
     String? traceparent,
     InteractiveTransactionInfo<T>? transaction,
