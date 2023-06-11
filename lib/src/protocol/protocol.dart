@@ -7,9 +7,19 @@ abstract interface class ProtocolMessage {
 }
 
 /// Prisma protocol encoder.
-abstract interface class ProtocolEncoder {
+abstract class ProtocolEncoder {
+  /// Prisma DMMF
+  final Document dmmf;
+
+  /// Prisma protocol encoder.
+  const ProtocolEncoder(this.dmmf);
+
   /// Encode to protocol message.
-  ProtocolMessage encode(ProtocolAction action);
+  ProtocolMessage encode({
+    required ProtocolAction action,
+    String model,
+    Map<String, dynamic>? args,
+  });
 }
 
 /// Prisma protocol action
