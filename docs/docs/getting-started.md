@@ -6,7 +6,7 @@ If you already have a project, please start with [2. Install Prisma CLI](#_2-ins
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/kMKyA_KEwV0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-> - [Watch at YouYube](https://www.youtube.com/embed/kMKyA_KEwV0)
+> - [Watch at YouTube](https://www.youtube.com/embed/kMKyA_KEwV0)
 > - [Watch at Bilibili](https://www.bilibili.com/video/BV1224y1t7Z5/)
 
 ## 1. Create a new Dart project
