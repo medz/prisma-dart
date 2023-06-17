@@ -9,11 +9,11 @@ In Prisma, relations and additional statistics need to be done using the Fluent 
 In the following example, we have a `User` model with a `Profile` model. The `Profile` model has a one-to-one relation with the `User` model.
 
 ```dart
-final flent = prisma.user.findUniqueOrThrow(
+final fluent = prisma.user.findUniqueOrThrow(
   where: UserWhereUniqueInput(id: 1),
 );
 
-final profile = await flent.profile();
+final profile = await fluent.profile();
 ```
 
 ## One to many
@@ -21,11 +21,11 @@ final profile = await flent.profile();
 In the following example, we have a `User` model with a `Post` model. The `Post` model has a one-to-many relation with the `User` model.
 
 ```dart
-final flent = prisma.user.findUniqueOrThrow(
+final fluent = prisma.user.findUniqueOrThrow(
   where: UserWhereUniqueInput(id: 1),
 );
 
-final posts = await flent.posts();
+final posts = await fluent.posts();
 ```
 
 ## Count relation
@@ -34,9 +34,9 @@ In the following example, we have a `User` model with a `Post` model. The `Post`
 
 ```dart
 
-final flent = prisma.user.findUniqueOrThrow(
+final fluent = prisma.user.findUniqueOrThrow(
   where: UserWhereUniqueInput(id: 1),
 );
 
-final count = await flent.$count().posts();
+final count = await fluent.$count().posts();
 ```
