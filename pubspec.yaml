@@ -23,7 +23,7 @@ dependencies:
   retry: ^3.1.2
 
   # CLI dependencies
-  analyzer: ^5.13.0
+  analyzer: ">=5.13.0 <7.0.0"
   code_builder: ^4.4.0
   dart_style: ^2.3.1
   recase: ^4.1.0
