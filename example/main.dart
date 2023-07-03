@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:orm/logger.dart';
-
-import 'prisma/prisma_client.dart';
+import 'package:prisma_dart_example/prisma_client.dart';
 
 /// Database URL
 ///

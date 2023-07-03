@@ -3,7 +3,7 @@
 
 generator client {
   provider = "dart run orm"
-  output   = "."
+  output   = "../lib"
 }
 
 datasource db {
