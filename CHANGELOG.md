@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.4](https://github.com/odroe/prisma-dart/compare/orm-v3.4.3...orm-v3.4.4) (2023-07-03)
+
+
+### Bug Fixes
+
+* bump analyzer from 5.13.0 to 6.0.0 ([c03aaa9](https://github.com/odroe/prisma-dart/commit/c03aaa99f63a641d9e0402abbd254488babb1d56))
+
 ## [3.4.3](https://github.com/odroe/prisma-dart/compare/orm-v3.4.2...orm-v3.4.3) (2023-05-30)
 
 
