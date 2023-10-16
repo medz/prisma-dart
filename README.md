@@ -1,5 +1,3 @@
-> **Noto**: Due to the bankruptcy of the company supporting this project, we have sadly had to suspend maintenance of this project. Wait until we solve our own debt crisis, we will be back!
-
 # Prisma ・ [![Pub Version](https://img.shields.io/pub/v/orm?label=latest)](https://pub.dev/packages/orm)[![GitHub license](https://img.shields.io/github/license/odroe/prisma-dart)](https://github.com/odroe/prisma-dart/blob/main/LICENSE)[![test](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml)[![analyze](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml)
 
 Prisma (for Dart) is a **next-generation ORM** for Dart and Flutter.
