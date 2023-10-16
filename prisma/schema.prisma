@@ -2,9 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider   = "dart run lib/dev.dart"
-  // output     = "."
-  outputType = ["a"]
+  provider   = "dart run dev.dart"
+  outputType = "package"
 }
 
 datasource db {
