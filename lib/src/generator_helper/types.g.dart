@@ -6,16 +6,10 @@ part of 'types.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FormEnvVarImpl _$$FormEnvVarImplFromJson(Map<String, dynamic> json) =>
-    _$FormEnvVarImpl(
-      json['env'] as String,
-      $type: json['runtimeType'] as String?,
-    );
-
-_$FormEnvValueImpl _$$FormEnvValueImplFromJson(Map<String, dynamic> json) =>
-    _$FormEnvValueImpl(
-      json['value'] as String,
-      $type: json['runtimeType'] as String?,
+_$EnvValueImpl _$$EnvValueImplFromJson(Map<String, dynamic> json) =>
+    _$EnvValueImpl(
+      fromEnvVar: json['fromEnvVar'] as String?,
+      value: json['value'] as String?,
     );
 
 _$GeneratorConfigImpl _$$GeneratorConfigImplFromJson(

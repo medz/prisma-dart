@@ -4,9 +4,11 @@ part 'types.freezed.dart';
 part 'types.g.dart';
 
 @jsonSerializable
-sealed class EnvValue with _$EnvValue {
-  const factory EnvValue.env(final String env) = FormEnvVar;
-  const factory EnvValue.value(final String value) = FormEnvValue;
+class EnvValue with _$EnvValue {
+  const factory EnvValue({
+    final String? fromEnvVar,
+    final String? value,
+  }) = _EnvValue;
 }
 
 @jsonSerializable

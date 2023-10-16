@@ -15,151 +15,40 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 EnvValue _$EnvValueFromJson(Map<String, dynamic> json) {
-  switch (json['runtimeType']) {
-    case 'env':
-      return FormEnvVar.fromJson(json);
-    case 'value':
-      return FormEnvValue.fromJson(json);
-
-    default:
-      throw CheckedFromJsonException(json, 'runtimeType', 'EnvValue',
-          'Invalid union type "${json['runtimeType']}"!');
-  }
+  return _EnvValue.fromJson(json);
 }
 
 /// @nodoc
 mixin _$EnvValue {
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(FormEnvVar value) env,
-    required TResult Function(FormEnvValue value) value,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FormEnvVar value)? env,
-    TResult? Function(FormEnvValue value)? value,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(FormEnvVar value)? env,
-    TResult Function(FormEnvValue value)? value,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  String? get fromEnvVar => throw _privateConstructorUsedError;
+  String? get value => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 @JsonSerializable(createToJson: false)
-class _$FormEnvVarImpl implements FormEnvVar {
-  const _$FormEnvVarImpl(this.env, {final String? $type})
-      : $type = $type ?? 'env';
+class _$EnvValueImpl implements _EnvValue {
+  const _$EnvValueImpl({this.fromEnvVar, this.value});
 
-  factory _$FormEnvVarImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FormEnvVarImplFromJson(json);
-
-  @override
-  final String env;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
+  factory _$EnvValueImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EnvValueImplFromJson(json);
 
   @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(FormEnvVar value) env,
-    required TResult Function(FormEnvValue value) value,
-  }) {
-    return env(this);
-  }
-
+  final String? fromEnvVar;
   @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FormEnvVar value)? env,
-    TResult? Function(FormEnvValue value)? value,
-  }) {
-    return env?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(FormEnvVar value)? env,
-    TResult Function(FormEnvValue value)? value,
-    required TResult orElse(),
-  }) {
-    if (env != null) {
-      return env(this);
-    }
-    return orElse();
-  }
+  final String? value;
 }
 
-abstract class FormEnvVar implements EnvValue {
-  const factory FormEnvVar(final String env) = _$FormEnvVarImpl;
+abstract class _EnvValue implements EnvValue {
+  const factory _EnvValue({final String? fromEnvVar, final String? value}) =
+      _$EnvValueImpl;
 
-  factory FormEnvVar.fromJson(Map<String, dynamic> json) =
-      _$FormEnvVarImpl.fromJson;
-
-  String get env;
-}
-
-/// @nodoc
-@JsonSerializable(createToJson: false)
-class _$FormEnvValueImpl implements FormEnvValue {
-  const _$FormEnvValueImpl(this.value, {final String? $type})
-      : $type = $type ?? 'value';
-
-  factory _$FormEnvValueImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FormEnvValueImplFromJson(json);
+  factory _EnvValue.fromJson(Map<String, dynamic> json) =
+      _$EnvValueImpl.fromJson;
 
   @override
-  final String value;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
-
+  String? get fromEnvVar;
   @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(FormEnvVar value) env,
-    required TResult Function(FormEnvValue value) value,
-  }) {
-    return value(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FormEnvVar value)? env,
-    TResult? Function(FormEnvValue value)? value,
-  }) {
-    return value?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(FormEnvVar value)? env,
-    TResult Function(FormEnvValue value)? value,
-    required TResult orElse(),
-  }) {
-    if (value != null) {
-      return value(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class FormEnvValue implements EnvValue {
-  const factory FormEnvValue(final String value) = _$FormEnvValueImpl;
-
-  factory FormEnvValue.fromJson(Map<String, dynamic> json) =
-      _$FormEnvValueImpl.fromJson;
-
-  String get value;
+  String? get value;
 }
 
 GeneratorConfig _$GeneratorConfigFromJson(Map<String, dynamic> json) {
