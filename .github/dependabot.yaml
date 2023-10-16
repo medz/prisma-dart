@@ -16,6 +16,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    commit-message:
+      prefix: 'chore'
 
   # `orm` package
   - package-ecosystem: pub
@@ -23,4 +25,4 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: "fix"
+      prefix: 'fix'
