@@ -12,7 +12,7 @@ environment:
   sdk: ^3.0.0
 
 executables:
-  prisma: orm
+  prisma-client-dart: orm
 
 dependencies:
   json_annotation: ^4.8.1
