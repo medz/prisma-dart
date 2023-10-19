@@ -360,7 +360,9 @@ class Deprecation implements JsonConvertible<Map<String, dynamic>> {
 }
 
 @JsonConvertible.serializable
-class OutputObjectTypes implements JsonConvertible<Map<String, dynamic>> {}
+class OutputObjectTypes implements JsonConvertible<Map<String, dynamic>> {
+  // TODO: GO ON
+}
 
 // ---------------------
 @JsonConvertible.serializable
