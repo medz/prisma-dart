@@ -13,6 +13,10 @@ Document _$DocumentFromJson(Map json) => $checkedCreate(
         final val = Document(
           datamodel: $checkedConvert('datamodel',
               (v) => Datamodel.fromJson(Map<String, dynamic>.from(v as Map))),
+          schema: $checkedConvert('schema',
+              (v) => Schema.fromJson(Map<String, dynamic>.from(v as Map))),
+          mappings: $checkedConvert('mappings',
+              (v) => Mappings.fromJson(Map<String, dynamic>.from(v as Map))),
         );
         return val;
       },
@@ -20,6 +24,8 @@ Document _$DocumentFromJson(Map json) => $checkedCreate(
 
 Map<String, dynamic> _$DocumentToJson(Document instance) => <String, dynamic>{
       'datamodel': instance.datamodel.toJson(),
+      'schema': instance.schema.toJson(),
+      'mappings': instance.mappings.toJson(),
     };
 
 Datamodel _$DatamodelFromJson(Map json) => $checkedCreate(
@@ -308,7 +314,15 @@ Schema _$SchemaFromJson(Map json) => $checkedCreate(
               (v) => InputObjectTypes.fromJson(
                   Map<String, dynamic>.from(v as Map))),
           outputObjectTypes: $checkedConvert(
-              'outputObjectTypes', (v) => OutputObjectTypes.fromJson(v as Map)),
+              'outputObjectTypes',
+              (v) => OutputObjectTypes.fromJson(
+                  Map<String, dynamic>.from(v as Map))),
+          enumTypes: $checkedConvert('enumTypes',
+              (v) => EnumTypes.fromJson(Map<String, dynamic>.from(v as Map))),
+          fieldRefTypes: $checkedConvert(
+              'fieldRefTypes',
+              (v) =>
+                  FieldRefTypes.fromJson(Map<String, dynamic>.from(v as Map))),
         );
         return val;
       },
@@ -327,6 +341,8 @@ Map<String, dynamic> _$SchemaToJson(Schema instance) {
   writeNotNull('rootMutationType', instance.rootMutationType);
   val['inputObjectTypes'] = instance.inputObjectTypes.toJson();
   val['outputObjectTypes'] = instance.outputObjectTypes.toJson();
+  val['enumTypes'] = instance.enumTypes.toJson();
+  val['fieldRefTypes'] = instance.fieldRefTypes.toJson();
   return val;
 }
 
@@ -472,8 +488,8 @@ SchemaArg _$SchemaArgFromJson(Map json) => $checkedCreate(
           inputTypes: $checkedConvert(
               'inputTypes',
               (v) => (v as List<dynamic>)
-                  .map((e) => InputTypeRef.fromJson(
-                      Map<String, dynamic>.from(e as Map)))
+                  .map((e) =>
+                      TypeRef.fromJson(Map<String, dynamic>.from(e as Map)))
                   .toList()),
           deprecation: $checkedConvert(
               'deprecation',
@@ -504,35 +520,45 @@ Map<String, dynamic> _$SchemaArgToJson(SchemaArg instance) {
   return val;
 }
 
-InputTypeRef _$InputTypeRefFromJson(Map json) => $checkedCreate(
-      'InputTypeRef',
+TypeRef _$TypeRefFromJson(Map json) => $checkedCreate(
+      'TypeRef',
       json,
       ($checkedConvert) {
-        final val = InputTypeRef(
-          location: $checkedConvert('location',
-              (v) => $enumDecode(_$InputTypeRefAllowedLocationsEnumMap, v)),
+        final val = TypeRef(
           isList: $checkedConvert('isList', (v) => v as bool),
           type: $checkedConvert('type', (v) => v as String),
-          namespace: $checkedConvert(
-              'namespace', (v) => $enumDecode(_$FieldNamespaceEnumMap, v)),
+          location: $checkedConvert(
+              'location', (v) => $enumDecode(_$FieldLocationEnumMap, v)),
+          namespace: $checkedConvert('namespace',
+              (v) => $enumDecodeNullable(_$FieldNamespaceEnumMap, v)),
         );
         return val;
       },
     );
 
-Map<String, dynamic> _$InputTypeRefToJson(InputTypeRef instance) =>
-    <String, dynamic>{
-      'isList': instance.isList,
-      'type': instance.type,
-      'namespace': _$FieldNamespaceEnumMap[instance.namespace]!,
-      'location': _$InputTypeRefAllowedLocationsEnumMap[instance.location]!,
-    };
+Map<String, dynamic> _$TypeRefToJson(TypeRef instance) {
+  final val = <String, dynamic>{
+    'isList': instance.isList,
+    'type': instance.type,
+    'location': _$FieldLocationEnumMap[instance.location]!,
+  };
 
-const _$InputTypeRefAllowedLocationsEnumMap = {
-  InputTypeRefAllowedLocations.scalar: 'scalar',
-  InputTypeRefAllowedLocations.inputObjectTypes: 'inputObjectTypes',
-  InputTypeRefAllowedLocations.enumTypes: 'enumTypes',
-  InputTypeRefAllowedLocations.fieldRefTypes: 'fieldRefTypes',
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('namespace', _$FieldNamespaceEnumMap[instance.namespace]);
+  return val;
+}
+
+const _$FieldLocationEnumMap = {
+  FieldLocation.scalar: 'scalar',
+  FieldLocation.inputObjectTypes: 'inputObjectTypes',
+  FieldLocation.outputObjectTypes: 'outputObjectTypes',
+  FieldLocation.enumTypes: 'enumTypes',
+  FieldLocation.fieldRefTypes: 'fieldRefTypes',
 };
 
 const _$FieldNamespaceEnumMap = {
@@ -574,13 +600,133 @@ OutputObjectTypes _$OutputObjectTypesFromJson(Map json) => $checkedCreate(
       'OutputObjectTypes',
       json,
       ($checkedConvert) {
-        final val = OutputObjectTypes();
+        final val = OutputObjectTypes(
+          model: $checkedConvert(
+              'model',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      OutputType.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+          prisma: $checkedConvert(
+              'prisma',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      OutputType.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+        );
         return val;
       },
     );
 
 Map<String, dynamic> _$OutputObjectTypesToJson(OutputObjectTypes instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'model': instance.model.map((e) => e.toJson()).toList(),
+      'prisma': instance.prisma.map((e) => e.toJson()).toList(),
+    };
+
+OutputType _$OutputTypeFromJson(Map json) => $checkedCreate(
+      'OutputType',
+      json,
+      ($checkedConvert) {
+        final val = OutputType(
+          name: $checkedConvert('name', (v) => v as String),
+          fields: $checkedConvert(
+              'fields',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      SchemaField.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$OutputTypeToJson(OutputType instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'fields': instance.fields.map((e) => e.toJson()).toList(),
+    };
+
+SchemaField _$SchemaFieldFromJson(Map json) => $checkedCreate(
+      'SchemaField',
+      json,
+      ($checkedConvert) {
+        final val = SchemaField(
+          name: $checkedConvert('name', (v) => v as String),
+          isNullable: $checkedConvert('isNullable', (v) => v as bool? ?? false),
+          outputType: $checkedConvert('outputType',
+              (v) => TypeRef.fromJson(Map<String, dynamic>.from(v as Map))),
+          args: $checkedConvert(
+              'args',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      SchemaArg.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+          deprecation: $checkedConvert(
+              'deprecation',
+              (v) => v == null
+                  ? null
+                  : Deprecation.fromJson(Map<String, dynamic>.from(v as Map))),
+          documentation: $checkedConvert('documentation', (v) => v as String?),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$SchemaFieldToJson(SchemaField instance) {
+  final val = <String, dynamic>{
+    'name': instance.name,
+    'isNullable': instance.isNullable,
+    'outputType': instance.outputType.toJson(),
+    'args': instance.args.map((e) => e.toJson()).toList(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('deprecation', instance.deprecation?.toJson());
+  writeNotNull('documentation', instance.documentation);
+  return val;
+}
+
+EnumTypes _$EnumTypesFromJson(Map json) => $checkedCreate(
+      'EnumTypes',
+      json,
+      ($checkedConvert) {
+        final val = EnumTypes(
+          model: $checkedConvert(
+              'model',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) =>
+                      SchemaEnum.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+          prisma: $checkedConvert(
+              'prisma',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      SchemaEnum.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$EnumTypesToJson(EnumTypes instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('model', instance.model?.map((e) => e.toJson()).toList());
+  val['prisma'] = instance.prisma.map((e) => e.toJson()).toList();
+  return val;
+}
 
 SchemaEnum _$SchemaEnumFromJson(Map json) => $checkedCreate(
       'SchemaEnum',
@@ -600,3 +746,168 @@ Map<String, dynamic> _$SchemaEnumToJson(SchemaEnum instance) =>
       'name': instance.name,
       'values': instance.values,
     };
+
+FieldRefTypes _$FieldRefTypesFromJson(Map json) => $checkedCreate(
+      'FieldRefTypes',
+      json,
+      ($checkedConvert) {
+        final val = FieldRefTypes(
+          prisma: $checkedConvert(
+              'prisma',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) => FieldRefType.fromJson(
+                      Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$FieldRefTypesToJson(FieldRefTypes instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('prisma', instance.prisma?.map((e) => e.toJson()).toList());
+  return val;
+}
+
+FieldRefType _$FieldRefTypeFromJson(Map json) => $checkedCreate(
+      'FieldRefType',
+      json,
+      ($checkedConvert) {
+        final val = FieldRefType(
+          name: $checkedConvert('name', (v) => v as String),
+          allowTypes: $checkedConvert(
+              'allowTypes',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      TypeRef.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+          fields: $checkedConvert(
+              'fields',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      SchemaArg.fromJson(Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$FieldRefTypeToJson(FieldRefType instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'allowTypes': instance.allowTypes.map((e) => e.toJson()).toList(),
+      'fields': instance.fields.map((e) => e.toJson()).toList(),
+    };
+
+Mappings _$MappingsFromJson(Map json) => $checkedCreate(
+      'Mappings',
+      json,
+      ($checkedConvert) {
+        final val = Mappings(
+          modelOperations: $checkedConvert(
+              'modelOperations',
+              (v) => (v as List<dynamic>)
+                  .map((e) => ModelMapping.fromJson(
+                      Map<String, dynamic>.from(e as Map)))
+                  .toList()),
+          otherOperations: $checkedConvert(
+              'otherOperations',
+              (v) => OtherOperations.fromJson(
+                  Map<String, dynamic>.from(v as Map))),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$MappingsToJson(Mappings instance) => <String, dynamic>{
+      'modelOperations':
+          instance.modelOperations.map((e) => e.toJson()).toList(),
+      'otherOperations': instance.otherOperations.toJson(),
+    };
+
+OtherOperations _$OtherOperationsFromJson(Map json) => $checkedCreate(
+      'OtherOperations',
+      json,
+      ($checkedConvert) {
+        final val = OtherOperations(
+          read: $checkedConvert('read',
+              (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+          write: $checkedConvert('write',
+              (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$OtherOperationsToJson(OtherOperations instance) =>
+    <String, dynamic>{
+      'read': instance.read,
+      'write': instance.write,
+    };
+
+ModelMapping _$ModelMappingFromJson(Map json) => $checkedCreate(
+      'ModelMapping',
+      json,
+      ($checkedConvert) {
+        final val = ModelMapping(
+          model: $checkedConvert('model', (v) => v as String),
+          plural: $checkedConvert('plural', (v) => v as String?),
+          findUnique: $checkedConvert('findUnique', (v) => v as String?),
+          findUniqueOrThrow:
+              $checkedConvert('findUniqueOrThrow', (v) => v as String?),
+          findFirst: $checkedConvert('findFirst', (v) => v as String?),
+          findMany: $checkedConvert('findMany', (v) => v as String?),
+          create: $checkedConvert('create', (v) => v as String?),
+          createMany: $checkedConvert('createMany', (v) => v as String?),
+          update: $checkedConvert('update', (v) => v as String?),
+          updateMany: $checkedConvert('updateMany', (v) => v as String?),
+          upsert: $checkedConvert('upsert', (v) => v as String?),
+          delete: $checkedConvert('delete', (v) => v as String?),
+          deleteMany: $checkedConvert('deleteMany', (v) => v as String?),
+          aggregate: $checkedConvert('aggregate', (v) => v as String?),
+          groupBy: $checkedConvert('groupBy', (v) => v as String?),
+          count: $checkedConvert('count', (v) => v as String?),
+          findRaw: $checkedConvert('findRaw', (v) => v as String?),
+          aggregateRaw: $checkedConvert('aggregateRaw', (v) => v as String?),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$ModelMappingToJson(ModelMapping instance) {
+  final val = <String, dynamic>{
+    'model': instance.model,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('plural', instance.plural);
+  writeNotNull('findUnique', instance.findUnique);
+  writeNotNull('findUniqueOrThrow', instance.findUniqueOrThrow);
+  writeNotNull('findFirst', instance.findFirst);
+  writeNotNull('findMany', instance.findMany);
+  writeNotNull('create', instance.create);
+  writeNotNull('createMany', instance.createMany);
+  writeNotNull('update', instance.update);
+  writeNotNull('updateMany', instance.updateMany);
+  writeNotNull('upsert', instance.upsert);
+  writeNotNull('delete', instance.delete);
+  writeNotNull('deleteMany', instance.deleteMany);
+  writeNotNull('aggregate', instance.aggregate);
+  writeNotNull('groupBy', instance.groupBy);
+  writeNotNull('count', instance.count);
+  writeNotNull('findRaw', instance.findRaw);
+  writeNotNull('aggregateRaw', instance.aggregateRaw);
+  return val;
+}

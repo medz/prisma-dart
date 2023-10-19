@@ -7,13 +7,13 @@ part 'dmmf.g.dart';
 @JsonConvertible.serializable
 class Document implements JsonConvertible<Map<String, dynamic>> {
   final Datamodel datamodel;
-  // final Schema schema;
-  // final Mappings mappings;
+  final Schema schema;
+  final Mappings mappings;
 
   const Document({
     required this.datamodel,
-    // required this.schema,
-    // required this.mappings,
+    required this.schema,
+    required this.mappings,
   });
 
   factory Document.fromJson(Map<String, dynamic> json) =>
@@ -195,16 +195,16 @@ class Schema implements JsonConvertible<Map<String, dynamic>> {
   final String? rootMutationType;
   final InputObjectTypes inputObjectTypes;
   final OutputObjectTypes outputObjectTypes;
-  // final EnumTypes enumTypes;
-  // final FieldRefTypes fieldRefTypes;
+  final EnumTypes enumTypes;
+  final FieldRefTypes fieldRefTypes;
 
   const Schema({
     this.rootQueryType,
     this.rootMutationType,
     required this.inputObjectTypes,
     required this.outputObjectTypes,
-    // required this.enumTypes,
-    // required this.fieldRefTypes,
+    required this.enumTypes,
+    required this.fieldRefTypes,
   });
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
@@ -278,7 +278,7 @@ class SchemaArg implements JsonConvertible<Map<String, dynamic>> {
   final String? comment;
   final bool isNullable;
   final bool isRequired;
-  final List<InputTypeRef> inputTypes;
+  final List<TypeRef> inputTypes;
   final Deprecation? deprecation;
 
   const SchemaArg({
@@ -297,51 +297,39 @@ class SchemaArg implements JsonConvertible<Map<String, dynamic>> {
   Map<String, dynamic> toJson() => _$SchemaArgToJson(this);
 }
 
-abstract class TypeRef<T extends Enum>
-    implements JsonConvertible<Map<String, dynamic>> {
-  final bool isList;
-  final String type;
-  final FieldNamespace namespace;
-
-  const TypeRef({
-    required this.isList,
-    required this.type,
-    required this.namespace,
-  });
-
-  abstract final T location;
-}
-
-enum FieldNamespace { model, prisma }
-
-enum InputTypeRefAllowedLocations {
+enum FieldLocation {
   scalar,
   inputObjectTypes,
+  outputObjectTypes,
   enumTypes,
   fieldRefTypes,
 }
 
 @JsonConvertible.serializable
-class InputTypeRef extends TypeRef<InputTypeRefAllowedLocations> {
-  @override
-  final InputTypeRefAllowedLocations location;
+class TypeRef implements JsonConvertible<Map<String, dynamic>> {
+  final bool isList;
+  final String type;
+  final FieldLocation location;
+  final FieldNamespace? namespace;
 
-  const InputTypeRef({
+  const TypeRef({
+    required this.isList,
+    required this.type,
     required this.location,
-    required super.isList,
-    required super.type,
-    required super.namespace,
+    this.namespace,
   });
 
-  factory InputTypeRef.fromJson(Map<String, dynamic> json) =>
-      _$InputTypeRefFromJson(json);
+  factory TypeRef.fromJson(Map<String, dynamic> json) =>
+      _$TypeRefFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$InputTypeRefToJson(this);
+  Map<String, dynamic> toJson() => _$TypeRefToJson(this);
 }
 
+enum FieldNamespace { model, prisma }
+
 @JsonConvertible.serializable
-class Deprecation implements JsonConvertible<Map<String, dynamic>> {
+class Deprecation implements JsonConvertible<Map<String, String>> {
   final String sinceVersion;
   final String reason;
   final String? plannedRemovalVersion;
@@ -356,15 +344,76 @@ class Deprecation implements JsonConvertible<Map<String, dynamic>> {
       _$DeprecationFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$DeprecationToJson(this);
+  Map<String, String> toJson() => _$DeprecationToJson(this).cast();
 }
 
 @JsonConvertible.serializable
 class OutputObjectTypes implements JsonConvertible<Map<String, dynamic>> {
-  // TODO: GO ON
+  final List<OutputType> model;
+  final List<OutputType> prisma;
+
+  const OutputObjectTypes({required this.model, required this.prisma});
+  factory OutputObjectTypes.fromJson(Map<String, dynamic> json) =>
+      _$OutputObjectTypesFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$OutputObjectTypesToJson(this);
 }
 
-// ---------------------
+@JsonConvertible.serializable
+class OutputType implements JsonConvertible<Map<String, dynamic>> {
+  final String name;
+  final List<SchemaField> fields;
+
+  const OutputType({required this.name, required this.fields});
+  factory OutputType.fromJson(Map<String, dynamic> json) =>
+      _$OutputTypeFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$OutputTypeToJson(this);
+}
+
+@JsonConvertible.serializable
+class SchemaField implements JsonConvertible<Map<String, dynamic>> {
+  final String name;
+  final bool isNullable;
+  final TypeRef outputType;
+  final List<SchemaArg> args;
+  final Deprecation? deprecation;
+  final String? documentation;
+
+  const SchemaField({
+    required this.name,
+    this.isNullable = false,
+    required this.outputType,
+    required this.args,
+    this.deprecation,
+    this.documentation,
+  });
+
+  factory SchemaField.fromJson(Map<String, dynamic> json) =>
+      _$SchemaFieldFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$SchemaFieldToJson(this);
+}
+
+enum OutputTypeRefAllowedLocations { scalar, outputObjectTypes, enumTypes }
+
+@JsonConvertible.serializable
+class EnumTypes implements JsonConvertible<Map<String, dynamic>> {
+  final List<SchemaEnum>? model;
+  final List<SchemaEnum> prisma;
+
+  const EnumTypes({this.model, required this.prisma});
+
+  factory EnumTypes.fromJson(Map<String, dynamic> json) =>
+      _$EnumTypesFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$EnumTypesToJson(this);
+}
+
 @JsonConvertible.serializable
 class SchemaEnum implements JsonConvertible<Map<String, dynamic>> {
   final String name;
@@ -378,10 +427,129 @@ class SchemaEnum implements JsonConvertible<Map<String, dynamic>> {
   Map<String, dynamic> toJson() => _$SchemaEnumToJson(this);
 }
 
-// enum FieldLocation {
-//   scalar,
-//   inputObjectTypes,
-//   outputObjectTypes,
-//   enumTypes,
-//   fieldRefTypes,
-// }
+@JsonConvertible.serializable
+class FieldRefTypes implements JsonConvertible<Map<String, dynamic>> {
+  final List<FieldRefType>? prisma;
+
+  const FieldRefTypes({required this.prisma});
+  factory FieldRefTypes.fromJson(Map<String, dynamic> json) =>
+      _$FieldRefTypesFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$FieldRefTypesToJson(this);
+}
+
+@JsonConvertible.serializable
+class FieldRefType implements JsonConvertible<Map<String, dynamic>> {
+  final String name;
+  final List<TypeRef> allowTypes;
+  final List<SchemaArg> fields;
+
+  const FieldRefType({
+    required this.name,
+    required this.allowTypes,
+    required this.fields,
+  });
+
+  factory FieldRefType.fromJson(Map<String, dynamic> json) =>
+      _$FieldRefTypeFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$FieldRefTypeToJson(this);
+}
+
+@JsonConvertible.serializable
+class Mappings implements JsonConvertible<Map<String, dynamic>> {
+  final List<ModelMapping> modelOperations;
+  final OtherOperations otherOperations;
+
+  const Mappings({
+    required this.modelOperations,
+    required this.otherOperations,
+  });
+
+  factory Mappings.fromJson(Map<String, dynamic> json) =>
+      _$MappingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$MappingsToJson(this);
+}
+
+@JsonConvertible.serializable
+class OtherOperations implements JsonConvertible<Map<String, List<String>>> {
+  final List<String> read;
+  final List<String> write;
+
+  const OtherOperations({required this.read, required this.write});
+
+  factory OtherOperations.fromJson(Map<String, dynamic> json) =>
+      _$OtherOperationsFromJson(json);
+
+  @override
+  Map<String, List<String>> toJson() => _$OtherOperationsToJson(this).cast();
+}
+
+@JsonConvertible.serializable
+class ModelMapping implements JsonConvertible<Map<String, String>> {
+  final String model;
+  final String? plural;
+  final String? findUnique;
+  final String? findUniqueOrThrow;
+  final String? findFirst;
+  final String? findMany;
+  final String? create;
+  final String? createMany;
+  final String? update;
+  final String? updateMany;
+  final String? upsert;
+  final String? delete;
+  final String? deleteMany;
+  final String? aggregate;
+  final String? groupBy;
+  final String? count;
+  final String? findRaw;
+  final String? aggregateRaw;
+
+  const ModelMapping({
+    required this.model,
+    this.plural,
+    @JsonKey(readValue: _readModelMappingValue) this.findUnique,
+    @JsonKey(readValue: _readModelMappingValue) this.findUniqueOrThrow,
+    @JsonKey(readValue: _readModelMappingValue) this.findFirst,
+    @JsonKey(readValue: _readModelMappingValue) this.findMany,
+    @JsonKey(readValue: _readModelMappingValue) this.create,
+    @JsonKey(readValue: _readModelMappingValue) this.createMany,
+    @JsonKey(readValue: _readModelMappingValue) this.update,
+    @JsonKey(readValue: _readModelMappingValue) this.updateMany,
+    @JsonKey(readValue: _readModelMappingValue) this.upsert,
+    @JsonKey(readValue: _readModelMappingValue) this.delete,
+    @JsonKey(readValue: _readModelMappingValue) this.deleteMany,
+    @JsonKey(readValue: _readModelMappingValue) this.aggregate,
+    @JsonKey(readValue: _readModelMappingValue) this.groupBy,
+    @JsonKey(readValue: _readModelMappingValue) this.count,
+    @JsonKey(readValue: _readModelMappingValue) this.findRaw,
+    @JsonKey(readValue: _readModelMappingValue) this.aggregateRaw,
+  });
+
+  factory ModelMapping.fromJson(Map<String, dynamic> json) {
+    print(json);
+    return _$ModelMappingFromJson(json);
+  }
+
+  @override
+  Map<String, String> toJson() => _$ModelMappingToJson(this).cast();
+}
+
+Object? _readModelMappingValue(Map json, String key) {
+  if (json.containsKey(key)) return json[key];
+
+  final withOneKey = '${key}One';
+  if (json.containsKey(withOneKey)) return json[withOneKey];
+
+  if (key.length > 3 && key.endsWith('One')) {
+    final withoutOneKey = key.substring(0, key.length - 3);
+    if (json.containsKey(withoutOneKey)) return json[withoutOneKey];
+  }
+
+  return null;
+}

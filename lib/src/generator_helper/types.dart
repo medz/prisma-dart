@@ -1,18 +1,9 @@
-import 'package:json_annotation/json_annotation.dart';
+import '../runtime/json_convertible.dart';
+import '../dmmf.dart' show Document;
 
 part 'types.g.dart';
 
-const _jsonSerializable = JsonSerializable(
-  anyMap: true,
-  createToJson: true,
-  createFactory: true,
-  checked: true,
-  createFieldMap: false,
-  explicitToJson: true,
-  includeIfNull: false,
-);
-
-@_jsonSerializable
+@JsonConvertible.serializable
 class EnvValue {
   final String? formEnvVar;
   final String? value;
@@ -23,7 +14,7 @@ class EnvValue {
   Map<String, dynamic> toJson() => _$EnvValueToJson(this);
 }
 
-@_jsonSerializable
+@JsonConvertible.serializable
 class BinaryTargetsEnvValue extends EnvValue {
   final bool native;
 
@@ -39,10 +30,11 @@ class BinaryTargetsEnvValue extends EnvValue {
   factory BinaryTargetsEnvValue.fromJson(Map json) =>
       _$BinaryTargetsEnvValueFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$BinaryTargetsEnvValueToJson(this);
 }
 
-@_jsonSerializable
+@JsonConvertible.serializable
 class GeneratorCustomConfig {
   static const _packagePrefix = 'package';
   static const _defaultPackageName = 'prisma_client';
@@ -67,7 +59,7 @@ class GeneratorCustomConfig {
   }
 }
 
-@_jsonSerializable
+@JsonConvertible.serializable
 class GeneratorConfig {
   final String name;
   final EnvValue provider;
@@ -90,7 +82,7 @@ class GeneratorConfig {
   Map<String, dynamic> toJson() => _$GeneratorConfigToJson(this);
 }
 
-@_jsonSerializable
+@JsonConvertible.serializable
 class DenyLists {
   final Iterable<String>? models;
   final Iterable<String>? fields;
@@ -102,7 +94,7 @@ class DenyLists {
 }
 
 /// https://github.com/prisma/prisma/blob/main/packages/generator-helper/src/types.ts#L102
-@_jsonSerializable
+@JsonConvertible.serializable
 class GeneratorManifest {
   final String? prettyName;
   final String? defaultOutput;
@@ -134,7 +126,7 @@ enum ConnectorType {
   cockroachdb
 }
 
-@_jsonSerializable
+@JsonConvertible.serializable
 class DataSource {
   final String name;
   final ConnectorType provider;
@@ -156,14 +148,14 @@ class DataSource {
   Map<String, dynamic> toJson() => _$DataSourceToJson(this);
 }
 
-@_jsonSerializable
+@JsonConvertible.serializable
 class GeneratorOptions {
   final GeneratorConfig generator;
   final String schemaPath;
   final String datamodel;
   final Iterable<DataSource> datasources;
   final String version;
-  // TODO: DMMF
+  final Document dmmf;
 
   const GeneratorOptions({
     required this.generator,
@@ -171,6 +163,7 @@ class GeneratorOptions {
     required this.datamodel,
     required this.datasources,
     required this.version,
+    required this.dmmf,
   });
 
   factory GeneratorOptions.fromJson(Map json) =>

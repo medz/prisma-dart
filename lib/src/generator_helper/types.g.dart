@@ -257,6 +257,8 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => $checkedCreate(
               (v) => (v as List<dynamic>)
                   .map((e) => DataSource.fromJson(e as Map))),
           version: $checkedConvert('version', (v) => v as String),
+          dmmf: $checkedConvert('dmmf',
+              (v) => Document.fromJson(Map<String, dynamic>.from(v as Map))),
         );
         return val;
       },
@@ -269,4 +271,5 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'datamodel': instance.datamodel,
       'datasources': instance.datasources.map((e) => e.toJson()).toList(),
       'version': instance.version,
+      'dmmf': instance.dmmf.toJson(),
     };
