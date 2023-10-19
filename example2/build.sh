@@ -1,1 +1,0 @@
-docker build --platform=amd64 -t exanple .

@@ -1,5 +1,5 @@
-/// Prisma JSON protocol model actions.
-enum ModelActions {
+/// Prisma JSON protocol model action.
+enum ModelAction {
   /// Find unique.
   findUnique('findUnique'),
 
@@ -65,8 +65,8 @@ enum ModelActions {
   ;
   //------------------------------------------------------------
 
-  /// Creates a new [ModelActions] static instance.
-  const ModelActions(this.value);
+  /// Creates a new [ModelAction] static instance.
+  const ModelAction(this.value);
 
   /// The action value.
   final String value;
