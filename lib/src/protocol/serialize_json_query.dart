@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:decimal/decimal.dart';
 
 import '../dmmf.dart' as dmmf;
 import '../engines/common/errors/engine_validation_error.dart';
 import '../runtime/error_format.dart';
 import '../runtime/errors/validation_error.dart';
 import '../runtime/field_ref.dart';
+import '../runtime/json_convertible.dart';
 import '../runtime/prisma_null.dart';
+import '../runtime/raw_parameters.dart';
 import 'model_action.dart';
 import 'serialize_context.dart';
 
@@ -33,11 +38,11 @@ Map serializeJsonQuery({
   return <String, dynamic>{
     if (modelName != null) 'modelName': modelName,
     'action': action.value,
-    'query': serializeFieldSelection(args ?? const {}, context),
+    'query': _serializeFieldSelection(args ?? const {}, context),
   };
 }
 
-Map<String, dynamic> serializeFieldSelection(
+Map<String, dynamic> _serializeFieldSelection(
   final Map args,
   final SerializeContext context,
 ) {
@@ -55,13 +60,14 @@ Map<String, dynamic> serializeFieldSelection(
     ..remove('include');
 
   return {
-    'arguments': serializeArgumentsObject(argsWithoutSelectAndInclude, context),
+    'arguments':
+        _serializeArgumentsObject(argsWithoutSelectAndInclude, context),
     'selection':
-        serializeSelectionSet(context, select: select, include: include),
+        _serializeSelectionSet(context, select: select, include: include),
   };
 }
 
-Map<String, dynamic> serializeSelectionSet(
+Map<String, dynamic> _serializeSelectionSet(
   final SerializeContext context, {
   final Map<String, dynamic>? select,
   final Map<String, dynamic>? include,
@@ -110,7 +116,7 @@ void addIncludedRelations(
 
     final resolved = switch (value) {
       true => true,
-      Map args => serializeFieldSelection(args, context.nestSelection(key)),
+      Map args => _serializeFieldSelection(args, context.nestSelection(key)),
       _ => null,
     };
 
@@ -130,7 +136,7 @@ Map<String, dynamic> createExplicitSelection(
 
     final resolved = switch (value) {
       true => true,
-      Map args => serializeFieldSelection(args, context.nestSelection(key)),
+      Map args => _serializeFieldSelection(args, context.nestSelection(key)),
       _ => null,
     };
 
@@ -142,7 +148,7 @@ Map<String, dynamic> createExplicitSelection(
   return result;
 }
 
-Map<String, dynamic> serializeArgumentsObject(
+Map<String, dynamic> _serializeArgumentsObject(
     final Map args, SerializeContext context) {
   if (args.containsKey(r'$type')) {
     return {r'$type': 'Json', 'value': json.encode(args)};
@@ -152,13 +158,13 @@ Map<String, dynamic> serializeArgumentsObject(
   for (final MapEntry(key: key, value: value) in args.entries) {
     if (value == null) continue;
 
-    result[key] = serializeArgumentsValue(value, context.nestArgument(key));
+    result[key] = _serializeArgumentsValue(value, context.nestArgument(key));
   }
 
   return result;
 }
 
-dynamic serializeArgumentsValue(dynamic value, SerializeContext context) {
+dynamic _serializeArgumentsValue(dynamic value, SerializeContext context) {
   return switch (value) {
     PrismaNull _ => null,
     int integer => integer,
@@ -175,7 +181,19 @@ dynamic serializeArgumentsValue(dynamic value, SerializeContext context) {
           '_container': modelName,
         },
       },
-    Iterable iterable => serializeArgumentsArray(iterable, context),
+    Iterable iterable => _serializeArgumentsArray(iterable, context),
+    ByteBuffer buffer => {
+        r'$type': 'Bytes',
+        'value': base64.encode(buffer.asUint8List()),
+      },
+    RawParameters(values: final values) => values,
+    Decimal(toString: final serialize) => {
+        r'$type': 'Decimal',
+        'value': serialize(),
+      },
+    // TODO: Object enums,
+    JsonConvertible(toJson: final serialize) => serialize(),
+    Map args => _serializeArgumentsObject(args, context),
     _ => throw context.throwValidationError(InvalidArgumentValueError(
         selectionPath: context.getSelectionPath(),
         argumentPath: context.getArgumentPath(),
@@ -189,7 +207,7 @@ dynamic serializeArgumentsValue(dynamic value, SerializeContext context) {
   };
 }
 
-Iterable serializeArgumentsArray(
+Iterable _serializeArgumentsArray(
     Iterable iterable, SerializeContext context) sync* {
   for (int key = 0; key < iterable.length; key++) {
     final itemContext = context.nestArgument(key.toString());
@@ -208,6 +226,6 @@ Iterable serializeArgumentsArray(
       ));
     }
 
-    yield serializeArgumentsValue(value, itemContext);
+    yield _serializeArgumentsValue(value, itemContext);
   }
 }
