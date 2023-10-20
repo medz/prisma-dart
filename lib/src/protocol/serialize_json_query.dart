@@ -11,8 +11,8 @@ import '../runtime/field_ref.dart';
 import '../runtime/json_convertible.dart';
 import '../runtime/prisma_null.dart';
 import '../runtime/raw_parameters.dart';
+import '_internal/serialize_context.dart';
 import 'model_action.dart';
-import 'serialize_context.dart';
 
 Map serializeJsonQuery({
   final String? modelName,
