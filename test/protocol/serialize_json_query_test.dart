@@ -178,4 +178,163 @@ void main() {
       },
     );
   });
+
+  test('args - int', () {
+    final serialized =
+        serialize(action: ModelAction.findMany, modelName: 'User', args: {
+      'where': {'id': 1},
+    });
+
+    expect(serialized, {
+      'modelName': 'User',
+      'action': 'findMany',
+      'query': {
+        'arguments': {
+          'where': {'id': 1},
+        },
+        'selection': {
+          r'$composites': true,
+          r'$scalars': true,
+        },
+      },
+    });
+  });
+
+  test('args - double', () {
+    final serialized =
+        serialize(action: ModelAction.findMany, modelName: 'User', args: {
+      'where': {'id': 1.2345},
+    });
+
+    expect(serialized, {
+      'modelName': 'User',
+      'action': 'findMany',
+      'query': {
+        'arguments': {
+          'where': {'id': 1.2345},
+        },
+        'selection': {
+          r'$composites': true,
+          r'$scalars': true,
+        },
+      },
+    });
+  });
+
+  test('args - string', () {
+    final serialized =
+        serialize(action: ModelAction.findMany, modelName: 'User', args: {
+      'where': {'id': 'foo'},
+    });
+
+    expect(serialized, {
+      'modelName': 'User',
+      'action': 'findMany',
+      'query': {
+        'arguments': {
+          'where': {'id': 'foo'},
+        },
+        'selection': {
+          r'$composites': true,
+          r'$scalars': true,
+        },
+      },
+    });
+  });
+
+  group('args bool', () {
+    test('true', () {
+      final serialized =
+          serialize(action: ModelAction.findMany, modelName: 'User', args: {
+        'where': {'id': true},
+      });
+
+      expect(serialized, {
+        'modelName': 'User',
+        'action': 'findMany',
+        'query': {
+          'arguments': {
+            'where': {'id': true},
+          },
+          'selection': {
+            r'$composites': true,
+            r'$scalars': true,
+          },
+        },
+      });
+    });
+
+    test('false', () {
+      final serialized =
+          serialize(action: ModelAction.findMany, modelName: 'User', args: {
+        'where': {'id': false},
+      });
+
+      expect(serialized, {
+        'modelName': 'User',
+        'action': 'findMany',
+        'query': {
+          'arguments': {
+            'where': {'id': false},
+          },
+          'selection': {
+            r'$composites': true,
+            r'$scalars': true,
+          },
+        },
+      });
+    });
+  });
+
+  test('args DateTime', () {
+    final now = DateTime.now();
+    final serialized =
+        serialize(action: ModelAction.findMany, modelName: 'User', args: {
+      'where': {'birthday': now},
+    });
+    expect(serialized, {
+      'modelName': 'User',
+      'action': 'findMany',
+      'query': {
+        'arguments': {
+          'where': {
+            'birthday': {
+              r'$type': 'DateTime',
+              'value': now.toUtc().toIso8601String(),
+            },
+          },
+        },
+        'selection': {
+          r'$composites': true,
+          r'$scalars': true,
+        },
+      },
+    });
+  });
+
+  test('args BitInt', () {
+    final serialized =
+        serialize(action: ModelAction.findMany, modelName: 'User', args: {
+      'where': {'id': BigInt.from(1e+30)},
+    });
+
+    expect(serialized, {
+      'modelName': 'User',
+      'action': 'findMany',
+      'query': {
+        'arguments': {
+          'where': {
+            'id': {
+              r'$type': 'BigInt',
+              'value': '1000000000000000019884624838656',
+            }
+          },
+        },
+        'selection': {
+          r'$composites': true,
+          r'$scalars': true,
+        },
+      },
+    });
+  });
 }

@@ -167,7 +167,7 @@ Map<String, dynamic> _serializeArgumentsObject(
 dynamic _serializeArgumentsValue(dynamic value, SerializeContext context) {
   return switch (value) {
     PrismaNull _ => null,
-    int integer => integer,
+    num value => value,
     String string => string,
     bool boolean => boolean,
     BigInt(toString: final serialize) => {
@@ -193,6 +193,10 @@ dynamic _serializeArgumentsValue(dynamic value, SerializeContext context) {
       },
     // TODO: Object enums,
     JsonConvertible(toJson: final serialize) => serialize(),
+    DateTime date => {
+        r'$type': 'DateTime',
+        'value': date.toUtc().toIso8601String(),
+      },
     Map args => _serializeArgumentsObject(args, context),
     _ => throw context.throwValidationError(InvalidArgumentValueError(
         selectionPath: context.getSelectionPath(),
