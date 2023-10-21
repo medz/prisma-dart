@@ -1,4 +1,4 @@
-import '../../../runtime/errors/validation_error.dart';
+import 'validation_error.dart';
 
 class OutputTypeDescription {
   final String name;

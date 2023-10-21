@@ -1,6 +1,6 @@
 import '../../_internal/iterable_extension.dart';
 import '../../dmmf.dart' as dmmf;
-import '../../engines/common/errors/engine_validation_error.dart';
+import '../../runtime/errors/engine_validation_error.dart';
 import '../../runtime/error-rendering/throw_validation_error.dart'
     as error_reendering;
 import '../../runtime/error_format.dart';

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 
 import '../dmmf.dart' as dmmf;
-import '../engines/common/errors/engine_validation_error.dart';
+import '../runtime/errors/engine_validation_error.dart';
 import '../runtime/error_format.dart';
 import '../runtime/errors/validation_error.dart';
 import '../runtime/field_ref.dart';

@@ -1,4 +1,4 @@
-import '../../engines/common/errors/engine_validation_error.dart';
+import 'engine_validation_error.dart';
 
 abstract class ValidationError implements Exception {
   const ValidationError();
