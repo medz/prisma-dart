@@ -4,13 +4,13 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 
 import '../dmmf.dart' as dmmf;
-import '../runtime/errors/engine_validation_error.dart';
-import '../runtime/error_format.dart';
-import '../runtime/errors/validation_error.dart';
-import '../runtime/field_ref.dart';
-import '../runtime/json_convertible.dart';
-import '../runtime/prisma_null.dart';
-import '../runtime/raw_parameters.dart';
+import '../core/errors/engine_validation_error.dart';
+import '../core/error_format.dart';
+import '../core/errors/validation_error.dart';
+import '../core/field_ref.dart';
+import '../core/json_convertible.dart';
+import '../core/prisma_null.dart';
+import '../core/raw_parameters.dart';
 import '_internal/serialize_context.dart';
 import 'model_action.dart';
 
@@ -174,11 +174,11 @@ dynamic _serializeArgumentsValue(dynamic value, SerializeContext context) {
         r'$type': 'BigInt',
         'value': serialize(),
       },
-    FieldRef(name: final name, modelName: final modelName) => {
+    FieldRef($model: final model, $name: final name) => {
         r'$type': 'FieldRef',
         'value': {
           '_ref': name,
-          '_container': modelName,
+          '_container': model,
         },
       },
     Iterable iterable => _serializeArgumentsArray(iterable, context),

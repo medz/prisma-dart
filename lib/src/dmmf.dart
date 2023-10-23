@@ -1,6 +1,6 @@
 // DMMF copy of https://github.com/prisma/prisma/blob/main/packages/generator-helper/src/dmmf.ts
 
-import 'runtime/json_convertible.dart';
+import 'core/json_convertible.dart';
 
 part 'dmmf.g.dart';
 
@@ -531,10 +531,8 @@ class ModelMapping implements JsonConvertible<Map<String, String>> {
     @JsonKey(readValue: _readModelMappingValue) this.aggregateRaw,
   });
 
-  factory ModelMapping.fromJson(Map<String, dynamic> json) {
-    print(json);
-    return _$ModelMappingFromJson(json);
-  }
+  factory ModelMapping.fromJson(Map<String, dynamic> json) =>
+      _$ModelMappingFromJson(json);
 
   @override
   Map<String, String> toJson() => _$ModelMappingToJson(this).cast();

@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:decimal/decimal.dart';
-import 'package:orm/src/runtime/field_ref.dart';
-import 'package:orm/src/runtime/json_convertible.dart';
-import 'package:orm/src/runtime/raw_parameters.dart';
+import 'package:orm/src/core/field_ref.dart';
+import 'package:orm/src/core/json_convertible.dart';
+import 'package:orm/src/core/raw_parameters.dart';
 import 'package:test/test.dart';
 import 'package:orm/dmmf.dart' as dmmf;
 import 'package:orm/protocol.dart';
-import 'package:orm/src/runtime/error_format.dart';
+import 'package:orm/src/core/error_format.dart';
 
 import '../test_utils/datamodel_builder.dart';
 

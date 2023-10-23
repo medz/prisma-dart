@@ -1,10 +1,10 @@
 import '../../_internal/iterable_extension.dart';
 import '../../dmmf.dart' as dmmf;
-import '../../runtime/errors/engine_validation_error.dart';
-import '../../runtime/error-rendering/throw_validation_error.dart'
+import '../../core/errors/engine_validation_error.dart';
+import '../../core/error-rendering/throw_validation_error.dart'
     as error_reendering;
-import '../../runtime/error_format.dart';
-import '../../runtime/errors/validation_error.dart';
+import '../../core/error_format.dart';
+import '../../core/errors/validation_error.dart';
 import '../model_action.dart';
 
 class SerializeContext {

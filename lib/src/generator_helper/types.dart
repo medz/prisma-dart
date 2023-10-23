@@ -1,4 +1,4 @@
-import '../runtime/json_convertible.dart';
+import '../core/json_convertible.dart';
 import '../dmmf.dart' show Document;
 
 part 'types.g.dart';

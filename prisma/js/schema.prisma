@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator DartClient {
+  provider   = "dart run orm"
+  outputType = "package"
+  output     = "dart"
+}
+
+generator JSClient {
+  provider = "prisma-client-js"
+  output   = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "file:./prisma.sqlite"
+}
+
+model User {
+  id        String   @id @default(uuid()) @map("_id")
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  posts     Post[]
+}
+
+model Post {
+  id          String       @id @default(uuid())
+  title       String
+  body        String
+  authorId    String
+  published   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  author      User         @relation(fields: [authorId], references: [id])
+  attachments Attachment[]
+}
+
+enum MediaType {
+  image
+  video
+}
+
+model Attachment {
+  id        String    @id @default(uuid())
+  name      String
+  url       String
+  type      MediaType
+  postId    String
+  post      Post      @relation(fields: [postId], references: [id])
+  createdAt DateTime  @default(now())
+}
+
+model Jsonable {
+  id        String   @id @default(uuid())
+  json      Json
+  createdAt DateTime @default(now())
+}

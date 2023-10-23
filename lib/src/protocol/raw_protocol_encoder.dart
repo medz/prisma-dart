@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 
-import '../runtime/json_convertible.dart';
-import '../runtime/prisma_null.dart';
+import '../core/json_convertible.dart';
+import '../core/prisma_null.dart';
 
 class RawProtocolEncoder extends Converter {
   const RawProtocolEncoder();
