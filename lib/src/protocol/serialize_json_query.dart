@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 
 import '../dmmf.dart' as dmmf;
+import '../core/prisma_enum.dart';
 import '../core/errors/engine_validation_error.dart';
 import '../core/error_format.dart';
 import '../core/errors/validation_error.dart';
@@ -191,7 +192,10 @@ dynamic _serializeArgumentsValue(dynamic value, SerializeContext context) {
         r'$type': 'Decimal',
         'value': serialize(),
       },
-    // TODO: Object enums,
+    PrismaEnum(PRISMA_ENUM_VALUE: final value) => {
+        r'$type': 'Enum',
+        'value': value,
+      },
     JsonConvertible(toJson: final serialize) => serialize(),
     DateTime date => {
         r'$type': 'DateTime',

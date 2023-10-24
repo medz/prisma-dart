@@ -109,32 +109,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  email: 'email',
   name: 'name',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.PostScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  body: 'body',
-  authorId: 'authorId',
-  published: 'published',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.AttachmentScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  url: 'url',
-  type: 'type',
-  postId: 'postId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.JsonableScalarFieldEnum = {
-  id: 'id',
+  role: 'role',
+  price: 'price',
+  size: 'size',
+  bytes: 'bytes',
   json: 'json',
+  age: 'age',
   createdAt: 'createdAt'
 };
 
@@ -143,7 +124,8 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -152,26 +134,23 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.MediaType = exports.$Enums.MediaType = {
-  image: 'image',
-  video: 'video'
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.Role = exports.$Enums.Role = {
+  user: 'user',
+  owner: 'owner'
 };
 
 exports.Prisma.ModelName = {
-  User: 'User',
-  Post: 'Post',
-  Attachment: 'Attachment',
-  Jsonable: 'Jsonable'
+  User: 'User'
 };
 
 /**

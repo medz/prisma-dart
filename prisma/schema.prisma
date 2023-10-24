@@ -17,42 +17,19 @@ datasource db {
   url      = "file:./prisma.sqlite"
 }
 
+enum Role {
+  user
+  owner
+}
+
 model User {
-  id        String   @id @default(uuid()) @map("_id")
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  posts     Post[]
-}
-
-model Post {
-  id          String       @id @default(uuid())
-  title       String
-  body        String
-  authorId    String
-  published   Boolean      @default(false)
-  createdAt   DateTime     @default(now())
-  author      User         @relation(fields: [authorId], references: [id])
-  attachments Attachment[]
-}
-
-enum MediaType {
-  image
-  video
-}
-
-model Attachment {
-  id        String    @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   name      String
-  url       String
-  type      MediaType
-  postId    String
-  post      Post      @relation(fields: [postId], references: [id])
-  createdAt DateTime  @default(now())
-}
-
-model Jsonable {
-  id        String   @id @default(uuid())
-  json      Json
+  role      Role     @default(user)
+  price     Decimal
+  size      BigInt
+  bytes     Bytes
+  json      Json?
+  age       Int?
   createdAt DateTime @default(now())
 }
