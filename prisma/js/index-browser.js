@@ -16,12 +16,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 5.4.2
- * Query Engine version: ac9d7041ed77bcc8a8dbd2ab6616b39013829574
+ * Prisma Client JS version: 5.5.0
+ * Query Engine version: 475c616176945d72f4330c92801f0c5e6398dc0f
  */
 Prisma.prismaVersion = {
-  client: "5.4.2",
-  engine: "ac9d7041ed77bcc8a8dbd2ab6616b39013829574"
+  client: "5.5.0",
+  engine: "475c616176945d72f4330c92801f0c5e6398dc0f"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -120,6 +120,12 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  userId: 'userId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -151,7 +157,8 @@ exports.Role = exports.$Enums.Role = {
 };
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Post: 'Post'
 };
 
 /**

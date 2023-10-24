@@ -33,4 +33,12 @@ model User {
   age       Int?
   demo      Float
   createdAt DateTime @default(now())
+  posts     Post[]
+}
+
+model Post {
+  id     String @id @default(cuid())
+  title  String
+  author User   @relation(fields: [userId], references: [id])
+  userId Int
 }
