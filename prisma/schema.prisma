@@ -31,5 +31,6 @@ model User {
   bytes     Bytes
   json      Json?
   age       Int?
+  demo      Float
   createdAt DateTime @default(now())
 }

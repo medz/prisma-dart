@@ -974,6 +974,7 @@ export namespace Prisma {
     price: Decimal | null;
     size: number | null;
     age: number | null;
+    demo: number | null;
   };
 
   export type UserSumAggregateOutputType = {
@@ -981,6 +982,7 @@ export namespace Prisma {
     price: Decimal | null;
     size: bigint | null;
     age: number | null;
+    demo: number | null;
   };
 
   export type UserMinAggregateOutputType = {
@@ -991,6 +993,7 @@ export namespace Prisma {
     size: bigint | null;
     bytes: Buffer | null;
     age: number | null;
+    demo: number | null;
     createdAt: Date | null;
   };
 
@@ -1002,6 +1005,7 @@ export namespace Prisma {
     size: bigint | null;
     bytes: Buffer | null;
     age: number | null;
+    demo: number | null;
     createdAt: Date | null;
   };
 
@@ -1014,6 +1018,7 @@ export namespace Prisma {
     bytes: number;
     json: number;
     age: number;
+    demo: number;
     createdAt: number;
     _all: number;
   };
@@ -1023,6 +1028,7 @@ export namespace Prisma {
     price?: true;
     size?: true;
     age?: true;
+    demo?: true;
   };
 
   export type UserSumAggregateInputType = {
@@ -1030,6 +1036,7 @@ export namespace Prisma {
     price?: true;
     size?: true;
     age?: true;
+    demo?: true;
   };
 
   export type UserMinAggregateInputType = {
@@ -1040,6 +1047,7 @@ export namespace Prisma {
     size?: true;
     bytes?: true;
     age?: true;
+    demo?: true;
     createdAt?: true;
   };
 
@@ -1051,6 +1059,7 @@ export namespace Prisma {
     size?: true;
     bytes?: true;
     age?: true;
+    demo?: true;
     createdAt?: true;
   };
 
@@ -1063,6 +1072,7 @@ export namespace Prisma {
     bytes?: true;
     json?: true;
     age?: true;
+    demo?: true;
     createdAt?: true;
     _all?: true;
   };
@@ -1165,6 +1175,7 @@ export namespace Prisma {
     bytes: Buffer;
     json: JsonValue | null;
     age: number | null;
+    demo: number;
     createdAt: Date;
     _count: UserCountAggregateOutputType | null;
     _avg: UserAvgAggregateOutputType | null;
@@ -1197,6 +1208,7 @@ export namespace Prisma {
       bytes?: boolean;
       json?: boolean;
       age?: boolean;
+      demo?: boolean;
       createdAt?: boolean;
     },
     ExtArgs['result']['user']
@@ -1211,6 +1223,7 @@ export namespace Prisma {
     bytes?: boolean;
     json?: boolean;
     age?: boolean;
+    demo?: boolean;
     createdAt?: boolean;
   };
 
@@ -1229,6 +1242,7 @@ export namespace Prisma {
         bytes: Buffer;
         json: Prisma.JsonValue | null;
         age: number | null;
+        demo: number;
         createdAt: Date;
       },
       ExtArgs['result']['user']
@@ -1697,6 +1711,7 @@ export namespace Prisma {
     readonly bytes: FieldRef<'User', 'Bytes'>;
     readonly json: FieldRef<'User', 'Json'>;
     readonly age: FieldRef<'User', 'Int'>;
+    readonly demo: FieldRef<'User', 'Float'>;
     readonly createdAt: FieldRef<'User', 'DateTime'>;
   }
 
@@ -2019,6 +2034,7 @@ export namespace Prisma {
     bytes: 'bytes';
     json: 'json';
     age: 'age';
+    demo: 'demo';
     createdAt: 'createdAt';
   };
 
@@ -2172,22 +2188,6 @@ export namespace Prisma {
   >;
 
   /**
-   * Reference to a field of type 'DateTime'
-   */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
-    $PrismaModel,
-    'DateTime'
-  >;
-
-  /**
-   * Reference to a field of type 'DateTime[]'
-   */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
-    $PrismaModel,
-    'DateTime[]'
-  >;
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -2201,6 +2201,22 @@ export namespace Prisma {
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<
     $PrismaModel,
     'Float[]'
+  >;
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
+    $PrismaModel,
+    'DateTime'
+  >;
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
+    $PrismaModel,
+    'DateTime[]'
   >;
 
   /**
@@ -2219,6 +2235,7 @@ export namespace Prisma {
     bytes?: BytesFilter<'User'> | Buffer;
     json?: JsonNullableFilter<'User'>;
     age?: IntNullableFilter<'User'> | number | null;
+    demo?: FloatFilter<'User'> | number;
     createdAt?: DateTimeFilter<'User'> | Date | string;
   };
 
@@ -2231,6 +2248,7 @@ export namespace Prisma {
     bytes?: SortOrder;
     json?: SortOrderInput | SortOrder;
     age?: SortOrderInput | SortOrder;
+    demo?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -2247,6 +2265,7 @@ export namespace Prisma {
       bytes?: BytesFilter<'User'> | Buffer;
       json?: JsonNullableFilter<'User'>;
       age?: IntNullableFilter<'User'> | number | null;
+      demo?: FloatFilter<'User'> | number;
       createdAt?: DateTimeFilter<'User'> | Date | string;
     },
     'id'
@@ -2261,6 +2280,7 @@ export namespace Prisma {
     bytes?: SortOrder;
     json?: SortOrderInput | SortOrder;
     age?: SortOrderInput | SortOrder;
+    demo?: SortOrder;
     createdAt?: SortOrder;
     _count?: UserCountOrderByAggregateInput;
     _avg?: UserAvgOrderByAggregateInput;
@@ -2290,6 +2310,7 @@ export namespace Prisma {
     bytes?: BytesWithAggregatesFilter<'User'> | Buffer;
     json?: JsonNullableWithAggregatesFilter<'User'>;
     age?: IntNullableWithAggregatesFilter<'User'> | number | null;
+    demo?: FloatWithAggregatesFilter<'User'> | number;
     createdAt?: DateTimeWithAggregatesFilter<'User'> | Date | string;
   };
 
@@ -2301,6 +2322,7 @@ export namespace Prisma {
     bytes: Buffer;
     json?: NullableJsonNullValueInput | InputJsonValue;
     age?: number | null;
+    demo: number;
     createdAt?: Date | string;
   };
 
@@ -2313,6 +2335,7 @@ export namespace Prisma {
     bytes: Buffer;
     json?: NullableJsonNullValueInput | InputJsonValue;
     age?: number | null;
+    demo: number;
     createdAt?: Date | string;
   };
 
@@ -2329,6 +2352,7 @@ export namespace Prisma {
     bytes?: BytesFieldUpdateOperationsInput | Buffer;
     json?: NullableJsonNullValueInput | InputJsonValue;
     age?: NullableIntFieldUpdateOperationsInput | number | null;
+    demo?: FloatFieldUpdateOperationsInput | number;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2346,6 +2370,7 @@ export namespace Prisma {
     bytes?: BytesFieldUpdateOperationsInput | Buffer;
     json?: NullableJsonNullValueInput | InputJsonValue;
     age?: NullableIntFieldUpdateOperationsInput | number | null;
+    demo?: FloatFieldUpdateOperationsInput | number;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2358,6 +2383,7 @@ export namespace Prisma {
     bytes: Buffer;
     json?: NullableJsonNullValueInput | InputJsonValue;
     age?: number | null;
+    demo: number;
     createdAt?: Date | string;
   };
 
@@ -2374,6 +2400,7 @@ export namespace Prisma {
     bytes?: BytesFieldUpdateOperationsInput | Buffer;
     json?: NullableJsonNullValueInput | InputJsonValue;
     age?: NullableIntFieldUpdateOperationsInput | number | null;
+    demo?: FloatFieldUpdateOperationsInput | number;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2391,6 +2418,7 @@ export namespace Prisma {
     bytes?: BytesFieldUpdateOperationsInput | Buffer;
     json?: NullableJsonNullValueInput | InputJsonValue;
     age?: NullableIntFieldUpdateOperationsInput | number | null;
+    demo?: FloatFieldUpdateOperationsInput | number;
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string;
   };
 
@@ -2540,6 +2568,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null;
   };
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>;
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    lt?: number | FloatFieldRefInput<$PrismaModel>;
+    lte?: number | FloatFieldRefInput<$PrismaModel>;
+    gt?: number | FloatFieldRefInput<$PrismaModel>;
+    gte?: number | FloatFieldRefInput<$PrismaModel>;
+    not?: NestedFloatFilter<$PrismaModel> | number;
+  };
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>;
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>;
@@ -2565,6 +2604,7 @@ export namespace Prisma {
     bytes?: SortOrder;
     json?: SortOrder;
     age?: SortOrder;
+    demo?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -2573,6 +2613,7 @@ export namespace Prisma {
     price?: SortOrder;
     size?: SortOrder;
     age?: SortOrder;
+    demo?: SortOrder;
   };
 
   export type UserMaxOrderByAggregateInput = {
@@ -2583,6 +2624,7 @@ export namespace Prisma {
     size?: SortOrder;
     bytes?: SortOrder;
     age?: SortOrder;
+    demo?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -2594,6 +2636,7 @@ export namespace Prisma {
     size?: SortOrder;
     bytes?: SortOrder;
     age?: SortOrder;
+    demo?: SortOrder;
     createdAt?: SortOrder;
   };
 
@@ -2602,6 +2645,7 @@ export namespace Prisma {
     price?: SortOrder;
     size?: SortOrder;
     age?: SortOrder;
+    demo?: SortOrder;
   };
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -2788,6 +2832,22 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>;
   };
 
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>;
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    lt?: number | FloatFieldRefInput<$PrismaModel>;
+    lte?: number | FloatFieldRefInput<$PrismaModel>;
+    gt?: number | FloatFieldRefInput<$PrismaModel>;
+    gte?: number | FloatFieldRefInput<$PrismaModel>;
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number;
+    _count?: NestedIntFilter<$PrismaModel>;
+    _avg?: NestedFloatFilter<$PrismaModel>;
+    _sum?: NestedFloatFilter<$PrismaModel>;
+    _min?: NestedFloatFilter<$PrismaModel>;
+    _max?: NestedFloatFilter<$PrismaModel>;
+  };
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>;
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>;
@@ -2832,6 +2892,14 @@ export namespace Prisma {
 
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null;
+    increment?: number;
+    decrement?: number;
+    multiply?: number;
+    divide?: number;
+  };
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number;
     increment?: number;
     decrement?: number;
     multiply?: number;
@@ -2962,6 +3030,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null;
   };
 
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>;
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    lt?: number | FloatFieldRefInput<$PrismaModel>;
+    lte?: number | FloatFieldRefInput<$PrismaModel>;
+    gt?: number | FloatFieldRefInput<$PrismaModel>;
+    gte?: number | FloatFieldRefInput<$PrismaModel>;
+    not?: NestedFloatFilter<$PrismaModel> | number;
+  };
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>;
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>;
@@ -2987,17 +3066,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>;
     _min?: NestedIntFilter<$PrismaModel>;
     _max?: NestedIntFilter<$PrismaModel>;
-  };
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>;
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>;
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>;
-    lt?: number | FloatFieldRefInput<$PrismaModel>;
-    lte?: number | FloatFieldRefInput<$PrismaModel>;
-    gt?: number | FloatFieldRefInput<$PrismaModel>;
-    gte?: number | FloatFieldRefInput<$PrismaModel>;
-    not?: NestedFloatFilter<$PrismaModel> | number;
   };
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3170,6 +3238,22 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>;
     gte?: number | FloatFieldRefInput<$PrismaModel>;
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null;
+  };
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>;
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>;
+    lt?: number | FloatFieldRefInput<$PrismaModel>;
+    lte?: number | FloatFieldRefInput<$PrismaModel>;
+    gt?: number | FloatFieldRefInput<$PrismaModel>;
+    gte?: number | FloatFieldRefInput<$PrismaModel>;
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number;
+    _count?: NestedIntFilter<$PrismaModel>;
+    _avg?: NestedFloatFilter<$PrismaModel>;
+    _sum?: NestedFloatFilter<$PrismaModel>;
+    _min?: NestedFloatFilter<$PrismaModel>;
+    _max?: NestedFloatFilter<$PrismaModel>;
   };
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {

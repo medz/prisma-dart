@@ -116,6 +116,7 @@ exports.Prisma.UserScalarFieldEnum = {
   bytes: 'bytes',
   json: 'json',
   age: 'age',
+  demo: 'demo',
   createdAt: 'createdAt'
 };
 
