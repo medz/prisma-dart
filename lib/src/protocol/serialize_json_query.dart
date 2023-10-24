@@ -20,7 +20,6 @@ Map serializeJsonQuery({
   required final ModelAction action,
   final Map? args,
   required final dmmf.Datamodel datamodel,
-  required final String clientMethod,
   required final String clientVersion,
   required final ErrorFormat errorFormat,
 }) {
@@ -29,7 +28,7 @@ Map serializeJsonQuery({
     modelName: modelName,
     rootArgs: args,
     action: action,
-    originalMethod: clientMethod,
+    originalMethod: action.value,
     errorFormat: errorFormat,
     clientVersion: clientVersion,
     selectionPath: const [],
