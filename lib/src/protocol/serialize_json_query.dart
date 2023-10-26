@@ -15,7 +15,7 @@ import '../core/raw_parameters.dart';
 import '_internal/serialize_context.dart';
 import 'model_action.dart';
 
-Map serializeJsonQuery({
+Map<String, dynamic> serializeJsonQuery({
   final String? modelName,
   required final ModelAction action,
   final Map? args,
@@ -37,7 +37,7 @@ Map serializeJsonQuery({
 
   return <String, dynamic>{
     if (modelName != null) 'modelName': modelName,
-    'action': action.value,
+    'action': context.originalMethod,
     'query': _serializeFieldSelection(args ?? const {}, context),
   };
 }

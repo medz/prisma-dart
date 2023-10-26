@@ -24,8 +24,7 @@ class Context {
 }
 
 abstract class WithRuntimeContext {
-  // ignore: non_constant_identifier_names
-  final Context RUNTIME_CONTEXT;
+  final Context context;
 
-  const WithRuntimeContext(Context context) : RUNTIME_CONTEXT = context;
+  const WithRuntimeContext({required this.context});
 }

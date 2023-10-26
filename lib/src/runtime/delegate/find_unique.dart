@@ -1,5 +1,5 @@
 import '../../core/json_convertible.dart';
-import '../action_client/find_unique.dart';
+import '../action_client/find_unique_action_client.dart';
 import 'delegate.dart';
 
 mixin DelegateFindUnique<
@@ -20,6 +20,6 @@ mixin DelegateFindUnique<
   ///   .where(PostWhereInput.id(5))
   ///   .include(PostInclude.author);
   /// ```
-  FindUniqueActionClient<Map<String, dynamic>?, Where, Select, Include>
-      findUnique() => FindUniqueActionClient(RUNTIME_CONTEXT);
+  FindUniqueActionClient<Where, Select, Include> findUnique() =>
+      FindUniqueActionClient(context: context);
 }
