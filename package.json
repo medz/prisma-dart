@@ -3,6 +3,6 @@
   "name": "prisma-dart",
   "dependencies": {
     "@prisma/client": "^5.5.0",
-    "prisma": "^5.5.0"
+    "prisma": "^5.5.2"
   }
 }
