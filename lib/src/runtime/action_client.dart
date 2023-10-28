@@ -90,11 +90,12 @@ extension ActionClientInclude<R, S extends Include> on ActionClient<R, S> {
       copyWithNamedArg('include', include.toJson());
 }
 
-abstract interface class Where implements JsonConvertible {}
+abstract interface class Where<T> {}
 
-extension ActionClientWhere<R, S extends Where> on ActionClient<R, S> {
+extension ActionClientWhere<R, T extends JsonConvertible, S extends Where<T>>
+    on ActionClient<R, S> {
   /// Filter, which [R] to fetch.
-  ActionClient<R, S> where(S where) =>
+  ActionClient<R, S> where(T where) =>
       copyWithNamedArg('where', where.toJson());
 }
 
