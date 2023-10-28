@@ -57,7 +57,6 @@ Map serialize({
       action: action,
       datamodel: datamodel,
       modelName: modelName,
-      clientMethod: 'foo',
       clientVersion: '0.0.0',
       errorFormat: ErrorFormat.colorless,
     );
@@ -411,7 +410,7 @@ void main() {
     final serialized =
         serialize(action: ModelAction.findMany, modelName: 'User', args: {
       'where': {
-        'name': FieldRef('User', 'nickname'),
+        'name': FieldRef.create('User', 'nickname'),
       },
     });
 
