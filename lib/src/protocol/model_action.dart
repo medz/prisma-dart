@@ -70,4 +70,9 @@ enum ModelAction {
 
   /// The action value.
   final String value;
+
+  /// Returns the [ModelAction] from the [value] of enum name.
+  static ModelAction from(String name) {
+    return ModelAction.values.firstWhere((element) => element.name == name);
+  }
 }

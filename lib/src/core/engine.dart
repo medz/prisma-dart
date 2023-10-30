@@ -13,7 +13,6 @@ abstract interface class Engine<T> {
   /// Request a new query.
   Future request(
     Map query, {
-    final String? traceparent,
     final int? numTry,
     required final bool isWrite,
     final InteractiveTransactionInfo<T>? transaction,
@@ -21,23 +20,16 @@ abstract interface class Engine<T> {
 
   /// Start a new transaction.
   Future<InteractiveTransactionInfo<T>> startTransaction({
-    final String? traceparent,
     final int maxWait = 2000,
     final int timeout = 5000,
     final IsolationLevel? isolationLevel,
   });
 
   /// Commit a transaction.
-  Future<void> commitTransaction(
-    InteractiveTransactionInfo<T> info, {
-    final String? traceparent,
-  });
+  Future<void> commitTransaction(InteractiveTransactionInfo<T> transaction);
 
   /// Rollback a transaction.
-  Future<void> rollbackTransaction(
-    InteractiveTransactionInfo<T> info, {
-    final String? traceparent,
-  });
+  Future<void> rollbackTransaction(InteractiveTransactionInfo<T> transaction);
 
   // TODO: metrics, on
 }

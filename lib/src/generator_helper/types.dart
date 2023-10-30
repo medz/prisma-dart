@@ -35,36 +35,11 @@ class BinaryTargetsEnvValue extends EnvValue {
 }
 
 @JsonConvertible.serializable
-class GeneratorCustomConfig {
-  static const _packagePrefix = 'package';
-  static const _defaultPackageName = 'prisma_client';
-
-  final String? outputType;
-
-  const GeneratorCustomConfig({this.outputType});
-  factory GeneratorCustomConfig.fromJson(Map json) =>
-      _$GeneratorCustomConfigFromJson(json);
-
-  Map<String, dynamic> toJson() => _$GeneratorCustomConfigToJson(this);
-
-  String? get outputPackageName {
-    if (outputType == _packagePrefix) return _defaultPackageName;
-    if (outputType?.startsWith('$_packagePrefix:') == true) {
-      final name = outputType?.substring(_packagePrefix.length + 1);
-
-      return name?.isEmpty == true ? _defaultPackageName : name;
-    }
-
-    return null;
-  }
-}
-
-@JsonConvertible.serializable
 class GeneratorConfig {
   final String name;
   final EnvValue provider;
   final EnvValue? output;
-  final GeneratorCustomConfig config;
+  final Map config;
   final Iterable<BinaryTargetsEnvValue> binaryTargets;
   final Iterable<String> previewFeatures;
 

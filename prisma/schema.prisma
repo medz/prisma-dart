@@ -2,9 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator DartClient {
-  provider   = "dart run orm"
-  outputType = "package"
-  output     = "dart"
+  provider = "dart run orm"
+  output   = "dart"
 }
 
 // generator JSClient {

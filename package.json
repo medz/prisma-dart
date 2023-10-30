@@ -2,7 +2,9 @@
   "private": true,
   "name": "prisma-dart",
   "dependencies": {
-    "@prisma/client": "^5.5.2",
+    "@prisma/client": "^5.5.2"
+  },
+  "devDependencies": {
     "prisma": "^5.5.2"
   }
 }

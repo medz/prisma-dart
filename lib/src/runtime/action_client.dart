@@ -47,14 +47,12 @@ class ActionClient<T, S> extends WithRuntimeContext
       action: action,
       datamodel: context.datamodel,
       clientVersion: context.clientVersion,
-      errorFormat: context.errorFormat,
       args: toJson(),
     );
 
     final response = await context.engine.request(
       query,
       isWrite: isWrite,
-      traceparent: context.traceparent,
       transaction: context.transaction,
     );
 

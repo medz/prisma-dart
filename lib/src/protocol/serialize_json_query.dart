@@ -6,7 +6,6 @@ import 'package:decimal/decimal.dart';
 import '../dmmf.dart' as dmmf;
 import '../core/prisma_enum.dart';
 import '../core/errors/engine_validation_error.dart';
-import '../core/error_format.dart';
 import '../core/errors/validation_error.dart';
 import '../core/field_ref.dart';
 import '../core/json_convertible.dart';
@@ -21,7 +20,6 @@ Map<String, dynamic> serializeJsonQuery({
   final Map? args,
   required final dmmf.Datamodel datamodel,
   required final String clientVersion,
-  required final ErrorFormat errorFormat,
 }) {
   final context = SerializeContext(
     datamodel: datamodel,
@@ -29,7 +27,6 @@ Map<String, dynamic> serializeJsonQuery({
     rootArgs: args,
     action: action,
     originalMethod: action.value,
-    errorFormat: errorFormat,
     clientVersion: clientVersion,
     selectionPath: const [],
     argumentPath: const [],

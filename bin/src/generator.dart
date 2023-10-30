@@ -8,16 +8,11 @@ import 'package:recase/recase.dart';
 
 import 'generate_client.dart';
 
-const inlineOutputPath = '../lib/src/generated/prisma_client';
-const packageOutputPath = 'client';
-
 final generator = createGenerator(
   onManifest: (config) {
     return GeneratorManifest(
       prettyName: 'Prisma Dart Client',
-      defaultOutput: config.config.outputPackageName == null
-          ? inlineOutputPath
-          : packageOutputPath,
+      defaultOutput: '../lib/src/generated/prisma_client',
     );
   },
   onGenerate: (options) {
@@ -30,24 +25,17 @@ final generator = createGenerator(
       Directory(output).deleteSync(recursive: true);
     }
 
-    final Map<Reference, Library> libraries = {};
-    generateClient(libraries, options);
-
-    final package = options.generator.config.outputPackageName;
-    // if (package != null) {
-    //   Directory(join(output, 'lib', 'src')).createSync(recursive: true);
-    // }
-
+    final Map<Reference, Library> libraries = generateClient(options);
     final formater = DartFormatter();
+
     for (final MapEntry(key: reference, value: library) in libraries.entries) {
       final emitter = DartEmitter.scoped(useNullSafetySyntax: true);
       final code = library.accept(emitter).toString();
-      final root = package != null ? join(output, 'lib', 'src') : output;
       final filename = reference.url != null
           ? Uri.parse(reference.url!).path
           : '${reference.symbol!.snakeCase}.dart';
 
-      final file = File(join(root, filename));
+      final file = File(join(output, filename));
       if (file.existsSync()) {
         file.deleteSync();
       }

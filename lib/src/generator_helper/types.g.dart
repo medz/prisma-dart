@@ -62,32 +62,6 @@ Map<String, dynamic> _$BinaryTargetsEnvValueToJson(
   return val;
 }
 
-GeneratorCustomConfig _$GeneratorCustomConfigFromJson(Map json) =>
-    $checkedCreate(
-      'GeneratorCustomConfig',
-      json,
-      ($checkedConvert) {
-        final val = GeneratorCustomConfig(
-          outputType: $checkedConvert('outputType', (v) => v as String?),
-        );
-        return val;
-      },
-    );
-
-Map<String, dynamic> _$GeneratorCustomConfigToJson(
-    GeneratorCustomConfig instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('outputType', instance.outputType);
-  return val;
-}
-
 GeneratorConfig _$GeneratorConfigFromJson(Map json) => $checkedCreate(
       'GeneratorConfig',
       json,
@@ -96,8 +70,7 @@ GeneratorConfig _$GeneratorConfigFromJson(Map json) => $checkedCreate(
           name: $checkedConvert('name', (v) => v as String),
           provider:
               $checkedConvert('provider', (v) => EnvValue.fromJson(v as Map)),
-          config: $checkedConvert(
-              'config', (v) => GeneratorCustomConfig.fromJson(v as Map)),
+          config: $checkedConvert('config', (v) => v as Map),
           binaryTargets: $checkedConvert(
               'binaryTargets',
               (v) => (v as List<dynamic>)
@@ -124,7 +97,7 @@ Map<String, dynamic> _$GeneratorConfigToJson(GeneratorConfig instance) {
   }
 
   writeNotNull('output', instance.output?.toJson());
-  val['config'] = instance.config.toJson();
+  val['config'] = instance.config;
   val['binaryTargets'] = instance.binaryTargets.map((e) => e.toJson()).toList();
   val['previewFeatures'] = instance.previewFeatures.toList();
   return val;

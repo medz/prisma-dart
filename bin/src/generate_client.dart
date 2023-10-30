@@ -1,56 +1,88 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/generator_helper.dart' show GeneratorOptions;
+import 'package:recase/recase.dart';
 
+import 'model_delegate.dart';
 import 'packages.dart';
+import 'references.dart';
 
-void generateClient(
-    Map<Reference, Library> libraries, GeneratorOptions options) {
+Map<Reference, Library> generateClient(GeneratorOptions options) {
+  final Map<Reference, Library> libraries = {};
   final reference = refer('PrismaClient');
-  final generator = PrismaClientGenerator(options, libraries);
+  final client = Class((builder) {
+    builder.name = reference.symbol;
 
-  libraries[reference] = generator.build();
-}
-
-class PrismaClientGenerator {
-  final GeneratorOptions options;
-  final Map<Reference, Library> libraries;
-  final LibraryBuilder library;
-
-  PrismaClientGenerator(this.options, this.libraries)
-      : library = LibraryBuilder();
-
-  Library build() {
-    library.body.add(Class((builder) {
-      builder.name = 'PrismaClient';
-
-      builder.fields.add(Field(engineField));
-
-      builder.methods.add(Method(clientVersion));
-      builder.methods.add(Method(engineVersion));
+    // Generate `$engine` property
+    builder.fields.add(Field((builder) {
+      builder.name = r'_engine';
+      builder.type = ormCoreRefer('Engine').typed(refer('T'));
+      builder.modifier = FieldModifier.final$;
     }));
 
-    return library.build();
-  }
+    // Generate [InteractiveTransactionInfo] info.
+    builder.fields.add(Field((builder) {
+      builder
+        ..name = '_transaction'
+        ..modifier = FieldModifier.final$
+        ..type = ormCoreRefer('InteractiveTransactionInfo')
+            .typed(refer('T'))
+            .nullable;
+    }));
 
-  void engineField(FieldBuilder builder) {
-    builder.name = r'$engine';
-    builder.type = ormCoreRefer('Engine');
-    builder.modifier = FieldModifier.final$;
-  }
+    // Generate `_` constructor
+    builder.constructors.add(Constructor((builder) {
+      builder.name = '_';
 
-  void clientVersion(MethodBuilder builder) {
-    builder.name = r'$clientVersion';
-    builder.returns = refer('String');
-    builder.body = ormVersion.code;
-    builder.lambda = true;
-    builder.type = MethodType.getter;
-  }
+      // Add `_engine` parameter
+      builder.optionalParameters.add(Parameter((builder) {
+        builder.name = r'engine';
+        builder.type = ormCoreRefer('Engine').typed(refer('T'));
+        builder.required = true;
+        builder.named = true;
+      }));
 
-  void engineVersion(MethodBuilder builder) {
-    builder.name = r'$engineVersion';
-    builder.returns = refer('String');
-    builder.body = literalString(options.version).code;
-    builder.lambda = true;
-    builder.type = MethodType.getter;
-  }
+      // add `_info` parameter
+      builder.optionalParameters.add(Parameter((builder) {
+        builder.name = r'transaction';
+        builder.type = ormCoreRefer('InteractiveTransactionInfo')
+            .typed(refer('T'))
+            .nullable;
+        builder.required = false;
+        builder.named = true;
+      }));
+
+      builder.initializers.addAll([
+        refer(r'_engine').assign(refer('engine')).code,
+        refer('_transaction').assign(refer('transaction')).code,
+      ]);
+
+      builder.constant = true;
+    }));
+
+    builder.types.add(refer('T'));
+
+    // Generate model delegates
+    for (final model in options.dmmf.datamodel.models) {
+      final Reference modelDelegate =
+          generateModelDelegate(model, options, libraries);
+
+      builder.methods.add(Method((builder) {
+        builder.name = model.name.camelCase;
+        builder.type = MethodType.getter;
+        builder.returns = modelDelegate;
+        builder.lambda = true;
+
+        builder.body = modelDelegate.newInstance([
+          refer('_engine'),
+          refer('_transaction'),
+        ]).code;
+      }));
+    }
+  });
+
+  libraries[reference] = Library((builder) {
+    builder.body.add(client);
+  });
+
+  return libraries;
 }

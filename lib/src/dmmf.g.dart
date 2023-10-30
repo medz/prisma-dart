@@ -859,23 +859,86 @@ ModelMapping _$ModelMappingFromJson(Map json) => $checkedCreate(
         final val = ModelMapping(
           model: $checkedConvert('model', (v) => v as String),
           plural: $checkedConvert('plural', (v) => v as String?),
-          findUnique: $checkedConvert('findUnique', (v) => v as String?),
-          findUniqueOrThrow:
-              $checkedConvert('findUniqueOrThrow', (v) => v as String?),
-          findFirst: $checkedConvert('findFirst', (v) => v as String?),
-          findMany: $checkedConvert('findMany', (v) => v as String?),
-          create: $checkedConvert('create', (v) => v as String?),
-          createMany: $checkedConvert('createMany', (v) => v as String?),
-          update: $checkedConvert('update', (v) => v as String?),
-          updateMany: $checkedConvert('updateMany', (v) => v as String?),
-          upsert: $checkedConvert('upsert', (v) => v as String?),
-          delete: $checkedConvert('delete', (v) => v as String?),
-          deleteMany: $checkedConvert('deleteMany', (v) => v as String?),
-          aggregate: $checkedConvert('aggregate', (v) => v as String?),
-          groupBy: $checkedConvert('groupBy', (v) => v as String?),
-          count: $checkedConvert('count', (v) => v as String?),
-          findRaw: $checkedConvert('findRaw', (v) => v as String?),
-          aggregateRaw: $checkedConvert('aggregateRaw', (v) => v as String?),
+          findUnique: $checkedConvert(
+            'findUnique',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          findUniqueOrThrow: $checkedConvert(
+            'findUniqueOrThrow',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          findFirst: $checkedConvert(
+            'findFirst',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          findMany: $checkedConvert(
+            'findMany',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          create: $checkedConvert(
+            'create',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          createMany: $checkedConvert(
+            'createMany',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          update: $checkedConvert(
+            'update',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          updateMany: $checkedConvert(
+            'updateMany',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          upsert: $checkedConvert(
+            'upsert',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          delete: $checkedConvert(
+            'delete',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          deleteMany: $checkedConvert(
+            'deleteMany',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          aggregate: $checkedConvert(
+            'aggregate',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          groupBy: $checkedConvert(
+            'groupBy',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          count: $checkedConvert(
+            'count',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          findRaw: $checkedConvert(
+            'findRaw',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
+          aggregateRaw: $checkedConvert(
+            'aggregateRaw',
+            (v) => v as String?,
+            readValue: _readModelMappingValue,
+          ),
         );
         return val;
       },

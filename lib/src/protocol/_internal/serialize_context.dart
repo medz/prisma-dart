@@ -3,7 +3,6 @@ import '../../dmmf.dart' as dmmf;
 import '../../core/errors/engine_validation_error.dart';
 import '../../core/error-rendering/throw_validation_error.dart'
     as error_reendering;
-import '../../core/error_format.dart';
 import '../../core/errors/validation_error.dart';
 import '../model_action.dart';
 
@@ -15,7 +14,6 @@ class SerializeContext {
   final Iterable<String> argumentPath;
   final String? modelName;
   final ModelAction action;
-  final ErrorFormat errorFormat;
   final String clientVersion;
 
   const SerializeContext({
@@ -26,7 +24,6 @@ class SerializeContext {
     required this.argumentPath,
     this.modelName,
     required this.action,
-    required this.errorFormat,
     required this.clientVersion,
   });
 
@@ -44,7 +41,6 @@ class SerializeContext {
         errors: [error],
         originalMethod: originalMethod,
         args: rootArgs ?? const {},
-        errorFormat: errorFormat,
         clientVersion: clientVersion,
       );
 
@@ -86,7 +82,6 @@ class SerializeContext {
       argumentPath: argumentPath,
       modelName: modelName,
       action: action,
-      errorFormat: errorFormat,
       clientVersion: clientVersion,
     );
   }
@@ -99,7 +94,6 @@ class SerializeContext {
         argumentPath: [...argumentPath, fieldName],
         modelName: modelName,
         action: action,
-        errorFormat: errorFormat,
         clientVersion: clientVersion,
       );
 

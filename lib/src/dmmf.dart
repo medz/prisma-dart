@@ -493,42 +493,74 @@ class OtherOperations implements JsonConvertible<Map<String, List<String>>> {
 class ModelMapping implements JsonConvertible<Map<String, String>> {
   final String model;
   final String? plural;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? findUnique;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? findUniqueOrThrow;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? findFirst;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? findMany;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? create;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? createMany;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? update;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? updateMany;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? upsert;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? delete;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? deleteMany;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? aggregate;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? groupBy;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? count;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? findRaw;
+
+  @JsonKey(readValue: _readModelMappingValue)
   final String? aggregateRaw;
 
   const ModelMapping({
     required this.model,
     this.plural,
-    @JsonKey(readValue: _readModelMappingValue) this.findUnique,
-    @JsonKey(readValue: _readModelMappingValue) this.findUniqueOrThrow,
-    @JsonKey(readValue: _readModelMappingValue) this.findFirst,
-    @JsonKey(readValue: _readModelMappingValue) this.findMany,
-    @JsonKey(readValue: _readModelMappingValue) this.create,
-    @JsonKey(readValue: _readModelMappingValue) this.createMany,
-    @JsonKey(readValue: _readModelMappingValue) this.update,
-    @JsonKey(readValue: _readModelMappingValue) this.updateMany,
-    @JsonKey(readValue: _readModelMappingValue) this.upsert,
-    @JsonKey(readValue: _readModelMappingValue) this.delete,
-    @JsonKey(readValue: _readModelMappingValue) this.deleteMany,
-    @JsonKey(readValue: _readModelMappingValue) this.aggregate,
-    @JsonKey(readValue: _readModelMappingValue) this.groupBy,
-    @JsonKey(readValue: _readModelMappingValue) this.count,
-    @JsonKey(readValue: _readModelMappingValue) this.findRaw,
-    @JsonKey(readValue: _readModelMappingValue) this.aggregateRaw,
+    this.findUnique,
+    this.findUniqueOrThrow,
+    this.findFirst,
+    this.findMany,
+    this.create,
+    this.createMany,
+    this.update,
+    this.updateMany,
+    this.upsert,
+    this.delete,
+    this.deleteMany,
+    this.aggregate,
+    this.groupBy,
+    this.count,
+    this.findRaw,
+    this.aggregateRaw,
   });
 
   factory ModelMapping.fromJson(Map<String, dynamic> json) =>
