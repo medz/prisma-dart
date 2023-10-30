@@ -74,11 +74,12 @@ extension<R, S, V> on ActionClient<R, S> {
       args: _args.deepMerge({name: value}));
 }
 
-abstract interface class Select implements JsonConvertible {}
+abstract interface class Select<T> {}
 
-extension ActionClientSelect<R, S extends Select> on ActionClient<R, S> {
+extension ActionClientSelect<R, T extends JsonConvertible, S extends Select<T>>
+    on ActionClient<R, S> {
   /// Select specific fields to fetch from the [R]
-  ActionClient<R, S> select(S select) =>
+  ActionClient<R, S> select(T select) =>
       copyWithNamedArg('select', select.toJson());
 }
 
