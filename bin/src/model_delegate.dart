@@ -72,7 +72,6 @@ Reference generateModelDelegate(
     // Generate model actions
     final modelMapping = options.dmmf.mappings.modelOperations
         .firstWhere((element) => element.model == model.name);
-    // print(modelMapping.toJson());
     final actions = modelMapping.toJson()
       ..remove('model')
       ..remove('plural');

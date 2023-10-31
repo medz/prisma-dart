@@ -7,7 +7,6 @@ import 'package:orm/src/core/raw_parameters.dart';
 import 'package:test/test.dart';
 import 'package:orm/dmmf.dart' as dmmf;
 import 'package:orm/protocol.dart';
-import 'package:orm/src/core/error_format.dart';
 
 import '../test_utils/datamodel_builder.dart';
 
@@ -58,7 +57,6 @@ Map serialize({
       datamodel: datamodel,
       modelName: modelName,
       clientVersion: '0.0.0',
-      errorFormat: ErrorFormat.colorless,
     );
 
 class _Name implements JsonConvertible<String> {
