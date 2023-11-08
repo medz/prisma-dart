@@ -1,3 +1,0 @@
-class PrismaNull {
-  const PrismaNull();
-}
