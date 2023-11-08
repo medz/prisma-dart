@@ -1,4 +1,4 @@
-import '../core/json_convertible.dart';
+import '../json_convertible.dart';
 
 class Metric<T> implements JsonConvertible<Map<String, dynamic>> {
   const Metric({

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 
-import '../date_time.dart';
 import '../prisma_null.dart';
 
 /// Raw protocol encoding converter.
@@ -14,11 +13,8 @@ class RawProtocolEncoder extends Converter {
   convert(dynamic input) {
     return switch (input) {
       BigInt(toString: final toString) => _tagged('bigint', toString()),
-      DateTime datetime => switch (datetime) {
-          Date date => _tagged('date', date.toString()),
-          Time time => _tagged('time', time.toString()),
-          _ => _tagged('datetime', datetime.toUtc().toIso8601String()),
-        },
+      DateTime datetime =>
+        _tagged('datetime', datetime.toUtc().toIso8601String()),
       Decimal decimal => _tagged('decimal', decimal.toString()),
       ByteBuffer buffer =>
         _tagged('bytes', base64.encode(buffer.asUint8List())),
@@ -81,8 +77,8 @@ class RawProtocolDecoder extends Converter {
       'bytes' => base64.decode(value).buffer,
       'decimal' => Decimal.parse(value),
       'datetime' => DateTime.parse(value),
-      'date' => Date.parse(value),
-      'time' => Time.parse(value),
+      'date' => DateTime.parse(value),
+      'time' => DateTime.parse('1970-01-01T${value}Z'),
       _ => value,
     };
   }

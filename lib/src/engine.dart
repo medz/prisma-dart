@@ -28,7 +28,7 @@ abstract class Engine<T> {
 
   /// Request a query to be executed.
   Future<dynamic> request(
-    JsonConvertible payload, {
+    JsonConvertible query, {
     int attempts = 0,
     required bool isWrite,
     Transaction<T> transaction,
