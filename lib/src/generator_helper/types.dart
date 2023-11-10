@@ -1,20 +1,20 @@
-import '../core/json_convertible.dart';
-import '../dmmf.dart' show Document;
+import 'package:json_annotation/json_annotation.dart';
 
 part 'types.g.dart';
 
-@JsonConvertible.serializable
+@JsonSerializable()
 class EnvValue {
   final String? formEnvVar;
   final String? value;
 
   const EnvValue({this.formEnvVar, this.value});
-  factory EnvValue.fromJson(Map json) => _$EnvValueFromJson(json);
+  factory EnvValue.fromJson(Map<String, dynamic> json) =>
+      _$EnvValueFromJson(json);
 
   Map<String, dynamic> toJson() => _$EnvValueToJson(this);
 }
 
-@JsonConvertible.serializable
+@JsonSerializable()
 class BinaryTargetsEnvValue extends EnvValue {
   final bool native;
 
@@ -27,14 +27,14 @@ class BinaryTargetsEnvValue extends EnvValue {
   @override
   String get value => super.value!;
 
-  factory BinaryTargetsEnvValue.fromJson(Map json) =>
+  factory BinaryTargetsEnvValue.fromJson(Map<String, dynamic> json) =>
       _$BinaryTargetsEnvValueFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$BinaryTargetsEnvValueToJson(this);
 }
 
-@JsonConvertible.serializable
+@JsonSerializable()
 class GeneratorConfig {
   final String name;
   final EnvValue provider;
@@ -52,24 +52,26 @@ class GeneratorConfig {
     this.output,
   });
 
-  factory GeneratorConfig.fromJson(Map json) => _$GeneratorConfigFromJson(json);
+  factory GeneratorConfig.fromJson(Map<String, dynamic> json) =>
+      _$GeneratorConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$GeneratorConfigToJson(this);
 }
 
-@JsonConvertible.serializable
+@JsonSerializable()
 class DenyLists {
   final Iterable<String>? models;
   final Iterable<String>? fields;
 
   const DenyLists({this.models, this.fields});
-  factory DenyLists.fromJson(Map json) => _$DenyListsFromJson(json);
+  factory DenyLists.fromJson(Map<String, dynamic> json) =>
+      _$DenyListsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DenyListsToJson(this);
 }
 
 /// https://github.com/prisma/prisma/blob/main/packages/generator-helper/src/types.ts#L102
-@JsonConvertible.serializable
+@JsonSerializable()
 class GeneratorManifest {
   final String? prettyName;
   final String? defaultOutput;
@@ -86,7 +88,7 @@ class GeneratorManifest {
     this.version,
     this.requiresEngineVersion,
   });
-  factory GeneratorManifest.fromJson(Map json) =>
+  factory GeneratorManifest.fromJson(Map<String, dynamic> json) =>
       _$GeneratorManifestFromJson(json);
 
   Map<String, dynamic> toJson() => _$GeneratorManifestToJson(this);
@@ -101,7 +103,7 @@ enum ConnectorType {
   cockroachdb
 }
 
-@JsonConvertible.serializable
+@JsonSerializable()
 class DataSource {
   final String name;
   final ConnectorType provider;
@@ -118,19 +120,20 @@ class DataSource {
     this.directUrl,
     required this.schemas,
   });
-  factory DataSource.fromJson(Map json) => _$DataSourceFromJson(json);
+  factory DataSource.fromJson(Map<String, dynamic> json) =>
+      _$DataSourceFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataSourceToJson(this);
 }
 
-@JsonConvertible.serializable
+@JsonSerializable()
 class GeneratorOptions {
   final GeneratorConfig generator;
   final String schemaPath;
   final String datamodel;
   final Iterable<DataSource> datasources;
   final String version;
-  final Document dmmf;
+  final Map<String, dynamic> dmmf;
 
   const GeneratorOptions({
     required this.generator,
@@ -141,7 +144,7 @@ class GeneratorOptions {
     required this.dmmf,
   });
 
-  factory GeneratorOptions.fromJson(Map json) =>
+  factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
       _$GeneratorOptionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$GeneratorOptionsToJson(this);

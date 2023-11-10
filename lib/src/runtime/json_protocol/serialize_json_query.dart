@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
-import 'package:orm/src/prisma_null.dart';
 
-import '../_internal/extension.dart';
+import '../../_internal/extension.dart';
 import '../json_convertible.dart';
+import '../prisma_null.dart';
 import '_internal/serialize_context.dart';
 
 const Map<String, String> _modelActionRestoration = {

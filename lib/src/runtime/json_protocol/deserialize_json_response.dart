@@ -20,8 +20,7 @@ dynamic _deserializeJsonObject(Map object) {
 
 dynamic _deserializeTaggedValue(Map object) => switch (object) {
       {r'$type': 'BigInt', 'value': final String value} => BigInt.parse(value),
-      {r'$type': 'Bytes', 'value': final String value} =>
-        base64.decode(value).buffer,
+      {r'$type': 'Bytes', 'value': final String value} => base64.decode(value),
       {r'$type': 'DateTime', 'value': final String value} =>
         DateTime.parse(value),
       {r'$type': 'Decimal', 'value': final String value} =>

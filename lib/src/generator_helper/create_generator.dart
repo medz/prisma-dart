@@ -30,7 +30,7 @@ Generator createGenerator({
 
   // Register a method called 'getManifest'.
   server.registerMethod('getManifest', (Parameters params) async {
-    final config = GeneratorConfig.fromJson(params.asMap);
+    final config = GeneratorConfig.fromJson(params.asMap.cast());
     final manifest = await onManifest?.call(config);
 
     return {'manifest': manifest?.toJson()};
