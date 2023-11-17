@@ -1,2 +1,1 @@
-mod format;
-pub use format::*;
+pub use prisma_fmt::*;

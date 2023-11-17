@@ -6,7 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-log = "0.4.20"
-lsp-types = "0.94.1"
+thiserror = "1.0.50"
+url = "2.4.1"
+psl = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0" }
+query-core = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0" }
 prisma-fmt = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0" }
+query-connector = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0" }
+user-facing-errors = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0", features = ["sql"] }
+connection-string = "0.2.0"
 serde_json = "1.0.108"
