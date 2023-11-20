@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'json_protocol/protocol.dart';
+import 'metrics/metrics_format.dart';
 import 'transaction.dart';
 
 abstract interface class Engine<T> {
@@ -87,8 +88,6 @@ abstract interface class Engine<T> {
   });
 
   /// Returns the metrics for the engine.
-  Future<String> prometheusMetrics({Map<String, String>? globalLabels});
-
-  /// Returns the metrics for the engine in JSON format.
-  Future<Map<String, dynamic>> jsonMetrics({Map<String, String>? globalLabels});
+  Future<dynamic> metrics(
+      {Map<String, String>? globalLabels, required MetricsFormat format});
 }

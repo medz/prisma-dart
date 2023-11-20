@@ -1,0 +1,4 @@
+enum MetricsFormat {
+  json,
+  prometheus,
+}

@@ -1,7 +1,8 @@
 import '../engine.dart';
+import 'metrics_format.dart';
 
-class MetriceClient<T> {
-  const MetriceClient(Engine<T> engine) : _engine = engine;
+class MetricsClient<T> {
+  const MetricsClient(Engine<T> engine) : _engine = engine;
 
   final Engine<T> _engine;
 
@@ -11,7 +12,18 @@ class MetriceClient<T> {
   /// endpoint
   ///
   /// - [globalLabels] are the labels to be added to all metrics.
-  Future<String> prometheus({Map<String, String>? globalLabels}) {
-    return _engine.prometheusMetrics(globalLabels: globalLabels);
+  Future<String> prometheus({Map<String, String>? globalLabels}) async {
+    final result = await _engine.metrics(
+        globalLabels: globalLabels, format: MetricsFormat.prometheus);
+
+    return result.toString();
+  }
+
+  /// Returns all metrics gathered up to this point in json format.
+  Future<Map<String, dynamic>> json({Map<String, String>? globalLabels}) async {
+    final result = await _engine.metrics(
+        globalLabels: globalLabels, format: MetricsFormat.json);
+
+    return result as Map<String, dynamic>;
   }
 }
