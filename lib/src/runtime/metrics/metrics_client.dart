@@ -1,4 +1,4 @@
-import '../engine/engine.dart';
+import '../engine.dart';
 
 class MetriceClient<T> {
   const MetriceClient(Engine<T> engine) : _engine = engine;
