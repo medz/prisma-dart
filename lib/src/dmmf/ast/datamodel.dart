@@ -177,7 +177,7 @@ class Field {
     return Field(
       kind: switch (json['kind']) {
         'scalar' => FieldKind.scalar,
-        'relation' => FieldKind.relation,
+        'object' => FieldKind.object,
         'enum' => FieldKind.$enum,
         _ => FieldKind.unsupported,
       },
@@ -232,7 +232,7 @@ class Field {
 
 enum FieldKind {
   scalar,
-  relation,
+  object,
   $enum,
   unsupported,
 }
