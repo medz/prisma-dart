@@ -38,7 +38,7 @@ class GeneratorOptions {
       datasources:
           (json['datasources'] as Iterable).map((e) => Datasource.fromJson(e)),
       version: json['version'],
-      binaryPaths: BinaryPaths.fromJson(json['binaryPaths']),
+      binaryPaths: BinaryPaths.fromJson(json['binaryPaths'] ?? const {}),
       postinstall: json['postinstall'] ?? false,
       noEngine: json['noEngine'] ?? false,
     );

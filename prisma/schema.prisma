@@ -3,7 +3,7 @@
 
 generator DartClient {
   provider = "dart run orm"
-  output   = "dart"
+  // output   = "dart"
 }
 
 // generator JSClient {

@@ -15,9 +15,10 @@ class Schema {
 
   factory Schema.fromJson(Map json) {
     return Schema(
-      inputTypes: SchemaTypes.fromJson(json['inputTypes'], InputType.fromJson),
+      inputTypes:
+          SchemaTypes.fromJson(json['inputObjectTypes'], InputType.fromJson),
       outputTypes:
-          SchemaTypes.fromJson(json['outputTypes'], OutputType.fromJson),
+          SchemaTypes.fromJson(json['outputObjectTypes'], OutputType.fromJson),
       enumTypes: SchemaTypes.fromJson(json['enumTypes'], Enum.fromJson),
       fieldRefTypes:
           SchemaTypes.fromJson(json['fieldRefTypes'], FieldRefType.fromJson),
