@@ -238,7 +238,7 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
     Uint8List bytes => _createTypedValue('Bytes', base64.encode(bytes)),
     RawParameters parameters => parameters.values,
     FieldRef ref => _createTypedValue(
-        'FieldRef', {'_container': ref.modelName, '_ref': ref.name}),
+        'FieldRef', {'_container': ref.modelName, '_ref': ref.field}),
     Decimal value => _createTypedValue('Decimal', value.toString()),
     PrismaEnum value => _createTypedValue('Enum', value.toPrismaEnumName()),
     Enum value => _createTypedValue('Enum', value.name),

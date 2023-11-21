@@ -1,6 +1,6 @@
 class FieldRef {
-  final String name;
+  final String field;
   final String modelName;
 
-  const FieldRef(this.modelName, this.name);
+  const FieldRef(this.modelName, this.field);
 }
