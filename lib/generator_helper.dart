@@ -1,4 +1,4 @@
-library prisma.generator;
+library prisma.generator_helper;
 
 export 'src/generator_helper/binary_targets_env_value.dart';
 export 'src/generator_helper/config.dart';

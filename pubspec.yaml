@@ -15,32 +15,16 @@ executables:
   prisma-client-dart: orm
 
 dependencies:
-  code_builder: ^4.7.0
+  code_builder: ^4.8.0
   dart_style: ^2.3.3
   decimal: ^2.3.3
-  json_annotation: ^4.8.1
   json_rpc_2: ^3.0.2
   path: ^1.8.3
   recase: ^4.1.0
   stream_channel: ^2.1.2
-  # Library dependencies
-  # crypto: ^3.0.3
-  # http: ^1.0.0
-  # json_annotation: ^4.8.1
-  # meta: ^1.9.1
-  # path: ^1.8.3
-  # retry: ^3.1.2
-
-  # CLI dependencies
-  # analyzer: ^5.13.0
-  # code_builder: ^4.4.0
-  # dart_style: ^2.3.1
-  # recase: ^4.1.0
-  # prisma_generator_helper: ^1.2.4
 
 # Devlopment dependencies
 dev_dependencies:
   build_runner: ^2.4.6
-  json_serializable: ^6.7.1
   lints: ^3.0.0
   test: ^1.24.8
