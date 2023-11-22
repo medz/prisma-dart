@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
@@ -26,6 +27,10 @@ Future<GeneratorManifest> manifest(GeneratorConfig config) async {
 
 Future<void> generate(GeneratorOptions options) async {
   final formatter = DartFormatter();
+
+  File('dmmf.json')
+    ..autoCreateSync()
+    ..writeAsStringSync(json.encode(options.dmmf.source));
 
   await writeDartSpec(
     formatter: formatter,
