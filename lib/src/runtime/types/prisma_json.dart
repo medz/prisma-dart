@@ -1,0 +1,1 @@
+abstract interface class PrismaJson {}

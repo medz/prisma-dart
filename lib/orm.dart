@@ -17,4 +17,5 @@ export 'src/runtime/raw/raw_parameters.dart';
 export 'src/runtime/types/decimal.dart';
 export 'src/runtime/types/field_ref.dart';
 export 'src/runtime/types/prisma_enum.dart';
+export 'src/runtime/types/prisma_json.dart';
 export 'src/runtime/types/prisma_null.dart';

@@ -1,4 +1,4 @@
-class FieldRef {
+class FieldRef<T> {
   final String field;
   final String modelName;
 

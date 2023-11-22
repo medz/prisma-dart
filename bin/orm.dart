@@ -29,7 +29,7 @@ Future<void> generate(GeneratorOptions options) async {
 
   await writeDartSpec(
     formatter: formatter,
-    spec: generateTypesLibrary(options.dmmf.schema),
+    spec: generateTypesLibrary(options.dmmf),
     path: join(options.generator.output!.value, 'types.dart'),
   );
 }
