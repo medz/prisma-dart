@@ -15,11 +15,25 @@ final scalars = <String, Reference>{
 };
 
 extension DmmfFieldExtension on dmmf.Field {
-  Reference toDartReference({bool innerTypes = false}) {
+  Reference toDartReference({bool inner = false}) {
     return switch (kind) {
       dmmf.FieldKind.scalar => scalars[type] ?? refer(type),
-      dmmf.FieldKind.$enum => innerTypes ? refer(type) : typesRef(type),
+      dmmf.FieldKind.$enum => inner ? refer(type) : typesRef(type),
       _ => throw UnimplementedError(),
+    };
+  }
+
+  Reference toInnerReference() => toDartReference(inner: true);
+}
+
+extension DmmfTypeReferenceExtension on dmmf.TypeReference {
+  Reference toDartReference({bool inner = true}) {
+    return switch (location) {
+      dmmf.TypeLocation.scalar => scalars[type] ?? refer(type),
+      dmmf.TypeLocation.enumTypes => inner ? refer(type) : typesRef(type),
+      dmmf.TypeLocation.inputObjectTypes => refer(type),
+      dmmf.TypeLocation.outputObjectTypes => refer(type),
+      dmmf.TypeLocation.fieldRefTypes => refer(type),
     };
   }
 }

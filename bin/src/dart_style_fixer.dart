@@ -14,6 +14,7 @@ const reserved = <String>{
   'void',
   'null',
   'default',
+  'in',
 };
 
 extension DartClassNameStyleFixer on String {

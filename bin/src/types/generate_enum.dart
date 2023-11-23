@@ -4,10 +4,7 @@ import 'package:orm/dmmf.dart' as dmmf;
 import '../dart_style_fixer.dart';
 import '../refs.dart';
 import '../scalars.dart';
-
-extension on dmmf.SchemaTypes<dmmf.Enum> {
-  Iterable<dmmf.Enum> get pattern => [...model, ...prisma];
-}
+import '../utils/dmmf_schema_types.dart';
 
 extension on dmmf.Enum {
   dmmf.Model? findModel(dmmf.DMMF document) {
@@ -27,10 +24,6 @@ extension on dmmf.Model {
   String toModelScalarEnumName() {
     return '${name}Scalar'.toDartClassNameString();
   }
-}
-
-extension on dmmf.Field {
-  Reference toTypesInnerReference() => toDartReference(innerTypes: true);
 }
 
 final enumProperty = Field((builder) {
@@ -123,7 +116,7 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
           builder.arguments.add(literalString(model.name));
 
           final field = model.fields.firstWhere((element) => element.name == e);
-          builder.types.add(field.toTypesInnerReference());
+          builder.types.add(field.toInnerReference());
         }
       }),
     ));

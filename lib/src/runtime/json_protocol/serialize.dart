@@ -8,6 +8,7 @@ import '../raw/raw_parameters.dart';
 import '../types/decimal.dart';
 import '../types/field_ref.dart';
 import '../types/prisma_enum.dart';
+import '../types/prisma_json.dart';
 import '../types/prisma_null.dart';
 import 'protocol.dart';
 
@@ -241,6 +242,8 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
         'FieldRef', {'_container': ref.modelName, '_ref': ref.field}),
     Decimal value => _createTypedValue('Decimal', value.toString()),
     PrismaEnum value => _createTypedValue('Enum', value.toPrismaEnumName()),
+    PrismaJson(value: final value) =>
+      _createTypedValue('Json', json.encode(value)),
     Enum value => _createTypedValue('Enum', value.name),
     JsonConvertible value => _serializeArgumentValue(context, value),
     Iterable value => _serializeIterable(context, value),

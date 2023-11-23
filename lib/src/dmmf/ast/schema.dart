@@ -197,7 +197,7 @@ class TypeReference {
   final String type;
   final bool isList;
   final TypeLocation location;
-  final TypeNamespace namespace;
+  final TypeNamespace? namespace;
 
   const TypeReference({
     required this.type,
@@ -213,9 +213,9 @@ class TypeReference {
       location: TypeLocation.values.firstWhere(
         (e) => e.name == json['location'],
       ),
-      namespace: TypeNamespace.values.firstWhere(
-        (e) => e.name == json['namespace'],
-      ),
+      namespace: TypeNamespace.values
+          .where((e) => e.name == json['namespace'])
+          .firstOrNull,
     );
   }
 }
