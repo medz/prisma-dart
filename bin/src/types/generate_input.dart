@@ -47,15 +47,6 @@ Code generateToJsonBody(dmmf.InputType type, dmmf.DMMF document) {
   );
 
   return literalMap(Map.fromEntries(entries)).code;
-
-  // return literalMap({
-  //   Block((builder) {
-  //     builder.statements.add(
-  //       refer('if').call([refer('id').notEqualTo(literalNull)]).code,
-  //     );
-  //     builder.statements.add(literalString('id').code);
-  //   }): refer('id'),
-  // }).code;
 }
 
 Spec generateToJsonMapKey(dmmf.InputField field) {
@@ -67,7 +58,7 @@ Spec generateToJsonMapKey(dmmf.InputField field) {
         refer(field.name.toDartPropertyNameString()).notEqualTo(literalNull)
       ]).code,
     );
-    builder.statements.add(literalString(field.name).code);
+    builder.statements.add(literalString(field.name, raw: true).code);
   });
 }
 

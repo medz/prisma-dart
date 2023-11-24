@@ -194,21 +194,21 @@ class UserWhereInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
-        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
-        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (AND != null) r'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) r'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) r'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
       };
 }
 
@@ -252,18 +252,18 @@ class UserOrderByWithRelationInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
       };
 }
 
@@ -318,21 +318,21 @@ class UserWhereUniqueInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
-        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
-        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (AND != null) r'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) r'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) r'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
       };
 }
 
@@ -388,22 +388,22 @@ class UserOrderByWithAggregationInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
       };
 }
 
@@ -456,20 +456,20 @@ class UserScalarWhereWithAggregatesInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
-        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
-        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (AND != null) r'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) r'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) r'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -500,13 +500,13 @@ class PostWhereInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
-        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
-        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
-        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+        if (AND != null) r'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) r'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) r'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
+        if (author != null) r'author': _i1.JsonConvertible.serialize(author),
       };
 }
 
@@ -529,10 +529,10 @@ class PostOrderByWithRelationInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
-        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
+        if (author != null) r'author': _i1.JsonConvertible.serialize(author),
       };
 }
 
@@ -564,13 +564,13 @@ class PostWhereUniqueInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
-        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
-        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
-        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (AND != null) r'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) r'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) r'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
+        if (author != null) r'author': _i1.JsonConvertible.serialize(author),
       };
 }
 
@@ -605,14 +605,14 @@ class PostOrderByWithAggregationInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
       };
 }
 
@@ -643,12 +643,12 @@ class PostScalarWhereWithAggregatesInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
-        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
-        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (AND != null) r'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) r'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) r'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
       };
 }
 
@@ -689,16 +689,16 @@ class UserCreateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   @override
   Map<String, dynamic> toJson() => {
         'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
         'price': _i1.JsonConvertible.serialize(price),
         'size': _i1.JsonConvertible.serialize(size),
         'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
         'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
       };
 }
 
@@ -742,18 +742,18 @@ class UserUncheckedCreateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
         'price': _i1.JsonConvertible.serialize(price),
         'size': _i1.JsonConvertible.serialize(size),
         'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
         'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
       };
 }
 
@@ -797,17 +797,17 @@ class UserUpdateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
       };
 }
 
@@ -855,18 +855,18 @@ class UserUncheckedUpdateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
       };
 }
 
@@ -906,17 +906,17 @@ class UserCreateManyInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
         'price': _i1.JsonConvertible.serialize(price),
         'size': _i1.JsonConvertible.serialize(size),
         'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
         'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -958,16 +958,16 @@ class UserUpdateManyMutationInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -1012,17 +1012,17 @@ class UserUncheckedUpdateManyInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -1041,7 +1041,7 @@ class PostCreateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'title': _i1.JsonConvertible.serialize(title),
         'author': _i1.JsonConvertible.serialize(author),
       };
@@ -1063,7 +1063,7 @@ class PostUncheckedCreateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'title': _i1.JsonConvertible.serialize(title),
         'userId': _i1.JsonConvertible.serialize(userId),
       };
@@ -1084,9 +1084,9 @@ class PostUpdateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (author != null) r'author': _i1.JsonConvertible.serialize(author),
       };
 }
 
@@ -1106,9 +1106,9 @@ class PostUncheckedUpdateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
       };
 }
 
@@ -1127,7 +1127,7 @@ class PostCreateManyInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'title': _i1.JsonConvertible.serialize(title),
         'userId': _i1.JsonConvertible.serialize(userId),
       };
@@ -1146,8 +1146,8 @@ class PostUpdateManyMutationInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
       };
 }
 
@@ -1167,9 +1167,9 @@ class PostUncheckedUpdateManyInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
       };
 }
 
@@ -1203,14 +1203,14 @@ class IntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1257,21 +1257,21 @@ class StringFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (contains != null)
-          'contains': _i1.JsonConvertible.serialize(contains),
+          r'contains': _i1.JsonConvertible.serialize(contains),
         if (startsWith != null)
-          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+          r'startsWith': _i1.JsonConvertible.serialize(startsWith),
         if (endsWith != null)
-          'endsWith': _i1.JsonConvertible.serialize(endsWith),
-        if (mode != null) 'mode': _i1.JsonConvertible.serialize(mode),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+          r'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (mode != null) r'mode': _i1.JsonConvertible.serialize(mode),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1293,10 +1293,10 @@ class EnumRoleFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1334,14 +1334,14 @@ class DecimalFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1376,14 +1376,14 @@ class BigIntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1407,10 +1407,10 @@ class BytesFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1468,25 +1468,26 @@ class JsonNullableFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if (path != null) 'path': _i1.JsonConvertible.serialize(path),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if (path != null) r'path': _i1.JsonConvertible.serialize(path),
         if (stringContains != null)
-          'string_contains': _i1.JsonConvertible.serialize(stringContains),
+          r'string_contains': _i1.JsonConvertible.serialize(stringContains),
         if (stringStartsWith != null)
-          'string_starts_with': _i1.JsonConvertible.serialize(stringStartsWith),
+          r'string_starts_with':
+              _i1.JsonConvertible.serialize(stringStartsWith),
         if (stringEndsWith != null)
-          'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
+          r'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
         if (arrayContains != null)
-          'array_contains': _i1.JsonConvertible.serialize(arrayContains),
+          r'array_contains': _i1.JsonConvertible.serialize(arrayContains),
         if (arrayStartsWith != null)
-          'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
+          r'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
         if (arrayEndsWith != null)
-          'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+          r'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1525,14 +1526,14 @@ class IntNullableFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1567,14 +1568,14 @@ class FloatFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1610,14 +1611,14 @@ class DateTimeFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -1637,9 +1638,9 @@ class PostListRelationFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (every != null) 'every': _i1.JsonConvertible.serialize(every),
-        if (some != null) 'some': _i1.JsonConvertible.serialize(some),
-        if (none != null) 'none': _i1.JsonConvertible.serialize(none),
+        if (every != null) r'every': _i1.JsonConvertible.serialize(every),
+        if (some != null) r'some': _i1.JsonConvertible.serialize(some),
+        if (none != null) r'none': _i1.JsonConvertible.serialize(none),
       };
 }
 
@@ -1656,7 +1657,7 @@ class SortOrderInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   @override
   Map<String, dynamic> toJson() => {
         'sort': _i1.JsonConvertible.serialize(sort),
-        if (nulls != null) 'nulls': _i1.JsonConvertible.serialize(nulls),
+        if (nulls != null) r'nulls': _i1.JsonConvertible.serialize(nulls),
       };
 }
 
@@ -1668,7 +1669,7 @@ class PostOrderByRelationAggregateInput
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (count != null) '_count': _i1.JsonConvertible.serialize(count)};
+      {if (count != null) r'_count': _i1.JsonConvertible.serialize(count)};
 }
 
 class UserCountOrderByAggregateInput
@@ -1708,17 +1709,17 @@ class UserCountOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -1744,11 +1745,11 @@ class UserAvgOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
       };
 }
 
@@ -1786,16 +1787,16 @@ class UserMaxOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -1833,16 +1834,16 @@ class UserMinOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -1868,11 +1869,11 @@ class UserSumOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
       };
 }
 
@@ -1922,19 +1923,19 @@ class IntWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -1991,24 +1992,24 @@ class StringWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (contains != null)
-          'contains': _i1.JsonConvertible.serialize(contains),
+          r'contains': _i1.JsonConvertible.serialize(contains),
         if (startsWith != null)
-          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+          r'startsWith': _i1.JsonConvertible.serialize(startsWith),
         if (endsWith != null)
-          'endsWith': _i1.JsonConvertible.serialize(endsWith),
-        if (mode != null) 'mode': _i1.JsonConvertible.serialize(mode),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+          r'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (mode != null) r'mode': _i1.JsonConvertible.serialize(mode),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2040,13 +2041,13 @@ class EnumRoleWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2100,19 +2101,19 @@ class DecimalWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2163,19 +2164,19 @@ class BigIntWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2209,13 +2210,13 @@ class BytesWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2283,28 +2284,29 @@ class JsonNullableWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if (path != null) 'path': _i1.JsonConvertible.serialize(path),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if (path != null) r'path': _i1.JsonConvertible.serialize(path),
         if (stringContains != null)
-          'string_contains': _i1.JsonConvertible.serialize(stringContains),
+          r'string_contains': _i1.JsonConvertible.serialize(stringContains),
         if (stringStartsWith != null)
-          'string_starts_with': _i1.JsonConvertible.serialize(stringStartsWith),
+          r'string_starts_with':
+              _i1.JsonConvertible.serialize(stringStartsWith),
         if (stringEndsWith != null)
-          'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
+          r'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
         if (arrayContains != null)
-          'array_contains': _i1.JsonConvertible.serialize(arrayContains),
+          r'array_contains': _i1.JsonConvertible.serialize(arrayContains),
         if (arrayStartsWith != null)
-          'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
+          r'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
         if (arrayEndsWith != null)
-          'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+          r'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2361,19 +2363,19 @@ class IntNullableWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2424,19 +2426,19 @@ class FloatWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2482,17 +2484,17 @@ class DateTimeWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -2508,8 +2510,8 @@ class UserRelationFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if ($is != null) 'is': _i1.JsonConvertible.serialize($is),
-        if (isNot != null) 'isNot': _i1.JsonConvertible.serialize(isNot),
+        if ($is != null) r'is': _i1.JsonConvertible.serialize($is),
+        if (isNot != null) r'isNot': _i1.JsonConvertible.serialize(isNot),
       };
 }
 
@@ -2529,9 +2531,9 @@ class PostCountOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
       };
 }
 
@@ -2543,7 +2545,7 @@ class PostAvgOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId)};
+      {if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId)};
 }
 
 class PostMaxOrderByAggregateInput
@@ -2562,9 +2564,9 @@ class PostMaxOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
       };
 }
 
@@ -2584,9 +2586,9 @@ class PostMinOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
       };
 }
 
@@ -2598,7 +2600,7 @@ class PostSumOrderByAggregateInput
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId)};
+      {if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId)};
 }
 
 class PostCreateNestedManyWithoutAuthorInput
@@ -2627,12 +2629,12 @@ class PostCreateNestedManyWithoutAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (create != null) r'create': _i1.JsonConvertible.serialize(create),
         if (connectOrCreate != null)
-          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+          r'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
         if (createMany != null)
-          'createMany': _i1.JsonConvertible.serialize(createMany),
-        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+          r'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (connect != null) r'connect': _i1.JsonConvertible.serialize(connect),
       };
 }
 
@@ -2662,12 +2664,12 @@ class PostUncheckedCreateNestedManyWithoutAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (create != null) r'create': _i1.JsonConvertible.serialize(create),
         if (connectOrCreate != null)
-          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+          r'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
         if (createMany != null)
-          'createMany': _i1.JsonConvertible.serialize(createMany),
-        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+          r'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (connect != null) r'connect': _i1.JsonConvertible.serialize(connect),
       };
 }
 
@@ -2679,7 +2681,7 @@ class StringFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
+      {if (set != null) r'set': _i1.JsonConvertible.serialize(set)};
 }
 
 class EnumRoleFieldUpdateOperationsInput
@@ -2690,7 +2692,7 @@ class EnumRoleFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
+      {if (set != null) r'set': _i1.JsonConvertible.serialize(set)};
 }
 
 class DecimalFieldUpdateOperationsInput
@@ -2715,14 +2717,14 @@ class DecimalFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (set != null) r'set': _i1.JsonConvertible.serialize(set),
         if (increment != null)
-          'increment': _i1.JsonConvertible.serialize(increment),
+          r'increment': _i1.JsonConvertible.serialize(increment),
         if (decrement != null)
-          'decrement': _i1.JsonConvertible.serialize(decrement),
+          r'decrement': _i1.JsonConvertible.serialize(decrement),
         if (multiply != null)
-          'multiply': _i1.JsonConvertible.serialize(multiply),
-        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+          r'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) r'divide': _i1.JsonConvertible.serialize(divide),
       };
 }
 
@@ -2748,14 +2750,14 @@ class BigIntFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (set != null) r'set': _i1.JsonConvertible.serialize(set),
         if (increment != null)
-          'increment': _i1.JsonConvertible.serialize(increment),
+          r'increment': _i1.JsonConvertible.serialize(increment),
         if (decrement != null)
-          'decrement': _i1.JsonConvertible.serialize(decrement),
+          r'decrement': _i1.JsonConvertible.serialize(decrement),
         if (multiply != null)
-          'multiply': _i1.JsonConvertible.serialize(multiply),
-        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+          r'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) r'divide': _i1.JsonConvertible.serialize(divide),
       };
 }
 
@@ -2767,7 +2769,7 @@ class BytesFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
+      {if (set != null) r'set': _i1.JsonConvertible.serialize(set)};
 }
 
 class NullableIntFieldUpdateOperationsInput
@@ -2792,14 +2794,14 @@ class NullableIntFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (set != null) r'set': _i1.JsonConvertible.serialize(set),
         if (increment != null)
-          'increment': _i1.JsonConvertible.serialize(increment),
+          r'increment': _i1.JsonConvertible.serialize(increment),
         if (decrement != null)
-          'decrement': _i1.JsonConvertible.serialize(decrement),
+          r'decrement': _i1.JsonConvertible.serialize(decrement),
         if (multiply != null)
-          'multiply': _i1.JsonConvertible.serialize(multiply),
-        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+          r'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) r'divide': _i1.JsonConvertible.serialize(divide),
       };
 }
 
@@ -2825,14 +2827,14 @@ class FloatFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (set != null) r'set': _i1.JsonConvertible.serialize(set),
         if (increment != null)
-          'increment': _i1.JsonConvertible.serialize(increment),
+          r'increment': _i1.JsonConvertible.serialize(increment),
         if (decrement != null)
-          'decrement': _i1.JsonConvertible.serialize(decrement),
+          r'decrement': _i1.JsonConvertible.serialize(decrement),
         if (multiply != null)
-          'multiply': _i1.JsonConvertible.serialize(multiply),
-        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+          r'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) r'divide': _i1.JsonConvertible.serialize(divide),
       };
 }
 
@@ -2844,7 +2846,7 @@ class DateTimeFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
+      {if (set != null) r'set': _i1.JsonConvertible.serialize(set)};
 }
 
 class PostUpdateManyWithoutAuthorNestedInput
@@ -2901,22 +2903,22 @@ class PostUpdateManyWithoutAuthorNestedInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (create != null) r'create': _i1.JsonConvertible.serialize(create),
         if (connectOrCreate != null)
-          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
-        if (upsert != null) 'upsert': _i1.JsonConvertible.serialize(upsert),
+          r'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (upsert != null) r'upsert': _i1.JsonConvertible.serialize(upsert),
         if (createMany != null)
-          'createMany': _i1.JsonConvertible.serialize(createMany),
-        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+          r'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (set != null) r'set': _i1.JsonConvertible.serialize(set),
         if (disconnect != null)
-          'disconnect': _i1.JsonConvertible.serialize(disconnect),
-        if (delete != null) 'delete': _i1.JsonConvertible.serialize(delete),
-        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
-        if (update != null) 'update': _i1.JsonConvertible.serialize(update),
+          r'disconnect': _i1.JsonConvertible.serialize(disconnect),
+        if (delete != null) r'delete': _i1.JsonConvertible.serialize(delete),
+        if (connect != null) r'connect': _i1.JsonConvertible.serialize(connect),
+        if (update != null) r'update': _i1.JsonConvertible.serialize(update),
         if (updateMany != null)
-          'updateMany': _i1.JsonConvertible.serialize(updateMany),
+          r'updateMany': _i1.JsonConvertible.serialize(updateMany),
         if (deleteMany != null)
-          'deleteMany': _i1.JsonConvertible.serialize(deleteMany),
+          r'deleteMany': _i1.JsonConvertible.serialize(deleteMany),
       };
 }
 
@@ -2942,14 +2944,14 @@ class IntFieldUpdateOperationsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (set != null) r'set': _i1.JsonConvertible.serialize(set),
         if (increment != null)
-          'increment': _i1.JsonConvertible.serialize(increment),
+          r'increment': _i1.JsonConvertible.serialize(increment),
         if (decrement != null)
-          'decrement': _i1.JsonConvertible.serialize(decrement),
+          r'decrement': _i1.JsonConvertible.serialize(decrement),
         if (multiply != null)
-          'multiply': _i1.JsonConvertible.serialize(multiply),
-        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+          r'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) r'divide': _i1.JsonConvertible.serialize(divide),
       };
 }
 
@@ -3007,22 +3009,22 @@ class PostUncheckedUpdateManyWithoutAuthorNestedInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (create != null) r'create': _i1.JsonConvertible.serialize(create),
         if (connectOrCreate != null)
-          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
-        if (upsert != null) 'upsert': _i1.JsonConvertible.serialize(upsert),
+          r'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (upsert != null) r'upsert': _i1.JsonConvertible.serialize(upsert),
         if (createMany != null)
-          'createMany': _i1.JsonConvertible.serialize(createMany),
-        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+          r'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (set != null) r'set': _i1.JsonConvertible.serialize(set),
         if (disconnect != null)
-          'disconnect': _i1.JsonConvertible.serialize(disconnect),
-        if (delete != null) 'delete': _i1.JsonConvertible.serialize(delete),
-        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
-        if (update != null) 'update': _i1.JsonConvertible.serialize(update),
+          r'disconnect': _i1.JsonConvertible.serialize(disconnect),
+        if (delete != null) r'delete': _i1.JsonConvertible.serialize(delete),
+        if (connect != null) r'connect': _i1.JsonConvertible.serialize(connect),
+        if (update != null) r'update': _i1.JsonConvertible.serialize(update),
         if (updateMany != null)
-          'updateMany': _i1.JsonConvertible.serialize(updateMany),
+          r'updateMany': _i1.JsonConvertible.serialize(updateMany),
         if (deleteMany != null)
-          'deleteMany': _i1.JsonConvertible.serialize(deleteMany),
+          r'deleteMany': _i1.JsonConvertible.serialize(deleteMany),
       };
 }
 
@@ -3043,10 +3045,10 @@ class UserCreateNestedOneWithoutPostsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (create != null) r'create': _i1.JsonConvertible.serialize(create),
         if (connectOrCreate != null)
-          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
-        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+          r'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (connect != null) r'connect': _i1.JsonConvertible.serialize(connect),
       };
 }
 
@@ -3076,12 +3078,12 @@ class UserUpdateOneRequiredWithoutPostsNestedInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (create != null) r'create': _i1.JsonConvertible.serialize(create),
         if (connectOrCreate != null)
-          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
-        if (upsert != null) 'upsert': _i1.JsonConvertible.serialize(upsert),
-        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
-        if (update != null) 'update': _i1.JsonConvertible.serialize(update),
+          r'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (upsert != null) r'upsert': _i1.JsonConvertible.serialize(upsert),
+        if (connect != null) r'connect': _i1.JsonConvertible.serialize(connect),
+        if (update != null) r'update': _i1.JsonConvertible.serialize(update),
       };
 }
 
@@ -3115,14 +3117,14 @@ class NestedIntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3166,20 +3168,20 @@ class NestedStringFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (contains != null)
-          'contains': _i1.JsonConvertible.serialize(contains),
+          r'contains': _i1.JsonConvertible.serialize(contains),
         if (startsWith != null)
-          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+          r'startsWith': _i1.JsonConvertible.serialize(startsWith),
         if (endsWith != null)
-          'endsWith': _i1.JsonConvertible.serialize(endsWith),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+          r'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3202,10 +3204,10 @@ class NestedEnumRoleFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3243,14 +3245,14 @@ class NestedDecimalFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3285,14 +3287,14 @@ class NestedBigIntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3316,10 +3318,10 @@ class NestedBytesFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3359,14 +3361,14 @@ class NestedIntNullableFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3401,14 +3403,14 @@ class NestedFloatFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3445,14 +3447,14 @@ class NestedDateTimeFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3502,19 +3504,19 @@ class NestedIntWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -3568,23 +3570,23 @@ class NestedStringWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (contains != null)
-          'contains': _i1.JsonConvertible.serialize(contains),
+          r'contains': _i1.JsonConvertible.serialize(contains),
         if (startsWith != null)
-          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+          r'startsWith': _i1.JsonConvertible.serialize(startsWith),
         if (endsWith != null)
-          'endsWith': _i1.JsonConvertible.serialize(endsWith),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+          r'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -3616,13 +3618,13 @@ class NestedEnumRoleWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -3676,19 +3678,19 @@ class NestedDecimalWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -3739,19 +3741,19 @@ class NestedBigIntWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -3785,13 +3787,13 @@ class NestedBytesWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -3850,25 +3852,26 @@ class NestedJsonNullableFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if (path != null) 'path': _i1.JsonConvertible.serialize(path),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if (path != null) r'path': _i1.JsonConvertible.serialize(path),
         if (stringContains != null)
-          'string_contains': _i1.JsonConvertible.serialize(stringContains),
+          r'string_contains': _i1.JsonConvertible.serialize(stringContains),
         if (stringStartsWith != null)
-          'string_starts_with': _i1.JsonConvertible.serialize(stringStartsWith),
+          r'string_starts_with':
+              _i1.JsonConvertible.serialize(stringStartsWith),
         if (stringEndsWith != null)
-          'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
+          r'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
         if (arrayContains != null)
-          'array_contains': _i1.JsonConvertible.serialize(arrayContains),
+          r'array_contains': _i1.JsonConvertible.serialize(arrayContains),
         if (arrayStartsWith != null)
-          'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
+          r'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
         if (arrayEndsWith != null)
-          'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+          r'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -3925,19 +3928,19 @@ class NestedIntNullableWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -3976,14 +3979,14 @@ class NestedFloatNullableFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
       };
 }
 
@@ -4034,19 +4037,19 @@ class NestedFloatWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -4092,17 +4095,17 @@ class NestedDateTimeWithAggregatesFilter
 
   @override
   Map<String, dynamic> toJson() => {
-        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
-        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
-        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
-        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
-        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
-        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
-        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
-        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (equals != null) r'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) r'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) r'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) r'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
       };
 }
 
@@ -4119,7 +4122,7 @@ class PostCreateWithoutAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'title': _i1.JsonConvertible.serialize(title),
       };
 }
@@ -4137,7 +4140,7 @@ class PostUncheckedCreateWithoutAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'title': _i1.JsonConvertible.serialize(title),
       };
 }
@@ -4177,7 +4180,7 @@ class PostCreateManyAuthorInputEnvelope
   Map<String, dynamic> toJson() => {
         'data': _i1.JsonConvertible.serialize(data),
         if (skipDuplicates != null)
-          'skipDuplicates': _i1.JsonConvertible.serialize(skipDuplicates),
+          r'skipDuplicates': _i1.JsonConvertible.serialize(skipDuplicates),
       };
 }
 
@@ -4270,12 +4273,12 @@ class PostScalarWhereInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
-        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
-        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
-        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (AND != null) r'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) r'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) r'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
       };
 }
 
@@ -4314,15 +4317,15 @@ class UserCreateWithoutPostsInput
   @override
   Map<String, dynamic> toJson() => {
         'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
         'price': _i1.JsonConvertible.serialize(price),
         'size': _i1.JsonConvertible.serialize(size),
         'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
         'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -4363,17 +4366,17 @@ class UserUncheckedCreateWithoutPostsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
         'price': _i1.JsonConvertible.serialize(price),
         'size': _i1.JsonConvertible.serialize(size),
         'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
         'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -4416,7 +4419,7 @@ class UserUpsertWithoutPostsInput
   Map<String, dynamic> toJson() => {
         'update': _i1.JsonConvertible.serialize(update),
         'create': _i1.JsonConvertible.serialize(create),
-        if (where != null) 'where': _i1.JsonConvertible.serialize(where),
+        if (where != null) r'where': _i1.JsonConvertible.serialize(where),
       };
 }
 
@@ -4434,7 +4437,7 @@ class UserUpdateToOneWithWhereWithoutPostsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (where != null) 'where': _i1.JsonConvertible.serialize(where),
+        if (where != null) r'where': _i1.JsonConvertible.serialize(where),
         'data': _i1.JsonConvertible.serialize(data),
       };
 }
@@ -4477,16 +4480,16 @@ class UserUpdateWithoutPostsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -4531,17 +4534,17 @@ class UserUncheckedUpdateWithoutPostsInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
-        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
-        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
-        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
-        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
-        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
-        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) r'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) r'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) r'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) r'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) r'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) r'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
         if (createdAt != null)
-          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+          r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
 }
 
@@ -4558,7 +4561,7 @@ class PostCreateManyAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         'title': _i1.JsonConvertible.serialize(title),
       };
 }
@@ -4576,8 +4579,8 @@ class PostUpdateWithoutAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
       };
 }
 
@@ -4594,8 +4597,8 @@ class PostUncheckedUpdateWithoutAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
       };
 }
 
@@ -4612,7 +4615,7 @@ class PostUncheckedUpdateManyWithoutAuthorInput
 
   @override
   Map<String, dynamic> toJson() => {
-        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
-        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (id != null) r'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) r'title': _i1.JsonConvertible.serialize(title),
       };
 }
