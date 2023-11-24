@@ -144,7 +144,7 @@ enum NullsOrder implements _i1.PrismaEnum {
   String toPrismaEnumName() => _prismaEnumName;
 }
 
-class UserWhereInput {
+class UserWhereInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserWhereInput({
     this.AND,
     this.OR,
@@ -191,9 +191,29 @@ class UserWhereInput {
   final _i1.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
 
   final PostListRelationFilter? posts;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+      };
 }
 
-class UserOrderByWithRelationInput {
+class UserOrderByWithRelationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserOrderByWithRelationInput({
     this.id,
     this.name,
@@ -229,9 +249,26 @@ class UserOrderByWithRelationInput {
   final SortOrder? createdAt;
 
   final PostOrderByRelationAggregateInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+      };
 }
 
-class UserWhereUniqueInput {
+class UserWhereUniqueInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserWhereUniqueInput({
     this.id,
     this.AND,
@@ -278,9 +315,29 @@ class UserWhereUniqueInput {
   final _i1.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
 
   final PostListRelationFilter? posts;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+      };
 }
 
-class UserOrderByWithAggregationInput {
+class UserOrderByWithAggregationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserOrderByWithAggregationInput({
     this.id,
     this.name,
@@ -328,9 +385,30 @@ class UserOrderByWithAggregationInput {
   final UserMinOrderByAggregateInput? min;
 
   final UserSumOrderByAggregateInput? sum;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+      };
 }
 
-class UserScalarWhereWithAggregatesInput {
+class UserScalarWhereWithAggregatesInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserScalarWhereWithAggregatesInput({
     this.AND,
     this.OR,
@@ -375,9 +453,27 @@ class UserScalarWhereWithAggregatesInput {
   final _i1.PrismaUnion<FloatWithAggregatesFilter, double>? demo;
 
   final _i1.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class PostWhereInput {
+class PostWhereInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostWhereInput({
     this.AND,
     this.OR,
@@ -401,9 +497,21 @@ class PostWhereInput {
   final _i1.PrismaUnion<IntFilter, int>? userId;
 
   final _i1.PrismaUnion<UserRelationFilter, UserWhereInput>? author;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+      };
 }
 
-class PostOrderByWithRelationInput {
+class PostOrderByWithRelationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostOrderByWithRelationInput({
     this.id,
     this.title,
@@ -418,9 +526,18 @@ class PostOrderByWithRelationInput {
   final SortOrder? userId;
 
   final UserOrderByWithRelationInput? author;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+      };
 }
 
-class PostWhereUniqueInput {
+class PostWhereUniqueInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostWhereUniqueInput({
     this.id,
     this.AND,
@@ -444,9 +561,21 @@ class PostWhereUniqueInput {
   final _i1.PrismaUnion<IntFilter, int>? userId;
 
   final _i1.PrismaUnion<UserRelationFilter, UserWhereInput>? author;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+      };
 }
 
-class PostOrderByWithAggregationInput {
+class PostOrderByWithAggregationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostOrderByWithAggregationInput({
     this.id,
     this.title,
@@ -473,9 +602,22 @@ class PostOrderByWithAggregationInput {
   final PostMinOrderByAggregateInput? min;
 
   final PostSumOrderByAggregateInput? sum;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+      };
 }
 
-class PostScalarWhereWithAggregatesInput {
+class PostScalarWhereWithAggregatesInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostScalarWhereWithAggregatesInput({
     this.AND,
     this.OR,
@@ -498,9 +640,19 @@ class PostScalarWhereWithAggregatesInput {
   final _i1.PrismaUnion<StringWithAggregatesFilter, String>? title;
 
   final _i1.PrismaUnion<IntWithAggregatesFilter, int>? userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class UserCreateInput {
+class UserCreateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserCreateInput({
     required this.name,
     this.role,
@@ -533,9 +685,25 @@ class UserCreateInput {
   final DateTime? createdAt;
 
   final PostCreateNestedManyWithoutAuthorInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        'price': _i1.JsonConvertible.serialize(price),
+        'size': _i1.JsonConvertible.serialize(size),
+        'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+      };
 }
 
-class UserUncheckedCreateInput {
+class UserUncheckedCreateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUncheckedCreateInput({
     this.id,
     required this.name,
@@ -571,9 +739,25 @@ class UserUncheckedCreateInput {
   final DateTime? createdAt;
 
   final PostUncheckedCreateNestedManyWithoutAuthorInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        'price': _i1.JsonConvertible.serialize(price),
+        'size': _i1.JsonConvertible.serialize(size),
+        'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+      };
 }
 
-class UserUpdateInput {
+class UserUpdateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUpdateInput({
     this.name,
     this.role,
@@ -610,9 +794,25 @@ class UserUpdateInput {
       createdAt;
 
   final PostUpdateManyWithoutAuthorNestedInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+      };
 }
 
-class UserUncheckedUpdateInput {
+class UserUncheckedUpdateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUncheckedUpdateInput({
     this.id,
     this.name,
@@ -652,9 +852,25 @@ class UserUncheckedUpdateInput {
       createdAt;
 
   final PostUncheckedUpdateManyWithoutAuthorNestedInput? posts;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+        if (posts != null) 'posts': _i1.JsonConvertible.serialize(posts),
+      };
 }
 
-class UserCreateManyInput {
+class UserCreateManyInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserCreateManyInput({
     this.id,
     required this.name,
@@ -687,9 +903,25 @@ class UserCreateManyInput {
   final double demo;
 
   final DateTime? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        'price': _i1.JsonConvertible.serialize(price),
+        'size': _i1.JsonConvertible.serialize(size),
+        'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserUpdateManyMutationInput {
+class UserUpdateManyMutationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUpdateManyMutationInput({
     this.name,
     this.role,
@@ -723,9 +955,24 @@ class UserUpdateManyMutationInput {
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserUncheckedUpdateManyInput {
+class UserUncheckedUpdateManyInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUncheckedUpdateManyInput({
     this.id,
     this.name,
@@ -762,9 +1009,24 @@ class UserUncheckedUpdateManyInput {
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class PostCreateInput {
+class PostCreateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCreateInput({
     this.id,
     required this.title,
@@ -776,9 +1038,17 @@ class PostCreateInput {
   final String title;
 
   final UserCreateNestedOneWithoutPostsInput author;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'title': _i1.JsonConvertible.serialize(title),
+        'author': _i1.JsonConvertible.serialize(author),
+      };
 }
 
-class PostUncheckedCreateInput {
+class PostUncheckedCreateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedCreateInput({
     this.id,
     required this.title,
@@ -790,9 +1060,16 @@ class PostUncheckedCreateInput {
   final String title;
 
   final int userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'title': _i1.JsonConvertible.serialize(title),
+        'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class PostUpdateInput {
+class PostUpdateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUpdateInput({
     this.id,
     this.title,
@@ -804,9 +1081,17 @@ class PostUpdateInput {
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
 
   final UserUpdateOneRequiredWithoutPostsNestedInput? author;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (author != null) 'author': _i1.JsonConvertible.serialize(author),
+      };
 }
 
-class PostUncheckedUpdateInput {
+class PostUncheckedUpdateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedUpdateInput({
     this.id,
     this.title,
@@ -818,9 +1103,16 @@ class PostUncheckedUpdateInput {
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
 
   final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput>? userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class PostCreateManyInput {
+class PostCreateManyInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCreateManyInput({
     this.id,
     required this.title,
@@ -832,9 +1124,17 @@ class PostCreateManyInput {
   final String title;
 
   final int userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'title': _i1.JsonConvertible.serialize(title),
+        'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class PostUpdateManyMutationInput {
+class PostUpdateManyMutationInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUpdateManyMutationInput({
     this.id,
     this.title,
@@ -843,9 +1143,16 @@ class PostUpdateManyMutationInput {
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+      };
 }
 
-class PostUncheckedUpdateManyInput {
+class PostUncheckedUpdateManyInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedUpdateManyInput({
     this.id,
     this.title,
@@ -857,9 +1164,16 @@ class PostUncheckedUpdateManyInput {
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
 
   final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput>? userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class IntFilter {
+class IntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const IntFilter({
     this.equals,
     this.$in,
@@ -886,9 +1200,21 @@ class IntFilter {
   final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
 
   final _i1.PrismaUnion<int, NestedIntFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class StringFilter {
+class StringFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StringFilter({
     this.equals,
     this.$in,
@@ -928,9 +1254,28 @@ class StringFilter {
   final QueryMode? mode;
 
   final _i1.PrismaUnion<String, NestedStringFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (contains != null)
+          'contains': _i1.JsonConvertible.serialize(contains),
+        if (startsWith != null)
+          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+        if (endsWith != null)
+          'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (mode != null) 'mode': _i1.JsonConvertible.serialize(mode),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class EnumRoleFilter {
+class EnumRoleFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const EnumRoleFilter({
     this.equals,
     this.$in,
@@ -945,9 +1290,17 @@ class EnumRoleFilter {
   final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? notIn;
 
   final _i1.PrismaUnion<Role, NestedEnumRoleFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class DecimalFilter {
+class DecimalFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const DecimalFilter({
     this.equals,
     this.$in,
@@ -978,9 +1331,21 @@ class DecimalFilter {
   final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gte;
 
   final _i1.PrismaUnion<_i1.Decimal, NestedDecimalFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class BigIntFilter {
+class BigIntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const BigIntFilter({
     this.equals,
     this.$in,
@@ -1008,9 +1373,21 @@ class BigIntFilter {
   final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gte;
 
   final _i1.PrismaUnion<BigInt, NestedBigIntFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class BytesFilter {
+class BytesFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const BytesFilter({
     this.equals,
     this.$in,
@@ -1027,9 +1404,17 @@ class BytesFilter {
       _i1.FieldRef<Iterable<_i2.Uint8List>>>? notIn;
 
   final _i1.PrismaUnion<_i2.Uint8List, NestedBytesFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class JsonNullableFilter {
+class JsonNullableFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const JsonNullableFilter({
     this.equals,
     this.path,
@@ -1080,9 +1465,32 @@ class JsonNullableFilter {
 
   final _i1.PrismaUnion<_i1.PrismaJson,
       _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if (path != null) 'path': _i1.JsonConvertible.serialize(path),
+        if (stringContains != null)
+          'string_contains': _i1.JsonConvertible.serialize(stringContains),
+        if (stringStartsWith != null)
+          'string_starts_with': _i1.JsonConvertible.serialize(stringStartsWith),
+        if (stringEndsWith != null)
+          'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
+        if (arrayContains != null)
+          'array_contains': _i1.JsonConvertible.serialize(arrayContains),
+        if (arrayStartsWith != null)
+          'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
+        if (arrayEndsWith != null)
+          'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class IntNullableFilter {
+class IntNullableFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const IntNullableFilter({
     this.equals,
     this.$in,
@@ -1114,9 +1522,21 @@ class IntNullableFilter {
 
   final _i1.PrismaUnion<int,
       _i1.PrismaUnion<NestedIntNullableFilter, _i1.PrismaNull>>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class FloatFilter {
+class FloatFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const FloatFilter({
     this.equals,
     this.$in,
@@ -1144,9 +1564,21 @@ class FloatFilter {
   final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gte;
 
   final _i1.PrismaUnion<double, NestedFloatFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class DateTimeFilter {
+class DateTimeFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const DateTimeFilter({
     this.equals,
     this.$in,
@@ -1175,9 +1607,22 @@ class DateTimeFilter {
   final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gte;
 
   final _i1.PrismaUnion<DateTime, NestedDateTimeFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class PostListRelationFilter {
+class PostListRelationFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostListRelationFilter({
     this.every,
     this.some,
@@ -1189,9 +1634,16 @@ class PostListRelationFilter {
   final PostWhereInput? some;
 
   final PostWhereInput? none;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (every != null) 'every': _i1.JsonConvertible.serialize(every),
+        if (some != null) 'some': _i1.JsonConvertible.serialize(some),
+        if (none != null) 'none': _i1.JsonConvertible.serialize(none),
+      };
 }
 
-class SortOrderInput {
+class SortOrderInput implements _i1.JsonConvertible<Map<String, dynamic>> {
   const SortOrderInput({
     required this.sort,
     this.nulls,
@@ -1200,15 +1652,27 @@ class SortOrderInput {
   final SortOrder sort;
 
   final NullsOrder? nulls;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'sort': _i1.JsonConvertible.serialize(sort),
+        if (nulls != null) 'nulls': _i1.JsonConvertible.serialize(nulls),
+      };
 }
 
-class PostOrderByRelationAggregateInput {
+class PostOrderByRelationAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostOrderByRelationAggregateInput({this.count});
 
   final SortOrder? count;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {if (count != null) '_count': _i1.JsonConvertible.serialize(count)};
 }
 
-class UserCountOrderByAggregateInput {
+class UserCountOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserCountOrderByAggregateInput({
     this.id,
     this.name,
@@ -1241,9 +1705,25 @@ class UserCountOrderByAggregateInput {
   final SortOrder? demo;
 
   final SortOrder? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserAvgOrderByAggregateInput {
+class UserAvgOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserAvgOrderByAggregateInput({
     this.id,
     this.price,
@@ -1261,9 +1741,19 @@ class UserAvgOrderByAggregateInput {
   final SortOrder? age;
 
   final SortOrder? demo;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+      };
 }
 
-class UserMaxOrderByAggregateInput {
+class UserMaxOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserMaxOrderByAggregateInput({
     this.id,
     this.name,
@@ -1293,9 +1783,24 @@ class UserMaxOrderByAggregateInput {
   final SortOrder? demo;
 
   final SortOrder? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserMinOrderByAggregateInput {
+class UserMinOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserMinOrderByAggregateInput({
     this.id,
     this.name,
@@ -1325,9 +1830,24 @@ class UserMinOrderByAggregateInput {
   final SortOrder? demo;
 
   final SortOrder? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserSumOrderByAggregateInput {
+class UserSumOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserSumOrderByAggregateInput({
     this.id,
     this.price,
@@ -1345,9 +1865,19 @@ class UserSumOrderByAggregateInput {
   final SortOrder? age;
 
   final SortOrder? demo;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+      };
 }
 
-class IntWithAggregatesFilter {
+class IntWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const IntWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1389,9 +1919,27 @@ class IntWithAggregatesFilter {
   final NestedIntFilter? min;
 
   final NestedIntFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class StringWithAggregatesFilter {
+class StringWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StringWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1440,9 +1988,32 @@ class StringWithAggregatesFilter {
   final NestedStringFilter? min;
 
   final NestedStringFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (contains != null)
+          'contains': _i1.JsonConvertible.serialize(contains),
+        if (startsWith != null)
+          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+        if (endsWith != null)
+          'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (mode != null) 'mode': _i1.JsonConvertible.serialize(mode),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class EnumRoleWithAggregatesFilter {
+class EnumRoleWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const EnumRoleWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1466,9 +2037,21 @@ class EnumRoleWithAggregatesFilter {
   final NestedEnumRoleFilter? min;
 
   final NestedEnumRoleFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class DecimalWithAggregatesFilter {
+class DecimalWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const DecimalWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1514,9 +2097,27 @@ class DecimalWithAggregatesFilter {
   final NestedDecimalFilter? min;
 
   final NestedDecimalFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class BigIntWithAggregatesFilter {
+class BigIntWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const BigIntWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1559,9 +2160,27 @@ class BigIntWithAggregatesFilter {
   final NestedBigIntFilter? min;
 
   final NestedBigIntFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class BytesWithAggregatesFilter {
+class BytesWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const BytesWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1587,9 +2206,21 @@ class BytesWithAggregatesFilter {
   final NestedBytesFilter? min;
 
   final NestedBytesFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class JsonNullableWithAggregatesFilter {
+class JsonNullableWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const JsonNullableWithAggregatesFilter({
     this.equals,
     this.path,
@@ -1649,9 +2280,36 @@ class JsonNullableWithAggregatesFilter {
   final NestedJsonNullableFilter? min;
 
   final NestedJsonNullableFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if (path != null) 'path': _i1.JsonConvertible.serialize(path),
+        if (stringContains != null)
+          'string_contains': _i1.JsonConvertible.serialize(stringContains),
+        if (stringStartsWith != null)
+          'string_starts_with': _i1.JsonConvertible.serialize(stringStartsWith),
+        if (stringEndsWith != null)
+          'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
+        if (arrayContains != null)
+          'array_contains': _i1.JsonConvertible.serialize(arrayContains),
+        if (arrayStartsWith != null)
+          'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
+        if (arrayEndsWith != null)
+          'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class IntNullableWithAggregatesFilter {
+class IntNullableWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const IntNullableWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1700,9 +2358,27 @@ class IntNullableWithAggregatesFilter {
   final NestedIntNullableFilter? min;
 
   final NestedIntNullableFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class FloatWithAggregatesFilter {
+class FloatWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const FloatWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1745,9 +2421,27 @@ class FloatWithAggregatesFilter {
   final NestedFloatFilter? min;
 
   final NestedFloatFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class DateTimeWithAggregatesFilter {
+class DateTimeWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const DateTimeWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -1785,9 +2479,24 @@ class DateTimeWithAggregatesFilter {
   final NestedDateTimeFilter? min;
 
   final NestedDateTimeFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class UserRelationFilter {
+class UserRelationFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserRelationFilter({
     this.$is,
     this.isNot,
@@ -1796,9 +2505,16 @@ class UserRelationFilter {
   final UserWhereInput? $is;
 
   final UserWhereInput? isNot;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if ($is != null) 'is': _i1.JsonConvertible.serialize($is),
+        if (isNot != null) 'isNot': _i1.JsonConvertible.serialize(isNot),
+      };
 }
 
-class PostCountOrderByAggregateInput {
+class PostCountOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCountOrderByAggregateInput({
     this.id,
     this.title,
@@ -1810,15 +2526,28 @@ class PostCountOrderByAggregateInput {
   final SortOrder? title;
 
   final SortOrder? userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class PostAvgOrderByAggregateInput {
+class PostAvgOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostAvgOrderByAggregateInput({this.userId});
 
   final SortOrder? userId;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId)};
 }
 
-class PostMaxOrderByAggregateInput {
+class PostMaxOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostMaxOrderByAggregateInput({
     this.id,
     this.title,
@@ -1830,9 +2559,17 @@ class PostMaxOrderByAggregateInput {
   final SortOrder? title;
 
   final SortOrder? userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class PostMinOrderByAggregateInput {
+class PostMinOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostMinOrderByAggregateInput({
     this.id,
     this.title,
@@ -1844,15 +2581,28 @@ class PostMinOrderByAggregateInput {
   final SortOrder? title;
 
   final SortOrder? userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class PostSumOrderByAggregateInput {
+class PostSumOrderByAggregateInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostSumOrderByAggregateInput({this.userId});
 
   final SortOrder? userId;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId)};
 }
 
-class PostCreateNestedManyWithoutAuthorInput {
+class PostCreateNestedManyWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCreateNestedManyWithoutAuthorInput({
     this.create,
     this.connectOrCreate,
@@ -1874,9 +2624,20 @@ class PostCreateNestedManyWithoutAuthorInput {
 
   final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
       connect;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (connectOrCreate != null)
+          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (createMany != null)
+          'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+      };
 }
 
-class PostUncheckedCreateNestedManyWithoutAuthorInput {
+class PostUncheckedCreateNestedManyWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedCreateNestedManyWithoutAuthorInput({
     this.create,
     this.connectOrCreate,
@@ -1898,21 +2659,42 @@ class PostUncheckedCreateNestedManyWithoutAuthorInput {
 
   final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
       connect;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (connectOrCreate != null)
+          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (createMany != null)
+          'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+      };
 }
 
-class StringFieldUpdateOperationsInput {
+class StringFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const StringFieldUpdateOperationsInput({this.set});
 
   final String? set;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
 }
 
-class EnumRoleFieldUpdateOperationsInput {
+class EnumRoleFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const EnumRoleFieldUpdateOperationsInput({this.set});
 
   final Role? set;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
 }
 
-class DecimalFieldUpdateOperationsInput {
+class DecimalFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const DecimalFieldUpdateOperationsInput({
     this.set,
     this.increment,
@@ -1930,9 +2712,22 @@ class DecimalFieldUpdateOperationsInput {
   final _i1.Decimal? multiply;
 
   final _i1.Decimal? divide;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (increment != null)
+          'increment': _i1.JsonConvertible.serialize(increment),
+        if (decrement != null)
+          'decrement': _i1.JsonConvertible.serialize(decrement),
+        if (multiply != null)
+          'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+      };
 }
 
-class BigIntFieldUpdateOperationsInput {
+class BigIntFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const BigIntFieldUpdateOperationsInput({
     this.set,
     this.increment,
@@ -1950,15 +2745,33 @@ class BigIntFieldUpdateOperationsInput {
   final BigInt? multiply;
 
   final BigInt? divide;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (increment != null)
+          'increment': _i1.JsonConvertible.serialize(increment),
+        if (decrement != null)
+          'decrement': _i1.JsonConvertible.serialize(decrement),
+        if (multiply != null)
+          'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+      };
 }
 
-class BytesFieldUpdateOperationsInput {
+class BytesFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const BytesFieldUpdateOperationsInput({this.set});
 
   final _i2.Uint8List? set;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
 }
 
-class NullableIntFieldUpdateOperationsInput {
+class NullableIntFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NullableIntFieldUpdateOperationsInput({
     this.set,
     this.increment,
@@ -1976,9 +2789,22 @@ class NullableIntFieldUpdateOperationsInput {
   final int? multiply;
 
   final int? divide;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (increment != null)
+          'increment': _i1.JsonConvertible.serialize(increment),
+        if (decrement != null)
+          'decrement': _i1.JsonConvertible.serialize(decrement),
+        if (multiply != null)
+          'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+      };
 }
 
-class FloatFieldUpdateOperationsInput {
+class FloatFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const FloatFieldUpdateOperationsInput({
     this.set,
     this.increment,
@@ -1996,15 +2822,33 @@ class FloatFieldUpdateOperationsInput {
   final double? multiply;
 
   final double? divide;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (increment != null)
+          'increment': _i1.JsonConvertible.serialize(increment),
+        if (decrement != null)
+          'decrement': _i1.JsonConvertible.serialize(decrement),
+        if (multiply != null)
+          'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+      };
 }
 
-class DateTimeFieldUpdateOperationsInput {
+class DateTimeFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const DateTimeFieldUpdateOperationsInput({this.set});
 
   final DateTime? set;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {if (set != null) 'set': _i1.JsonConvertible.serialize(set)};
 }
 
-class PostUpdateManyWithoutAuthorNestedInput {
+class PostUpdateManyWithoutAuthorNestedInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUpdateManyWithoutAuthorNestedInput({
     this.create,
     this.connectOrCreate,
@@ -2054,9 +2898,30 @@ class PostUpdateManyWithoutAuthorNestedInput {
 
   final _i1.PrismaUnion<PostScalarWhereInput, Iterable<PostScalarWhereInput>>?
       deleteMany;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (connectOrCreate != null)
+          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (upsert != null) 'upsert': _i1.JsonConvertible.serialize(upsert),
+        if (createMany != null)
+          'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (disconnect != null)
+          'disconnect': _i1.JsonConvertible.serialize(disconnect),
+        if (delete != null) 'delete': _i1.JsonConvertible.serialize(delete),
+        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+        if (update != null) 'update': _i1.JsonConvertible.serialize(update),
+        if (updateMany != null)
+          'updateMany': _i1.JsonConvertible.serialize(updateMany),
+        if (deleteMany != null)
+          'deleteMany': _i1.JsonConvertible.serialize(deleteMany),
+      };
 }
 
-class IntFieldUpdateOperationsInput {
+class IntFieldUpdateOperationsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const IntFieldUpdateOperationsInput({
     this.set,
     this.increment,
@@ -2074,9 +2939,22 @@ class IntFieldUpdateOperationsInput {
   final int? multiply;
 
   final int? divide;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (increment != null)
+          'increment': _i1.JsonConvertible.serialize(increment),
+        if (decrement != null)
+          'decrement': _i1.JsonConvertible.serialize(decrement),
+        if (multiply != null)
+          'multiply': _i1.JsonConvertible.serialize(multiply),
+        if (divide != null) 'divide': _i1.JsonConvertible.serialize(divide),
+      };
 }
 
-class PostUncheckedUpdateManyWithoutAuthorNestedInput {
+class PostUncheckedUpdateManyWithoutAuthorNestedInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedUpdateManyWithoutAuthorNestedInput({
     this.create,
     this.connectOrCreate,
@@ -2126,9 +3004,30 @@ class PostUncheckedUpdateManyWithoutAuthorNestedInput {
 
   final _i1.PrismaUnion<PostScalarWhereInput, Iterable<PostScalarWhereInput>>?
       deleteMany;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (connectOrCreate != null)
+          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (upsert != null) 'upsert': _i1.JsonConvertible.serialize(upsert),
+        if (createMany != null)
+          'createMany': _i1.JsonConvertible.serialize(createMany),
+        if (set != null) 'set': _i1.JsonConvertible.serialize(set),
+        if (disconnect != null)
+          'disconnect': _i1.JsonConvertible.serialize(disconnect),
+        if (delete != null) 'delete': _i1.JsonConvertible.serialize(delete),
+        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+        if (update != null) 'update': _i1.JsonConvertible.serialize(update),
+        if (updateMany != null)
+          'updateMany': _i1.JsonConvertible.serialize(updateMany),
+        if (deleteMany != null)
+          'deleteMany': _i1.JsonConvertible.serialize(deleteMany),
+      };
 }
 
-class UserCreateNestedOneWithoutPostsInput {
+class UserCreateNestedOneWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserCreateNestedOneWithoutPostsInput({
     this.create,
     this.connectOrCreate,
@@ -2141,9 +3040,18 @@ class UserCreateNestedOneWithoutPostsInput {
   final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
 
   final UserWhereUniqueInput? connect;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (connectOrCreate != null)
+          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+      };
 }
 
-class UserUpdateOneRequiredWithoutPostsNestedInput {
+class UserUpdateOneRequiredWithoutPostsNestedInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUpdateOneRequiredWithoutPostsNestedInput({
     this.create,
     this.connectOrCreate,
@@ -2165,9 +3073,19 @@ class UserUpdateOneRequiredWithoutPostsNestedInput {
       UserUpdateToOneWithWhereWithoutPostsInput,
       _i1.PrismaUnion<UserUpdateWithoutPostsInput,
           UserUncheckedUpdateWithoutPostsInput>>? update;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (create != null) 'create': _i1.JsonConvertible.serialize(create),
+        if (connectOrCreate != null)
+          'connectOrCreate': _i1.JsonConvertible.serialize(connectOrCreate),
+        if (upsert != null) 'upsert': _i1.JsonConvertible.serialize(upsert),
+        if (connect != null) 'connect': _i1.JsonConvertible.serialize(connect),
+        if (update != null) 'update': _i1.JsonConvertible.serialize(update),
+      };
 }
 
-class NestedIntFilter {
+class NestedIntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedIntFilter({
     this.equals,
     this.$in,
@@ -2194,9 +3112,21 @@ class NestedIntFilter {
   final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
 
   final _i1.PrismaUnion<int, NestedIntFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedStringFilter {
+class NestedStringFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedStringFilter({
     this.equals,
     this.$in,
@@ -2233,9 +3163,28 @@ class NestedStringFilter {
   final _i1.PrismaUnion<String, _i1.FieldRef<String>>? endsWith;
 
   final _i1.PrismaUnion<String, NestedStringFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (contains != null)
+          'contains': _i1.JsonConvertible.serialize(contains),
+        if (startsWith != null)
+          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+        if (endsWith != null)
+          'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedEnumRoleFilter {
+class NestedEnumRoleFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedEnumRoleFilter({
     this.equals,
     this.$in,
@@ -2250,9 +3199,17 @@ class NestedEnumRoleFilter {
   final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? notIn;
 
   final _i1.PrismaUnion<Role, NestedEnumRoleFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedDecimalFilter {
+class NestedDecimalFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedDecimalFilter({
     this.equals,
     this.$in,
@@ -2283,9 +3240,21 @@ class NestedDecimalFilter {
   final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gte;
 
   final _i1.PrismaUnion<_i1.Decimal, NestedDecimalFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedBigIntFilter {
+class NestedBigIntFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedBigIntFilter({
     this.equals,
     this.$in,
@@ -2313,9 +3282,21 @@ class NestedBigIntFilter {
   final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gte;
 
   final _i1.PrismaUnion<BigInt, NestedBigIntFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedBytesFilter {
+class NestedBytesFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedBytesFilter({
     this.equals,
     this.$in,
@@ -2332,9 +3313,18 @@ class NestedBytesFilter {
       _i1.FieldRef<Iterable<_i2.Uint8List>>>? notIn;
 
   final _i1.PrismaUnion<_i2.Uint8List, NestedBytesFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedIntNullableFilter {
+class NestedIntNullableFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedIntNullableFilter({
     this.equals,
     this.$in,
@@ -2366,9 +3356,21 @@ class NestedIntNullableFilter {
 
   final _i1.PrismaUnion<int,
       _i1.PrismaUnion<NestedIntNullableFilter, _i1.PrismaNull>>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedFloatFilter {
+class NestedFloatFilter implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedFloatFilter({
     this.equals,
     this.$in,
@@ -2396,9 +3398,22 @@ class NestedFloatFilter {
   final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gte;
 
   final _i1.PrismaUnion<double, NestedFloatFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedDateTimeFilter {
+class NestedDateTimeFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedDateTimeFilter({
     this.equals,
     this.$in,
@@ -2427,9 +3442,22 @@ class NestedDateTimeFilter {
   final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gte;
 
   final _i1.PrismaUnion<DateTime, NestedDateTimeFilter>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedIntWithAggregatesFilter {
+class NestedIntWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedIntWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2471,9 +3499,27 @@ class NestedIntWithAggregatesFilter {
   final NestedIntFilter? min;
 
   final NestedIntFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedStringWithAggregatesFilter {
+class NestedStringWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedStringWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2519,9 +3565,31 @@ class NestedStringWithAggregatesFilter {
   final NestedStringFilter? min;
 
   final NestedStringFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (contains != null)
+          'contains': _i1.JsonConvertible.serialize(contains),
+        if (startsWith != null)
+          'startsWith': _i1.JsonConvertible.serialize(startsWith),
+        if (endsWith != null)
+          'endsWith': _i1.JsonConvertible.serialize(endsWith),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedEnumRoleWithAggregatesFilter {
+class NestedEnumRoleWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedEnumRoleWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2545,9 +3613,21 @@ class NestedEnumRoleWithAggregatesFilter {
   final NestedEnumRoleFilter? min;
 
   final NestedEnumRoleFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedDecimalWithAggregatesFilter {
+class NestedDecimalWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedDecimalWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2593,9 +3673,27 @@ class NestedDecimalWithAggregatesFilter {
   final NestedDecimalFilter? min;
 
   final NestedDecimalFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedBigIntWithAggregatesFilter {
+class NestedBigIntWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedBigIntWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2638,9 +3736,27 @@ class NestedBigIntWithAggregatesFilter {
   final NestedBigIntFilter? min;
 
   final NestedBigIntFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedBytesWithAggregatesFilter {
+class NestedBytesWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedBytesWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2666,9 +3782,21 @@ class NestedBytesWithAggregatesFilter {
   final NestedBytesFilter? min;
 
   final NestedBytesFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedJsonNullableFilter {
+class NestedJsonNullableFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedJsonNullableFilter({
     this.equals,
     this.path,
@@ -2719,9 +3847,33 @@ class NestedJsonNullableFilter {
 
   final _i1.PrismaUnion<_i1.PrismaJson,
       _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if (path != null) 'path': _i1.JsonConvertible.serialize(path),
+        if (stringContains != null)
+          'string_contains': _i1.JsonConvertible.serialize(stringContains),
+        if (stringStartsWith != null)
+          'string_starts_with': _i1.JsonConvertible.serialize(stringStartsWith),
+        if (stringEndsWith != null)
+          'string_ends_with': _i1.JsonConvertible.serialize(stringEndsWith),
+        if (arrayContains != null)
+          'array_contains': _i1.JsonConvertible.serialize(arrayContains),
+        if (arrayStartsWith != null)
+          'array_starts_with': _i1.JsonConvertible.serialize(arrayStartsWith),
+        if (arrayEndsWith != null)
+          'array_ends_with': _i1.JsonConvertible.serialize(arrayEndsWith),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedIntNullableWithAggregatesFilter {
+class NestedIntNullableWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedIntNullableWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2770,9 +3922,27 @@ class NestedIntNullableWithAggregatesFilter {
   final NestedIntNullableFilter? min;
 
   final NestedIntNullableFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedFloatNullableFilter {
+class NestedFloatNullableFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedFloatNullableFilter({
     this.equals,
     this.$in,
@@ -2803,9 +3973,22 @@ class NestedFloatNullableFilter {
 
   final _i1.PrismaUnion<double,
       _i1.PrismaUnion<NestedFloatNullableFilter, _i1.PrismaNull>>? not;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+      };
 }
 
-class NestedFloatWithAggregatesFilter {
+class NestedFloatWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedFloatWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2848,9 +4031,27 @@ class NestedFloatWithAggregatesFilter {
   final NestedFloatFilter? min;
 
   final NestedFloatFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (avg != null) '_avg': _i1.JsonConvertible.serialize(avg),
+        if (sum != null) '_sum': _i1.JsonConvertible.serialize(sum),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class NestedDateTimeWithAggregatesFilter {
+class NestedDateTimeWithAggregatesFilter
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const NestedDateTimeWithAggregatesFilter({
     this.equals,
     this.$in,
@@ -2888,9 +4089,25 @@ class NestedDateTimeWithAggregatesFilter {
   final NestedDateTimeFilter? min;
 
   final NestedDateTimeFilter? max;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (equals != null) 'equals': _i1.JsonConvertible.serialize(equals),
+        if ($in != null) 'in': _i1.JsonConvertible.serialize($in),
+        if (notIn != null) 'notIn': _i1.JsonConvertible.serialize(notIn),
+        if (lt != null) 'lt': _i1.JsonConvertible.serialize(lt),
+        if (lte != null) 'lte': _i1.JsonConvertible.serialize(lte),
+        if (gt != null) 'gt': _i1.JsonConvertible.serialize(gt),
+        if (gte != null) 'gte': _i1.JsonConvertible.serialize(gte),
+        if (not != null) 'not': _i1.JsonConvertible.serialize(not),
+        if (count != null) '_count': _i1.JsonConvertible.serialize(count),
+        if (min != null) '_min': _i1.JsonConvertible.serialize(min),
+        if (max != null) '_max': _i1.JsonConvertible.serialize(max),
+      };
 }
 
-class PostCreateWithoutAuthorInput {
+class PostCreateWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCreateWithoutAuthorInput({
     this.id,
     required this.title,
@@ -2899,9 +4116,16 @@ class PostCreateWithoutAuthorInput {
   final String? id;
 
   final String title;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'title': _i1.JsonConvertible.serialize(title),
+      };
 }
 
-class PostUncheckedCreateWithoutAuthorInput {
+class PostUncheckedCreateWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedCreateWithoutAuthorInput({
     this.id,
     required this.title,
@@ -2910,9 +4134,16 @@ class PostUncheckedCreateWithoutAuthorInput {
   final String? id;
 
   final String title;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'title': _i1.JsonConvertible.serialize(title),
+      };
 }
 
-class PostCreateOrConnectWithoutAuthorInput {
+class PostCreateOrConnectWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCreateOrConnectWithoutAuthorInput({
     required this.where,
     required this.create,
@@ -2922,9 +4153,16 @@ class PostCreateOrConnectWithoutAuthorInput {
 
   final _i1.PrismaUnion<PostCreateWithoutAuthorInput,
       PostUncheckedCreateWithoutAuthorInput> create;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'where': _i1.JsonConvertible.serialize(where),
+        'create': _i1.JsonConvertible.serialize(create),
+      };
 }
 
-class PostCreateManyAuthorInputEnvelope {
+class PostCreateManyAuthorInputEnvelope
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCreateManyAuthorInputEnvelope({
     required this.data,
     this.skipDuplicates,
@@ -2934,9 +4172,17 @@ class PostCreateManyAuthorInputEnvelope {
       Iterable<PostCreateManyAuthorInput>> data;
 
   final bool? skipDuplicates;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'data': _i1.JsonConvertible.serialize(data),
+        if (skipDuplicates != null)
+          'skipDuplicates': _i1.JsonConvertible.serialize(skipDuplicates),
+      };
 }
 
-class PostUpsertWithWhereUniqueWithoutAuthorInput {
+class PostUpsertWithWhereUniqueWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUpsertWithWhereUniqueWithoutAuthorInput({
     required this.where,
     required this.update,
@@ -2950,9 +4196,17 @@ class PostUpsertWithWhereUniqueWithoutAuthorInput {
 
   final _i1.PrismaUnion<PostCreateWithoutAuthorInput,
       PostUncheckedCreateWithoutAuthorInput> create;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'where': _i1.JsonConvertible.serialize(where),
+        'update': _i1.JsonConvertible.serialize(update),
+        'create': _i1.JsonConvertible.serialize(create),
+      };
 }
 
-class PostUpdateWithWhereUniqueWithoutAuthorInput {
+class PostUpdateWithWhereUniqueWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUpdateWithWhereUniqueWithoutAuthorInput({
     required this.where,
     required this.data,
@@ -2962,9 +4216,16 @@ class PostUpdateWithWhereUniqueWithoutAuthorInput {
 
   final _i1.PrismaUnion<PostUpdateWithoutAuthorInput,
       PostUncheckedUpdateWithoutAuthorInput> data;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'where': _i1.JsonConvertible.serialize(where),
+        'data': _i1.JsonConvertible.serialize(data),
+      };
 }
 
-class PostUpdateManyWithWhereWithoutAuthorInput {
+class PostUpdateManyWithWhereWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUpdateManyWithWhereWithoutAuthorInput({
     required this.where,
     required this.data,
@@ -2974,9 +4235,16 @@ class PostUpdateManyWithWhereWithoutAuthorInput {
 
   final _i1.PrismaUnion<PostUpdateManyMutationInput,
       PostUncheckedUpdateManyWithoutAuthorInput> data;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'where': _i1.JsonConvertible.serialize(where),
+        'data': _i1.JsonConvertible.serialize(data),
+      };
 }
 
-class PostScalarWhereInput {
+class PostScalarWhereInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostScalarWhereInput({
     this.AND,
     this.OR,
@@ -2999,9 +4267,20 @@ class PostScalarWhereInput {
   final _i1.PrismaUnion<StringFilter, String>? title;
 
   final _i1.PrismaUnion<IntFilter, int>? userId;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (AND != null) 'AND': _i1.JsonConvertible.serialize(AND),
+        if (OR != null) 'OR': _i1.JsonConvertible.serialize(OR),
+        if (NOT != null) 'NOT': _i1.JsonConvertible.serialize(NOT),
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+        if (userId != null) 'userId': _i1.JsonConvertible.serialize(userId),
+      };
 }
 
-class UserCreateWithoutPostsInput {
+class UserCreateWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserCreateWithoutPostsInput({
     required this.name,
     this.role,
@@ -3031,9 +4310,24 @@ class UserCreateWithoutPostsInput {
   final double demo;
 
   final DateTime? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        'price': _i1.JsonConvertible.serialize(price),
+        'size': _i1.JsonConvertible.serialize(size),
+        'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserUncheckedCreateWithoutPostsInput {
+class UserUncheckedCreateWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUncheckedCreateWithoutPostsInput({
     this.id,
     required this.name,
@@ -3066,9 +4360,25 @@ class UserUncheckedCreateWithoutPostsInput {
   final double demo;
 
   final DateTime? createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        'price': _i1.JsonConvertible.serialize(price),
+        'size': _i1.JsonConvertible.serialize(size),
+        'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserCreateOrConnectWithoutPostsInput {
+class UserCreateOrConnectWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserCreateOrConnectWithoutPostsInput({
     required this.where,
     required this.create,
@@ -3078,9 +4388,16 @@ class UserCreateOrConnectWithoutPostsInput {
 
   final _i1.PrismaUnion<UserCreateWithoutPostsInput,
       UserUncheckedCreateWithoutPostsInput> create;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'where': _i1.JsonConvertible.serialize(where),
+        'create': _i1.JsonConvertible.serialize(create),
+      };
 }
 
-class UserUpsertWithoutPostsInput {
+class UserUpsertWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUpsertWithoutPostsInput({
     required this.update,
     required this.create,
@@ -3094,9 +4411,17 @@ class UserUpsertWithoutPostsInput {
       UserUncheckedCreateWithoutPostsInput> create;
 
   final UserWhereInput? where;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'update': _i1.JsonConvertible.serialize(update),
+        'create': _i1.JsonConvertible.serialize(create),
+        if (where != null) 'where': _i1.JsonConvertible.serialize(where),
+      };
 }
 
-class UserUpdateToOneWithWhereWithoutPostsInput {
+class UserUpdateToOneWithWhereWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUpdateToOneWithWhereWithoutPostsInput({
     this.where,
     required this.data,
@@ -3106,9 +4431,16 @@ class UserUpdateToOneWithWhereWithoutPostsInput {
 
   final _i1.PrismaUnion<UserUpdateWithoutPostsInput,
       UserUncheckedUpdateWithoutPostsInput> data;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (where != null) 'where': _i1.JsonConvertible.serialize(where),
+        'data': _i1.JsonConvertible.serialize(data),
+      };
 }
 
-class UserUpdateWithoutPostsInput {
+class UserUpdateWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUpdateWithoutPostsInput({
     this.name,
     this.role,
@@ -3142,9 +4474,24 @@ class UserUpdateWithoutPostsInput {
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class UserUncheckedUpdateWithoutPostsInput {
+class UserUncheckedUpdateWithoutPostsInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const UserUncheckedUpdateWithoutPostsInput({
     this.id,
     this.name,
@@ -3181,9 +4528,25 @@ class UserUncheckedUpdateWithoutPostsInput {
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (name != null) 'name': _i1.JsonConvertible.serialize(name),
+        if (role != null) 'role': _i1.JsonConvertible.serialize(role),
+        if (price != null) 'price': _i1.JsonConvertible.serialize(price),
+        if (size != null) 'size': _i1.JsonConvertible.serialize(size),
+        if (bytes != null) 'bytes': _i1.JsonConvertible.serialize(bytes),
+        if (json != null) 'json': _i1.JsonConvertible.serialize(json),
+        if (age != null) 'age': _i1.JsonConvertible.serialize(age),
+        if (demo != null) 'demo': _i1.JsonConvertible.serialize(demo),
+        if (createdAt != null)
+          'createdAt': _i1.JsonConvertible.serialize(createdAt),
+      };
 }
 
-class PostCreateManyAuthorInput {
+class PostCreateManyAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostCreateManyAuthorInput({
     this.id,
     required this.title,
@@ -3192,9 +4555,16 @@ class PostCreateManyAuthorInput {
   final String? id;
 
   final String title;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        'title': _i1.JsonConvertible.serialize(title),
+      };
 }
 
-class PostUpdateWithoutAuthorInput {
+class PostUpdateWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUpdateWithoutAuthorInput({
     this.id,
     this.title,
@@ -3203,9 +4573,16 @@ class PostUpdateWithoutAuthorInput {
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+      };
 }
 
-class PostUncheckedUpdateWithoutAuthorInput {
+class PostUncheckedUpdateWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedUpdateWithoutAuthorInput({
     this.id,
     this.title,
@@ -3214,9 +4591,16 @@ class PostUncheckedUpdateWithoutAuthorInput {
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+      };
 }
 
-class PostUncheckedUpdateManyWithoutAuthorInput {
+class PostUncheckedUpdateManyWithoutAuthorInput
+    implements _i1.JsonConvertible<Map<String, dynamic>> {
   const PostUncheckedUpdateManyWithoutAuthorInput({
     this.id,
     this.title,
@@ -3225,4 +4609,10 @@ class PostUncheckedUpdateManyWithoutAuthorInput {
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
 
   final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (id != null) 'id': _i1.JsonConvertible.serialize(id),
+        if (title != null) 'title': _i1.JsonConvertible.serialize(title),
+      };
 }

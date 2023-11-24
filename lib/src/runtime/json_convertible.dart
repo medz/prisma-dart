@@ -9,6 +9,15 @@ abstract interface class JsonConvertible<T> {
   ///
   /// Returns the JSON representation of the object.
   T toJson();
+
+  static serialize(dynamic value) {
+    return switch (value) {
+      JsonConvertible value => value.toJson(),
+      Iterable values => values.map((e) => serialize(e)).toList(),
+      Map values => values.map((key, value) => MapEntry(key, serialize(value))),
+      _ => value,
+    };
+  }
 }
 
 /// An abstract interface class for converting a map to JSON and vice versa.

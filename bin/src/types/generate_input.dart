@@ -15,9 +15,66 @@ Iterable<Class> generateInputTypes(dmmf.DMMF document) sync* {
 Class generateInputType(dmmf.InputType input, dmmf.DMMF document) {
   return Class((builder) {
     builder.name = input.name.toDartClassNameString();
-    builder.fields.addAll(generateInputFields(input.fields, document));
+    builder.implements.add(
+      refer('JsonConvertible').toPrismaRuntime().copyWith(
+        types: [
+          refer('Map').copyWith(
+            types: [refer('String'), refer('dynamic')],
+          )
+        ],
+      ),
+    );
     builder.constructors.add(generateInputConstructor(input, document));
+    builder.fields.addAll(generateInputFields(input.fields, document));
+    builder.methods.add(generateInputToJsonMethod(input, document));
   });
+}
+
+Method generateInputToJsonMethod(dmmf.InputType type, dmmf.DMMF document) {
+  return Method((builder) {
+    builder.name = 'toJson';
+    builder.returns = refer('Map').copyWith(
+      types: [refer('String'), refer('dynamic')],
+    );
+    builder.annotations.add(refer('override'));
+    builder.body = generateToJsonBody(type, document);
+  });
+}
+
+Code generateToJsonBody(dmmf.InputType type, dmmf.DMMF document) {
+  final entries = type.fields.map(
+    (e) => MapEntry(generateToJsonMapKey(e), generateToJsonMapValue(e)),
+  );
+
+  return literalMap(Map.fromEntries(entries)).code;
+
+  // return literalMap({
+  //   Block((builder) {
+  //     builder.statements.add(
+  //       refer('if').call([refer('id').notEqualTo(literalNull)]).code,
+  //     );
+  //     builder.statements.add(literalString('id').code);
+  //   }): refer('id'),
+  // }).code;
+}
+
+Spec generateToJsonMapKey(dmmf.InputField field) {
+  if (field.isRequired) return literalString(field.name);
+
+  return Block((builder) {
+    builder.statements.add(
+      refer('if').call([
+        refer(field.name.toDartPropertyNameString()).notEqualTo(literalNull)
+      ]).code,
+    );
+    builder.statements.add(literalString(field.name).code);
+  });
+}
+
+Spec generateToJsonMapValue(dmmf.InputField field) {
+  return refer('JsonConvertible').toPrismaRuntime().property('serialize').call([
+    refer(field.name.toDartPropertyNameString()),
+  ]);
 }
 
 Constructor generateInputConstructor(dmmf.InputType type, dmmf.DMMF document) {

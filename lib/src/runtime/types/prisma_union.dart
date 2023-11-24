@@ -1,4 +1,6 @@
-class PrismaUnion<A, B> {
+import '../json_convertible.dart';
+
+class PrismaUnion<A, B> implements JsonConvertible {
   final A? $1;
   final B? $2;
 
@@ -9,4 +11,12 @@ class PrismaUnion<A, B> {
   const PrismaUnion.$2(B value)
       : $1 = null,
         $2 = value;
+
+  @override
+  toJson() {
+    return switch ($1 ?? $2) {
+      JsonConvertible value => value.toJson(),
+      dynamic value => value,
+    };
+  }
 }
