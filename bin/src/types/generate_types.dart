@@ -8,6 +8,8 @@ Library generateTypesLibrary(dmmf.DMMF document) {
   return Library((builder) {
     builder.name = 'prisma.client.types';
 
+    builder.ignoreForFile.add('non_constant_identifier_names');
+
     // Generate enums.
     builder.body.addAll(generateEnums(document));
 

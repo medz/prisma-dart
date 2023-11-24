@@ -17,12 +17,20 @@ const reserved = <String>{
   'in',
 };
 
+const prismaReserved = <String>{
+  'AND',
+  'OR',
+  'NOT',
+};
+
 extension DartClassNameStyleFixer on String {
   String toDartClassNameString() {
     return pascalCase..fixStartsWithUnderline();
   }
 
   String toDartPropertyNameString() {
+    if (prismaReserved.contains(this)) return this;
+
     final propertyName = camelCase;
     if (reserved.contains(propertyName.toLowerCase())) {
       return '\$$propertyName';

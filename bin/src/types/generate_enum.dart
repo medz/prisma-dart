@@ -2,7 +2,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart' as dmmf;
 
 import '../dart_style_fixer.dart';
-import '../refs.dart';
+import '../reference.dart';
 import '../scalars.dart';
 import '../utils/dmmf_schema_types.dart';
 
@@ -80,13 +80,6 @@ final modelScalarConstructor = enumConstructor.rebuild((builder) {
   }));
 });
 
-Reference typedFieldRef(Reference type) => TypeReference((builder) {
-      final fieldRef = runtimeRef('FieldRef');
-      builder.symbol = fieldRef.symbol;
-      builder.url = fieldRef.url;
-      builder.types.add(type);
-    });
-
 String generateModelScalarFieldEnumName(dmmf.Model model) {
   return '${model.name}Scalar'.toDartClassNameString();
 }
@@ -102,7 +95,7 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
     final model = element.findModel(document);
 
     builder.name = element.name.toDartClassNameString();
-    builder.implements.add(runtimeRef('PrismaEnum'));
+    builder.implements.add(refer('PrismaEnum').toPrismaRuntime());
     builder.fields.add(enumProperty);
     builder.constructors.add(enumConstructor);
 
@@ -116,7 +109,7 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
           builder.arguments.add(literalString(model.name));
 
           final field = model.fields.firstWhere((element) => element.name == e);
-          builder.types.add(field.toInnerReference());
+          builder.types.add(field.toDartReference());
         }
       }),
     ));
@@ -124,7 +117,7 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
 
     // TransactionIsolationLevel
     if (element.name == 'TransactionIsolationLevel') {
-      builder.implements.add(runtimeRef('IsolationLevel'));
+      builder.implements.add(refer('IsolationLevel').toPrismaRuntime());
       builder.methods.add(isolationLevel);
     }
 
@@ -137,7 +130,11 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
 
       builder.types.add(refer('T'));
 
-      builder.implements.add(typedFieldRef(refer('T')));
+      builder.implements.add(
+        refer('FieldRef').toPrismaRuntime().copyWith(
+          types: [refer('T')],
+        ),
+      );
       builder.fields.add(fieldRefEnumModelName);
       builder.methods.add(fieldRefEnumField);
     }

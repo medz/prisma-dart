@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 library prisma.client.types; // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'dart:typed_data' as _i2;
@@ -143,233 +145,378 @@ enum NullsOrder implements _i1.PrismaEnum {
 }
 
 class UserWhereInput {
-  final _i1.PrismaUnion<UserWhereInput, UserWhereInput> AND;
+  const UserWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+    this.posts,
+  });
 
-  final UserWhereInput OR;
+  final _i1.PrismaUnion<UserWhereInput, Iterable<UserWhereInput>>? AND;
 
-  final _i1.PrismaUnion<UserWhereInput, UserWhereInput> NOT;
+  final Iterable<UserWhereInput>? OR;
 
-  final _i1.PrismaUnion<IntFilter, int> id;
+  final _i1.PrismaUnion<UserWhereInput, Iterable<UserWhereInput>>? NOT;
 
-  final _i1.PrismaUnion<StringFilter, String> name;
+  final _i1.PrismaUnion<IntFilter, int>? id;
 
-  final _i1.PrismaUnion<EnumRoleFilter, Role> role;
+  final _i1.PrismaUnion<StringFilter, String>? name;
 
-  final _i1.PrismaUnion<DecimalFilter, _i1.Decimal> price;
+  final _i1.PrismaUnion<EnumRoleFilter, Role>? role;
 
-  final _i1.PrismaUnion<BigIntFilter, BigInt> size;
+  final _i1.PrismaUnion<DecimalFilter, _i1.Decimal>? price;
 
-  final _i1.PrismaUnion<BytesFilter, _i2.Uint8List> bytes;
+  final _i1.PrismaUnion<BigIntFilter, BigInt>? size;
 
-  final JsonNullableFilter json;
+  final _i1.PrismaUnion<BytesFilter, _i2.Uint8List>? bytes;
 
-  final _i1.PrismaUnion<IntNullableFilter, _i1.PrismaUnion<int, Null>> age;
+  final JsonNullableFilter? json;
 
-  final _i1.PrismaUnion<FloatFilter, double> demo;
+  final _i1
+      .PrismaUnion<IntNullableFilter, _i1.PrismaUnion<int, _i1.PrismaNull>>?
+      age;
 
-  final _i1.PrismaUnion<DateTimeFilter, DateTime> createdAt;
+  final _i1.PrismaUnion<FloatFilter, double>? demo;
 
-  final PostListRelationFilter posts;
+  final _i1.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
+
+  final PostListRelationFilter? posts;
 }
 
 class UserOrderByWithRelationInput {
-  final SortOrder id;
+  const UserOrderByWithRelationInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+    this.posts,
+  });
 
-  final SortOrder name;
+  final SortOrder? id;
 
-  final SortOrder role;
+  final SortOrder? name;
 
-  final SortOrder price;
+  final SortOrder? role;
 
-  final SortOrder size;
+  final SortOrder? price;
 
-  final SortOrder bytes;
+  final SortOrder? size;
 
-  final _i1.PrismaUnion<SortOrder, SortOrderInput> json;
+  final SortOrder? bytes;
 
-  final _i1.PrismaUnion<SortOrder, SortOrderInput> age;
+  final _i1.PrismaUnion<SortOrder, SortOrderInput>? json;
 
-  final SortOrder demo;
+  final _i1.PrismaUnion<SortOrder, SortOrderInput>? age;
 
-  final SortOrder createdAt;
+  final SortOrder? demo;
 
-  final PostOrderByRelationAggregateInput posts;
+  final SortOrder? createdAt;
+
+  final PostOrderByRelationAggregateInput? posts;
 }
 
 class UserWhereUniqueInput {
-  final int id;
+  const UserWhereUniqueInput({
+    this.id,
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+    this.posts,
+  });
 
-  final _i1.PrismaUnion<UserWhereInput, UserWhereInput> AND;
+  final int? id;
 
-  final UserWhereInput OR;
+  final _i1.PrismaUnion<UserWhereInput, Iterable<UserWhereInput>>? AND;
 
-  final _i1.PrismaUnion<UserWhereInput, UserWhereInput> NOT;
+  final Iterable<UserWhereInput>? OR;
 
-  final _i1.PrismaUnion<StringFilter, String> name;
+  final _i1.PrismaUnion<UserWhereInput, Iterable<UserWhereInput>>? NOT;
 
-  final _i1.PrismaUnion<EnumRoleFilter, Role> role;
+  final _i1.PrismaUnion<StringFilter, String>? name;
 
-  final _i1.PrismaUnion<DecimalFilter, _i1.Decimal> price;
+  final _i1.PrismaUnion<EnumRoleFilter, Role>? role;
 
-  final _i1.PrismaUnion<BigIntFilter, BigInt> size;
+  final _i1.PrismaUnion<DecimalFilter, _i1.Decimal>? price;
 
-  final _i1.PrismaUnion<BytesFilter, _i2.Uint8List> bytes;
+  final _i1.PrismaUnion<BigIntFilter, BigInt>? size;
 
-  final JsonNullableFilter json;
+  final _i1.PrismaUnion<BytesFilter, _i2.Uint8List>? bytes;
 
-  final _i1.PrismaUnion<IntNullableFilter, _i1.PrismaUnion<int, Null>> age;
+  final JsonNullableFilter? json;
 
-  final _i1.PrismaUnion<FloatFilter, double> demo;
+  final _i1
+      .PrismaUnion<IntNullableFilter, _i1.PrismaUnion<int, _i1.PrismaNull>>?
+      age;
 
-  final _i1.PrismaUnion<DateTimeFilter, DateTime> createdAt;
+  final _i1.PrismaUnion<FloatFilter, double>? demo;
 
-  final PostListRelationFilter posts;
+  final _i1.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
+
+  final PostListRelationFilter? posts;
 }
 
 class UserOrderByWithAggregationInput {
-  final SortOrder id;
+  const UserOrderByWithAggregationInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+    this.count,
+    this.avg,
+    this.max,
+    this.min,
+    this.sum,
+  });
 
-  final SortOrder name;
+  final SortOrder? id;
 
-  final SortOrder role;
+  final SortOrder? name;
 
-  final SortOrder price;
+  final SortOrder? role;
 
-  final SortOrder size;
+  final SortOrder? price;
 
-  final SortOrder bytes;
+  final SortOrder? size;
 
-  final _i1.PrismaUnion<SortOrder, SortOrderInput> json;
+  final SortOrder? bytes;
 
-  final _i1.PrismaUnion<SortOrder, SortOrderInput> age;
+  final _i1.PrismaUnion<SortOrder, SortOrderInput>? json;
 
-  final SortOrder demo;
+  final _i1.PrismaUnion<SortOrder, SortOrderInput>? age;
 
-  final SortOrder createdAt;
+  final SortOrder? demo;
 
-  final UserCountOrderByAggregateInput count;
+  final SortOrder? createdAt;
 
-  final UserAvgOrderByAggregateInput avg;
+  final UserCountOrderByAggregateInput? count;
 
-  final UserMaxOrderByAggregateInput max;
+  final UserAvgOrderByAggregateInput? avg;
 
-  final UserMinOrderByAggregateInput min;
+  final UserMaxOrderByAggregateInput? max;
 
-  final UserSumOrderByAggregateInput sum;
+  final UserMinOrderByAggregateInput? min;
+
+  final UserSumOrderByAggregateInput? sum;
 }
 
 class UserScalarWhereWithAggregatesInput {
+  const UserScalarWhereWithAggregatesInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
+
   final _i1.PrismaUnion<UserScalarWhereWithAggregatesInput,
-      UserScalarWhereWithAggregatesInput> AND;
+      Iterable<UserScalarWhereWithAggregatesInput>>? AND;
 
-  final UserScalarWhereWithAggregatesInput OR;
+  final Iterable<UserScalarWhereWithAggregatesInput>? OR;
 
   final _i1.PrismaUnion<UserScalarWhereWithAggregatesInput,
-      UserScalarWhereWithAggregatesInput> NOT;
+      Iterable<UserScalarWhereWithAggregatesInput>>? NOT;
 
-  final _i1.PrismaUnion<IntWithAggregatesFilter, int> id;
+  final _i1.PrismaUnion<IntWithAggregatesFilter, int>? id;
 
-  final _i1.PrismaUnion<StringWithAggregatesFilter, String> name;
+  final _i1.PrismaUnion<StringWithAggregatesFilter, String>? name;
 
-  final _i1.PrismaUnion<EnumRoleWithAggregatesFilter, Role> role;
+  final _i1.PrismaUnion<EnumRoleWithAggregatesFilter, Role>? role;
 
-  final _i1.PrismaUnion<DecimalWithAggregatesFilter, _i1.Decimal> price;
+  final _i1.PrismaUnion<DecimalWithAggregatesFilter, _i1.Decimal>? price;
 
-  final _i1.PrismaUnion<BigIntWithAggregatesFilter, BigInt> size;
+  final _i1.PrismaUnion<BigIntWithAggregatesFilter, BigInt>? size;
 
-  final _i1.PrismaUnion<BytesWithAggregatesFilter, _i2.Uint8List> bytes;
+  final _i1.PrismaUnion<BytesWithAggregatesFilter, _i2.Uint8List>? bytes;
 
-  final JsonNullableWithAggregatesFilter json;
+  final JsonNullableWithAggregatesFilter? json;
 
-  final _i1
-      .PrismaUnion<IntNullableWithAggregatesFilter, _i1.PrismaUnion<int, Null>>
-      age;
+  final _i1.PrismaUnion<IntNullableWithAggregatesFilter,
+      _i1.PrismaUnion<int, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<FloatWithAggregatesFilter, double> demo;
+  final _i1.PrismaUnion<FloatWithAggregatesFilter, double>? demo;
 
-  final _i1.PrismaUnion<DateTimeWithAggregatesFilter, DateTime> createdAt;
+  final _i1.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? createdAt;
 }
 
 class PostWhereInput {
-  final _i1.PrismaUnion<PostWhereInput, PostWhereInput> AND;
+  const PostWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.title,
+    this.userId,
+    this.author,
+  });
 
-  final PostWhereInput OR;
+  final _i1.PrismaUnion<PostWhereInput, Iterable<PostWhereInput>>? AND;
 
-  final _i1.PrismaUnion<PostWhereInput, PostWhereInput> NOT;
+  final Iterable<PostWhereInput>? OR;
 
-  final _i1.PrismaUnion<StringFilter, String> id;
+  final _i1.PrismaUnion<PostWhereInput, Iterable<PostWhereInput>>? NOT;
 
-  final _i1.PrismaUnion<StringFilter, String> title;
+  final _i1.PrismaUnion<StringFilter, String>? id;
 
-  final _i1.PrismaUnion<IntFilter, int> userId;
+  final _i1.PrismaUnion<StringFilter, String>? title;
 
-  final _i1.PrismaUnion<UserRelationFilter, UserWhereInput> author;
+  final _i1.PrismaUnion<IntFilter, int>? userId;
+
+  final _i1.PrismaUnion<UserRelationFilter, UserWhereInput>? author;
 }
 
 class PostOrderByWithRelationInput {
-  final SortOrder id;
+  const PostOrderByWithRelationInput({
+    this.id,
+    this.title,
+    this.userId,
+    this.author,
+  });
 
-  final SortOrder title;
+  final SortOrder? id;
 
-  final SortOrder userId;
+  final SortOrder? title;
 
-  final UserOrderByWithRelationInput author;
+  final SortOrder? userId;
+
+  final UserOrderByWithRelationInput? author;
 }
 
 class PostWhereUniqueInput {
-  final String id;
+  const PostWhereUniqueInput({
+    this.id,
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.title,
+    this.userId,
+    this.author,
+  });
 
-  final _i1.PrismaUnion<PostWhereInput, PostWhereInput> AND;
+  final String? id;
 
-  final PostWhereInput OR;
+  final _i1.PrismaUnion<PostWhereInput, Iterable<PostWhereInput>>? AND;
 
-  final _i1.PrismaUnion<PostWhereInput, PostWhereInput> NOT;
+  final Iterable<PostWhereInput>? OR;
 
-  final _i1.PrismaUnion<StringFilter, String> title;
+  final _i1.PrismaUnion<PostWhereInput, Iterable<PostWhereInput>>? NOT;
 
-  final _i1.PrismaUnion<IntFilter, int> userId;
+  final _i1.PrismaUnion<StringFilter, String>? title;
 
-  final _i1.PrismaUnion<UserRelationFilter, UserWhereInput> author;
+  final _i1.PrismaUnion<IntFilter, int>? userId;
+
+  final _i1.PrismaUnion<UserRelationFilter, UserWhereInput>? author;
 }
 
 class PostOrderByWithAggregationInput {
-  final SortOrder id;
+  const PostOrderByWithAggregationInput({
+    this.id,
+    this.title,
+    this.userId,
+    this.count,
+    this.avg,
+    this.max,
+    this.min,
+    this.sum,
+  });
 
-  final SortOrder title;
+  final SortOrder? id;
 
-  final SortOrder userId;
+  final SortOrder? title;
 
-  final PostCountOrderByAggregateInput count;
+  final SortOrder? userId;
 
-  final PostAvgOrderByAggregateInput avg;
+  final PostCountOrderByAggregateInput? count;
 
-  final PostMaxOrderByAggregateInput max;
+  final PostAvgOrderByAggregateInput? avg;
 
-  final PostMinOrderByAggregateInput min;
+  final PostMaxOrderByAggregateInput? max;
 
-  final PostSumOrderByAggregateInput sum;
+  final PostMinOrderByAggregateInput? min;
+
+  final PostSumOrderByAggregateInput? sum;
 }
 
 class PostScalarWhereWithAggregatesInput {
+  const PostScalarWhereWithAggregatesInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.title,
+    this.userId,
+  });
+
   final _i1.PrismaUnion<PostScalarWhereWithAggregatesInput,
-      PostScalarWhereWithAggregatesInput> AND;
+      Iterable<PostScalarWhereWithAggregatesInput>>? AND;
 
-  final PostScalarWhereWithAggregatesInput OR;
+  final Iterable<PostScalarWhereWithAggregatesInput>? OR;
 
   final _i1.PrismaUnion<PostScalarWhereWithAggregatesInput,
-      PostScalarWhereWithAggregatesInput> NOT;
+      Iterable<PostScalarWhereWithAggregatesInput>>? NOT;
 
-  final _i1.PrismaUnion<StringWithAggregatesFilter, String> id;
+  final _i1.PrismaUnion<StringWithAggregatesFilter, String>? id;
 
-  final _i1.PrismaUnion<StringWithAggregatesFilter, String> title;
+  final _i1.PrismaUnion<StringWithAggregatesFilter, String>? title;
 
-  final _i1.PrismaUnion<IntWithAggregatesFilter, int> userId;
+  final _i1.PrismaUnion<IntWithAggregatesFilter, int>? userId;
 }
 
 class UserCreateInput {
+  const UserCreateInput({
+    required this.name,
+    this.role,
+    required this.price,
+    required this.size,
+    required this.bytes,
+    this.json,
+    this.age,
+    required this.demo,
+    this.createdAt,
+    this.posts,
+  });
+
   final String name;
 
-  final Role role;
+  final Role? role;
 
   final _i1.Decimal price;
 
@@ -377,23 +524,37 @@ class UserCreateInput {
 
   final _i2.Uint8List bytes;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<int, Null> age;
+  final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
   final double demo;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
-  final PostCreateNestedManyWithoutAuthorInput posts;
+  final PostCreateNestedManyWithoutAuthorInput? posts;
 }
 
 class UserUncheckedCreateInput {
-  final int id;
+  const UserUncheckedCreateInput({
+    this.id,
+    required this.name,
+    this.role,
+    required this.price,
+    required this.size,
+    required this.bytes,
+    this.json,
+    this.age,
+    required this.demo,
+    this.createdAt,
+    this.posts,
+  });
+
+  final int? id;
 
   final String name;
 
-  final Role role;
+  final Role? role;
 
   final _i1.Decimal price;
 
@@ -401,71 +562,117 @@ class UserUncheckedCreateInput {
 
   final _i2.Uint8List bytes;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<int, Null> age;
+  final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
   final double demo;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
-  final PostUncheckedCreateNestedManyWithoutAuthorInput posts;
+  final PostUncheckedCreateNestedManyWithoutAuthorInput? posts;
 }
 
 class UserUpdateInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> name;
+  const UserUpdateInput({
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+    this.posts,
+  });
 
-  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput> role;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput> price;
+  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput>? role;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput> size;
+  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput>? price;
 
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput> bytes;
+  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput>? size;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput>? bytes;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NullableIntFieldUpdateOperationsInput, Null>> age;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput> demo;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput> createdAt;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
 
-  final PostUpdateManyWithoutAuthorNestedInput posts;
+  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
+      createdAt;
+
+  final PostUpdateManyWithoutAuthorNestedInput? posts;
 }
 
 class UserUncheckedUpdateInput {
-  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput> id;
+  const UserUncheckedUpdateInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+    this.posts,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> name;
+  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput>? id;
 
-  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput> role;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput> price;
+  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput>? role;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput> size;
+  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput>? price;
 
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput> bytes;
+  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput>? size;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput>? bytes;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NullableIntFieldUpdateOperationsInput, Null>> age;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput> demo;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput> createdAt;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
 
-  final PostUncheckedUpdateManyWithoutAuthorNestedInput posts;
+  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
+      createdAt;
+
+  final PostUncheckedUpdateManyWithoutAuthorNestedInput? posts;
 }
 
 class UserCreateManyInput {
-  final int id;
+  const UserCreateManyInput({
+    this.id,
+    required this.name,
+    this.role,
+    required this.price,
+    required this.size,
+    required this.bytes,
+    this.json,
+    this.age,
+    required this.demo,
+    this.createdAt,
+  });
+
+  final int? id;
 
   final String name;
 
-  final Role role;
+  final Role? role;
 
   final _i1.Decimal price;
 
@@ -473,61 +680,98 @@ class UserCreateManyInput {
 
   final _i2.Uint8List bytes;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<int, Null> age;
+  final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
   final double demo;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 }
 
 class UserUpdateManyMutationInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> name;
+  const UserUpdateManyMutationInput({
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
 
-  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput> role;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput> price;
+  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput>? role;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput> size;
+  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput>? price;
 
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput> bytes;
+  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput>? size;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput>? bytes;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NullableIntFieldUpdateOperationsInput, Null>> age;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput> demo;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput> createdAt;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+
+  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
+      createdAt;
 }
 
 class UserUncheckedUpdateManyInput {
-  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput> id;
+  const UserUncheckedUpdateManyInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> name;
+  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput>? id;
 
-  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput> role;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput> price;
+  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput>? role;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput> size;
+  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput>? price;
 
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput> bytes;
+  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput>? size;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput>? bytes;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NullableIntFieldUpdateOperationsInput, Null>> age;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput> demo;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput> createdAt;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+
+  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
+      createdAt;
 }
 
 class PostCreateInput {
-  final String id;
+  const PostCreateInput({
+    this.id,
+    required this.title,
+    required this.author,
+  });
+
+  final String? id;
 
   final String title;
 
@@ -535,7 +779,13 @@ class PostCreateInput {
 }
 
 class PostUncheckedCreateInput {
-  final String id;
+  const PostUncheckedCreateInput({
+    this.id,
+    required this.title,
+    required this.userId,
+  });
+
+  final String? id;
 
   final String title;
 
@@ -543,23 +793,41 @@ class PostUncheckedCreateInput {
 }
 
 class PostUpdateInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> id;
+  const PostUpdateInput({
+    this.id,
+    this.title,
+    this.author,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> title;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
 
-  final UserUpdateOneRequiredWithoutPostsNestedInput author;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
+
+  final UserUpdateOneRequiredWithoutPostsNestedInput? author;
 }
 
 class PostUncheckedUpdateInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> id;
+  const PostUncheckedUpdateInput({
+    this.id,
+    this.title,
+    this.userId,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> title;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
 
-  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput> userId;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
+
+  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput>? userId;
 }
 
 class PostCreateManyInput {
-  final String id;
+  const PostCreateManyInput({
+    this.id,
+    required this.title,
+    required this.userId,
+  });
+
+  final String? id;
 
   final String title;
 
@@ -567,1274 +835,2089 @@ class PostCreateManyInput {
 }
 
 class PostUpdateManyMutationInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> id;
+  const PostUpdateManyMutationInput({
+    this.id,
+    this.title,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> title;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
 }
 
 class PostUncheckedUpdateManyInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> id;
+  const PostUncheckedUpdateManyInput({
+    this.id,
+    this.title,
+    this.userId,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> title;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
 
-  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput> userId;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
+
+  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput>? userId;
 }
 
 class IntFilter {
-  final _i1.PrismaUnion<int, IntFieldRefInput> equals;
+  const IntFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> $in;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? equals;
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int, NestedIntFilter> not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
+
+  final _i1.PrismaUnion<int, NestedIntFilter>? not;
 }
 
 class StringFilter {
-  final _i1.PrismaUnion<String, StringFieldRefInput> equals;
+  const StringFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.mode,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> $in;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? equals;
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>? $in;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>?
+      notIn;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gt;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> contains;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> startsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? contains;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> endsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? startsWith;
 
-  final QueryMode mode;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? endsWith;
 
-  final _i1.PrismaUnion<String, NestedStringFilter> not;
+  final QueryMode? mode;
+
+  final _i1.PrismaUnion<String, NestedStringFilter>? not;
 }
 
 class EnumRoleFilter {
-  final _i1.PrismaUnion<Role, EnumRoleFieldRefInput> equals;
+  const EnumRoleFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> $in;
+  final _i1.PrismaUnion<Role, _i1.FieldRef<Role>>? equals;
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? $in;
 
-  final _i1.PrismaUnion<Role, NestedEnumRoleFilter> not;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? notIn;
+
+  final _i1.PrismaUnion<Role, NestedEnumRoleFilter>? not;
 }
 
 class DecimalFilter {
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> equals;
+  const DecimalFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> $in;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? equals;
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> notIn;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      $in;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lt;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      notIn;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lt;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gt;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lte;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gt;
 
-  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalFilter> not;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gte;
+
+  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalFilter>? not;
 }
 
 class BigIntFilter {
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> equals;
+  const BigIntFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> $in;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? equals;
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>? $in;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>?
+      notIn;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lt;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gt;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lte;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gt;
 
-  final _i1.PrismaUnion<BigInt, NestedBigIntFilter> not;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gte;
+
+  final _i1.PrismaUnion<BigInt, NestedBigIntFilter>? not;
 }
 
 class BytesFilter {
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldRefInput> equals;
+  const BytesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> $in;
+  final _i1.PrismaUnion<_i2.Uint8List, _i1.FieldRef<_i2.Uint8List>>? equals;
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? $in;
 
-  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesFilter> not;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? notIn;
+
+  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesFilter>? not;
 }
 
 class JsonNullableFilter {
+  const JsonNullableFilter({
+    this.equals,
+    this.path,
+    this.stringContains,
+    this.stringStartsWith,
+    this.stringEndsWith,
+    this.arrayContains,
+    this.arrayStartsWith,
+    this.arrayEndsWith,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
+
   final _i1.PrismaUnion<_i1.PrismaJson,
-      _i1.PrismaUnion<JsonFieldRefInput, JsonNullValueFilter>> equals;
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>?
+      equals;
 
-  final String path;
+  final Iterable<String>? path;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringContains;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringContains;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringStartsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringStartsWith;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringEndsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringEndsWith;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayContains;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayStartsWith;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayEndsWith;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> lt;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? lt;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> lte;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? lte;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> gt;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? gt;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> gte;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? gte;
 
   final _i1.PrismaUnion<_i1.PrismaJson,
-      _i1.PrismaUnion<JsonFieldRefInput, JsonNullValueFilter>> not;
+      _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>? not;
 }
 
 class IntNullableFilter {
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<IntFieldRefInput, Null>> equals;
+  const IntNullableFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> $in;
+  final _i1
+      .PrismaUnion<int, _i1.PrismaUnion<_i1.FieldRef<int>, _i1.PrismaNull>>?
+      equals;
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> notIn;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<NestedIntNullableFilter, Null>>
-      not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
+
+  final _i1.PrismaUnion<int,
+      _i1.PrismaUnion<NestedIntNullableFilter, _i1.PrismaNull>>? not;
 }
 
 class FloatFilter {
-  final _i1.PrismaUnion<double, FloatFieldRefInput> equals;
+  const FloatFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> $in;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? equals;
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>? $in;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>?
+      notIn;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lt;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gt;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lte;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gt;
 
-  final _i1.PrismaUnion<double, NestedFloatFilter> not;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gte;
+
+  final _i1.PrismaUnion<double, NestedFloatFilter>? not;
 }
 
 class DateTimeFilter {
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> equals;
+  const DateTimeFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> $in;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? equals;
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      $in;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      notIn;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lt;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gt;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lte;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gt;
 
-  final _i1.PrismaUnion<DateTime, NestedDateTimeFilter> not;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gte;
+
+  final _i1.PrismaUnion<DateTime, NestedDateTimeFilter>? not;
 }
 
 class PostListRelationFilter {
-  final PostWhereInput every;
+  const PostListRelationFilter({
+    this.every,
+    this.some,
+    this.none,
+  });
 
-  final PostWhereInput some;
+  final PostWhereInput? every;
 
-  final PostWhereInput none;
+  final PostWhereInput? some;
+
+  final PostWhereInput? none;
 }
 
 class SortOrderInput {
+  const SortOrderInput({
+    required this.sort,
+    this.nulls,
+  });
+
   final SortOrder sort;
 
-  final NullsOrder nulls;
+  final NullsOrder? nulls;
 }
 
 class PostOrderByRelationAggregateInput {
-  final SortOrder count;
+  const PostOrderByRelationAggregateInput({this.count});
+
+  final SortOrder? count;
 }
 
 class UserCountOrderByAggregateInput {
-  final SortOrder id;
+  const UserCountOrderByAggregateInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
 
-  final SortOrder name;
+  final SortOrder? id;
 
-  final SortOrder role;
+  final SortOrder? name;
 
-  final SortOrder price;
+  final SortOrder? role;
 
-  final SortOrder size;
+  final SortOrder? price;
 
-  final SortOrder bytes;
+  final SortOrder? size;
 
-  final SortOrder json;
+  final SortOrder? bytes;
 
-  final SortOrder age;
+  final SortOrder? json;
 
-  final SortOrder demo;
+  final SortOrder? age;
 
-  final SortOrder createdAt;
+  final SortOrder? demo;
+
+  final SortOrder? createdAt;
 }
 
 class UserAvgOrderByAggregateInput {
-  final SortOrder id;
+  const UserAvgOrderByAggregateInput({
+    this.id,
+    this.price,
+    this.size,
+    this.age,
+    this.demo,
+  });
 
-  final SortOrder price;
+  final SortOrder? id;
 
-  final SortOrder size;
+  final SortOrder? price;
 
-  final SortOrder age;
+  final SortOrder? size;
 
-  final SortOrder demo;
+  final SortOrder? age;
+
+  final SortOrder? demo;
 }
 
 class UserMaxOrderByAggregateInput {
-  final SortOrder id;
+  const UserMaxOrderByAggregateInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
 
-  final SortOrder name;
+  final SortOrder? id;
 
-  final SortOrder role;
+  final SortOrder? name;
 
-  final SortOrder price;
+  final SortOrder? role;
 
-  final SortOrder size;
+  final SortOrder? price;
 
-  final SortOrder bytes;
+  final SortOrder? size;
 
-  final SortOrder age;
+  final SortOrder? bytes;
 
-  final SortOrder demo;
+  final SortOrder? age;
 
-  final SortOrder createdAt;
+  final SortOrder? demo;
+
+  final SortOrder? createdAt;
 }
 
 class UserMinOrderByAggregateInput {
-  final SortOrder id;
+  const UserMinOrderByAggregateInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
 
-  final SortOrder name;
+  final SortOrder? id;
 
-  final SortOrder role;
+  final SortOrder? name;
 
-  final SortOrder price;
+  final SortOrder? role;
 
-  final SortOrder size;
+  final SortOrder? price;
 
-  final SortOrder bytes;
+  final SortOrder? size;
 
-  final SortOrder age;
+  final SortOrder? bytes;
 
-  final SortOrder demo;
+  final SortOrder? age;
 
-  final SortOrder createdAt;
+  final SortOrder? demo;
+
+  final SortOrder? createdAt;
 }
 
 class UserSumOrderByAggregateInput {
-  final SortOrder id;
+  const UserSumOrderByAggregateInput({
+    this.id,
+    this.price,
+    this.size,
+    this.age,
+    this.demo,
+  });
 
-  final SortOrder price;
+  final SortOrder? id;
 
-  final SortOrder size;
+  final SortOrder? price;
 
-  final SortOrder age;
+  final SortOrder? size;
 
-  final SortOrder demo;
+  final SortOrder? age;
+
+  final SortOrder? demo;
 }
 
 class IntWithAggregatesFilter {
-  final _i1.PrismaUnion<int, IntFieldRefInput> equals;
+  const IntWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> $in;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? equals;
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int, NestedIntWithAggregatesFilter> not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<int, NestedIntWithAggregatesFilter>? not;
 
-  final NestedFloatFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedIntFilter sum;
+  final NestedFloatFilter? avg;
 
-  final NestedIntFilter min;
+  final NestedIntFilter? sum;
 
-  final NestedIntFilter max;
+  final NestedIntFilter? min;
+
+  final NestedIntFilter? max;
 }
 
 class StringWithAggregatesFilter {
-  final _i1.PrismaUnion<String, StringFieldRefInput> equals;
+  const StringWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.mode,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> $in;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? equals;
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>? $in;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>?
+      notIn;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gt;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> contains;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> startsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? contains;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> endsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? startsWith;
 
-  final QueryMode mode;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? endsWith;
 
-  final _i1.PrismaUnion<String, NestedStringWithAggregatesFilter> not;
+  final QueryMode? mode;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<String, NestedStringWithAggregatesFilter>? not;
 
-  final NestedStringFilter min;
+  final NestedIntFilter? count;
 
-  final NestedStringFilter max;
+  final NestedStringFilter? min;
+
+  final NestedStringFilter? max;
 }
 
 class EnumRoleWithAggregatesFilter {
-  final _i1.PrismaUnion<Role, EnumRoleFieldRefInput> equals;
+  const EnumRoleWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> $in;
+  final _i1.PrismaUnion<Role, _i1.FieldRef<Role>>? equals;
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? $in;
 
-  final _i1.PrismaUnion<Role, NestedEnumRoleWithAggregatesFilter> not;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? notIn;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<Role, NestedEnumRoleWithAggregatesFilter>? not;
 
-  final NestedEnumRoleFilter min;
+  final NestedIntFilter? count;
 
-  final NestedEnumRoleFilter max;
+  final NestedEnumRoleFilter? min;
+
+  final NestedEnumRoleFilter? max;
 }
 
 class DecimalWithAggregatesFilter {
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> equals;
+  const DecimalWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> $in;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? equals;
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> notIn;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      $in;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lt;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      notIn;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lt;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gt;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lte;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gt;
 
-  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalWithAggregatesFilter> not;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalWithAggregatesFilter>? not;
 
-  final NestedDecimalFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedDecimalFilter sum;
+  final NestedDecimalFilter? avg;
 
-  final NestedDecimalFilter min;
+  final NestedDecimalFilter? sum;
 
-  final NestedDecimalFilter max;
+  final NestedDecimalFilter? min;
+
+  final NestedDecimalFilter? max;
 }
 
 class BigIntWithAggregatesFilter {
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> equals;
+  const BigIntWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> $in;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? equals;
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>? $in;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>?
+      notIn;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lt;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gt;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lte;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gt;
 
-  final _i1.PrismaUnion<BigInt, NestedBigIntWithAggregatesFilter> not;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<BigInt, NestedBigIntWithAggregatesFilter>? not;
 
-  final NestedFloatFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedBigIntFilter sum;
+  final NestedFloatFilter? avg;
 
-  final NestedBigIntFilter min;
+  final NestedBigIntFilter? sum;
 
-  final NestedBigIntFilter max;
+  final NestedBigIntFilter? min;
+
+  final NestedBigIntFilter? max;
 }
 
 class BytesWithAggregatesFilter {
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldRefInput> equals;
+  const BytesWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> $in;
+  final _i1.PrismaUnion<_i2.Uint8List, _i1.FieldRef<_i2.Uint8List>>? equals;
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? $in;
 
-  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesWithAggregatesFilter> not;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? notIn;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesWithAggregatesFilter>? not;
 
-  final NestedBytesFilter min;
+  final NestedIntFilter? count;
 
-  final NestedBytesFilter max;
+  final NestedBytesFilter? min;
+
+  final NestedBytesFilter? max;
 }
 
 class JsonNullableWithAggregatesFilter {
+  const JsonNullableWithAggregatesFilter({
+    this.equals,
+    this.path,
+    this.stringContains,
+    this.stringStartsWith,
+    this.stringEndsWith,
+    this.arrayContains,
+    this.arrayStartsWith,
+    this.arrayEndsWith,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
+
   final _i1.PrismaUnion<_i1.PrismaJson,
-      _i1.PrismaUnion<JsonFieldRefInput, JsonNullValueFilter>> equals;
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>?
+      equals;
 
-  final String path;
+  final Iterable<String>? path;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringContains;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringContains;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringStartsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringStartsWith;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringEndsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringEndsWith;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayContains;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayStartsWith;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayEndsWith;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> lt;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? lt;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> lte;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? lte;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> gt;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? gt;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> gte;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? gte;
 
   final _i1.PrismaUnion<_i1.PrismaJson,
-      _i1.PrismaUnion<JsonFieldRefInput, JsonNullValueFilter>> not;
+      _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>? not;
 
-  final NestedIntNullableFilter count;
+  final NestedIntNullableFilter? count;
 
-  final NestedJsonNullableFilter min;
+  final NestedJsonNullableFilter? min;
 
-  final NestedJsonNullableFilter max;
+  final NestedJsonNullableFilter? max;
 }
 
 class IntNullableWithAggregatesFilter {
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<IntFieldRefInput, Null>> equals;
+  const IntNullableWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> $in;
+  final _i1
+      .PrismaUnion<int, _i1.PrismaUnion<_i1.FieldRef<int>, _i1.PrismaNull>>?
+      equals;
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> notIn;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NestedIntNullableWithAggregatesFilter, Null>> not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
 
-  final NestedIntNullableFilter count;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NestedIntNullableWithAggregatesFilter, _i1.PrismaNull>>? not;
 
-  final NestedFloatNullableFilter avg;
+  final NestedIntNullableFilter? count;
 
-  final NestedIntNullableFilter sum;
+  final NestedFloatNullableFilter? avg;
 
-  final NestedIntNullableFilter min;
+  final NestedIntNullableFilter? sum;
 
-  final NestedIntNullableFilter max;
+  final NestedIntNullableFilter? min;
+
+  final NestedIntNullableFilter? max;
 }
 
 class FloatWithAggregatesFilter {
-  final _i1.PrismaUnion<double, FloatFieldRefInput> equals;
+  const FloatWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> $in;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? equals;
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>? $in;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>?
+      notIn;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lt;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gt;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lte;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gt;
 
-  final _i1.PrismaUnion<double, NestedFloatWithAggregatesFilter> not;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<double, NestedFloatWithAggregatesFilter>? not;
 
-  final NestedFloatFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedFloatFilter sum;
+  final NestedFloatFilter? avg;
 
-  final NestedFloatFilter min;
+  final NestedFloatFilter? sum;
 
-  final NestedFloatFilter max;
+  final NestedFloatFilter? min;
+
+  final NestedFloatFilter? max;
 }
 
 class DateTimeWithAggregatesFilter {
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> equals;
+  const DateTimeWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> $in;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? equals;
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      $in;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      notIn;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lt;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gt;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lte;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gt;
 
-  final _i1.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter> not;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter>? not;
 
-  final NestedDateTimeFilter min;
+  final NestedIntFilter? count;
 
-  final NestedDateTimeFilter max;
+  final NestedDateTimeFilter? min;
+
+  final NestedDateTimeFilter? max;
 }
 
 class UserRelationFilter {
-  final UserWhereInput $is;
+  const UserRelationFilter({
+    this.$is,
+    this.isNot,
+  });
 
-  final UserWhereInput isNot;
+  final UserWhereInput? $is;
+
+  final UserWhereInput? isNot;
 }
 
 class PostCountOrderByAggregateInput {
-  final SortOrder id;
+  const PostCountOrderByAggregateInput({
+    this.id,
+    this.title,
+    this.userId,
+  });
 
-  final SortOrder title;
+  final SortOrder? id;
 
-  final SortOrder userId;
+  final SortOrder? title;
+
+  final SortOrder? userId;
 }
 
 class PostAvgOrderByAggregateInput {
-  final SortOrder userId;
+  const PostAvgOrderByAggregateInput({this.userId});
+
+  final SortOrder? userId;
 }
 
 class PostMaxOrderByAggregateInput {
-  final SortOrder id;
+  const PostMaxOrderByAggregateInput({
+    this.id,
+    this.title,
+    this.userId,
+  });
 
-  final SortOrder title;
+  final SortOrder? id;
 
-  final SortOrder userId;
+  final SortOrder? title;
+
+  final SortOrder? userId;
 }
 
 class PostMinOrderByAggregateInput {
-  final SortOrder id;
+  const PostMinOrderByAggregateInput({
+    this.id,
+    this.title,
+    this.userId,
+  });
 
-  final SortOrder title;
+  final SortOrder? id;
 
-  final SortOrder userId;
+  final SortOrder? title;
+
+  final SortOrder? userId;
 }
 
 class PostSumOrderByAggregateInput {
-  final SortOrder userId;
+  const PostSumOrderByAggregateInput({this.userId});
+
+  final SortOrder? userId;
 }
 
 class PostCreateNestedManyWithoutAuthorInput {
+  const PostCreateNestedManyWithoutAuthorInput({
+    this.create,
+    this.connectOrCreate,
+    this.createMany,
+    this.connect,
+  });
+
   final _i1.PrismaUnion<
       PostCreateWithoutAuthorInput,
       _i1.PrismaUnion<
-          PostCreateWithoutAuthorInput,
+          Iterable<PostCreateWithoutAuthorInput>,
           _i1.PrismaUnion<PostUncheckedCreateWithoutAuthorInput,
-              PostUncheckedCreateWithoutAuthorInput>>> create;
+              Iterable<PostUncheckedCreateWithoutAuthorInput>>>>? create;
 
   final _i1.PrismaUnion<PostCreateOrConnectWithoutAuthorInput,
-      PostCreateOrConnectWithoutAuthorInput> connectOrCreate;
+      Iterable<PostCreateOrConnectWithoutAuthorInput>>? connectOrCreate;
 
-  final PostCreateManyAuthorInputEnvelope createMany;
+  final PostCreateManyAuthorInputEnvelope? createMany;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> connect;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      connect;
 }
 
 class PostUncheckedCreateNestedManyWithoutAuthorInput {
+  const PostUncheckedCreateNestedManyWithoutAuthorInput({
+    this.create,
+    this.connectOrCreate,
+    this.createMany,
+    this.connect,
+  });
+
   final _i1.PrismaUnion<
       PostCreateWithoutAuthorInput,
       _i1.PrismaUnion<
-          PostCreateWithoutAuthorInput,
+          Iterable<PostCreateWithoutAuthorInput>,
           _i1.PrismaUnion<PostUncheckedCreateWithoutAuthorInput,
-              PostUncheckedCreateWithoutAuthorInput>>> create;
+              Iterable<PostUncheckedCreateWithoutAuthorInput>>>>? create;
 
   final _i1.PrismaUnion<PostCreateOrConnectWithoutAuthorInput,
-      PostCreateOrConnectWithoutAuthorInput> connectOrCreate;
+      Iterable<PostCreateOrConnectWithoutAuthorInput>>? connectOrCreate;
 
-  final PostCreateManyAuthorInputEnvelope createMany;
+  final PostCreateManyAuthorInputEnvelope? createMany;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> connect;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      connect;
 }
 
 class StringFieldUpdateOperationsInput {
-  final String set;
+  const StringFieldUpdateOperationsInput({this.set});
+
+  final String? set;
 }
 
 class EnumRoleFieldUpdateOperationsInput {
-  final Role set;
+  const EnumRoleFieldUpdateOperationsInput({this.set});
+
+  final Role? set;
 }
 
 class DecimalFieldUpdateOperationsInput {
-  final _i1.Decimal set;
+  const DecimalFieldUpdateOperationsInput({
+    this.set,
+    this.increment,
+    this.decrement,
+    this.multiply,
+    this.divide,
+  });
 
-  final _i1.Decimal increment;
+  final _i1.Decimal? set;
 
-  final _i1.Decimal decrement;
+  final _i1.Decimal? increment;
 
-  final _i1.Decimal multiply;
+  final _i1.Decimal? decrement;
 
-  final _i1.Decimal divide;
+  final _i1.Decimal? multiply;
+
+  final _i1.Decimal? divide;
 }
 
 class BigIntFieldUpdateOperationsInput {
-  final BigInt set;
+  const BigIntFieldUpdateOperationsInput({
+    this.set,
+    this.increment,
+    this.decrement,
+    this.multiply,
+    this.divide,
+  });
 
-  final BigInt increment;
+  final BigInt? set;
 
-  final BigInt decrement;
+  final BigInt? increment;
 
-  final BigInt multiply;
+  final BigInt? decrement;
 
-  final BigInt divide;
+  final BigInt? multiply;
+
+  final BigInt? divide;
 }
 
 class BytesFieldUpdateOperationsInput {
-  final _i2.Uint8List set;
+  const BytesFieldUpdateOperationsInput({this.set});
+
+  final _i2.Uint8List? set;
 }
 
 class NullableIntFieldUpdateOperationsInput {
-  final _i1.PrismaUnion<int, Null> set;
+  const NullableIntFieldUpdateOperationsInput({
+    this.set,
+    this.increment,
+    this.decrement,
+    this.multiply,
+    this.divide,
+  });
 
-  final int increment;
+  final _i1.PrismaUnion<int, _i1.PrismaNull>? set;
 
-  final int decrement;
+  final int? increment;
 
-  final int multiply;
+  final int? decrement;
 
-  final int divide;
+  final int? multiply;
+
+  final int? divide;
 }
 
 class FloatFieldUpdateOperationsInput {
-  final double set;
+  const FloatFieldUpdateOperationsInput({
+    this.set,
+    this.increment,
+    this.decrement,
+    this.multiply,
+    this.divide,
+  });
 
-  final double increment;
+  final double? set;
 
-  final double decrement;
+  final double? increment;
 
-  final double multiply;
+  final double? decrement;
 
-  final double divide;
+  final double? multiply;
+
+  final double? divide;
 }
 
 class DateTimeFieldUpdateOperationsInput {
-  final DateTime set;
+  const DateTimeFieldUpdateOperationsInput({this.set});
+
+  final DateTime? set;
 }
 
 class PostUpdateManyWithoutAuthorNestedInput {
+  const PostUpdateManyWithoutAuthorNestedInput({
+    this.create,
+    this.connectOrCreate,
+    this.upsert,
+    this.createMany,
+    this.set,
+    this.disconnect,
+    this.delete,
+    this.connect,
+    this.update,
+    this.updateMany,
+    this.deleteMany,
+  });
+
   final _i1.PrismaUnion<
       PostCreateWithoutAuthorInput,
       _i1.PrismaUnion<
-          PostCreateWithoutAuthorInput,
+          Iterable<PostCreateWithoutAuthorInput>,
           _i1.PrismaUnion<PostUncheckedCreateWithoutAuthorInput,
-              PostUncheckedCreateWithoutAuthorInput>>> create;
+              Iterable<PostUncheckedCreateWithoutAuthorInput>>>>? create;
 
   final _i1.PrismaUnion<PostCreateOrConnectWithoutAuthorInput,
-      PostCreateOrConnectWithoutAuthorInput> connectOrCreate;
+      Iterable<PostCreateOrConnectWithoutAuthorInput>>? connectOrCreate;
 
   final _i1.PrismaUnion<PostUpsertWithWhereUniqueWithoutAuthorInput,
-      PostUpsertWithWhereUniqueWithoutAuthorInput> upsert;
+      Iterable<PostUpsertWithWhereUniqueWithoutAuthorInput>>? upsert;
 
-  final PostCreateManyAuthorInputEnvelope createMany;
+  final PostCreateManyAuthorInputEnvelope? createMany;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> set;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      set;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> disconnect;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      disconnect;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> delete;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      delete;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> connect;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      connect;
 
   final _i1.PrismaUnion<PostUpdateWithWhereUniqueWithoutAuthorInput,
-      PostUpdateWithWhereUniqueWithoutAuthorInput> update;
+      Iterable<PostUpdateWithWhereUniqueWithoutAuthorInput>>? update;
 
   final _i1.PrismaUnion<PostUpdateManyWithWhereWithoutAuthorInput,
-      PostUpdateManyWithWhereWithoutAuthorInput> updateMany;
+      Iterable<PostUpdateManyWithWhereWithoutAuthorInput>>? updateMany;
 
-  final _i1.PrismaUnion<PostScalarWhereInput, PostScalarWhereInput> deleteMany;
+  final _i1.PrismaUnion<PostScalarWhereInput, Iterable<PostScalarWhereInput>>?
+      deleteMany;
 }
 
 class IntFieldUpdateOperationsInput {
-  final int set;
+  const IntFieldUpdateOperationsInput({
+    this.set,
+    this.increment,
+    this.decrement,
+    this.multiply,
+    this.divide,
+  });
 
-  final int increment;
+  final int? set;
 
-  final int decrement;
+  final int? increment;
 
-  final int multiply;
+  final int? decrement;
 
-  final int divide;
+  final int? multiply;
+
+  final int? divide;
 }
 
 class PostUncheckedUpdateManyWithoutAuthorNestedInput {
+  const PostUncheckedUpdateManyWithoutAuthorNestedInput({
+    this.create,
+    this.connectOrCreate,
+    this.upsert,
+    this.createMany,
+    this.set,
+    this.disconnect,
+    this.delete,
+    this.connect,
+    this.update,
+    this.updateMany,
+    this.deleteMany,
+  });
+
   final _i1.PrismaUnion<
       PostCreateWithoutAuthorInput,
       _i1.PrismaUnion<
-          PostCreateWithoutAuthorInput,
+          Iterable<PostCreateWithoutAuthorInput>,
           _i1.PrismaUnion<PostUncheckedCreateWithoutAuthorInput,
-              PostUncheckedCreateWithoutAuthorInput>>> create;
+              Iterable<PostUncheckedCreateWithoutAuthorInput>>>>? create;
 
   final _i1.PrismaUnion<PostCreateOrConnectWithoutAuthorInput,
-      PostCreateOrConnectWithoutAuthorInput> connectOrCreate;
+      Iterable<PostCreateOrConnectWithoutAuthorInput>>? connectOrCreate;
 
   final _i1.PrismaUnion<PostUpsertWithWhereUniqueWithoutAuthorInput,
-      PostUpsertWithWhereUniqueWithoutAuthorInput> upsert;
+      Iterable<PostUpsertWithWhereUniqueWithoutAuthorInput>>? upsert;
 
-  final PostCreateManyAuthorInputEnvelope createMany;
+  final PostCreateManyAuthorInputEnvelope? createMany;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> set;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      set;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> disconnect;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      disconnect;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> delete;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      delete;
 
-  final _i1.PrismaUnion<PostWhereUniqueInput, PostWhereUniqueInput> connect;
+  final _i1.PrismaUnion<PostWhereUniqueInput, Iterable<PostWhereUniqueInput>>?
+      connect;
 
   final _i1.PrismaUnion<PostUpdateWithWhereUniqueWithoutAuthorInput,
-      PostUpdateWithWhereUniqueWithoutAuthorInput> update;
+      Iterable<PostUpdateWithWhereUniqueWithoutAuthorInput>>? update;
 
   final _i1.PrismaUnion<PostUpdateManyWithWhereWithoutAuthorInput,
-      PostUpdateManyWithWhereWithoutAuthorInput> updateMany;
+      Iterable<PostUpdateManyWithWhereWithoutAuthorInput>>? updateMany;
 
-  final _i1.PrismaUnion<PostScalarWhereInput, PostScalarWhereInput> deleteMany;
+  final _i1.PrismaUnion<PostScalarWhereInput, Iterable<PostScalarWhereInput>>?
+      deleteMany;
 }
 
 class UserCreateNestedOneWithoutPostsInput {
+  const UserCreateNestedOneWithoutPostsInput({
+    this.create,
+    this.connectOrCreate,
+    this.connect,
+  });
+
   final _i1.PrismaUnion<UserCreateWithoutPostsInput,
-      UserUncheckedCreateWithoutPostsInput> create;
+      UserUncheckedCreateWithoutPostsInput>? create;
 
-  final UserCreateOrConnectWithoutPostsInput connectOrCreate;
+  final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
 
-  final UserWhereUniqueInput connect;
+  final UserWhereUniqueInput? connect;
 }
 
 class UserUpdateOneRequiredWithoutPostsNestedInput {
+  const UserUpdateOneRequiredWithoutPostsNestedInput({
+    this.create,
+    this.connectOrCreate,
+    this.upsert,
+    this.connect,
+    this.update,
+  });
+
   final _i1.PrismaUnion<UserCreateWithoutPostsInput,
-      UserUncheckedCreateWithoutPostsInput> create;
+      UserUncheckedCreateWithoutPostsInput>? create;
 
-  final UserCreateOrConnectWithoutPostsInput connectOrCreate;
+  final UserCreateOrConnectWithoutPostsInput? connectOrCreate;
 
-  final UserUpsertWithoutPostsInput upsert;
+  final UserUpsertWithoutPostsInput? upsert;
 
-  final UserWhereUniqueInput connect;
+  final UserWhereUniqueInput? connect;
 
   final _i1.PrismaUnion<
       UserUpdateToOneWithWhereWithoutPostsInput,
       _i1.PrismaUnion<UserUpdateWithoutPostsInput,
-          UserUncheckedUpdateWithoutPostsInput>> update;
+          UserUncheckedUpdateWithoutPostsInput>>? update;
 }
 
 class NestedIntFilter {
-  final _i1.PrismaUnion<int, IntFieldRefInput> equals;
+  const NestedIntFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> $in;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? equals;
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int, NestedIntFilter> not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
+
+  final _i1.PrismaUnion<int, NestedIntFilter>? not;
 }
 
 class NestedStringFilter {
-  final _i1.PrismaUnion<String, StringFieldRefInput> equals;
+  const NestedStringFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> $in;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? equals;
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>? $in;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>?
+      notIn;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gt;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> contains;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> startsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? contains;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> endsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? startsWith;
 
-  final _i1.PrismaUnion<String, NestedStringFilter> not;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? endsWith;
+
+  final _i1.PrismaUnion<String, NestedStringFilter>? not;
 }
 
 class NestedEnumRoleFilter {
-  final _i1.PrismaUnion<Role, EnumRoleFieldRefInput> equals;
+  const NestedEnumRoleFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> $in;
+  final _i1.PrismaUnion<Role, _i1.FieldRef<Role>>? equals;
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? $in;
 
-  final _i1.PrismaUnion<Role, NestedEnumRoleFilter> not;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? notIn;
+
+  final _i1.PrismaUnion<Role, NestedEnumRoleFilter>? not;
 }
 
 class NestedDecimalFilter {
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> equals;
+  const NestedDecimalFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> $in;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? equals;
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> notIn;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      $in;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lt;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      notIn;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lt;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gt;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lte;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gt;
 
-  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalFilter> not;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gte;
+
+  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalFilter>? not;
 }
 
 class NestedBigIntFilter {
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> equals;
+  const NestedBigIntFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> $in;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? equals;
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>? $in;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>?
+      notIn;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lt;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gt;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lte;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gt;
 
-  final _i1.PrismaUnion<BigInt, NestedBigIntFilter> not;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gte;
+
+  final _i1.PrismaUnion<BigInt, NestedBigIntFilter>? not;
 }
 
 class NestedBytesFilter {
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldRefInput> equals;
+  const NestedBytesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> $in;
+  final _i1.PrismaUnion<_i2.Uint8List, _i1.FieldRef<_i2.Uint8List>>? equals;
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? $in;
 
-  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesFilter> not;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? notIn;
+
+  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesFilter>? not;
 }
 
 class NestedIntNullableFilter {
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<IntFieldRefInput, Null>> equals;
+  const NestedIntNullableFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> $in;
+  final _i1
+      .PrismaUnion<int, _i1.PrismaUnion<_i1.FieldRef<int>, _i1.PrismaNull>>?
+      equals;
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> notIn;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<NestedIntNullableFilter, Null>>
-      not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
+
+  final _i1.PrismaUnion<int,
+      _i1.PrismaUnion<NestedIntNullableFilter, _i1.PrismaNull>>? not;
 }
 
 class NestedFloatFilter {
-  final _i1.PrismaUnion<double, FloatFieldRefInput> equals;
+  const NestedFloatFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> $in;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? equals;
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>? $in;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>?
+      notIn;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lt;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gt;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lte;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gt;
 
-  final _i1.PrismaUnion<double, NestedFloatFilter> not;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gte;
+
+  final _i1.PrismaUnion<double, NestedFloatFilter>? not;
 }
 
 class NestedDateTimeFilter {
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> equals;
+  const NestedDateTimeFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> $in;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? equals;
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      $in;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      notIn;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lt;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gt;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lte;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gt;
 
-  final _i1.PrismaUnion<DateTime, NestedDateTimeFilter> not;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gte;
+
+  final _i1.PrismaUnion<DateTime, NestedDateTimeFilter>? not;
 }
 
 class NestedIntWithAggregatesFilter {
-  final _i1.PrismaUnion<int, IntFieldRefInput> equals;
+  const NestedIntWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> $in;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? equals;
 
-  final _i1.PrismaUnion<int, ListIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>, _i1.FieldRef<Iterable<int>>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int, NestedIntWithAggregatesFilter> not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<int, NestedIntWithAggregatesFilter>? not;
 
-  final NestedFloatFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedIntFilter sum;
+  final NestedFloatFilter? avg;
 
-  final NestedIntFilter min;
+  final NestedIntFilter? sum;
 
-  final NestedIntFilter max;
+  final NestedIntFilter? min;
+
+  final NestedIntFilter? max;
 }
 
 class NestedStringWithAggregatesFilter {
-  final _i1.PrismaUnion<String, StringFieldRefInput> equals;
+  const NestedStringWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> $in;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? equals;
 
-  final _i1.PrismaUnion<String, ListStringFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>? $in;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<String>, _i1.FieldRef<Iterable<String>>>?
+      notIn;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> lte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gt;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? lte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> gte;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gt;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> contains;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? gte;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> startsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? contains;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> endsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? startsWith;
 
-  final _i1.PrismaUnion<String, NestedStringWithAggregatesFilter> not;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? endsWith;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<String, NestedStringWithAggregatesFilter>? not;
 
-  final NestedStringFilter min;
+  final NestedIntFilter? count;
 
-  final NestedStringFilter max;
+  final NestedStringFilter? min;
+
+  final NestedStringFilter? max;
 }
 
 class NestedEnumRoleWithAggregatesFilter {
-  final _i1.PrismaUnion<Role, EnumRoleFieldRefInput> equals;
+  const NestedEnumRoleWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> $in;
+  final _i1.PrismaUnion<Role, _i1.FieldRef<Role>>? equals;
 
-  final _i1.PrismaUnion<Role, ListEnumRoleFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? $in;
 
-  final _i1.PrismaUnion<Role, NestedEnumRoleWithAggregatesFilter> not;
+  final _i1.PrismaUnion<Iterable<Role>, _i1.FieldRef<Iterable<Role>>>? notIn;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<Role, NestedEnumRoleWithAggregatesFilter>? not;
 
-  final NestedEnumRoleFilter min;
+  final NestedIntFilter? count;
 
-  final NestedEnumRoleFilter max;
+  final NestedEnumRoleFilter? min;
+
+  final NestedEnumRoleFilter? max;
 }
 
 class NestedDecimalWithAggregatesFilter {
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> equals;
+  const NestedDecimalWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> $in;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? equals;
 
-  final _i1.PrismaUnion<_i1.Decimal, ListDecimalFieldRefInput> notIn;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      $in;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lt;
+  final _i1
+      .PrismaUnion<Iterable<_i1.Decimal>, _i1.FieldRef<Iterable<_i1.Decimal>>>?
+      notIn;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> lte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lt;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gt;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? lte;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldRefInput> gte;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gt;
 
-  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalWithAggregatesFilter> not;
+  final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<_i1.Decimal, NestedDecimalWithAggregatesFilter>? not;
 
-  final NestedDecimalFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedDecimalFilter sum;
+  final NestedDecimalFilter? avg;
 
-  final NestedDecimalFilter min;
+  final NestedDecimalFilter? sum;
 
-  final NestedDecimalFilter max;
+  final NestedDecimalFilter? min;
+
+  final NestedDecimalFilter? max;
 }
 
 class NestedBigIntWithAggregatesFilter {
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> equals;
+  const NestedBigIntWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> $in;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? equals;
 
-  final _i1.PrismaUnion<BigInt, ListBigIntFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>? $in;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<BigInt>, _i1.FieldRef<Iterable<BigInt>>>?
+      notIn;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> lte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lt;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gt;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? lte;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldRefInput> gte;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gt;
 
-  final _i1.PrismaUnion<BigInt, NestedBigIntWithAggregatesFilter> not;
+  final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<BigInt, NestedBigIntWithAggregatesFilter>? not;
 
-  final NestedFloatFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedBigIntFilter sum;
+  final NestedFloatFilter? avg;
 
-  final NestedBigIntFilter min;
+  final NestedBigIntFilter? sum;
 
-  final NestedBigIntFilter max;
+  final NestedBigIntFilter? min;
+
+  final NestedBigIntFilter? max;
 }
 
 class NestedBytesWithAggregatesFilter {
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldRefInput> equals;
+  const NestedBytesWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> $in;
+  final _i1.PrismaUnion<_i2.Uint8List, _i1.FieldRef<_i2.Uint8List>>? equals;
 
-  final _i1.PrismaUnion<_i2.Uint8List, ListBytesFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? $in;
 
-  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesWithAggregatesFilter> not;
+  final _i1.PrismaUnion<Iterable<_i2.Uint8List>,
+      _i1.FieldRef<Iterable<_i2.Uint8List>>>? notIn;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<_i2.Uint8List, NestedBytesWithAggregatesFilter>? not;
 
-  final NestedBytesFilter min;
+  final NestedIntFilter? count;
 
-  final NestedBytesFilter max;
+  final NestedBytesFilter? min;
+
+  final NestedBytesFilter? max;
 }
 
 class NestedJsonNullableFilter {
+  const NestedJsonNullableFilter({
+    this.equals,
+    this.path,
+    this.stringContains,
+    this.stringStartsWith,
+    this.stringEndsWith,
+    this.arrayContains,
+    this.arrayStartsWith,
+    this.arrayEndsWith,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
+
   final _i1.PrismaUnion<_i1.PrismaJson,
-      _i1.PrismaUnion<JsonFieldRefInput, JsonNullValueFilter>> equals;
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>?
+      equals;
 
-  final String path;
+  final Iterable<String>? path;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringContains;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringContains;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringStartsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringStartsWith;
 
-  final _i1.PrismaUnion<String, StringFieldRefInput> stringEndsWith;
+  final _i1.PrismaUnion<String, _i1.FieldRef<String>>? stringEndsWith;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayContains;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayStartsWith;
 
-  final _i1
-      .PrismaUnion<_i1.PrismaJson, _i1.PrismaUnion<JsonFieldRefInput, Null>>
+  final _i1.PrismaUnion<_i1.PrismaJson,
+          _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, _i1.PrismaNull>>?
       arrayEndsWith;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> lt;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? lt;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> lte;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? lte;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> gt;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? gt;
 
-  final _i1.PrismaUnion<_i1.PrismaJson, JsonFieldRefInput> gte;
+  final _i1.PrismaUnion<_i1.PrismaJson, _i1.FieldRef<_i1.PrismaJson>>? gte;
 
   final _i1.PrismaUnion<_i1.PrismaJson,
-      _i1.PrismaUnion<JsonFieldRefInput, JsonNullValueFilter>> not;
+      _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>? not;
 }
 
 class NestedIntNullableWithAggregatesFilter {
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<IntFieldRefInput, Null>> equals;
+  const NestedIntNullableWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> $in;
+  final _i1
+      .PrismaUnion<int, _i1.PrismaUnion<_i1.FieldRef<int>, _i1.PrismaNull>>?
+      equals;
 
-  final _i1.PrismaUnion<int, _i1.PrismaUnion<ListIntFieldRefInput, Null>> notIn;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? $in;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<int>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<int>>, _i1.PrismaNull>>? notIn;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> lte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lt;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gt;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? lte;
 
-  final _i1.PrismaUnion<int, IntFieldRefInput> gte;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gt;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NestedIntNullableWithAggregatesFilter, Null>> not;
+  final _i1.PrismaUnion<int, _i1.FieldRef<int>>? gte;
 
-  final NestedIntNullableFilter count;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NestedIntNullableWithAggregatesFilter, _i1.PrismaNull>>? not;
 
-  final NestedFloatNullableFilter avg;
+  final NestedIntNullableFilter? count;
 
-  final NestedIntNullableFilter sum;
+  final NestedFloatNullableFilter? avg;
 
-  final NestedIntNullableFilter min;
+  final NestedIntNullableFilter? sum;
 
-  final NestedIntNullableFilter max;
+  final NestedIntNullableFilter? min;
+
+  final NestedIntNullableFilter? max;
 }
 
 class NestedFloatNullableFilter {
-  final _i1.PrismaUnion<double, _i1.PrismaUnion<FloatFieldRefInput, Null>>
-      equals;
+  const NestedFloatNullableFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
 
-  final _i1.PrismaUnion<double, _i1.PrismaUnion<ListFloatFieldRefInput, Null>>
-      $in;
+  final _i1.PrismaUnion<double,
+      _i1.PrismaUnion<_i1.FieldRef<double>, _i1.PrismaNull>>? equals;
 
-  final _i1.PrismaUnion<double, _i1.PrismaUnion<ListFloatFieldRefInput, Null>>
-      notIn;
+  final _i1.PrismaUnion<Iterable<double>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<double>>, _i1.PrismaNull>>? $in;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<double>,
+      _i1.PrismaUnion<_i1.FieldRef<Iterable<double>>, _i1.PrismaNull>>? notIn;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lt;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gt;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lte;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gt;
 
-  final _i1
-      .PrismaUnion<double, _i1.PrismaUnion<NestedFloatNullableFilter, Null>>
-      not;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gte;
+
+  final _i1.PrismaUnion<double,
+      _i1.PrismaUnion<NestedFloatNullableFilter, _i1.PrismaNull>>? not;
 }
 
 class NestedFloatWithAggregatesFilter {
-  final _i1.PrismaUnion<double, FloatFieldRefInput> equals;
+  const NestedFloatWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.avg,
+    this.sum,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> $in;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? equals;
 
-  final _i1.PrismaUnion<double, ListFloatFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>? $in;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<double>, _i1.FieldRef<Iterable<double>>>?
+      notIn;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> lte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lt;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gt;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? lte;
 
-  final _i1.PrismaUnion<double, FloatFieldRefInput> gte;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gt;
 
-  final _i1.PrismaUnion<double, NestedFloatWithAggregatesFilter> not;
+  final _i1.PrismaUnion<double, _i1.FieldRef<double>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<double, NestedFloatWithAggregatesFilter>? not;
 
-  final NestedFloatFilter avg;
+  final NestedIntFilter? count;
 
-  final NestedFloatFilter sum;
+  final NestedFloatFilter? avg;
 
-  final NestedFloatFilter min;
+  final NestedFloatFilter? sum;
 
-  final NestedFloatFilter max;
+  final NestedFloatFilter? min;
+
+  final NestedFloatFilter? max;
 }
 
 class NestedDateTimeWithAggregatesFilter {
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> equals;
+  const NestedDateTimeWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.count,
+    this.min,
+    this.max,
+  });
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> $in;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? equals;
 
-  final _i1.PrismaUnion<DateTime, ListDateTimeFieldRefInput> notIn;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      $in;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lt;
+  final _i1.PrismaUnion<Iterable<DateTime>, _i1.FieldRef<Iterable<DateTime>>>?
+      notIn;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> lte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lt;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gt;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? lte;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldRefInput> gte;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gt;
 
-  final _i1.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter> not;
+  final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? gte;
 
-  final NestedIntFilter count;
+  final _i1.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter>? not;
 
-  final NestedDateTimeFilter min;
+  final NestedIntFilter? count;
 
-  final NestedDateTimeFilter max;
+  final NestedDateTimeFilter? min;
+
+  final NestedDateTimeFilter? max;
 }
 
 class PostCreateWithoutAuthorInput {
-  final String id;
+  const PostCreateWithoutAuthorInput({
+    this.id,
+    required this.title,
+  });
+
+  final String? id;
 
   final String title;
 }
 
 class PostUncheckedCreateWithoutAuthorInput {
-  final String id;
+  const PostUncheckedCreateWithoutAuthorInput({
+    this.id,
+    required this.title,
+  });
+
+  final String? id;
 
   final String title;
 }
 
 class PostCreateOrConnectWithoutAuthorInput {
+  const PostCreateOrConnectWithoutAuthorInput({
+    required this.where,
+    required this.create,
+  });
+
   final PostWhereUniqueInput where;
 
   final _i1.PrismaUnion<PostCreateWithoutAuthorInput,
@@ -1842,13 +2925,24 @@ class PostCreateOrConnectWithoutAuthorInput {
 }
 
 class PostCreateManyAuthorInputEnvelope {
-  final _i1.PrismaUnion<PostCreateManyAuthorInput, PostCreateManyAuthorInput>
-      data;
+  const PostCreateManyAuthorInputEnvelope({
+    required this.data,
+    this.skipDuplicates,
+  });
 
-  final Boolean skipDuplicates;
+  final _i1.PrismaUnion<PostCreateManyAuthorInput,
+      Iterable<PostCreateManyAuthorInput>> data;
+
+  final bool? skipDuplicates;
 }
 
 class PostUpsertWithWhereUniqueWithoutAuthorInput {
+  const PostUpsertWithWhereUniqueWithoutAuthorInput({
+    required this.where,
+    required this.update,
+    required this.create,
+  });
+
   final PostWhereUniqueInput where;
 
   final _i1.PrismaUnion<PostUpdateWithoutAuthorInput,
@@ -1859,6 +2953,11 @@ class PostUpsertWithWhereUniqueWithoutAuthorInput {
 }
 
 class PostUpdateWithWhereUniqueWithoutAuthorInput {
+  const PostUpdateWithWhereUniqueWithoutAuthorInput({
+    required this.where,
+    required this.data,
+  });
+
   final PostWhereUniqueInput where;
 
   final _i1.PrismaUnion<PostUpdateWithoutAuthorInput,
@@ -1866,6 +2965,11 @@ class PostUpdateWithWhereUniqueWithoutAuthorInput {
 }
 
 class PostUpdateManyWithWhereWithoutAuthorInput {
+  const PostUpdateManyWithWhereWithoutAuthorInput({
+    required this.where,
+    required this.data,
+  });
+
   final PostScalarWhereInput where;
 
   final _i1.PrismaUnion<PostUpdateManyMutationInput,
@@ -1873,23 +2977,46 @@ class PostUpdateManyWithWhereWithoutAuthorInput {
 }
 
 class PostScalarWhereInput {
-  final _i1.PrismaUnion<PostScalarWhereInput, PostScalarWhereInput> AND;
+  const PostScalarWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.title,
+    this.userId,
+  });
 
-  final PostScalarWhereInput OR;
+  final _i1.PrismaUnion<PostScalarWhereInput, Iterable<PostScalarWhereInput>>?
+      AND;
 
-  final _i1.PrismaUnion<PostScalarWhereInput, PostScalarWhereInput> NOT;
+  final Iterable<PostScalarWhereInput>? OR;
 
-  final _i1.PrismaUnion<StringFilter, String> id;
+  final _i1.PrismaUnion<PostScalarWhereInput, Iterable<PostScalarWhereInput>>?
+      NOT;
 
-  final _i1.PrismaUnion<StringFilter, String> title;
+  final _i1.PrismaUnion<StringFilter, String>? id;
 
-  final _i1.PrismaUnion<IntFilter, int> userId;
+  final _i1.PrismaUnion<StringFilter, String>? title;
+
+  final _i1.PrismaUnion<IntFilter, int>? userId;
 }
 
 class UserCreateWithoutPostsInput {
+  const UserCreateWithoutPostsInput({
+    required this.name,
+    this.role,
+    required this.price,
+    required this.size,
+    required this.bytes,
+    this.json,
+    this.age,
+    required this.demo,
+    this.createdAt,
+  });
+
   final String name;
 
-  final Role role;
+  final Role? role;
 
   final _i1.Decimal price;
 
@@ -1897,21 +3024,34 @@ class UserCreateWithoutPostsInput {
 
   final _i2.Uint8List bytes;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<int, Null> age;
+  final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
   final double demo;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 }
 
 class UserUncheckedCreateWithoutPostsInput {
-  final int id;
+  const UserUncheckedCreateWithoutPostsInput({
+    this.id,
+    required this.name,
+    this.role,
+    required this.price,
+    required this.size,
+    required this.bytes,
+    this.json,
+    this.age,
+    required this.demo,
+    this.createdAt,
+  });
+
+  final int? id;
 
   final String name;
 
-  final Role role;
+  final Role? role;
 
   final _i1.Decimal price;
 
@@ -1919,16 +3059,21 @@ class UserUncheckedCreateWithoutPostsInput {
 
   final _i2.Uint8List bytes;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<int, Null> age;
+  final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
   final double demo;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 }
 
 class UserCreateOrConnectWithoutPostsInput {
+  const UserCreateOrConnectWithoutPostsInput({
+    required this.where,
+    required this.create,
+  });
+
   final UserWhereUniqueInput where;
 
   final _i1.PrismaUnion<UserCreateWithoutPostsInput,
@@ -1936,86 +3081,148 @@ class UserCreateOrConnectWithoutPostsInput {
 }
 
 class UserUpsertWithoutPostsInput {
+  const UserUpsertWithoutPostsInput({
+    required this.update,
+    required this.create,
+    this.where,
+  });
+
   final _i1.PrismaUnion<UserUpdateWithoutPostsInput,
       UserUncheckedUpdateWithoutPostsInput> update;
 
   final _i1.PrismaUnion<UserCreateWithoutPostsInput,
       UserUncheckedCreateWithoutPostsInput> create;
 
-  final UserWhereInput where;
+  final UserWhereInput? where;
 }
 
 class UserUpdateToOneWithWhereWithoutPostsInput {
-  final UserWhereInput where;
+  const UserUpdateToOneWithWhereWithoutPostsInput({
+    this.where,
+    required this.data,
+  });
+
+  final UserWhereInput? where;
 
   final _i1.PrismaUnion<UserUpdateWithoutPostsInput,
       UserUncheckedUpdateWithoutPostsInput> data;
 }
 
 class UserUpdateWithoutPostsInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> name;
+  const UserUpdateWithoutPostsInput({
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
 
-  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput> role;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput> price;
+  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput>? role;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput> size;
+  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput>? price;
 
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput> bytes;
+  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput>? size;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput>? bytes;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NullableIntFieldUpdateOperationsInput, Null>> age;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput> demo;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput> createdAt;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+
+  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
+      createdAt;
 }
 
 class UserUncheckedUpdateWithoutPostsInput {
-  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput> id;
+  const UserUncheckedUpdateWithoutPostsInput({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.demo,
+    this.createdAt,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> name;
+  final _i1.PrismaUnion<int, IntFieldUpdateOperationsInput>? id;
 
-  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput> role;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? name;
 
-  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput> price;
+  final _i1.PrismaUnion<Role, EnumRoleFieldUpdateOperationsInput>? role;
 
-  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput> size;
+  final _i1.PrismaUnion<_i1.Decimal, DecimalFieldUpdateOperationsInput>? price;
 
-  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput> bytes;
+  final _i1.PrismaUnion<BigInt, BigIntFieldUpdateOperationsInput>? size;
 
-  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson> json;
+  final _i1.PrismaUnion<_i2.Uint8List, BytesFieldUpdateOperationsInput>? bytes;
 
-  final _i1.PrismaUnion<int,
-      _i1.PrismaUnion<NullableIntFieldUpdateOperationsInput, Null>> age;
+  final _i1.PrismaUnion<NullableJsonNullValueInput, _i1.PrismaJson>? json;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput> demo;
+  final _i1.PrismaUnion<
+      int,
+      _i1
+      .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput> createdAt;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+
+  final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
+      createdAt;
 }
 
 class PostCreateManyAuthorInput {
-  final String id;
+  const PostCreateManyAuthorInput({
+    this.id,
+    required this.title,
+  });
+
+  final String? id;
 
   final String title;
 }
 
 class PostUpdateWithoutAuthorInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> id;
+  const PostUpdateWithoutAuthorInput({
+    this.id,
+    this.title,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> title;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
 }
 
 class PostUncheckedUpdateWithoutAuthorInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> id;
+  const PostUncheckedUpdateWithoutAuthorInput({
+    this.id,
+    this.title,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> title;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
 }
 
 class PostUncheckedUpdateManyWithoutAuthorInput {
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> id;
+  const PostUncheckedUpdateManyWithoutAuthorInput({
+    this.id,
+    this.title,
+  });
 
-  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput> title;
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? id;
+
+  final _i1.PrismaUnion<String, StringFieldUpdateOperationsInput>? title;
 }
