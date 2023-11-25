@@ -30,7 +30,7 @@ model User {
   bytes     Bytes
   json      Json?
   age       Int?
-  demo      Float
+  count     Float
   createdAt DateTime @default(now())
   posts     Post[]
 }

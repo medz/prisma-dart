@@ -47,13 +47,10 @@ class ModelMapping {
   factory ModelMapping.fromJson(Map json) {
     final entries = ModelAction.values
         .map((e) {
-          if (json.containsKey(e.name)) {
-            return MapEntry<ModelAction, String>(e, json[e.name]);
-          } else if (json.containsKey('${e.name}One')) {
-            return MapEntry<ModelAction, String>(e, json['${e.name}One']);
-          }
-
-          return null;
+          return switch (json[e.name] ?? json['${e.name}One']) {
+            String name => MapEntry<ModelAction, String>(e, name),
+            _ => null,
+          };
         })
         .where((e) => e != null)
         .whereType<MapEntry<ModelAction, String>>();

@@ -10,6 +10,15 @@ abstract interface class JsonConvertible<T> {
   /// Returns the JSON representation of the object.
   T toJson();
 
+  /// Serializes a dynamic value into a JSON representation.
+  ///
+  /// The [value] parameter can be of any type. If the value is an instance of a class that implements the `JsonConvertible` interface,
+  /// the `toJson()` method of that class will be called to obtain the JSON representation.
+  /// If the value is an iterable, each element in the iterable will be recursively serialized using the `serialize()` function.
+  /// If the value is a map, each key-value pair in the map will be recursively serialized using the `serialize()` function.
+  /// If the value does not match any of the above cases, it will be returned as is.
+  ///
+  /// Returns the JSON representation of the value.
   static serialize(dynamic value) {
     return switch (value) {
       JsonConvertible value => value.toJson(),

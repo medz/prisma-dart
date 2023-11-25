@@ -43,7 +43,7 @@ enum UserScalar<T> implements _i1.PrismaEnum, _i1.FieldRef<T> {
   bytes<_i2.Uint8List>('bytes', 'User'),
   json<_i1.PrismaJson>('json', 'User'),
   age<int>('age', 'User'),
-  demo<double>('demo', 'User'),
+  count<double>('count', 'User'),
   createdAt<DateTime>('createdAt', 'User');
 
   const UserScalar(
@@ -157,7 +157,7 @@ class UserWhereInput implements _i1.JsonConvertible<Map<String, dynamic>> {
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
     this.posts,
   });
@@ -186,7 +186,7 @@ class UserWhereInput implements _i1.JsonConvertible<Map<String, dynamic>> {
       .PrismaUnion<IntNullableFilter, _i1.PrismaUnion<int, _i1.PrismaNull>>?
       age;
 
-  final _i1.PrismaUnion<FloatFilter, double>? demo;
+  final _i1.PrismaUnion<FloatFilter, double>? count;
 
   final _i1.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
 
@@ -205,7 +205,7 @@ class UserWhereInput implements _i1.JsonConvertible<Map<String, dynamic>> {
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
         if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
@@ -223,7 +223,7 @@ class UserOrderByWithRelationInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
     this.posts,
   });
@@ -244,7 +244,7 @@ class UserOrderByWithRelationInput
 
   final _i1.PrismaUnion<SortOrder, SortOrderInput>? age;
 
-  final SortOrder? demo;
+  final SortOrder? count;
 
   final SortOrder? createdAt;
 
@@ -260,7 +260,7 @@ class UserOrderByWithRelationInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
         if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
@@ -281,7 +281,7 @@ class UserWhereUniqueInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
     this.posts,
   });
@@ -310,7 +310,7 @@ class UserWhereUniqueInput
       .PrismaUnion<IntNullableFilter, _i1.PrismaUnion<int, _i1.PrismaNull>>?
       age;
 
-  final _i1.PrismaUnion<FloatFilter, double>? demo;
+  final _i1.PrismaUnion<FloatFilter, double>? count;
 
   final _i1.PrismaUnion<DateTimeFilter, DateTime>? createdAt;
 
@@ -329,7 +329,7 @@ class UserWhereUniqueInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
         if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
@@ -347,13 +347,13 @@ class UserOrderByWithAggregationInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
-    this.createdAt,
     this.count,
-    this.avg,
-    this.max,
-    this.min,
-    this.sum,
+    this.createdAt,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
   });
 
   final SortOrder? id;
@@ -372,19 +372,19 @@ class UserOrderByWithAggregationInput
 
   final _i1.PrismaUnion<SortOrder, SortOrderInput>? age;
 
-  final SortOrder? demo;
+  final SortOrder? count;
 
   final SortOrder? createdAt;
 
-  final UserCountOrderByAggregateInput? count;
+  final UserCountOrderByAggregateInput? $count;
 
-  final UserAvgOrderByAggregateInput? avg;
+  final UserAvgOrderByAggregateInput? $avg;
 
-  final UserMaxOrderByAggregateInput? max;
+  final UserMaxOrderByAggregateInput? $max;
 
-  final UserMinOrderByAggregateInput? min;
+  final UserMinOrderByAggregateInput? $min;
 
-  final UserSumOrderByAggregateInput? sum;
+  final UserSumOrderByAggregateInput? $sum;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -396,14 +396,14 @@ class UserOrderByWithAggregationInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
       };
 }
 
@@ -421,7 +421,7 @@ class UserScalarWhereWithAggregatesInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -450,7 +450,7 @@ class UserScalarWhereWithAggregatesInput
   final _i1.PrismaUnion<IntNullableWithAggregatesFilter,
       _i1.PrismaUnion<int, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<FloatWithAggregatesFilter, double>? demo;
+  final _i1.PrismaUnion<FloatWithAggregatesFilter, double>? count;
 
   final _i1.PrismaUnion<DateTimeWithAggregatesFilter, DateTime>? createdAt;
 
@@ -467,7 +467,7 @@ class UserScalarWhereWithAggregatesInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -580,11 +580,11 @@ class PostOrderByWithAggregationInput
     this.id,
     this.title,
     this.userId,
-    this.count,
-    this.avg,
-    this.max,
-    this.min,
-    this.sum,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
   });
 
   final SortOrder? id;
@@ -593,26 +593,26 @@ class PostOrderByWithAggregationInput
 
   final SortOrder? userId;
 
-  final PostCountOrderByAggregateInput? count;
+  final PostCountOrderByAggregateInput? $count;
 
-  final PostAvgOrderByAggregateInput? avg;
+  final PostAvgOrderByAggregateInput? $avg;
 
-  final PostMaxOrderByAggregateInput? max;
+  final PostMaxOrderByAggregateInput? $max;
 
-  final PostMinOrderByAggregateInput? min;
+  final PostMinOrderByAggregateInput? $min;
 
-  final PostSumOrderByAggregateInput? sum;
+  final PostSumOrderByAggregateInput? $sum;
 
   @override
   Map<String, dynamic> toJson() => {
         if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         if (title != null) r'title': _i1.JsonConvertible.serialize(title),
         if (userId != null) r'userId': _i1.JsonConvertible.serialize(userId),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
       };
 }
 
@@ -661,7 +661,7 @@ class UserCreateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
     required this.bytes,
     this.json,
     this.age,
-    required this.demo,
+    required this.count,
     this.createdAt,
     this.posts,
   });
@@ -680,7 +680,7 @@ class UserCreateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
-  final double demo;
+  final double count;
 
   final DateTime? createdAt;
 
@@ -695,7 +695,7 @@ class UserCreateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
         'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        'demo': _i1.JsonConvertible.serialize(demo),
+        'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
         if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
@@ -713,7 +713,7 @@ class UserUncheckedCreateInput
     required this.bytes,
     this.json,
     this.age,
-    required this.demo,
+    required this.count,
     this.createdAt,
     this.posts,
   });
@@ -734,7 +734,7 @@ class UserUncheckedCreateInput
 
   final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
-  final double demo;
+  final double count;
 
   final DateTime? createdAt;
 
@@ -750,7 +750,7 @@ class UserUncheckedCreateInput
         'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        'demo': _i1.JsonConvertible.serialize(demo),
+        'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
         if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
@@ -766,7 +766,7 @@ class UserUpdateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
     this.posts,
   });
@@ -788,7 +788,7 @@ class UserUpdateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
       _i1
       .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? count;
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
@@ -804,7 +804,7 @@ class UserUpdateInput implements _i1.JsonConvertible<Map<String, dynamic>> {
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
         if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
@@ -822,7 +822,7 @@ class UserUncheckedUpdateInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
     this.posts,
   });
@@ -846,7 +846,7 @@ class UserUncheckedUpdateInput
       _i1
       .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? count;
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
@@ -863,7 +863,7 @@ class UserUncheckedUpdateInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
         if (posts != null) r'posts': _i1.JsonConvertible.serialize(posts),
@@ -880,7 +880,7 @@ class UserCreateManyInput implements _i1.JsonConvertible<Map<String, dynamic>> {
     required this.bytes,
     this.json,
     this.age,
-    required this.demo,
+    required this.count,
     this.createdAt,
   });
 
@@ -900,7 +900,7 @@ class UserCreateManyInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
   final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
-  final double demo;
+  final double count;
 
   final DateTime? createdAt;
 
@@ -914,7 +914,7 @@ class UserCreateManyInput implements _i1.JsonConvertible<Map<String, dynamic>> {
         'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        'demo': _i1.JsonConvertible.serialize(demo),
+        'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -930,7 +930,7 @@ class UserUpdateManyMutationInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -951,7 +951,7 @@ class UserUpdateManyMutationInput
       _i1
       .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? count;
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
@@ -965,7 +965,7 @@ class UserUpdateManyMutationInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -982,7 +982,7 @@ class UserUncheckedUpdateManyInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -1005,7 +1005,7 @@ class UserUncheckedUpdateManyInput
       _i1
       .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? count;
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
@@ -1020,7 +1020,7 @@ class UserUncheckedUpdateManyInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -1663,13 +1663,13 @@ class SortOrderInput implements _i1.JsonConvertible<Map<String, dynamic>> {
 
 class PostOrderByRelationAggregateInput
     implements _i1.JsonConvertible<Map<String, dynamic>> {
-  const PostOrderByRelationAggregateInput({this.count});
+  const PostOrderByRelationAggregateInput({this.$count});
 
-  final SortOrder? count;
+  final SortOrder? $count;
 
   @override
   Map<String, dynamic> toJson() =>
-      {if (count != null) r'_count': _i1.JsonConvertible.serialize(count)};
+      {if ($count != null) r'_count': _i1.JsonConvertible.serialize($count)};
 }
 
 class UserCountOrderByAggregateInput
@@ -1683,7 +1683,7 @@ class UserCountOrderByAggregateInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -1703,7 +1703,7 @@ class UserCountOrderByAggregateInput
 
   final SortOrder? age;
 
-  final SortOrder? demo;
+  final SortOrder? count;
 
   final SortOrder? createdAt;
 
@@ -1717,7 +1717,7 @@ class UserCountOrderByAggregateInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -1730,7 +1730,7 @@ class UserAvgOrderByAggregateInput
     this.price,
     this.size,
     this.age,
-    this.demo,
+    this.count,
   });
 
   final SortOrder? id;
@@ -1741,7 +1741,7 @@ class UserAvgOrderByAggregateInput
 
   final SortOrder? age;
 
-  final SortOrder? demo;
+  final SortOrder? count;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -1749,7 +1749,7 @@ class UserAvgOrderByAggregateInput
         if (price != null) r'price': _i1.JsonConvertible.serialize(price),
         if (size != null) r'size': _i1.JsonConvertible.serialize(size),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
       };
 }
 
@@ -1763,7 +1763,7 @@ class UserMaxOrderByAggregateInput
     this.size,
     this.bytes,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -1781,7 +1781,7 @@ class UserMaxOrderByAggregateInput
 
   final SortOrder? age;
 
-  final SortOrder? demo;
+  final SortOrder? count;
 
   final SortOrder? createdAt;
 
@@ -1794,7 +1794,7 @@ class UserMaxOrderByAggregateInput
         if (size != null) r'size': _i1.JsonConvertible.serialize(size),
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -1810,7 +1810,7 @@ class UserMinOrderByAggregateInput
     this.size,
     this.bytes,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -1828,7 +1828,7 @@ class UserMinOrderByAggregateInput
 
   final SortOrder? age;
 
-  final SortOrder? demo;
+  final SortOrder? count;
 
   final SortOrder? createdAt;
 
@@ -1841,7 +1841,7 @@ class UserMinOrderByAggregateInput
         if (size != null) r'size': _i1.JsonConvertible.serialize(size),
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -1854,7 +1854,7 @@ class UserSumOrderByAggregateInput
     this.price,
     this.size,
     this.age,
-    this.demo,
+    this.count,
   });
 
   final SortOrder? id;
@@ -1865,7 +1865,7 @@ class UserSumOrderByAggregateInput
 
   final SortOrder? age;
 
-  final SortOrder? demo;
+  final SortOrder? count;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -1873,7 +1873,7 @@ class UserSumOrderByAggregateInput
         if (price != null) r'price': _i1.JsonConvertible.serialize(price),
         if (size != null) r'size': _i1.JsonConvertible.serialize(size),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
       };
 }
 
@@ -1888,11 +1888,11 @@ class IntWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<int, _i1.FieldRef<int>>? equals;
@@ -1911,15 +1911,15 @@ class IntWithAggregatesFilter
 
   final _i1.PrismaUnion<int, NestedIntWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedFloatFilter? avg;
+  final NestedFloatFilter? $avg;
 
-  final NestedIntFilter? sum;
+  final NestedIntFilter? $sum;
 
-  final NestedIntFilter? min;
+  final NestedIntFilter? $min;
 
-  final NestedIntFilter? max;
+  final NestedIntFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -1931,11 +1931,11 @@ class IntWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -1954,9 +1954,9 @@ class StringWithAggregatesFilter
     this.endsWith,
     this.mode,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<String, _i1.FieldRef<String>>? equals;
@@ -1984,11 +1984,11 @@ class StringWithAggregatesFilter
 
   final _i1.PrismaUnion<String, NestedStringWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedStringFilter? min;
+  final NestedStringFilter? $min;
 
-  final NestedStringFilter? max;
+  final NestedStringFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2007,9 +2007,9 @@ class StringWithAggregatesFilter
           r'endsWith': _i1.JsonConvertible.serialize(endsWith),
         if (mode != null) r'mode': _i1.JsonConvertible.serialize(mode),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2020,9 +2020,9 @@ class EnumRoleWithAggregatesFilter
     this.$in,
     this.notIn,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<Role, _i1.FieldRef<Role>>? equals;
@@ -2033,11 +2033,11 @@ class EnumRoleWithAggregatesFilter
 
   final _i1.PrismaUnion<Role, NestedEnumRoleWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedEnumRoleFilter? min;
+  final NestedEnumRoleFilter? $min;
 
-  final NestedEnumRoleFilter? max;
+  final NestedEnumRoleFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2045,9 +2045,9 @@ class EnumRoleWithAggregatesFilter
         if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
         if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2062,11 +2062,11 @@ class DecimalWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? equals;
@@ -2089,15 +2089,15 @@ class DecimalWithAggregatesFilter
 
   final _i1.PrismaUnion<_i1.Decimal, NestedDecimalWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedDecimalFilter? avg;
+  final NestedDecimalFilter? $avg;
 
-  final NestedDecimalFilter? sum;
+  final NestedDecimalFilter? $sum;
 
-  final NestedDecimalFilter? min;
+  final NestedDecimalFilter? $min;
 
-  final NestedDecimalFilter? max;
+  final NestedDecimalFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2109,11 +2109,11 @@ class DecimalWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2128,11 +2128,11 @@ class BigIntWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? equals;
@@ -2152,15 +2152,15 @@ class BigIntWithAggregatesFilter
 
   final _i1.PrismaUnion<BigInt, NestedBigIntWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedFloatFilter? avg;
+  final NestedFloatFilter? $avg;
 
-  final NestedBigIntFilter? sum;
+  final NestedBigIntFilter? $sum;
 
-  final NestedBigIntFilter? min;
+  final NestedBigIntFilter? $min;
 
-  final NestedBigIntFilter? max;
+  final NestedBigIntFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2172,11 +2172,11 @@ class BigIntWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2187,9 +2187,9 @@ class BytesWithAggregatesFilter
     this.$in,
     this.notIn,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<_i2.Uint8List, _i1.FieldRef<_i2.Uint8List>>? equals;
@@ -2202,11 +2202,11 @@ class BytesWithAggregatesFilter
 
   final _i1.PrismaUnion<_i2.Uint8List, NestedBytesWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedBytesFilter? min;
+  final NestedBytesFilter? $min;
 
-  final NestedBytesFilter? max;
+  final NestedBytesFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2214,9 +2214,9 @@ class BytesWithAggregatesFilter
         if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
         if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2236,9 +2236,9 @@ class JsonNullableWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<_i1.PrismaJson,
@@ -2276,11 +2276,11 @@ class JsonNullableWithAggregatesFilter
   final _i1.PrismaUnion<_i1.PrismaJson,
       _i1.PrismaUnion<_i1.FieldRef<_i1.PrismaJson>, JsonNullValueFilter>>? not;
 
-  final NestedIntNullableFilter? count;
+  final NestedIntNullableFilter? $count;
 
-  final NestedJsonNullableFilter? min;
+  final NestedJsonNullableFilter? $min;
 
-  final NestedJsonNullableFilter? max;
+  final NestedJsonNullableFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2304,9 +2304,9 @@ class JsonNullableWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2321,11 +2321,11 @@ class IntNullableWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1
@@ -2351,15 +2351,15 @@ class IntNullableWithAggregatesFilter
       _i1
       .PrismaUnion<NestedIntNullableWithAggregatesFilter, _i1.PrismaNull>>? not;
 
-  final NestedIntNullableFilter? count;
+  final NestedIntNullableFilter? $count;
 
-  final NestedFloatNullableFilter? avg;
+  final NestedFloatNullableFilter? $avg;
 
-  final NestedIntNullableFilter? sum;
+  final NestedIntNullableFilter? $sum;
 
-  final NestedIntNullableFilter? min;
+  final NestedIntNullableFilter? $min;
 
-  final NestedIntNullableFilter? max;
+  final NestedIntNullableFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2371,11 +2371,11 @@ class IntNullableWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2390,11 +2390,11 @@ class FloatWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<double, _i1.FieldRef<double>>? equals;
@@ -2414,15 +2414,15 @@ class FloatWithAggregatesFilter
 
   final _i1.PrismaUnion<double, NestedFloatWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedFloatFilter? avg;
+  final NestedFloatFilter? $avg;
 
-  final NestedFloatFilter? sum;
+  final NestedFloatFilter? $sum;
 
-  final NestedFloatFilter? min;
+  final NestedFloatFilter? $min;
 
-  final NestedFloatFilter? max;
+  final NestedFloatFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2434,11 +2434,11 @@ class FloatWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -2453,9 +2453,9 @@ class DateTimeWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? equals;
@@ -2476,11 +2476,11 @@ class DateTimeWithAggregatesFilter
 
   final _i1.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedDateTimeFilter? min;
+  final NestedDateTimeFilter? $min;
 
-  final NestedDateTimeFilter? max;
+  final NestedDateTimeFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -2492,9 +2492,9 @@ class DateTimeWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -3469,11 +3469,11 @@ class NestedIntWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<int, _i1.FieldRef<int>>? equals;
@@ -3492,15 +3492,15 @@ class NestedIntWithAggregatesFilter
 
   final _i1.PrismaUnion<int, NestedIntWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedFloatFilter? avg;
+  final NestedFloatFilter? $avg;
 
-  final NestedIntFilter? sum;
+  final NestedIntFilter? $sum;
 
-  final NestedIntFilter? min;
+  final NestedIntFilter? $min;
 
-  final NestedIntFilter? max;
+  final NestedIntFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -3512,11 +3512,11 @@ class NestedIntWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -3534,9 +3534,9 @@ class NestedStringWithAggregatesFilter
     this.startsWith,
     this.endsWith,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<String, _i1.FieldRef<String>>? equals;
@@ -3562,11 +3562,11 @@ class NestedStringWithAggregatesFilter
 
   final _i1.PrismaUnion<String, NestedStringWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedStringFilter? min;
+  final NestedStringFilter? $min;
 
-  final NestedStringFilter? max;
+  final NestedStringFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -3584,9 +3584,9 @@ class NestedStringWithAggregatesFilter
         if (endsWith != null)
           r'endsWith': _i1.JsonConvertible.serialize(endsWith),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -3597,9 +3597,9 @@ class NestedEnumRoleWithAggregatesFilter
     this.$in,
     this.notIn,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<Role, _i1.FieldRef<Role>>? equals;
@@ -3610,11 +3610,11 @@ class NestedEnumRoleWithAggregatesFilter
 
   final _i1.PrismaUnion<Role, NestedEnumRoleWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedEnumRoleFilter? min;
+  final NestedEnumRoleFilter? $min;
 
-  final NestedEnumRoleFilter? max;
+  final NestedEnumRoleFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -3622,9 +3622,9 @@ class NestedEnumRoleWithAggregatesFilter
         if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
         if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -3639,11 +3639,11 @@ class NestedDecimalWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<_i1.Decimal, _i1.FieldRef<_i1.Decimal>>? equals;
@@ -3666,15 +3666,15 @@ class NestedDecimalWithAggregatesFilter
 
   final _i1.PrismaUnion<_i1.Decimal, NestedDecimalWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedDecimalFilter? avg;
+  final NestedDecimalFilter? $avg;
 
-  final NestedDecimalFilter? sum;
+  final NestedDecimalFilter? $sum;
 
-  final NestedDecimalFilter? min;
+  final NestedDecimalFilter? $min;
 
-  final NestedDecimalFilter? max;
+  final NestedDecimalFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -3686,11 +3686,11 @@ class NestedDecimalWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -3705,11 +3705,11 @@ class NestedBigIntWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<BigInt, _i1.FieldRef<BigInt>>? equals;
@@ -3729,15 +3729,15 @@ class NestedBigIntWithAggregatesFilter
 
   final _i1.PrismaUnion<BigInt, NestedBigIntWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedFloatFilter? avg;
+  final NestedFloatFilter? $avg;
 
-  final NestedBigIntFilter? sum;
+  final NestedBigIntFilter? $sum;
 
-  final NestedBigIntFilter? min;
+  final NestedBigIntFilter? $min;
 
-  final NestedBigIntFilter? max;
+  final NestedBigIntFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -3749,11 +3749,11 @@ class NestedBigIntWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -3764,9 +3764,9 @@ class NestedBytesWithAggregatesFilter
     this.$in,
     this.notIn,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<_i2.Uint8List, _i1.FieldRef<_i2.Uint8List>>? equals;
@@ -3779,11 +3779,11 @@ class NestedBytesWithAggregatesFilter
 
   final _i1.PrismaUnion<_i2.Uint8List, NestedBytesWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedBytesFilter? min;
+  final NestedBytesFilter? $min;
 
-  final NestedBytesFilter? max;
+  final NestedBytesFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -3791,9 +3791,9 @@ class NestedBytesWithAggregatesFilter
         if ($in != null) r'in': _i1.JsonConvertible.serialize($in),
         if (notIn != null) r'notIn': _i1.JsonConvertible.serialize(notIn),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -3886,11 +3886,11 @@ class NestedIntNullableWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1
@@ -3916,15 +3916,15 @@ class NestedIntNullableWithAggregatesFilter
       _i1
       .PrismaUnion<NestedIntNullableWithAggregatesFilter, _i1.PrismaNull>>? not;
 
-  final NestedIntNullableFilter? count;
+  final NestedIntNullableFilter? $count;
 
-  final NestedFloatNullableFilter? avg;
+  final NestedFloatNullableFilter? $avg;
 
-  final NestedIntNullableFilter? sum;
+  final NestedIntNullableFilter? $sum;
 
-  final NestedIntNullableFilter? min;
+  final NestedIntNullableFilter? $min;
 
-  final NestedIntNullableFilter? max;
+  final NestedIntNullableFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -3936,11 +3936,11 @@ class NestedIntNullableWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -4001,11 +4001,11 @@ class NestedFloatWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.avg,
-    this.sum,
-    this.min,
-    this.max,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<double, _i1.FieldRef<double>>? equals;
@@ -4025,15 +4025,15 @@ class NestedFloatWithAggregatesFilter
 
   final _i1.PrismaUnion<double, NestedFloatWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedFloatFilter? avg;
+  final NestedFloatFilter? $avg;
 
-  final NestedFloatFilter? sum;
+  final NestedFloatFilter? $sum;
 
-  final NestedFloatFilter? min;
+  final NestedFloatFilter? $min;
 
-  final NestedFloatFilter? max;
+  final NestedFloatFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -4045,11 +4045,11 @@ class NestedFloatWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (avg != null) r'_avg': _i1.JsonConvertible.serialize(avg),
-        if (sum != null) r'_sum': _i1.JsonConvertible.serialize(sum),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($avg != null) r'_avg': _i1.JsonConvertible.serialize($avg),
+        if ($sum != null) r'_sum': _i1.JsonConvertible.serialize($sum),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -4064,9 +4064,9 @@ class NestedDateTimeWithAggregatesFilter
     this.gt,
     this.gte,
     this.not,
-    this.count,
-    this.min,
-    this.max,
+    this.$count,
+    this.$min,
+    this.$max,
   });
 
   final _i1.PrismaUnion<DateTime, _i1.FieldRef<DateTime>>? equals;
@@ -4087,11 +4087,11 @@ class NestedDateTimeWithAggregatesFilter
 
   final _i1.PrismaUnion<DateTime, NestedDateTimeWithAggregatesFilter>? not;
 
-  final NestedIntFilter? count;
+  final NestedIntFilter? $count;
 
-  final NestedDateTimeFilter? min;
+  final NestedDateTimeFilter? $min;
 
-  final NestedDateTimeFilter? max;
+  final NestedDateTimeFilter? $max;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -4103,9 +4103,9 @@ class NestedDateTimeWithAggregatesFilter
         if (gt != null) r'gt': _i1.JsonConvertible.serialize(gt),
         if (gte != null) r'gte': _i1.JsonConvertible.serialize(gte),
         if (not != null) r'not': _i1.JsonConvertible.serialize(not),
-        if (count != null) r'_count': _i1.JsonConvertible.serialize(count),
-        if (min != null) r'_min': _i1.JsonConvertible.serialize(min),
-        if (max != null) r'_max': _i1.JsonConvertible.serialize(max),
+        if ($count != null) r'_count': _i1.JsonConvertible.serialize($count),
+        if ($min != null) r'_min': _i1.JsonConvertible.serialize($min),
+        if ($max != null) r'_max': _i1.JsonConvertible.serialize($max),
       };
 }
 
@@ -4292,7 +4292,7 @@ class UserCreateWithoutPostsInput
     required this.bytes,
     this.json,
     this.age,
-    required this.demo,
+    required this.count,
     this.createdAt,
   });
 
@@ -4310,7 +4310,7 @@ class UserCreateWithoutPostsInput
 
   final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
-  final double demo;
+  final double count;
 
   final DateTime? createdAt;
 
@@ -4323,7 +4323,7 @@ class UserCreateWithoutPostsInput
         'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        'demo': _i1.JsonConvertible.serialize(demo),
+        'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -4340,7 +4340,7 @@ class UserUncheckedCreateWithoutPostsInput
     required this.bytes,
     this.json,
     this.age,
-    required this.demo,
+    required this.count,
     this.createdAt,
   });
 
@@ -4360,7 +4360,7 @@ class UserUncheckedCreateWithoutPostsInput
 
   final _i1.PrismaUnion<int, _i1.PrismaNull>? age;
 
-  final double demo;
+  final double count;
 
   final DateTime? createdAt;
 
@@ -4374,7 +4374,7 @@ class UserUncheckedCreateWithoutPostsInput
         'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        'demo': _i1.JsonConvertible.serialize(demo),
+        'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -4452,7 +4452,7 @@ class UserUpdateWithoutPostsInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -4473,7 +4473,7 @@ class UserUpdateWithoutPostsInput
       _i1
       .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? count;
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
@@ -4487,7 +4487,7 @@ class UserUpdateWithoutPostsInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -4504,7 +4504,7 @@ class UserUncheckedUpdateWithoutPostsInput
     this.bytes,
     this.json,
     this.age,
-    this.demo,
+    this.count,
     this.createdAt,
   });
 
@@ -4527,7 +4527,7 @@ class UserUncheckedUpdateWithoutPostsInput
       _i1
       .PrismaUnion<NullableIntFieldUpdateOperationsInput, _i1.PrismaNull>>? age;
 
-  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? demo;
+  final _i1.PrismaUnion<double, FloatFieldUpdateOperationsInput>? count;
 
   final _i1.PrismaUnion<DateTime, DateTimeFieldUpdateOperationsInput>?
       createdAt;
@@ -4542,7 +4542,7 @@ class UserUncheckedUpdateWithoutPostsInput
         if (bytes != null) r'bytes': _i1.JsonConvertible.serialize(bytes),
         if (json != null) r'json': _i1.JsonConvertible.serialize(json),
         if (age != null) r'age': _i1.JsonConvertible.serialize(age),
-        if (demo != null) r'demo': _i1.JsonConvertible.serialize(demo),
+        if (count != null) r'count': _i1.JsonConvertible.serialize(count),
         if (createdAt != null)
           r'createdAt': _i1.JsonConvertible.serialize(createdAt),
       };
@@ -4618,4 +4618,605 @@ class PostUncheckedUpdateManyWithoutAuthorInput
         if (id != null) r'id': _i1.JsonConvertible.serialize(id),
         if (title != null) r'title': _i1.JsonConvertible.serialize(title),
       };
+}
+
+class User {
+  const User({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.count,
+    this.createdAt,
+    this.posts,
+    this.$count,
+  });
+
+  factory User.fromJson(Map json) => User(
+        id: json['id'],
+        name: json['name'],
+        role: Role.values
+            .where((e) => e.toPrismaEnumName() == json['role'])
+            .firstOrNull,
+        price: json['price'],
+        size: json['size'],
+        bytes: json['bytes'],
+        json: json['json'],
+        age: json['age'],
+        count: json['count'],
+        createdAt: json['createdAt'],
+        posts:
+            (json['posts'] as Iterable?)?.map((e) => Post.fromJson((e as Map))),
+        $count: json['_count'] == null
+            ? null
+            : UserCountOutputType.fromJson((json['_count'] as Map)),
+      );
+
+  final int? id;
+
+  final String? name;
+
+  final Role? role;
+
+  final _i1.Decimal? price;
+
+  final BigInt? size;
+
+  final _i2.Uint8List? bytes;
+
+  final dynamic json;
+
+  final int? age;
+
+  final double? count;
+
+  final DateTime? createdAt;
+
+  final Iterable<Post>? posts;
+
+  final UserCountOutputType? $count;
+}
+
+class Post {
+  const Post({
+    this.id,
+    this.title,
+    this.userId,
+    this.author,
+  });
+
+  factory Post.fromJson(Map json) => Post(
+        id: json['id'],
+        title: json['title'],
+        userId: json['userId'],
+        author: json['author'] == null
+            ? null
+            : User.fromJson((json['author'] as Map)),
+      );
+
+  final String? id;
+
+  final String? title;
+
+  final int? userId;
+
+  final User? author;
+}
+
+class AggregateUser {
+  const AggregateUser({
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
+
+  factory AggregateUser.fromJson(Map json) => AggregateUser(
+        $count: json['_count'] == null
+            ? null
+            : UserCountAggregateOutputType.fromJson((json['_count'] as Map)),
+        $avg: json['_avg'] == null
+            ? null
+            : UserAvgAggregateOutputType.fromJson((json['_avg'] as Map)),
+        $sum: json['_sum'] == null
+            ? null
+            : UserSumAggregateOutputType.fromJson((json['_sum'] as Map)),
+        $min: json['_min'] == null
+            ? null
+            : UserMinAggregateOutputType.fromJson((json['_min'] as Map)),
+        $max: json['_max'] == null
+            ? null
+            : UserMaxAggregateOutputType.fromJson((json['_max'] as Map)),
+      );
+
+  final UserCountAggregateOutputType? $count;
+
+  final UserAvgAggregateOutputType? $avg;
+
+  final UserSumAggregateOutputType? $sum;
+
+  final UserMinAggregateOutputType? $min;
+
+  final UserMaxAggregateOutputType? $max;
+}
+
+class UserGroupByOutputType {
+  const UserGroupByOutputType({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.count,
+    this.createdAt,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
+
+  factory UserGroupByOutputType.fromJson(Map json) => UserGroupByOutputType(
+        id: json['id'],
+        name: json['name'],
+        role: Role.values
+            .where((e) => e.toPrismaEnumName() == json['role'])
+            .firstOrNull,
+        price: json['price'],
+        size: json['size'],
+        bytes: json['bytes'],
+        json: json['json'],
+        age: json['age'],
+        count: json['count'],
+        createdAt: json['createdAt'],
+        $count: json['_count'] == null
+            ? null
+            : UserCountAggregateOutputType.fromJson((json['_count'] as Map)),
+        $avg: json['_avg'] == null
+            ? null
+            : UserAvgAggregateOutputType.fromJson((json['_avg'] as Map)),
+        $sum: json['_sum'] == null
+            ? null
+            : UserSumAggregateOutputType.fromJson((json['_sum'] as Map)),
+        $min: json['_min'] == null
+            ? null
+            : UserMinAggregateOutputType.fromJson((json['_min'] as Map)),
+        $max: json['_max'] == null
+            ? null
+            : UserMaxAggregateOutputType.fromJson((json['_max'] as Map)),
+      );
+
+  final int? id;
+
+  final String? name;
+
+  final Role? role;
+
+  final _i1.Decimal? price;
+
+  final BigInt? size;
+
+  final _i2.Uint8List? bytes;
+
+  final dynamic json;
+
+  final int? age;
+
+  final double? count;
+
+  final DateTime? createdAt;
+
+  final UserCountAggregateOutputType? $count;
+
+  final UserAvgAggregateOutputType? $avg;
+
+  final UserSumAggregateOutputType? $sum;
+
+  final UserMinAggregateOutputType? $min;
+
+  final UserMaxAggregateOutputType? $max;
+}
+
+class AggregatePost {
+  const AggregatePost({
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
+
+  factory AggregatePost.fromJson(Map json) => AggregatePost(
+        $count: json['_count'] == null
+            ? null
+            : PostCountAggregateOutputType.fromJson((json['_count'] as Map)),
+        $avg: json['_avg'] == null
+            ? null
+            : PostAvgAggregateOutputType.fromJson((json['_avg'] as Map)),
+        $sum: json['_sum'] == null
+            ? null
+            : PostSumAggregateOutputType.fromJson((json['_sum'] as Map)),
+        $min: json['_min'] == null
+            ? null
+            : PostMinAggregateOutputType.fromJson((json['_min'] as Map)),
+        $max: json['_max'] == null
+            ? null
+            : PostMaxAggregateOutputType.fromJson((json['_max'] as Map)),
+      );
+
+  final PostCountAggregateOutputType? $count;
+
+  final PostAvgAggregateOutputType? $avg;
+
+  final PostSumAggregateOutputType? $sum;
+
+  final PostMinAggregateOutputType? $min;
+
+  final PostMaxAggregateOutputType? $max;
+}
+
+class PostGroupByOutputType {
+  const PostGroupByOutputType({
+    this.id,
+    this.title,
+    this.userId,
+    this.$count,
+    this.$avg,
+    this.$sum,
+    this.$min,
+    this.$max,
+  });
+
+  factory PostGroupByOutputType.fromJson(Map json) => PostGroupByOutputType(
+        id: json['id'],
+        title: json['title'],
+        userId: json['userId'],
+        $count: json['_count'] == null
+            ? null
+            : PostCountAggregateOutputType.fromJson((json['_count'] as Map)),
+        $avg: json['_avg'] == null
+            ? null
+            : PostAvgAggregateOutputType.fromJson((json['_avg'] as Map)),
+        $sum: json['_sum'] == null
+            ? null
+            : PostSumAggregateOutputType.fromJson((json['_sum'] as Map)),
+        $min: json['_min'] == null
+            ? null
+            : PostMinAggregateOutputType.fromJson((json['_min'] as Map)),
+        $max: json['_max'] == null
+            ? null
+            : PostMaxAggregateOutputType.fromJson((json['_max'] as Map)),
+      );
+
+  final String? id;
+
+  final String? title;
+
+  final int? userId;
+
+  final PostCountAggregateOutputType? $count;
+
+  final PostAvgAggregateOutputType? $avg;
+
+  final PostSumAggregateOutputType? $sum;
+
+  final PostMinAggregateOutputType? $min;
+
+  final PostMaxAggregateOutputType? $max;
+}
+
+class AffectedRowsOutput {
+  const AffectedRowsOutput({this.count});
+
+  factory AffectedRowsOutput.fromJson(Map json) =>
+      AffectedRowsOutput(count: json['count']);
+
+  final int? count;
+}
+
+class UserCountOutputType {
+  const UserCountOutputType({this.posts});
+
+  factory UserCountOutputType.fromJson(Map json) =>
+      UserCountOutputType(posts: json['posts']);
+
+  final int? posts;
+}
+
+class UserCountAggregateOutputType {
+  const UserCountAggregateOutputType({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.json,
+    this.age,
+    this.count,
+    this.createdAt,
+    this.$all,
+  });
+
+  factory UserCountAggregateOutputType.fromJson(Map json) =>
+      UserCountAggregateOutputType(
+        id: json['id'],
+        name: json['name'],
+        role: json['role'],
+        price: json['price'],
+        size: json['size'],
+        bytes: json['bytes'],
+        json: json['json'],
+        age: json['age'],
+        count: json['count'],
+        createdAt: json['createdAt'],
+        $all: json['_all'],
+      );
+
+  final int? id;
+
+  final int? name;
+
+  final int? role;
+
+  final int? price;
+
+  final int? size;
+
+  final int? bytes;
+
+  final int? json;
+
+  final int? age;
+
+  final int? count;
+
+  final int? createdAt;
+
+  final int? $all;
+}
+
+class UserAvgAggregateOutputType {
+  const UserAvgAggregateOutputType({
+    this.id,
+    this.price,
+    this.size,
+    this.age,
+    this.count,
+  });
+
+  factory UserAvgAggregateOutputType.fromJson(Map json) =>
+      UserAvgAggregateOutputType(
+        id: json['id'],
+        price: json['price'],
+        size: json['size'],
+        age: json['age'],
+        count: json['count'],
+      );
+
+  final double? id;
+
+  final _i1.Decimal? price;
+
+  final double? size;
+
+  final double? age;
+
+  final double? count;
+}
+
+class UserSumAggregateOutputType {
+  const UserSumAggregateOutputType({
+    this.id,
+    this.price,
+    this.size,
+    this.age,
+    this.count,
+  });
+
+  factory UserSumAggregateOutputType.fromJson(Map json) =>
+      UserSumAggregateOutputType(
+        id: json['id'],
+        price: json['price'],
+        size: json['size'],
+        age: json['age'],
+        count: json['count'],
+      );
+
+  final int? id;
+
+  final _i1.Decimal? price;
+
+  final BigInt? size;
+
+  final int? age;
+
+  final double? count;
+}
+
+class UserMinAggregateOutputType {
+  const UserMinAggregateOutputType({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.age,
+    this.count,
+    this.createdAt,
+  });
+
+  factory UserMinAggregateOutputType.fromJson(Map json) =>
+      UserMinAggregateOutputType(
+        id: json['id'],
+        name: json['name'],
+        role: Role.values
+            .where((e) => e.toPrismaEnumName() == json['role'])
+            .firstOrNull,
+        price: json['price'],
+        size: json['size'],
+        bytes: json['bytes'],
+        age: json['age'],
+        count: json['count'],
+        createdAt: json['createdAt'],
+      );
+
+  final int? id;
+
+  final String? name;
+
+  final Role? role;
+
+  final _i1.Decimal? price;
+
+  final BigInt? size;
+
+  final _i2.Uint8List? bytes;
+
+  final int? age;
+
+  final double? count;
+
+  final DateTime? createdAt;
+}
+
+class UserMaxAggregateOutputType {
+  const UserMaxAggregateOutputType({
+    this.id,
+    this.name,
+    this.role,
+    this.price,
+    this.size,
+    this.bytes,
+    this.age,
+    this.count,
+    this.createdAt,
+  });
+
+  factory UserMaxAggregateOutputType.fromJson(Map json) =>
+      UserMaxAggregateOutputType(
+        id: json['id'],
+        name: json['name'],
+        role: Role.values
+            .where((e) => e.toPrismaEnumName() == json['role'])
+            .firstOrNull,
+        price: json['price'],
+        size: json['size'],
+        bytes: json['bytes'],
+        age: json['age'],
+        count: json['count'],
+        createdAt: json['createdAt'],
+      );
+
+  final int? id;
+
+  final String? name;
+
+  final Role? role;
+
+  final _i1.Decimal? price;
+
+  final BigInt? size;
+
+  final _i2.Uint8List? bytes;
+
+  final int? age;
+
+  final double? count;
+
+  final DateTime? createdAt;
+}
+
+class PostCountAggregateOutputType {
+  const PostCountAggregateOutputType({
+    this.id,
+    this.title,
+    this.userId,
+    this.$all,
+  });
+
+  factory PostCountAggregateOutputType.fromJson(Map json) =>
+      PostCountAggregateOutputType(
+        id: json['id'],
+        title: json['title'],
+        userId: json['userId'],
+        $all: json['_all'],
+      );
+
+  final int? id;
+
+  final int? title;
+
+  final int? userId;
+
+  final int? $all;
+}
+
+class PostAvgAggregateOutputType {
+  const PostAvgAggregateOutputType({this.userId});
+
+  factory PostAvgAggregateOutputType.fromJson(Map json) =>
+      PostAvgAggregateOutputType(userId: json['userId']);
+
+  final double? userId;
+}
+
+class PostSumAggregateOutputType {
+  const PostSumAggregateOutputType({this.userId});
+
+  factory PostSumAggregateOutputType.fromJson(Map json) =>
+      PostSumAggregateOutputType(userId: json['userId']);
+
+  final int? userId;
+}
+
+class PostMinAggregateOutputType {
+  const PostMinAggregateOutputType({
+    this.id,
+    this.title,
+    this.userId,
+  });
+
+  factory PostMinAggregateOutputType.fromJson(Map json) =>
+      PostMinAggregateOutputType(
+        id: json['id'],
+        title: json['title'],
+        userId: json['userId'],
+      );
+
+  final String? id;
+
+  final String? title;
+
+  final int? userId;
+}
+
+class PostMaxAggregateOutputType {
+  const PostMaxAggregateOutputType({
+    this.id,
+    this.title,
+    this.userId,
+  });
+
+  factory PostMaxAggregateOutputType.fromJson(Map json) =>
+      PostMaxAggregateOutputType(
+        id: json['id'],
+        title: json['title'],
+        userId: json['userId'],
+      );
+
+  final String? id;
+
+  final String? title;
+
+  final int? userId;
 }

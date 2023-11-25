@@ -32,7 +32,11 @@ extension DartClassNameStyleFixer on String {
     if (prismaReserved.contains(this)) return this;
 
     final propertyName = camelCase;
-    if (reserved.contains(propertyName.toLowerCase())) {
+    if (reserved.contains(propertyName.toLowerCase()) || startsWith('_')) {
+      if (propertyName.startsWith('_')) {
+        return propertyName.fixStartsWithUnderline();
+      }
+
       return '\$$propertyName';
     }
 
