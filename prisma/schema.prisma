@@ -3,13 +3,13 @@
 
 generator DartClient {
   provider = "dart run orm"
-  // output   = "dart"
+  output   = "dart"
 }
 
-// generator JSClient {
-//   provider = "prisma-client-js"
-//   output   = "js"
-// }
+generator JSClient {
+  provider = "prisma-client-js"
+  output   = "js"
+}
 
 datasource db {
   provider = "postgresql"
