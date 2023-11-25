@@ -1,5 +1,16 @@
 import 'package:code_builder/code_builder.dart';
 
+enum Packages {
+  dartTypedData('dart:typed_data'),
+  prismaRuntime('package:orm/orm.dart'),
+  prismaDmmf('package:orm/dmmf.dart'),
+  generatedTypes('types.dart'),
+  ;
+
+  final String url;
+  const Packages(this.url);
+}
+
 extension TypeReferenceExtension on TypeReference {
   TypeReference copyWith({
     String? symbol,
@@ -49,23 +60,7 @@ extension ReferenceExtension on Reference {
     return toTypeReference().copyWith(isNullable: false);
   }
 
-  TypeReference toPrismaRuntime() {
-    return toTypeReference().copyWith(url: 'package:orm/orm.dart');
-  }
-
-  TypeReference toPrismaDmmf() {
-    return toTypeReference().copyWith(url: 'package:orm/dmmf.dart');
-  }
-
-  TypeReference toGeneratedTypes() {
-    return toTypeReference().copyWith(url: 'types.dart');
-  }
-
-  TypeReference toDartTypedData() {
-    return toTypeReference().copyWith(url: 'dart:typed_data');
-  }
-
-  TypeReference toDartCore() {
-    return toTypeReference().copyWith(url: 'dart:core');
+  TypeReference toPackage(Packages package) {
+    return toTypeReference().copyWith(url: package.url);
   }
 }

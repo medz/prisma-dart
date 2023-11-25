@@ -6,6 +6,7 @@ import 'package:orm/generator_helper.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart';
 
+import 'src/client/generate_client.dart';
 import 'src/types/generate_types.dart';
 
 Future<void> main() async {
@@ -36,6 +37,12 @@ Future<void> generate(GeneratorOptions options) async {
     formatter: formatter,
     spec: generateTypesLibrary(options.dmmf),
     path: join(options.generator.output!.value, 'types.dart'),
+  );
+
+  await writeDartSpec(
+    formatter: formatter,
+    spec: generateClientLibrary(options.dmmf),
+    path: join(options.generator.output!.value, 'client.dart'),
   );
 }
 

@@ -95,7 +95,8 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
     final model = element.findModel(document);
 
     builder.name = element.name.toDartClassNameString();
-    builder.implements.add(refer('PrismaEnum').toPrismaRuntime());
+    builder.implements
+        .add(refer('PrismaEnum').toPackage(Packages.prismaRuntime));
     builder.fields.add(enumProperty);
     builder.constructors.add(enumConstructor);
 
@@ -117,7 +118,8 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
 
     // TransactionIsolationLevel
     if (element.name == 'TransactionIsolationLevel') {
-      builder.implements.add(refer('IsolationLevel').toPrismaRuntime());
+      builder.implements
+          .add(refer('IsolationLevel').toPackage(Packages.prismaRuntime));
       builder.methods.add(isolationLevel);
     }
 
@@ -131,7 +133,7 @@ Enum generateEnum(dmmf.Enum element, dmmf.DMMF document) {
       builder.types.add(refer('T'));
 
       builder.implements.add(
-        refer('FieldRef').toPrismaRuntime().copyWith(
+        refer('FieldRef').toPackage(Packages.prismaRuntime).copyWith(
           types: [refer('T')],
         ),
       );

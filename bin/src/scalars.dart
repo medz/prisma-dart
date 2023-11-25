@@ -8,12 +8,12 @@ final scalars = <String, Reference>{
   'Int': refer('int'),
   'Float': refer('double'),
   'String': refer('String'),
-  'Decimal': refer('Decimal').toPrismaRuntime(),
+  'Decimal': refer('Decimal').toPackage(Packages.prismaRuntime),
   'BigInt': refer('BigInt'),
-  'Bytes': refer('Uint8List').toDartTypedData(),
-  'Json': refer('PrismaJson').toPrismaRuntime(),
+  'Bytes': refer('Uint8List').toPackage(Packages.dartTypedData),
+  'Json': refer('PrismaJson').toPackage(Packages.prismaRuntime),
   'DateTime': refer('DateTime'),
-  'Null': refer('PrismaNull').toPrismaRuntime(),
+  'Null': refer('PrismaNull').toPackage(Packages.prismaRuntime),
   'Boolean': refer('bool'),
 };
 
@@ -53,7 +53,7 @@ extension DmmfTypeReferenceExtension on dmmf.TypeReference {
         .allowTypes
         .first;
 
-    final ref = refer('FieldRef').toPrismaRuntime();
+    final ref = refer('FieldRef').toPackage(Packages.prismaRuntime);
 
     return TypeReference((builder) {
       builder.symbol = ref.symbol;

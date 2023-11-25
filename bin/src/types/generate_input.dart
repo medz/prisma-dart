@@ -16,7 +16,7 @@ Class generateInputType(dmmf.InputType input, dmmf.DMMF document) {
   return Class((builder) {
     builder.name = input.name.toDartClassNameString();
     builder.implements.add(
-      refer('JsonConvertible').toPrismaRuntime().copyWith(
+      refer('JsonConvertible').toPackage(Packages.prismaRuntime).copyWith(
         types: [
           refer('Map').copyWith(
             types: [refer('String'), refer('dynamic')],
@@ -63,7 +63,10 @@ Spec generateToJsonMapKey(dmmf.InputField field) {
 }
 
 Spec generateToJsonMapValue(dmmf.InputField field) {
-  return refer('JsonConvertible').toPrismaRuntime().property('serialize').call([
+  return refer('JsonConvertible')
+      .toPackage(Packages.prismaRuntime)
+      .property('serialize')
+      .call([
     refer(field.name.toDartPropertyNameString()),
   ]);
 }
@@ -106,6 +109,7 @@ Field generateInputField(dmmf.InputField field, dmmf.DMMF document) {
     builder.name = field.name.toDartPropertyNameString();
     builder.modifier = FieldModifier.final$;
     builder.type = generateInputFieldType(field.inputTypes, document);
+
     if (!field.isRequired || field.isNullable) {
       builder.type = builder.type?.toNullable();
     }
@@ -116,7 +120,7 @@ Reference generateInputFieldType(
     Iterable<dmmf.TypeReference> types, dmmf.DMMF document) {
   return switch (types) {
     Iterable(length: 1, first: final type) => type.toDartReference(document),
-    _ => refer('PrismaUnion').toPrismaRuntime().copyWith(
+    _ => refer('PrismaUnion').toPackage(Packages.prismaRuntime).copyWith(
         types: [
           types.first.toDartReference(document),
           generateInputFieldType(types.skip(1), document)
