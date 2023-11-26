@@ -1,8 +1,8 @@
-# [v4.0.0-alpha.0]
+# Prisma Dart client v4.0.0-alpha.0
 
 To install Prisma Dart client v4.0.0-alpha.0 run:
 
-```base
+```sh
 # If you are using Dart
 dart pub add orm:4.0.0-alpha.0
 
@@ -17,7 +17,7 @@ dependencies:
   orm: 4.0.0-alpha.0
 ```
 
-[Read Prisma Dart Client v4.0.0-alpha.0 release notes on the Prisma Dart discussions](https://github.com/medz/prisma-dart/discussions/{id});
+[Read Prisma Dart Client v4.0.0-alpha.0 release notes on the Prisma Dart discussions](https://github.com/medz/prisma-dart/discussions/{id})
 
 ## What's Changed
 
@@ -83,7 +83,7 @@ generator CopyQueryEngine {
 
 ### Step 4: Generate client
 
-```base
+```sh
 npx prisma generate
 ```
 
