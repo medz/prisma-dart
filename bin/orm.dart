@@ -1,4 +1,3 @@
-// import 'dart:convert';
 import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
@@ -7,6 +6,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart';
 
 import 'src/client/generate_client.dart';
+import 'src/generate_dmmf.dart';
 import 'src/types/generate_types.dart';
 
 Future<void> main() async {
@@ -29,9 +29,11 @@ Future<GeneratorManifest> manifest(GeneratorConfig config) async {
 Future<void> generate(GeneratorOptions options) async {
   final formatter = DartFormatter();
 
-  // File('dmmf.json')
-  //   ..autoCreateSync()
-  //   ..writeAsStringSync(json.encode(options.dmmf.source));
+  await writeDartSpec(
+    formatter: formatter,
+    spec: generateDmmfLibrary(options.dmmf),
+    path: join(options.generator.output!.value, 'dmmf.dart'),
+  );
 
   await writeDartSpec(
     formatter: formatter,

@@ -28,13 +28,14 @@ extension DmmfFieldExtension on dmmf.Field {
 }
 
 extension DmmfTypeReferenceExtension on dmmf.TypeReference {
-  Reference toDartReference(dmmf.DMMF document) {
+  Reference toDartReference(dmmf.DMMF document, {bool innerTypes = false}) {
     final reference = switch (location) {
       dmmf.TypeLocation.scalar => scalars[type] ?? refer(type),
-      dmmf.TypeLocation.enumTypes => refer(type),
-      dmmf.TypeLocation.inputObjectTypes => refer(type),
-      dmmf.TypeLocation.outputObjectTypes => refer(type),
-      dmmf.TypeLocation.fieldRefTypes => _toFieldRefTypeReference(document),
+      dmmf.TypeLocation.enumTypes =>
+        _generateEnumReference(type, document, innerTypes),
+      dmmf.TypeLocation.fieldRefTypes =>
+        _toFieldRefTypeReference(document, innerTypes),
+      _ => refer(type).innerTypes(innerTypes),
     };
 
     if (isList) {
@@ -47,18 +48,24 @@ extension DmmfTypeReferenceExtension on dmmf.TypeReference {
     return reference;
   }
 
-  Reference _toFieldRefTypeReference(dmmf.DMMF document) {
+  Reference _generateEnumReference(
+      String type, dmmf.DMMF document, bool innerTypes) {
+    if (type.endsWith('ScalarFieldEnum')) {
+      return refer(type.substring(0, type.length - 'FieldEnum'.length))
+          .innerTypes(innerTypes);
+    }
+
+    return refer(type).innerTypes(innerTypes);
+  }
+
+  Reference _toFieldRefTypeReference(dmmf.DMMF document, bool innerTypes) {
     final field = document.schema.fieldRefTypes.pattern
         .firstWhere((element) => element.name == type)
         .allowTypes
         .first;
 
-    final ref = refer('FieldRef').toPackage(Packages.prismaRuntime);
-
-    return TypeReference((builder) {
-      builder.symbol = ref.symbol;
-      builder.url = ref.url;
-      builder.types.add(field.toDartReference(document));
-    });
+    return refer('FieldRef').toPackage(Packages.prismaRuntime).copyWith(
+      types: [field.toDartReference(document, innerTypes: innerTypes)],
+    );
   }
 }

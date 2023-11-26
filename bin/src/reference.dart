@@ -5,6 +5,7 @@ enum Packages {
   prismaRuntime('package:orm/orm.dart'),
   prismaDmmf('package:orm/dmmf.dart'),
   generatedTypes('types.dart'),
+  generatedDmmf('dmmf.dart'),
   ;
 
   final String url;
@@ -60,7 +61,15 @@ extension ReferenceExtension on Reference {
     return toTypeReference().copyWith(isNullable: false);
   }
 
+  TypeReference switchNullable(bool nullable) {
+    return nullable ? toNullable() : toNonNullable();
+  }
+
   TypeReference toPackage(Packages package) {
     return toTypeReference().copyWith(url: package.url);
+  }
+
+  Reference innerTypes(bool isTypes) {
+    return isTypes ? this : toPackage(Packages.generatedTypes);
   }
 }

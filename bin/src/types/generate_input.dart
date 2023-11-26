@@ -117,13 +117,16 @@ Field generateInputField(dmmf.InputField field, dmmf.DMMF document) {
 }
 
 Reference generateInputFieldType(
-    Iterable<dmmf.TypeReference> types, dmmf.DMMF document) {
+    Iterable<dmmf.TypeReference> types, dmmf.DMMF document,
+    {bool innerTypes = true}) {
   return switch (types) {
-    Iterable(length: 1, first: final type) => type.toDartReference(document),
+    Iterable(length: 1, first: final type) =>
+      type.toDartReference(document, innerTypes: innerTypes),
     _ => refer('PrismaUnion').toPackage(Packages.prismaRuntime).copyWith(
         types: [
-          types.first.toDartReference(document),
-          generateInputFieldType(types.skip(1), document)
+          types.first.toDartReference(document, innerTypes: innerTypes),
+          generateInputFieldType(types.skip(1), document,
+              innerTypes: innerTypes)
         ],
       ),
   };

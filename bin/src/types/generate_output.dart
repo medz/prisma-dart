@@ -43,7 +43,7 @@ Constructor generateOutputFromJsonConstructor(
     final entries = type.fields.map((e) {
       final value = switch (e.outputType.location) {
         dmmf.TypeLocation.enumTypes => e.outputType
-              .toDartReference(document)
+              .toDartReference(document, innerTypes: true)
               .property('values')
               .property('where')
               .call([
@@ -66,7 +66,7 @@ Constructor generateOutputFromJsonConstructor(
                 .conditional(
                   literalNull,
                   e.outputType
-                      .toDartReference(document)
+                      .toDartReference(document, innerTypes: true)
                       .property('fromJson')
                       .call(
                     [
@@ -92,8 +92,10 @@ Constructor generateOutputFromJsonConstructor(
                       type: e.outputType.type,
                       location: e.outputType.location,
                       namespace: e.outputType.namespace);
-                  builder.body =
-                      type.toDartReference(document).property('fromJson').call([
+                  builder.body = type
+                      .toDartReference(document, innerTypes: true)
+                      .property('fromJson')
+                      .call([
                     refer('e').asA(refer('Map')),
                   ]).code;
                 }).closure
@@ -137,7 +139,9 @@ Iterable<Field> generateOutputTypeFields(
 Field generateOutputTypeField(dmmf.OutputField field, dmmf.DMMF document) {
   return Field((builder) {
     builder.name = field.name.toDartPropertyNameString();
-    builder.type = field.outputType.toDartReference(document).toNullable();
+    builder.type = field.outputType
+        .toDartReference(document, innerTypes: true)
+        .toNullable();
     if (field.outputType.type == 'Json') {
       builder.type = refer('dynamic');
     }

@@ -33,25 +33,9 @@ abstract interface class Engine<T> {
   /// - [isWrite] indicates whether the query is a write query.
   /// - [headers] are the headers to be sent with the request.
   /// - [transaction] is the transaction to be used for the request.
-  Future<T> request(
+  Future<dynamic> request(
     JsonQuery query, {
     int attempts = 1,
-    required bool isWrite,
-    TransactionHeaders? headers,
-    Transaction<T>? transaction,
-  });
-
-  /// Sends a batch of requests to the engine.
-  ///
-  /// - [queries] are the queries to be sent to the engine.
-  /// - [attempts] is the number of times the query should be retried if it fails.
-  /// - [isWrite] indicates whether the query is a write query.
-  /// - [headers] are the headers to be sent with the request.
-  /// - [transaction] is the transaction to be used for the request.
-  Future<Iterable<T>> batch(
-    Iterable<JsonQuery> queries, {
-    int attempts = 1,
-    required bool isWrite,
     TransactionHeaders? headers,
     Transaction<T>? transaction,
   });

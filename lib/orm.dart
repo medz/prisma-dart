@@ -2,6 +2,8 @@ library prisma.runtime;
 
 export 'src/runtime/engine.dart';
 export 'src/runtime/json_convertible.dart';
+export 'src/runtime/prisma_client.dart';
+export 'src/runtime/model_delegate.dart';
 export 'src/runtime/transaction.dart';
 
 export 'src/runtime/json_protocol/deserialize.dart';
