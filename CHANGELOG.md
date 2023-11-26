@@ -106,8 +106,8 @@ import '[path]/client.dart';
 
 final prisma = PrismaClient(
   engine: BinaryEngine(
-    url: 'file:./prisma/dev.db',
-    // path: '/path/to/query-engine', // You generated engine path, if not set, will search in current directory.
+    url: Uri.parse('file:./prisma/dev.db'),
+    // binary: '/path/to/query-engine', // You generated engine path, if not set, will search in current directory.
   ),
 );
 ```
