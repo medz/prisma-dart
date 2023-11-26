@@ -110,6 +110,21 @@ extension on dmmf.OutputField {
         .toDartReference(document, innerTypes: false)
         .switchNullable(nullable);
   }
+
+  bool allowSelectAndInlcude(dmmf.ModelAction action) {
+    const disallowedActions = <dmmf.ModelAction>[
+      dmmf.ModelAction.createMany,
+      dmmf.ModelAction.updateMany,
+      dmmf.ModelAction.count,
+      dmmf.ModelAction.groupBy,
+      dmmf.ModelAction.findRaw,
+      dmmf.ModelAction.aggregateRaw,
+    ];
+
+    return outputType.location == dmmf.TypeLocation.outputObjectTypes &&
+        outputType.namespace == dmmf.TypeNamespace.model &&
+        !disallowedActions.contains(action);
+  }
 }
 
 extension on Reference {
@@ -129,16 +144,17 @@ Method generateDelegateMethod(MapEntry<dmmf.ModelAction, String> entity,
     builder.name = entity.key.name.toDartPropertyNameString();
     builder.returns = field.toModelDelegateReturnType(document).wrapperFuture();
     builder.modifier = MethodModifier.async;
-    builder.optionalParameters
-        .addAll(generateDelegateMethodParameters(field, document));
+    builder.optionalParameters.addAll(
+      generateDelegateMethodParameters(field, entity.key, document),
+    );
     builder.body =
         generateDelegateMethodBody(entity.key, field, mapping, document);
   });
 }
 
 Iterable<Parameter> generateDelegateMethodParameters(
-    dmmf.OutputField field, dmmf.DMMF document) {
-  return field.args.map((e) {
+    dmmf.OutputField field, dmmf.ModelAction action, dmmf.DMMF document) {
+  final parameters = field.args.map((e) {
     return Parameter((builder) {
       builder.name = e.name.toDartPropertyNameString();
       builder.named = true;
@@ -147,14 +163,43 @@ Iterable<Parameter> generateDelegateMethodParameters(
               .switchNullable(!e.isRequired || e.isNullable);
       builder.required = e.isRequired;
     });
-  });
+  }).toList();
+
+  // Append select and include parameters.
+  if (field.allowSelectAndInlcude(action)) {
+    // Select
+    parameters.add(Parameter((builder) {
+      builder.name = 'select';
+      builder.type =
+          refer('${field.outputType.type.toDartClassNameString()}Select')
+              .toNullable()
+              .toPackage(Packages.generatedTypes);
+    }));
+
+    // Include
+    parameters.add(Parameter((builder) {
+      builder.name = 'include';
+      builder.type =
+          refer('${field.outputType.type.toDartClassNameString()}Include')
+              .toNullable()
+              .toPackage(Packages.generatedTypes);
+    }));
+  }
+
+  return parameters;
 }
 
 Block generateDelegateMethodBody(dmmf.ModelAction action,
     dmmf.OutputField field, dmmf.ModelMapping mapping, dmmf.DMMF document) {
   return Block((builder) {
     final entries = field.args
-        .map((e) => MapEntry(e.name, refer(e.name.toDartPropertyNameString())));
+        .map((e) => MapEntry(e.name, refer(e.name.toDartPropertyNameString())))
+        .toList();
+
+    if (field.allowSelectAndInlcude(action)) {
+      entries.add(MapEntry('select', refer('select')));
+      entries.add(MapEntry('include', refer('include')));
+    }
 
     // Add args map.
     builder.statements.add(
