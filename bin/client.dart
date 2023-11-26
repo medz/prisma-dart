@@ -44,7 +44,7 @@ Future<void> generate(GeneratorOptions options) async {
 
   await writeDartSpec(
     formatter: formatter,
-    spec: generateClientLibrary(options.dmmf),
+    spec: generateClientLibrary(options.dmmf, options.schema),
     path: join(options.generator.output!.value, 'client.dart'),
   );
 }

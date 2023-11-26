@@ -12,11 +12,14 @@ extension on dmmf.ModelMapping {
       '${model}Delegate'.toDartClassNameString();
 }
 
-Library generateClientLibrary(dmmf.DMMF document) {
+Library generateClientLibrary(dmmf.DMMF document, String schema) {
   return Library((builder) {
     builder.name = 'prisma.client';
     builder.body.add(generateClientExtension(document));
     builder.body.addAll(generateModelDelegate(document));
+    builder.body.add(
+      declareConst('schema').assign(literalString(schema)).statement,
+    );
   });
 }
 

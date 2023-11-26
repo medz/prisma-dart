@@ -1,5 +1,7 @@
 docs/
 graphs/
 node_modules/
-example/prisma/*
-!example/prisma/schema.prisma
+packages/
+prisma/
+!prisma/schema.prisma
+target/

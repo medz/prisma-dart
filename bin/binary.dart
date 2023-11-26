@@ -17,7 +17,6 @@ Future<GeneratorManifest> manifest(GeneratorConfig config) async {
     prettyName: 'Prisma Binary',
     defaultOutput: join('prisma_client', 'prisma-query-engine'),
     requiresEngines: [EngineType.queryEngine],
-    requiresGenerators: ['dart run orm'],
   );
 }
 
