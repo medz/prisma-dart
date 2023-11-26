@@ -1,868 +1,113 @@
-# Changelog
+# [v4.0.0-alpha.0]
 
-## [3.4.4](https://github.com/odroe/prisma-dart/compare/orm-v3.4.3...orm-v3.4.4) (2023-07-03)
+To install Prisma Dart client v4.0.0-alpha.0 run:
 
+```base
+# If you are using Dart
+dart pub add orm:4.0.0-alpha.0
 
-### Bug Fixes
-
-* bump analyzer from 5.13.0 to 6.0.0 ([c03aaa9](https://github.com/odroe/prisma-dart/commit/c03aaa99f63a641d9e0402abbd254488babb1d56))
-
-## [3.4.3](https://github.com/odroe/prisma-dart/compare/orm-v3.4.2...orm-v3.4.3) (2023-05-30)
-
-
-### Bug Fixes
-
-* type 'Null' is not a subtype of type 'String' in type cast ([b28cd4e](https://github.com/odroe/prisma-dart/commit/b28cd4e620733850f98c230d2b0dee234200ab6d)), closes [#227](https://github.com/odroe/prisma-dart/issues/227)
-
-## [3.4.2](https://github.com/odroe/prisma-dart/compare/orm-v3.4.1...orm-v3.4.2) (2023-05-30)
-
-
-### Bug Fixes
-
-* **generator:** Fixed field kind enum type origin value ([bc508a0](https://github.com/odroe/prisma-dart/commit/bc508a0aa21bcf319faaabfc82e3025afe7a3ab5)), closes [#225](https://github.com/odroe/prisma-dart/issues/225)
-
-## 3.4.1
-
-### BREAKING CHANGE
-
-- Update Dart SDK to `^3.0.0`
-- **Generator**: Adapt to upstream dependencies
-
-## [3.3.2](https://github.com/odroe/prisma-dart/compare/orm-v3.3.1...orm-v3.3.2) (2023-05-23)
-
-### Bug Fixes
-
-- **generator:** Json field short input type selection ([dd904d7](https://github.com/odroe/prisma-dart/commit/dd904d75d23b6a36f501f63d030d3bb04c72d3a5))
-
-## [3.3.1](https://github.com/odroe/prisma-dart/compare/orm-v3.3.0...orm-v3.3.1) (2023-05-23)
-
-### Bug Fixes
-
-- RAW parameter decoder ([cba5e9e](https://github.com/odroe/prisma-dart/commit/cba5e9ea886479075d33b0e001b6aac83eae8fcb))
-
-## [3.3.0](https://github.com/odroe/prisma-dart/compare/orm-v3.2.6...orm-v3.3.0) (2023-04-05)
-
-### Features
-
-- **runtime:** Exposing lower level transaction primitives, Thx [@craiglabenz](https://github.com/craiglabenz) ([1c31841](https://github.com/odroe/prisma-dart/commit/1c31841f5a553a6e6c277a6186d970fffd9db512)), closes [#193](https://github.com/odroe/prisma-dart/issues/193)
-
-### Bug Fixes
-
-- **runtime:** Fix repeat attach engine in finalizer ([a5890b7](https://github.com/odroe/prisma-dart/commit/a5890b7afb2c382179cd867ff27babc201a218fc))
-- **runtime:** Fix the engine stop caused by calling `$disconnect` outside of transaction ([4448438](https://github.com/odroe/prisma-dart/commit/4448438a13d001ef1edc9871214da9c2f64178e3))
-- **runtime:** Remove deprecated transactionId ([2606456](https://github.com/odroe/prisma-dart/commit/260645676f373b6598654811f40137bb49e9bfbf))
-
-## [3.2.6](https://github.com/odroe/prisma-dart/compare/orm-v3.2.5...orm-v3.2.6) (2023-03-27)
-
-### Bug Fixes
-
-- **engine:** Fix ignored errors ([fe8c89f](https://github.com/odroe/prisma-dart/commit/fe8c89f2a1975ce2d67f89edc9c623756f6eb29b))
-
-## [3.2.5](https://github.com/odroe/prisma-dart/compare/orm-v3.2.4...orm-v3.2.5) (2023-03-27)
-
-### Bug Fixes
-
-- **engine:** Fix raw query always returning null, Thx [@craiglabenz](https://github.com/craiglabenz) ([efb15a6](https://github.com/odroe/prisma-dart/commit/efb15a69414464f8ab1820706b1fac851529a780)), closes [#177](https://github.com/odroe/prisma-dart/issues/177)
-- **engine:** Fix the order of throwing exceptions in transaction, Thx @PeterMX ([f0b86bd](https://github.com/odroe/prisma-dart/commit/f0b86bdf5c13f5400797d7b2a8593c5960b14a34)), closes [#181](https://github.com/odroe/prisma-dart/issues/181)
-- **engine:** Prioritize checking for transaction errors, Thx @PeterMX ([b3bedce](https://github.com/odroe/prisma-dart/commit/b3bedce971fa767369d0a7a9449091e1ceee404a))
-
-## [3.2.4](https://github.com/odroe/prisma-dart/compare/orm-v3.2.3...orm-v3.2.4) (2023-03-26)
-
-### Bug Fixes
-
-- **engine:** maxWait and timeout were passed incorrectly ([f4627b0](https://github.com/odroe/prisma-dart/commit/f4627b053e5c7399a4f142b71b631c3049249d82)), closes [#178](https://github.com/odroe/prisma-dart/issues/178)
-
-## [3.2.3](https://github.com/odroe/prisma-dart/compare/orm-v3.2.2...orm-v3.2.3) (2023-03-21)
-
-### Bug Fixes
-
-- Fix decoding special characters ([8d75d2a](https://github.com/odroe/prisma-dart/commit/8d75d2a24eeeb9487ec3823eb9e6a4df4f389459))
-
-## [3.2.2](https://github.com/odroe/prisma-dart/compare/orm-v3.2.1...orm-v3.2.2) (2023-03-19)
-
-### Bug Fixes
-
-- **generator:** DateTime not convert to UTC ([5f1f28b](https://github.com/odroe/prisma-dart/commit/5f1f28b90852e9c8654e1ed00d3a8f6d91404bdd))
-- Read Dart reserved keyword from analyzer ([f6a2b45](https://github.com/odroe/prisma-dart/commit/f6a2b45ff6c596d026edbac65fa607eac06b8e16))
-
-## [3.2.1](https://github.com/odroe/prisma-dart/compare/orm-v3.2.0...orm-v3.2.1) (2023-03-19)
-
-### Bug Fixes
-
-- fix not convert `default` of property key, Thx [@gzlock](https://github.com/gzlock) ([8adab24](https://github.com/odroe/prisma-dart/commit/8adab240aceea8e7922b2197f1dc67dd67a3251b)), closes [#172](https://github.com/odroe/prisma-dart/issues/172)
-
-## [3.2.0](https://github.com/odroe/prisma-dart/compare/orm-v3.1.5...orm-v3.2.0) (2023-03-18)
-
-### Features
-
-- Migrate to generator helper ([35486f4](https://github.com/odroe/prisma-dart/commit/35486f49fa89195886a309021360f7f6d2dd20fc))
-
-## [3.1.5](https://github.com/odroe/prisma-dart/compare/orm-v3.1.4...orm-v3.1.5) (2023-03-17)
-
-### Bug Fixes
-
-- **engine:** binary engine failed to clean up process, Thx [@blopker](https://github.com/blopker) ([afc29a7](https://github.com/odroe/prisma-dart/commit/afc29a7c80e767c49b0bf8345ce095dc389e5851))
-- Missing Dart reserved keywords, Thx [@nikosportolos](https://github.com/nikosportolos) ([78c467b](https://github.com/odroe/prisma-dart/commit/78c467b4ce9811465a9791d5f5376011620ff130))
-
-## [3.1.4](https://github.com/odroe/prisma-dart/compare/orm-v3.1.3...orm-v3.1.4) (2023-03-15)
-
-### Bug Fixes
-
-- fix retry strategy not as expected ([d327bcb](https://github.com/odroe/prisma-dart/commit/d327bcb492fbbffcb8566728ed2e98c10960400e)), closes [#161](https://github.com/odroe/prisma-dart/issues/161)
-
-## [3.1.3](https://github.com/odroe/prisma-dart/compare/orm-v3.1.2...orm-v3.1.3) (2023-03-14)
-
-### Bug Fixes
-
-- **generator:** main rethrow error ([c536887](https://github.com/odroe/prisma-dart/commit/c536887de018f1f30c6712d670a78ee6b3772da4))
-- **engine:** fix retry If failure, not as expected
-- **engine:** fix binary engine status retries not as expected. Thanks [@blopker](https://github.com/blopker) on [#161](https://github.com/odroe/prisma-dart/issues/161)
-
-## [3.1.2](https://github.com/odroe/prisma-dart/compare/v3.1.1...v3.1.2) (2023-03-11)
-
-### Bug Fixes
-
-- Fix and optimize startup ([253fb16](https://github.com/odroe/prisma-dart/commit/253fb16dd4d9e3c8b1f917e8d3c1246f95ad61d0))
-
-## [3.1.1](https://github.com/odroe/prisma-dart/compare/v3.1.0...v3.1.1) (2023-03-10)
-
-### Bug Fixes
-
-- **client:** Fix missing error handler ([8a32b6d](https://github.com/odroe/prisma-dart/commit/8a32b6d86064303d29b2c208ea22371cd1975dbd))
-- **generate:** Fix datasource failed to generate dataproxy client. ([8c5b7d7](https://github.com/odroe/prisma-dart/commit/8c5b7d79af750b7a6f9c4eaac0cc022fbbaafc13))
-
-## [3.1.0](https://github.com/odroe/prisma-dart/compare/v3.0.2...v3.1.0) (2023-03-07)
-
-### Features
-
-- **generator:** Only support npm ([41adccb](https://github.com/odroe/prisma-dart/commit/41adccbfa2c18808727adb0fa433924b3d8cb20e))
-
-### Bug Fixes
-
-- **generator:** fix node package manager find index ([a50d88f](https://github.com/odroe/prisma-dart/commit/a50d88fd3fb21cd62176a6a7e3bd08371c43494d))
-- **generator:** fix node package manager not found on Windows ([a233f59](https://github.com/odroe/prisma-dart/commit/a233f59b2da11293b84c6291d0bddfcd8869399f))
-- **generator:** fix parse prisma version error on Windows ([7b16821](https://github.com/odroe/prisma-dart/commit/7b168215dda0cb6e0d1f1c38d7017b271e09ac8a))
-- **generator:** fix yarn query Prisma version is not json output ([34b116c](https://github.com/odroe/prisma-dart/commit/34b116ca56166ac3b83b48f2df56cad5b3bedbb4))
-
-## [3.0.2](https://github.com/odroe/prisma-dart/compare/v3.0.1...v3.0.2) (2023-03-06)
-
-### Bug Fixes
-
-- **engine:** fixed logger definitions is empty throw error ([4dc62f1](https://github.com/odroe/prisma-dart/commit/4dc62f1ebe2cde209d12ec5fc9044952201d722c))
-- **generator:** fixed Windows system cannot find the file specified ([6446739](https://github.com/odroe/prisma-dart/commit/64467396e6d1b6253f0e5b0bbc7f9f73a05257dc))
-
-## [3.0.1](https://github.com/odroe/prisma-dart/compare/3.0.0...v3.0.1) (2023-03-05)
-
-### Bug Fixes
-
-- **client:** fixed prisma transaction type ([2cf52ad](https://github.com/odroe/prisma-dart/commit/2cf52add55538b00659d3460f17e38035d7da4b3))
-
-## 3.0.0
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v3.0.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/3.0.0) about the release. 🌟
-
-> **Note**: Migration from 2.x to 3.x guide is available [here](https://prisma.pub/docs/migration-from-2.html).
-
-## 3.0.1-beta+0
-
-No changes.
-
-## 3.0.0-beta+3
-
-### Bug Fixes
-
-- generate: fixed model delegate resolve GraphQL top-level field (35ebc6a)
-
-## 2.6.2
-
-1. Fixed `DateTime` to `String` must be ISO8601 format error - [#103](https://github.com/odroe/prisma-dart/issues/103)
-2. Fixed `PrismaNull` being serialized as `null` error.
-
-## 2.6.1
-
-1. Fixed generated freezed file has undefined class error - [#96](https://github.com/odroe/prisma-dart/issues/96)
-2. generated Prisma Dart Client is now null-safe
-3. Optimize the log parameter for `createPrismaClient`
-
-## 2.6.0
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.6.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.6.0) about the release. 🌟
-
-### New requirements
-
-**Breaking change**: You are now asked to install the `freezed` package:
-
-```
-dart pub add freezed -d
+# Or if you are using Flutter
+flutter pub add orm:4.0.0-alpha.0
 ```
 
-### Breaking changes
+To upgrade to Prisma Dart client v4.0.0-alpha.0, Please follow the [migration guide](#migration-guide-from-v3) and update your `pubspec.yaml` file:
 
-**All input classes types will be reset!**
-
-The Map input by forJson needs to follow the `freezed` rules, examples:
-
-```dart
-final PrismaNull $null = PrismaNull.fromJson({}); // An empty map must be entered to indicate PrismaNull
-
-final UserWhereInput where = UserWhereInput.fromJson({
-  'id': {
-    'runtimeType': 'withInt', // The runtimeType must be entered, name is `UserWhereInput_id` factory name.
-    'value': 1,
-  },
-});
+```yaml
+dependencies:
+  orm: 4.0.0-alpha.0
 ```
 
-`PrismaUnion` has been removed:
+[Read Prisma Dart Client v4.0.0-alpha.0 release notes on the Prisma Dart discussions](https://github.com/medz/prisma-dart/discussions/{id});
 
-Before:
+## What's Changed
 
-```dart
-final data = UserCreateInput(
-  name: PrismaUnion.zero("Seven"),
-);
+- Whole project refactoring
+- Remove any JSON serialization tool, now it's ready to use by just generating the client without any other dependencies and extra commands
+- Switch from GraphQL protocol to JSON protocol
+- Client takes a standalone Prisma engine instance
+- Client and all input/output types are standalone and can be distributed to any Dart platform
+- Add database field reference support
+- Support `select` feature (incomplete, currently only support rough one-level Model fields)
+- Support `include` feature (incomplete, currently only support rough one-level Model fields)
+- `PrismaUnion` regression, now can structure nested inputs of multiple parameters via union
+- `PrismaNull` regression, now support database `null` data setting
+- DMMF, generator helpers regression, no need to depend on other packages, can directly use `orm` as the base package for developing Dart Prisma ecosystem packages
+- Add `Decimal` type support (from [decimal package](https://pub.dev/package/decimal), exported by `orm` proxy)
+
+## Migration Guide (from v3)
+
+### Step 1: Update your `pubspec.yaml` file
+
+```yaml
+dependencies:
+  orm: ^4.0.0-alpha.0
 ```
 
-Now:
+### Step 2: Update prisma schame
 
-```dart
-final data = CreateOneUserData.withUserCreateInput( // OR `withUserUncheckedCreateInput`
-  UserCreateInput(
-    name: "Seven",
-  ),
-);
+Previous generator configuration:
+
+```prisma
+generator DartClient {
+  provider = "dart run orm"
+}
 ```
 
-> Note: `withUserCreateInput` and `withUserUncheckedCreateInput` are generated by `prisma_client.dart` file.
+Current generator configuration:
 
-### Model delegates
-
-All delegat methods input classes are now generated by `freezed` package， Example(create a user):
-
-Before:
-
-```dart
-final user = await prisma.user.create(
-  data: UserCreateInput(
-    name: PrismaUnion.zero("Seven"),
-  ),
-);
+```prisma
+generator DartClient {
+  provider = "dart run orm:client"
+}
 ```
 
-Now:
+If you have `orm` installed globally, `provider` can use `prisma-client-dart` directly:
 
-```dart
-final user = await prisma.user.create(
-  data: CreateOneUserData.withUserUncheckedCreateInput(
-    UserUncheckedCreateInput(
-      name: 'Seven',
-      email: 'seven@odroe.com',
-    ),
-  ),
-);
+```prisma
+generator DartClient {
+  provider = "prisma-client-dart"
+}
 ```
 
-### Seems like it's getting troublesome?
+### Step 3: Configure your engine (in `schema.prisma`)
 
-We are preparing to support more Prisma functions in the future, such as REF query.
-
-In addition, we are preparing for the next Dart 3, and we expect that in Dart 3, there is no need to run additional commands before compilation to complete the serialization of input and output types.
-
-> Since full input types are relatively cumbersome for web applications, we recommend using the fromJson method to create inputs.
-
-Because the current input is the complete Prisma input type, it is expected to be improved in Dart 3. Currently, Dart 2 does not support union types. Our strategy is to create as many types as possible to meet all Prisma input requirements.
-
-## 2.5.1
-
-### Support `OrThrow` methods
-
-Prisma client now supports `OrThrow` methods.
-
-```dart
-final User user = await prisma.user.findUniqueOrThrow(...);
-final Post post = await prisma.post.findFirstOrThrow(...);
+```prisma
+generator CopyQueryEngine {
+  provider = "dart run orm:binary"
+  // If you have `orm` installed globally, `provider` can use `prisma-engine-binary` directly:
+  // provider = "prisma-engine-binary"
+}
 ```
 
-## 2.5.0
+> Currently, `orm` only supports Prisma binary engine, other engines will be supported in future updates.
 
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.5.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.5.0) about the release. 🌟
+### Step 4: Generate client
 
-### Breaking changes
+```base
+npx prisma generate
+```
 
-#### Standalone Prisma client
+### Setp 5: Update your code
 
-Prisma client is now exported by orm package and exposes `fromEngine` constructor.
+Previous import use `[path]/prisma_client.dart`, now use `[path]/client.dart`:
+
+Now the client will generate three files:
+
+- `client.dart` - Client implementation (interact with Prisma engine)
+- `types.dart` - All input/output types
+- `dmmf.dart` - DMMF data structure
 
 ```dart
 import 'package:orm/orm.dart';
-
-final PrismaClient prisma = PrismaClient.fromEngine(...);
-```
-
-The generated prisma client now only extends model delegates, and creating a new Prisma client was changed from `PrismaClient()` to `createPrismaClient`:
-
-Before:
-
-```dart
-final PrismaClient prisma = PrismaClient(...);
-```
-
-After:
-
-```dart
-final PrismaClient prisma = createPrismaClient(...);
-```
-
-### Remove preview feature
-
-All previews will be removed and existing Previews will be marked as stable in this release.
-
-> Preview will no longer be enabled in future releases, but release `*.preview.{num}` versions to mark
-
-## New features
-
-### Support `queryRaw` and `executeRaw` methods
-
-Prisma client now supports `queryRaw` and `executeRaw` methods.
-
-```dart
-final PrismaClient prisma = createPrismaClient(...);
-
-final List<Map<String, dynamic>> result = await prisma.$queryRaw('SELECT * FROM User');
-final int affectedRows = await prisma.$executeRaw('DELETE FROM User');
-```
-
-### Input classes support `fromJson` method
-
-All input classes now support `fromJson` method.
-
-```dart
-final UserCreateInput input = UserCreateInput.fromJson(...);
-```
-
-### Engines
-
-1. Prisma binary engines version updated to `d6e67a83f971b175a593ccc12e15c4a757f93ffe`
-2. Remote engines version updated to `4.8.0`
-
-## 2.4.7
-
-1. Now, Data proxy is stable.
-2. Getting platforms is now supported by `prisma_get_platform`.
-
-## 2.4.6
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.4.6🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.4.6) about the release. 🌟
-
-### Query Engines
-
-- **Data Proxy**: Remote client version updated to `4.7.1`.
-- **Binary**: Query engine version updated to `272861e07ab64f234d3ffc4094e32bd61775599c`.
-
-### Bug Fixes
-
-- **DMMF**: The 'name' field of UniqueIndex should be nullable, not non-nullable as incorrectly defined. ([#77](https://github.com/odroe/prisma-dart/issues/76))
-
-### Highlights
-
-#### Interactive transactions are now Generally Available
-
-Interactive transactions allow you to pass an async function into a $transaction, and execute any code you like between the individual Prisma Client queries. Once the application reaches the end of the function, the transaction is committed to the database. If your application encounters an error as the transaction is being executed, the function will throw an exception and automatically rollback the transaction.
-
-##### Before
-
-```prisma
-generator client {
-  provider = "prisma-client-dart"
-  previewFeatures = ["interactiveTransactions"]
-}
-```
-
-##### Now
-
-```prisma
-generator client {
-  provider = "prisma-client-dart"
-}
-```
-
-## 2.4.5
-
-- [Fix client generation with composite types](https://github.com/odroe/prisma-dart/pull/71)
-
-## 2.4.4
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.4.4🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.4.4) about the release. 🌟
-
-### Engines
-
-- Update Prisma query engine to `694eea289a8462c80264df36757e4fdc129b1b32` (from `4.6.1`)
-- Update Data Proxy remote prisma client to `4.6.1`
-- Interactive Transactions for Prisma Data Proxy
-
-### Generator
-
-- Fix standard data type error calling fromJson
-
-## 2.4.3
-
-- Fix `generate` command error format.
-
-## 2.4.2
-
-- Fix `init` command generated SQLite database file url
-
-## 2.4.1
-
-### Bug Fixes
-
-- Fix JSON-RPC error code on error data is nullable - [#52](https://github.com/odroe/prisma-dart/issues/52)
-
-## 2.4.0
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.4.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.4.0) about the release. 🌟
-
-### Major improvements
-
-Refactor Prisma config (environment), starting from 2.4.0, Prisma ORM for Dart no longer includes any third-party configurator.
-
-> What about the `rc` package?
->
-> The `rc` package was born for the Prisma ORM for Dart itself, and now the `rc` package has been refactored into a platform variable wrapper.
-
-#### Production environment
-
-The `.prismarc` file in the Dart project directory was loaded by default, and now `lib/prisma_configurator.dart` is loaded by default.
-
-Previously configured Key in `pubspec.yaml` was `prismarc`, now it is `production`.
-
-Before:
-
-```yaml
-prisma:
-  prismarc: { path }
-```
-
-after:
-
-```yaml
-prisma:
-  production: { path }
-```
-
-#### Development environment
-
-The `.dev.rc` file was loaded by default, now it is `prisma/development.dart`.
-
-#### Platform Environment
-
-Prisma adaptively loads platform environment variables according to the current platform environment.
-
-This means that the environment variables in the current system can be read in Dart VM, Flutter JIT, Dart JIT-compiled and Dart AOT-compiled. And it cannot be read in Dart Web and Flutter built app.
-
-> Flutter built app is an exception, even though it supports `dart:io` but there is no environment variable for the build environment in it.
-
-## 2.3.1
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.3.1🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.3.1) about the release. 🌟
-
-### Features
-
-#### Logging (Preview)
-
-Prisma ORM for Dart now supports [logging](https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/logging) as a preview feature. That means, it might have some flaws, but we hope you'll try it out and provide feedback.
-
-To enable logging, you need to set the `log` property on the `PrismaClient` constructor and `generate` command:
-
-```bash
-prisma generate --preview=logging
-```
-
-```dart
-PrismaClient(
-  log: [
-    PrismaLogDefinition(
-      level: PrismaLogLevel.query,
-      emit: PrismaLogEvent.stdout,
-    ),
-  ],
-)
-```
-
-##### Subscribe to log events
-
-You can subscribe to log events to perform custom actions when a log occurs.
-
-```dart
-prisma.$on([PrismaLogLevel.query], (e) {
-  print(e);
-});
-```
-
-## 2.3.0
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.3.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.3.0) about the release. 🌟
-
-### Features
-
-#### Development runtime configuration.
-
-When using Prisma ORM to develop an app, you may want the development configuration to be inconsistent with the production environment (although this can be avoided by configuring the production environment separately), but there are always surprises.
-
-For example, when we use Data Proxy, the client and CLI cannot be consistent, because the link address of Data Proxy cannot manage your database.
-
-Now, you just need to add a `.dev.rc` to the root of your Dart project whose configuration will override the same configuration for prismarc and dotenv:
-
-```yaml
-# .prismarc
-DATABASE_URL: prisma://{location}.prisma-data.com/?api_key={Your API key}
-
-# .dev.rc
-DATABASE_URL: postgres://user:password@localhost:5432/mydb
-```
-
-For example in the configuration above, the actual CLI runtime uses `postgres://user:password@localhost:5432/mydb`, while in Prisma Client it uses `prisma://{location}.prisma-data.com/?api_key` ={Your API key}`.
-
-##### Custom development runtime configuration
-
-To customize the development runtime configuration file path, you can write in `pubspec.yaml`:
-
-```yaml
-prisma:
-  development: custom.devrc
-```
-
-#### Data Proxy (Preview)
-
-Great, Prisma Dart now supports Prisma Data Proxy to access your database!
-
-you just need to run:
-
-```bash
-dart run orm generate --data-proxy --preview=data-proxy
-```
-
-It can also be turned on from runtime configuration or dotenv:
-
-```bash
-# Configuration file
-PRISMA_GENERATE_DATAPROXY = true
-
-# Command line
-dart run orm generate --preview=data-proxy
-```
-
-##### Custom remote client version.
-
-If the default remote client version is not what you want, you can fix it by configuring:
-
-```bash
-PRISMA_CLIENT_DATA_PROXY_CLIENT_VERSION = "4.3.1"
-```
-
-#### [Finalizer](https://api.flutter.dev/flutter/dart-core/Finalizer-class.html) for `PrismaClient`
-
-The `PrismaClient` now has a finalizer that will close the underlying database connection when the client is garbage collected.
-
-> **Note**: This feature is currently in preview state, you need to install `2.3.0` and above, and pass the `--preview=finalizer` option in the `generate` command to enable it. More information can be found in the [2.3.0@CLI](#cli) change log.
-
-#### CLI
-
-`generate` command now supports `--preview` option to generate client for preview features.
-
-E.g.
-
-```bash
-# Enable finalizer feature for generated PrismaClient.
-dart run orm generate --preview=finalizer
-```
-
-### Fixed bugs
-
-- Runtime:
-  - Known request error meta allow nullable - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@NCavazzon#1574468691776999448](https://twitter.com/NCavazzon/status/1574468691776999448)
-  - Fixed date time not serialized - [#34](https://github.com/odroe/prisma-dart/issues/34), [twitter@mizxamthegod#1574470423097610265](https://twitter.com/mizxamthegod/status/1574470423097610265)
-
-## 2.2.3
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.2.3🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.2.3) about the release. 🌟
-
-### Bug Fixes
-
-1. Fixed debian/ubuntu system distro match - [#31](https://github.com/odroe/prisma-dart/issues/31)
-2. Runtime - Fixed parse user facing error
-3. CLI - Fixed check engine version binary incomplete
-
-## 2.2.2
-
-Fixed generate `schema` not working ([#29](https://github.com/odroe/prisma-dart/issues/29)
-
-## 2.2.1
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.2.1🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.2.1) about the release. 🌟
-
-### Major improvements
-
-Auto fix enum name and model name conflicts:
-
-```prisma
-enum role {
- user
- admin
-}
-
-model user {
- id Int @id @default(autoincrement())
- role role
-}
-```
-
-Before this release, the above schema would result in a `role` enum and a `user` model. This is not valid in Dart, so we now auto fix the enum name to `Role` and the model name to `User`.
-
-> Thanks to [@moepoi](https://github.com/moepoi)
-
-### Bug fixes
-
-1. Fixed `$transaction` options not being passed.
-2. FIxed Using lowercase keywords in schema.prisma cannot generate clients correctly. - [#26](https://github.com/odroe/prisma-dart/issues/26)
-
-## Other
-
-- Update `code_builder` to `^4.3.0`.
-
-## 2.2.0
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.2.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.2.0) about the release. 🌟
-
-### Major improvements:
-
-Input object Types without `PrismaUnion` wrapper, Before:
-
-```dart
-final User user = await prisma.user.create(
-   data: PrismaUnion(
-      zero: UserCreateInput(name: 'odroe'),
-   ),
+import 'package:orm/engines/binary.dart';
+
+// Your generated client path.
+import '[path]/client.dart';
+
+final prisma = PrismaClient(
+  engine: BinaryEngine(
+    url: 'file:./prisma/dev.db',
+    // path: '/path/to/query-engine', // You generated engine path, if not set, will search in current directory.
+  ),
 );
 ```
-
-After:
-
-```dart
-final User user = await prisma.user.create(
-   data: UserCreateInput(name: 'odroe'),
-);
-```
-
-### Bug fixes:
-
-- Nullable fields generating broken field implementations - [#23](https://github.com/odroe/prisma-dart/issues/23)
-
-### Features:
-
-- Add `precache` command, Populate the Prisma engines cache of binary artifacts.
-
-## 2.1.3
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20@prisma%20ORM%20for%20Dart%20release%20v2.1.3🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.1.3) about the release. 🌟
-
-### Major improvements:
-
-1. refactor `PrismaClientKnownRequestError`, Prisma Client throws a PrismaClientKnownRequestError exception if the query engine returns a known error related to the request - for example, a unique constraint violation. Reference 👉 [PrismaClientKnownRequestError](https://www.prisma.io/docs/reference/api-reference/error-reference#prismaclientknownrequesterror)
-2. All exceptions on the client side will throw predictable errors，Reference 👉 [PrismaClientKnownRequestError](https://www.prisma.io/docs/reference/api-reference/error-reference)
-3. `query_engine` renamed to `engine_core`
-
-### Better error message
-
-Take transaction errors as an example, before simply throwing `PrismaServerError` without any friendly prompts. Now:
-
-```
-PrismaClientUnknownRequestError:
-Use the `prisma.$transaction()` API to run queries in a transaction.
-
-Add the following to your `schema.prisma` file:
-
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions"]
-}
-
-Read more about transactions in our documentation:
- - https://github.com/odroe/prisma-dart#qa
- - https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions-in-preview
-```
-
-If the engine is not found:
-
-```
-PrismaClientInitializationError:
-  message: Could not find query engine binary for current platform "macos" in query-engine path.
-
-This probably happens, because you built Prisma Client on a different platform.
-
-Searched Locations:
-  - /Users/seven/workspace/prisma/example
-  - /Users/seven/workspace/prisma/example/.dart_tool/prisma
-  - /Users/seven/workspace/prisma/example/prisma
-  - /Users/seven/workspace/prisma/example/.dart_tool/pub/bin/example
-
-You already added the platform "macos" to the "generator" block in the "schema.prisma" file as described in https://pris.ly/d/client-generator, but something went wrong. That's suboptimal.
-
-Please create an issue at https://github.com/odroe/prisma-dart/issues/new
-  errorCode: null
-  clientVersion: 2.1.2
-```
-
-### `$transaction` options
-
-`prisma.$transaction` now supports the following options:
-
-```dart
-final prisma = PrismaClient();
-await prisma.$transaction((prisma) async {
-   // ...
-}, TransactionOptions(
-   maxWait: 2000,
-   timeout: 5000,
-   isolationLevel: TransactionIsolationLevel.ReadUncommitted,
-));
-```
-
-More details 👉 [Interactive transactions](https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions-in-preview)
-
-### Bug fixes
-
-1. Fixed `packageVersion` not updating with version
-2. Fixed binary query engine not automatically searching when `executable` is specified
-3. Fixed binary query engine not automatically searching when specifying `PRISMA_QUERY_ENGINE_BINARY` environment variable
-
-### Engines version
-
-`c875e43600dfe042452e0b868f7a48b817b9640b`
-
-## 2.1.2
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20Prisma%20ORM%20for%20Dart%20release%20v2.1.2🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.1.2) about the release. 🌟
-
-### Bug fixes
-
-- Fix the problem of repeated operation of the lookup runtime configuration
-- Fix setting owerwrite datasources causing engine startup failure
-
-### Refactor
-
-Refactored to owerwrite datasources to convert to engine readable settings
-
-## 2.1.1
-
-Support custom runtime configuration.
-
-## 2.1.0
-
-🌟 Help us spread the word about [Prisma ORM for Dart](https://github.com/odroe/prisma-dart) by starring the repo or [Tweeting](https://twitter.com/intent/tweet?text=Check%20out%20the%20latest%20Prisma%20ORM%20for%20Dart%20release%20v2.1.0🚀%0D%0A%0D%0Ahttps://github.com/odroe/prisma-dart/releases/tag/2.1.0) about the release. 🌟
-
-### Major improvements:
-
-#### Runtime configuration
-
-Previously, use `prisma.yaml` to configure Prisma:
-
-```yaml
-environment:
-  DATABASE_URL: postgres://user:password@localhost:5432/mydb
-```
-
-Now, we have introduced a new configuration method, **Runtime Configuration** compatible with dotenv format:
-
-```
-# .prismarc
-DATABASE_URL=postgres://user:password@localhost:5432/mydb
-
-# Database host
-DATABASE_HOST=postgres://user:password@localhost:5432
-DATABASE_URL=${DATABASE_HOST}/mydb
-```
-
-If you have dotenv in mind, you just need to add the database URL configuration to `.env`:
-
-```dotenv
-DATABASE_URL=postgres://user:password@localhost:5432/mydb
-```
-
-For more usage of runtime configuration, please see 👉 https://pub.dev/packages/rc
-
-#### Custom configuration
-
-Now, you can customize your prisma project configuration in `pubspec.yaml`:
-
-```yaml
----
-prisma:
-  prismarc: path/a/b/c/custom.prismarc
-  dotenv: path/a/b/c/custom.env
-  schema: path/a/b/c/custom.prisma
-```
-
-| Parameter  | Description                       | Default                |
-| ---------- | :-------------------------------- | ---------------------- |
-| `prismarc` | Custom runtime configuration path | `.prismarc`            |
-| `dotenv`   | Custom dotenv path                | `.env`                 |
-| `schema`   | Custom Prisma schema path         | `prisma/schema.prisma` |
-
-#### Custom engine path
-
-Previously, the Prisma engine was downloaded into the `.dart_tool/prisma` directory, now you can customize it.
-
-##### Custom engines path with runtime configuration
-
-```
-# Query binary engine
-PRISMA_QUERY_ENGINE_BINARY(path) = custom-engines/query-engine
-
-# Migration binary engine
-PRISMA_MIGRATION_ENGINE_BINARY(path) = custom-engines/migration-engine
-
-# Introspection binary engine
-PRISMA_INTROSPECTION_ENGINE_BINARY(path) = custom-engines/introspection-engine
-
-# Format binary engine
-PRISMA_FMT_BINARY(path) = custom-engines/prisma-fmt
-```
-
-##### Custom engines path with dotenv
-
-```
-PRISMA_QUERY_ENGINE_BINARY=path/to/custom-engines/query-engine
-PRISMA_MIGRATION_ENGINE_BINARY=path/to/custom-engines/migration-engine
-PRISMA_INTROSPECTION_ENGINE_BINARY=path/to/custom-engines/introspection-engine
-PRISMA_FMT_BINARY=path/to/custom-engines/prisma-fmt
-```
-
-#### Refactored `package:orm/configure.dart`
-
-Previously, we have `package:orm/configure.dart` to configure Prisma, now we have refactored it to `package:orm/prisma.dart`:
-
-```dart
-import 'package:orm/configure.dart';
-
-print(configure('DATABASE_URL'));
-```
-
-Now, you can use `package:orm/configure.dart` to configure Prisma:
-
-```dart
-import 'package:orm/configure.dart';
-
-print(environment.DATABASE_URL);
-```
-
-### Bug fixes:
-
-1. Fix map and throws binary errors - [#16](https://github.com/odroe/prisma-dart/pull/16)
-2. Problems using Model with relation - [#14](https://github.com/odroe/prisma-dart/pull/14)
-
-### Features:
-
-1. Generator generate import support show.
-2. Prisma CLI debug allow set to dotenv or runtime configuration.
-3. Prisma CLI debug print stack trace.

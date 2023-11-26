@@ -25,7 +25,7 @@ Here will be the implementation part of the Prisma client, which covers many aux
 
 ## Reporting a bug
 
-Reporting a bug is also a contribution to the project, but it is not the same as fixing a bug. If you find a bug, please report it in the [issue](https://github.com/odroe/prisma-dart/issues) section.
+Reporting a bug is also a contribution to the project, but it is not the same as fixing a bug. If you find a bug, please report it in the [issue](https://github.com/medz/prisma-dart/issues) section.
 
 ## Testing
 
