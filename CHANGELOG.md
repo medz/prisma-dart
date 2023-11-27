@@ -104,10 +104,12 @@ import 'package:orm/engines/binary.dart';
 // Your generated client path.
 import '[path]/client.dart';
 
+final engine = BinaryEngine(
+  datasource: 'db',
+  schema: schema,
+  url: Uri.parse('postgresql://seven@localhost:5432/prisma-dart'),
+);
 final prisma = PrismaClient(
-  engine: BinaryEngine(
-    url: Uri.parse('file:./prisma/dev.db'),
-    // binary: '/path/to/query-engine', // You generated engine path, if not set, will search in current directory.
-  ),
+  engine: engine,
 );
 ```
