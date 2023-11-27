@@ -18,24 +18,14 @@ abstract interface class Engine<T> {
   /// Throws an error if the engine fails to stop.
   Future<void> stop();
 
-  /// Returns the version of the engine.
-  ///
-  /// If [force] is set to true, the version will be forcefully retrieved from the engine.
-  /// Otherwise, the version will be retrieved from the cache if available.
-  ///
-  /// Returns a [Future] that completes with the version string.
-  FutureOr<String> version([bool force = false]);
-
   /// Sends a request to the engine.
   ///
   /// - [query] is the query to be sent to the engine.
-  /// - [attempts] is the number of times the query should be retried if it fails.
-  /// - [isWrite] indicates whether the query is a write query.
   /// - [headers] are the headers to be sent with the request.
   /// - [transaction] is the transaction to be used for the request.
   Future<dynamic> request(
     JsonQuery query, {
-    int attempts = 1,
+    required String action,
     TransactionHeaders? headers,
     Transaction<T>? transaction,
   });

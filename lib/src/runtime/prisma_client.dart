@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'engine.dart';
 import 'transaction.dart';
 
@@ -66,7 +64,7 @@ class PrismaClient<T> {
   /// });
   /// ```
   Future<R> $transaction<R>(
-    FutureOr<R> Function(PrismaClient<T> prisma) fn, {
+    Future<R> Function(PrismaClient<T> prisma) fn, {
     int maxWait = 2000,
     int timeout = 5000,
     IsolationLevel? isolationLevel,

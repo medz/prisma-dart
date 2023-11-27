@@ -18,7 +18,7 @@ generator CopyBinaryEngine {
 
 datasource db {
   provider = "postgresql"
-  url      = "file:./prisma.sqlite"
+  url      = "postgresql://seven@localhost:5432/prisma-dart"
 }
 
 enum Role {

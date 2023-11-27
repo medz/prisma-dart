@@ -1,3 +1,5 @@
+import 'json_convertible.dart';
+
 abstract interface class IsolationLevel {
   String get value;
 }
@@ -11,8 +13,12 @@ class Transaction<T> {
   const Transaction(this.id, this.payload);
 }
 
-class TransactionHeaders {
+class TransactionHeaders implements MapJsonConvertible<String, String> {
   final String? traceparent;
 
   const TransactionHeaders({this.traceparent});
+
+  @override
+  Map<String, String> toJson() =>
+      {if (traceparent != null) 'traceparent': traceparent!};
 }

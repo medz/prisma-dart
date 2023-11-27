@@ -132,11 +132,13 @@ JsonQuery serializeJsonQuery({
 
 Map<String, dynamic> _serializeFieldSelection(_Context context,
     [Map args = const {}]) {
-  final Map<String, dynamic> select = switch (args['select']) {
+  final Map<String, dynamic> select =
+      switch (JsonConvertible.serialize(args['select'])) {
     Map select => select.cast(),
     _ => const <String, dynamic>{},
   };
-  final Map<String, dynamic> include = switch (args['include']) {
+  final Map<String, dynamic> include =
+      switch (JsonConvertible.serialize(args['include'])) {
     Map include => include.cast(),
     _ => const <String, dynamic>{},
   };
@@ -237,6 +239,8 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
     DateTime value =>
       _createTypedValue('DateTime', value.toUtc().toIso8601String()),
     Uint8List bytes => _createTypedValue('Bytes', base64.encode(bytes)),
+    ByteBuffer bytes => _serializeArgumentValue(context, bytes.asUint8List()),
+    TypedData bytes => _serializeArgumentValue(context, bytes.buffer),
     RawParameters parameters => parameters.values,
     FieldRef ref => _createTypedValue(
         'FieldRef', {'_container': ref.modelName, '_ref': ref.field}),
@@ -245,8 +249,8 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
     PrismaJson(value: final value) =>
       _createTypedValue('Json', json.encode(value)),
     Enum value => _createTypedValue('Enum', value.name),
-    JsonConvertible value => _serializeArgumentValue(context, value),
-    Iterable value => _serializeIterable(context, value),
+    JsonConvertible value => _serializeArgumentValue(context, value.toJson()),
+    Iterable value => _serializeIterable(context, value).toList(),
     Map value => _serializeArgumentsObject(context, value),
     _ =>
       context.throwValidationError('Argument value `$value` is not supported'),

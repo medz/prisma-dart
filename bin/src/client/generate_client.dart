@@ -245,6 +245,7 @@ Block generateDelegateMethodBody(dmmf.ModelAction action,
           'transaction': modelDelegate
               .property(r'$getPrismaClientTransaction')
               .call([refer('this')]),
+          'action': literalString(field.name),
         });
 
     builder.statements.add(result.assign(request.awaited).statement);

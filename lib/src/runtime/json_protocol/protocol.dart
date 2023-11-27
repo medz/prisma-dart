@@ -1,4 +1,6 @@
-class JsonQuery {
+import '../json_convertible.dart';
+
+class JsonQuery implements MapJsonConvertible<String, dynamic> {
   final String? modelName;
   final JsonQueryAction action;
   final Map<String, dynamic> query;
@@ -8,6 +10,13 @@ class JsonQuery {
     required this.action,
     required this.query,
   });
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (modelName != null) 'modelName': modelName!,
+        'action': action.name,
+        'query': query,
+      };
 }
 
 enum JsonQueryAction {
