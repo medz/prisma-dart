@@ -10,14 +10,14 @@ dart pub add orm:4.0.0-alpha.0
 flutter pub add orm:4.0.0-alpha.0
 ```
 
-To upgrade to Prisma Dart client v4.0.0-alpha.0, Please follow the [migration guide](#migration-guide-from-v3) and update your `pubspec.yaml` file:
+To upgrade to Prisma Dart client v4.0.0-alpha.0, Please follow the [announcements](https://github.com/medz/prisma-dart/discussions/292) and update your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
   orm: 4.0.0-alpha.0
 ```
 
-[Read Prisma Dart Client v4.0.0-alpha.0 release notes on the Prisma Dart discussions](https://github.com/medz/prisma-dart/discussions/{id})
+[Read Prisma Dart Client v4.0.0-alpha.0 release notes on the Prisma Dart discussions](https://github.com/medz/prisma-dart/discussions/292)
 
 ## What's Changed
 
@@ -33,83 +33,3 @@ dependencies:
 - `PrismaNull` regression, now support database `null` data setting
 - DMMF, generator helpers regression, no need to depend on other packages, can directly use `orm` as the base package for developing Dart Prisma ecosystem packages
 - Add `Decimal` type support (from [decimal package](https://pub.dev/package/decimal), exported by `orm` proxy)
-
-## Migration Guide (from v3)
-
-### Step 1: Update your `pubspec.yaml` file
-
-```yaml
-dependencies:
-  orm: ^4.0.0-alpha.0
-```
-
-### Step 2: Update prisma schame
-
-Previous generator configuration:
-
-```prisma
-generator DartClient {
-  provider = "dart run orm"
-}
-```
-
-Current generator configuration:
-
-```prisma
-generator DartClient {
-  provider = "dart run orm:client"
-}
-```
-
-If you have `orm` installed globally, `provider` can use `prisma-client-dart` directly:
-
-```prisma
-generator DartClient {
-  provider = "prisma-client-dart"
-}
-```
-
-### Step 3: Configure your engine (in `schema.prisma`)
-
-```prisma
-generator CopyQueryEngine {
-  provider = "dart run orm:binary"
-  // If you have `orm` installed globally, `provider` can use `prisma-engine-binary` directly:
-  // provider = "prisma-engine-binary"
-}
-```
-
-> Currently, `orm` only supports Prisma binary engine, other engines will be supported in future updates.
-
-### Step 4: Generate client
-
-```sh
-npx prisma generate
-```
-
-### Setp 5: Update your code
-
-Previous import use `[path]/prisma_client.dart`, now use `[path]/client.dart`:
-
-Now the client will generate three files:
-
-- `client.dart` - Client implementation (interact with Prisma engine)
-- `types.dart` - All input/output types
-- `dmmf.dart` - DMMF data structure
-
-```dart
-import 'package:orm/orm.dart';
-import 'package:orm/engines/binary.dart';
-
-// Your generated client path.
-import '[path]/client.dart';
-
-final engine = BinaryEngine(
-  datasource: 'db',
-  schema: schema,
-  url: Uri.parse('postgresql://seven@localhost:5432/prisma-dart'),
-);
-final prisma = PrismaClient(
-  engine: engine,
-);
-```
