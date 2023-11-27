@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_internal_member
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:json_annotation/json_annotation.dart';
 import 'package:orm/binary_engine.dart' as _i5;
@@ -82,6 +84,10 @@ class UserWhereUniqueInput implements _i1.JsonSerializable {
   const UserWhereUniqueInput({
     this.id,
     this.name,
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.createdAt,
   });
 
   factory UserWhereUniqueInput.fromJson(Map<String, dynamic> json) =>
@@ -90,6 +96,14 @@ class UserWhereUniqueInput implements _i1.JsonSerializable {
   final String? id;
 
   final String? name;
+
+  final Iterable<UserWhereInput>? AND;
+
+  final Iterable<UserWhereInput>? OR;
+
+  final Iterable<UserWhereInput>? NOT;
+
+  final DateTimeFilter? createdAt;
 
   @override
   Map<String, dynamic> toJson() => _$UserWhereUniqueInputToJson(this);
@@ -1615,6 +1629,7 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
         headers: headers ?? _headers,
         transaction: transaction ?? _transaction,
       );
+
   _i1.ModelDelegate<User> get user => _i1.ModelDelegate<User>(
         _engine,
         headers: _headers,

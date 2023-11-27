@@ -40,10 +40,7 @@ class PrismaInfo {
   /// Prisma version
   final String version;
 
-  /// Current platform
-  final String platform;
-
-  const PrismaInfo._(this.version, this.platform);
+  const PrismaInfo._(this.version);
 
   /// Lookup the Prisma version and platform.
   factory PrismaInfo.lookup(String excutable) {
@@ -62,6 +59,6 @@ class PrismaInfo {
         .map((e) => MapEntry(e.key.trim().toLowerCase(), e.value.trim()));
     final json = Map.fromEntries(entries);
 
-    return PrismaInfo._(json['prisma']!, json['current platform']!);
+    return PrismaInfo._(json['prisma']!);
   }
 }

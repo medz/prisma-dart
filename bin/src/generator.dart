@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart' as code;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
+import 'package:orm/prisma_generator_helper/prisma_generator_helper.dart';
 import 'package:path/path.dart' as path;
-import 'package:prisma_generator_helper/dmmf.dart' as dmmf;
-import 'package:prisma_generator_helper/prisma_generator_helper.dart';
+import 'package:orm/prisma_generator_helper/dmmf.dart' as dmmf;
 
 import 'packages.dart' as packages;
 import 'prisma_info.dart';
@@ -39,6 +39,7 @@ class PrismaDartClientGenerator implements Handler {
         'prisma',
       ]),
       requiresEngines: [EngineType.queryEngine],
+      version: "v3.x",
     );
   }
 
@@ -120,6 +121,10 @@ extension WriteLibrary on PrismaDartClientGenerator {
 
   /// Write library to file
   void writeLibrary() {
+    this.library.ignoreForFile.addAll([
+      'invalid_use_of_internal_member',
+    ]);
+
     final library = this.library.build();
     final original = library.accept(emitter);
 
@@ -332,10 +337,10 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
 
   /// Build field type
   code.Reference _buildFieldType(dmmf.SchemaArg field) {
-    /// TODO: bug https://github.com/odroe/prisma-dart/issues/209
-    withoutJsonValueInput(String name) {
+    withoutInputs(String name) {
       if (name == 'NullableJsonNullValueInput') return false;
       if (name == 'JsonNullValueInput') return false;
+      if (name.endsWith('FieldRefInput')) return false;
 
       return true;
     }
@@ -346,8 +351,8 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
           dmmf.EnumArgType(value: final enum_) => enum_.name,
         };
 
-    final types = field.inputTypes.where(
-        (element) => withoutJsonValueInput(readArgTypeName(element.type)));
+    final types = field.inputTypes
+        .where((element) => withoutInputs(readArgTypeName(element.type)));
 
     // If the types is a single type, return it.
     if (types.length == 1) {
@@ -388,17 +393,6 @@ extension InputObjectTypesGenerator on PrismaDartClientGenerator {
       isList: types.first.isList,
       isNullable: !field.isRequired,
     );
-
-    // TODO: Build union type
-    // Build union type
-    // final reference = code.TypeReference((code.TypeReferenceBuilder updates) {
-    //   updates
-    //     ..symbol = 'PrismaUnion${types.length}'
-    //     ..url = packages.orm
-    //     ..types.addAll(types.map((e) => scalar(e, false)));
-    // });
-
-    // return field.isRequired ? reference : reference.nullable;
   }
 
   /// Build to json method
@@ -1653,10 +1647,10 @@ extension PrismaClientGenerator on PrismaDartClientGenerator {
 
   /// Find binary engine executable
   code.Expression _findBinaryEngineExecutable() {
-    final executable = options.binaryPaths?.queryEngine?[info.platform];
+    final executable =
+        options.binaryPaths?.queryEngine?.entries.firstOrNull?.value;
     if (executable == null) {
-      throw Exception(
-          'Could not find query engine for platform ${info.platform}');
+      throw Exception('Could not find query engine');
     }
 
     return code.literalString(executable, raw: true);

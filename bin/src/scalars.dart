@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:prisma_generator_helper/dmmf.dart';
+import 'package:orm/prisma_generator_helper/dmmf.dart';
 
 import 'packages.dart' as packages;
 import 'utils.dart';
