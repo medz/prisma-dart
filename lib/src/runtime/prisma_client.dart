@@ -1,4 +1,5 @@
 import 'engine.dart';
+import 'metrics/metrics_client.dart';
 import 'transaction.dart';
 
 class PrismaClient<T> {
@@ -100,4 +101,6 @@ class PrismaClient<T> {
       rethrow;
     }
   }
+
+  MetricsClient<T> get $metrics => MetricsClient(_engine);
 }
