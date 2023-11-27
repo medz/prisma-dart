@@ -138,6 +138,15 @@ extension WriteLibrary on PrismaDartClientGenerator {
 
     // Write to file.
     output.writeAsStringSync(formatted, mode: FileMode.write);
+
+    // Copy binary engine file.
+    final executable =
+        options.binaryPaths?.queryEngine?.entries.firstOrNull?.value;
+    if (executable != null) {
+      File(executable).copySync(
+        path.join(path.dirname(output.path), path.basename(executable)),
+      );
+    }
   }
 
   /// Resolve the output path

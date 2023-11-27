@@ -74,10 +74,16 @@ class BinaryEngine extends UniversalEngine implements Engine {
       if (file.existsSync()) {
         return file.path;
       }
+
+      final defaultFile = File(path.join(directory, 'prisma-query-engine'));
+      if (defaultFile.existsSync()) {
+        return defaultFile.path;
+      }
     }
 
     throw PrismaInitializationException(
-        message: 'Cannot find the query engine binary (Basename: $basename)',
+        message:
+            'Cannot find the query engine binary (Basename: $basename | prisma-query-engine)',
         engine: this);
   }
 
