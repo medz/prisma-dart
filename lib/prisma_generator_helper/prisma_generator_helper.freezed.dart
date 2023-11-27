@@ -507,18 +507,12 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$GeneratorOptions {
   GeneratorConfig get generator => throw _privateConstructorUsedError;
-
-  /// TODO: what is otherGenerators for?
   List<GeneratorConfig>? get otherGenerators =>
       throw _privateConstructorUsedError;
   String get schemaPath => throw _privateConstructorUsedError;
   Document get dmmf => throw _privateConstructorUsedError;
   List<DataSource> get datasources => throw _privateConstructorUsedError;
-
-  /// TODO: deprecate datamodel & rename to schema?
   String get datamodel => throw _privateConstructorUsedError;
-
-  /// TODO: is it really always version hash? Feature is unclear.
   String get version => throw _privateConstructorUsedError;
   BinaryPaths? get binaryPaths => throw _privateConstructorUsedError;
   bool get dataProxy => throw _privateConstructorUsedError;
@@ -767,11 +761,7 @@ class _$GeneratorOptionsImpl implements _GeneratorOptions {
 
   @override
   final GeneratorConfig generator;
-
-  /// TODO: what is otherGenerators for?
   final List<GeneratorConfig>? _otherGenerators;
-
-  /// TODO: what is otherGenerators for?
   @override
   List<GeneratorConfig>? get otherGenerators {
     final value = _otherGenerators;
@@ -793,11 +783,8 @@ class _$GeneratorOptionsImpl implements _GeneratorOptions {
     return EqualUnmodifiableListView(_datasources);
   }
 
-  /// TODO: deprecate datamodel & rename to schema?
   @override
   final String datamodel;
-
-  /// TODO: is it really always version hash? Feature is unclear.
   @override
   final String version;
   @override
@@ -887,8 +874,6 @@ abstract class _GeneratorOptions implements GeneratorOptions {
   @override
   GeneratorConfig get generator;
   @override
-
-  /// TODO: what is otherGenerators for?
   List<GeneratorConfig>? get otherGenerators;
   @override
   String get schemaPath;
@@ -897,12 +882,8 @@ abstract class _GeneratorOptions implements GeneratorOptions {
   @override
   List<DataSource> get datasources;
   @override
-
-  /// TODO: deprecate datamodel & rename to schema?
   String get datamodel;
   @override
-
-  /// TODO: is it really always version hash? Feature is unclear.
   String get version;
   @override
   BinaryPaths? get binaryPaths;
@@ -931,8 +912,6 @@ mixin _$GeneratorConfig {
   Map<String, String> get config => throw _privateConstructorUsedError;
   List<BinaryTargetsEnvValue> get binaryTargets =>
       throw _privateConstructorUsedError;
-
-  /// TODO why is this not optional?
   List<String> get previewFeatures => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1153,10 +1132,7 @@ class _$GeneratorConfigImpl implements _GeneratorConfig {
     return EqualUnmodifiableListView(_binaryTargets);
   }
 
-  /// TODO why is this not optional?
   final List<String> _previewFeatures;
-
-  /// TODO why is this not optional?
   @override
   List<String> get previewFeatures {
     if (_previewFeatures is EqualUnmodifiableListView) return _previewFeatures;
@@ -1242,8 +1218,6 @@ abstract class _GeneratorConfig implements GeneratorConfig {
   @override
   List<BinaryTargetsEnvValue> get binaryTargets;
   @override
-
-  /// TODO why is this not optional?
   List<String> get previewFeatures;
   @override
   @JsonKey(ignore: true)

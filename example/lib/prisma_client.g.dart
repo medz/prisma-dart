@@ -77,6 +77,15 @@ UserWhereUniqueInput _$UserWhereUniqueInputFromJson(
     UserWhereUniqueInput(
       id: json['id'] as String?,
       name: json['name'] as String?,
+      AND: (json['AND'] as List<dynamic>?)
+          ?.map((e) => UserWhereInput.fromJson(e as Map<String, dynamic>)),
+      OR: (json['OR'] as List<dynamic>?)
+          ?.map((e) => UserWhereInput.fromJson(e as Map<String, dynamic>)),
+      NOT: (json['NOT'] as List<dynamic>?)
+          ?.map((e) => UserWhereInput.fromJson(e as Map<String, dynamic>)),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTimeFilter.fromJson(json['createdAt'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserWhereUniqueInputToJson(
@@ -91,6 +100,10 @@ Map<String, dynamic> _$UserWhereUniqueInputToJson(
 
   writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
+  writeNotNull('AND', instance.AND?.map((e) => e.toJson()).toList());
+  writeNotNull('OR', instance.OR?.map((e) => e.toJson()).toList());
+  writeNotNull('NOT', instance.NOT?.map((e) => e.toJson()).toList());
+  writeNotNull('createdAt', instance.createdAt?.toJson());
   return val;
 }
 
