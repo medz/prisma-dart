@@ -1,25 +1,41 @@
-# Changelog
+## 3.4.5
+
+To install Prisma Dart client v3.4.5, run the following command:
+
+```bash
+dart pub add orm
+```
+
+To update Prisma Dart client v3.4.5, update the `orm` dependency in your `pubspec.yaml` file.
+
+```yaml
+dependencies:
+  orm: ^3.4.5
+```
+
+### What's Changed
+
+1. **Bug**: fix not working on Prisma 5.
+2. **Bug**: type 'Null' is not a subtype of type 'bool' in type cast. #273 #259
+3. **Feature**: Now, Copy current platform engine to output directory. #285
 
 ## [3.4.4](https://github.com/odroe/prisma-dart/compare/orm-v3.4.3...orm-v3.4.4) (2023-07-03)
 
-
 ### Bug Fixes
 
-* bump analyzer from 5.13.0 to 6.0.0 ([c03aaa9](https://github.com/odroe/prisma-dart/commit/c03aaa99f63a641d9e0402abbd254488babb1d56))
+- bump analyzer from 5.13.0 to 6.0.0 ([c03aaa9](https://github.com/odroe/prisma-dart/commit/c03aaa99f63a641d9e0402abbd254488babb1d56))
 
 ## [3.4.3](https://github.com/odroe/prisma-dart/compare/orm-v3.4.2...orm-v3.4.3) (2023-05-30)
 
-
 ### Bug Fixes
 
-* type 'Null' is not a subtype of type 'String' in type cast ([b28cd4e](https://github.com/odroe/prisma-dart/commit/b28cd4e620733850f98c230d2b0dee234200ab6d)), closes [#227](https://github.com/odroe/prisma-dart/issues/227)
+- type 'Null' is not a subtype of type 'String' in type cast ([b28cd4e](https://github.com/odroe/prisma-dart/commit/b28cd4e620733850f98c230d2b0dee234200ab6d)), closes [#227](https://github.com/odroe/prisma-dart/issues/227)
 
 ## [3.4.2](https://github.com/odroe/prisma-dart/compare/orm-v3.4.1...orm-v3.4.2) (2023-05-30)
 
-
 ### Bug Fixes
 
-* **generator:** Fixed field kind enum type origin value ([bc508a0](https://github.com/odroe/prisma-dart/commit/bc508a0aa21bcf319faaabfc82e3025afe7a3ab5)), closes [#225](https://github.com/odroe/prisma-dart/issues/225)
+- **generator:** Fixed field kind enum type origin value ([bc508a0](https://github.com/odroe/prisma-dart/commit/bc508a0aa21bcf319faaabfc82e3025afe7a3ab5)), closes [#225](https://github.com/odroe/prisma-dart/issues/225)
 
 ## 3.4.1
 

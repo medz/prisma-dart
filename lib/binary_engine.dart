@@ -179,6 +179,9 @@ class BinaryEngine extends UniversalEngine implements Engine {
     arguments.add('--host');
     arguments.add(address.host);
 
+    // Set query protocol
+    arguments.addAll(['--engine-protocol', 'graphql']);
+
     // Create process.
     final process = await Process.start(
       resolvedExecutable,
