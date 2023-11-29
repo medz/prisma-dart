@@ -6,6 +6,7 @@ enum Packages {
   prismaDmmf('package:orm/dmmf.dart'),
   generatedTypes('types.dart'),
   generatedDmmf('dmmf.dart'),
+  generateClient('client.dart'),
   ;
 
   final String url;

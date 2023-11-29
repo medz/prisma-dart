@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:orm/generator_helper.dart';
@@ -29,4 +30,5 @@ Future<void> generate(GeneratorOptions options) async {
   final output = options.generator.output!.value;
 
   await File(path).copy(output);
+  await File('dmmf.json').writeAsString(json.encode(options.dmmf.source));
 }

@@ -11,10 +11,10 @@ generator CopyBinaryEngine {
   output   = "dart/prisma-query-engine"
 }
 
-// generator JSClient {
-//   provider = "prisma-client-js"
-//   output   = "js"
-// }
+generator JSClient {
+  provider = "prisma-client-js"
+  output   = "js"
+}
 
 datasource db {
   provider = "postgresql"
