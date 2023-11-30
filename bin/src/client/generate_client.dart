@@ -113,21 +113,6 @@ extension on dmmf.OutputField {
         .toDartReference(document, innerTypes: false)
         .switchNullable(nullable);
   }
-
-  bool allowSelectAndInlcude(dmmf.ModelAction action) {
-    const disallowedActions = <dmmf.ModelAction>[
-      dmmf.ModelAction.createMany,
-      dmmf.ModelAction.updateMany,
-      dmmf.ModelAction.count,
-      dmmf.ModelAction.groupBy,
-      dmmf.ModelAction.findRaw,
-      dmmf.ModelAction.aggregateRaw,
-    ];
-
-    return outputType.location == dmmf.TypeLocation.outputObjectTypes &&
-        outputType.namespace == dmmf.TypeNamespace.model &&
-        !disallowedActions.contains(action);
-  }
 }
 
 extension on Reference {
@@ -168,27 +153,6 @@ Iterable<Parameter> generateDelegateMethodParameters(
     });
   }).toList();
 
-  // Append select and include parameters.
-  if (field.allowSelectAndInlcude(action)) {
-    // Select
-    parameters.add(Parameter((builder) {
-      builder.name = 'select';
-      builder.type =
-          refer('${field.outputType.type.toDartClassNameString()}Select')
-              .toNullable()
-              .toPackage(Packages.generatedTypes);
-    }));
-
-    // Include
-    parameters.add(Parameter((builder) {
-      builder.name = 'include';
-      builder.type =
-          refer('${field.outputType.type.toDartClassNameString()}Include')
-              .toNullable()
-              .toPackage(Packages.generatedTypes);
-    }));
-  }
-
   return parameters;
 }
 
@@ -198,11 +162,6 @@ Block generateDelegateMethodBody(dmmf.ModelAction action,
     final entries = field.args
         .map((e) => MapEntry(e.name, refer(e.name.toDartPropertyNameString())))
         .toList();
-
-    if (field.allowSelectAndInlcude(action)) {
-      entries.add(MapEntry('select', refer('select')));
-      entries.add(MapEntry('include', refer('include')));
-    }
 
     // Add args map.
     builder.statements.add(

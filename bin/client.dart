@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'src/client/generate_client.dart';
 import 'src/generate_dmmf.dart';
 import 'src/types/generate_types.dart';
+import 'src/types/select.dart';
 import 'src/write_dart_file.dart';
 
 Future<void> main() async {
@@ -29,6 +30,8 @@ Future<GeneratorManifest> manifest(GeneratorConfig config) async {
 
 Future<void> generate(GeneratorOptions options) async {
   final formatter = DartFormatter();
+
+  wrapSelectArgs(options.dmmf);
 
   await writeDartSpec(
     formatter: formatter,

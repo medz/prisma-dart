@@ -27,8 +27,8 @@ class Schema {
 }
 
 class SchemaTypes<T> {
-  final Iterable<T> model;
-  final Iterable<T> prisma;
+  final List<T> model;
+  final List<T> prisma;
 
   const SchemaTypes({
     required this.model,
@@ -39,10 +39,10 @@ class SchemaTypes<T> {
     return SchemaTypes(
       model: json['model'] == null
           ? []
-          : (json['model'] as Iterable).cast<Map>().map(factory),
+          : (json['model'] as Iterable).cast<Map>().map(factory).toList(),
       prisma: json['prisma'] == null
           ? []
-          : (json['prisma'] as Iterable).cast<Map>().map(factory),
+          : (json['prisma'] as Iterable).cast<Map>().map(factory).toList(),
     );
   }
 }
@@ -51,7 +51,7 @@ class InputType {
   final String name;
   final InputTypeConstraints constraints;
   final InputTypeMeta? meta;
-  final Iterable<InputField> fields;
+  final List<InputField> fields;
 
   const InputType({
     required this.name,
@@ -65,7 +65,9 @@ class InputType {
       name: json['name'],
       constraints: InputTypeConstraints.fromJson(json['constraints']),
       meta: json['meta'] == null ? null : InputTypeMeta.fromJson(json['meta']),
-      fields: (json['fields'] as Iterable).map((e) => InputField.fromJson(e)),
+      fields: (json['fields'] as Iterable)
+          .map((e) => InputField.fromJson(e))
+          .toList(),
     );
   }
 }
@@ -110,7 +112,7 @@ class InputField {
   final String name;
   final bool isNullable;
   final bool isRequired;
-  final Iterable<TypeReference> inputTypes;
+  final List<TypeReference> inputTypes;
   final Deprecation? deprecation;
 
   const InputField({
@@ -127,7 +129,8 @@ class InputField {
       isNullable: json['isNullable'],
       isRequired: json['isRequired'],
       inputTypes: (json['inputTypes'] as Iterable)
-          .map((e) => TypeReference.fromJson(e)),
+          .map((e) => TypeReference.fromJson(e))
+          .toList(),
       deprecation: json['deprecation'] == null
           ? null
           : Deprecation.fromJson(json['deprecation']),
@@ -235,7 +238,7 @@ enum TypeNamespace {
 
 class OutputType {
   final String name;
-  final Iterable<OutputField> fields;
+  final List<OutputField> fields;
 
   const OutputType({
     required this.name,
@@ -245,14 +248,16 @@ class OutputType {
   factory OutputType.fromJson(Map json) {
     return OutputType(
       name: json['name'],
-      fields: (json['fields'] as Iterable).map((e) => OutputField.fromJson(e)),
+      fields: (json['fields'] as Iterable)
+          .map((e) => OutputField.fromJson(e))
+          .toList(),
     );
   }
 }
 
 class OutputField {
   final String name;
-  final Iterable<InputField> args;
+  final List<InputField> args;
   final bool isNullable;
   final TypeReference outputType;
   final Deprecation? deprecation;
@@ -268,7 +273,9 @@ class OutputField {
   factory OutputField.fromJson(Map json) {
     return OutputField(
       name: json['name'],
-      args: (json['args'] as Iterable).map((e) => InputField.fromJson(e)),
+      args: (json['args'] as Iterable)
+          .map((e) => InputField.fromJson(e))
+          .toList(),
       isNullable: json['isNullable'],
       outputType: TypeReference.fromJson(json['outputType']),
       deprecation: json['deprecation'] == null

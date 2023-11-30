@@ -22,6 +22,6 @@ Library generateTypesLibrary(dmmf.DMMF document) {
     builder.body.addAll(generateOutputTypes(document));
 
     // Generate select and include types.
-    builder.body.addAll(generateSelectTypes(document));
+    // builder.body.addAll(generateSelectTypes(document));
   });
 }
