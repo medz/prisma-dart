@@ -11,6 +11,10 @@ generator CopyBinaryEngine {
   output   = "dart/prisma-query-engine"
 }
 
+generator DMMF {
+  provider = "dart run tool/dmmf_generator.dart"
+}
+
 generator JSClient {
   provider = "prisma-client-js"
   output   = "js"
