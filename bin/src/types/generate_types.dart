@@ -4,7 +4,6 @@ import 'package:orm/dmmf.dart' as dmmf;
 import 'generate_enum.dart';
 import 'generate_input.dart';
 import 'generate_output.dart';
-import 'generate_select.dart';
 
 Library generateTypesLibrary(dmmf.DMMF document) {
   return Library((builder) {

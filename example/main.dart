@@ -1,10 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:orm/engines/binary.dart';
 import 'package:orm/orm.dart';
 
 import '../prisma/dart/client.dart';
-import '../prisma/dart/types.dart';
+import '../prisma/dart/dmmf.dart';
 
 void main() async {
   final engine = BinaryEngine(
@@ -14,41 +12,23 @@ void main() async {
     url: Uri.parse('postgresql://seven@localhost:5432/prisma-dart'),
   );
   final prisma = PrismaClient(engine: engine);
+  await prisma.$connect();
 
-  await prisma.$transaction((prisma) async {
-    // Delete all users and posts.
-    await prisma.post.deleteMany();
-    await prisma.user.deleteMany();
-
-    await prisma.user.create(
-      data: PrismaUnion.$2(
-        UserUncheckedCreateInput(
-          name: 'Seven',
-          price: Decimal.fromInt(1),
-          size: BigInt.zero,
-          bytes: Uint8List(0),
-          count: 1,
-          posts: PostUncheckedCreateNestedManyWithoutAuthorInput(
-            create: PrismaUnion.$2(
-              PrismaUnion.$1([
-                PostCreateWithoutAuthorInput(title: 'Post 1'),
-                PostCreateWithoutAuthorInput(title: 'Post 2'),
-              ]),
-            ),
-          ),
-        ),
-      ),
-    );
-  });
-
-  final users = await prisma.user
-      .findMany(select: UserSelect(id: true, name: true, $count: true));
-  final post = await prisma.post.findFirstOrThrow(
-    include: PostInclude(author: true),
+  final query = serializeJsonQuery(
+    datamodel: dmmf.datamodel,
+    action: JsonQueryAction.aggregate,
+    modelName: 'Post',
+    args: {
+      'select': {
+        '_count': {
+          "select": {'_all': true}
+        },
+      },
+    },
   );
 
-  print(users);
-  print(post.author);
+  final result = await engine.request(query, action: 'aggregatePost');
+  print(result);
 
   await prisma.$disconnect();
 }

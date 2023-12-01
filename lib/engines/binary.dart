@@ -265,7 +265,7 @@ class BinaryEngine implements Engine<Null> {
     return switch (await response.json()) {
       {'data': final Map data} => deserializeJsonResponse(data[action]),
       {'errors': final Iterable errors} => throw Exception(errors),
-      _ => throw Exception('Unknown response'),
+      dynamic value => throw Exception(value),
     };
   }
 
