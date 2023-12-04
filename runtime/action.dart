@@ -3,9 +3,15 @@ import 'dart:async';
 class Action<T, P> implements Future<T> {
   final String model;
   final String action;
-  final Map<String, dynamic> args = {};
+  final Map<String, dynamic> args;
+  final T Function(Map json) deserialize;
 
-  Action(this.model, this.action);
+  const Action(
+    this.model,
+    this.action, {
+    this.args = const {},
+    required this.deserialize,
+  });
 
   @override
   Stream<T> asStream() {
