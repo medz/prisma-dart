@@ -9,7 +9,7 @@ edition = "2021"
 thiserror = "1.0.50"
 url = "2.5.0"
 psl = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0" }
-query-core = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0" }
+query-core = { git = "https://github.com/prisma/prisma-engines", tag = "5.7.0", version = "0.1.0" }
 prisma-fmt = { git = "https://github.com/prisma/prisma-engines", tag = "5.7.0", version = "0.1.0" }
 query-connector = { git = "https://github.com/prisma/prisma-engines", tag = "5.6.0", version = "0.1.0" }
 user-facing-errors = { git = "https://github.com/prisma/prisma-engines", tag = "5.7.0", version = "0.1.0", features = ["sql"] }
