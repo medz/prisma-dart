@@ -1412,7 +1412,7 @@ dependencies = [
  "connection-string",
  "prisma-fmt",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?tag=5.6.0)",
- "query-connector",
+ "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?tag=5.7.0)",
  "query-core",
  "serde_json",
  "thiserror",
@@ -1641,6 +1641,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "query-connector"
+version = "0.1.0"
+source = "git+https://github.com/prisma/prisma-engines?tag=5.7.0#79fb5193cf0a8fdbef536e4b4a159cad677ab1b9"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "chrono",
+ "futures",
+ "indexmap 1.9.3",
+ "itertools",
+ "prisma-value 0.1.0 (git+https://github.com/prisma/prisma-engines?tag=5.7.0)",
+ "query-structure",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?tag=5.7.0)",
+ "uuid",
+]
+
+[[package]]
 name = "query-core"
 version = "0.1.0"
 source = "git+https://github.com/prisma/prisma-engines?tag=5.6.0#e95e739751f42d8ca026f6b910f5a2dc5adeaeee"
@@ -1661,7 +1681,7 @@ dependencies = [
  "petgraph",
  "prisma-models",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?tag=5.6.0)",
- "query-connector",
+ "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?tag=5.6.0)",
  "query-engine-metrics",
  "schema 0.1.0 (git+https://github.com/prisma/prisma-engines?tag=5.6.0)",
  "serde",
