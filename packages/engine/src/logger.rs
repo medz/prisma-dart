@@ -17,7 +17,7 @@ use tracing_subscriber::{
     Layer, Registry,
 };
 
-type Function = fn (String) -> Result<(), String>;
+use crate::types::Function;
 
 #[derive(Clone)]
 pub struct LogCallback(pub Function);

@@ -1,0 +1,1 @@
+pub type Function = fn (String) -> Result<(), String>;
