@@ -1,0 +1,15 @@
+[package]
+name = "engine"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+prisma-fmt = { git = "https://github.com/prisma/prisma-engines", tag = "5.7.0", version = "0.1.0" }
+query-core = { git = "https://github.com/prisma/prisma-engines", version = "0.1.0" }
+query-engine-common = { version = "0.1.0", path = "../query-engine-common" }
+serde_json = "1.0.108"
+tracing = "0.1.40"
+tracing-opentelemetry = "0.17.3"
+tracing-subscriber = "0.3.18"

@@ -1,4 +1,0 @@
-[submodule "packages/prisma-engines"]
-	path = packages/prisma-engines
-	url = https://github.com/prisma/prisma-engines
-	branch = tags/5.7.0
