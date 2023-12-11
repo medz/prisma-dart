@@ -24,9 +24,3 @@ updates:
     directory: /
     schedule:
       interval: daily
-
-  # prisma engines
-  - package-ecosystem: gitsubmodule
-    directory: /packages/prisma-engines
-    schedule:
-      interval: daily
