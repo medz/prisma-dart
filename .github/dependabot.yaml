@@ -1,7 +1,7 @@
 # To get started with Dependabot version updates, you'll need to specify which
 # package ecosystems to update and where the package manifests are located.
 # Please see the documentation for all configuration options:
-# https://docs.github.com/cn/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#configuration-options-for-the-dependabotyml-file
+# https://docs.github.com/zh/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#configuration-options-for-the-dependabotyml-file
 
 version: 2
 updates:
@@ -22,5 +22,11 @@ updates:
   # rust crates
   - package-ecosystem: cargo
     directory: /
+    schedule:
+      interval: daily
+
+  # prisma engines
+  - package-ecosystem: gitsubmodule
+    directory: /packages/prisma-engines
     schedule:
       interval: daily
