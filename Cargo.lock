@@ -364,6 +364,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "builtin-psl-connectors"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "connection-string",
+ "either",
+ "enumflags2",
+ "indoc",
+ "lsp-types",
+ "once_cell",
+ "psl-core 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "regex",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -642,6 +657,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "crosstarget-utils"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "futures",
+ "js-sys",
+ "pin-project",
+ "tokio",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+]
+
+[[package]]
 name = "crypto-common"
 version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -788,6 +816,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "diagnostics"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "colored",
+ "indoc",
+ "pest",
+]
+
+[[package]]
 name = "digest"
 version = "0.10.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -824,6 +862,46 @@ dependencies = [
  "schema 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "dmmf"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "bigdecimal",
+ "indexmap 1.9.3",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "schema 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "driver-adapters"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "async-trait",
+ "futures",
+ "js-sys",
+ "metrics 0.18.1",
+ "napi",
+ "napi-derive",
+ "once_cell",
+ "pin-project",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "serde_repr",
+ "tracing",
+ "tracing-core",
+ "tsify",
+ "uuid",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -908,14 +986,22 @@ version = "0.1.0"
 dependencies = [
  "prisma-fmt",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "query-core",
+ "query-core 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-engine-common 0.1.0",
- "request-handlers",
+ "request-handlers 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "serde_json",
  "tokio",
  "tracing",
  "tracing-opentelemetry",
  "tracing-subscriber",
+]
+
+[[package]]
+name = "engine_ffi"
+version = "0.1.0"
+dependencies = [
+ "query-engine-wasm",
+ "serde_json",
 ]
 
 [[package]]
@@ -2048,7 +2134,7 @@ dependencies = [
  "mongodb-client",
  "prisma-value 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "query-connector",
+ "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-engine-metrics",
  "query-structure 0.0.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "rand 0.7.3",
@@ -2059,7 +2145,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-futures",
- "user-facing-errors",
+ "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "uuid",
 ]
 
@@ -2178,8 +2264,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4869e4d80615fdab57dffe38c36a5bc62fae37352a00a35ee7aca1cea41b1bb3"
 dependencies = [
  "convert_case 0.6.0",
+ "once_cell",
  "proc-macro2",
  "quote",
+ "regex",
+ "semver 1.0.20",
  "syn 1.0.109",
 ]
 
@@ -2526,6 +2615,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "parser-database"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "diagnostics 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "either",
+ "enumflags2",
+ "indexmap 1.9.3",
+ "rustc-hash",
+ "schema-ast 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+]
+
+[[package]]
 name = "pbkdf2"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2785,6 +2887,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "prisma-value"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "base64 0.13.1",
+ "bigdecimal",
+ "chrono",
+ "once_cell",
+ "regex",
+ "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
 name = "prisma_engine"
 version = "0.1.0"
 dependencies = [
@@ -2857,6 +2974,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "psl"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "builtin-psl-connectors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "psl-core 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+]
+
+[[package]]
 name = "psl-core"
 version = "0.1.0"
 source = "git+https://github.com/prisma/prisma-engines?tag=5.7.0#79fb5193cf0a8fdbef536e4b4a159cad677ab1b9"
@@ -2901,6 +3027,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "psl-core"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "bigdecimal",
+ "chrono",
+ "diagnostics 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "enumflags2",
+ "indoc",
+ "itertools 0.10.5",
+ "lsp-types",
+ "once_cell",
+ "parser-database 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "prisma-value 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "regex",
+ "schema-ast 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde_json",
+ "url",
+]
+
+[[package]]
 name = "ptr_meta"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2933,7 +3081,48 @@ dependencies = [
  "bytes",
  "chrono",
  "connection-string",
- "crosstarget-utils",
+ "crosstarget-utils 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "either",
+ "futures",
+ "getrandom 0.2.11",
+ "hex",
+ "lru-cache",
+ "metrics 0.18.1",
+ "mobc",
+ "mysql_async",
+ "native-tls",
+ "num_cpus",
+ "percent-encoding",
+ "postgres-native-tls",
+ "postgres-types",
+ "rusqlite",
+ "serde_json",
+ "sqlformat",
+ "thiserror",
+ "tiberius",
+ "tokio",
+ "tokio-postgres",
+ "tokio-util 0.6.10",
+ "tracing",
+ "tracing-core",
+ "url",
+ "uuid",
+]
+
+[[package]]
+name = "quaint"
+version = "0.2.0-alpha.13"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "async-trait",
+ "base64 0.12.3",
+ "bigdecimal",
+ "bit-vec",
+ "byteorder",
+ "bytes",
+ "chrono",
+ "connection-string",
+ "crosstarget-utils 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "either",
  "futures",
  "getrandom 0.2.11",
@@ -2993,7 +3182,27 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
- "user-facing-errors",
+ "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "uuid",
+]
+
+[[package]]
+name = "query-connector"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "chrono",
+ "futures",
+ "indexmap 1.9.3",
+ "itertools 0.10.5",
+ "prisma-value 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "uuid",
 ]
 
@@ -3007,7 +3216,7 @@ dependencies = [
  "chrono",
  "connection-string",
  "crossbeam-channel",
- "crosstarget-utils",
+ "crosstarget-utils 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "cuid",
  "enumflags2",
  "futures",
@@ -3018,7 +3227,7 @@ dependencies = [
  "opentelemetry",
  "petgraph",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "query-connector",
+ "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-engine-metrics",
  "query-structure 0.0.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "schema 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
@@ -3030,7 +3239,43 @@ dependencies = [
  "tracing-futures",
  "tracing-opentelemetry",
  "tracing-subscriber",
- "user-facing-errors",
+ "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "uuid",
+]
+
+[[package]]
+name = "query-core"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "async-trait",
+ "bigdecimal",
+ "chrono",
+ "connection-string",
+ "crossbeam-channel",
+ "crosstarget-utils 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "cuid",
+ "enumflags2",
+ "futures",
+ "indexmap 1.9.3",
+ "itertools 0.10.5",
+ "lru 0.7.8",
+ "once_cell",
+ "opentelemetry",
+ "petgraph",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "schema 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-futures",
+ "tracing-opentelemetry",
+ "tracing-subscriber",
+ "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "uuid",
 ]
 
@@ -3051,8 +3296,8 @@ dependencies = [
  "napi",
  "opentelemetry",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "query-connector",
- "query-core",
+ "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "query-core 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-engine-metrics",
  "serde",
  "serde_json",
@@ -3063,7 +3308,7 @@ dependencies = [
  "tracing-subscriber",
  "tsify",
  "url",
- "user-facing-errors",
+ "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "wasm-bindgen",
 ]
 
@@ -3082,6 +3327,42 @@ dependencies = [
  "tracing",
  "tracing-futures",
  "tracing-subscriber",
+]
+
+[[package]]
+name = "query-engine-wasm"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "connection-string",
+ "driver-adapters",
+ "futures",
+ "js-sys",
+ "opentelemetry",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-core 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "request-handlers 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "sql-query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-futures",
+ "tracing-opentelemetry",
+ "tracing-subscriber",
+ "tsify",
+ "url",
+ "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "wasm-rs-dbg",
 ]
 
 [[package]]
@@ -3114,6 +3395,23 @@ dependencies = [
  "nanoid",
  "prisma-value 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "thiserror",
+ "uuid",
+]
+
+[[package]]
+name = "query-structure"
+version = "0.0.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "bigdecimal",
+ "chrono",
+ "cuid",
+ "getrandom 0.2.11",
+ "itertools 0.10.5",
+ "nanoid",
+ "prisma-value 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "thiserror",
  "uuid",
 ]
@@ -3315,16 +3613,42 @@ dependencies = [
  "mongodb-query-connector",
  "once_cell",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "quaint",
- "query-core",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "query-core 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-structure 0.0.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "serde",
  "serde_json",
- "sql-query-connector",
+ "sql-query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "thiserror",
  "tracing",
  "url",
- "user-facing-errors",
+ "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+]
+
+[[package]]
+name = "request-handlers"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "bigdecimal",
+ "connection-string",
+ "dmmf 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "futures",
+ "graphql-parser",
+ "indexmap 1.9.3",
+ "itertools 0.10.5",
+ "once_cell",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-core 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde_json",
+ "sql-query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "thiserror",
+ "tracing",
+ "url",
+ "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
 ]
 
 [[package]]
@@ -3538,6 +3862,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "schema"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "once_cell",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "rustc-hash",
+]
+
+[[package]]
 name = "schema-ast"
 version = "0.1.0"
 source = "git+https://github.com/prisma/prisma-engines?tag=5.7.0#79fb5193cf0a8fdbef536e4b4a159cad677ab1b9"
@@ -3553,6 +3888,16 @@ version = "0.1.0"
 source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
 dependencies = [
  "diagnostics 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "pest",
+ "pest_derive",
+]
+
+[[package]]
+name = "schema-ast"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "diagnostics 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "pest",
  "pest_derive",
 ]
@@ -3630,6 +3975,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "25dd9975e68d0cb5aa1120c288333fc98731bd1dd12f561e468ea4728c042b89"
 dependencies = [
  "serde_derive",
+]
+
+[[package]]
+name = "serde-wasm-bindgen"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3b143e2833c57ab9ad3ea280d21fd34e285a42837aeb0ee301f4f41890fa00e"
+dependencies = [
+ "js-sys",
+ "serde",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -3851,8 +4207,8 @@ dependencies = [
  "opentelemetry",
  "prisma-value 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "quaint",
- "query-connector",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-structure 0.0.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "rand 0.7.3",
  "serde",
@@ -3862,7 +4218,39 @@ dependencies = [
  "tracing",
  "tracing-futures",
  "tracing-opentelemetry",
- "user-facing-errors",
+ "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "uuid",
+]
+
+[[package]]
+name = "sql-query-connector"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "bigdecimal",
+ "chrono",
+ "cuid",
+ "futures",
+ "hex",
+ "itertools 0.10.5",
+ "once_cell",
+ "opentelemetry",
+ "prisma-value 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "rand 0.7.3",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-futures",
+ "tracing-opentelemetry",
+ "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "uuid",
 ]
 
@@ -4559,6 +4947,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "user-facing-error-macros"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "user-facing-errors"
 version = "0.1.0"
 source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
@@ -4566,11 +4964,26 @@ dependencies = [
  "backtrace",
  "indoc",
  "itertools 0.10.5",
- "quaint",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "serde",
  "serde_json",
  "tracing",
- "user-facing-error-macros",
+ "user-facing-error-macros 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+]
+
+[[package]]
+name = "user-facing-errors"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+dependencies = [
+ "backtrace",
+ "indoc",
+ "itertools 0.10.5",
+ "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "serde",
+ "serde_json",
+ "tracing",
+ "user-facing-error-macros 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
 ]
 
 [[package]]
@@ -4705,6 +5118,15 @@ name = "wasm-bindgen-shared"
 version = "0.2.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7ab9b36309365056cd639da3134bf87fa8f3d86008abf99e612384a6eecd459f"
+
+[[package]]
+name = "wasm-rs-dbg"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61e5fe4ac478ca5cf1db842029f41a5881da39e70320deb0006912f226ea63f4"
+dependencies = [
+ "web-sys",
+]
 
 [[package]]
 name = "web-sys"

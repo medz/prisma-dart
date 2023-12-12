@@ -4,4 +4,5 @@ members = [
     "packages/query-engine-common",
     "packages/engine",
     "packages/prisma_engine",
+    "packages/engine_ffi",
 ]
