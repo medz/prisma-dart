@@ -992,7 +992,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "tracing",
- "tracing-opentelemetry",
+ "tracing-opentelemetry 0.22.0",
  "tracing-subscriber",
 ]
 
@@ -1988,7 +1988,7 @@ dependencies = [
  "indexmap 1.9.3",
  "metrics 0.18.1",
  "num_cpus",
- "ordered-float",
+ "ordered-float 2.10.1",
  "parking_lot 0.11.2",
  "quanta",
  "radix_trie",
@@ -2506,6 +2506,42 @@ dependencies = [
 ]
 
 [[package]]
+name = "opentelemetry"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e32339a5dc40459130b3bd269e9892439f55b33e772d2a9d402a789baaf4e8a"
+dependencies = [
+ "futures-core",
+ "futures-sink",
+ "indexmap 2.1.0",
+ "js-sys",
+ "once_cell",
+ "pin-project-lite",
+ "thiserror",
+ "urlencoding",
+]
+
+[[package]]
+name = "opentelemetry_sdk"
+version = "0.21.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "968ba3f2ca03e90e5187f5e4f46c791ef7f2c163ae87789c8ce5f5ca3b7b7de5"
+dependencies = [
+ "async-trait",
+ "crossbeam-channel",
+ "futures-channel",
+ "futures-executor",
+ "futures-util",
+ "glob",
+ "once_cell",
+ "opentelemetry 0.21.0",
+ "ordered-float 4.2.0",
+ "percent-encoding",
+ "rand 0.8.5",
+ "thiserror",
+]
+
+[[package]]
 name = "opentls"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2524,6 +2560,15 @@ name = "ordered-float"
 version = "2.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68f19d67e5a2795c94e73e0bb1cc1a7edeb2e28efd39e2e1c9b7a40c1108b11c"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
+name = "ordered-float"
+version = "4.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a76df7075c7d4d01fdcb46c912dd17fba5b60c78ea480b475f2b6ab6f666584e"
 dependencies = [
  "num-traits",
 ]
@@ -3224,7 +3269,7 @@ dependencies = [
  "itertools 0.10.5",
  "lru 0.7.8",
  "once_cell",
- "opentelemetry",
+ "opentelemetry 0.17.0",
  "petgraph",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
@@ -3237,7 +3282,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-futures",
- "tracing-opentelemetry",
+ "tracing-opentelemetry 0.17.4",
  "tracing-subscriber",
  "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "uuid",
@@ -3261,7 +3306,7 @@ dependencies = [
  "itertools 0.10.5",
  "lru 0.7.8",
  "once_cell",
- "opentelemetry",
+ "opentelemetry 0.17.0",
  "petgraph",
  "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
@@ -3273,7 +3318,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-futures",
- "tracing-opentelemetry",
+ "tracing-opentelemetry 0.17.4",
  "tracing-subscriber",
  "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "uuid",
@@ -3294,7 +3339,7 @@ dependencies = [
  "async-trait",
  "connection-string",
  "napi",
- "opentelemetry",
+ "opentelemetry 0.17.0",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-core 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
@@ -3304,7 +3349,7 @@ dependencies = [
  "thiserror",
  "tracing",
  "tracing-futures",
- "tracing-opentelemetry",
+ "tracing-opentelemetry 0.17.4",
  "tracing-subscriber",
  "tsify",
  "url",
@@ -3340,7 +3385,7 @@ dependencies = [
  "driver-adapters",
  "futures",
  "js-sys",
- "opentelemetry",
+ "opentelemetry 0.17.0",
  "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
@@ -3355,7 +3400,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-futures",
- "tracing-opentelemetry",
+ "tracing-opentelemetry 0.17.4",
  "tracing-subscriber",
  "tsify",
  "url",
@@ -4204,7 +4249,7 @@ dependencies = [
  "hex",
  "itertools 0.10.5",
  "once_cell",
- "opentelemetry",
+ "opentelemetry 0.17.0",
  "prisma-value 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "quaint 0.2.0-alpha.13 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
@@ -4217,7 +4262,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-futures",
- "tracing-opentelemetry",
+ "tracing-opentelemetry 0.17.4",
  "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "uuid",
 ]
@@ -4236,7 +4281,7 @@ dependencies = [
  "hex",
  "itertools 0.10.5",
  "once_cell",
- "opentelemetry",
+ "opentelemetry 0.17.0",
  "prisma-value 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
@@ -4249,7 +4294,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-futures",
- "tracing-opentelemetry",
+ "tracing-opentelemetry 0.17.4",
  "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "uuid",
 ]
@@ -4729,11 +4774,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fbbe89715c1dbbb790059e2565353978564924ee85017b5fff365c872ff6721f"
 dependencies = [
  "once_cell",
- "opentelemetry",
+ "opentelemetry 0.17.0",
  "tracing",
  "tracing-core",
  "tracing-log 0.1.4",
  "tracing-subscriber",
+]
+
+[[package]]
+name = "tracing-opentelemetry"
+version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c67ac25c5407e7b961fafc6f7e9aa5958fd297aada2d20fa2ae1737357e55596"
+dependencies = [
+ "js-sys",
+ "once_cell",
+ "opentelemetry 0.21.0",
+ "opentelemetry_sdk",
+ "smallvec",
+ "tracing",
+ "tracing-core",
+ "tracing-log 0.2.0",
+ "tracing-subscriber",
+ "web-time",
 ]
 
 [[package]]
@@ -4937,6 +5000,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "urlencoding"
+version = "2.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "daf8dba3b7eb870caf1ddeed7bc9d2a049f3cfdfae7cb521b087cc33ae4c49da"
+
+[[package]]
 name = "user-facing-error-macros"
 version = "0.1.0"
 source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
@@ -5133,6 +5202,16 @@ name = "web-sys"
 version = "0.3.66"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "50c24a44ec86bb68fbecd1b3efed7e85ea5621b39b35ef2766b66cd984f8010f"
+dependencies = [
+ "js-sys",
+ "wasm-bindgen",
+]
+
+[[package]]
+name = "web-time"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "57099a701fb3a8043f993e8228dc24229c7b942e2b009a1b962e54489ba1d3bf"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
