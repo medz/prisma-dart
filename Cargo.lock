@@ -366,7 +366,7 @@ dependencies = [
 [[package]]
 name = "builtin-psl-connectors"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "connection-string",
  "either",
@@ -417,6 +417,25 @@ name = "bytes"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2bd12c1caf447e69cd4528f47f94d203fd2582878ecb9e9465484c4148a8223"
+
+[[package]]
+name = "cbindgen"
+version = "0.26.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da6bc11b07529f16944307272d5bd9b22530bc7d05751717c9d416586cedab49"
+dependencies = [
+ "clap 3.2.25",
+ "heck 0.4.1",
+ "indexmap 1.9.3",
+ "log",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "serde_json",
+ "syn 1.0.109",
+ "tempfile",
+ "toml",
+]
 
 [[package]]
 name = "cc"
@@ -484,9 +503,33 @@ dependencies = [
  "atty",
  "bitflags 1.3.2",
  "strsim 0.8.0",
- "textwrap",
+ "textwrap 0.11.0",
  "unicode-width",
  "vec_map",
+]
+
+[[package]]
+name = "clap"
+version = "3.2.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ea181bf566f71cb9a5d17a59e1871af638180a18fb0035c92ae62b705207123"
+dependencies = [
+ "atty",
+ "bitflags 1.3.2",
+ "clap_lex",
+ "indexmap 1.9.3",
+ "strsim 0.10.0",
+ "termcolor",
+ "textwrap 0.16.0",
+]
+
+[[package]]
+name = "clap_lex"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2850f2f5a82cbf437dd5af4d49848fbdfc27c157c3d010345776f952765261c5"
+dependencies = [
+ "os_str_bytes",
 ]
 
 [[package]]
@@ -659,7 +702,7 @@ dependencies = [
 [[package]]
 name = "crosstarget-utils"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "futures",
  "js-sys",
@@ -681,9 +724,9 @@ dependencies = [
 
 [[package]]
 name = "ctor"
-version = "0.2.5"
+version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37e366bff8cd32dd8754b0991fb66b279dc48f598c3a18914852a6673deef583"
+checksum = "30d2b3721e861707777e3195b0158f950ae6dc4a27e4d02ff9f67e3eb3de199e"
 dependencies = [
  "quote",
  "syn 2.0.40",
@@ -818,7 +861,7 @@ dependencies = [
 [[package]]
 name = "diagnostics"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "colored",
  "indoc",
@@ -867,7 +910,7 @@ dependencies = [
 [[package]]
 name = "dmmf"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "bigdecimal",
  "indexmap 1.9.3",
@@ -881,7 +924,7 @@ dependencies = [
 [[package]]
 name = "driver-adapters"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "async-trait",
  "futures",
@@ -1000,8 +1043,10 @@ dependencies = [
 name = "engine_ffi"
 version = "0.1.0"
 dependencies = [
+ "cbindgen",
  "query-engine-wasm",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -2117,6 +2162,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "mongodb-client"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
+dependencies = [
+ "mongodb",
+ "once_cell",
+ "percent-encoding",
+ "thiserror",
+]
+
+[[package]]
 name = "mongodb-query-connector"
 version = "0.1.0"
 source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
@@ -2131,11 +2187,11 @@ dependencies = [
  "indexmap 1.9.3",
  "itertools 0.10.5",
  "mongodb",
- "mongodb-client",
+ "mongodb-client 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "prisma-value 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "query-engine-metrics",
+ "query-engine-metrics 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-structure 0.0.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "rand 0.7.3",
  "regex",
@@ -2146,6 +2202,39 @@ dependencies = [
  "tracing",
  "tracing-futures",
  "user-facing-errors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
+ "uuid",
+]
+
+[[package]]
+name = "mongodb-query-connector"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "bigdecimal",
+ "bson",
+ "chrono",
+ "cuid",
+ "futures",
+ "indexmap 1.9.3",
+ "itertools 0.10.5",
+ "mongodb",
+ "mongodb-client 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "prisma-value 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-engine-metrics 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "rand 0.7.3",
+ "regex",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-futures",
+ "user-facing-errors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "uuid",
 ]
 
@@ -2535,6 +2624,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a86ed3f5f244b372d6b1a00b72ef7f8876d0bc6a78a4c9985c53614041512063"
 
 [[package]]
+name = "os_str_bytes"
+version = "6.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e2355d85b9a3786f481747ced0e0ff2ba35213a1f9bd406ed906554d7af805a1"
+
+[[package]]
 name = "overload"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2617,7 +2712,7 @@ dependencies = [
 [[package]]
 name = "parser-database"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "diagnostics 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "either",
@@ -2889,7 +2984,7 @@ dependencies = [
 [[package]]
 name = "prisma-value"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "base64 0.13.1",
  "bigdecimal",
@@ -2976,7 +3071,7 @@ dependencies = [
 [[package]]
 name = "psl"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "builtin-psl-connectors 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "psl-core 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
@@ -3029,7 +3124,7 @@ dependencies = [
 [[package]]
 name = "psl-core"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "bigdecimal",
  "chrono",
@@ -3112,7 +3207,7 @@ dependencies = [
 [[package]]
 name = "quaint"
 version = "0.2.0-alpha.13"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "async-trait",
  "base64 0.12.3",
@@ -3189,7 +3284,7 @@ dependencies = [
 [[package]]
 name = "query-connector"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3228,7 +3323,7 @@ dependencies = [
  "petgraph",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "query-engine-metrics",
+ "query-engine-metrics 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-structure 0.0.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "schema 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "serde",
@@ -3246,7 +3341,7 @@ dependencies = [
 [[package]]
 name = "query-core"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "async-trait",
  "bigdecimal",
@@ -3265,6 +3360,7 @@ dependencies = [
  "petgraph",
  "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
+ "query-engine-metrics 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "query-structure 0.0.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "schema 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "serde",
@@ -3298,7 +3394,7 @@ dependencies = [
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "query-core 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
- "query-engine-metrics",
+ "query-engine-metrics 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "serde",
  "serde_json",
  "thiserror",
@@ -3330,9 +3426,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "query-engine-metrics"
+version = "0.1.0"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
+dependencies = [
+ "metrics 0.18.1",
+ "metrics-exporter-prometheus",
+ "metrics-util 0.12.1",
+ "once_cell",
+ "parking_lot 0.12.1",
+ "serde",
+ "serde_json",
+ "tracing",
+ "tracing-futures",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "query-engine-wasm"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3402,7 +3515,7 @@ dependencies = [
 [[package]]
 name = "query-structure"
 version = "0.0.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "bigdecimal",
  "chrono",
@@ -3610,7 +3723,7 @@ dependencies = [
  "graphql-parser",
  "indexmap 1.9.3",
  "itertools 0.10.5",
- "mongodb-query-connector",
+ "mongodb-query-connector 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "once_cell",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "quaint 0.2.0-alpha.13 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
@@ -3628,7 +3741,7 @@ dependencies = [
 [[package]]
 name = "request-handlers"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "bigdecimal",
  "connection-string",
@@ -3637,6 +3750,7 @@ dependencies = [
  "graphql-parser",
  "indexmap 1.9.3",
  "itertools 0.10.5",
+ "mongodb-query-connector 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "once_cell",
  "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "quaint 0.2.0-alpha.13 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
@@ -3864,7 +3978,7 @@ dependencies = [
 [[package]]
 name = "schema"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "once_cell",
  "psl 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
@@ -3895,7 +4009,7 @@ dependencies = [
 [[package]]
 name = "schema-ast"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "diagnostics 0.1.0 (git+https://github.com/medz/prisma-engines?branch=prisma-dart)",
  "pest",
@@ -4225,7 +4339,7 @@ dependencies = [
 [[package]]
 name = "sql-query-connector"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4300,7 +4414,7 @@ version = "0.3.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c6b5c64445ba8094a6ab0c3cd2ad323e07171012d9c98b0b15651daf1787a10"
 dependencies = [
- "clap",
+ "clap 2.34.0",
  "lazy_static",
  "structopt-derive",
 ]
@@ -4406,6 +4520,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "termcolor"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ff1bc3d3f05aff0403e8ac0d92ced918ec05b666a43f83297ccef5bea8a3d449"
+dependencies = [
+ "winapi-util",
+]
+
+[[package]]
 name = "textwrap"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4413,6 +4536,12 @@ checksum = "d326610f408c7a4eb6f51c37c330e496b08506c9457c9d34287ecc38809fb060"
 dependencies = [
  "unicode-width",
 ]
+
+[[package]]
+name = "textwrap"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "222a222a5bfe1bba4a77b45ec488a741b3cb8872e5e499451fd7d0129c9c7c3d"
 
 [[package]]
 name = "thiserror"
@@ -4632,6 +4761,15 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "toml"
+version = "0.5.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f4f7f0dd8d50a853a531c426359045b1998f04219d88799810762cd4ad314234"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
@@ -4949,7 +5087,7 @@ dependencies = [
 [[package]]
 name = "user-facing-error-macros"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4974,7 +5112,7 @@ dependencies = [
 [[package]]
 name = "user-facing-errors"
 version = "0.1.0"
-source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#9c29e552490be3ad36576a9e74dc3aa76f0f774e"
+source = "git+https://github.com/medz/prisma-engines?branch=prisma-dart#b4cf862083bf30874d132c3a237d91c15efa7335"
 dependencies = [
  "backtrace",
  "indoc",
@@ -5165,6 +5303,15 @@ name = "winapi-i686-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
+
+[[package]]
+name = "winapi-util"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f29e6f9198ba0d26b4c9f07dbe6f9ed633e1f3d5b8b414090084349e46a52596"
+dependencies = [
+ "winapi",
+]
 
 [[package]]
 name = "winapi-x86_64-pc-windows-gnu"
