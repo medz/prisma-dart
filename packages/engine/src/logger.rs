@@ -42,12 +42,11 @@ impl Logger {
             FilterExt::boxed(log_level)
         };
 
-        let fn1 = CallbackLayer::new(&log_callback);
-        let fn2 = CallbackLayer::new(&log_callback);
+        let log_callback = CallbackLayer::new(log_callback);
 
         let is_user_trace = filter_fn(telemetry::helpers::user_facing_span_only_filter);
 
-        let tracer = query_engine_common::tracer::new_pipeline().install_simple(Box::new(fn1));
+        let tracer = query_engine_common::tracer::new_pipeline().install_simple(Box::new(log_callback.clone()));
 
         let telemetry = if enable_tracing {
             let telemetry = tracing_opentelemetry::layer()
@@ -58,7 +57,7 @@ impl Logger {
             None
         };
 
-        let layer = fn2.with_filter(filters);
+        let layer = log_callback.with_filter(filters);
 
         Self {
             dispatcher: Dispatch::new(Registry::default().with(telemetry).with(layer)),
@@ -123,22 +122,21 @@ impl<'a> ToString for JsonVisitor<'a> {
 }
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub(crate) struct CallbackLayer {
     callback: Function,
 }
 
 impl CallbackLayer {
-    pub fn new(callback: &Function) -> Self {
-        let callback = callback.into();
-
+    pub fn new(callback: Function) -> Self {
         CallbackLayer { callback }
     }
 }
 
 impl StringCallback for CallbackLayer {
     fn call(&self, message: String) -> Result<(), String> {
-        // let _ = self.callback(message);
+        let func = self.callback;
+        let _ = func(message.as_ptr() as _);
 
         Ok(())
     }

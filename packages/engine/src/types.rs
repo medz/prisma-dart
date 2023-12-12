@@ -1,3 +1,3 @@
-use query_engine_common::logger::StringCallback;
+use std::ffi::c_char;
 
-pub type Function = Box<dyn StringCallback + Sync + Send>;
+pub type Function = extern "C" fn(*const c_char);
