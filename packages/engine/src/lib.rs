@@ -1,4 +1,5 @@
 pub mod logger;
 pub mod schema;
+pub mod query;
 
-mod types;
+pub mod types;

@@ -7,9 +7,12 @@ edition = "2021"
 
 [dependencies]
 prisma-fmt = { git = "https://github.com/prisma/prisma-engines", tag = "5.7.0", version = "0.1.0" }
-query-core = { git = "https://github.com/prisma/prisma-engines", version = "0.1.0" }
+psl = { git = "https://github.com/prisma/prisma-engines", version = "0.1.0", branch = "feat/query-engine-common" }
+query-core = { git = "https://github.com/prisma/prisma-engines", branch = "feat/query-engine-common" }
 query-engine-common = { version = "0.1.0", path = "../query-engine-common" }
+request-handlers = { git = "https://github.com/prisma/prisma-engines", branch = "feat/query-engine-common", features = ["sql"] }
 serde_json = "1.0.108"
+tokio = { version = "1.35.0", features = ["macros", "sync", "io-util", "time"] }
 tracing = "0.1.40"
 tracing-opentelemetry = "0.17.3"
 tracing-subscriber = "0.3.18"

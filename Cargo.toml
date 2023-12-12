@@ -3,4 +3,5 @@ resolver = "2"
 members = [
     "packages/query-engine-common",
     "packages/engine",
+    "packages/prisma_engine",
 ]

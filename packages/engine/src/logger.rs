@@ -3,7 +3,7 @@
 
 use core::fmt;
 use query_core::telemetry;
-use query_engine_common::logger::StringCallback;
+pub use query_engine_common::logger::StringCallback;
 use serde_json::Value;
 use std::collections::BTreeMap;
 use tracing::{
@@ -19,19 +19,13 @@ use tracing_subscriber::{
 
 use crate::types::Function;
 
-#[derive(Clone)]
-pub struct LogCallback(pub Function);
-
-unsafe impl Send for LogCallback {}
-unsafe impl Sync for LogCallback {}
-
 pub(crate) struct Logger {
     dispatcher: Dispatch,
 }
 
 impl Logger {
     /// Creates a new logger using a call layer
-    pub fn new(log_queries: bool, log_level: LevelFilter, log_callback: LogCallback, enable_tracing: bool) -> Self {
+    pub fn new(log_queries: bool, log_level: LevelFilter, log_callback: Function, enable_tracing: bool) -> Self {
         let is_sql_query = filter_fn(|meta| {
             meta.target() == "quaint::connector::metrics" && meta.fields().iter().any(|f| f.name() == "query")
         });
@@ -48,11 +42,12 @@ impl Logger {
             FilterExt::boxed(log_level)
         };
 
-        let log_callback = CallbackLayer::new(log_callback);
+        let fn1 = CallbackLayer::new(&log_callback);
+        let fn2 = CallbackLayer::new(&log_callback);
 
         let is_user_trace = filter_fn(telemetry::helpers::user_facing_span_only_filter);
 
-        let tracer = query_engine_common::tracer::new_pipeline().install_simple(Box::new(log_callback.clone()));
+        let tracer = query_engine_common::tracer::new_pipeline().install_simple(Box::new(fn1));
 
         let telemetry = if enable_tracing {
             let telemetry = tracing_opentelemetry::layer()
@@ -63,7 +58,7 @@ impl Logger {
             None
         };
 
-        let layer = log_callback.with_filter(filters);
+        let layer = fn2.with_filter(filters);
 
         Self {
             dispatcher: Dispatch::new(Registry::default().with(telemetry).with(layer)),
@@ -127,21 +122,25 @@ impl<'a> ToString for JsonVisitor<'a> {
     }
 }
 
-#[derive(Clone)]
+
+#[derive(Debug)]
 pub(crate) struct CallbackLayer {
-    callback: LogCallback,
+    callback: Function,
 }
 
 impl CallbackLayer {
-    pub fn new(callback: LogCallback) -> Self {
+    pub fn new(callback: &Function) -> Self {
+        let callback = callback.into();
+
         CallbackLayer { callback }
     }
 }
 
 impl StringCallback for CallbackLayer {
     fn call(&self, message: String) -> Result<(), String> {
-        (self.callback
-            .0)(message)
+        // let _ = self.callback(message);
+
+        Ok(())
     }
 }
 
