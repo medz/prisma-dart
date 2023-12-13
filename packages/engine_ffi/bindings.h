@@ -2,14 +2,9 @@ typedef const int8_t *DartString;
 
 typedef void (*StringCallback)(DartString);
 
-typedef void (*QueryEngineNewCallback)(QueryEngine*);
-
 typedef void (*VoidCallback)(void);
 
-void query_engine_new(DartString options,
-                      StringCallback callback,
-                      QueryEngineNewCallback created,
-                      VoidCallback error);
+QueryEngine *query_engine_new(DartString options, StringCallback callback);
 
 void query_engine_connect(QueryEngine *engine,
                           VoidCallback callback,
