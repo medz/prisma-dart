@@ -351,7 +351,7 @@ dependencies = [
 [[package]]
 name = "builtin-psl-connectors"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "connection-string",
  "either",
@@ -689,7 +689,7 @@ dependencies = [
 [[package]]
 name = "crosstarget-utils"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "futures",
  "js-sys",
@@ -851,7 +851,7 @@ dependencies = [
 [[package]]
 name = "diagnostics"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "colored",
  "indoc",
@@ -896,7 +896,7 @@ dependencies = [
 [[package]]
 name = "dmmf"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "bigdecimal",
  "indexmap 1.9.3",
@@ -2153,7 +2153,7 @@ dependencies = [
 [[package]]
 name = "mongodb-client"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "mongodb",
  "once_cell",
@@ -2175,7 +2175,7 @@ dependencies = [
 [[package]]
 name = "mongodb-query-connector"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2183,6 +2183,7 @@ dependencies = [
  "bson",
  "chrono",
  "cuid",
+ "derive_more",
  "futures",
  "indexmap 1.9.3",
  "itertools 0.10.5",
@@ -2699,7 +2700,7 @@ dependencies = [
 [[package]]
 name = "parser-database"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "diagnostics 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "either",
@@ -2969,7 +2970,7 @@ dependencies = [
 [[package]]
 name = "prisma-value"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "base64 0.13.1",
  "bigdecimal",
@@ -3062,7 +3063,7 @@ dependencies = [
 [[package]]
 name = "psl"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "builtin-psl-connectors 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "psl-core 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
@@ -3102,7 +3103,7 @@ dependencies = [
 [[package]]
 name = "psl-core"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "bigdecimal",
  "chrono",
@@ -3166,7 +3167,7 @@ dependencies = [
 [[package]]
 name = "quaint"
 version = "0.2.0-alpha.13"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "async-trait",
  "base64 0.12.3",
@@ -3181,6 +3182,7 @@ dependencies = [
  "futures",
  "getrandom 0.2.11",
  "hex",
+ "itertools 0.10.5",
  "lru-cache",
  "metrics 0.18.1",
  "mobc",
@@ -3264,7 +3266,7 @@ dependencies = [
 [[package]]
 name = "query-connector"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3304,7 +3306,7 @@ dependencies = [
 [[package]]
 name = "query-core"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "async-trait",
  "bigdecimal",
@@ -3385,7 +3387,7 @@ dependencies = [
 [[package]]
 name = "query-engine-common"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "async-trait",
  "connection-string",
@@ -3411,7 +3413,7 @@ dependencies = [
 [[package]]
 name = "query-engine-metrics"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "metrics 0.18.1",
  "metrics-exporter-prometheus",
@@ -3498,7 +3500,7 @@ dependencies = [
 [[package]]
 name = "query-structure"
 version = "0.0.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "bigdecimal",
  "chrono",
@@ -3714,7 +3716,7 @@ dependencies = [
 [[package]]
 name = "request-handlers"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "bigdecimal",
  "connection-string",
@@ -3967,7 +3969,7 @@ dependencies = [
 [[package]]
 name = "schema"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "once_cell",
  "psl 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
@@ -3999,7 +4001,7 @@ dependencies = [
 [[package]]
 name = "schema-ast"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "diagnostics 0.1.0 (git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common)",
  "pest",
@@ -4307,7 +4309,7 @@ checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
 [[package]]
 name = "sql-query-connector"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5077,7 +5079,7 @@ dependencies = [
 [[package]]
 name = "user-facing-error-macros"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5097,7 +5099,7 @@ dependencies = [
 [[package]]
 name = "user-facing-errors"
 version = "0.1.0"
-source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#1af7189f1858c050562d9d93b2faa23d0399db4b"
+source = "git+https://github.com/prisma/prisma-engines?branch=feat/query-engine-common#53361f03c864d32a6746c6bb5b4509e7fb068b75"
 dependencies = [
  "backtrace",
  "indoc",
