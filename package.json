@@ -5,6 +5,6 @@
   },
   "private": true,
   "dependencies": {
-    "@prisma/client": "5.6.0"
+    "@prisma/client": "5.7.1"
   }
 }
