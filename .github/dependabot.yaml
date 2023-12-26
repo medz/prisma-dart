@@ -10,6 +10,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    commit-message:
+      prefix: 'ci(deps)'
 
   # `orm` package
   - package-ecosystem: pub
@@ -17,10 +19,20 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: 'fix'
+      prefix: 'fix(deps)'
 
   # rust crates
   - package-ecosystem: cargo
     directory: /
     schedule:
       interval: daily
+    commit-message:
+      prefix: 'fix(deps)'
+
+  # npm
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: 'chore(deps)'
