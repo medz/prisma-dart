@@ -38,7 +38,10 @@ class Action<
     Pagination,
 
     /// distinct
-    Distinct
+    Distinct,
+
+    /// having
+    Having
     //------------------------- Divider -------------------------//
     > implements Future<Model> {
   /// The factory of the model

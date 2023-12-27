@@ -1,3 +1,3 @@
-abstract interface class ModelScalar implements Enum {
-  String get name;
-}
+import 'prisma_enum.dart';
+
+abstract interface class ModelScalar implements PrismaEnum {}

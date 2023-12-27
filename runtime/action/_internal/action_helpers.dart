@@ -2,9 +2,9 @@ import '../../input/input.dart';
 import '../action.dart';
 import '../action+from.dart';
 
-extension ActionHelpers<$1, $2, $3, $4, Cursor, Pagination, Distinct>
-    on Action<$1, $2, $3, $4, Cursor, Pagination, Distinct> {
-  Action<$1, $2, $3, $4, Cursor, Pagination, Distinct> fromWith(
+extension ActionHelpers<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having>
+    on Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having> {
+  Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having> fromWith(
       String name, Input input) {
     final arguments = this
         .arguments

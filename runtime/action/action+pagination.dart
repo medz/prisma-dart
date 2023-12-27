@@ -4,18 +4,19 @@ import 'action+from.dart';
 import 'action.dart';
 
 extension Action$Pagination<Unserialized, Model, Where, OrderBy, Cursor,
-        Distinct>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct> {
-  Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct> take(
-      int value) {
+        Distinct, Having>
+    on Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct,
+        Having> {
+  Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct, Having>
+      take(int value) {
     return from({
       ...arguments,
       'take': value,
     });
   }
 
-  Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct> skip(
-      int value) {
+  Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct, Having>
+      skip(int value) {
     return from({
       ...arguments,
       'skip': value,
