@@ -8,15 +8,16 @@ extension ActionHelpers<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having,
         Update, Many> {
   Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having, Create, Update,
       Many> fromWith(String name, Input input) {
-    final arguments = this
-        .arguments
-        .mergeWithCreate([name, ...input.$_keys_], input.$_value_);
+    final arguments = input.$records.fold(this.arguments, (current, element) {
+      final (keys, value) = element;
+      return current.mergeWithCreate([name, ...keys], value);
+    });
 
     return from(arguments);
   }
 
-  Map<String, dynamic> deserializeInput(Input input) =>
-      <String, dynamic>{}.mergeWithCreate(input.$_keys_, input.$_value_);
+  Map<String, dynamic> deserializeInput(Input input) => input.$records.fold({},
+      (current, element) => current.mergeWithCreate(element.$1, element.$2));
 }
 
 extension<V> on Map<String, V> {

@@ -1,11 +1,7 @@
 abstract class Input {
-  // ignore: non_constant_identifier_names
-  final Iterable<String> $_keys_;
+  /// Current input records storage for keys-value pairs.
+  final Iterable<(Iterable<String> keys, dynamic value)> $records;
 
-  // ignore: non_constant_identifier_names
-  final dynamic $_value_;
-
-  const Input(Iterable<String> keys, dynamic value)
-      : $_keys_ = keys,
-        $_value_ = value;
+  /// Creates an input with single keys-value pair.
+  Input(Iterable<String> keys, dynamic value) : $records = [(keys, value)];
 }
