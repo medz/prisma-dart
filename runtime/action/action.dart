@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import '../input/input.dart';
-
 /// Model from JSON factory.
 typedef ModelFactory<T, R> = R Function(T data);
 
@@ -19,8 +17,30 @@ class Action<
     /// Model data type
     Model,
 
-    /// Where builder type
-    Where extends Input> implements Future<Model> {
+    /// Where builder type, If type set to [Null] then the where builder will be
+    /// disabled, Otherwise the [Where] is extends from [Input] class enable
+    /// where builder.
+    Where,
+
+    /// Order by builder type, If type set to [Null] then the order by builder
+    /// will be disabled, Otherwise the [OrderBy] is extends from [Input] class
+    /// enable order by builder.
+    OrderBy,
+
+    /// cursor builder type, If type set to [Null] then the cursor builder
+    /// will be disabled, Otherwise the [Cursor] is extends from [Input] class
+    /// enable cursor builder.
+    Cursor,
+
+    /// Pagination builder type, If type set to [Null] then the pagination
+    /// builder will be disabled, Otherwise the [Pagination] set to [bool]
+    /// enable pagination builder.
+    Pagination,
+
+    /// distinct
+    Distinct
+    //------------------------- Divider -------------------------//
+    > implements Future<Model> {
   /// The factory of the model
   final ModelFactory<Unserialized, Model> factory;
 
