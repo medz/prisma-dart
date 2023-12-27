@@ -2,18 +2,18 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator DartClient {
-  provider = "dart run orm:client"
+  provider = "dart run orm:generate"
   output   = "dart"
 }
 
-generator CopyBinaryEngine {
-  provider = "dart run orm:binary"
-  output   = "dart/prisma-query-engine"
-}
+// generator CopyBinaryEngine {
+//   provider = "dart run orm:binary"
+//   output   = "dart/prisma-query-engine"
+// }
 
-generator DMMF {
-  provider = "dart run tool/dmmf_generator.dart"
-}
+// generator DMMF {
+//   provider = "dart run tool/dmmf_generator.dart"
+// }
 
 generator JSClient {
   provider = "prisma-client-js"
