@@ -15,10 +15,10 @@ generator DartClient {
 //   provider = "dart run tool/dmmf_generator.dart"
 // }
 
-generator JSClient {
-  provider = "prisma-client-js"
-  output   = "js"
-}
+// generator JSClient {
+//   provider = "prisma-client-js"
+//   output   = "js"
+// }
 
 datasource db {
   provider = "postgresql"

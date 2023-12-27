@@ -3,7 +3,6 @@ library prisma.runtime;
 export 'src/runtime/decimal.dart';
 export 'src/runtime/engine.dart';
 export 'src/runtime/json_convertible.dart';
-export 'src/runtime/model_delegate.dart';
 export 'src/runtime/model_scalar.dart';
 export 'src/runtime/prisma_client.dart';
 export 'src/runtime/prisma_enum.dart';

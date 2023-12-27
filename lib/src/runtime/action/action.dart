@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import '../../dmmf/ast/datamodel.dart' show DataModel;
+import '../json_protocol/protocol.dart';
+
 /// Model from JSON factory.
 typedef ModelFactory<T, R> = R Function(T data);
 
@@ -15,9 +18,21 @@ class Action<U, T, O> implements Future<T> {
   /// Action arguments
   final Map<String, dynamic> arguments;
 
+  /// The schema data model.
+  final DataModel datamodel;
+
+  /// The action type
+  final JsonQueryAction action;
+
+  /// The action owner model name.
+  final String? model;
+
   /// Create a new action.
   const Action({
     required this.factory,
+    required this.datamodel,
+    required this.action,
+    this.model,
     this.arguments = const {},
   });
 

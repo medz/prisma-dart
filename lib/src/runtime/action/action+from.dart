@@ -8,6 +8,13 @@ extension Action$From<U, T, O> on Action<U, T, O> {
   /// ```dart
   /// final user = await prisma.user.findMany().from({...});
   /// ```
-  Action<U, T, O> from(Map<String, dynamic> arguments) =>
-      Action(factory: factory, arguments: arguments);
+  Action<U, T, O> from(Map<String, dynamic> arguments) {
+    return Action(
+      factory: factory,
+      arguments: arguments,
+      datamodel: datamodel,
+      action: action,
+      model: model,
+    );
+  }
 }

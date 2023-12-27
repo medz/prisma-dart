@@ -3,39 +3,29 @@ import 'metrics/metrics_client.dart';
 import 'transaction.dart';
 
 class PrismaClient<T> {
-  const PrismaClient._internal({
+  /// The client transaction headers.
+  final TransactionHeaders? $headers;
+
+  /// The client transaction information.
+  final Transaction? $info;
+
+  /// the client with engine.
+  final Engine<T> $engine;
+
+  /// Creates a new client from parameters.
+  const PrismaClient.from({
     required Engine<T> engine,
     TransactionHeaders? headers,
     Transaction<T>? transaction,
-  })  : _engine = engine,
-        _headers = headers,
-        _transaction = transaction;
-
-  static TransactionHeaders? $getPrismaClientHeaders(PrismaClient prisma) =>
-      prisma._headers;
-
-  static Transaction<T>? $getPrismaClientTransaction<T>(
-          PrismaClient<T> prisma) =>
-      prisma._transaction;
-
-  static Engine<T> $getPrismaEngine<T>(PrismaClient<T> prisma) =>
-      prisma._engine;
-
-  const PrismaClient({required Engine<T> engine})
-      : this._internal(engine: engine);
-
-  //-------------------- Inner fields ----------------------
-  final TransactionHeaders? _headers;
-  final Transaction<T>? _transaction;
-  //------------------ Inner fields end --------------------
-
-  final Engine<T> _engine;
+  })  : $headers = headers,
+        $info = transaction,
+        $engine = engine;
 
   /// Connect with the database.
-  Future<void> $connect() => _engine.start();
+  Future<void> $connect() => $engine.start();
 
   /// Disconnect from the database.
-  Future<void> $disconnect() => _engine.stop();
+  Future<void> $disconnect() => $engine.stop();
 
   /// Interactive Transactions
   ///
@@ -70,30 +60,30 @@ class PrismaClient<T> {
     int timeout = 5000,
     IsolationLevel? isolationLevel,
   }) async {
-    if (_transaction != null) {
+    if ($info != null) {
       throw Exception('Cannot nest transactions.');
     }
 
-    const headers = TransactionHeaders();
-    final transaction = await _engine.startTransaction(
+    const headers = TransactionHeaders(traceparent: "");
+    final transaction = await $engine.startTransaction(
       headers: headers,
       maxWait: maxWait,
       timeout: timeout,
       isolationLevel: isolationLevel,
     );
-    final prisma = PrismaClient<T>._internal(
-        engine: _engine, headers: headers, transaction: transaction);
+    final prisma = PrismaClient<T>.from(
+        engine: $engine, headers: headers, transaction: transaction);
 
     try {
       final result = await fn(prisma);
-      await _engine.commitTransaction(
+      await $engine.commitTransaction(
         headers: headers,
         transaction: transaction,
       );
 
       return result;
     } catch (e) {
-      await _engine.rollbackTransaction(
+      await $engine.rollbackTransaction(
         headers: headers,
         transaction: transaction,
       );
@@ -102,5 +92,5 @@ class PrismaClient<T> {
     }
   }
 
-  MetricsClient<T> get $metrics => MetricsClient(_engine);
+  MetricsClient<T> get $metrics => MetricsClient($engine);
 }

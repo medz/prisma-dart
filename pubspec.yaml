@@ -4,7 +4,7 @@ version: 4.0.0-alpha.0
 homepage: https://prisma.pub
 repository: https://github.com/medz/prisma-dart
 funding:
-  - https://github.com/sponsors/odroe
+  - https://github.com/sponsors/medz
   - https://opencollective.com/openodroe
   - https://www.patreon.com/user?u=80114587
 
@@ -13,7 +13,6 @@ environment:
 
 executables:
   prisma-client-dart: client
-  prisma-engine-binary: binary
 
 dependencies:
   code_builder: ^4.8.0
