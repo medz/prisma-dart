@@ -5,51 +5,23 @@ import '../model_scalar.dart';
 import '_internal/action_helpers.dart';
 import 'action+from.dart';
 import 'action.dart';
+import 'action_options.dart';
 
-extension Action$Having<Unserialized, Model, Where, OrderBy, Cursor, Pagination,
-        Distinct, Having extends Input, Create, Update, Many>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update, Many> {
-  Action<
-      Unserialized,
-      Model,
-      Where,
-      OrderBy,
-      Cursor,
-      Pagination,
-      Distinct,
-      Having,
-      Create,
-      Update,
-      Many> having(Having input) => fromWith('having', input);
-}
+extension Action$Having<I extends Input, By extends ModelScalar, U, T,
+    O extends ActionHavingOption<I, By>> on Action<U, T, O> {
+  Action<U, T, O> having(I input) => fromWith('having', input);
 
-extension Action$GroupBy<
-        Unserialized,
-        Model,
-        Where,
-        OrderBy,
-        Cursor,
-        Pagination,
-        Distinct extends ModelScalar,
-        Having extends Input,
-        Create,
-        Update,
-        Many>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update, Many> {
-  Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-      Having, Create, Update, Many> by(Distinct input) {
+  Action<U, T, O> by(By value) {
     return switch (arguments['by']) {
       String previous => from({
           ...arguments,
-          'by': [previous, input.name],
+          'by': [previous, value.name],
         }),
       Iterable<String> previous => from({
           ...arguments,
-          'by': [...previous, input.name],
+          'by': [...previous, value.name],
         }),
-      _ => from({...arguments, 'by': input.name}),
+      _ => from({...arguments, 'by': value.name}),
     };
   }
 }

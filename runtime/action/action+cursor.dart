@@ -3,31 +3,10 @@
 import '../input/input.dart';
 import '_internal/action_helpers.dart';
 import 'action.dart';
+import 'action_options.dart';
 
-extension Action$Cursor<
-        Unserialized,
-        Model,
-        Where,
-        OrderBy,
-        Cursor extends Input,
-        Pagination,
-        Distinct,
-        Having,
-        Create,
-        Update,
-        Many>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update, Many> {
-  Action<
-      Unserialized,
-      Model,
-      Where,
-      OrderBy,
-      Cursor,
-      Pagination,
-      Distinct,
-      Having,
-      Create,
-      Update,
-      Many> cursor(Cursor input) => fromWith('cursor', input);
+extension Action$Cursor<U, R, T extends Input, O extends ActionCursorOption<T>>
+    on Action<U, R, O> {
+  /// Set the cursor argument.
+  Action<U, R, O> cursor(T value) => fromWith('cursor', value);
 }

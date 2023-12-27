@@ -3,29 +3,17 @@
 import '../input/input.dart';
 import '_internal/action_helpers.dart';
 import 'action.dart';
+import 'action_options.dart';
 
-extension Action$Where<Unserialized, Model, Where extends Input, OrderBy,
-        Cursor, Pagination, Distinct, Having, Create, Update, Many>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update, Many> {
+extension Action$Where<I extends Input, U, T, O extends ActionWhereOption<I>>
+    on Action<U, T, O> {
   /// Returns a new [Action<Unserialized, Model, Where>] with the specified
-  /// [Where] into the [arguments].
+  /// [I] into the [arguments].
   ///
   /// ```dart
   /// final action = prisma.user.findMany().where(
   ///   UserWhereInput.id(1)
   /// );
   /// ```
-  Action<
-      Unserialized,
-      Model,
-      Where,
-      OrderBy,
-      Cursor,
-      Pagination,
-      Distinct,
-      Having,
-      Create,
-      Update,
-      Many> where(Where where) => fromWith('where', where);
+  Action<U, T, O> where(I input) => fromWith('where', input);
 }

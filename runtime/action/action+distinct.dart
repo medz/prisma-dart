@@ -3,23 +3,21 @@
 import '../model_scalar.dart';
 import 'action+from.dart';
 import 'action.dart';
+import 'action_options.dart';
 
-extension Action$Distinct<Unserialized, Model, Where, OrderBy, Cursor,
-        Pagination, Distinct extends ModelScalar, Having, Create, Update, Many>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update, Many> {
-  Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-      Having, Create, Update, Many> distinct(Distinct input) {
+extension Action$Distinct<I extends ModelScalar, U, T,
+    O extends ActionDistinctOption<I>> on Action<U, T, O> {
+  Action<U, T, O> distinct(I value) {
     return switch (arguments['distinct']) {
       String previous => from({
           ...arguments,
-          'distinct': [previous, input.name],
+          'distinct': [previous, value.name],
         }),
       Iterable<String> previous => from({
           ...arguments,
-          'distinct': [...previous, input.name],
+          'distinct': [...previous, value.name],
         }),
-      _ => from({...arguments, 'distinct': input.name}),
+      _ => from({...arguments, 'distinct': value.name}),
     };
   }
 }

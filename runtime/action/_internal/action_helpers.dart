@@ -2,12 +2,8 @@ import '../../input/input.dart';
 import '../action.dart';
 import '../action+from.dart';
 
-extension ActionHelpers<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having,
-        Create, Update, Many>
-    on Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having, Create,
-        Update, Many> {
-  Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having, Create, Update,
-      Many> fromWith(String name, Input input) {
+extension ActionHelpers<U, T, O> on Action<U, T, O> {
+  Action<U, T, O> fromWith(String name, Input input) {
     final arguments = input.$records.fold(this.arguments, (current, element) {
       final (keys, value) = element;
       return current.mergeWithCreate([name, ...keys], value);

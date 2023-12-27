@@ -2,21 +2,18 @@
 
 import 'action+from.dart';
 import 'action.dart';
+import 'action_options.dart';
 
-extension Action$Pagination<Unserialized, Model, Where, OrderBy, Cursor,
-        Distinct, Having, Create, Update, Many>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct,
-        Having, Create, Update, Many> {
-  Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct, Having,
-      Create, Update, Many> take(int value) {
+extension Action$Pagination<U, T, O extends ActionPaginationOption>
+    on Action<U, T, O> {
+  Action<U, T, O> take(int value) {
     return from({
       ...arguments,
       'take': value,
     });
   }
 
-  Action<Unserialized, Model, Where, OrderBy, Cursor, bool, Distinct, Having,
-      Create, Update, Many> skip(int value) {
+  Action<U, T, O> skip(int value) {
     return from({
       ...arguments,
       'skip': value,

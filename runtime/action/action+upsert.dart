@@ -3,34 +3,10 @@
 import '../input/input.dart';
 import '_internal/action_helpers.dart';
 import 'action.dart';
+import 'action_options.dart';
 
-extension Action$Upsert<Unserialized, Model, Where, OrderBy, Cursor, Pagination,
-        Distinct, Having, Create extends Input, Update extends Input, Many>
-    on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update, Many> {
-  Action<
-      Unserialized,
-      Model,
-      Where,
-      OrderBy,
-      Cursor,
-      Pagination,
-      Distinct,
-      Having,
-      Create,
-      Update,
-      Many> create(Create input) => fromWith('create', input);
-
-  Action<
-      Unserialized,
-      Model,
-      Where,
-      OrderBy,
-      Cursor,
-      Pagination,
-      Distinct,
-      Having,
-      Create,
-      Update,
-      Many> update(Create input) => fromWith('update', input);
+extension Action$Upsert<Create extends Input, Update extends Input, U, T,
+    O extends ActionUpsertOptions<Create, Update>> on Action<U, T, O> {
+  Action<U, T, O> create(Create input) => fromWith('create', input);
+  Action<U, T, O> update(Update input) => fromWith('update', input);
 }
