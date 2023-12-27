@@ -5,6 +5,7 @@ import 'package:orm/dmmf.dart' as dmmf;
 
 import '../src/dart_style_fixer.dart';
 import '../src/reference.dart';
+import 'client+output.dart';
 import 'client.dart';
 
 final _clientField = Field((builder) {
@@ -48,11 +49,85 @@ extension Client$Delegate on Client {
 
 extension on Client {
   Method generateMethod(MapEntry<dmmf.ModelAction, String> action) {
+    final field = findAction(action.value);
+
     return Method((builder) {
       builder.name = action.key.name.toDartPropertyNameString();
       builder.returns = refer('Action').copyWith(
         url: 'package:orm/orm.dart',
+        types: [
+          generateUnserialized(field),
+          generateModelType(field, generateOutput(field.outputType)),
+        ],
       );
     });
+  }
+
+  Reference generateModelType(dmmf.OutputField action, Reference type) {
+    if (action.outputType.isList) {
+      return TypeReference((builder) {
+        builder.symbol = 'Iterable';
+        builder.types.add(type);
+      });
+    } else if (action.name.endsWith('OrThrow')) {
+      return type;
+    }
+
+    return TypeReference((builder) {
+      builder.symbol = type.symbol;
+      builder.url = type.url;
+      builder.isNullable = action.isNullable;
+    });
+  }
+
+  Reference generateUnserialized(dmmf.OutputField action) {
+    final type = TypeReference((builder) {
+      builder.symbol = 'Map';
+      builder.types.addAll([
+        refer('String'),
+        refer('dynamic'),
+      ]);
+    });
+
+    if (action.outputType.isList) {
+      return TypeReference((builder) {
+        builder.symbol = 'Iterable';
+        builder.types.add(type);
+      });
+    } else if (action.name.endsWith('OrThrow')) {
+      return type;
+    }
+
+    return type.rebuild((builder) {
+      builder.isNullable = action.isNullable;
+    });
+  }
+
+  dmmf.OutputField findAction(String actionName) {
+    for (final type in options.dmmf.schema.outputTypes.prisma) {
+      if (type.name != 'Query' && type.name != 'Mutation') {
+        continue;
+      }
+
+      final action =
+          type.fields.firstWhereOrNull((element) => element.name == actionName);
+      if (action == null) {
+        continue;
+      }
+
+      return action;
+    }
+
+    throw StateError('Action $actionName not found');
+  }
+}
+
+extension<T> on Iterable<T> {
+  T? firstWhereOrNull(bool Function(T element) test) {
+    for (final element in this) {
+      if (test(element)) return element;
+    }
+
+    return null;
   }
 }
