@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import '../json_convertible.dart';
-import '../types/decimal.dart';
-import '../types/prisma_null.dart';
+import '../decimal.dart';
+import '../prisma_null.dart';
 
 /// A codec for encoding and decoding Prisma raw parameters.
 ///

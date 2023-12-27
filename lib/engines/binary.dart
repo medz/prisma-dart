@@ -4,10 +4,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:orm/orm.dart';
 import 'package:path/path.dart';
 import 'package:retry/retry.dart';
 import 'package:stdweb/stdweb.dart' show fetch;
+
+import '../src/runtime/engine.dart';
+import '../src/runtime/json_protocol/deserialize.dart';
+import '../src/runtime/json_protocol/protocol.dart';
+import '../src/runtime/metrics/metrics_format.dart';
+import '../src/runtime/transaction.dart';
 
 class BinaryEngine implements Engine<Null> {
   /// Prisma schema string.

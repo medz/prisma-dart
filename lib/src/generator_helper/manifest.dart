@@ -1,6 +1,6 @@
 import '../runtime/json_convertible.dart';
 
-class GeneratorManifest implements MapJsonConvertible<String, dynamic> {
+class GeneratorManifest implements JsonConvertible<Map<String, dynamic>> {
   final String? prettyName;
   final String? defaultOutput;
   final String? version;
@@ -34,7 +34,8 @@ class GeneratorManifest implements MapJsonConvertible<String, dynamic> {
   }
 }
 
-class GeneratorManifestDenyList implements MapJsonConvertible<String, dynamic> {
+class GeneratorManifestDenyList
+    implements JsonConvertible<Map<String, dynamic>> {
   final Iterable<String>? models;
   final Iterable<String>? fields;
 

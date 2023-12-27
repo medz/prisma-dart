@@ -1,6 +1,6 @@
 import '../json_convertible.dart';
 
-class JsonQuery implements MapJsonConvertible<String, dynamic> {
+class JsonQuery implements JsonConvertible<Map<String, dynamic>> {
   final String? modelName;
   final JsonQueryAction action;
   final Map<String, dynamic> query;

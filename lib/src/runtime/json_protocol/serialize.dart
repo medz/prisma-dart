@@ -4,12 +4,11 @@ import 'dart:typed_data';
 
 import '../../../dmmf.dart' as dmmf;
 import '../json_convertible.dart';
+import '../prisma_enum.dart';
+import '../prisma_null.dart';
 import '../raw/raw_parameters.dart';
-import '../types/decimal.dart';
-import '../types/field_ref.dart';
-import '../types/prisma_enum.dart';
-import '../types/prisma_json.dart';
-import '../types/prisma_null.dart';
+import '../decimal.dart';
+import '../reference.dart';
 import 'protocol.dart';
 
 extension ModelActionToJsonQueryAction on dmmf.ModelAction {
@@ -242,12 +241,13 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
     ByteBuffer bytes => _serializeArgumentValue(context, bytes.asUint8List()),
     TypedData bytes => _serializeArgumentValue(context, bytes.buffer),
     RawParameters parameters => parameters.values,
-    FieldRef ref => _createTypedValue(
-        'FieldRef', {'_container': ref.modelName, '_ref': ref.field}),
+    Reference ref => _createTypedValue(
+        'FieldRef', {'_container': ref.model, '_ref': ref.field}),
     Decimal value => _createTypedValue('Decimal', value.toString()),
-    PrismaEnum value => _createTypedValue('Enum', value.toPrismaEnumName()),
-    PrismaJson(value: final value) =>
-      _createTypedValue('Json', json.encode(value)),
+    PrismaEnum value => _createTypedValue('Enum', value.name),
+    // TODO: implement JSON serialization
+    // PrismaJson(value: final value) =>
+    //   _createTypedValue('Json', json.encode(value)),
     Enum value => _createTypedValue('Enum', value.name),
     JsonConvertible value => _serializeArgumentValue(context, value.toJson()),
     Iterable value => _serializeIterable(context, value).toList(),

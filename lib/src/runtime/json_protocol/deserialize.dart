@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../types/decimal.dart';
+import '../decimal.dart';
 
 dynamic deserializeJsonResponse(dynamic result) => switch (result) {
       Iterable iterable => iterable.map(deserializeJsonResponse),

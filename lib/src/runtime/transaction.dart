@@ -13,7 +13,7 @@ class Transaction<T> {
   const Transaction(this.id, this.payload);
 }
 
-class TransactionHeaders implements MapJsonConvertible<String, String> {
+class TransactionHeaders implements JsonConvertible<Map<String, String>> {
   final String? traceparent;
 
   const TransactionHeaders({this.traceparent});

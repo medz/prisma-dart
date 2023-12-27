@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart' as dmmf;
-import 'package:orm/orm.dart';
+import 'package:orm/orm.dart' hide Reference;
 
 import '../dart_style_fixer.dart';
 import '../reference.dart';
