@@ -5,11 +5,11 @@ import 'action+from.dart';
 import 'action.dart';
 
 extension Action$Distinct<Unserialized, Model, Where, OrderBy, Cursor,
-        Pagination, Distinct extends ModelScalar, Having>
+        Pagination, Distinct extends ModelScalar, Having, Create, Update>
     on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having> {
+        Having, Create, Update> {
   Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-      Having> distinct(Distinct input) {
+      Having, Create, Update> distinct(Distinct input) {
     return switch (arguments['distinct']) {
       String previous => from({
           ...arguments,

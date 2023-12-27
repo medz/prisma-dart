@@ -9,6 +9,25 @@ typedef ModelFactory<T, R> = R Function(T data);
 /// - [Model]: The result of the action serialized to model type.
 /// - [Where]: Automatically generate a where builder, If type set to [Null]
 ///   then the where builder will be disabled.
+/// - [OrderBy]: Automatically generate a order by builder, If type set to
+///   [Null] then the order by builder will be disabled.
+/// - [Cursor]: Automatically generate a cursor builder, If type set to [Null]
+///   then the cursor builder will be disabled.
+/// - [Pagination]: Automatically generate a pagination builder, If type set to
+///   [Null] then the pagination builder will be disabled.
+/// - [Distinct]: Automatically generate a distinct builder, If type set to
+///   [Null] then the distinct builder will be disabled.
+/// - [Having]: Automatically generate a having builder, If type set to
+///   [Null] then the having builder will be disabled.
+/// - [Create]: Automatically generate a create builder, If type set to
+///   [Null] then the create builder will be disabled.
+/// - [Update]: Automatically generate a update builder, If type set to
+///   [Null] then the update builder will be disabled.
+///
+/// **NOTE**: If the [Update] and [Create] is extends from [Input] class then
+/// the builder will be `create` and `update` automatically. otherwise the
+/// [Create] extends from [Input], [Update] is set to [Null] then the builder
+/// will be `data` automatically.
 class Action<
 
     /// Unserialized data type
@@ -41,7 +60,13 @@ class Action<
     Distinct,
 
     /// having
-    Having
+    Having,
+
+    /// Create data input
+    Create,
+
+    /// Update data input
+    Update
     //------------------------- Divider -------------------------//
     > implements Future<Model> {
   /// The factory of the model

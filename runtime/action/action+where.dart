@@ -5,9 +5,9 @@ import '_internal/action_helpers.dart';
 import 'action.dart';
 
 extension Action$Where<Unserialized, Model, Where extends Input, OrderBy,
-        Cursor, Pagination, Distinct, Having>
+        Cursor, Pagination, Distinct, Having, Create, Update>
     on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having> {
+        Having, Create, Update> {
   /// Returns a new [Action<Unserialized, Model, Where>] with the specified
   /// [Where] into the [arguments].
   ///
@@ -17,5 +17,5 @@ extension Action$Where<Unserialized, Model, Where extends Input, OrderBy,
   /// );
   /// ```
   Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-      Having> where(Where where) => fromWith('where', where);
+      Having, Create, Update> where(Where where) => fromWith('where', where);
 }
