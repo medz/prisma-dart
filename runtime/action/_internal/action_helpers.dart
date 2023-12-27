@@ -3,11 +3,11 @@ import '../action.dart';
 import '../action+from.dart';
 
 extension ActionHelpers<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having,
-        Create, Update>
+        Create, Update, Many>
     on Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having, Create,
-        Update> {
-  Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having, Create, Update>
-      fromWith(String name, Input input) {
+        Update, Many> {
+  Action<$1, $2, $3, $4, Cursor, Pagination, Distinct, Having, Create, Update,
+      Many> fromWith(String name, Input input) {
     final arguments = this
         .arguments
         .mergeWithCreate([name, ...input.$_keys_], input.$_value_);

@@ -6,12 +6,12 @@ import 'action+from.dart';
 import 'action.dart';
 
 extension Action$OrderBy<OrderBy extends Input, Unserialized, Model, Where,
-        Cursor, Pagination, Distinct, Having, Create, Update>
+        Cursor, Pagination, Distinct, Having, Create, Update, Many>
     on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update> {
+        Having, Create, Update, Many> {
   /// Returns a new [Action] with the order by into the [arguments].
   Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-      Having, Create, Update> orderBy(OrderBy input) {
+      Having, Create, Update, Many> orderBy(OrderBy input) {
     final value = deserializeInput(input);
 
     return switch (arguments['orderBy']) {

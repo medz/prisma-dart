@@ -7,11 +7,21 @@ import 'action+from.dart';
 import 'action.dart';
 
 extension Action$Having<Unserialized, Model, Where, OrderBy, Cursor, Pagination,
-        Distinct, Having extends Input, Create, Update>
+        Distinct, Having extends Input, Create, Update, Many>
     on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update> {
-  Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-      Having, Create, Update> having(Having input) => fromWith('having', input);
+        Having, Create, Update, Many> {
+  Action<
+      Unserialized,
+      Model,
+      Where,
+      OrderBy,
+      Cursor,
+      Pagination,
+      Distinct,
+      Having,
+      Create,
+      Update,
+      Many> having(Having input) => fromWith('having', input);
 }
 
 extension Action$GroupBy<
@@ -24,11 +34,12 @@ extension Action$GroupBy<
         Distinct extends ModelScalar,
         Having extends Input,
         Create,
-        Update>
+        Update,
+        Many>
     on Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-        Having, Create, Update> {
+        Having, Create, Update, Many> {
   Action<Unserialized, Model, Where, OrderBy, Cursor, Pagination, Distinct,
-      Having, Create, Update> by(Distinct input) {
+      Having, Create, Update, Many> by(Distinct input) {
     return switch (arguments['by']) {
       String previous => from({
           ...arguments,

@@ -23,6 +23,8 @@ typedef ModelFactory<T, R> = R Function(T data);
 ///   [Null] then the create builder will be disabled.
 /// - [Update]: Automatically generate a update builder, If type set to
 ///   [Null] then the update builder will be disabled.
+/// - [Many]: Only applicable in [Create] and [Update], if set to [bool], it
+///   represents' createMany 'or' updateMany 'action.
 ///
 /// **NOTE**: If the [Update] and [Create] is extends from [Input] class then
 /// the builder will be `create` and `update` automatically. otherwise the
@@ -66,7 +68,10 @@ class Action<
     Create,
 
     /// Update data input
-    Update
+    Update,
+
+    /// Only applicable in [Create] and [Update], if set to [bool], it represents' createMany 'or' updateMany 'action.
+    Many
     //------------------------- Divider -------------------------//
     > implements Future<Model> {
   /// The factory of the model
