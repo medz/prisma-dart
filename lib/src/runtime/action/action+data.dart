@@ -16,7 +16,7 @@ extension Action$CreateMany<I extends Input, U, T,
   Action<U, T, O> data(Iterable<I> values) {
     return from({
       ...arguments,
-      'data': values.map(deserializeInput),
+      'data': values.map(Input.deserialize),
     });
   }
 

@@ -2,7 +2,7 @@ import 'input.dart';
 
 /// [Input] factory, creates a where from [keys] and [value].
 typedef InputFactory<R extends Input> = R Function(
-    Iterable<String> keys, Object value);
+    Iterable<String> keys, dynamic value);
 
 /// [Input] builder
 ///
