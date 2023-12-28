@@ -81,26 +81,18 @@ extension on Client {
   }
 
   Reference generateUnserialized(dmmf.OutputField action) {
-    final type = TypeReference((builder) {
-      builder.symbol = 'Map';
-      builder.types.addAll([
-        refer('String'),
-        refer('dynamic'),
-      ]);
-    });
+    final type = refer('Map');
 
     if (action.outputType.isList) {
       return TypeReference((builder) {
         builder.symbol = 'Iterable';
         builder.types.add(type);
       });
-    } else if (action.name.endsWith('OrThrow')) {
-      return type;
+    } else if (action.isNullable && !action.name.endsWith('OrThrow')) {
+      return type.toNullable();
     }
 
-    return type.rebuild((builder) {
-      builder.isNullable = action.isNullable;
-    });
+    return type;
   }
 
   dmmf.OutputField findAction(String actionName) {
