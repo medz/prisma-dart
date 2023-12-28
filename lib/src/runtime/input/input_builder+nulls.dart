@@ -4,7 +4,7 @@ import '../prisma_null.dart';
 import 'input.dart';
 import 'input_builder.dart';
 
-extension InputBuilder$Nulls<T extends Object, R extends Input>
-    on InputBuilder<T, R, bool> {
+extension InputBuilder$Nulls<R extends Input, T extends Object, Ref, Filter>
+    on InputBuilder<R, T, Ref, Filter, bool> {
   R get nulls => factory(keys, const PrismaNull());
 }

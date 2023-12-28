@@ -12,8 +12,8 @@ enum NullsOrder { first, last }
 /// [R] - result type
 /// [Nulls] - nulls ordering, If [Null] disables nulls ordering, otherwise
 /// [NullsOrder] is used.
-class OrderByBuilder<R extends Input, Nulls>
-    extends InputBuilder<SortOrder, R, Nulls> {
+class OrderByBuilder<R extends Input, Ref, F, N, Nulls>
+    extends InputBuilder<R, SortOrder, Ref, F, N> {
   OrderByBuilder(super.keys, super.factory);
 
   /// Ascending order
@@ -23,8 +23,8 @@ class OrderByBuilder<R extends Input, Nulls>
   R get desc => factory(keys, SortOrder.desc);
 }
 
-extension OrderByBuilder$Call<R extends Input>
-    on OrderByBuilder<R, NullsOrder> {
+extension OrderByBuilder$Call<R extends Input, Ref, F, N>
+    on OrderByBuilder<R, Ref, F, N, NullsOrder> {
   /// Call with [NullsOrder]
   R call({required SortOrder sort, NullsOrder? nulls}) {
     return factory(keys, {

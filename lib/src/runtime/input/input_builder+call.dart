@@ -3,7 +3,7 @@
 import 'input.dart';
 import 'input_builder.dart';
 
-extension InputBuilder$Call<T extends Object, R extends Input, N>
-    on InputBuilder<T, R, N> {
+extension InputBuilder$Call<R extends Input, T extends Object, Ref, Filter, N>
+    on InputBuilder<R, T, Ref, Filter, N> {
   R call(T value) => factory(keys, value);
 }

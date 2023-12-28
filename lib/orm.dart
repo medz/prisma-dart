@@ -28,10 +28,9 @@ export 'src/runtime/input/input.dart';
 export 'src/runtime/input/input_builder.dart';
 export 'src/runtime/input/input_builder+call.dart';
 export 'src/runtime/input/input_builder+nulls.dart';
+export 'src/runtime/input/input_builder+ref.dart';
 export 'src/runtime/input/order_by.dart';
-export 'src/runtime/input/where/where_builder.dart';
-export 'src/runtime/input/where/where_builder+ref.dart';
-export 'src/runtime/input/where/filters/num_filter.dart';
+export 'src/runtime/input/filters/num_filter.dart';
 
 // JSON Protocol
 export 'src/runtime/json_protocol/protocol.dart';

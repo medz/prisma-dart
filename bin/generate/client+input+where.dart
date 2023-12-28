@@ -4,6 +4,8 @@ import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart' as dmmf;
 
 import '../src/dart_style_fixer.dart';
+import '../src/scalars.dart';
+import '../utils/iterable.dart';
 import 'client+common.dart';
 import 'client.dart';
 
@@ -64,7 +66,7 @@ final _recordsField = Field((builder) {
           builder.symbol = 'Iterable';
           builder.types.add(refer('String'));
         }),
-        refer('dynamic'),
+        refer('Object'),
       ]);
     }));
   });
@@ -147,12 +149,17 @@ extension on Client {
   }
 
   Field generateStaticField(String name, dmmf.InputField field) {
-    final wherebuilder = TypeReference((builder) {
-      builder.symbol = 'WhereBuilder';
+    final inputBuilder = TypeReference((builder) {
+      builder.symbol = 'InputBuilder';
       builder.url = 'package:orm/orm.dart';
+
+      final (valueType, filterType) = generateValueTypes(field);
       builder.types.addAll([
         refer(name),
-        // TODO:
+        valueType,
+        refer('Null'),
+        filterType,
+        generateNullableType(field.inputTypes),
       ]);
     });
 
@@ -160,12 +167,78 @@ extension on Client {
       builder.static = true;
       builder.modifier = FieldModifier.constant;
       builder.name = field.name.toDartPropertyNameString();
-      builder.type = wherebuilder;
-      builder.assignment = wherebuilder.newInstance([
+      builder.type = inputBuilder;
+      builder.assignment = inputBuilder.newInstance([
         literalConstList([literalString(field.name)]),
         refer(name).property('_factory'),
       ]).code;
     });
+  }
+
+  (Reference type, Reference filter) generateValueTypes(dmmf.InputField field) {
+    final scalar = field.inputTypes.firstWhereOrNull(
+        (element) => element.location == dmmf.TypeLocation.scalar);
+    if (scalar != null) {
+      final type = scalars[scalar.type] ?? refer(scalar.type);
+      if (scalar.isList) {
+        return (
+          TypeReference((builder) {
+            builder.symbol = 'Iterable';
+            builder.types.add(type);
+          }),
+          refer('Null'),
+        );
+      }
+
+      final allowFilter = field.inputTypes
+          .any((element) => element.type == '${scalar.type}Filter');
+      final filter = switch (allowFilter) {
+        true => refer('bool'),
+        _ => refer('Null'),
+      };
+
+      return (type, filter);
+    }
+
+    final enum_ = field.inputTypes.firstWhereOrNull(
+        (element) => element.location == dmmf.TypeLocation.enumTypes);
+    if (enum_ != null) {
+      final type = switch (enum_.namespace) {
+        dmmf.TypeNamespace.model => refer(enum_.type, 'model.dart'),
+        dmmf.TypeNamespace.prisma => refer(enum_.type, 'prisma.dart'),
+        _ => refer(enum_.type),
+      };
+      if (enum_.isList) {
+        return (
+          TypeReference((builder) {
+            builder.symbol = 'Iterable';
+            builder.types.add(type);
+          }),
+          refer('Null'),
+        );
+      }
+
+      final allowFilter = field.inputTypes
+          .any((element) => element.type == 'Enum${enum_.type}Filter');
+      final filter = switch (allowFilter) {
+        true => refer('bool'),
+        _ => refer('Null'),
+      };
+
+      return (type, filter);
+    }
+
+    // TODO
+    return (refer('Object'), refer('Null'));
+  }
+
+  Reference generateNullableType(Iterable<dmmf.TypeReference> types) {
+    final nulls = types.any((element) => element.type == 'Nulls');
+    if (nulls) {
+      return refer('bool');
+    }
+
+    return refer('Null');
   }
 
   Constructor generateMultitInputsConstructor(
