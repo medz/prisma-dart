@@ -6,6 +6,7 @@ import 'package:orm/orm.dart' show ModelActionToJsonQueryAction;
 
 import '../src/dart_style_fixer.dart';
 import '../src/reference.dart';
+import 'client+action.dart';
 import 'client+output.dart';
 import 'client.dart';
 
@@ -51,26 +52,6 @@ extension Client$Delegate on Client {
 }
 
 extension on Client {
-  Reference generateOptions(
-      String model, dmmf.ModelAction action, dmmf.OutputField field) {
-    final typeName =
-        '${model}_${action.name}_ActionOptions'.toDartClassNameString();
-    if (types[client]?.contains(typeName) == true) {
-      return refer(typeName);
-    }
-
-    final options = Class((builder) {
-      builder.name = typeName;
-      builder.abstract = true;
-      builder.modifier = ClassModifier.final$;
-    });
-    client.body.add(options);
-
-    types[client] = [...?types[client], options.name];
-
-    return refer(options.name);
-  }
-
   Method generateMethod(String model, (dmmf.ModelAction, String) action) {
     final field = findAction(action.$2);
 
@@ -80,7 +61,7 @@ extension on Client {
         types: [
           generateUnserialized(field),
           generateModelType(field, generateOutput(field.outputType)),
-          generateOptions(model, action.$1, field),
+          generateActionOptions(model, action.$1, field),
         ],
       );
 

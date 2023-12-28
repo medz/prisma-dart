@@ -33,5 +33,5 @@ class WhereBuilder<
     /// - Anything object is nullable
     /// - Null is nullable
     Nullable> extends InputBuilder<Value, Where, Nullable> {
-  WhereBuilder(super.keys, super.factory);
+  const WhereBuilder(super.keys, super.factory);
 }
