@@ -14,11 +14,7 @@ class Client {
   final LibraryBuilder prisma = LibraryBuilder()
     ..name = 'prisma.namespace.prisma';
 
-  Client(this.options) {
-    types[client] = [];
-    types[model] = [];
-    types[prisma] = [];
-  }
+  Client(this.options);
 
   Future<void> generate() async {
     client.body.add(generateClient());
@@ -36,6 +32,7 @@ extension on Client {
         builder.url = 'package:orm/orm.dart';
       });
       builder.methods.addAll(generateMethods());
+      builder.fields.add(generateDatamodel());
     });
   }
 
@@ -50,5 +47,19 @@ extension on Client {
         builder.body = delegate.newInstanceNamed('_', [refer('this')]).code;
       });
     }
+  }
+
+  Field generateDatamodel() {
+    final type = refer('DataModel', 'package:orm/dmmf.dart');
+    final value = options.dmmf.source['datamodel'];
+    final datamodel = type.newInstanceNamed('fromJson', [literalMap(value)]);
+
+    return Field((builder) {
+      builder.name = '_datamodel';
+      builder.static = true;
+      builder.modifier = FieldModifier.final$;
+      builder.type = type;
+      builder.assignment = datamodel.code;
+    });
   }
 }

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import '../../dmmf/ast/datamodel.dart' show DataModel;
 import '../json_protocol/protocol.dart';
+import '../json_protocol/serialize.dart';
+import '../prisma_client.dart';
 
 /// Model from JSON factory.
 typedef ModelFactory<T, R> = R Function(T data);
@@ -22,23 +24,41 @@ class Action<U, T, O> implements Future<T> {
   final DataModel datamodel;
 
   /// The action type
-  final JsonQueryAction action;
+  final (JsonQueryAction, String) action;
 
   /// The action owner model name.
   final String? model;
+
+  /// The action owner client.
+  final PrismaClient client;
 
   /// Create a new action.
   const Action({
     required this.factory,
     required this.datamodel,
     required this.action,
+    required this.client,
     this.model,
     this.arguments = const {},
   });
 
   /// Returns the action unserialized data.
-  Future<U> unserialized() {
-    throw UnimplementedError();
+  Future<U> unserialized() async {
+    final query = serializeJsonQuery(
+      datamodel: datamodel,
+      action: action.$1,
+      modelName: model,
+      args: arguments,
+    );
+    final result = await client.$engine.request(
+      query,
+      action: action.$2,
+      headers: client.$headers,
+      transaction: client.$info,
+    );
+
+    if (result is U) return result;
+    throw StateError('Unexpected result: $result');
   }
 
   @override

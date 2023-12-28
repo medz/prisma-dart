@@ -49,7 +49,7 @@ Future<void> generate(GeneratorOptions options) async {
     );
     final file =
         await File(join(options.generator.output!.value, path)).autoCreate();
-    final code = formatter.format('${library.accept(emitter)}');
+    final code = formatter.format(library.accept(emitter).toString());
 
     await file.writeAsString(code);
   }

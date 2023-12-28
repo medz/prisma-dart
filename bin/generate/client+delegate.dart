@@ -2,6 +2,7 @@
 
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart' as dmmf;
+import 'package:orm/orm.dart' show ModelActionToJsonQueryAction;
 
 import '../src/dart_style_fixer.dart';
 import '../src/reference.dart';
@@ -36,7 +37,9 @@ extension Client$Delegate on Client {
       builder.constructors.add(_defaultConstructor);
 
       for (final action in modelMapping.actions.entries) {
-        builder.methods.add(generateMethod(action));
+        builder.methods.add(
+          generateMethod(modelMapping.model, (action.key, action.value)),
+        );
       }
     });
 
@@ -48,19 +51,69 @@ extension Client$Delegate on Client {
 }
 
 extension on Client {
-  Method generateMethod(MapEntry<dmmf.ModelAction, String> action) {
-    final field = findAction(action.value);
+  Reference generateOptions(
+      String model, dmmf.ModelAction action, dmmf.OutputField field) {
+    final typeName =
+        '${model}_${action.name}_ActionOptions'.toDartClassNameString();
+    if (types[client]?.contains(typeName) == true) {
+      return refer(typeName);
+    }
+
+    final options = Class((builder) {
+      builder.name = typeName;
+      builder.abstract = true;
+      builder.modifier = ClassModifier.final$;
+    });
+    client.body.add(options);
+
+    types[client] = [...?types[client], options.name];
+
+    return refer(options.name);
+  }
+
+  Method generateMethod(String model, (dmmf.ModelAction, String) action) {
+    final field = findAction(action.$2);
 
     return Method((builder) {
-      builder.name = action.key.name.toDartPropertyNameString();
-      builder.returns = refer('Action').copyWith(
+      final returnType = refer('Action').copyWith(
         url: 'package:orm/orm.dart',
         types: [
           generateUnserialized(field),
           generateModelType(field, generateOutput(field.outputType)),
+          generateOptions(model, action.$1, field),
         ],
       );
+
+      builder.name = action.$1.name.toDartPropertyNameString();
+      builder.returns = returnType;
+      builder.body = returnType.newInstance([], {
+        'datamodel': refer('PrismaClientExtension').property('_datamodel'),
+        'client': refer('_client'),
+        'action': literalConstRecord([
+          refer('JsonQueryAction', 'package:orm/orm.dart').property(
+            action.$1.toJsonQueryAction().name,
+          ),
+          literalString(action.$2),
+        ], {}),
+        'model': literalString(model),
+        'factory': generateActionFactory(field),
+      }).code;
     });
+  }
+
+  Expression generateActionFactory(dmmf.OutputField field) {
+    final fromJson = generateOutput(field.outputType).property('fromJson');
+    if (field.outputType.isList) {
+      return refer('JsonConvertible', 'package:orm/orm.dart')
+          .property('createIterableFromJson')
+          .call([fromJson]);
+    } else if (field.isNullable && !field.name.endsWith('OrThrow')) {
+      return refer('JsonConvertible', 'package:orm/orm.dart')
+          .property('createNullableFromJson')
+          .call([fromJson]);
+    }
+
+    return fromJson;
   }
 
   Reference generateModelType(dmmf.OutputField action, Reference type) {

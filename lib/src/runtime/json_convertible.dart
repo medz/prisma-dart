@@ -29,7 +29,7 @@ abstract interface class JsonConvertible<T> {
   }
 
   /// Deserializes a JSON representation into a typed object.
-  static R? Function(Map json) createBullableFromJson<R>(
+  static R? Function(Map? json) createNullableFromJson<R>(
     R Function(Map json) factory,
   ) {
     return (Map? json) {

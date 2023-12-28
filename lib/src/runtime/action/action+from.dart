@@ -15,6 +15,7 @@ extension Action$From<U, T, O> on Action<U, T, O> {
       datamodel: datamodel,
       action: action,
       model: model,
+      client: client,
     );
   }
 }
