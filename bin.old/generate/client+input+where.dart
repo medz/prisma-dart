@@ -5,7 +5,7 @@ import 'package:orm/dmmf.dart' as dmmf;
 
 import '../src/dart_style_fixer.dart';
 import '../src/scalars.dart';
-import '../utils/iterable.dart';
+import '../../bin/src/utils/iterable.dart';
 import 'client+common.dart';
 import 'client.dart';
 

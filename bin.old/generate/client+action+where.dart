@@ -3,7 +3,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart' as dmmf;
 
-import '../utils/iterable.dart';
+import '../../bin/src/utils/iterable.dart';
 import 'client+input+where.dart';
 import 'client.dart';
 

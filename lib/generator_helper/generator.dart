@@ -9,17 +9,17 @@ import 'config.dart';
 import 'manifest.dart';
 import 'options.dart';
 
-class Generator {
+class GeneratorApp {
   final Server server;
 
-  const Generator(this.server);
+  const GeneratorApp(this.server);
 
-  factory Generator.channel(
+  factory GeneratorApp.channel(
       {required Stream<String> input, required StreamSink<String> output}) {
-    return Generator(Server(StreamChannel<String>(input, output)));
+    return GeneratorApp(Server(StreamChannel<String>(input, output)));
   }
 
-  factory Generator.stdio({
+  factory GeneratorApp.stdio({
     required Stdin stdin,
     required Stdout stdout,
   }) {
@@ -28,7 +28,7 @@ class Generator {
     final controller = StreamController<String>();
     controller.stream.listen(stdout.writeln);
 
-    return Generator.channel(input: input, output: controller.sink);
+    return GeneratorApp.channel(input: input, output: controller.sink);
   }
 
   void onManifest(
