@@ -1,13 +1,15 @@
 import 'engine.dart';
 import 'metrics/metrics_client.dart';
-import 'transaction.dart';
+import 'transaction/isolation_level.dart';
+import 'transaction/transaction_headers.dart';
+import 'transaction/transaction_info.dart';
 
 class PrismaClient<T> {
   /// The client transaction headers.
   final TransactionHeaders? $headers;
 
   /// The client transaction information.
-  final Transaction? $info;
+  final TransactionInfo<T>? $info;
 
   /// the client with engine.
   final Engine<T> $engine;
@@ -16,7 +18,7 @@ class PrismaClient<T> {
   const PrismaClient.from({
     required Engine<T> engine,
     TransactionHeaders? headers,
-    Transaction<T>? transaction,
+    TransactionInfo<T>? transaction,
   })  : $headers = headers,
         $info = transaction,
         $engine = engine;

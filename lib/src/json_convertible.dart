@@ -27,20 +27,4 @@ abstract interface class JsonConvertible<T> {
       _ => value,
     };
   }
-
-  /// Deserializes a JSON representation into a typed object.
-  static R? Function(Map? json) createNullableFromJson<R>(
-    R Function(Map json) factory,
-  ) {
-    return (Map? json) {
-      if (json == null) return null;
-      return factory(json);
-    };
-  }
-
-  static Iterable<R> Function(Iterable<Map> json) createIterableFromJson<R>(
-    R Function(Map json) factory,
-  ) {
-    return (Iterable<Map> json) => json.map((e) => factory(e));
-  }
 }

@@ -1,5 +1,3 @@
-library prisma.engines;
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -12,7 +10,9 @@ import 'engine.dart';
 import 'json_protocol/deserialize.dart';
 import 'json_protocol/protocol.dart';
 import 'metrics/metrics_format.dart';
-import 'transaction.dart';
+import 'transaction/isolation_level.dart';
+import 'transaction/transaction_headers.dart';
+import 'transaction/transaction_info.dart';
 
 class BinaryEngine implements Engine<Null> {
   /// Prisma schema string.
@@ -247,7 +247,7 @@ class BinaryEngine implements Engine<Null> {
   Future request(
     JsonQuery query, {
     TransactionHeaders? headers,
-    Transaction<Null>? transaction,
+    TransactionInfo<Null>? transaction,
   }) async {
     print(query.toJson());
 
@@ -276,7 +276,7 @@ class BinaryEngine implements Engine<Null> {
   @override
   Future<void> commitTransaction({
     required TransactionHeaders headers,
-    required Transaction transaction,
+    required TransactionInfo transaction,
   }) async {
     await start();
 
@@ -297,7 +297,7 @@ class BinaryEngine implements Engine<Null> {
   @override
   Future<void> rollbackTransaction({
     required TransactionHeaders headers,
-    required Transaction transaction,
+    required TransactionInfo transaction,
   }) async {
     await start();
 
@@ -316,7 +316,7 @@ class BinaryEngine implements Engine<Null> {
   }
 
   @override
-  Future<Transaction<Null>> startTransaction({
+  Future<TransactionInfo<Null>> startTransaction({
     required TransactionHeaders headers,
     int maxWait = 2000,
     int timeout = 5000,
@@ -331,13 +331,13 @@ class BinaryEngine implements Engine<Null> {
       body: {
         'max_wait': maxWait,
         'timeout': timeout,
-        if (isolationLevel != null) 'isolation_level': isolationLevel.value,
+        if (isolationLevel != null) 'isolation_level': isolationLevel.name,
       },
     );
     final result = await response.json();
 
     return switch (result) {
-      {'id': final String id} => Transaction(id, null),
+      {'id': final String id} => TransactionInfo(id, null),
       {'errors': final Iterable errors} => throw Exception(errors),
       _ => throw Exception(result),
     };
