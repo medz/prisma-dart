@@ -157,7 +157,7 @@ extension on Client {
       builder.types.addAll([
         refer(name),
         valueType,
-        refer('Null'),
+        refer('Null'), // TODO: implement input builder reference
         filterType,
         generateNullableType(field.inputTypes),
       ]);
