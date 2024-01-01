@@ -8,11 +8,11 @@ import 'package:path/path.dart';
 import 'package:retry/retry.dart';
 import 'package:stdweb/stdweb.dart' show fetch;
 
-import '../src/runtime/engine.dart';
-import '../src/runtime/json_protocol/deserialize.dart';
-import '../src/runtime/json_protocol/protocol.dart';
-import '../src/runtime/metrics/metrics_format.dart';
-import '../src/runtime/transaction.dart';
+import 'engine.dart';
+import 'json_protocol/deserialize.dart';
+import 'json_protocol/protocol.dart';
+import 'metrics/metrics_format.dart';
+import 'transaction.dart';
 
 class BinaryEngine implements Engine<Null> {
   /// Prisma schema string.
@@ -246,7 +246,6 @@ class BinaryEngine implements Engine<Null> {
   @override
   Future request(
     JsonQuery query, {
-    required String action,
     TransactionHeaders? headers,
     Transaction<Null>? transaction,
   }) async {
@@ -268,7 +267,7 @@ class BinaryEngine implements Engine<Null> {
     );
 
     return switch (await response.json()) {
-      {'data': final Map data} => deserializeJsonResponse(data[action]),
+      {'data': final Map data} => deserializeJsonResponse(data),
       {'errors': final Iterable errors} => throw Exception(errors),
       dynamic value => throw Exception(value),
     };

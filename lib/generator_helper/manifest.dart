@@ -1,4 +1,4 @@
-import '../runtime/json_convertible.dart';
+import '../src/json_convertible.dart';
 
 class GeneratorManifest implements JsonConvertible<Map<String, dynamic>> {
   final String? prettyName;

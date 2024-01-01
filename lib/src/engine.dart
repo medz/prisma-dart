@@ -25,7 +25,6 @@ abstract interface class Engine<T> {
   /// - [transaction] is the transaction to be used for the request.
   Future<dynamic> request(
     JsonQuery query, {
-    required String action,
     TransactionHeaders? headers,
     Transaction<T>? transaction,
   });
