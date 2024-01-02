@@ -17,6 +17,7 @@ extension GenerateClient on Generator {
         type.types.add(refer('T'));
       });
       builder.types.add(refer('T'));
+      builder.fields.add(generateDatamodel());
 
       for (final mapping in options.dmmf.mappings.modelOperations) {
         builder.methods.add(generateModelOperation(mapping));
@@ -26,6 +27,18 @@ extension GenerateClient on Generator {
 }
 
 extension on Generator {
+  Field generateDatamodel() {
+    return Field((builder) {
+      builder.static = true;
+      builder.modifier = FieldModifier.final$;
+      builder.name = 'datamodel';
+      builder.assignment = refer('DataModel', 'package:orm/dmmf.dart')
+          .newInstanceNamed('fromJson', [
+        literalMap(options.dmmf.source['datamodel']),
+      ]).code;
+    });
+  }
+
   Method generateModelOperation(ModelMapping mapping) {
     final type = generateDelegate(mapping);
 

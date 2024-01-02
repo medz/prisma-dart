@@ -1,34 +1,44 @@
 import 'dart:async';
 
 class ActionClient<T, R> implements Future<R> {
+  final FutureOr<Map> _result;
+  final String _action;
+  final R Function(T) _factory;
+
+  const ActionClient({
+    required String action,
+    required FutureOr<Map> result,
+    required R Function(T unserialized) factory,
+  })  : _action = action,
+        _result = result,
+        _factory = factory;
+
+  Future<T> unserialized() =>
+      Future.value(_result).then((value) => value[_action]);
+
   @override
-  Stream<R> asStream() {
-    // TODO: implement asStream
-    throw UnimplementedError();
-  }
+  Stream<R> asStream() => unserialized().then(_factory).asStream();
 
   @override
   Future<R> catchError(Function onError, {bool Function(Object error)? test}) {
-    // TODO: implement catchError
-    throw UnimplementedError();
+    return unserialized().then(_factory).catchError(onError, test: test);
   }
 
   @override
   Future<R2> then<R2>(FutureOr<R2> Function(R value) onValue,
       {Function? onError}) {
-    // TODO: implement then
-    throw UnimplementedError();
+    return unserialized().then(_factory).then(onValue, onError: onError);
   }
 
   @override
   Future<R> timeout(Duration timeLimit, {FutureOr<R> Function()? onTimeout}) {
-    // TODO: implement timeout
-    throw UnimplementedError();
+    return unserialized()
+        .then(_factory)
+        .timeout(timeLimit, onTimeout: onTimeout);
   }
 
   @override
   Future<R> whenComplete(FutureOr<void> Function() action) {
-    // TODO: implement whenComplete
-    throw UnimplementedError();
+    return unserialized().then(_factory).whenComplete(action);
   }
 }

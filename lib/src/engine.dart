@@ -25,7 +25,7 @@ abstract interface class Engine<T> {
   /// - [query] is the query to be sent to the engine.
   /// - [headers] are the headers to be sent with the request.
   /// - [transaction] is the transaction to be used for the request.
-  Future<dynamic> request(
+  Future<Map> request(
     JsonQuery query, {
     TransactionHeaders? headers,
     TransactionInfo<T>? transaction,

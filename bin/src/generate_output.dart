@@ -136,6 +136,9 @@ extension on Generator {
       builder.name = field.name.propertyName;
       builder.modifier = FieldModifier.final$;
       builder.type = type.nullable(true);
+      if (field.outputType.type.toLowerCase() == 'json') {
+        builder.type = refer('Object?');
+      }
     });
   }
 

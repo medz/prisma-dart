@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:orm/generator_helper.dart';
 
 Future<void> main() async {
-  final generator = Generator.stdio(stdin: stdin, stdout: stderr);
+  final generator = GeneratorApp.stdio(stdin: stdin, stdout: stderr);
 
   generator.onManifest(manifest);
   generator.onGenerate(generate);

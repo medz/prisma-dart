@@ -216,17 +216,13 @@ class BinaryEngine implements Engine<Null> {
         process.stdout.transform(utf8.decoder).transform(const LineSplitter());
     stream.listen((message) {
       if (message.isEmpty) return;
-      // print(message);
       try {
         final data = json.decode(message);
         if (data
             case {
               'level': "INFO",
               'target': 'query_engine::server',
-              'fields': {
-                'ip': final String host,
-                'port': final String port,
-              }
+              'fields': {'ip': final String host, 'port': final String port}
             }) {
           _endpoint = Uri(scheme: 'http', host: host, port: int.parse(port));
         }
@@ -244,7 +240,7 @@ class BinaryEngine implements Engine<Null> {
   }
 
   @override
-  Future request(
+  Future<Map> request(
     JsonQuery query, {
     TransactionHeaders? headers,
     TransactionInfo<Null>? transaction,

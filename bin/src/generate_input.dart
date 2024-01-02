@@ -9,27 +9,33 @@ import 'utils/reference.dart';
 extension GenerateInput on Generator {
   Reference generateInput(
       String name, dmmf.TypeNamespace? namespace, bool isList) {
+    final input = findInputByNamespace(name, namespace);
+    return generateInputByInput(input, namespace: namespace).list(isList);
+  }
+
+  Reference generateInputByInput(
+    dmmf.InputType input, {
+    dmmf.TypeNamespace? namespace,
+  }) {
+    final name = input.name.className;
     final types = getTypesWithNamespace(namespace);
-    final typeName = name.className;
-    if (types.contains(typeName)) {
-      return refer(typeName).namespace(namespace).list(isList);
+    if (types.contains(name)) {
+      return refer(name).namespace(namespace);
     }
 
     final builder = getLibraryByNamespace(namespace);
-    final input = findInputByNamespace(name, namespace);
 
-    types.add(typeName);
+    types.add(name);
     builder.body.add(Class((builder) {
-      builder.name = typeName;
+      builder.name = name;
+      builder.constructors.add(generateDefaultConstructor(input));
 
       for (final field in input.fields) {
         builder.fields.add(generateField(field, input));
       }
-
-      builder.constructors.add(generateDefaultConstructor(input));
     }));
 
-    return refer(typeName).namespace(namespace).list(isList);
+    return refer(name).namespace(namespace);
   }
 }
 

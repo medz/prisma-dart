@@ -35,4 +35,15 @@ extension GenerateHelpers on Generator {
       ]);
     });
   }
+
+  bool allowSelect(dmmf.ModelAction action) =>
+      !_disallowedSelectActions.contains(action);
 }
+
+final _disallowedSelectActions = <dmmf.ModelAction>[
+  dmmf.ModelAction.createMany,
+  dmmf.ModelAction.updateMany,
+  dmmf.ModelAction.deleteMany,
+  dmmf.ModelAction.findRaw,
+  dmmf.ModelAction.aggregateRaw,
+];

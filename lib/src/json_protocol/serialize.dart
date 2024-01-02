@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import '../../../dmmf.dart' as dmmf;
 import '../json_convertible.dart';
 import '../prisma_enum.dart';
+import '../prisma_json.dart';
 import '../prisma_null.dart';
 import '../raw/raw_parameters.dart';
 import '../decimal.dart';
@@ -214,7 +215,7 @@ Map<String, dynamic> _createExplicitSelection(
 }
 
 Map<String, dynamic> _serializeArgumentsObject(_Context context, Map args) {
-  // Why? https://github.com/prisma/prisma/blob/main/packages/client/src/runtime/core/jsonProtocol/serializeJsonQuery.ts#L255
+  // TODO: Why? https://github.com/prisma/prisma/blob/main/packages/client/src/runtime/core/jsonProtocol/serializeJsonQuery.ts#L255
   if (args.containsKey(r'$type')) {
     return {r'$type': 'Json', 'value': json.encode(args)};
   }
@@ -245,9 +246,8 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
         'FieldRef', {'_container': ref.model, '_ref': ref.name}),
     Decimal value => _createTypedValue('Decimal', value.toString()),
     PrismaEnum value => _createTypedValue('Enum', value.name),
-    // TODO: implement JSON serialization
-    // PrismaJson(value: final value) =>
-    //   _createTypedValue('Json', json.encode(value)),
+    PrismaJson(value: final value) =>
+      _createTypedValue('Json', json.encode(value)),
     Enum value => _createTypedValue('Enum', value.name),
     JsonConvertible value => _serializeArgumentValue(context, value.toJson()),
     Iterable value => _serializeIterable(context, value).toList(),
