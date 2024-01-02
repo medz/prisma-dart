@@ -3,6 +3,7 @@ import 'package:orm/dmmf.dart' as dmmf;
 import 'package:orm/orm.dart' as orm;
 
 import 'generate_helpers.dart';
+import 'generate_include.dart';
 import 'generate_select.dart';
 import 'generate_type.dart';
 import 'generator.dart';
@@ -87,7 +88,13 @@ extension on Generator {
         }));
       }
 
-      // TODO: implement include
+      if (allowInclude(field.outputType)) {
+        method.optionalParameters.add(Parameter((builder) {
+          builder.name = 'include';
+          builder.named = true;
+          builder.type = generateInclude(field.outputType).nullable(true);
+        }));
+      }
 
       method.body = Block.of([
         generateArgs(field, action.$1),
@@ -182,8 +189,8 @@ extension on Generator {
         .assign(literalMap({
           ...Map.fromEntries(
               field.args.map((e) => MapEntry(e.name, refer(e.name)))),
-          // TODO: select and include
           if (allowSelect(action)) 'select': refer('select'),
+          if (allowInclude(field.outputType)) 'include': refer('include'),
         }))
         .statement;
   }

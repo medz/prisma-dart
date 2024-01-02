@@ -1,6 +1,8 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart' as dmmf;
 
+import 'generate_helpers.dart';
+import 'generate_include.dart';
 import 'generate_input.dart';
 import 'generator.dart';
 import 'utils/dart_style_fixer.dart';
@@ -25,6 +27,72 @@ extension GenerateSelect on Generator {
     }));
 
     return refer(name).namespace(dmmf.TypeNamespace.prisma);
+  }
+
+  Reference generateTypeWithFieldArgs(
+      dmmf.OutputField field, String outoutName) {
+    final name = '$outoutName\$${field.name.className}\$Args';
+    if (generated.prisma.contains(name)) {
+      return TypeReference((builder) {
+        builder.symbol = 'PrismaUnion';
+        builder.url = 'package:orm/orm.dart';
+        builder.types.addAll([
+          refer('bool'),
+          refer(name).namespace(dmmf.TypeNamespace.prisma),
+        ]);
+      });
+    }
+
+    final fields = List<dmmf.InputField>.from(field.args);
+    if (field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
+      generateSelect(field);
+      fields.add(dmmf.InputField(
+        name: 'select',
+        isNullable: true,
+        isRequired: false,
+        inputTypes: [
+          dmmf.TypeReference(
+            isList: false,
+            namespace: dmmf.TypeNamespace.prisma,
+            location: dmmf.TypeLocation.outputObjectTypes,
+            type: '${field.outputType.type}Select',
+          ),
+        ],
+      ));
+    }
+
+    if (allowInclude(field.outputType)) {
+      generateInclude(field.outputType);
+      fields.add(dmmf.InputField(
+        name: 'include',
+        isNullable: true,
+        isRequired: false,
+        inputTypes: [
+          dmmf.TypeReference(
+            isList: false,
+            namespace: dmmf.TypeNamespace.prisma,
+            location: dmmf.TypeLocation.outputObjectTypes,
+            type: '${field.outputType.type}Include',
+          ),
+        ],
+      ));
+    }
+
+    final input = dmmf.InputType(
+      name: name,
+      constraints: const dmmf.InputTypeConstraints(),
+      fields: fields,
+    );
+    final type = generateInputByInput(
+      input,
+      namespace: dmmf.TypeNamespace.prisma,
+    );
+
+    return TypeReference((builder) {
+      builder.symbol = 'PrismaUnion';
+      builder.url = 'package:orm/orm.dart';
+      builder.types.addAll([refer('bool'), type]);
+    });
   }
 }
 
@@ -58,44 +126,7 @@ extension on Generator {
       return refer('bool');
     }
 
-    final name = '$outoutName\$${field.name.className}\$Args';
-    if (generated.prisma.contains(name)) {
-      return refer(name).namespace(dmmf.TypeNamespace.prisma);
-    }
-
-    final fields = List<dmmf.InputField>.from(field.args);
-    if (field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
-      generateSelect(field);
-      fields.add(dmmf.InputField(
-        name: 'select',
-        isNullable: true,
-        isRequired: false,
-        inputTypes: [
-          dmmf.TypeReference(
-            isList: false,
-            namespace: dmmf.TypeNamespace.prisma,
-            location: dmmf.TypeLocation.outputObjectTypes,
-            type: '${field.outputType.type}Select',
-          ),
-        ],
-      ));
-    }
-
-    final input = dmmf.InputType(
-      name: name,
-      constraints: const dmmf.InputTypeConstraints(),
-      fields: fields,
-    );
-    final type = generateInputByInput(
-      input,
-      namespace: dmmf.TypeNamespace.prisma,
-    );
-
-    return TypeReference((builder) {
-      builder.symbol = 'PrismaUnion';
-      builder.url = 'package:orm/orm.dart';
-      builder.types.addAll([refer('bool'), type]);
-    });
+    return generateTypeWithFieldArgs(field, outoutName);
   }
 
   dmmf.OutputType findOutputField(dmmf.TypeReference type) {

@@ -3,6 +3,7 @@ import 'package:orm/dmmf.dart' as dmmf;
 
 import 'generate_type.dart';
 import 'generator.dart';
+import 'utils/iterable.dart';
 
 extension GenerateHelpers on Generator {
   LibraryBuilder getLibraryByNamespace(dmmf.TypeNamespace? namespace) {
@@ -38,6 +39,21 @@ extension GenerateHelpers on Generator {
 
   bool allowSelect(dmmf.ModelAction action) =>
       !_disallowedSelectActions.contains(action);
+
+  bool allowInclude(dmmf.TypeReference type) {
+    final types = switch (type.namespace) {
+      dmmf.TypeNamespace.model => options.dmmf.schema.outputTypes.model,
+      dmmf.TypeNamespace.prisma => options.dmmf.schema.outputTypes.prisma,
+      _ => const <dmmf.OutputType>[],
+    };
+    final models = options.dmmf.datamodel.models.map((e) => e.name);
+    final output =
+        types.firstWhereOrNull((element) => element.name == type.type);
+    final modelRefs = output?.fields
+        .where((element) => models.contains(element.outputType.type));
+
+    return modelRefs?.isNotEmpty ?? false;
+  }
 }
 
 final _disallowedSelectActions = <dmmf.ModelAction>[
