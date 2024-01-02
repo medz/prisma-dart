@@ -10,7 +10,7 @@ extension GenerateModelScalar on Generator {
     final modelName =
         enumName.substring(0, enumName.indexOf('ScalarFieldEnum')).className;
     final name = '${modelName}Scalar';
-    if (generated.model.contains(name)) {
+    if (generated.prisma.contains(name)) {
       return refer(name);
     }
 
@@ -19,8 +19,8 @@ extension GenerateModelScalar on Generator {
     final model = findModel(modelName);
     final fields = model.fields.where((e) => enum$.values.contains(e.name));
 
-    generated.model.add(name);
-    libraries.model.body.add(Enum((builder) {
+    generated.prisma.add(name);
+    libraries.prisma.body.add(Enum((builder) {
       builder.name = name;
 
       for (final field in fields) {
@@ -33,6 +33,8 @@ extension GenerateModelScalar on Generator {
           builder.types.add(field.type.scalar);
         }));
       }
+
+      // TODO: implement model scalar
     }));
 
     return refer(name);
