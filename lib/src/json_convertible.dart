@@ -19,7 +19,7 @@ abstract interface class JsonConvertible<T> {
   /// If the value does not match any of the above cases, it will be returned as is.
   ///
   /// Returns the JSON representation of the value.
-  static serialize(dynamic value) {
+  static serialize(value) {
     return switch (value) {
       JsonConvertible value => serialize(value.toJson()),
       Iterable values => values.map((e) => serialize(e)).toList(),

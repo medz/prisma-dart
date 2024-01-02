@@ -1,9 +1,9 @@
 library prisma.runtime;
 
+export 'src/action_client.dart';
 export 'src/decimal.dart';
 export 'src/engine.dart';
 export 'src/json_convertible.dart';
-export 'src/model_scalar.dart';
 export 'src/prisma_client.dart';
 export 'src/prisma_enum.dart';
 export 'src/prisma_null.dart';

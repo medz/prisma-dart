@@ -242,7 +242,7 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
     TypedData bytes => _serializeArgumentValue(context, bytes.buffer),
     RawParameters parameters => parameters.values,
     Reference ref => _createTypedValue(
-        'FieldRef', {'_container': ref.model, '_ref': ref.field}),
+        'FieldRef', {'_container': ref.model, '_ref': ref.name}),
     Decimal value => _createTypedValue('Decimal', value.toString()),
     PrismaEnum value => _createTypedValue('Enum', value.name),
     // TODO: implement JSON serialization

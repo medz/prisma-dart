@@ -17,7 +17,7 @@ const _dartReservedProperties = <String>{
   'in',
 };
 
-const _prismaReservedpProperties = <String>{'AND', 'OR', 'NOT'};
+const prismaReservedpProperties = <String>{'AND', 'OR', 'NOT'};
 
 extension DartStyleFixer on String {
   /// Returns dart class name string.
@@ -25,7 +25,7 @@ extension DartStyleFixer on String {
 
   /// Returns dart property name string.
   String get propertyName {
-    if (_prismaReservedpProperties.contains(this)) return this;
+    if (prismaReservedpProperties.contains(this)) return this;
     if (_dartReservedProperties.contains(toLowerCase())) {
       return '\$$this'.camelCase;
     }

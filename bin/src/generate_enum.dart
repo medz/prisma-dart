@@ -12,7 +12,7 @@ extension GenerateEnum on Generator {
       String name, dmmf.TypeNamespace? namespace, bool isList) {
     if (name.endsWith('ScalarFieldEnum') &&
         namespace == dmmf.TypeNamespace.prisma) {
-      return generateModelScalar(name).list(isList);
+      return generateModelScalar(name).namespace(namespace).list(isList);
     }
 
     final types = getTypesWithNamespace(namespace);
