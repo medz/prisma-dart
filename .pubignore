@@ -5,3 +5,4 @@ packages/
 prisma/
 !prisma/schema.prisma
 target/
+prisma-query-engine

@@ -21,13 +21,13 @@ updates:
     commit-message:
       prefix: 'fix(deps)'
 
-  # rust crates
-  - package-ecosystem: cargo
-    directory: /
-    schedule:
-      interval: daily
-    commit-message:
-      prefix: 'fix(deps)'
+  # # rust crates
+  # - package-ecosystem: cargo
+  #   directory: /
+  #   schedule:
+  #     interval: daily
+  #   commit-message:
+  #     prefix: 'fix(deps)'
 
   # npm
   - package-ecosystem: npm
