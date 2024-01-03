@@ -1,4 +1,4 @@
-import '../dmmf/dmmf.dart';
+import '../../dmmf/src/dmmf.dart';
 import 'config.dart';
 import 'env_value.dart';
 

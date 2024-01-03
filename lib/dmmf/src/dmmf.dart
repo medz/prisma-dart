@@ -1,6 +1,6 @@
-import 'src/datamodel.dart';
-import 'src/mappings.dart';
-import 'src/schema.dart';
+import 'datamodel.dart';
+import 'mappings.dart';
+import 'schema.dart';
 
 /// Prisma data model meta format(DMMF).
 class DMMF {

@@ -6,13 +6,13 @@ import 'package:path/path.dart';
 import 'package:retry/retry.dart';
 import 'package:stdweb/stdweb.dart' show fetch;
 
-import 'engine.dart';
-import 'json_protocol/deserialize.dart';
-import 'json_protocol/protocol.dart';
-import 'metrics/metrics_format.dart';
-import 'transaction/isolation_level.dart';
-import 'transaction/transaction_headers.dart';
-import 'transaction/transaction_info.dart';
+import '../../src/engine.dart';
+import '../../src/json_protocol/deserialize.dart';
+import '../../src/json_protocol/protocol.dart';
+import '../../src/metrics/metrics_format.dart';
+import '../../src/transaction/isolation_level.dart';
+import '../../src/transaction/transaction_headers.dart';
+import '../../src/transaction/transaction_info.dart';
 
 class BinaryEngine implements Engine<Null> {
   /// Prisma schema string.
