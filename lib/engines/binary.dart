@@ -21,6 +21,7 @@ class BinaryEngine extends Engine {
     final searchDirectories = [
       Directory.current.path,
       join(Directory.current.path, 'prisma'),
+      join(Directory.current.path, '.dart_tool'),
     ];
 
     for (final directory in searchDirectories) {
@@ -29,13 +30,14 @@ class BinaryEngine extends Engine {
     }
 
     throw Exception(
-        'No query engine binary found ($executable) in ${searchDirectories.join('\n')}');
+        'No query engine binary found ($executable) in $searchDirectories');
   }
 
   /// Generate owerwrite datasources.
   String get _overwriteDatasources {
-    final overwrite =
-        datasources.entries.map((e) => {'name': e.key, 'url': e.value});
+    final overwrite = datasources.entries
+        .map((e) => {'name': e.key, 'url': e.value})
+        .toList();
 
     return base64.encode(utf8.encode(json.encode(overwrite)));
   }

@@ -20,7 +20,6 @@ extension GenerateDelegate on Generator {
     generated.client.add(name);
     libraries.client.body.add(Class((builder) {
       builder.name = name;
-      builder.types.add(refer('T'));
       builder.fields.add(_clientField);
       builder.constructors.add(_defaultConstructor);
 
@@ -54,17 +53,9 @@ extension on Generator {
     final field = findActionDefinition(action.$2);
     final returnsType = generateType(field.outputType)
         .nullable(field.name.endsWith('OrThrow') ? false : field.isNullable);
-    final rawType = (field.outputType.isList
-            ? TypeReference((type) {
-                type.symbol = 'Iterable';
-                type.types.add(refer('Map'));
-              })
-            : refer('Map'))
-        .nullable(field.name.endsWith('OrThrow') ? false : field.isNullable);
-
     final returns = TypeReference((type) {
       type.symbol = 'ActionClient';
-      type.types.addAll([rawType, returnsType]);
+      type.types.add(returnsType);
       type.url = 'package:orm/orm.dart';
     });
 
@@ -118,39 +109,41 @@ extension on Generator {
       return Method((builder) {
         builder.requiredParameters.add(Parameter((builder) {
           builder.name = 'values';
-          builder.type = TypeReference((type) {
-            type.symbol = 'Iterable';
-            type.types.add(refer('Map'));
-            type.isNullable = field.isNullable;
-          });
         }));
 
         final mapProperty = switch (field.isNullable) {
-          true => refer('values').nullSafeProperty('map'),
-          _ => refer('values').property('map'),
+          true =>
+            refer('values').asA(refer('Iterable?')).nullSafeProperty('map'),
+          _ => refer('values').asA(refer('Iterable')).property('map'),
         };
 
-        builder.body = mapProperty.call([serialize]).code;
-      }).closure;
-    } else if (field.isNullable && !orThrow) {
-      return Method((builder) {
-        builder.requiredParameters.add(Parameter((builder) {
-          builder.name = 'value';
-          builder.type = TypeReference((type) {
-            type.symbol = 'Map';
-            type.isNullable = true;
-          });
-        }));
-        final thenTrue = serialize.call([refer('value')]);
+        final fn = Method((builder) {
+          builder.requiredParameters.add(Parameter((builder) {
+            builder.name = 'e';
+          }));
 
-        builder.body = refer('value')
-            .notEqualTo(literalNull)
-            .conditional(thenTrue, literalNull)
-            .code;
+          builder.body = serialize.call([refer('e')]).code;
+        });
+
+        builder.body = mapProperty.call([fn.closure]).code;
       }).closure;
     }
 
-    return serialize;
+    return Method((builder) {
+      builder.requiredParameters.add(Parameter((builder) {
+        builder.name = 'e';
+      }));
+
+      final thenTrue = serialize.call([refer('e')]);
+
+      builder.body = thenTrue.code;
+      if (field.isNullable && !orThrow) {
+        builder.body = refer('e')
+            .notEqualTo(literalNull)
+            .conditional(thenTrue, literalNull)
+            .code;
+      }
+    }).closure;
   }
 
   Code generateResult() {
@@ -182,11 +175,31 @@ extension on Generator {
   }
 
   Code generateArgs(dmmf.OutputField field, dmmf.ModelAction action) {
+    final args = Map.fromEntries(field.args.map((e) {
+      if (action == dmmf.ModelAction.groupBy && e.name == 'by') {
+        return MapEntry(
+          'by',
+          refer('JsonQuery', 'package:orm/orm.dart')
+              .property('groupBySerializer')
+              .call([refer('by')]),
+        );
+      }
+
+      return MapEntry(e.name, refer(e.name));
+    }));
+
+    final select = switch (action == dmmf.ModelAction.groupBy) {
+      true => refer('select').ifNullThen(
+          refer('JsonQuery', 'package:orm/orm.dart')
+              .property('groupBySelectSerializer')
+              .call([refer('by')])),
+      _ => refer('select'),
+    };
+
     return declareFinal('args')
         .assign(literalMap({
-          ...Map.fromEntries(
-              field.args.map((e) => MapEntry(e.name, refer(e.name)))),
-          if (allowSelect(action)) 'select': refer('select'),
+          ...args,
+          if (allowSelect(action)) 'select': select,
           if (allowInclude(field.outputType)) 'include': refer('include'),
         }))
         .statement;

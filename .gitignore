@@ -12,6 +12,7 @@ pubspec.lock
 # Development files or directories.
 example/prisma/*
 !example/prisma/schema.prisma
+prisma-query-*
 
 # Prisma Engine (Rust)
 target/

@@ -21,6 +21,7 @@ Future<GeneratorManifest> manifest(GeneratorConfig config) async {
     prettyName: 'Prisma Dart Client',
     defaultOutput: 'generated_dart_client',
     version: 'v$version',
+    requiresEngines: [EngineType.queryEngine],
   );
 }
 
@@ -44,6 +45,13 @@ Future<void> generate(GeneratorOptions options) async {
         .autoCreate();
 
     await output.writeAsString(formated);
+  }
+
+  // Copy prisma query engine.
+  final engineDownloadPath =
+      options.binaryPaths.queryEngine?.values.firstOrNull;
+  if (engineDownloadPath != null) {
+    await File(engineDownloadPath).copy('prisma-query-engine');
   }
 }
 

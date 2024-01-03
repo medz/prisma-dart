@@ -20,10 +20,17 @@ extension GenerateSelect on Generator {
     libraries.prisma.body.add(Class((builder) {
       builder.name = name;
       builder.constructors.add(generateDefaultConstructor(outout));
+      builder.implements.add(TypeReference((builder) {
+        builder.symbol = 'JsonConvertible';
+        builder.url = 'package:orm/orm.dart';
+        builder.types.add(refer('Map<String, dynamic>'));
+      }));
 
       for (final field in outout.fields) {
         builder.fields.add(generateField(field, outout.name.className));
       }
+
+      builder.methods.add(generateToJson(outout));
     }));
 
     return refer(name).namespace(dmmf.TypeNamespace.prisma);
@@ -31,7 +38,7 @@ extension GenerateSelect on Generator {
 
   Reference generateTypeWithFieldArgs(
       dmmf.OutputField field, String outoutName) {
-    final name = '$outoutName\$${field.name.className}\$Args';
+    final name = '${outoutName.className}${field.name.className}Args';
     if (generated.prisma.contains(name)) {
       return TypeReference((builder) {
         builder.symbol = 'PrismaUnion';
@@ -97,12 +104,24 @@ extension GenerateSelect on Generator {
 }
 
 extension on Generator {
+  Method generateToJson(dmmf.OutputType output) {
+    final entries =
+        output.fields.map((e) => MapEntry(e.name, refer(e.name.propertyName)));
+
+    return Method((builder) {
+      builder.name = 'toJson';
+      builder.returns = refer('Map<String, dynamic>');
+      builder.body = literalMap(Map.fromEntries(entries)).code;
+      builder.annotations.add(refer('override'));
+    });
+  }
+
   Constructor generateDefaultConstructor(dmmf.OutputType output) {
     return Constructor((builder) {
       builder.constant = true;
 
       for (final arg in output.fields) {
-        builder.requiredParameters.add(Parameter((builder) {
+        builder.optionalParameters.add(Parameter((builder) {
           builder.name = arg.name.propertyName;
           builder.toThis = true;
           builder.named = true;
@@ -120,13 +139,16 @@ extension on Generator {
   }
 
   Reference generateSelectType(dmmf.OutputField field, String outoutName) {
-    if (!options.dmmf.datamodel.models
-        .map((e) => e.name)
-        .contains(field.outputType.type)) {
-      return refer('bool');
+    // if (!options.dmmf.datamodel.models
+    //     .map((e) => e.name)
+    //     .contains(field.outputType)) {
+    //   return refer('bool');
+    // }
+    if (field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
+      return generateTypeWithFieldArgs(field, outoutName);
     }
 
-    return generateTypeWithFieldArgs(field, outoutName);
+    return refer('bool');
   }
 
   dmmf.OutputType findOutputField(dmmf.TypeReference type) {

@@ -18,6 +18,11 @@ extension GenerateInclude on Generator {
     libraries.prisma.body.add(Class((builder) {
       builder.name = name;
       builder.constructors.add(generateDefaultConstructor(outout));
+      builder.implements.add(TypeReference((builder) {
+        builder.symbol = 'JsonConvertible';
+        builder.url = 'package:orm/orm.dart';
+        builder.types.add(refer('Map<String, dynamic>'));
+      }));
 
       for (final field in outout.fields) {
         if (!isModuleRef(field)) {
@@ -26,6 +31,8 @@ extension GenerateInclude on Generator {
 
         builder.fields.add(generateField(field, outout.name.className));
       }
+
+      builder.methods.add(generateToJson(outout));
     }));
 
     return refer(name).namespace(dmmf.TypeNamespace.prisma);
@@ -33,6 +40,19 @@ extension GenerateInclude on Generator {
 }
 
 extension on Generator {
+  Method generateToJson(dmmf.OutputType output) {
+    final entries = output.fields
+        .where(isModuleRef)
+        .map((e) => MapEntry(e.name, refer(e.name.propertyName)));
+
+    return Method((builder) {
+      builder.name = 'toJson';
+      builder.returns = refer('Map<String, dynamic>');
+      builder.body = literalMap(Map.fromEntries(entries)).code;
+      builder.annotations.add(refer('override'));
+    });
+  }
+
   Field generateField(dmmf.OutputField field, String outoutName) {
     return Field((builder) {
       builder.modifier = FieldModifier.final$;

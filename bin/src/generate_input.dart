@@ -29,10 +29,17 @@ extension GenerateInput on Generator {
     builder.body.add(Class((builder) {
       builder.name = name;
       builder.constructors.add(generateDefaultConstructor(input));
+      builder.implements.add(TypeReference((builder) {
+        builder.symbol = 'JsonConvertible';
+        builder.url = 'package:orm/orm.dart';
+        builder.types.add(refer('Map<String, dynamic>'));
+      }));
 
       for (final field in input.fields) {
         builder.fields.add(generateField(field, input));
       }
+
+      builder.methods.add(generateToJson(input));
     }));
 
     return refer(name).namespace(namespace);
@@ -40,6 +47,18 @@ extension GenerateInput on Generator {
 }
 
 extension on Generator {
+  Method generateToJson(dmmf.InputType input) {
+    final entries =
+        input.fields.map((e) => MapEntry(e.name, refer(e.name.propertyName)));
+
+    return Method((builder) {
+      builder.name = 'toJson';
+      builder.returns = refer('Map<String, dynamic>');
+      builder.body = literalMap(Map.fromEntries(entries)).code;
+      builder.annotations.add(refer('override'));
+    });
+  }
+
   Constructor generateDefaultConstructor(dmmf.InputType input) {
     return Constructor((builder) {
       builder.constant = true;

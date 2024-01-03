@@ -1,4 +1,6 @@
 import '../json_convertible.dart';
+import '../prisma_enum.dart';
+import '../prisma_union.dart';
 
 class JsonQuery implements JsonConvertible<Map<String, dynamic>> {
   final String? modelName;
@@ -17,6 +19,36 @@ class JsonQuery implements JsonConvertible<Map<String, dynamic>> {
         'action': action.name,
         'query': query,
       };
+
+  static groupBySerializer(dynamic value) {
+    if (value is PrismaEnum) {
+      return value.name;
+    } else if (value is Iterable) {
+      return value.map(groupBySerializer);
+    } else if (value is PrismaUnion) {
+      if (value.$1 != null) return groupBySerializer(value.$1);
+      if (value.$2 != null) return groupBySerializer(value.$2);
+    }
+
+    return value;
+  }
+
+  static groupBySelectSerializer(dynamic value) {
+    final by = groupBySerializer(value);
+    final select = <String, bool>{};
+
+    if (by is String) {
+      select[by] = true;
+    } else if (by is Iterable) {
+      for (final item in by) {
+        if (item is String) {
+          select[item] = true;
+        }
+      }
+    }
+
+    return select.isEmpty ? null : select;
+  }
 }
 
 enum JsonQueryAction {

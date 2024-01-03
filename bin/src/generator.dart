@@ -28,7 +28,6 @@ class Generator {
     libraries.model.name = 'prisma.namespace.model';
 
     libraries.prisma.ignoreForFile.add('non_constant_identifier_names');
-
     libraries.client.body.add(generateClient());
 
     return [

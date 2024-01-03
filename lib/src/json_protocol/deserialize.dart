@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import '../decimal.dart';
 
-dynamic deserializeJsonResponse(dynamic result) => switch (result) {
-      Iterable iterable => iterable.map(deserializeJsonResponse),
-      Map object => _deserializeJsonObject(object),
-      _ => result,
-    };
+dynamic deserializeJsonResponse(dynamic result) {
+  return switch (result) {
+    Iterable iterable => iterable.map(deserializeJsonResponse),
+    Map object => _deserializeJsonObject(object),
+    _ => result,
+  };
+}
 
 dynamic _deserializeJsonObject(Map object) {
   if (object.containsKey(r'$type')) {
