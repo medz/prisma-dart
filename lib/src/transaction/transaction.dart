@@ -1,8 +1,8 @@
-class TransactionInfo<T> {
+class Transaction<T> {
   /// Transaction ID returned by the query engine.
   final String id;
 
   final T payload;
 
-  const TransactionInfo(this.id, this.payload);
+  const Transaction(this.id, this.payload);
 }

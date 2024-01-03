@@ -14,7 +14,7 @@ export 'src/reference.dart';
 // transaction
 export 'src/transaction/isolation_level.dart';
 export 'src/transaction/transaction_headers.dart';
-export 'src/transaction/transaction_info.dart';
+export 'src/transaction/transaction.dart';
 
 // JSON Protocol
 export 'src/json_protocol/protocol.dart';

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:retry/retry.dart';
-import 'package:stdweb/stdweb.dart' show fetch;
+import 'package:webfetch/webfetch.dart' show fetch;
 
 import '../../src/engine.dart';
 import '../../src/json_protocol/deserialize.dart';
@@ -12,7 +12,7 @@ import '../../src/json_protocol/protocol.dart';
 import '../../src/metrics/metrics_format.dart';
 import '../../src/transaction/isolation_level.dart';
 import '../../src/transaction/transaction_headers.dart';
-import '../../src/transaction/transaction_info.dart';
+import '../../src/transaction/transaction.dart';
 
 class BinaryEngine implements Engine<Null> {
   /// Prisma schema string.
@@ -243,21 +243,20 @@ class BinaryEngine implements Engine<Null> {
   Future<Map> request(
     JsonQuery query, {
     TransactionHeaders? headers,
-    TransactionInfo<Null>? transaction,
+    Transaction<Null>? transaction,
   }) async {
-    print(query.toJson());
+    headers ??= TransactionHeaders();
 
     await start();
     final endpoint = await _serverEndpoint();
-    final httpHeaders = headers?.toJson() ?? <String, String>{};
 
     if (transaction != null) {
-      httpHeaders['x-transaction-id'] = transaction.id;
+      headers.set('x-transaction-id', transaction.id);
     }
 
     final response = await fetch(
       endpoint,
-      headers: httpHeaders,
+      headers: headers,
       body: query.toJson(),
       method: 'POST',
     );
@@ -272,7 +271,7 @@ class BinaryEngine implements Engine<Null> {
   @override
   Future<void> commitTransaction({
     required TransactionHeaders headers,
-    required TransactionInfo transaction,
+    required Transaction transaction,
   }) async {
     await start();
 
@@ -280,7 +279,7 @@ class BinaryEngine implements Engine<Null> {
     final response = await fetch(
       endpoint.resolve('/transaction/${transaction.id}/commit'),
       method: 'POST',
-      headers: headers.toJson(),
+      headers: headers,
     );
     final result = await response.json();
 
@@ -293,7 +292,7 @@ class BinaryEngine implements Engine<Null> {
   @override
   Future<void> rollbackTransaction({
     required TransactionHeaders headers,
-    required TransactionInfo transaction,
+    required Transaction transaction,
   }) async {
     await start();
 
@@ -301,7 +300,7 @@ class BinaryEngine implements Engine<Null> {
     final response = await fetch(
       endpoint.resolve('/transaction/${transaction.id}/rollback'),
       method: 'POST',
-      headers: headers.toJson(),
+      headers: headers,
     );
     final result = await response.json();
 
@@ -312,7 +311,7 @@ class BinaryEngine implements Engine<Null> {
   }
 
   @override
-  Future<TransactionInfo<Null>> startTransaction({
+  Future<Transaction<Null>> startTransaction({
     required TransactionHeaders headers,
     int maxWait = 2000,
     int timeout = 5000,
@@ -323,7 +322,7 @@ class BinaryEngine implements Engine<Null> {
     final response = await fetch(
       endpoint.resolve('/transaction/start'),
       method: 'POST',
-      headers: headers.toJson(),
+      headers: headers,
       body: {
         'max_wait': maxWait,
         'timeout': timeout,
@@ -333,7 +332,7 @@ class BinaryEngine implements Engine<Null> {
     final result = await response.json();
 
     return switch (result) {
-      {'id': final String id} => TransactionInfo(id, null),
+      {'id': final String id} => Transaction(id, null),
       {'errors': final Iterable errors} => throw Exception(errors),
       _ => throw Exception(result),
     };

@@ -22,8 +22,8 @@ dependencies:
   path: ^1.8.3
   recase: ^4.1.0
   retry: ^3.1.2
-  stdweb: ^0.0.4
   stream_channel: ^2.1.2
+  webfetch: ^0.0.10
 
 dev_dependencies:
   lints: ^3.0.0

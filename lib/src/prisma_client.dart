@@ -2,14 +2,14 @@ import 'engine.dart';
 import 'metrics/metrics_client.dart';
 import 'transaction/isolation_level.dart';
 import 'transaction/transaction_headers.dart';
-import 'transaction/transaction_info.dart';
+import 'transaction/transaction.dart';
 
 class PrismaClient<T> {
   /// The client transaction headers.
   final TransactionHeaders? $headers;
 
   /// The client transaction information.
-  final TransactionInfo<T>? $info;
+  final Transaction<T>? $info;
 
   /// the client with engine.
   final Engine<T> $engine;
@@ -18,7 +18,7 @@ class PrismaClient<T> {
   const PrismaClient.from({
     required Engine<T> engine,
     TransactionHeaders? headers,
-    TransactionInfo<T>? transaction,
+    Transaction<T>? transaction,
   })  : $headers = headers,
         $info = transaction,
         $engine = engine;
@@ -66,7 +66,7 @@ class PrismaClient<T> {
       throw Exception('Cannot nest transactions.');
     }
 
-    const headers = TransactionHeaders(traceparent: "");
+    final headers = TransactionHeaders();
     final transaction = await $engine.startTransaction(
       headers: headers,
       maxWait: maxWait,
