@@ -1,10 +1,10 @@
 import '../engine.dart';
 import 'metrics_format.dart';
 
-class MetricsClient<T> {
-  const MetricsClient(Engine<T> engine) : _engine = engine;
+class MetricsClient {
+  const MetricsClient(Engine engine) : _engine = engine;
 
-  final Engine<T> _engine;
+  final Engine _engine;
 
   /// Returns all metrics gathered up to this point in prometheus format.
   ///

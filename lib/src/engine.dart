@@ -6,7 +6,15 @@ import 'transaction/isolation_level.dart';
 import 'transaction/transaction_headers.dart';
 import 'transaction/transaction.dart';
 
-abstract interface class Engine<T> {
+abstract class Engine {
+  final String schema;
+  final Map<String, String> datasources;
+
+  const Engine({
+    required this.schema,
+    required this.datasources,
+  });
+
   /// Starts the engine.
   ///
   /// This method is used to start the engine and perform any necessary initialization.
@@ -28,7 +36,7 @@ abstract interface class Engine<T> {
   Future<Map> request(
     JsonQuery query, {
     TransactionHeaders? headers,
-    Transaction<T>? transaction,
+    Transaction? transaction,
   });
 
   /// Starts a transaction.
@@ -37,7 +45,7 @@ abstract interface class Engine<T> {
   /// - [maxWait] is the maximum amount of time to wait for the transaction to start.
   /// - [timeout] is the maximum amount of time to wait for the transaction to complete.
   /// - [isolationLevel] is the isolation level to be used for the transaction.
-  Future<Transaction<T>> startTransaction({
+  Future<Transaction> startTransaction({
     required TransactionHeaders headers,
     int maxWait = 2000,
     int timeout = 5000,
@@ -50,7 +58,7 @@ abstract interface class Engine<T> {
   /// - [transaction] is the transaction to be committed.
   Future<void> commitTransaction({
     required TransactionHeaders headers,
-    required Transaction<T> transaction,
+    required Transaction transaction,
   });
 
   /// Rolls back a transaction.
@@ -59,7 +67,7 @@ abstract interface class Engine<T> {
   /// - [transaction] is the transaction to be rolled back.
   Future<void> rollbackTransaction({
     required TransactionHeaders headers,
-    required Transaction<T> transaction,
+    required Transaction transaction,
   });
 
   /// Returns the metrics for the engine.

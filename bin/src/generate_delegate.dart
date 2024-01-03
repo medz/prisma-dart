@@ -36,11 +36,7 @@ extension GenerateDelegate on Generator {
 
 final _clientField = Field((builder) {
   builder.name = '_client';
-  builder.type = TypeReference((type) {
-    type.symbol = 'PrismaClient';
-    type.url = 'package:orm/orm.dart';
-    type.types.add(refer('T'));
-  });
+  builder.type = refer('PrismaClient');
   builder.modifier = FieldModifier.final$;
 });
 
@@ -159,11 +155,12 @@ extension on Generator {
 
   Code generateResult() {
     final request =
-        refer('_client').property('\$engine').property('request').call([
+        refer('_client').property('_engine').property('request').call([
       refer('query')
     ], {
-      'headers': refer('_client').property('\$headers'),
-      'transaction': refer('_client').property('\$info'),
+      'headers': refer('_client').property('\$transaction').property('headers'),
+      'transaction':
+          refer('_client').property('\$transaction').property('transaction'),
     });
 
     return declareFinal('result').assign(request).statement;
@@ -176,7 +173,7 @@ extension on Generator {
       'action': refer('JsonQueryAction', 'package:orm/orm.dart').property(
         action.$1.toJsonQueryAction().name,
       ),
-      'datamodel': refer('PrismaClient\$Extention').property('datamodel'),
+      'datamodel': refer('PrismaClient').property('datamodel'),
     };
     final serialize =
         refer('serializeJsonQuery', 'package:orm/orm.dart').call([], args);

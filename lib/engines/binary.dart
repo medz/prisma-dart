@@ -1,3 +1,5 @@
+library prisma.engines.binary;
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -5,122 +7,37 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:retry/retry.dart';
 import 'package:webfetch/webfetch.dart' show fetch;
+import '../orm.dart';
 
-import '../../src/engine.dart';
-import '../../src/json_protocol/deserialize.dart';
-import '../../src/json_protocol/protocol.dart';
-import '../../src/metrics/metrics_format.dart';
-import '../../src/transaction/isolation_level.dart';
-import '../../src/transaction/transaction_headers.dart';
-import '../../src/transaction/transaction.dart';
-
-class BinaryEngine implements Engine<Null> {
-  /// Prisma schema string.
-  ///
-  /// Exported from `client.dart` file.
-  final String schema;
-
-  /// Your datasource defined in `schema.prisma` file.
-  ///
-  /// Example:
-  ///
-  /// ```prisma
-  /// datasource db {
-  ///  provider = "postgresql"
-  ///  url      = env("DATABASE_URL")
-  /// }
-  /// ```
-  ///
-  /// You **datasource** name is `db`.
-  final String datasource;
-
-  /// Path to prisma binary query engine.
-  ///
-  /// If not provided, it will search for `prisma-query-engine` binary in
-  /// current directory.
-  ///
-  /// If you provide a path, but the file does not exist, it will search for
-  /// base name of the path in current directory.
-  final String? binary;
-
-  /// Your database url.
-  ///
-  /// If you not provide [url], it will search for [envVariable] environment:
-  ///
-  /// Priority:
-  ///
-  /// 1. [url]
-  /// 2. `String.fromEnvironment(envVariable)`
-  /// 3. `Platform.environment[envVariable]`
-  final Uri? url;
-
-  /// Database url environment variable name.
-  ///
-  /// If you provide [url], this will be ignored.
-  final String envVariable;
-
+class BinaryEngine extends Engine {
   Process? _process;
   Uri? _endpoint;
 
-  BinaryEngine({
-    required this.schema,
-    required this.datasource,
-    this.binary,
-    this.url,
-    this.envVariable = 'DATABASE_URL',
-  });
-
-  /// Resolve prisma binary query engine path.
-  File get _executable {
-    if (this.binary == null) {
-      return _searchExecutable();
-    }
-
-    final binary = File(this.binary!);
-    if (!binary.existsSync()) return _searchExecutable();
-
-    return binary;
-  }
+  BinaryEngine({required super.schema, required super.datasources});
 
   /// Search for prisma binary query engine path.
-  File _searchExecutable() {
-    const defaultExecutableName = 'prisma-query-engine';
-    final executableName = switch (binary) {
-      String binary => basename(binary),
-      _ => defaultExecutableName,
-    };
+  File get _executable {
+    final executable = 'prisma-query-engine';
+    final searchDirectories = [
+      Directory.current.path,
+      join(Directory.current.path, 'prisma'),
+    ];
 
-    final executable = File(executableName);
-    if (executable.existsSync()) return executable;
+    for (final directory in searchDirectories) {
+      final file = File(join(directory, executable));
+      if (file.existsSync()) return file;
+    }
 
-    final defaultExecutable = File(defaultExecutableName);
-    if (defaultExecutable.existsSync()) return defaultExecutable;
-
-    throw Exception('No query engine binary found ($executableName)');
+    throw Exception(
+        'No query engine binary found ($executable) in ${searchDirectories.join('\n')}');
   }
 
   /// Generate owerwrite datasources.
   String get _overwriteDatasources {
-    final overwrite = [
-      {'name': datasource, 'url': url?.toString() ?? _urlFromEnv},
-    ];
+    final overwrite =
+        datasources.entries.map((e) => {'name': e.key, 'url': e.value});
 
-    return base64.encode(
-      utf8.encode(
-        json.encode(overwrite),
-      ),
-    );
-  }
-
-  /// Get database url from environment.
-  String get _urlFromEnv {
-    if (bool.hasEnvironment(envVariable)) {
-      return String.fromEnvironment(envVariable);
-    } else if (Platform.environment.containsKey(envVariable)) {
-      return Platform.environment[envVariable]!;
-    }
-
-    throw Exception('No database url found ($envVariable)');
+    return base64.encode(utf8.encode(json.encode(overwrite)));
   }
 
   @override
@@ -243,7 +160,7 @@ class BinaryEngine implements Engine<Null> {
   Future<Map> request(
     JsonQuery query, {
     TransactionHeaders? headers,
-    Transaction<Null>? transaction,
+    Transaction? transaction,
   }) async {
     headers ??= TransactionHeaders();
 
@@ -311,7 +228,7 @@ class BinaryEngine implements Engine<Null> {
   }
 
   @override
-  Future<Transaction<Null>> startTransaction({
+  Future<Transaction> startTransaction({
     required TransactionHeaders headers,
     int maxWait = 2000,
     int timeout = 5000,
@@ -332,7 +249,7 @@ class BinaryEngine implements Engine<Null> {
     final result = await response.json();
 
     return switch (result) {
-      {'id': final String id} => Transaction(id, null),
+      {'id': final String id} => Transaction(id),
       {'errors': final Iterable errors} => throw Exception(errors),
       _ => throw Exception(result),
     };

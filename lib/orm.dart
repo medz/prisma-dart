@@ -4,7 +4,6 @@ export 'src/action_client.dart';
 export 'src/decimal.dart';
 export 'src/engine.dart';
 export 'src/json_convertible.dart';
-export 'src/prisma_client.dart';
 export 'src/prisma_enum.dart';
 export 'src/prisma_null.dart';
 export 'src/prisma_json.dart';
@@ -15,6 +14,7 @@ export 'src/reference.dart';
 export 'src/transaction/isolation_level.dart';
 export 'src/transaction/transaction_headers.dart';
 export 'src/transaction/transaction.dart';
+export 'src/transaction/transaction_client.dart';
 
 // JSON Protocol
 export 'src/json_protocol/protocol.dart';

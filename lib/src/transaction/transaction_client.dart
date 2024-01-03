@@ -3,24 +3,30 @@ import 'isolation_level.dart';
 import 'transaction_headers.dart';
 import 'transaction.dart';
 
-class TransactionClient<T, Client> {
-  final Engine<T> _engine;
-  final Client Function(TransactionClient<T, Client> transactionClient)
-      _factory;
+class TransactionClient<T> {
+  final Engine _engine;
+  final T Function(TransactionClient<T> transactionClient) _factory;
 
   final TransactionHeaders? headers;
-  final Transaction<T>? transaction;
+  final Transaction? transaction;
 
-  const TransactionClient({
-    required Client Function(TransactionClient<T, Client>) factory,
-    required Engine<T> engine,
-    this.headers,
-    this.transaction,
-  })  : _engine = engine,
-        _factory = factory;
+  const TransactionClient._({
+    required T Function(TransactionClient<T>) factory,
+    required Engine engine,
+    required this.headers,
+    required this.transaction,
+  })  : _factory = factory,
+        _engine = engine;
+
+  const TransactionClient(
+      Engine engine, T Function(TransactionClient<T>) factory)
+      : _factory = factory,
+        _engine = engine,
+        headers = null,
+        transaction = null;
 
   /// Start a new transaction.
-  Future<Client> start({
+  Future<T> start({
     TransactionHeaders? headers,
     int maxWait = 2000,
     int timeout = 5000,
@@ -39,7 +45,7 @@ class TransactionClient<T, Client> {
       timeout: timeout,
       isolationLevel: isolationLevel,
     );
-    final client = TransactionClient(
+    final client = TransactionClient._(
       factory: _factory,
       engine: _engine,
       headers: headers,
@@ -85,7 +91,7 @@ class TransactionClient<T, Client> {
   /// });
   /// ```
   Future<R> call<R>(
-    Future<R> Function(Client client) fn, {
+    Future<R> Function(T client) fn, {
     int maxWait = 2000,
     int timeout = 5000,
     IsolationLevel? isolationLevel,
