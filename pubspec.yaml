@@ -9,7 +9,7 @@ funding:
   - https://www.patreon.com/user?u=80114587
 
 environment:
-  sdk: ^3.1.0
+  sdk: '>=3.1.0 <4.0.0'
 
 executables:
   prisma-client-dart: orm

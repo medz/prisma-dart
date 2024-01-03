@@ -9,7 +9,11 @@ void main() async {
   final prisma = PrismaClient();
   try {
     final user = await prisma.user.findFirstOrThrow(
-      select: UserSelect(id: true, name: true, $count: PrismaUnion.$1(true)),
+      select: UserSelect(
+        id: true,
+        name: true,
+        $count: PrismaUnion.$1(true),
+      ),
     );
 
     print(

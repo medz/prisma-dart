@@ -1,39 +1,35 @@
 ---
-title: "What is Prisma (for Dart)?"
+title: Overview
 ---
 
-# What is Prisma (for Dart)?
+# What's Prisma Dart client?
 
-Prisma (for Dart) is a **next-generation ORM** for Dart and Flutter.
+Prisma Dart client is a Dart ORM for Prisma. It is a Dart implementation of the Prisma Client, which provides type-safe access to your database.
 
-- **Most Popular Databases**: Prisma supports PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
+## Features
+
 - **Type-safe**: Prisma Client is a query builder that’s tailored to your schema. We designed its API to be intuitive, both for SQL veterans and developers brand new to databases. The auto-completion helps you figure out your query without the need for documentation.
 - **Human-readable**: Prisma schema is intuitive and lets you declare your database tables in a human-readable way — making your data modeling experience a delight. You define your models by hand or introspect them from an existing database.
+- **Most Popular Databases**: Prisma works seamlessly across most popular databases and service providers. | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
 
-## Developer Experience
+## How it works?
 
-Prisma ORM aims to provide a simple, type-safe, multi-database supported ORM for a great Dart backend development experience.
+Prisma Dart client 即是一个 Dart 实现的 Prisma client 运行时，也是一个 Prisma 的 Dart 客户端生成器。
 
-## Performance
+Prisma Dart client is both a Dart implementation of the Prisma client runtime and a Prisma client generator for Dart.
 
-Unlike Dart other connected databases, Prisma is a sane ORM.
+你只需要在你的 `schema.prisma` 中添加一个 `generator` 即可：
 
-- **Type-safe**
+```prisma
+generator client {
+  provider = "dart run orm"
+}
+```
 
-  Any input in your editor or IDE will be hinted at the parameter type, and even some editors or IDEs can use these hints for auto-completion.
+You only need to add a `generator` in your `schema.prisma`:
 
-- **Multi-database**
-
-  Prisma ORM supports multiple databases, and you can migrate between different databases without modifying the code.
-
-## What About Prisma client Dart?
-
-Prisma client Dart is the Dart version of (Prisma ORM)(https://www.prisma.io), which is an ORM and also a Dart client for Prisma engines.
-
-There are significant differences between Prisma client Dart and Prisma client JS/TS, but their APIs are as consistent as possible. From this, we can reuse most of the documentation content in [Prisma Documentation](https://www.prisma.io/docs/).
-
-## Does it have any flaws?
-
-1. Due to the limitations of the Dart language, we cannot implement all the functions supported by Prisma in the Dart language, such as `select`, `include` and more input types, and we cannot achieve dynamic output type construction.
-
-2. Need to rely on `build_runner` and `json_serializable` to complete the serialization and deserialization of the model, which will lead to some unnecessary dependencies and cumbersome construction steps.
+```prisma
+generator client {
+  provider = "dart run orm"
+}
+```
