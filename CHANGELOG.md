@@ -1,3 +1,33 @@
+## 3.4.6
+
+To install Prisma Dart client v3.4.6, run the following command:
+
+```bash
+dart pub add orm
+```
+
+To update Prisma Dart client v3.4.6, update the `orm` dependency in your `pubspec.yaml` file.
+
+```yaml
+dependencies:
+  orm: ^3.4.6
+```
+
+### What's Changed
+
+1. The binary engine will be copied to the current working command and named `prisma-query-engine`
+2. Add the `.dart_tool` directory to the search directory
+
+### About not found `prisma-query-engine` error
+
+```text
+Cannot find the query engine binary (Basename: C:\path\does\not\matter\query-engine-windows.exe | prisma-query-engine)
+```
+
+If you just run your app using the dart run {script}.dart command, you don’t need to do anything.
+
+**If you use dart compile exe to package your app as a executable, copy prisma-query-engine to the same location as your run file**
+
 ## 3.4.5
 
 To install Prisma Dart client v3.4.5, run the following command:

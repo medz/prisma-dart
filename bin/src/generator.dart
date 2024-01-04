@@ -143,9 +143,7 @@ extension WriteLibrary on PrismaDartClientGenerator {
     final executable =
         options.binaryPaths?.queryEngine?.entries.firstOrNull?.value;
     if (executable != null) {
-      File(executable).copySync(
-        path.join(path.dirname(output.path), path.basename(executable)),
-      );
+      File(executable).copySync("prisma-query-engine");
     }
   }
 

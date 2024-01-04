@@ -92,6 +92,7 @@ class BinaryEngine extends UniversalEngine implements Engine {
     yield directory;
     yield path.join(directory, 'node_modules', 'prisma');
     yield path.join(directory, 'prisma');
+    yield path.join(directory, '.dart_tool');
     yield path.join(directory, '.dart_tool', 'prisma');
   }
 
