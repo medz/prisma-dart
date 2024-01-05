@@ -1,3 +1,22 @@
+# Prisma Dart client v4.0.0-alpha.3
+
+To install Prisma Dart client v4.0.0-alpha.3 run:
+
+```sh
+dart pub add orm:4.0.0-alpha.3
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.0-alpha.3
+```
+
+## What's Changed
+
+1. dump `webfetch` to `0.0.14` version.
+
 # Prisma Dart client v4.0.0-alpha.2
 
 To install Prisma Dart client v4.0.0-alpha.2 run:

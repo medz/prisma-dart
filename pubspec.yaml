@@ -23,7 +23,7 @@ dependencies:
   recase: ^4.1.0
   retry: ^3.1.2
   stream_channel: ^2.1.2
-  webfetch: ^0.0.11
+  webfetch: ^0.0.14
 
 dev_dependencies:
   lints: ^3.0.0

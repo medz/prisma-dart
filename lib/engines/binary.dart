@@ -166,8 +166,7 @@ class BinaryEngine extends Engine {
       method: 'POST',
     );
 
-    final value = await response.text();
-    final result = json.decode(value);
+    final result = await response.json();
 
     return switch (result) {
       {'data': final Map data} => deserializeJsonResponse(data),
