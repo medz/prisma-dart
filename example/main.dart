@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:orm/orm.dart';
 
 import '../prisma/dart/client.dart';
@@ -19,14 +17,19 @@ void main() async {
     print(
         'Fond user ${user.name} (ID: ${user.id}), Total posts: ${user.$count?.posts}');
 
-    final result = await prisma.$raw
-        .query('SELECT * FROM "User" where id = \$1;', [user.id]);
+    final users = await prisma.$raw.query('SELECT * FROM "User"');
+    print('\n');
+    print('Raw Query users:');
+    print(users);
 
-    print('Raw Query result:');
-    print(result);
-    // print(json.encode(result));
+    final posts = await prisma.$raw
+        .query('SELECT * FROM "Post" WHERE "userId" = \$1', [user.id]);
+    print('\n');
+    print('Raw Query posts');
+    print(posts);
+  } catch (_) {
+    rethrow;
   } finally {
     await prisma.$disconnect();
-    exit(0);
   }
 }

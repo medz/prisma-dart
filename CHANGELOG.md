@@ -16,6 +16,47 @@ dependencies:
 ## What's Changed
 
 1. Change Dart SDK version to `^3.2.0`
+2. Support **RAW** query and execute feature, See [Raw queries](#raw-queries)
+
+## Raw queries
+
+You can use `$raw` to execute raw queries
+
+### `$raw.query`
+
+Execute a raw query, for example:
+
+```dart
+final result = await prisma.$raw.query('SELECT * FROM "User"'); // PostgreSQL
+```
+
+### `$raw.execute`
+
+Execute a raw query, for example:
+
+```dart
+final result = await prisma.$raw.execute('DELETE FROM "User"'); // PostgreSQL
+```
+
+### Parameters
+
+`$raw.query` and `$raw.execute` support parameters, for example:
+
+```dart
+// PostgreSQL
+final result = await prisma.$raw.query(
+  'SELECT * FROM "User" WHERE "id" = \$1',
+  [1],
+);
+
+// MySQL
+final result = await prisma.$raw.query(
+  'SELECT * FROM `User` WHERE `id` = ?',
+  [1],
+);
+```
+
+> SQL template string see your used database.
 
 # Prisma Dart client v4.0.0-alpha.1
 

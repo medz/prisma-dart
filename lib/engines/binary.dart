@@ -85,20 +85,6 @@ class BinaryEngine extends Engine {
       throw Exception('Unable to start query engine');
     }
 
-    const shutdownSignals = [
-      ProcessSignal.sigterm,
-      ProcessSignal.sighup,
-      ProcessSignal.sigterm,
-      ProcessSignal.sigint,
-      ProcessSignal.sigwinch,
-    ];
-    for (final signal in shutdownSignals) {
-      signal.watch().listen((event) {
-        process.kill();
-        exit(0);
-      });
-    }
-
     return process;
   }
 
@@ -181,10 +167,12 @@ class BinaryEngine extends Engine {
     );
 
     final value = await response.text();
-    return switch (json.decode(value)) {
+    final result = json.decode(value);
+
+    return switch (result) {
       {'data': final Map data} => deserializeJsonResponse(data),
       {'errors': final Iterable errors} => throw Exception(errors),
-      dynamic value => throw Exception(value),
+      _ => throw Exception(result),
     };
   }
 

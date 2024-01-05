@@ -39,8 +39,7 @@ class RawClient<T> {
   }) async {
     final args = {
       'query': sql,
-      if (parameters?.isNotEmpty == true)
-        'parameters': json.encode(rawParameter.encode(parameters)),
+      'parameters': json.encode(rawParameter.encode(parameters ?? const [])),
     };
 
     final query =
