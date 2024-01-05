@@ -180,7 +180,8 @@ class BinaryEngine extends Engine {
       method: 'POST',
     );
 
-    return switch (await response.json()) {
+    final value = await response.text();
+    return switch (json.decode(value)) {
       {'data': final Map data} => deserializeJsonResponse(data),
       {'errors': final Iterable errors} => throw Exception(errors),
       dynamic value => throw Exception(value),

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../json_convertible.dart';
-import '../decimal.dart';
-import '../prisma_null.dart';
+import '../../json_convertible.dart';
+import '../../decimal.dart';
+import '../../prisma_null.dart';
 
 /// A codec for encoding and decoding Prisma raw parameters.
 ///
@@ -30,24 +30,23 @@ class _RawParameterDecoder extends Converter {
     return switch (input) {
       {
         'prisma__type': final String type,
-        'prisma__value': final String value,
+        'prisma__value': final Object? value,
       } =>
-        deserialize(type, value),
-      Iterable value => value.map(convert),
+        deserialize(type, value.toString()),
+      Iterable value => value.map(convert).toList(),
       Map value => value.map((key, value) => MapEntry(key, convert(value))),
       _ => input,
     };
   }
 
-  deserialize(String type, String value) {
+  deserialize(String type, Object? value) {
     return switch (type) {
-      'date' || 'datatime' => DateTime.parse(value),
+      'date' || 'datatime' => DateTime.parse(value.toString()),
       'time' => DateTime.parse('1970-01-01T${value}Z'),
-      'bigint' => BigInt.parse(value),
-      'decimal' => Decimal.parse(value),
-      'bytes' => base64.decode(value),
-      _ => throw UnsupportedError(
-          'Prisma RAW parameter type "$type" is not supported.'),
+      'bigint' => BigInt.parse(value.toString()),
+      'decimal' => Decimal.parse(value.toString()),
+      'bytes' => base64.decode(value.toString()),
+      _ => value,
     };
   }
 }

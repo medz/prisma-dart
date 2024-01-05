@@ -26,6 +26,13 @@ extension GenerateClient on Generator {
         final method = generateModelOperation(mapping);
         builder.methods.add(method);
       }
+
+      final allowRaw = options.dmmf.mappings.otherOperations.write
+              .contains('queryRaw') &&
+          options.dmmf.mappings.otherOperations.write.contains('executeRaw');
+      if (allowRaw) {
+        builder.methods.add(_rawClientGetter);
+      }
     });
   }
 }
@@ -196,6 +203,24 @@ final _transactionField = Field((builder) {
     builder.url = 'package:orm/orm.dart';
     builder.types.add(refer('PrismaClient'));
   });
+});
+
+final _rawClientGetter = Method((builder) {
+  final client = TypeReference((builder) {
+    builder.symbol = 'RawClient';
+    builder.url = 'package:orm/orm.dart';
+    builder.types.add(refer('PrismaClient'));
+  });
+
+  builder.name = '\$raw';
+  builder.type = MethodType.getter;
+  builder.returns = client;
+  builder.lambda = true;
+  builder.body = client.newInstance([
+    refer(_engineField.name),
+    refer('datamodel'),
+    refer(_transactionField.name)
+  ]).code;
 });
 
 final _metricsField = Field((builder) {

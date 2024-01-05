@@ -7,7 +7,6 @@ import '../json_convertible.dart';
 import '../prisma_enum.dart';
 import '../prisma_json.dart';
 import '../prisma_null.dart';
-import '../raw/raw_parameters.dart';
 import '../decimal.dart';
 import '../reference.dart';
 import 'protocol.dart';
@@ -241,7 +240,6 @@ dynamic _serializeArgumentValue(_Context context, dynamic value) {
     Uint8List bytes => _createTypedValue('Bytes', base64.encode(bytes)),
     ByteBuffer bytes => _serializeArgumentValue(context, bytes.asUint8List()),
     TypedData bytes => _serializeArgumentValue(context, bytes.buffer),
-    RawParameters parameters => parameters.values,
     Reference ref => _createTypedValue(
         'FieldRef', {'_container': ref.model, '_ref': ref.name}),
     Decimal value => _createTypedValue('Decimal', value.toString()),

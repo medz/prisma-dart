@@ -18,6 +18,13 @@ void main() async {
 
     print(
         'Fond user ${user.name} (ID: ${user.id}), Total posts: ${user.$count?.posts}');
+
+    final result = await prisma.$raw
+        .query('SELECT * FROM "User" where id = \$1;', [user.id]);
+
+    print('Raw Query result:');
+    print(result);
+    // print(json.encode(result));
   } finally {
     await prisma.$disconnect();
     exit(0);

@@ -1,24 +1,18 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator DartClient {
+generator dart_client {
   provider = "dart run orm"
   output   = "dart"
 }
 
-// generator CopyBinaryEngine {
-//   provider = "dart run orm:binary"
-//   output   = "dart/prisma-query-engine"
-// }
+generator js_client {
+  provider = "prisma-client-js"
+}
 
-// generator DMMF {
-//   provider = "dart run tool/dmmf_generator.dart"
-// }
-
-// generator JSClient {
-//   provider = "prisma-client-js"
-//   output   = "js"
-// }
+generator dmmf {
+  provider = "dart run tool/dmmf_generator.dart"
+}
 
 datasource db {
   provider = "postgresql"

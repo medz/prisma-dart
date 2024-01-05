@@ -25,6 +25,5 @@ export 'src/json_protocol/deserialize.dart';
 export 'src/metrics/metrics_client.dart';
 export 'src/metrics/metrics_format.dart';
 
-// RAW
-export 'src/raw/raw_parameters.dart';
-export 'src/raw/raw_parameter_codec.dart';
+// Raw
+export 'src/raw/raw_client.dart';
