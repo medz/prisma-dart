@@ -59,7 +59,7 @@ dev_dependencies: ...
 
 The `.env` file is used to store environment variables. It should look like this:
 
-```env
+```bash
 # Environment variables declared in this file are automatically made available to Prisma.
 # See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
 

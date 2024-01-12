@@ -63,7 +63,7 @@ The `skipDuplicates` is not support when using **MongoDB** and **SQL Server**.
 
 ### Create records and connect or create related records
 
-See [Related queries -> Nested writes](./related-queries#nested-writes) for information about creating a record and one or more related at the same time.
+See [Related queries -> Nested writes](./relation-queries.md#nested-writes) for information about creating a record and one or more related at the same time.
 
 ## Read
 
