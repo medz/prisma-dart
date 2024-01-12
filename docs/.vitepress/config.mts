@@ -41,7 +41,7 @@ export default defineConfig({
       },
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' },
+      { icon: 'github', link: 'https://github.com/medz/prisma-dart' },
       { icon: 'twitter', link: 'https://twitter.com/shiweidu' },
     ],
     editLink: {
