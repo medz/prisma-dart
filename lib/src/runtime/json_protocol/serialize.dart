@@ -214,7 +214,6 @@ Map<String, dynamic> _createExplicitSelection(
 }
 
 Map<String, dynamic> _serializeArgumentsObject(_Context context, Map args) {
-  // TODO: Why? https://github.com/prisma/prisma/blob/main/packages/client/src/runtime/core/jsonProtocol/serializeJsonQuery.ts#L255
   if (args.containsKey(r'$type')) {
     return {r'$type': 'Json', 'value': json.encode(args)};
   }
