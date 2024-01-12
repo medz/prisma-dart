@@ -67,11 +67,7 @@ extension on Generator {
           builder.toThis = true;
           builder.named = true;
           builder.name = field.name.propertyName;
-          builder.required =
-              switch (input.constraints.fields?.contains(field.name)) {
-            true => true,
-            _ => field.isRequired,
-          };
+          builder.required = field.isRequired;
         }));
       }
     });
@@ -83,10 +79,7 @@ extension on Generator {
     return Field((builder) {
       builder.name = field.name.propertyName;
       builder.modifier = FieldModifier.final$;
-      builder.type = switch (input.constraints.fields?.contains(field.name)) {
-        true => type.nullable(false),
-        _ => type.nullable(!field.isRequired),
-      };
+      builder.type = type.nullable(!field.isRequired);
     });
   }
 
