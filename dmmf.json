@@ -3384,6 +3384,8 @@
   "otherGenerators": [],
   "schemaPath": "/Users/seven/workspace/prisma-dart/example/prisma/schema.prisma",
   "version": "e95e739751f42d8ca026f6b910f5a2dc5adeaeee",
+  "postinstall": true,
+  "noEngine": false,
   "binaryPaths": {
     "queryEngine": {
       "darwin-arm64": "/Users/seven/workspace/prisma-dart/node_modules/prisma/query-engine-darwin-arm64"
