@@ -81,8 +81,7 @@ extension on Generator {
   }
 
   bool isModuleRef(dmmf.OutputField field) {
-    return options.dmmf.datamodel.models
-        .any((element) => element.name == field.outputType.type);
+    return field.outputType.location == dmmf.TypeLocation.outputObjectTypes;
   }
 
   dmmf.OutputType findOutputField(dmmf.TypeReference type) {

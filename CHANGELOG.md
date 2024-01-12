@@ -19,6 +19,7 @@ dependencies:
 2. **REFACTOR** Adjust src code storage structure.
 3. **FIX** Rethrow start error
 4. **FIX** Fix input types required multiple fields.
+5. **FIX** Fix relation count not arguments in include.
 
 # Prisma Dart client v4.0.0-alpha.3
 
