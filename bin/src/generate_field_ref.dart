@@ -19,7 +19,10 @@ extension GenerateFieldRef on Generator {
 
 extension on Generator {
   dmmf.FieldRefType findRef(String name) {
-    return options.dmmf.schema.fieldRefTypes.prisma
-        .firstWhere((element) => element.name == name);
+    return options.dmmf.schema.fieldRefTypes.prisma.firstWhere(
+      (element) => element.name == name,
+      orElse: () => throw ArgumentError(
+          'FieldRefType $name not found in namespace prisma.', name),
+    );
   }
 }

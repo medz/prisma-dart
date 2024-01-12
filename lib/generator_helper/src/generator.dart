@@ -14,8 +14,10 @@ class GeneratorApp {
 
   const GeneratorApp(this.server);
 
-  factory GeneratorApp.channel(
-      {required Stream<String> input, required StreamSink<String> output}) {
+  factory GeneratorApp.channel({
+    required Stream<String> input,
+    required StreamSink<String> output,
+  }) {
     return GeneratorApp(Server(StreamChannel<String>(input, output)));
   }
 

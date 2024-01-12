@@ -222,6 +222,9 @@ extension on Generator {
             (element) => element.name == 'Query' || element.name == 'Mutation')
         .map((e) => e.fields)
         .expand((element) => element)
-        .firstWhere((element) => element.name == action);
+        .firstWhere(
+          (element) => element.name == action,
+          orElse: () => throw Exception('Not found action $action in schema'),
+        );
   }
 }

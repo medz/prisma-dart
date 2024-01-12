@@ -150,6 +150,10 @@ extension on Generator {
       _ => throw Exception('Unknown namespace'),
     };
 
-    return outputs.firstWhere((element) => element.name == name);
+    return outputs.firstWhere(
+      (element) => element.name == name,
+      orElse: () => throw ArgumentError(
+          'OutputType $name not found in namespace ${namespace?.name}.', name),
+    );
   }
 }

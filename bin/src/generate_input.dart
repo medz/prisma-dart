@@ -98,6 +98,10 @@ extension on Generator {
       _ => const <dmmf.InputType>[],
     };
 
-    return types.firstWhere((e) => e.name == name);
+    return types.firstWhere(
+      (e) => e.name == name,
+      orElse: () => throw ArgumentError(
+          'InputType $name not found in namespace ${namespace?.name}.', name),
+    );
   }
 }

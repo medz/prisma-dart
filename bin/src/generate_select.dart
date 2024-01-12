@@ -139,11 +139,6 @@ extension on Generator {
   }
 
   Reference generateSelectType(dmmf.OutputField field, String outoutName) {
-    // if (!options.dmmf.datamodel.models
-    //     .map((e) => e.name)
-    //     .contains(field.outputType)) {
-    //   return refer('bool');
-    // }
     if (field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
       return generateTypeWithFieldArgs(field, outoutName);
     }
@@ -158,6 +153,12 @@ extension on Generator {
       _ => const <dmmf.OutputType>[],
     };
 
-    return types.firstWhere((element) => element.name == type.type);
+    return types.firstWhere(
+      (element) => element.name == type.type,
+      orElse: () => throw ArgumentError(
+        'Output type ${type.type} not found.',
+        type.type,
+      ),
+    );
   }
 }

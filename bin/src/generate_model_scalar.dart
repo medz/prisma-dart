@@ -15,8 +15,11 @@ extension GenerateModelScalar on Generator {
       return refer(name);
     }
 
-    final enum$ = options.dmmf.schema.enumTypes.prisma
-        .firstWhere((element) => element.name == enumName);
+    final enum$ = options.dmmf.schema.enumTypes.prisma.firstWhere(
+      (element) => element.name == enumName,
+      orElse: () => throw ArgumentError(
+          'EnumType $enumName not found in namespace prisma.', enumName),
+    );
     final model = findModel(modelName);
     final fields = model.fields.where((e) => enum$.values.contains(e.name));
 
@@ -69,7 +72,9 @@ extension GenerateModelScalar on Generator {
 extension on Generator {
   dmmf.Model findModel(String name) {
     return options.dmmf.datamodel.models.firstWhere(
-        (element) => element.name.toLowerCase() == name.toLowerCase());
+      (element) => element.name.toLowerCase() == name.toLowerCase(),
+      orElse: () => throw ArgumentError('Model $name not found.', name),
+    );
   }
 }
 

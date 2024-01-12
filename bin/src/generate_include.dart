@@ -92,6 +92,11 @@ extension on Generator {
       _ => const <dmmf.OutputType>[],
     };
 
-    return types.firstWhere((element) => element.name == type.type);
+    return types.firstWhere(
+      (element) => element.name == type.type,
+      orElse: () => throw ArgumentError(
+          'OutputType ${type.type} not found in namespace ${type.namespace}.',
+          type.type),
+    );
   }
 }

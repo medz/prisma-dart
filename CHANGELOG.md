@@ -1,3 +1,22 @@
+# Prisma Dart client v4.0.0-alpha.4
+
+To install Prisma Dart client v4.0.0-alpha.4 run:
+
+```sh
+dart pub add orm:4.0.0-alpha.4
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.0-alpha.4
+```
+
+## What's Changed
+
+1. **OPTIMIZATION** Prisma Dart client generator outputs more user-friendly error messages that help you know where the problem lies.
+
 # Prisma Dart client v4.0.0-alpha.3
 
 To install Prisma Dart client v4.0.0-alpha.3 run:

@@ -69,9 +69,13 @@ extension on Generator {
     final enums = switch (namespace) {
       dmmf.TypeNamespace.model => options.dmmf.schema.enumTypes.model,
       dmmf.TypeNamespace.prisma => options.dmmf.schema.enumTypes.prisma,
-      _ => throw Exception('Unknown namespace'),
+      _ => throw UnsupportedError('Unsupported namespace ${namespace?.name}.')
     };
 
-    return enums.firstWhere((element) => element.name == name);
+    return enums.firstWhere(
+      (element) => element.name == name,
+      orElse: () => throw ArgumentError(
+          'Enum $name not found in namespace ${namespace?.name}.', name),
+    );
   }
 }
