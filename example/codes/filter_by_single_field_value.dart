@@ -16,5 +16,15 @@ void main(List<String> args) {
     // #endregion snippet
 
     print(users);
+
+    // #region 1
+    await prisma.user.findMany(
+      where: UserWhereInput(
+        email: PrismaUnion.$1(
+          StringFilter(endsWith: PrismaUnion.$1('@odroe.com')),
+        ),
+      ),
+    );
+    // #endregion 1
   });
 }

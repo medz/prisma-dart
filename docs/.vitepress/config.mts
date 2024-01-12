@@ -68,6 +68,19 @@ export default defineConfig({
           { text: 'CRUD', link: '/client/crud' },
           { text: 'Select Fields', link: '/client/select-fields' },
           { text: 'Relation queries', link: '/client/relation-queries' },
+          {
+            text: 'Filtering and Sorting',
+            link: '/client/filtering-and-sorting',
+          },
+          { text: 'Pagination', link: '/client/pagination' },
+          {
+            text: 'Aggregation, grouping, and summarizing',
+            link: '/client/aggregation-grouping-summarizing',
+          },
+          {
+            text: 'Interactive transactions',
+            link: '/client/interactive-transactions',
+          },
         ],
       },
     ],

@@ -11,12 +11,16 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  role    Role     @default(USER)
-  posts   Post[]
-  Profile Profile?
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  name         String?
+  age          Int?
+  role         Role     @default(USER)
+  posts        Post[]
+  Profile      Profile?
+  country      String?
+  city         String?
+  profileViews Int      @default(0)
 }
 
 model Post {
@@ -29,6 +33,7 @@ model Post {
   categories Category[]
   views      Int        @default(0)
   likes      Int        @default(0)
+  tags       String[]   @default([])
 }
 
 model Profile {

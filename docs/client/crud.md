@@ -269,3 +269,13 @@ To resolve this error, you can:
         await prisma.user.deleteMany();
    });
    ```
+
+## Unserializable query values
+
+Prisma Client Dart supports the following unserializable query values:
+
+```dart
+final data = await prisma.user.findMany().unserialized();
+```
+
+**All models actions support `unserialized` method.**

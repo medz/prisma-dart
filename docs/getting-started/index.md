@@ -78,5 +78,5 @@ Or add the following to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm: ^4.0.0-alpha.3
+  orm: ^4.0.0-alpha.3 // [!code focus]
 ```
