@@ -16,6 +16,7 @@ dependencies:
 ## What's Changed
 
 1. **OPTIMIZATION** Prisma Dart client generator outputs more user-friendly error messages that help you know where the problem lies.
+2. **REFACTOR** Adjust src code storage structure.
 
 # Prisma Dart client v4.0.0-alpha.3
 

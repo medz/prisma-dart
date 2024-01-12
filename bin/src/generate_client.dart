@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:code_builder/code_builder.dart';
-import 'package:orm/dmmf/src/mappings.dart';
+import 'package:orm/src/dmmf/mappings.dart';
 
 import 'generate_delegate.dart';
 import 'generator.dart';

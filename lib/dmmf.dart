@@ -1,6 +1,6 @@
 library prisma.dmmf;
 
-export 'dmmf/src/dmmf.dart';
-export 'dmmf/src/datamodel.dart';
-export 'dmmf/src/mappings.dart';
-export 'dmmf/src/schema.dart';
+export 'src/dmmf/dmmf.dart';
+export 'src/dmmf/datamodel.dart';
+export 'src/dmmf/mappings.dart';
+export 'src/dmmf/schema.dart';

@@ -1,12 +1,11 @@
 import 'dart:convert';
 
-import 'package:orm/src/raw/_internal/raw_parameter_codec.dart';
-
-import '../../dmmf/src/datamodel.dart' show DataModel;
+import '../../dmmf/datamodel.dart' show DataModel;
 import '../engine.dart';
 import '../json_protocol/protocol.dart';
 import '../json_protocol/serialize.dart';
 import '../transaction/transaction_client.dart';
+import '_internal/raw_parameter_codec.dart';
 
 class RawClient<T> {
   final Engine _engine;

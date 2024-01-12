@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:collection';
 import 'dart:typed_data';
 
-import '../../../dmmf.dart' as dmmf;
+import '../../../../dmmf.dart' as dmmf;
 import '../json_convertible.dart';
 import '../prisma_enum.dart';
 import '../prisma_json.dart';
