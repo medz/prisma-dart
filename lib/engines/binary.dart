@@ -132,8 +132,7 @@ class BinaryEngine extends Engine {
           _endpoint = Uri(scheme: 'http', host: host, port: int.parse(port));
         }
       } catch (e) {
-        // TODO: log error
-        // print(message);
+        rethrow;
       }
     });
   }
