@@ -52,6 +52,22 @@ export default defineConfig({
       copyright: `Copyright © ${new Date().getFullYear()} Seven Du & Odroe, Inc.`,
     },
 
+    nav: [
+      {
+        text: 'Version',
+        items: [
+          {
+            text: 'v4.0.0-alpha.*',
+            link: '/',
+          },
+          {
+            text: 'v3.x',
+            link: 'https://prisma-dart-git-3x-herodeveloper.vercel.app/',
+          },
+        ],
+      },
+    ],
+
     sidebar: [
       {
         text: 'Getting Started',
