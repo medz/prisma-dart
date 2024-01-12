@@ -12,7 +12,7 @@ hero:
   actions:
     - theme: brand
       text: ⚡️ Get Started
-      link: /docs/getting-started
+      link: /getting-started/
     - theme: alt
       text: ♥︎ Sponsor
       link: https://github.com/sponsors/medz

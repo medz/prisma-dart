@@ -52,31 +52,22 @@ export default defineConfig({
       copyright: `Copyright © ${new Date().getFullYear()} Seven Du & Odroe, Inc.`,
     },
 
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [{ text: 'Docs', link: '/docs/' }],
-
-    sidebar: {
-      '/docs/': [
-        {
-          text: 'Introduction',
-          items: [
-            { text: "What's Prisma Dart client", link: '/docs/' },
-            { text: 'Why Using?', link: '/docs/why' },
-            { text: 'Installation', link: '/docs/installation' },
-            { text: 'Getting Started', link: '/docs/getting-started' },
-          ],
-        },
-      ],
-    },
-
-    // sidebar: [
-    //   {
-    //     text: 'Examples',
-    //     items: [
-    //       { text: 'Markdown Examples', link: '/markdown-examples' },
-    //       { text: 'Runtime API Examples', link: '/api-examples' },
-    //     ],
-    //   },
-    // ],
+    sidebar: [
+      {
+        text: 'Getting Started',
+        items: [
+          { text: 'Introduction', link: '/getting-started/' },
+          { text: 'Setup', link: '/getting-started/setup' },
+          { text: 'Schema', link: '/getting-started/schema' },
+        ],
+      },
+      {
+        text: 'Prisma Client',
+        items: [
+          { text: 'Introduction', link: '/client/' },
+          { text: 'CRUD', link: '/client/crud' },
+        ],
+      },
+    ],
   },
 });
