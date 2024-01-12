@@ -5,26 +5,19 @@ generator client {
   provider = "dart run orm"
 }
 
+generator dmmf {
+  provider = "dart run ../../tool/dmmf_generator.dart"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  posts     Post[]
-}
-
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model client_job {
+  id         Int      @id @default(autoincrement()) @map("_id")
+  client_id  Int
+  jobId      Int
+  createdAt  DateTime @default(now()) @map("created_at")
+  updated_at DateTime @default(now()) @updatedAt @map("updated_at")
 }

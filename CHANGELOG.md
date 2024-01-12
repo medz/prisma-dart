@@ -15,7 +15,8 @@ dependencies:
 
 ## What's Changed
 
-1. dump `webfetch` to `0.0.14` version.
+1. Dump `webfetch` to `0.0.14` version.
+2. Fixed using a model name with an underscore (`_`) in `schema.prisma` causing the generator to fail.
 
 # Prisma Dart client v4.0.0-alpha.2
 

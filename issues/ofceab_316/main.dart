@@ -3,9 +3,9 @@ import 'prisma/generated_dart_client/client.dart';
 void main(List<String> args) async {
   final prisma = PrismaClient();
   try {
-    final users = await prisma.user.findMany();
+    final jobs = await prisma.clientJob.findMany();
 
-    print(users);
+    print(jobs);
   } finally {
     await prisma.$disconnect();
   }

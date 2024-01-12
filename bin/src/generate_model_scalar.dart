@@ -9,8 +9,8 @@ import 'utils/scalars.dart';
 extension GenerateModelScalar on Generator {
   Reference generateModelScalar(String enumName) {
     final modelName =
-        enumName.substring(0, enumName.indexOf('ScalarFieldEnum')).className;
-    final name = '${modelName}Scalar';
+        enumName.substring(0, enumName.indexOf('ScalarFieldEnum'));
+    final name = '${modelName}Scalar'.className;
     if (generated.prisma.contains(name)) {
       return refer(name);
     }
