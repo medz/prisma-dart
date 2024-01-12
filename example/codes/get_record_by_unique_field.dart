@@ -2,15 +2,13 @@ import '../prisma.dart';
 import '../prisma/generated_dart_client/prisma.dart';
 
 void main(List<String> args) {
-  providePrisma((prisma) {
+  providePrisma((prisma) async {
     // #region snippet
-    final user = prisma.user.findUnique(
-      where: UserWhereUniqueInput(id: "ckqj7q2qo0000q7tq6z6z6z6z"),
+    final user = await prisma.user.findUnique(
+      where: UserWhereUniqueInput(email: "seven@odroe.com"),
     );
     // #endregion snippet
 
-    print({
-      "user": user,
-    });
+    print(user);
   });
 }

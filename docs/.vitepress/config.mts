@@ -66,6 +66,8 @@ export default defineConfig({
         items: [
           { text: 'Introduction', link: '/client/' },
           { text: 'CRUD', link: '/client/crud' },
+          { text: 'Select Fields', link: '/client/select-fields' },
+          { text: 'Relation queries', link: '/client/relation-queries' },
         ],
       },
     ],

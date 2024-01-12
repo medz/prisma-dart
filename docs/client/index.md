@@ -1,7 +1,3 @@
----
-title: Introduction | Prisma Dart
----
-
 # Introduction
 
 Prisma Dart client is an auto-generated and type-safe query builder for Dart.
