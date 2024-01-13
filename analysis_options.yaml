@@ -18,9 +18,9 @@ include: package:lints/recommended.yaml
 #   rules:
 #     non_constant_identifier_names: false
 
-# analyzer:
-# exclude:
-#   - path/to/excluded/files/**
+analyzer:
+  exclude:
+    - node_modules/*
 # language:
 #   non-constant-identifier-names: false
 
