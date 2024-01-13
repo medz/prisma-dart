@@ -49,7 +49,7 @@ abstract class Engine {
     required TransactionHeaders headers,
     int maxWait = 2000,
     int timeout = 5000,
-    IsolationLevel? isolationLevel,
+    TransactionIsolationLevel? isolationLevel,
   });
 
   /// Commits a transaction.

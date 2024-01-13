@@ -1,3 +1,14 @@
 import '../prisma_enum.dart';
 
-abstract interface class IsolationLevel implements PrismaEnum {}
+enum TransactionIsolationLevel implements PrismaEnum {
+  readUncommitted("ReadUncommitted"),
+  readCommitted("ReadCommitted"),
+  repeatableRead("RepeatableRead"),
+  snapshot("Snapshot"),
+  serializable("Serializable");
+
+  @override
+  final String name;
+
+  const TransactionIsolationLevel(this.name);
+}

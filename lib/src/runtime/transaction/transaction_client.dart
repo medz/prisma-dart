@@ -30,7 +30,7 @@ class TransactionClient<T> {
     TransactionHeaders? headers,
     int maxWait = 2000,
     int timeout = 5000,
-    IsolationLevel? isolationLevel,
+    TransactionIsolationLevel? isolationLevel,
   }) async {
     if (this.transaction?.id != null) {
       throw Exception('Cannot nest start transactions.');
@@ -94,7 +94,7 @@ class TransactionClient<T> {
     Future<R> Function(T client) fn, {
     int maxWait = 2000,
     int timeout = 5000,
-    IsolationLevel? isolationLevel,
+    TransactionIsolationLevel? isolationLevel,
   }) async {
     final client = await start(
       maxWait: maxWait,

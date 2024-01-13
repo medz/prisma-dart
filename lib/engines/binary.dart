@@ -221,7 +221,7 @@ class BinaryEngine extends Engine {
     required TransactionHeaders headers,
     int maxWait = 2000,
     int timeout = 5000,
-    IsolationLevel? isolationLevel,
+    TransactionIsolationLevel? isolationLevel,
   }) async {
     await start();
     final endpoint = await _serverEndpoint();
