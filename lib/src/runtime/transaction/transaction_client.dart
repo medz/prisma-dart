@@ -91,7 +91,7 @@ class TransactionClient<T> {
   /// });
   /// ```
   Future<R> call<R>(
-    Future<R> Function(T client) fn, {
+    Future<R> Function(T tx) fn, {
     int maxWait = 2000,
     int timeout = 5000,
     TransactionIsolationLevel? isolationLevel,

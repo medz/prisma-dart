@@ -78,24 +78,27 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Prisma Client',
+        text: 'Queries',
         items: [
-          { text: 'Introduction', link: '/client/' },
-          { text: 'CRUD', link: '/client/crud' },
-          { text: 'Select Fields', link: '/client/select-fields' },
-          { text: 'Relation queries', link: '/client/relation-queries' },
+          { text: 'CRUD', link: '/queries/crud' },
+          { text: 'Select Fields', link: '/queries/select-fields' },
+          { text: 'Relation queries', link: '/queries/relation-queries' },
           {
             text: 'Filtering and Sorting',
-            link: '/client/filtering-and-sorting',
+            link: '/queries/filtering-and-sorting',
           },
-          { text: 'Pagination', link: '/client/pagination' },
+          { text: 'Pagination', link: '/queries/pagination' },
           {
             text: 'Aggregation, grouping, and summarizing',
-            link: '/client/aggregation-grouping-summarizing',
+            link: '/queries/aggregation-grouping-summarizing',
           },
           {
-            text: 'Interactive transactions',
-            link: '/client/interactive-transactions',
+            text: 'Transactions',
+            link: '/queries/transactions',
+          },
+          {
+            text: 'Raw database access',
+            link: '/queries/raw-database-access',
           },
         ],
       },

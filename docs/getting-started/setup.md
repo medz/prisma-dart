@@ -1,10 +1,6 @@
----
-title: Setup
----
-
 # Setup
 
-安装 Prisma Dart Client 完成后，你需要在你的项目中创建一个 `prisma/schema.prisma` 文件，这个文件是 Prisma 的核心文件，它定义了你的数据模型和数据库连接。
+Install Prisma Dart Client, you need to create a `prisma/schema.prisma` file in your project. This file is the core file of Prisma, which defines your data model and database connection.
 
 ::: code-group
 
@@ -59,14 +55,14 @@ dev_dependencies: ...
 
 The `.env` file is used to store environment variables. It should look like this:
 
-```bash
+```txt
 # Environment variables declared in this file are automatically made available to Prisma.
 # See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
 
 # Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
 # See the documentation for all the connection string options: https://pris.ly/d/connection-strings
-
-DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public" // [!code focus]
+// [!code focus:2]
+DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
 ```
 
 ## Prisma schema file `prisma/schema.prisma`
@@ -86,3 +82,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 ```
+
+## Generating
+
+Generate the Prisma Dart client by running the following command:
+
+::: code-group
+
+```bash [NPM]
+npx prisma generate
+```
+
+```bash [pnpm]
+pnpx prisma generate
+```
+
+```bash [Bun.js]
+bun prisma generate
+```
+
+:::
+
+This will generate the Prisma Dart client in your defined `output` directory.
+
+> Default output directory is `prisma/generated_dart_client/`.
+
+The following files will be generated:
+
+- `client.dart` - The Prisma client implementation.
+- `model.dart` - Your Prisma schema models, views and enums.
+- `prisma.dart` - Auto-generated Prisma client types.
+
+## Instantiating Prisma Client
+
+You can instantiate the Prisma client by importing the generated `client.dart` file and calling the `PrismaClient` constructor:
+
+```dart
+import 'prisma/generated_dart_client/client.dart';
+// [!code focus:2]
+final prisma = PrismaClient();
+```
+
+## Recommended Usage
+
+If you are using it in a command line application or an application that does not have error interception and will exit the process if an exception is thrown, we recommend wrapping it with the following structure:
+
+```dart
+final prisma = PrismaClient();
+
+void main(List<String> args) async {
+    try { // [!code focus:7]
+        // Your code here
+    } catch (e) {
+        // Handle error here
+    } finally {
+        await prisma.$disconnect();
+    }
+}
+```
+
+::: tip Why need `try/catch` using `finally` wrapper?
+
+Currently, the Prisma Dart client only supports **binary engine**. When you execute the first query or call `prisma.$connect()`, the client will automatically start the engine process. When you call `prisma.$disconnect()`, the client will automatically close the engine process.
+
+If you don't wrap `try/catch` in your application, when your application throws an exception, the engine process will not be closed, which will cause the engine process to run until you manually close it in the process manager of the system.
+
+> Currently, I have not found a good way to automatically close the engine process. If you have any suggestions, please feel free to [issue](https://github.com/medz/prisma-dart/issues/new) or create a [PR](https://github.com/medz/prisma-dart/pulls) for it.
+
+:::
