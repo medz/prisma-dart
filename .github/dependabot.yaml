@@ -23,3 +23,11 @@ updates:
       interval: daily
     commit-message:
       prefix: 'build(deps)'
+
+  # example & docs examples parts
+  - package-ecosystem: pub
+    directory: example/
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: 'chore(example)'
