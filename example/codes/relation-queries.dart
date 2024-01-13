@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:orm/orm.dart';
 
 import '../prisma.dart';
@@ -397,7 +399,7 @@ void main(List<String> args) => providePrisma((prisma) async {
           ),
         ),
       );
-      // #region code16
+      // #endregion code16
 
       // #region code17
       await prisma.post.findMany(
