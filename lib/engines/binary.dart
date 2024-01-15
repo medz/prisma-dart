@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:retry/retry.dart';
 import 'package:webfetch/webfetch.dart' show fetch;
@@ -12,6 +13,7 @@ import '../orm.dart';
 class BinaryEngine extends Engine {
   Process? _process;
   Uri? _endpoint;
+  final logger = Logger('prisma.binary-engine');
 
   BinaryEngine({required super.schema, required super.datasources});
 
@@ -26,9 +28,13 @@ class BinaryEngine extends Engine {
 
     for (final directory in searchDirectories) {
       final file = File(join(directory, executable));
-      if (file.existsSync()) return file;
+      if (file.existsSync()) {
+        logger.info('Found query engine binary in ${file.path}');
+        return file;
+      }
     }
 
+    logger.severe('No query engine binary found in $searchDirectories');
     throw Exception(
         'No query engine binary found ($executable) in $searchDirectories');
   }
@@ -111,7 +117,10 @@ class BinaryEngine extends Engine {
         return true;
       }
 
-      throw Exception('Prisma binary query engine not ready');
+      final error = Exception('Prisma binary query engine not ready');
+      logger.severe('Prisma binary query engine not ready ($url)', error);
+
+      throw error;
     });
   }
 
@@ -131,7 +140,8 @@ class BinaryEngine extends Engine {
             }) {
           _endpoint = Uri(scheme: 'http', host: host, port: int.parse(port));
         }
-      } catch (e) {
+      } catch (e, s) {
+        logger.severe('Unable to parse message: $message', e, s);
         rethrow;
       }
     });
