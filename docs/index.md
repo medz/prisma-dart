@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: Prisma Dart Client
-  text: Next-generation Dart ORM
-  tagline: Prisma unlocks a new level of developer experience when working with databases thanks to its intuitive data model, automated migrations, type-safety & auto-completion.
+  name: Prisma Client Dart
+  text: Auto-generated type-safe ORM
+  tagline: It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Prisma Client JS/TS APIs
   image:
     src: /prisma-dart.logo.svg
     alt: Prisma Dart client logo

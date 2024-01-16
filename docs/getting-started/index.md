@@ -14,12 +14,12 @@ Prisma unlocks a new level of developer experience when working with databases t
 
 [Learn more about Prisma](https://www.prisma.io/)
 
-## What is Prisma Dart Client?
+## What is Prisma Client Dart?
 
-Prisma Dart Client is a Dart ORM that is published on [pub.dev](https://pub.dev/packages/orm) with the package name `orm`.
+Prisma Client Dart is a Dart ORM that is published on [pub.dev](https://pub.dev/packages/orm) with the package name `orm`.
 It uses [Prisma Engine](https://github.com/prisma/prisma-engines) as the data access layer and tries to keep the API as consistent as possible with [Prisma JS/TS Client](https://www.prisma.io/docs/orm/prisma-client).
 
-::: details Why Prisma Dart Client package name is `orm`?
+::: details Why Prisma Client Dart package name is `orm`?
 
 Because the package name `prisma` has been occupied, and the package has not been widely used and the author is no longer updating it.
 When we released Prisma Dart Client, we contacted the author of the `prisma` package, but did not get a reply.
@@ -28,7 +28,7 @@ When we released Prisma Dart Client, we contacted the author of the `prisma` pac
 
 ## Installation
 
-Install Prisma Dart Client is very simple, Prisma is a Node.js project, so it is not a one-step process. If you encounter any problems during the installation process, you can submit a discussion in [GitHub Discussions](https://github.com/medz/prisma-dart/discussions).
+Install Prisma Client Dart is very simple, Prisma is a Node.js project, so it is not a one-step process. If you encounter any problems during the installation process, you can submit a discussion in [GitHub Discussions](https://github.com/medz/prisma-dart/discussions).
 
 ### Prerequisites
 
@@ -66,7 +66,7 @@ bun add prisma
 
 > Prisma Official installation documentation can be found here 👉 [Prisma CLI install](https://www.prisma.io/docs/orm/tools/prisma-cli#installation)
 
-### Install `orm` (Prisma Dart Client)
+### Install `orm` (Prisma Client Dart)
 
 Please run the following command to install `orm`:
 

@@ -7,7 +7,7 @@ export default defineConfig({
   },
   title: 'Prisma Dart',
   description:
-    'Next-generation ORM for Dart & Flutter | PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB',
+    'Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Prisma Client JS/TS APIs.',
   lastUpdated: true,
   head: [
     [

@@ -1,12 +1,17 @@
-# Prisma ・ [![Pub Version](https://img.shields.io/pub/v/orm?label=latest)](https://pub.dev/packages/orm)[![GitHub license](https://img.shields.io/github/license/odroe/prisma-dart)](https://github.com/odroe/prisma-dart/blob/main/LICENSE)[![test](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/test.yaml)[![analyze](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml/badge.svg)](https://github.com/odroe/prisma-dart/actions/workflows/analyze.yaml)
+# Prisma Client Dart
 
-Prisma (for Dart) is a **next-generation ORM** for Dart and Flutter.
+[![Pub Version](https://img.shields.io/pub/v/orm?include_prereleases)](https://pub.dev/packages/orm)
+[![GitHub License](https://img.shields.io/github/license/medz/prisma-dart)](https://github.com/medz/prisma-dart/blob/main/LICENSE)
+[![Docs website](https://img.shields.io/badge/docs-prisma.pub-brightgreen)](https://prisma.pub/)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/medz?label=github%20sponsors)](https://github.com/sponsors/medz)
+[![Open Collective sponsors](https://img.shields.io/opencollective/sponsors/openodroe?label=open%20collective)](https://opencollective.com/openodroe)
+[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/shiweidu)
+](https://twitter.com/shiweidu)
+[![Discord](https://img.shields.io/discord/1035043284457881620?label=discord)](https://discord.gg/ms2X9TQMR8)
 
-- **Most Popular Databases**: Prisma supports PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and CockroachDB.
-- **Type-safe**: Prisma Client is a query builder that’s tailored to your schema. We designed its API to be intuitive, both for SQL veterans and developers brand new to databases. The auto-completion helps you figure out your query without the need for documentation.
-- **Human-readable**: Prisma schema is intuitive and lets you declare your database tables in a human-readable way — making your data modeling experience a delight. You define your models by hand or introspect them from an existing database.
+Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Prisma Client JS/TS APIs.
 
-👉 [Learn how to use Prisma ORM for Dart in your project](https://prisma.pub/docs/getting-started.html).
+👉 [Learn how to use Prisma ORM for Dart in your project](https://prisma.pub/).
 
 ## Instanciation
 
@@ -14,12 +19,12 @@ This will add a like this to you packages `pubspec.yaml` (and run an implicit `d
 
 ```yaml
 dependencies:
-  orm: latest
+  orm: 4.0.0-alpha.5
 ```
 
 ## Sponsors
 
-Prisma ORM for Dart is an [BSD-3 Clause licensed](LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring Odroe development](https://github.com/sponsors/odroe).
+Prisma Client Dart is an [BSD-3 Clause licensed](https://github.com/medz/prisma-dart/blob/main/LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring Seven(@medz)](https://github.com/sponsors/medz) or [Odroe](https://opencollective.com/openodroe) on GitHub.
 
 <p align="center">
   <a target="_blank" href="https://github.com/sponsors/odroe#sponsors">
@@ -29,15 +34,22 @@ Prisma ORM for Dart is an [BSD-3 Clause licensed](LICENSE) open source project w
 
 ## Documentation
 
-You can find the Prisma ORM for Dart [on the website](https://prisma.pub).
+You can find the Prisma Client Dart [on the website](https://prisma.pub).
 
 The documentation is divided into the following sections:
 
-- [Getting Started](https://prisma.pub/docs/getting-started.html)
-- [Configuration](https://prisma.pub/docs/configuration.html)
-- [Logging](https://prisma.pub/docs/logging.html)
-- [CRUD](https://prisma.pub/docs/crud.html)
-- [Fluent API](https://prisma.pub/docs/fluent-api.html)
+- [Getting Started](https://prisma.pub/getting-started/)
+  - [Setup & Configuration](https://prisma.pub/getting-started/setup.html)
+  - [Prisma Schema](https://prisma.pub/getting-started/schema.html)
+- Queries
+  - [CRUD](https://prisma.pub/queries/crud.html)
+  - [Select Fields](https://prisma.pub/queries/select-fields.html)
+  - [Relation queries](https://prisma.pub/queries/relation-queries.html)
+  - [Filtering and Sorting](https://prisma.pub/queries/filtering-and-sorting.html)
+  - [Pagination](https://prisma.pub/queries/pagination.html)
+  - [Aggregation, grouping, and summarizing](https://prisma.pub/queries/aggregation-grouping-summarizing.html)
+  - [Transactions](https://prisma.pub/queries/transactions.html)
+  - [Raw database access](https://prisma.pub/queries/raw-database-access.html)
 
 > You can improve it by sending pull requests to [`docs` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/docs).
 
@@ -53,8 +65,6 @@ You can also find them in the [`example` folder in the `main` branch](https://gi
 | Library    |     ✅      |    ❌    |       ✅       |     ❌      |
 | Data Proxy |     ✅      |    ✅    |       ✅       |     ✅      |
 
-> The `Library` engine has not been supported yet. If you are Rust developer, you can help us by contributing to the [Prisma Query Engine (C API)](https://github.com/odroe/prisma-query-c-api).
-
 ## Contributing
 
 We welcome contributions! Please read our [contributing guide](CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Prisma.
@@ -66,9 +76,3 @@ Thank you to all the people who already contributed to Odroe!
 ## Code of Conduct
 
 This project has adopted the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). For more information see the [Code of Conduct FAQ](https://www.contributor-covenant.org/faq) or contact [hello@odroe.com](mailto:hello@odroe.com) with any additional questions or comments.
-
-## Stay in touch
-
-- [Website](https://prisma.pub)
-- [Twitter](https://twitter.com/odroeinc)
-- [Discord](https://discord.gg/r27AjtUUbV)
