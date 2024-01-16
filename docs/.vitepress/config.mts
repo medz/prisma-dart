@@ -5,7 +5,7 @@ export default defineConfig({
   sitemap: {
     hostname: 'https://prisma.pub',
   },
-  title: 'Prisma Dart',
+  title: 'Prisma Client Dart',
   description:
     'Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Prisma Client JS/TS APIs.',
   lastUpdated: true,
