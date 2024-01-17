@@ -22,7 +22,7 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: 'build(deps)'
+      prefix: 'chore(deps)'
 
   # example & docs examples parts
   - package-ecosystem: pub
@@ -30,4 +30,12 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: 'chore(example)'
+      prefix: 'docs(deps)'
+
+  # example & docs vitepress
+  - package-ecosystem: npm
+    directory: docs/
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: 'docs(deps)'
