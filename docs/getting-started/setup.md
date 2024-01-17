@@ -46,7 +46,7 @@ Your project's `pubspec.yaml` file should look like this:
 name: your_project_name
 description: your_project_description
 dependencies:
-  orm: ^4.0.0-alpha.5 // [!code focus]
+  orm: ^4.0.0-beta // [!code focus]
   // ...
 dev_dependencies: ...
 ```

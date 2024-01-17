@@ -7,7 +7,7 @@ This page describes how to perform CRUD operations with your generated Prisma Cl
 - [Update](#update)
 - [Delete](#delete)
 
-Refer to the [Prisma Client reference documentation](../references/prisma-client-reference.md) for a complete list of all available methods.
+Refer to the [Client API Reference documentation](../references/client-api.md) for a complete list of all available methods.
 
 ## Example schema and provider
 

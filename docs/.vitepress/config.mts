@@ -57,7 +57,7 @@ export default defineConfig({
         text: 'Version',
         items: [
           {
-            text: 'v4.0.0-alpha.*',
+            text: 'v4.0.0',
             link: '/',
           },
           {
