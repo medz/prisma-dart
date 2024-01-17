@@ -102,6 +102,23 @@ export default defineConfig({
           },
         ],
       },
+      {
+        text: 'References',
+        items: [
+          {
+            text: 'Client Reference',
+            link: '/references/client-api',
+          },
+          {
+            text: 'Model Delegate Reference',
+            link: '/references/model-delegate',
+          },
+          {
+            text: 'package:orm Reference',
+            link: 'https://pub.dev/documentation/orm',
+          },
+        ],
+      },
     ],
   },
 });
