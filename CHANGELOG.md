@@ -1,3 +1,26 @@
+# Prisma Client Dart v4.0.0-beta
+
+To install Prisma Client Dart v4.0.0-beta run:
+
+```bash
+dart pub add orm:4.0.0-beta
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.0-beta
+```
+
+## What's Changed
+
+The **first Beta version is released**. This version is a major version. We will conduct a lot of testing on this version to ensure the stability of this version.
+In addition, there are no actual code updates in this version, the documentation brings updates to the API Reference:
+
+1. [Client API Reference](https://prisma.pub/references/client-api.html)
+2. [Model Delegate API Reference](https://prisma.pub/references/model-delegate.html)
+
 # Prisma Dart client v4.0.0-alpha.5
 
 To install Prisma Dart client v4.0.0-alpha.5 run:
