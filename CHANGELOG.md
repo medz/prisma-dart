@@ -1,3 +1,26 @@
+# Prisma Client Dart v4.0.0-beta.1
+
+To install Prisma Client Dart v4.0.0-beta.1 run:
+
+```bash
+dart pub add orm:4.0.0-beta.1
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.0-beta.1
+```
+
+## What's Changed
+
+- fix relations are throwing error when you use include, https://github.com/medz/prisma-dart/issues/324
+
+## Thanks
+
+@kidusdev
+
 # Prisma Client Dart v4.0.0-beta
 
 To install Prisma Client Dart v4.0.0-beta run:
