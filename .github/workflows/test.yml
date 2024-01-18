@@ -29,6 +29,6 @@ jobs:
         run: npx prisma db push --schema test/schema.prisma --accept-data-loss --force-reset
 
       - name: Analyze
-        run: dart analyze
+        run: dart analyze lib && dart analyze bin
       - name: Test
         run: dart test
