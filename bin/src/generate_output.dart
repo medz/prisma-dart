@@ -87,15 +87,22 @@ extension on Generator {
       type: field.outputType.type,
     ));
 
+    final fromJson = Method((builder) {
+      builder.lambda = true;
+      builder.requiredParameters.add(Parameter((builder) {
+        builder.name = 'json';
+      }));
+      builder.body = type.property('fromJson').call([refer('json')]).code;
+    });
+
     return refer('json')
         .index(literalString(field.name))
         .asA(TypeReference((type) {
           type.symbol = 'Iterable';
-          type.types.add(refer('Map'));
           type.isNullable = true;
         }))
         .nullSafeProperty('map')
-        .call([type.property('fromJson')]);
+        .call([fromJson.closure]);
   }
 
   Expression generateFromJsonEnumField(dmmf.OutputField field) {

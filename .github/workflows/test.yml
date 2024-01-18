@@ -1,0 +1,34 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install Node.js
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      # Install Dart SDK
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get && npm install
+
+      - name: Generate test client & create test db
+        run: npx prisma db push --schema test/schema.prisma --accept-data-loss --force-reset
+
+      - name: Analyze
+        run: dart analyze
+      - name: Test
+        run: dart test
