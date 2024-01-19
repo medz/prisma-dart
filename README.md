@@ -14,19 +14,29 @@ Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as 
 
 👉 [Learn how to use Prisma ORM for Dart in your project](https://prisma.pub/).
 
+```dart
+import 'package:orm/orm.dart';
+
+final client = PrismaClient();
+
+main() {
+  final users = await client.user.findMany();
+}
+```
+
 ## Installation
 
 This will add a like this to you packages `pubspec.yaml` (and run an implicit `dart pub get`):
 
 ```yaml
 dependencies:
-  orm: 4.0.0-beta
+  orm: 4.0.0-beta.1
 ```
 
 Or you can run the following command:
 
 ```bash
-dart pub add orm:4.0.0-beta
+dart pub add orm:4.0.0-beta.1
 ```
 
 ## Sponsors
