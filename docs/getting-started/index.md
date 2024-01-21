@@ -26,6 +26,12 @@ When we released Prisma Dart Client, we contacted the author of the `prisma` pac
 
 :::
 
+::: tip
+
+Prisma Client Dart is an open source project maintained by [Seven Du](https://github.com/medz). It allows you to use Prisma ORM in Dart. It is not directly related to [Prisma Data Inc.](https://prisma.io/), but it Is a member of the [Prisma ecosystem](https://www.prisma.io/ecosystem/). Thanks to the great open source community, thanks to the great Prisma ORM project.
+
+:::
+
 ## Installation
 
 Install Prisma Client Dart is very simple, Prisma is a Node.js project, so it is not a one-step process. If you encounter any problems during the installation process, you can submit a discussion in [GitHub Discussions](https://github.com/medz/prisma-dart/discussions).
