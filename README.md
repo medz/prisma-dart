@@ -25,9 +25,11 @@ main() {
 ```
 
 > [!TIP]
-> Prisma Client Dart is an open source project developed and maintained by [Seven Du](https://github.com/medz), which allows you to use Prisma ORM in the Dart language. Prisma ORM is the next generation of Node.js and TypeScript ORM. If your back-end project uses Node.js or Bun.js, it is highly recommended that you take a look👉 [Prisma ORM Official](https://prisma.io/)
+> Prisma Client Dart is an open source project developed and maintained by [Seven Du](https://github.com/medz), which allows you to use Prisma ORM in the Dart language. **Prisma is Next-generation Node.js and TypeScript ORM**.
 >
-> Of course There are other language implementations in the community 👉 [Prisma Ecosystem](https://www.prisma.io/ecosystem/).
+> If your back-end project uses Node.js or Bun.js, it is highly recommended that you take a look 👉 [Prisma ORM Official](https://prisma.io/)
+>
+> Other language implementations in community 👉 [Prisma Ecosystem](https://www.prisma.io/ecosystem/).
 
 ## Installation
 
