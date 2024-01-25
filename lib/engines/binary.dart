@@ -77,10 +77,10 @@ class BinaryEngine extends Engine {
     final process = await Process.start(
       path.join(
         '.',
-        path.relative(_executable.path, from: path.dirname(_executable.path)),
+        path.relative(_executable.path, from: path.current),
       ),
       arguments,
-      workingDirectory: path.dirname(_executable.path),
+      workingDirectory: path.current,
       includeParentEnvironment: true,
       environment: {
         'RUST_BACKTRACE': '1',
