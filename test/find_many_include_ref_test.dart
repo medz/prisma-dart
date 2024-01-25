@@ -13,7 +13,13 @@ void main() {
 
     // Clear database
     await client.user.deleteMany();
+  });
 
+  tearDownAll(() async {
+    await client.$disconnect();
+  });
+
+  test('findMany include list refer', () async {
     // Seed database
     await client.user.create(
       data: PrismaUnion.$2(
@@ -30,13 +36,7 @@ void main() {
         ),
       ),
     );
-  });
 
-  tearDownAll(() async {
-    await client.$disconnect();
-  });
-
-  test('findMany include list refer', () async {
     final users = await client.user.findMany(
       include: UserInclude(posts: PrismaUnion.$1(true)),
     );
