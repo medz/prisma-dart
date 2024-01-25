@@ -52,10 +52,11 @@ class BinaryEngine extends UniversalEngine implements Engine {
   Uri get endpoint => Uri.http(address.host).replace(port: port);
 
   /// Resolve the binary query engine executable path.
-  String get resolvedExecutable {
+  File get resolvedExecutable {
     // If executable exists, return it.
-    if (File(executable).existsSync()) {
-      return path.relative(executable);
+    final configured = File(executable);
+    if (configured.existsSync()) {
+      return configured;
     }
 
     final basename = path.basename(executable);
@@ -72,12 +73,12 @@ class BinaryEngine extends UniversalEngine implements Engine {
     for (final directory in searchDirectories) {
       final file = File(path.join(directory, basename));
       if (file.existsSync()) {
-        return path.relative(file.path);
+        return file;
       }
 
       final defaultFile = File(path.join(directory, 'prisma-query-engine'));
       if (defaultFile.existsSync()) {
-        return path.relative(defaultFile.path);
+        return defaultFile;
       }
     }
 
@@ -185,8 +186,12 @@ class BinaryEngine extends UniversalEngine implements Engine {
 
     // Create process.
     final process = await Process.start(
-      resolvedExecutable,
+      path.join(
+        '.',
+        path.relative(resolvedExecutable.path, from: path.current),
+      ),
       arguments,
+      workingDirectory: path.current,
       environment: environment,
       includeParentEnvironment: true,
       mode: ProcessStartMode.normal,
