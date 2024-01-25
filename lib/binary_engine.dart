@@ -55,7 +55,7 @@ class BinaryEngine extends UniversalEngine implements Engine {
   String get resolvedExecutable {
     // If executable exists, return it.
     if (File(executable).existsSync()) {
-      return executable;
+      return path.relative(executable);
     }
 
     final basename = path.basename(executable);
@@ -72,12 +72,12 @@ class BinaryEngine extends UniversalEngine implements Engine {
     for (final directory in searchDirectories) {
       final file = File(path.join(directory, basename));
       if (file.existsSync()) {
-        return file.path;
+        return path.relative(file.path);
       }
 
       final defaultFile = File(path.join(directory, 'prisma-query-engine'));
       if (defaultFile.existsSync()) {
-        return defaultFile.path;
+        return path.relative(defaultFile.path);
       }
     }
 

@@ -1,3 +1,22 @@
+## 3.4.7
+
+To install Prisma Dart client v3.4.7, run the following command:
+
+```bash
+dart pub add orm:3.4.7
+```
+
+To update Prisma Dart client v3.4.7, update the `orm` dependency in your `pubspec.yaml` file.
+
+```yaml
+dependencies:
+  orm: ^3.4.7
+```
+
+### What's Changed
+
+1. **Bug**: Permission issues that may be caused by using absolute paths are resolved to paths based on `pwd`.
+
 ## 3.4.6
 
 To install Prisma Dart client v3.4.6, run the following command:
