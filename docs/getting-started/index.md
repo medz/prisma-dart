@@ -77,12 +77,12 @@ bun add prisma
 Please run the following command to install `orm`:
 
 ```bash
-dart pub add orm:4.0.0-beta.1
+dart pub add orm:4.0.0-beta.2
 ```
 
 Or add the following to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm: ^4.0.0-beta.1 // [!code focus]
+  orm: ^4.0.0-beta.2 // [!code focus]
 ```

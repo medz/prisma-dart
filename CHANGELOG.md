@@ -1,3 +1,22 @@
+# Prisma Client Dart v4.0.0-beta.2
+
+To install Prisma Client Dart v4.0.0-beta.2 run:
+
+```bash
+dart pub add orm:4.0.0-beta.2
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.0-beta.2
+```
+
+## What's Changed
+
+1. **Bug**: Use relative paths to execute the engine.
+
 # Prisma Client Dart v4.0.0-beta.1
 
 To install Prisma Client Dart v4.0.0-beta.1 run:
