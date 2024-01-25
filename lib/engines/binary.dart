@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:logging/logging.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:retry/retry.dart';
 import 'package:webfetch/webfetch.dart' show fetch;
 import '../orm.dart';
@@ -22,12 +22,12 @@ class BinaryEngine extends Engine {
     final executable = 'prisma-query-engine';
     final searchDirectories = [
       Directory.current.path,
-      join(Directory.current.path, 'prisma'),
-      join(Directory.current.path, '.dart_tool'),
+      path.join(Directory.current.path, 'prisma'),
+      path.join(Directory.current.path, '.dart_tool'),
     ];
 
     for (final directory in searchDirectories) {
-      final file = File(join(directory, executable));
+      final file = File(path.join(directory, executable));
       if (file.existsSync()) {
         logger.info('Found query engine binary in ${file.path}');
         return file;
@@ -75,8 +75,12 @@ class BinaryEngine extends Engine {
     arguments.addAll(['--overwrite-datasources', _overwriteDatasources]);
 
     final process = await Process.start(
-      _executable.path,
+      path.join(
+        '.',
+        path.relative(_executable.path, from: path.dirname(_executable.path)),
+      ),
       arguments,
+      workingDirectory: path.dirname(_executable.path),
       includeParentEnvironment: true,
       environment: {
         'RUST_BACKTRACE': '1',
