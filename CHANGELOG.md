@@ -1,3 +1,27 @@
+# Prisma Client Dart v4.0.0-beta.3
+
+To install Prisma Client Dart v4.0.0-beta.3 run:
+
+```bash
+dart pub add orm:4.0.0-beta.3
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.0-beta.3
+```
+
+## What's Changed
+
+- **Bug**: Fixed list of enum not parsing correctly (https://github.com/medz/prisma-dart/issues/329)
+
+## Credits
+
+- @lucasvaudey
+- @NeroSong
+
 # Prisma Client Dart v4.0.0-beta.2
 
 To install Prisma Client Dart v4.0.0-beta.2 run:
