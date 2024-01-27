@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:orm/dmmf.dart' as dmmf;
 
+import 'generate_enum.dart';
 import 'generate_helpers.dart';
 import 'generate_type.dart';
 import 'generator.dart';
@@ -106,20 +107,47 @@ extension on Generator {
   }
 
   Expression generateFromJsonEnumField(dmmf.OutputField field) {
-    final value = refer('json').index(literalString(field.name));
-    final method = Method((builder) {
-      builder.lambda = true;
-      builder.requiredParameters.add(Parameter((builder) {
-        builder.name = 'e';
-      }));
-      builder.body = refer('e').property('name').equalTo(value).code;
-    });
-    final deserialize = generateType(field.outputType)
-        .property('values')
-        .property('firstWhere')
-        .call([method.closure]);
+    Method generateClosure(String parameterName, Expression value) {
+      return Method((builder) {
+        builder.lambda = true;
+        builder.requiredParameters.add(Parameter((builder) {
+          builder.name = parameterName;
+        }));
+        builder.body =
+            refer(parameterName).property('name').equalTo(value).code;
+      });
+    }
 
-    return value.notEqualTo(literalNull).conditional(deserialize, literalNull);
+    Expression firstWhereCall(Expression enum$, Expression closure) {
+      return enum$.property('values').property('firstWhere').call([closure]);
+    }
+
+    Expression makeReurns(Expression value, Expression when) {
+      return value.notEqualTo(literalNull).conditional(when, literalNull);
+    }
+
+    final enum$ =
+        generateEnum(field.outputType.type, field.outputType.namespace, false);
+    final value = refer('json').index(literalString(field.name));
+
+    if (field.outputType.isList) {
+      final wrapper = Method((builder) {
+        builder.lambda = true;
+        builder.requiredParameters.add(Parameter((builder) {
+          builder.name = 'child';
+        }));
+        builder.body =
+            firstWhereCall(enum$, generateClosure('e', refer('child')).closure)
+                .code;
+      });
+      final deserialize =
+          value.asA(refer('Iterable')).property('map').call([wrapper.closure]);
+
+      return makeReurns(value, deserialize);
+    }
+
+    return makeReurns(
+        value, firstWhereCall(enum$, generateClosure('e', value).closure));
   }
 
   Constructor generateDefaultConstructor(dmmf.OutputType output) {
