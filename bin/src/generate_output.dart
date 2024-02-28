@@ -5,6 +5,7 @@ import 'generate_enum.dart';
 import 'generate_helpers.dart';
 import 'generate_type.dart';
 import 'generator.dart';
+import 'utils/scalars.dart';
 import 'utils/dart_style_fixer.dart';
 import 'utils/reference.dart';
 
@@ -59,13 +60,25 @@ extension on Generator {
         dmmf.TypeLocation.enumTypes => generateFromJsonEnumField(field),
         dmmf.TypeLocation.outputObjectTypes =>
           generateFromJsonOutputField(field),
-        _ => refer('json').index(literalString(field.name)),
+        _ => generageOtherField(field),
       };
 
       fields[field.name.propertyName] = value;
     }
 
     return fields;
+  }
+
+  Expression generageOtherField(dmmf.OutputField field) {
+    final type = refer('json').index(literalString(field.name));
+    if (!field.outputType.isList) return type;
+
+    final when = type
+        .asA(refer('Iterable'))
+        .property('whereType')
+        .call([], {}, [field.outputType.type.scalar]);
+
+    return type.isA(refer('Iterable')).conditional(when, literalNull);
   }
 
   Expression generateFromJsonOutputField(dmmf.OutputField field) {

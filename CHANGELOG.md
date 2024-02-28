@@ -1,3 +1,22 @@
+# Priama Client Dart v4.0.0-beta.4
+
+To install Prisma Client Dart v4.0.0-beta.4 run:
+
+```bash
+dart pub add orm:4.0.0-beta.4
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.0-beta.4
+```
+
+## What's Changed
+
+- **Bug**: Fixed list of primitive type not parsing correctly (https://github.com/medz/prisma-dart/issue/331)
+
 # Prisma Client Dart v4.0.0-beta.3
 
 To install Prisma Client Dart v4.0.0-beta.3 run:
