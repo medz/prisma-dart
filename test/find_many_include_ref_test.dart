@@ -12,6 +12,7 @@ void main() {
     await client.$connect();
 
     // Clear database
+    await client.post.deleteMany();
     await client.user.deleteMany();
   });
 
