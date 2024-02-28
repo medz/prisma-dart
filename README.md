@@ -37,13 +37,13 @@ This will add a like this to you packages `pubspec.yaml` (and run an implicit `d
 
 ```yaml
 dependencies:
-  orm: 4.0.0-beta.3
+  orm: 4.0.0
 ```
 
 Or you can run the following command:
 
 ```bash
-dart pub add orm:4.0.0-beta.3
+dart pub add orm
 ```
 
 ## Sponsors
