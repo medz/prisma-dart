@@ -1,6 +1,6 @@
 # Priama Client Dart v4.0.0
 
-To install Prisma Client Dart v4.0.0-beta.4 run:
+To install Prisma Client Dart v4.0.0 run:
 
 ```bash
 dart pub add orm:4.0.0
