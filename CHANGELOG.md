@@ -1,3 +1,22 @@
+# Prisma Client Dart v4.0.1
+
+To install Prisma Client for Dart v4.0.1 run:
+
+```bash
+dart pub add orm:4.0.1
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.1
+```
+
+## What's Changed
+
+- **Bug**(Generator): Fixed duplicate enum field name is `name`.
+
 # Priama Client Dart v4.0.0
 
 To install Prisma Client Dart v4.0.0 run:

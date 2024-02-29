@@ -1,0 +1,18 @@
+name: i340
+description: A sample command-line application.
+version: 1.0.0
+publish_to: none
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.4.0-185.0.dev
+
+# Add regular dependencies here.
+dependencies:
+  orm:
+    path: ..
+  # path: ^1.8.0
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.24.0

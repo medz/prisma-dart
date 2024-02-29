@@ -7,6 +7,8 @@ import 'generator.dart';
 import 'utils/dart_style_fixer.dart';
 import 'utils/reference.dart';
 
+const _enumFieldNames = ['name'];
+
 extension GenerateEnum on Generator {
   Reference generateEnum(
       String name, dmmf.TypeNamespace? namespace, bool isList) {
@@ -37,6 +39,10 @@ extension GenerateEnum on Generator {
       for (final value in enum$.values) {
         builder.values.add(EnumValue((builder) {
           builder.name = value.propertyName;
+          if (_enumFieldNames.contains(builder.name)) {
+            builder.name = '${builder.name}\$';
+          }
+
           builder.constructorName = _defaultConstructor.name;
           builder.arguments.add(literalString(value));
         }));
