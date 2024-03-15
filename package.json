@@ -1,16 +1,13 @@
 {
   "private": true,
   "dependencies": {
-    "@prisma/client": "^5.7.1",
-    "prisma": "^5.7.1",
-    "vitepress": "^1.0.0-rc.35"
+    "@prisma/client": "^5.11.0",
+    "prisma": "^5.11.0",
+    "vitepress": "^1.0.0-rc.45"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
-  },
-  "workspaces": [
-    "example"
-  ]
+  }
 }

@@ -1,6 +1,0 @@
-{
-  "name": "prisma_datr_client_example",
-  "dependencies": {
-    "prisma": "^5.8.0"
-  }
-}
