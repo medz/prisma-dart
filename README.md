@@ -1,6 +1,5 @@
 # Prisma Client Dart
 
-[![Test](https://github.com/medz/prisma-dart/actions/workflows/test.yml/badge.svg)](https://github.com/medz/prisma-dart/actions/workflows/test.yml)
 [![Pub Version](https://img.shields.io/pub/v/orm?include_prereleases)](https://pub.dev/packages/orm)
 [![GitHub License](https://img.shields.io/github/license/medz/prisma-dart)](https://github.com/medz/prisma-dart/blob/main/LICENSE)
 [![Docs website](https://img.shields.io/badge/docs-prisma.pub-brightgreen)](https://prisma.pub/)
