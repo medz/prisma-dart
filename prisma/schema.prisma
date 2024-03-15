@@ -15,8 +15,8 @@ generator dmmf {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = "postgresql://seven@localhost:5432/prisma-dart"
+  provider = "mysql"
+  url      = "mysql://seven@localhost:5432/prisma-dart"
 }
 
 enum Role {

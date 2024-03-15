@@ -31,11 +31,3 @@ updates:
       interval: daily
     commit-message:
       prefix: 'docs(deps)'
-
-  # example & docs vitepress
-  - package-ecosystem: npm
-    directory: docs/
-    schedule:
-      interval: daily
-    commit-message:
-      prefix: 'docs(deps)'
