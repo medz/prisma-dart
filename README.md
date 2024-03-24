@@ -36,7 +36,7 @@ This will add a like this to you packages `pubspec.yaml` (and run an implicit `d
 
 ```yaml
 dependencies:
-  orm: 4.0.0
+  orm: latest
 ```
 
 Or you can run the following command:
