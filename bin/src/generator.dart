@@ -23,10 +23,6 @@ class Generator {
   Generator(this.options);
 
   Iterable<(String, Library)> generate() {
-    libraries.client.name = 'prisma.client';
-    libraries.prisma.name = 'prisma.namespace.prisma';
-    libraries.model.name = 'prisma.namespace.model';
-
     libraries.prisma.ignoreForFile.add('non_constant_identifier_names');
     libraries.client.body.add(generateClient());
 

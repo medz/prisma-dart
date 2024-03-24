@@ -31,6 +31,7 @@ extension GenerateOutput on Generator {
 
       builder.constructors.add(generateDefaultConstructor(output));
       builder.constructors.add(generateFromJsonConstructor(output));
+      builder.methods.add(generateToJsonMethod(output));
     }));
 
     return refer(name).namespace(namespace).list(isList);
@@ -38,6 +39,53 @@ extension GenerateOutput on Generator {
 }
 
 extension on Generator {
+  /// Generates a `toJson` method for the output type.
+  Method generateToJsonMethod(dmmf.OutputType output) {
+    Expression generateValueExpression(Expression value, dmmf.OutputField field,
+        [bool nullable = true]) {
+      if ((field.outputType.location == dmmf.TypeLocation.scalar &&
+              field.outputType.type == 'Json') ||
+          field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
+        final call = nullable
+            ? value.nullSafeProperty('toJson')
+            : value.property('toJson');
+
+        return call([]);
+      }
+
+      return value;
+    }
+
+    final entries = output.fields.map((e) {
+      Expression expression = refer(e.name.propertyName);
+
+      // If output type is a list, we need to map the list to a list of json
+      // objects.
+      if (e.outputType.isList) {
+        expression = expression.nullSafeProperty('map').call([
+          Method((builder) {
+            builder.lambda = true;
+            builder.requiredParameters.add(Parameter((builder) {
+              builder.name = 'e';
+            }));
+            builder.body = generateValueExpression(refer('e'), e, false).code;
+          }).closure
+        ]);
+      } else {
+        expression = generateValueExpression(expression, e);
+      }
+
+      return MapEntry(literalString(e.name), expression);
+    });
+
+    return Method((builder) {
+      builder.name = 'toJson';
+      builder.returns = refer('Map<String, dynamic>');
+      builder.lambda = true;
+      builder.body = literalMap(Map.fromEntries(entries)).code;
+    });
+  }
+
   Constructor generateFromJsonConstructor(dmmf.OutputType output) {
     return Constructor((builder) {
       builder.name = 'fromJson';
