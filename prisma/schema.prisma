@@ -6,41 +6,13 @@ generator dart_client {
   output   = "dart"
 }
 
-generator js_client {
-  provider = "prisma-client-js"
-}
-
-generator dmmf {
-  provider = "dart run tool/dmmf_generator.dart"
-}
-
 datasource db {
-  provider = "mysql"
-  url      = "mysql://seven@localhost:5432/prisma-dart"
-}
-
-enum Role {
-  user
-  owner
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  role      Role     @default(user)
-  price     Decimal
-  size      BigInt
-  bytes     Bytes
-  json      Json?
-  age       Int?
-  count     Float
-  createdAt DateTime @default(now())
-  posts     Post[]
-}
-
-model Post {
-  id     String @id @default(cuid())
-  title  String
-  author User   @relation(fields: [userId], references: [id])
-  userId Int
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  email String  @unique
+  name  String?
 }

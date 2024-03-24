@@ -100,9 +100,8 @@ extension on Generator {
   }
 
   Expression generateFactory(dmmf.OutputField field) {
-    final serialize = refer(field.outputType.type.className)
-        .namespace(field.outputType.namespace)
-        .property('fromJson');
+    final serialize =
+        generateType(field.outputType, isList: false).property('fromJson');
     final orThrow = field.name.endsWith('OrThrow');
 
     if (field.outputType.isList) {
