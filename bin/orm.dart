@@ -40,11 +40,14 @@ Future<void> generate(GeneratorOptions options) async {
       orderDirectives: true,
     );
     final source = library.accept(emitter);
-    final formated = formatter.format(source.toString());
+    // final formated = formatter.format(source.toString());
     final output = await File(join(options.generator.output!.value, filename))
         .autoCreate();
 
-    await output.writeAsString(formated);
+    // TODO: Bug in dart formatter, https://github.com/medz/prisma-dart/issues/344#issuecomment-2018074768
+    await output.writeAsString(source.toString());
+
+    // await output.writeAsString(formated);
   }
 
   // Copy prisma query engine.
