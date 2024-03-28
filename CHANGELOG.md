@@ -1,3 +1,22 @@
+# Prisma Client Dart v4.0.3
+
+To install Prisma Client for Dart v4.0.3 run:
+
+```bash
+dart pub add orm:4.0.3
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.3
+```
+
+## What's Changed
+
+- **Bug**: fix for `code_builder` not handling CRLF case
+
 # Prisma Client Dart v4.0.2
 
 To install Prisma Client for Dart v4.0.2 run:
