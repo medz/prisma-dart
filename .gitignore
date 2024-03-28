@@ -12,6 +12,7 @@ pubspec.lock
 example/prisma/*
 !example/prisma/schema.prisma
 prisma-query-*
+prisma/.env*
 
 # Prisma Engine (Rust)
 target/

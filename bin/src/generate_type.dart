@@ -10,17 +10,17 @@ import 'utils/reference.dart';
 import 'utils/scalars.dart';
 
 extension GenerateType on Generator {
-  Reference generateType(dmmf.TypeReference type) {
+  Reference generateType(dmmf.TypeReference type, {bool? isList}) {
     return switch (type.location) {
       dmmf.TypeLocation.inputObjectTypes =>
-        generateInput(type.type, type.namespace, type.isList),
+        generateInput(type.type, type.namespace, isList ?? type.isList),
       dmmf.TypeLocation.outputObjectTypes =>
-        generateOutput(type.type, type.namespace, type.isList),
+        generateOutput(type.type, type.namespace, isList ?? type.isList),
       dmmf.TypeLocation.enumTypes =>
-        generateEnum(type.type, type.namespace, type.isList),
+        generateEnum(type.type, type.namespace, isList ?? type.isList),
       dmmf.TypeLocation.fieldRefTypes =>
-        generateFieldRef(type.type).list(type.isList),
-      _ => generateScalar(type.type, type.isList),
+        generateFieldRef(type.type).list(isList ?? type.isList),
+      _ => generateScalar(type.type, isList ?? type.isList),
     };
   }
 }

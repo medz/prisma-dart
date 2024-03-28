@@ -1,3 +1,22 @@
+# Prisma Client Dart v4.0.2
+
+To install Prisma Client for Dart v4.0.2 run:
+
+```bash
+dart pub add orm:4.0.2
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.0.2
+```
+
+## What's Changed
+
+- **Bug**: Fixed the `Json` class not found in the generated code.
+
 # Prisma Client Dart v4.0.1
 
 To install Prisma Client for Dart v4.0.1 run:

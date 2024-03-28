@@ -1,20 +1,18 @@
-generator client {
-  provider        = "dart run orm"
-  output          = "../lib/src/prisma_client/"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator dart_client {
+  provider = "dart run orm"
+  output   = "dart"
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
-model Soggetto {
-  uuid                 String  @id @default(uuid())
-  ragioneSociale       String
-  iban                 String?
-  negozioPreferitoUuid String?
-  codiceFiscale        String? @unique
-  note                 String?
+model User {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  email String  @unique
+  name  String?
 }
