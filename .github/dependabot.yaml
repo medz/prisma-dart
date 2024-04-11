@@ -9,12 +9,12 @@ updates:
       prefix: 'ci(deps)'
 
   # Workspace
-  - package-ecosystem: npm
-    directory: /
-    schedule:
-      interval: daily
-    commit-message:
-      prefix: 'chore(deps)'
+  # - package-ecosystem: npm
+  #   directory: /
+  #   schedule:
+  #     interval: daily
+  #   commit-message:
+  #     prefix: 'chore(deps)'
 
   # `package:orm` Prisma Dart client
   - package-ecosystem: pub
