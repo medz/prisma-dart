@@ -85,7 +85,9 @@ extension on Generator {
             .assign(
               refer('BinaryEngine', 'package:orm/engines/binary.dart')
                   .newInstance([], {
-                'schema': literalString(options.schema),
+                'schema':
+                    // TODO: https://github.com/dart-lang/code_builder/issues/452
+                    literalString(options.schema.replaceAll('\r\n', '\n')),
                 'datasources': refer('datasources'),
               }),
             )
