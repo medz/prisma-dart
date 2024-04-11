@@ -215,7 +215,7 @@ Map<String, dynamic> _createExplicitSelection(
 
 Map<String, dynamic> _serializeArgumentsObject(_Context context, Map args) {
   if (args.containsKey(r'$type')) {
-    return {r'$type': 'Json', 'value': json.encode(args)};
+    return {r'$type': 'Raw', 'value': args};
   }
 
   return args.withoutNulls().map((key, value) {
