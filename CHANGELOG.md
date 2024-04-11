@@ -1,3 +1,22 @@
+# Prisma Client Dart v4.1.0
+
+To install Prisma Client for Dart v4.1.0 run:
+
+```bash
+dart pub add orm:4.1.0
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: 4.1.0
+```
+
+## What's Changed
+
+- data model add `toJson` method by @medz in https://github.com/medz/prisma-dart/pull/352
+
 # Prisma Client Dart v4.0.3
 
 To install Prisma Client for Dart v4.0.3 run:
