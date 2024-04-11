@@ -9,7 +9,7 @@
 ](https://twitter.com/shiweidu)
 [![Discord](https://img.shields.io/discord/1035043284457881620?label=discord)](https://discord.gg/ms2X9TQMR8)
 
-Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Prisma Client JS/TS APIs.
+Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Client JS/TS APIs.
 
 👉 [Learn how to use Prisma ORM for Dart in your project](https://prisma.pub/).
 
@@ -22,13 +22,6 @@ main() {
   final users = await client.user.findMany();
 }
 ```
-
-> [!TIP]
-> Prisma Client Dart is an open source project developed and maintained by [Seven Du](https://github.com/medz), which allows you to use Prisma ORM in the Dart language. **Prisma is Next-generation Node.js and TypeScript ORM**.
->
-> If your back-end project uses Node.js or Bun.js, it is highly recommended that you take a look 👉 [Prisma ORM Official](https://prisma.io/)
->
-> Other language implementations in community 👉 [Prisma Ecosystem](https://www.prisma.io/ecosystem/).
 
 ## Installation
 
