@@ -8,6 +8,7 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  ffi: ^2.1.2
   # path: ^1.8.0
 
 dev_dependencies:
