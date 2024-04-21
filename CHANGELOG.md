@@ -74,7 +74,7 @@ dependencies:
 
 - **Bug**(Generator): Fixed duplicate enum field name is `name`.
 
-# Priama Client Dart v4.0.0
+# Prisma Client Dart v4.0.0
 
 To install Prisma Client Dart v4.0.0 run:
 
