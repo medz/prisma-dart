@@ -119,6 +119,15 @@ export default defineConfig({
           },
         ],
       },
+      {
+        text: 'Deployment',
+        items: [
+          {
+            text: 'Docker',
+            link: '/deployment/docker'
+          }
+        ]
+      }
     ],
   },
 });
