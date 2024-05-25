@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - prisma_flutter (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - prisma_flutter (from `.symlinks/plugins/prisma_flutter/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  prisma_flutter:
+    :path: ".symlinks/plugins/prisma_flutter/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  prisma_flutter: 35eda9fef8161839ded76ca1998c12148936117d
+
+PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+
+COCOAPODS: 1.15.2

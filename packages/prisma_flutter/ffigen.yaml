@@ -1,0 +1,19 @@
+# Run with `dart run ffigen --config ffigen.yaml`.
+name: QueryEngineBindings
+description: |
+  Bindings for `src/prisma_flutter.h`.
+
+  Regenerate bindings with `dart run ffigen --config ffigen.yaml`.
+output: "lib/src/query_engine_bindings.dart"
+headers:
+  entry-points:
+    - "engines/android/query_engine.h"
+  include-directives:
+    - "engines/android/query_engine.h"
+preamble: |
+  // ignore_for_file: always_specify_types
+  // ignore_for_file: camel_case_types
+  // ignore_for_file: non_constant_identifier_names
+comments:
+  style: any
+  length: full
