@@ -30,6 +30,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final engine = LibraryEngine(schema: schema, datasources: {});
 
+    // final demo = dylib.lookup<NativeFunction<Int Function()>>("prisma_create");
+    // final a = demo.asFunction<int Function()>();
+
+    // final engine = LibraryEngine(schema: schema, datasources: {});
+
     print(engine);
 
     return MaterialApp(

@@ -16,21 +16,26 @@ class LibraryEngine extends Engine {
     idptr = _evalId.toString().toNativeUtf8().cast();
     _evalId++;
 
+    final env = {
+      ...Platform.environment,
+      'RUST_BACKTRACE': 1,
+    };
+
+    final datasourcesOverrides =
+        json.encode(datasources.isEmpty ? null : datasources).toNativeUtf8();
+
     final options = Struct.create<ConstructorOptions>()
       ..base_path = nullptr
       ..datamodel = schema.toNativeUtf8().cast()
-      ..datasource_overrides = json
-          .encode(datasources.entries
-              .map((e) => {'name': e.key, 'url': e.value})
-              .toList())
-          .toNativeUtf8()
-          .cast()
-      ..env = json.encode(Platform.environment).toNativeUtf8().cast()
+      ..datasource_overrides = datasourcesOverrides.cast()
+      ..env = json.encode(env).toNativeUtf8().cast()
       ..id = idptr
       ..ignore_env_var_errors = true
       ..native = Struct.create<ConstructorOptionsNative>();
-    final errptr = Pointer<Pointer<Char>>.fromAddress(0);
-    final status = _bindings.prisma_create(options, enginePtr, errptr);
+    final errptr = malloc<Char>();
+    final status = _bindings.prisma_create(options, enginePtr, errptr.cast());
+
+    print(status);
 
     if (status != _bindings.PRISMA_OK) {
       if (errptr == nullptr) {
@@ -40,17 +45,19 @@ class LibraryEngine extends Engine {
         throw StateError('Create Query engine fail');
       }
 
-      final message = errptr.value.cast<Utf8>().toDartString();
+      print(errptr.cast<Utf8>().toDartString());
 
-      malloc.free(errptr);
-      malloc.free(idptr);
+      // final message = errptr.value.cast<Utf8>().toDartString();
 
-      throw StateError('Failed to create prisma engine: $message');
+      // malloc.free(errptr);
+      // malloc.free(idptr);
+
+      // throw StateError('Failed to create prisma engine: $message');
     }
   }
 
   late final Pointer<Char> idptr;
-  final Pointer<Pointer<QueryEngine>> enginePtr = Pointer.fromAddress(0);
+  final enginePtr = malloc<Pointer<QueryEngine>>();
 
   @override
   Future<void> commitTransaction(
@@ -82,7 +89,7 @@ class LibraryEngine extends Engine {
   @override
   Future<void> start() async {
     final errptr = Pointer<Pointer<Char>>.fromAddress(0);
-    final status = _bindings.prisma_connect(enginePtr.value, idptr, errptr);
+    final status = _bindings.prisma_connect(enginePtr.cast(), idptr, errptr);
 
     if (status != _bindings.PRISMA_OK) {
       final message = errptr.value.cast<Utf8>().toDartString();
@@ -104,7 +111,7 @@ class LibraryEngine extends Engine {
 
   @override
   Future<void> stop() async {
-    final status = _bindings.prisma_disconnect(enginePtr.value, idptr);
+    final status = _bindings.prisma_disconnect(enginePtr.cast(), idptr);
     if (status != _bindings.PRISMA_OK) {
       throw StateError('Could not disconnect from prisma query engine');
     }

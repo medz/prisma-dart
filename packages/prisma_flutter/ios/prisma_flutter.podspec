@@ -10,10 +10,10 @@ Pod::Spec.new do |s|
 A new Flutter FFI plugin project.
                        DESC
   s.homepage         = 'https://odroe.dev'
-  s.license          = { :file => '../LICENSE' }
+  s.license          = { :type => 'BSD-3', :file => '../LICENSE' }
   s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
-  s.source           = { :path => '.' }
-  s.vendored_frameworks = '../engines/ios/QueryEngine.xcframework'
+  s.source           = { :git => 'https://github.com/medz/prisma-dart.git', :tag = s.version.to_s }
+  s.vendored_frameworks = 'QueryEngine.xcframework'
 
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
