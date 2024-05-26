@@ -12,7 +12,8 @@ A new Flutter FFI plugin project.
   s.homepage         = 'https://odroe.dev'
   s.license          = { :type => 'BSD-3', :file => '../LICENSE' }
   s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
-  s.source           = { :git => 'https://github.com/medz/prisma-dart.git', :tag = s.version.to_s }
+  s.source           = { :git => 'https://github.com/medz/prisma-dart.git', :tag => s.version.to_s }
+  s.source_files     = 'Classes/**/*'
   s.vendored_frameworks = 'QueryEngine.xcframework'
 
   s.dependency 'Flutter'

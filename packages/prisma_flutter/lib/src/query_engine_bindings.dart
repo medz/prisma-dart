@@ -268,6 +268,32 @@ class QueryEngineBindings {
           'prisma_destroy');
   late final _prisma_destroy =
       _prisma_destroyPtr.asFunction<int Function(ffi.Pointer<QueryEngine>)>();
+
+  int initialize_prisma_query_engine(
+    ConstructorOptions options,
+    ffi.Pointer<ffi.Pointer<QueryEngine>> qe_ptr,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> error_string_ptr,
+  ) {
+    return _initialize_prisma_query_engine(
+      options,
+      qe_ptr,
+      error_string_ptr,
+    );
+  }
+
+  late final _initialize_prisma_query_enginePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  ConstructorOptions,
+                  ffi.Pointer<ffi.Pointer<QueryEngine>>,
+                  ffi.Pointer<ffi.Pointer<ffi.Char>>)>>(
+      'initialize_prisma_query_engine');
+  late final _initialize_prisma_query_engine =
+      _initialize_prisma_query_enginePtr.asFunction<
+          int Function(
+              ConstructorOptions,
+              ffi.Pointer<ffi.Pointer<QueryEngine>>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 }
 
 final class QueryEngine extends ffi.Opaque {}

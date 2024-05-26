@@ -7,9 +7,9 @@ description: |
 output: "lib/src/query_engine_bindings.dart"
 headers:
   entry-points:
-    - "engines/android/query_engine.h"
+    - "src/prisma_flutter.h"
   include-directives:
-    - "engines/android/query_engine.h"
+    - "src/**"
 preamble: |
   // ignore_for_file: always_specify_types
   // ignore_for_file: camel_case_types

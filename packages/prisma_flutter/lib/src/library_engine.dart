@@ -33,7 +33,8 @@ class LibraryEngine extends Engine {
       ..ignore_env_var_errors = true
       ..native = Struct.create<ConstructorOptionsNative>();
     final errptr = malloc<Char>();
-    final status = _bindings.prisma_create(options, enginePtr, errptr.cast());
+    final status = _bindings.initialize_prisma_query_engine(
+        options, enginePtr, errptr.cast());
 
     print(status);
 
