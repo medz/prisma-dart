@@ -1,28 +1,72 @@
 #include "prisma_flutter.h"
 #include "query_engine.h"
 
-// A very short-lived native function.
-//
-// For very short-lived functions, it is fine to call them on the main isolate.
-// They will block the Dart execution while running the native function, so
-// only do this for native functions which are guaranteed to be short-lived.
-FFI_PLUGIN_EXPORT int sum(int a, int b) { return a + b; }
+/**
+    Create a new [QueryEngine]
 
-// A longer-lived native function, which occupies the thread calling it.
-//
-// Do not call these kind of native functions in the main isolate. They will
-// block Dart execution. This will cause dropped frames in Flutter applications.
-// Instead, call these native functions on a separate isolate.
-FFI_PLUGIN_EXPORT int sum_long_running(int a, int b) {
-  // Simulate work.
-#if _WIN32
-  Sleep(5000);
-#else
-  usleep(5000 * 1000);
-#endif
-  return a + b;
+    Returns a [Status] code.
+*/
+FFI_PLUGIN_EXPORT int create(struct ConstructorOptions options,
+                             struct QueryEngine **qePtr,
+                             char **errorStringPtr)
+{
+    return prisma_create(options, qePtr, errorStringPtr);
 }
 
-FFI_PLUGIN_EXPORT int demo() {
-    return PRISMA_OK;
+/**
+    Destroy a [QueryEngine]
+*/
+FFI_PLUGIN_EXPORT int destroy(struct QueryEngine *qe) {
+    return prisma_destroy(qe);
+}
+
+/** Start a [QueryEngine] */
+FFI_PLUGIN_EXPORT int start(struct QueryEngine *qe,
+                            const char *trace,
+                            char **errorStringPtr) {
+    return prisma_connect(qe, trace, errorStringPtr);
+}
+
+/** Stop a [QueryEngine] */
+FFI_PLUGIN_EXPORT int stop(struct QueryEngine *qe,
+                           const char *headerStr) {
+    return prisma_disconnect(qe, headerStr);
+}
+
+/** Apply migrations */
+FFI_PLUGIN_EXPORT int applyMigrations(struct QueryEngine *qe,
+                                      const char *migrationsPath,
+                                      char **errorStringPtr) {
+    return prisma_apply_pending_migrations(qe, migrationsPath, errorStringPtr);
+}
+
+/** Query a prisma request */
+FFI_PLUGIN_EXPORT const char *query(struct QueryEngine *qe,
+                                    const char *bodyStr,
+                                    const char *headerStr,
+                                    const char *txIdStr,
+                                    char **errorStringPtr){
+    return prisma_query(qe, bodyStr, headerStr, txIdStr, errorStringPtr);
+}
+
+/** Statr a transaction */
+FFI_PLUGIN_EXPORT const char *startTransaction(struct QueryEngine *qe,
+                                               const char *optionsStr,
+                                               const char *headerStr) {
+    return prisma_start_transaction(qe, optionsStr, headerStr);
+}
+
+/** Commit a transaction querys */
+FFI_PLUGIN_EXPORT const char *commitTransaction(struct QueryEngine *qe,
+                                                const char *txIdStr,
+                                                const char *headerStr)
+{
+    return prisma_commit_transaction(qe, txIdStr, headerStr);
+}
+/** Roolback a transaction */
+FFI_PLUGIN_EXPORT const char *rollbackTransaction(struct QueryEngine *qe,
+                                                  const char *txIdStr,
+                                                  const char *headerStr)
+{
+    return prisma_rollback_transaction(qe, txIdStr, headerStr);
 }

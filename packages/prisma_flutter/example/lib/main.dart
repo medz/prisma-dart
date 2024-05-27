@@ -1,78 +1,64 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:prisma_flutter/prisma_flutter.dart';
 
-import 'package:prisma_flutter/prisma_flutter.dart' as prisma_flutter;
+// ignore: implementation_imports
+// import 'package:prisma_flutter/src/query_engine_bindings.dart';
 
-void main() {
-  runApp(const MyApp());
+const schema = '''
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator dart_client {
+  provider = "dart run orm"
+  output   = "dart"
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
+datasource db {
+  provider = "sqlite"
+  url      = "file://prisma_flutter.example.db"
 }
 
-class _MyAppState extends State<MyApp> {
-  late int sumResult;
-  late Future<int> sumAsyncResult;
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+''';
 
-  @override
-  void initState() {
-    super.initState();
-    sumResult = prisma_flutter.sum(1, 2);
-    sumAsyncResult = prisma_flutter.sumAsync(3, 4);
-  }
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final demo = prisma_flutter.demo();
+    // final callback =
+    //     NativeCallable<Void Function(Pointer<Char>, Pointer<Char>)>.listener(
+    //         log);
 
-    print(demo);
+    // final options = Struct.create<ConstructorOptions>()
+    //   ..log_callback = callback.nativeFunction;
+    // final qePtr = malloc<Pointer<QueryEngine>>();
+    // final errPtr = malloc<Pointer<Char>>();
 
-    const textStyle = TextStyle(fontSize: 25);
-    const spacerSmall = SizedBox(height: 10);
+    // final status = demo.prisma_create(options, qePtr, errPtr);
+    // print(status);
+
+    final engine = QueryEngine(
+      schema: schema,
+      logCallback: (String id, String message) {
+        print('[$id]: $message');
+      },
+    );
+
+    print(engine);
+
     return MaterialApp(
+      title: "Prisma Flutter",
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Native Packages'),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                const Text(
-                  'This calls a native function through FFI that is shipped as source in the package. '
-                  'The native code is built as part of the Flutter Runner build.',
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                ),
-                spacerSmall,
-                Text(
-                  'sum(1, 2) = $sumResult',
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                ),
-                spacerSmall,
-                FutureBuilder<int>(
-                  future: sumAsyncResult,
-                  builder: (BuildContext context, AsyncSnapshot<int> value) {
-                    final displayValue =
-                        (value.hasData) ? value.data : 'loading';
-                    return Text(
-                      'await sumAsync(3, 4) = $displayValue',
-                      style: textStyle,
-                      textAlign: TextAlign.center,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
+        appBar: AppBar(title: const Text('Prisma Flutter')),
+        // body: Text(bindings.PRISMA_MISSING_POINTER.toString()),
       ),
     );
   }
 }
+
+void main() => runApp(const App());
