@@ -21,10 +21,11 @@ int _evalEngineId = 0;
 
 enum LogLevel { error, warn, info, debug, trace }
 
-class QueryEngine {
+class QueryEngine implements Finalizable {
   final Pointer<bindings.QueryEngine> _engine;
+  final void Function() _cleanup;
 
-  const QueryEngine._(this._engine);
+  const QueryEngine._(this._engine, this._cleanup);
 
   factory QueryEngine({
     required String schema,
@@ -87,5 +88,52 @@ class QueryEngine {
 
     cleanup();
     throw StateError('Unknown create query engine error.');
+  }
+
+  void destroy() {
+    final status = _bindingsInstance.destroy(_engine);
+    if (status != bindings.Status.ok) {
+      throw StateError('Destory engine fail.');
+    }
+  }
+
+  void start({String? trace}) {
+    final errorPtr = malloc<Pointer<Char>>();
+    final status = _bindingsInstance.start(
+        _engine, trace?.toNativeUtf8().cast() ?? nullptr, errorPtr);
+    if (status != bindings.Status.ok) {
+      if (status == bindings.Status.miss) {
+        malloc.free(errorPtr);
+        throw StateError('Start query engine fail.');
+      }
+
+      final message = errorPtr.value.cast<Utf8>().toDartString();
+      malloc.free(errorPtr);
+      throw StateError(message);
+    }
+
+    malloc.free(errorPtr);
+  }
+
+  void stop({String? header}) {
+    final status = _bindingsInstance.stop(
+        _engine, header?.toNativeUtf8().cast() ?? nullptr);
+    if (status != bindings.Status.ok) {
+      throw StateError('Could not stop from prisma query engine');
+    }
+  }
+
+  void applyMigrations({required String path}) {
+    final errorPtr = malloc<Pointer<Char>>();
+    final status = _bindingsInstance.applyMigrations(
+        _engine, path.toNativeUtf8().cast(), errorPtr);
+    if (status != bindings.Status.ok) {
+      final message = errorPtr.value.cast<Utf8>().toDartString();
+      malloc.free(errorPtr);
+
+      throw StateError(message);
+    }
+
+    malloc.free(errorPtr);
   }
 }
