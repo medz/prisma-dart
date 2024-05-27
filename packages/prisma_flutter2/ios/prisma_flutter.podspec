@@ -14,12 +14,16 @@ A new Flutter FFI plugin project.
   s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
   s.source           = { :path => '.' }
 
+  s.public_header_files = 'QueryEngine.xcframework/ios-arm64/Headers/query_engine.h'
+  s.vendored_libraries = 'QueryEngine.xcframework/ios-arm64/libquery_engine.a'
+
+  #s.preserve_paths = 'QueryEngine.xcframework'
+  #s.vendored_frameworks = 'QueryEngine.xcframework'
+
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
-
-  s.vendored_frameworks = 'QueryEngine.xcframework'
 end
