@@ -32,17 +32,17 @@ Prisma ORM for Dart allows you to integrate it in Flutter Project.
 
 You should first read the [Installation Documentation](./index.md#installation), and [Setup Prisma ORM](./setup.md) of the `orm` package.
 
-Now, let’s install the `prisma_flutter` package, you can use the command line:
+Now, let’s install the `orm_flutter` package, you can use the command line:
 
 ```bash
-flutter pub add prisma_flutter
+flutter pub add orm_flutter
 ```
 
 Or edit your Flutter project’s `pubspce.yaml` file:
 
 ```yaml
 dependencies:
-   prisma_flutter: latest
+   orm_flutter: latest
 ```
 
 ## Integration
@@ -142,7 +142,7 @@ We install the database in the `<Application Support Directory>/database.sqlite`
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:prisma_flutter/prisma_flutter.dart';
+import 'package:orm_flutter/orm_flutter.dart';
 
 import '_generated_prisma_client/client.dart';
 

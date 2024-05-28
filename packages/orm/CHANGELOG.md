@@ -13,6 +13,11 @@ dependencies:
   orm: ^4.2.0
 ```
 
+## What's Changed
+
+* feat(orm): Add `PrismaClient.use` factory.
+* chore(deps): update dependency `flutter_lints` to v4 by @renovate in https://github.com/medz/prisma-dart/pull/369
+
 # Prisma Dart v4.1.1
 
 To install Prisma Client for Dart v4.1.1 run:
