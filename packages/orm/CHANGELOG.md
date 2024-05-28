@@ -1,6 +1,6 @@
-# Prisma Client Dart v4.2.0
+# Prisma Dart v4.2.0
 
-To install Prisma Client for Dart v4.1.0 run:
+To install Prisma Client for Dart v4.2.0 run:
 
 ```bash
 dart pub add orm:4.2.0
@@ -10,8 +10,40 @@ Or update your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm: 4.1.0
+  orm: ^4.2.0
 ```
+
+# Prisma Dart v4.1.1
+
+To install Prisma Client for Dart v4.1.1 run:
+
+```bash
+dart pub add orm:4.1.1
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^4.1.1
+```
+
+## What's Changed
+
+* Fixed typo in Changelog | Priama -> Prisma by @saphalpdyl in https://github.com/medz/prisma-dart/pull/358
+* fix(deps): update dependency webfetch to ^0.0.16 by @renovate in https://github.com/medz/prisma-dart/pull/359
+* chore(deps): update dependency lints to v4 by @renovate in https://github.com/medz/prisma-dart/pull/362
+* feat: Added docs of running on Docker by @kerimamansaryyev in https://github.com/medz/prisma-dart/pull/363
+* fixes: #365; by @atharvapalaskar in https://github.com/medz/prisma-dart/pull/366
+
+## New Contributors
+
+* @saphalpdyl made their first contribution in https://github.com/medz/prisma-dart/pull/358
+* @renovate made their first contribution in https://github.com/medz/prisma-dart/pull/359
+* @kerimamansaryyev made their first contribution in https://github.com/medz/prisma-dart/pull/363
+* @atharvapalaskar made their first contribution in https://github.com/medz/prisma-dart/pull/366
+
+**Full Changelog**: https://github.com/medz/prisma-dart/compare/v4.1.0...orm-v4.1.1
 
 # Prisma Client Dart v4.1.0
 
