@@ -1,8 +1,0 @@
-docs/
-graphs/
-node_modules/
-packages/
-prisma/
-!prisma/schema.prisma
-target/
-prisma-query-engine
