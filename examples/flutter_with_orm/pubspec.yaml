@@ -72,7 +72,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - prisma/migrations/
-    - prisma/migrations/20240528080152_init/
+    - prisma/migrations/20240528135435_init/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
