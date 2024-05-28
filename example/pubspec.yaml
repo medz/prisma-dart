@@ -1,6 +1,6 @@
 name: prisma_dart_client_example
 description: Prisma Dart Client Example
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0
 repository: https://github.com/medz/prisma-dart
 homepage: https://github.com/medz/prisma-dart/tree/master/example
@@ -8,7 +8,7 @@ environment:
   sdk: ^3.2.0
 dependencies:
   orm:
-    path: ../
+    path: ../packages/orm
 dev_dependencies:
   lints: ^4.0.0
   test: ^1.24.8

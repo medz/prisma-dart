@@ -42,10 +42,11 @@ class App extends StatelessWidget {
     // final status = demo.prisma_create(options, qePtr, errPtr);
     // print(status);
 
-    final engine = QueryEngine(
+    final engine = PrismaFlutterEngine(
       schema: schema,
-      logCallback: (String id, String message) {
-        print('[$id]: $message');
+      datasources: {},
+      logCallback: (String message) {
+        print(message);
       },
     );
 

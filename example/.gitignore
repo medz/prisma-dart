@@ -1,3 +1,8 @@
-node_modules
+.dart_tool/
+node_modules/
+prisma/generated_*
+prisma-query-engine
+pubspec.lock
+
 # Keep environment variables out of version control
 .env
