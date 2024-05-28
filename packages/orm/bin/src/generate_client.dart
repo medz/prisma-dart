@@ -21,6 +21,7 @@ extension GenerateClient on Generator {
 
       builder.constructors.add(_defaultConstructor);
       builder.constructors.add(generatePublicFactory());
+      builder.constructors.add(generateUseFactory());
 
       for (final mapping in options.dmmf.mappings.modelOperations) {
         final method = generateModelOperation(mapping);
@@ -38,59 +39,34 @@ extension GenerateClient on Generator {
 }
 
 extension on Generator {
-  Constructor generatePublicFactory() {
+  Constructor generateUseFactory() {
     final datasource = Map.fromEntries(
       options.datasources
           .map((e) => {e.name: e.url.value})
           .expand((e) => e.entries),
     );
 
-    options.datasources.first.name;
-
     return Constructor((builder) {
       builder.factory = true;
+      builder.name = 'use';
 
-      builder.optionalParameters.add(Parameter((builder) {
-        builder.name = 'datasourceUrl';
-        builder.named = true;
-        builder.type = refer('String').nullable(true);
-      }));
-
-      builder.optionalParameters.add(Parameter((builder) {
-        builder.name = 'datasources';
-        builder.named = true;
-        builder.type = refer('Map<String, String>').nullable(true);
+      builder.requiredParameters.add(Parameter((builder) {
+        builder.name = 'factory';
+        builder.type = FunctionType((builder) {
+          builder.returnType = refer('Engine', 'package:orm/orm.dart');
+          builder.requiredParameters.add(refer('String schema'));
+          builder.requiredParameters
+              .add(refer('Map<String, String> datasources'));
+        });
       }));
 
       builder.body = Block.of([
-        refer('datasources').assignNullAware(literalMap(datasource)).statement,
-        Code('if (datasourceUrl != null) {'),
-        refer('datasources')
-            .assign(refer('datasources').property('map').call([
-              Method((builder) {
-                builder.requiredParameters.add(Parameter((builder) {
-                  builder.name = 'key';
-                }));
-                builder.requiredParameters.add(Parameter((builder) {
-                  builder.name = 'value';
-                }));
-                builder.lambda = true;
-                builder.body = refer('MapEntry')
-                    .newInstance([refer('key'), refer('datasourceUrl')]).code;
-              }).closure,
-            ]))
-            .statement,
-        Code('}'),
         declareFinal('engine')
-            .assign(
-              refer('BinaryEngine', 'package:orm/engines/binary.dart')
-                  .newInstance([], {
-                'schema':
-                    // TODO: https://github.com/dart-lang/code_builder/issues/452
-                    literalString(options.schema.replaceAll('\r\n', '\n')),
-                'datasources': refer('datasources'),
-              }),
-            )
+            .assign(refer('factory').call([
+              // TODO: https://github.com/dart-lang/code_builder/issues/452
+              literalString(options.schema.replaceAll('\r\n', '\n')),
+              literalConstMap(datasource)
+            ]))
             .statement,
         declareFinal('metrics')
             .assign(
@@ -131,6 +107,46 @@ extension on Generator {
             .returned
             .statement,
       ]);
+    });
+  }
+
+  Constructor generatePublicFactory() {
+    return Constructor((builder) {
+      builder.factory = true;
+
+      builder.optionalParameters.add(Parameter((builder) {
+        builder.name = 'datasourceUrl';
+        builder.named = true;
+        builder.type = refer('String').nullable(true);
+      }));
+
+      builder.optionalParameters.add(Parameter((builder) {
+        builder.name = 'datasources';
+        builder.named = true;
+        builder.type = refer('Map<String, String>').nullable(true);
+      }));
+
+      builder.body = refer('PrismaClient').property('use').call([
+        Method((builder) {
+          builder.requiredParameters.add(Parameter((p) => p.name = 'schema'));
+          builder.requiredParameters
+              .add(Parameter((p) => p.name = 'defaultDataSources'));
+
+          final engine =
+              refer('BinaryEngine', 'package:orm/engines/binary.dart')
+                  .newInstance([], {
+            'schema': refer('schema'),
+            'datasources': refer('datasourceOverrides'),
+          });
+
+          builder.body = Block.of([
+            Code(
+                'final datasourceOverrides = (datasources ?? defaultDataSources)'
+                '.map((k, v) => MapEntry(k, datasourceUrl ?? v));'),
+            engine.returned.statement,
+          ]);
+        }).closure
+      ]).code;
     });
   }
 
