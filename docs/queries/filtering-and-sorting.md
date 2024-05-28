@@ -14,19 +14,19 @@ The following query:
 - Returns all User fields
 - Includes all related Post records where `published` equals `true`
 
-<<< @/../example/codes/filtering_and_sorting.dart#1
+<<< @/../docs-example/codes/filtering_and_sorting.dart#1
 
 ### Filter on null fields
 
 The following query returns all posts whose `content` field is `null`:
 
-<<< @/../example/codes/filtering_and_sorting.dart#2
+<<< @/../docs-example/codes/filtering_and_sorting.dart#2
 
 Filter for non-null fields
 
 The following query returns all posts whose `content` field is not `null`:
 
-<<< @/../example/codes/filtering_and_sorting.dart#3
+<<< @/../docs-example/codes/filtering_and_sorting.dart#3
 
 ### Filter on relations
 
@@ -51,17 +51,17 @@ model Post {
 
 The one-to-many relation between User and Post allows you to query users based on their posts - for example, the following query returns all users where at least one post (`some`) has more than 10 views:
 
-<<< @/../example/codes/filtering_and_sorting.dart#4
+<<< @/../docs-example/codes/filtering_and_sorting.dart#4
 
 You can also query posts based on the properties of the author. For example, the following query returns all posts where the author's `email` contains `odroe.com`:
 
-<<< @/../example/codes/filtering_and_sorting.dart#5
+<<< @/../docs-example/codes/filtering_and_sorting.dart#5
 
 ### Filter on scalar lists / arrays
 
 Scalar lists (for example `String[]`) have a special set of filter conditions - for example, the following query returns all posts where the `tags` array contains `databases`:
 
-<<< @/../example/codes/filtering_and_sorting.dart#6
+<<< @/../docs-example/codes/filtering_and_sorting.dart#6
 
 ### Case-insensitive filtering
 
@@ -69,7 +69,7 @@ Case-insensitive filtering is available as a feature for the PostgreSQL and Mong
 
 To use case-insensitive filtering, add the `mode` property to a particular filter and specify `insensitive`:
 
-<<< @/../example/codes/filtering_and_sorting.dart#7
+<<< @/../docs-example/codes/filtering_and_sorting.dart#7
 
 More see 👉 [Case Insensitive](https://www.prisma.io/docs/orm/prisma-client/queries/case-sensitivity) official docs.
 
@@ -77,17 +77,17 @@ More see 👉 [Case Insensitive](https://www.prisma.io/docs/orm/prisma-client/qu
 
 Use `orderBy` to sort a list of records or a nested list of records by a particular field or set of fields. For example, the following query returns all User records sorted by role and name, and each user's posts sorted by title:
 
-<<< @/../example/codes/filtering_and_sorting.dart#8
+<<< @/../docs-example/codes/filtering_and_sorting.dart#8
 
 ### Sort by relation
 
 You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:
 
-<<< @/../example/codes/filtering_and_sorting.dart#9
+<<< @/../docs-example/codes/filtering_and_sorting.dart#9
 
 ### Sort by relation aggregate value
 
 you can sort by the **count of related records**,
 For example, the following query sorts users by the number of related posts:
 
-<<< @/../example/codes/filtering_and_sorting.dart#10
+<<< @/../docs-example/codes/filtering_and_sorting.dart#10

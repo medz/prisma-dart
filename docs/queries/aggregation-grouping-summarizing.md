@@ -6,7 +6,7 @@ Prisma Dart Client allows you to count records, aggregate number fields, and sel
 
 Prisma Dart Client allows you to `aggregate` on the **number** fields (such as `Int` and `Float`) of a model. The following query returns the average age of all users:
 
-<<< @/../example/codes/aggregate.dart#1
+<<< @/../docs-example/codes/aggregate.dart#1
 
 You can combine aggregation with filtering and ordering. For example, the following query returns the average age of users:
 
@@ -14,7 +14,7 @@ You can combine aggregation with filtering and ordering. For example, the follow
 - Where `email` contains `hello`
 - Limited to the 10 users
 
-<<< @/../example/codes/aggregate.dart#2
+<<< @/../docs-example/codes/aggregate.dart#2
 
 ### Aggregate values are nullable
 
@@ -23,7 +23,7 @@ This excludes `$count` which always returns 0 if no records are found.
 
 Consider the following query, where `age` is nullable in the schema:
 
-<<< @/../example/codes/aggregate.dart#3
+<<< @/../docs-example/codes/aggregate.dart#3
 
 The query returns `{ _avg: { age: null } }` in either of the following scenarios:
 
@@ -38,11 +38,11 @@ Prisma Datr client `groupBy` allows you to **group records** by one or more fiel
 
 The following example groups all users by the `country` field and returns the total number of profile views for each country:
 
-<<< @/../example/codes/aggregate.dart#4
+<<< @/../docs-example/codes/aggregate.dart#4
 
 If you have a single element in the by option, you can use the following shorthand syntax to express your query:
 
-<<< @/../example/codes/aggregate.dart#5
+<<< @/../docs-example/codes/aggregate.dart#5
 
 ### `groupBy` and filtering
 
@@ -53,13 +53,13 @@ If you have a single element in the by option, you can use the following shortha
 Use `where` to filter all records **before grouping**.
 The following example groups users by country and sums profile views, but only includes users where the email address contains `test`:
 
-<<< @/../example/codes/aggregate.dart#6
+<<< @/../docs-example/codes/aggregate.dart#6
 
 #### Filter groups with `having`
 
 Use `having` to filter entire groups by an aggregate value such as the sum or average of a field, not individual records - for example, only return groups where the average profileViews is greater than 100:
 
-<<< @/../example/codes/aggregate.dart#7
+<<< @/../docs-example/codes/aggregate.dart#7
 
 ### `groupBy` and ordering
 
@@ -73,10 +73,10 @@ The following constraints apply when you combine `groupBy` and `orderBy`:
 
 The following example sorts each `city` group by the number of users in that group (largest group first):
 
-<<< @/../example/codes/aggregate.dart#8
+<<< @/../docs-example/codes/aggregate.dart#8
 
 #### Order by field
 
 The following query orders groups by country, skips the first two groups, and returns the 3rd and 4th group:
 
-<<< @/../example/codes/aggregate.dart#9
+<<< @/../docs-example/codes/aggregate.dart#9

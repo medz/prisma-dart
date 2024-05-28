@@ -16,19 +16,19 @@ All examples are based on the following Prisma schema:
 
 ::: details Expand to view the schema (`schema.prisma`)
 
-<<< @/../example/prisma/schema.prisma
+<<< @/../docs-example/prisma/schema.prisma
 
 :::
 
 ::: details Expand to view the provider (`prisma.dart`)
-<<< @/../example/prisma.dart
+<<< @/../docs-example/prisma.dart
 :::
 
 ## Return the default selection set
 
 The following query returns the default selection set (all scalar fields, no relations):
 
-<<< @/../example/codes/get_record_by_id.dart#snippet
+<<< @/../docs-example/codes/get_record_by_id.dart#snippet
 
 ::: details Expand to view the result
 
@@ -47,7 +47,7 @@ The following query returns the default selection set (all scalar fields, no rel
 
 Use `select` to return a limited subset of fields instead of all fields. The following example returns the `email` and `name` fields only:
 
-<<< @/../example/codes/select_subset_of_fields.dart#snippet
+<<< @/../docs-example/codes/select_subset_of_fields.dart#snippet
 
 ::: details Expand to view the result
 
@@ -64,7 +64,7 @@ Use `select` to return a limited subset of fields instead of all fields. The fol
 
 Use `include` to return a subset of relation fields. The following example returns the `name` field of the `User` record, and the `title` field of the `Post` relation:
 
-<<< @/../example/codes/include_relation_fields.dart#snippet
+<<< @/../docs-example/codes/include_relation_fields.dart#snippet
 
 ::: details Expand to view the result
 
@@ -86,7 +86,7 @@ Use `include` to return a subset of relation fields. The following example retur
 
 The following query uses select within an `include`, and returns all user fields and each post's `title` field:
 
-<<< @/../example/codes/include_relation_fields_with_select.dart#snippet
+<<< @/../docs-example/codes/include_relation_fields_with_select.dart#snippet
 
 ::: details Expand to view the result
 
