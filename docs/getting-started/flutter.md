@@ -187,19 +187,19 @@ The generator will generate references to all engines by default, but usually yo
 
 ```prisma [schema.prisma]
 generator client {
-   provider = "dart run orm"
+   provider   = "dart run orm"
+   engineType = "flutter" // [!code focus]
 }
 
 datasource db {
    provider = "sqlite"
-   url = "file:./db.sqlite"
-   engineType = "flutter" // [!code focus]
+   url      = "file:./db.sqlite"
 }
 ```
 
 :::
 
-When you configure `engineType` in `datasource` to `flutter`, the binary engine will no longer be referenced.
+When you configure `engineType` in `generator` to `flutter`, the binary engine will no longer be referenced.
 
 ## Example App
 
