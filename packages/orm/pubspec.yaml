@@ -6,7 +6,6 @@ repository: https://github.com/medz/prisma-dart
 funding:
   - https://github.com/sponsors/medz
   - https://opencollective.com/openodroe
-  - https://www.patreon.com/user?u=80114587
 
 environment:
   sdk: ^3.2.0

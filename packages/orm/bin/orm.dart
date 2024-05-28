@@ -7,6 +7,7 @@ import 'package:orm/version.dart';
 import 'package:path/path.dart';
 
 import 'src/generator.dart';
+import 'src/utils/is_flutter_engine_type.dart';
 
 void main() async {
   final app = GeneratorApp.stdio(stdin: stdin, stdout: stderr);
@@ -17,11 +18,16 @@ void main() async {
 }
 
 Future<GeneratorManifest> manifest(GeneratorConfig config) async {
+  final engines = switch (isFlutterEngineType(config.config)) {
+    true => null,
+    _ => const [EngineType.queryEngine]
+  };
+
   return GeneratorManifest(
     prettyName: 'Prisma Dart Client',
     defaultOutput: 'generated_dart_client',
     version: 'v$version',
-    requiresEngines: [EngineType.queryEngine],
+    requiresEngines: engines,
   );
 }
 

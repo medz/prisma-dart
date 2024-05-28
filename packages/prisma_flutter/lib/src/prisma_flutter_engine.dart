@@ -3,7 +3,10 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+import 'package:path/path.dart' as path_utils;
+import 'package:flutter/services.dart';
 import 'package:orm/orm.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'query_engine_bindings.dart';
 
@@ -31,7 +34,6 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
   factory PrismaFlutterEngine(
       {required String schema,
       required Map<String, String> datasources,
-      String? basePath,
       LogLevel logLevel = LogLevel.info,
       bool logQueries = false,
       void Function(String message)? logCallback,
@@ -57,7 +59,7 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
     final options = Struct.create<ConstructorOptions>()
       ..id = currentEngindId.toNativeUtf8().cast()
       ..datamodel = schema.toNativeUtf8().cast()
-      ..base_path = basePath?.toNativeUtf8().cast() ?? nullptr
+      ..base_path = nullptr
       ..log_level = logLevel.name.toNativeUtf8().cast()
       ..log_queries = logQueries
       ..log_callback = logNativeCallable.nativeFunction
@@ -107,7 +109,8 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
   @override
   Future<void> start() async {
     final errorPtr = malloc<Pointer<Char>>();
-    final status = _bindingsInstance.start(_qe, nullptr, errorPtr);
+    final status =
+        _bindingsInstance.start(_qe, '00'.toNativeUtf8().cast(), errorPtr);
     if (status != Status.ok) {
       if (status == Status.miss) {
         malloc.free(errorPtr);
@@ -130,10 +133,46 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
     }
   }
 
-  void applyMigrations({required String path}) {
+  Future<void> applyMigrations(
+      {required String path, AssetBundle? bundle}) async {
+    final resoolvedPath = path_utils.normalize(path);
+    final resolvedBundle = bundle ?? rootBundle;
+    final assetManifest =
+        await AssetManifest.loadFromAssetBundle(resolvedBundle);
+    final lock =
+        assetManifest.getAssetVariants('$resoolvedPath/migration_lock.toml');
+    if (lock?.isEmpty == true) {
+      throw ArgumentError(
+          'Path($resoolvedPath) is not a Prisma migrations directory');
+    }
+
+    final temporary = await getTemporaryDirectory();
+    final mark = (DateTime.timestamp().millisecondsSinceEpoch ~/ 1000);
+    final migrationTempDir = await temporary.createTemp('prisma_${mark}_');
+
+    for (final asset in assetManifest.listAssets()) {
+      if (!asset.startsWith(resoolvedPath)) {
+        continue;
+      }
+
+      final basename = asset.substring(resoolvedPath.length);
+      final file = File(
+        path_utils.normalize(path_utils.join(
+          migrationTempDir.path,
+          basename.startsWith('/') ? '.$basename' : basename,
+        )),
+      );
+      if (!await file.exists()) {
+        await file.create(recursive: true);
+      }
+
+      final bytes = await resolvedBundle.load(asset);
+      await file.writeAsBytes(bytes.buffer.asUint8List());
+    }
+
     final errorPtr = malloc<Pointer<Char>>();
     final status = _bindingsInstance.applyMigrations(
-        _qe, path.toNativeUtf8().cast(), errorPtr);
+        _qe, migrationTempDir.path.toNativeUtf8().cast(), errorPtr);
     if (status != Status.ok) {
       final message = errorPtr.value.cast<Utf8>().toDartString();
       malloc.free(errorPtr);
@@ -201,7 +240,7 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
 
   @override
   Future<Map> request(JsonQuery query,
-      {TransactionHeaders? headers, Transaction? transaction}) {
+      {TransactionHeaders? headers, Transaction? transaction}) async {
     final Pointer<Char> body =
         json.encode(query.toJson()).toNativeUtf8().cast();
     final Pointer<Char> trace =
@@ -211,8 +250,8 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
 
     final response = _bindingsInstance.query(_qe, body, trace, txId, errPtr);
 
-    if (response == nullptr || errPtr != nullptr) {
-      if (errPtr == nullptr) {
+    if (response == nullptr || errPtr.value != nullptr) {
+      if (errPtr.value == nullptr) {
         malloc.free(errPtr);
         throw StateError('Prisma engine did not request.');
       }

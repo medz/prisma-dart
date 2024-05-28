@@ -5,6 +5,7 @@ import 'package:orm/src/dmmf/mappings.dart';
 
 import 'generate_delegate.dart';
 import 'generator.dart';
+import 'utils/is_flutter_engine_type.dart';
 import 'utils/dart_style_fixer.dart';
 import 'utils/reference.dart';
 
@@ -20,8 +21,11 @@ extension GenerateClient on Generator {
       builder.methods.add(_disconnectMethod);
 
       builder.constructors.add(_defaultConstructor);
-      builder.constructors.add(generatePublicFactory());
       builder.constructors.add(generateUseFactory());
+
+      if (!isFlutterEngineType(options.generator.config)) {
+        builder.constructors.add(generatePublicFactory());
+      }
 
       for (final mapping in options.dmmf.mappings.modelOperations) {
         final method = generateModelOperation(mapping);
