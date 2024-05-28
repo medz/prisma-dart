@@ -42,9 +42,10 @@ Install Prisma Client Dart is very simple, Prisma is a Node.js project, so it is
 - [Prisma CLI](https://www.prisma.io) `>=5.7`
 - [Node.js](https://nodejs.org/en/) `>=16.13`, See [Prisma CLI Prerequisites](https://www.prisma.io/docs/orm/reference/system-requirements) for more information.
 
-### Install Node.js
+### Install [Bun.js](https://bun.sh/)/[Node.js](https://node.org)
 
-Node.js provides official [installation programs](https://nodejs.org/en/download/) for most platforms.
+- [Node.js](https://node.org) provides official [installation programs](https://nodejs.org/en/download/) for most platforms.
+- [Bun.js](https://bun.sh/), See Bun.js [Installation](https://bun.sh/docs/installation) docs.
 
 ### Install Prisma CLI
 
@@ -56,16 +57,16 @@ Please run the following command to install Prisma CLI:
 
 ::: code-group
 
+```bash [Bun.js]
+bun add prisma
+```
+
 ```bash [NPM]
 npm install prisma
 ```
 
 ```bash [pnpm]
 pnpm add prisma
-```
-
-```bash [Bun.js]
-bun add prisma
 ```
 
 :::
@@ -77,12 +78,16 @@ bun add prisma
 Please run the following command to install `orm`:
 
 ```bash
-dart pub add orm:4.1.0
+# Dart project 👇
+dart pub add orm
+
+# Flutter project 👇
+flutter pub add orm
 ```
 
 Or add the following to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm: ^4.1.0 // [!code focus]
+  orm: latest // [!code focus]
 ```

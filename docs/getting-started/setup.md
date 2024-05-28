@@ -4,16 +4,16 @@ Install Prisma Dart Client, you need to create a `prisma/schema.prisma` file in 
 
 ::: code-group
 
+```bash [Bun.js]
+bun prisma init --generator-provider="dart run orm"
+```
+
 ```bash [NPM]
 npx prisma init --generator-provider="dart run orm"
 ```
 
 ```bash [pnpm]
 pnpx prisma init --generator-provider="dart run orm"
-```
-
-```bash [Bun.js]
-bun prisma init --generator-provider="dart run orm"
 ```
 
 :::
@@ -46,7 +46,7 @@ Your project's `pubspec.yaml` file should look like this:
 name: your_project_name
 description: your_project_description
 dependencies:
-  orm: ^4.0.0-beta // [!code focus]
+  orm: latest // [!code focus]
   // ...
 dev_dependencies: ...
 ```
@@ -89,16 +89,16 @@ Generate the Prisma Dart client by running the following command:
 
 ::: code-group
 
+```bash [Bun.js]
+bun prisma init --generator-provider="dart run orm"
+```
+
 ```bash [NPM]
 npx prisma generate
 ```
 
 ```bash [pnpm]
 pnpx prisma generate
-```
-
-```bash [Bun.js]
-bun prisma generate
 ```
 
 :::

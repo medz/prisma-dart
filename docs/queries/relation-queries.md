@@ -13,29 +13,29 @@ Nested reads allow you to read related data from multiple tables in your databas
 
 The following example returns a single user and that user's posts:
 
-<<< @/../example/codes/nested_read.dart#snippet
+<<< @/../docs-example/codes/nested_read.dart#snippet
 
 ### Include all fields for a specific relation
 
 The following example returns a post and its author:
 
-<<< @/../example/codes/post_with_author.dart#snippet
+<<< @/../docs-example/codes/post_with_author.dart#snippet
 
 ### Include deeply nested relations
 
 You can nest `include` options to include relations of relations. The following example returns a user's posts, and each post's categories:
 
-<<< @/../example/codes/user_with_posts_with_categories.dart#snippet
+<<< @/../docs-example/codes/user_with_posts_with_categories.dart#snippet
 
 ### Select specific relation fields
 
 You can use a nested `select` to choose a subset of relation fields to return. For example, the following query returns the user's `name` and the `title` of each related post:
 
-<<< @/../example/codes/user_with_posts_title.dart#snippet
+<<< @/../docs-example/codes/user_with_posts_title.dart#snippet
 
 You can also nest a `select` inside an `include` - the following example returns all User fields and the `title` field of each post:
 
-<<< @/../example/codes/user_with_posts_title.dart#select-only-nested-posts-title
+<<< @/../docs-example/codes/user_with_posts_title.dart#select-only-nested-posts-title
 
 Note that you **cannot** use `select` and `include` on the same level. This means that if you choose to `include` a user's post and `select` each post's `title`, you cannot select only the user's `email`:
 
@@ -56,13 +56,13 @@ final user = await prisma.user.findFirst(
 
 Instead, use nested select options:
 
-<<< @/../example/codes/user_with_posts_title.dart#snippet
+<<< @/../docs-example/codes/user_with_posts_title.dart#snippet
 
 ## Relation count
 
 you can [`include` or `select` a count of relations](./aggregation-grouping-summarizing#count-relations) alongside fields - for example, to return a user for example, a user's post count:
 
-<<< @/../example/codes/relation-queries.dart#relation-count
+<<< @/../docs-example/codes/relation-queries.dart#relation-count
 
 ## Filter a list of relations
 
@@ -70,11 +70,11 @@ When you use `select` or `include` to return a subset of the related data, you c
 
 For example, the following query returns all users and a list of titles of the unpublished posts associated with each user:
 
-<<< @/../example/codes/relation-queries.dart#filter-list-of-relations
+<<< @/../docs-example/codes/relation-queries.dart#filter-list-of-relations
 
 You can also write the same query using `include` as follows:
 
-<<< @/../example/codes/relation-queries.dart#filter-list-of-relations-include
+<<< @/../docs-example/codes/relation-queries.dart#filter-list-of-relations-include
 
 ## Nested writes
 
@@ -90,7 +90,7 @@ Nested writes:
 
 You can create a record and one or more related records at the same time. The following query creates a User record and two related Post records:
 
-<<< @/../example/codes/relation-queries.dart#create-a-related-record
+<<< @/../docs-example/codes/relation-queries.dart#create-a-related-record
 
 ### Create a single record and multiple related records
 
@@ -118,7 +118,7 @@ The following query uses nested `create` to create:
 
 The example uses a nested `include` include all posts and post categories:
 
-<<< @/../example/codes/relation-queries.dart#code1
+<<< @/../docs-example/codes/relation-queries.dart#code1
 
 The following query uses a nested `createMany` to create:
 
@@ -127,7 +127,7 @@ The following query uses a nested `createMany` to create:
 
 The example uses a nested `include` to include all posts:
 
-<<< @/../example/codes/relation-queries.dart#code2
+<<< @/../docs-example/codes/relation-queries.dart#code2
 
 > **NOTE**: It is **not possible** to nest an additional `create` or `createMany` inside the highlighted query, which means that you cannot create a user, posts, and post categories at the same time.
 
@@ -135,13 +135,13 @@ The example uses a nested `include` to include all posts:
 
 You cannot access relations in a `createMany` query, which means that you cannot create multiple users and multiple posts in a single nested write. The following is **not possible**:
 
-<<< @/../example/codes/relation-queries.dart#code3
+<<< @/../docs-example/codes/relation-queries.dart#code3
 
 ### Connect multiple records
 
 The following query creates (`create`) a new `User` record and connects that record (`connect`) to three existing posts:
 
-<<< @/../example/codes/relation-queries.dart#code4
+<<< @/../docs-example/codes/relation-queries.dart#code4
 
 ::: info
 
@@ -158,7 +158,7 @@ connect: [{ id: 1 }, { id: 2 }, { id: 3 }]
 You can `connect` an existing record to a new or existing user.
 The following query connects an existing post (`id: 11`) to an existing user (`id: 9`)
 
-<<< @/../example/codes/relation-queries.dart#code5
+<<< @/../docs-example/codes/relation-queries.dart#code5
 
 ### Connect or create a record
 
@@ -167,46 +167,46 @@ If a related record may or may not already exist, use `connectOrCreate` to conne
 > Connect a User with the email address viola@prisma.io or
 > Create a new User with the email address viola@prisma.io if the user does not already exist
 
-<<< @/../example/codes/relation-queries.dart#code6
+<<< @/../docs-example/codes/relation-queries.dart#code6
 
 ### Disconnect a related record
 
 To `disconnect` one out of a list of records (for example, a specific blog post) provide the ID or unique identifier of the record(s) to disconnect:
 
-<<< @/../example/codes/relation-queries.dart#code7
+<<< @/../docs-example/codes/relation-queries.dart#code7
 
 To `disconnect` one record (for example, a post's author), use `disconnect: PrismaUnion.$1(true)`:
 
-<<< @/../example/codes/relation-queries.dart#code8
+<<< @/../docs-example/codes/relation-queries.dart#code8
 
 ### Disconnect all related records
 
 To `disconnect` all related records in a one-to-many relation (a user has many posts),
 `set` the relation to an empty list as shown:
 
-<<< @/../example/codes/relation-queries.dart#code9
+<<< @/../docs-example/codes/relation-queries.dart#code9
 
 ### Delete all related records
 
 Delete all related `Post` records for a specific `User`:
 
-<<< @/../example/codes/relation-queries.dart#code10
+<<< @/../docs-example/codes/relation-queries.dart#code10
 
 ### Delete specific related records
 
 Update a user by deleting all unpublished posts:
 
-<<< @/../example/codes/relation-queries.dart#code11
+<<< @/../docs-example/codes/relation-queries.dart#code11
 
 Update a user by deleting specific posts:
 
-<<< @/../example/codes/relation-queries.dart#code12
+<<< @/../docs-example/codes/relation-queries.dart#code12
 
 ### Update all related records (or filter)
 
 You can use a nested `updateMany` to update all related records for a particular user. The following query unpublishes all posts for a specific user:
 
-<<< @/../example/codes/relation-queries.dart#code13
+<<< @/../docs-example/codes/relation-queries.dart#code13
 
 ## Relation filters
 
@@ -227,7 +227,7 @@ For example, the following query returns User that meet the following criteria:
 - No posts with more than 100 views
 - All posts have less than, or equal to 50 likes
 
-<<< @/../example/codes/relation-queries.dart#code14
+<<< @/../docs-example/codes/relation-queries.dart#code14
 
 ### Filter on "-to-one" relations
 
@@ -238,22 +238,22 @@ For example, the following query returns all posts that meet the following crite
 - Author's name is not Bob
 - Author is older than 40
 
-<<< @/../example/codes/relation-queries.dart#code15
+<<< @/../docs-example/codes/relation-queries.dart#code15
 
 ### Filter on absence of "-to-many" records
 
 For example, the following query uses `none` return all users that have zero posts:
 
-<<< @/../example/codes/relation-queries.dart#code16
+<<< @/../docs-example/codes/relation-queries.dart#code16
 
 ### Filter on absence of "-to-one" relations
 
 The following query returns all posts that don't have an author relation:
 
-<<< @/../example/codes/relation-queries.dart#code17
+<<< @/../docs-example/codes/relation-queries.dart#code17
 
 ### Filter on presence of related records
 
 The following query returns all users with at least one post:
 
-<<< @/../example/codes/relation-queries.dart#code18
+<<< @/../docs-example/codes/relation-queries.dart#code18

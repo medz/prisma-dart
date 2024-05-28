@@ -8,7 +8,7 @@ Database transactions are a series of read/write operations that are guaranteed 
 
 Use the `$transaction` method to execute a closure within a transaction. If any of the operations within the closure fail, the entire transaction will be rolled back:
 
-<<< @/../example/transactions.dart#interactive
+<<< @/../docs-example/transactions.dart#interactive
 
 In the example above, you can try passing invalid data to `transfer` as any exception thrown will cause the transaction to be rolled back without affecting the data.
 
@@ -16,13 +16,13 @@ In the example above, you can try passing invalid data to `transfer` as any exce
 
 You may sometimes want to catch exceptions or errors within a transaction. You can do so using a `try/catch` statement:
 
-<<< @/../example/transactions.dart#catch
+<<< @/../docs-example/transactions.dart#catch
 
 ## Isolation Levels
 
 Prisma Dart client transactions support isolation levels (if the database supports them). By default, transactions use the database's default isolation level. To change the isolation level, use the `isolationLevel` parameter:
 
-<<< @/../example/transactions.dart#isolation
+<<< @/../docs-example/transactions.dart#isolation
 
 Supported database isolation level matrix:
 
@@ -65,7 +65,7 @@ When you use interactive transactions, in order to avoid long waiting times, you
 - `maxWait` - The maximum time the client waits for a transaction from the database, default `2` seconds
 - `timeout` - The maximum time an interactive transaction can run before being canceled or rolled back, default `5` seconds
 
-<<< @/../example/transactions.dart#timeout
+<<< @/../docs-example/transactions.dart#timeout
 
 ::: warning
 
@@ -77,6 +77,6 @@ You should use the timeout parameter with caution, keeping a transaction open fo
 
 Prisma Dart Client supports manual transactions, which means you can perform any number of operations within a transaction and then decide whether to commit or rollback the transaction.
 
-<<< @/../example/transactions.dart#manual
+<<< @/../docs-example/transactions.dart#manual
 
 Using `$transaction.start()` will return a new `PrismaClient` instance. All operations within the transaction should be performed on this instance. When you decide to commit or rollback the transaction, call `$transaction.commit()` or `$transaction.rollback()`.

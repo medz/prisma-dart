@@ -14,10 +14,10 @@ Before containerizing the project some prerequisites are suggested.
    (discussed later), a database at the hard-coded `DATABASE_URL` might not be accessible by the query engine. For example, if
     you set a custom hostname for your database container. Create `.env` in the root of your application and add it
    as a rule to `.gitignore`. This `.env` is needed to generate the classes for your application while running on your local machine:
-   
+
    ```env
    DATABASE_URL = "YOUR DATABASE URL TO USE ON LOCAL MACHINE"
-   ```   
+   ```
 
    Import it to the schema as:
     ```prisma
@@ -40,15 +40,15 @@ Before containerizing the project some prerequisites are suggested.
    /lib/src/prisma/generated
    ```
 
-## Setup `DockerFile`
-Create `DockerFile` in the root of your application.
+## Setup `Dockerfile`
+Create `Dockerfile` in the root of your application.
 ```dockerfile
 FROM dart:stable AS build
 
 # Download npm to work with prisma within the build phase involving Dart
 # We need it within "build" buildphase since the prisma cli needs Dart to be installed too to run "dart run orm"
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
-    apt-get install -y nodejs 
+    apt-get install -y nodejs
 
 # Setting up the working directory of the container
 WORKDIR /app
@@ -92,7 +92,7 @@ RUN FILES="libz.so libgcc_s.so libssl.so libcrypto.so"; \
     mkdir -p "/runtime${dir}"; \
     cp "$so" "/runtime$so"; \
     echo "Copied $so to /runtime${so}"; \
-    done 
+    done
 
 FROM scratch
 

@@ -1,0 +1,18 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider   = "dart run orm"
+  output     = "../lib/_generated_prisma_client"
+  engineType = "flutter"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./db.sqlite"
+}
+
+model User {
+  id   Int    @id @default(autoincrement())
+  name String
+}
