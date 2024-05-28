@@ -179,6 +179,28 @@ Future<void> main() async {
 
 :::
 
+## Platform specific engines
+
+The generator will generate references to all engines by default, but usually you will not use other engines. If you only want to use the Flutter integration engine, you should configure the engine type in the Prisma schema:
+
+::: code-group
+
+```prisma [schema.prisma]
+generator client {
+   provider = "dart run orm"
+}
+
+datasource db {
+   provider = "sqlite"
+   url = "file:./db.sqlite"
+   engineType = "flutter" // [!code focus]
+}
+```
+
+:::
+
+When you configure `engineType` in `datasource` to `flutter`, the binary engine will no longer be referenced.
+
 ## Example App
 
 We provide you with a demo App that integrates Prisma ORM in Flutter 👉 [Flutter with ORM](https://github.com/medz/prisma-dart/tree/main/examples/flutter_with_orm)
