@@ -43,6 +43,7 @@ extension on Generator {
   Method generateToJsonMethod(dmmf.OutputType output) {
     Expression generateValueExpression(Expression value, dmmf.OutputField field,
         [bool nullable = true]) {
+
       if ((field.outputType.location == dmmf.TypeLocation.scalar &&
               field.outputType.type == 'Json') ||
           field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
@@ -51,6 +52,18 @@ extension on Generator {
             : value.property('toJson');
 
         return call([]);
+      }
+      else if(field.outputType.location == dmmf.TypeLocation.scalar &&
+              field.outputType.type == 'DateTime') {
+        final call = nullable
+            ? value.nullSafeProperty('toIso8601String')
+            : value.property('toIso8601String');
+        return call([]);
+      }
+      else if(field.outputType.location == dmmf.TypeLocation.enumTypes) {
+        return nullable
+            ? value.nullSafeProperty('name')
+            : value.property('name'); 
       }
 
       return value;
