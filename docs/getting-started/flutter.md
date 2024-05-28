@@ -118,12 +118,12 @@ await engine.applyMigrations(
 > In addition to using `flutter.assets`, you can customize `AssetBundle` to achieve:
 > ```dart
 > await engine.applyMigrations(
-> path: '<Your migration dir prefix>',
-> bundle: <You custon bundle>,
+>   path: '<Your migration dir prefix>',
+>   bundle: <You custon bundle>,
 > );
 > ```
 >
-> **Also, `engine.applyMigrations` may throw exceptions. This is usually caused by your destructive changes to the migration files, and you should handle this yourself. The most common method is to delete the database file after throwing the exception, and then rerun the migration. **
+> **Also, `engine.applyMigrations` may throw exceptions. This is usually caused by your destructive changes to the migration files, and you should handle this yourself. The most common method is to delete the database file after throwing the exception, and then rerun the migration.**
 >
 > If you are adding a new migration, there will be almost no problems.
 
