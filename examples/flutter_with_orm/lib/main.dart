@@ -65,6 +65,10 @@ class _HomeState extends State<Home> {
                   return ListTile(
                     title: Text('User ID: ${user.id}'),
                     subtitle: Text('Username: ${user.name}'),
+                    trailing: IconButton(
+                      onPressed: () => onDelete(user.id!),
+                      icon: const Icon(Icons.delete),
+                    ),
                   );
                 },
               ),
@@ -154,5 +158,13 @@ class _HomeState extends State<Home> {
       SortOrder.desc => SortOrder.asc,
     };
     onRefresh();
+  }
+
+  void onDelete(int id) async {
+    prisma.user.delete(where: UserWhereUniqueInput(id: id)).then((_) {
+      setState(() {
+        users.removeWhere((u) => u.id == id);
+      });
+    });
   }
 }

@@ -52,8 +52,6 @@ export default defineConfig({
       copyright: `Copyright © ${new Date().getFullYear()} Seven Du & Odroe, Inc.`,
     },
 
-    nav: [],
-
     sidebar: [
       {
         text: "Getting Started",
@@ -61,6 +59,7 @@ export default defineConfig({
           { text: "Introduction", link: "/getting-started/" },
           { text: "Setup", link: "/getting-started/setup" },
           { text: "Schema", link: "/getting-started/schema" },
+          { text: "Flutter Integration", link: "/getting-started/flutter" },
         ],
       },
       {
