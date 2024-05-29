@@ -1,5 +1,5 @@
-#include "prisma_flutter.h"
 #include "query_engine.h"
+#include "engine_bridge.h"
 
 /**
     Create a new [QueryEngine]

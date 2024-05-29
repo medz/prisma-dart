@@ -1,3 +1,6 @@
-## 0.0.1
+# 0.0.2
 
-First publush
+## What's Changed
+
+* fixed `orm_flutter` reanme.
+* reanem `prisma_flutter` to `engine_bridge`
