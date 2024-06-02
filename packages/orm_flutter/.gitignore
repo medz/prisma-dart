@@ -29,6 +29,7 @@ migrate_working_dir/
 build/
 
 # Package
+.version/prisma-engines.lock
 example/*
 !example/README.md
 src/CMakeLists.txt

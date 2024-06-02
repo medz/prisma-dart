@@ -3,6 +3,13 @@
 # the plugin to fail to compile for some customers of the plugin.
 cmake_minimum_required(VERSION 3.10)
 
+execute_process(
+    COMMAND dart run ${CMAKE_CURRENT_SOURCE_DIR}/../tool/dl_engine.dart
+    WORKING_DIRECTORY ${WORKING_DIRECTORY}/../
+    OUTPUT_QUIET
+    ERROR_QUIET
+)
+
 project(orm_flutter_library VERSION 0.0.1 LANGUAGES C)
 
 add_library(orm_flutter SHARED
