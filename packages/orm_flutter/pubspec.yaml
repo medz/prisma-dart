@@ -1,6 +1,6 @@
 name: orm_flutter
 description: "The engine of Prisma ORM for Flutter, Library for binding Prisma's C-Abi engine with Flutter."
-version: 0.0.3
+version: 0.0.4
 homepage: https://prisma.pub/getting-started/flutter.html
 funding:
   - https://github.com/sponsors/medz
@@ -44,6 +44,8 @@ flutter:
   # Please refer to README.md for a detailed explanation.
   plugin:
     platforms:
+      android:
+        ffiPlugin: true
       ios:
         ffiPlugin: true
 
