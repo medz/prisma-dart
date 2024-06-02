@@ -1,28 +1,28 @@
 PODS:
   - Flutter (1.0.0)
+  - orm_flutter (0.0.1):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - prisma_flutter (0.0.1):
-    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - orm_flutter (from `.symlinks/plugins/orm_flutter/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-  - prisma_flutter (from `.symlinks/plugins/prisma_flutter/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  orm_flutter:
+    :path: ".symlinks/plugins/orm_flutter/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
-  prisma_flutter:
-    :path: ".symlinks/plugins/prisma_flutter/ios"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  orm_flutter: e608a7bc26e4d3d7179088a54e58b7f7045ef82a
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  prisma_flutter: 7483c643790d66f776313b6d2792c4896414a40b
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 

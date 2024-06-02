@@ -3,15 +3,15 @@
 # Run `pod lib lint prisma_flutter.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'prisma_flutter'
+  s.name             = 'orm_flutter'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter FFI plugin project.'
+  s.summary          = 'The engine of Prisma ORM for Flutter.'
   s.description      = <<-DESC
-A new Flutter FFI plugin project.
+The engine of Prisma ORM for Flutter, Library for binding Prisma's C-Abi engine with Flutter.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://prisma.pub'
   s.license          = { :file => '../LICENSE', :type => "BSD-3" }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
 
   # This will ensure the source files in Classes/ are included in the native
   # builds of apps using this FFI plugin. Podspec does not support relative

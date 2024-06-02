@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'query_engine_bindings.dart';
 
-const String _libName = 'prisma_flutter';
+const String _libName = 'orm_flutter';
 
 DynamicLibrary get _dylib {
   if (Platform.isIOS) {
