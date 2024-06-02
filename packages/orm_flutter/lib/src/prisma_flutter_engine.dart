@@ -12,13 +12,13 @@ import 'query_engine_bindings.dart';
 
 const String _libName = 'orm_flutter';
 
-DynamicLibrary get _dylib {
+final DynamicLibrary _dylib = () {
   if (Platform.isIOS) {
     return DynamicLibrary.open("$_libName.framework/$_libName");
   }
 
   throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
-}
+}();
 
 final _bindingsInstance = QueryEngineBindings(_dylib);
 int _evalEngineId = 0;
