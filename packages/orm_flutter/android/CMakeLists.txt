@@ -6,13 +6,7 @@ cmake_minimum_required(VERSION 3.10)
 project(orm_flutter_library VERSION 0.0.1 LANGUAGES C)
 
 add_library(orm_flutter SHARED
-  "../src/query_engine.h"
   "../src/orm_flutter.c"
-)
-
-include_directories(
-    ../src
-    query_engine
 )
 
 set_target_properties(orm_flutter PROPERTIES
@@ -22,15 +16,16 @@ set_target_properties(orm_flutter PROPERTIES
 
 target_compile_definitions(orm_flutter PUBLIC DART_SHARED_LIB)
 
-# cmake_path(SET QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/query_engine/${ANDROID_ABI}/libquery_engine.a NORMALIZE)
-set (QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/query_engine/${ANDROID_ABI}/libquery_engine.a)
+if ((CMAKE_VERSION GREATER 3.20) OR (CMAKE_VERSION EQUAL 3.20))
+    cmake_path(SET QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/query_engine/${ANDROID_ABI}/libquery_engine.a NORMALIZE)
+else()
+    set (QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/query_engine/${ANDROID_ABI}/libquery_engine.a)
+endif()
 
 add_library(query_engine STATIC IMPORTED)
 
 set_target_properties(query_engine PROPERTIES
     IMPORTED_LOCATION ${QUERY_ENGINE_LIB}
-    PUBLIC_HEADERS ../src/query_engine.h
-    OUTPUT_NAME "query_engine"
 )
 
 target_link_libraries(
