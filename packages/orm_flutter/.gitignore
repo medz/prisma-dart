@@ -33,3 +33,5 @@ build/
 example/*
 !example/README.md
 src/CMakeLists.txt
+android/query_engine/
+ios/Frameworks/QueryEngine.xcframework
