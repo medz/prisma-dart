@@ -11,7 +11,7 @@ Prisma ORM for Dart allows you to integrate it in Flutter Project.
 | Platform | Support | Nots |
 |------|------|------|
 | iOS | ✅ | |
-| Android | 🚧 | Working... |
+| Android | ✅ | |
 | macOS | ❌ | Prisma C-ABI not support |
 | Linux | ❌ | Prisma C-ABI not support |
 | Windows | ❌ | Prisma C-ABI not support |
