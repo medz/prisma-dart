@@ -1,3 +1,9 @@
+# 0.0.5
+
+## What's Changed
+
+* Download static libraries during construction
+
 # 0.0.4
 
 ## What's Changed
