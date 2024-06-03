@@ -1,3 +1,22 @@
+# Prisma Dart v4.3.0
+
+To install Prisma ORM for Dart v4.3.0 run this command:
+
+```bash
+dart pub add orm:4.3.0
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^4.3.0
+```
+
+## What's Changed
+
+* fix(deps): update dependency decimal to v3
+
 # Prisma Dart v4.2.1
 
 To install Prisma ORM for Dart v4.2.1 run this command:
