@@ -43,27 +43,22 @@ extension on Generator {
   Method generateToJsonMethod(dmmf.OutputType output) {
     Expression generateValueExpression(Expression value, dmmf.OutputField field,
         [bool nullable = true]) {
-
-      if ((field.outputType.location == dmmf.TypeLocation.scalar &&
-              field.outputType.type == 'Json') ||
-          field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
+      if (field.outputType.location == dmmf.TypeLocation.outputObjectTypes) {
         final call = nullable
             ? value.nullSafeProperty('toJson')
             : value.property('toJson');
 
         return call([]);
-      }
-      else if(field.outputType.location == dmmf.TypeLocation.scalar &&
-              field.outputType.type == 'DateTime') {
+      } else if (field.outputType.location == dmmf.TypeLocation.scalar &&
+          field.outputType.type == 'DateTime') {
         final call = nullable
             ? value.nullSafeProperty('toIso8601String')
             : value.property('toIso8601String');
         return call([]);
-      }
-      else if(field.outputType.location == dmmf.TypeLocation.enumTypes) {
+      } else if (field.outputType.location == dmmf.TypeLocation.enumTypes) {
         return nullable
             ? value.nullSafeProperty('name')
-            : value.property('name'); 
+            : value.property('name');
       }
 
       return value;
