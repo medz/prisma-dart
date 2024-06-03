@@ -1,8 +1,3 @@
-import 'json_convertible.dart';
-
-class PrismaNull implements JsonConvertible<Null> {
+class PrismaNull {
   const PrismaNull();
-
-  @override
-  Null toJson() => null;
 }
