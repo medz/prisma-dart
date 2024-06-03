@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(title: Text('Users (${users.length})'), actions: [
         IconButton(
           tooltip: 'Switch sorting',
-          onPressed: onTaggleSorting,
+          onPressed: onToggleSorting,
           icon: Icon(switch (sort) {
             SortOrder.asc => Icons.trending_up,
             SortOrder.desc => Icons.trending_down,
@@ -152,7 +152,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void onTaggleSorting() {
+  void onToggleSorting() {
     sort = switch (sort) {
       SortOrder.asc => SortOrder.desc,
       SortOrder.desc => SortOrder.asc,

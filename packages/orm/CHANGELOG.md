@@ -1,3 +1,28 @@
+# Prisma Dart v4.2.1
+
+To install Prisma ORM for Dart v4.2.1 run this command:
+
+```bash
+dart pub add orm:4.2.1
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^4.2.1
+```
+
+## What's Changed
+
+* chore(deps): update dependency ffigen to v12 by @renovate in https://github.com/medz/prisma-dart/pull/368
+* Support flutter android by @medz in https://github.com/medz/prisma-dart/pull/377
+* fix: Update null fields fail by @medz in https://github.com/medz/prisma-dart/pull/381
+* fix(orm): Fix incorrect definition of `toJson` to `Object?` type. by @medz in https://github.com/medz/prisma-dart/pull/380
+
+
+**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.2.0...orm-v4.2.1
+
 # Prisma Dart v4.2.0
 
 To install Prisma Client for Dart v4.2.0 run:
