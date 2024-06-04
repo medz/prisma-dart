@@ -3,13 +3,6 @@
 # the plugin to fail to compile for some customers of the plugin.
 cmake_minimum_required(VERSION 3.10)
 
-execute_process(
-    COMMAND dart run ${CMAKE_CURRENT_SOURCE_DIR}/../tool/dl_engine.dart
-    WORKING_DIRECTORY ${WORKING_DIRECTORY}/../
-    OUTPUT_QUIET
-    ERROR_QUIET
-)
-
 project(orm_flutter_library VERSION 0.0.1 LANGUAGES C)
 
 add_library(orm_flutter SHARED
@@ -29,7 +22,14 @@ else()
     set (QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/query_engine/${ANDROID_ABI}/libquery_engine.a)
 endif()
 
-add_library(query_engine STATIC IMPORTED)
+add_custom_command(OUTPUT ${QUERY_ENGINE_LIB}
+    COMMAND dart run orm_flutter:dl_engine
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../
+)
+
+add_custom_target(query_engine DEPENDS ${QUERY_ENGINE_LIB})
+
+# add_library(query_engine STATIC IMPORTED)
 
 set_target_properties(query_engine PROPERTIES
     IMPORTED_LOCATION ${QUERY_ENGINE_LIB}

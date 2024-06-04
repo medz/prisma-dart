@@ -14,7 +14,9 @@ The engine of Prisma ORM for Flutter, Library for binding Prisma's C-Abi engine 
   s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
 
   s.prepare_command = <<-CMD
-    dart run ../tool/dl_engine.dart
+    cd ..
+    dart run orm_flutter:dl_engine
+    cd -
   CMD
 
   # This will ensure the source files in Classes/ are included in the native

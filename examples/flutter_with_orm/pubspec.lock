@@ -125,10 +125,10 @@ packages:
     dependency: transitive
     description:
       name: decimal
-      sha256: "24a261d5d5c87e86c7651c417a5dbdf8bcd7080dd592533910e8d0505a279f21"
+      sha256: fec41e5cf4666c67307a5953b26a4ad758437bfad0dba80ee9d51337570ec242
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.3"
+    version: "3.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -187,6 +187,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0"
   json_rpc_2:
     dependency: transitive
     description:
@@ -273,14 +281,14 @@ packages:
       path: "../../packages/orm"
       relative: true
     source: path
-    version: "4.2.0"
+    version: "4.3.0"
   orm_flutter:
     dependency: "direct main"
     description:
       path: "../../packages/orm_flutter"
       relative: true
     source: path
-    version: "0.0.4"
+    version: "0.0.5"
   package_config:
     dependency: transitive
     description:
@@ -490,10 +498,10 @@ packages:
     dependency: transitive
     description:
       name: webfetch
-      sha256: "42775e831b0d8af643a355e71a39adad2ca76ea9f73b06de47be075c9f45f90a"
+      sha256: ad651c7ab3829c653732facf3eefa03ef6e023575ee8172b8b60bbdf117cdfd9
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.16"
+    version: "0.0.17"
   win32:
     dependency: transitive
     description:
