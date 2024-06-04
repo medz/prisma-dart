@@ -1,3 +1,7 @@
+# 0.0.6
+
+* Fix downloading query engine before building
+
 # 0.0.5
 
 ## What's Changed
