@@ -10,3 +10,5 @@ pubspec.lock
 prisma-query-*
 prisma/*
 !prisma/schema.prisma
+test/_generated/
+test/test.db*

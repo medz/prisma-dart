@@ -1,0 +1,28 @@
+generator client {
+  provider = "dart run orm"
+  output   = "_generated"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  contents  String?
+  authorId  Int
+  author    User      @relation(fields: [authorId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  publishAt DateTime?
+}
