@@ -1,3 +1,25 @@
+# Prisma Dart v4.4.0
+
+To install Prisma ORM for Dart v4.4.0 run this command:
+
+```bash
+dart pub add orm:4.4.0
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^4.4.0
+```
+
+## What's Changed
+
+* fix(deps): update dependency webfetch to ^0.0.17 by @renovate in https://github.com/medz/prisma-dart/pull/383
+* feat(client): support `createManyAndReturn` model delegate method by @medz in https://github.com/medz/prisma-dart/pull/386
+
+**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.3.0...orm-v4.4.0
+
 # Prisma Dart v4.3.0
 
 To install Prisma ORM for Dart v4.3.0 run this command:
