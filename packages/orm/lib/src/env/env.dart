@@ -47,4 +47,22 @@ extension EnvironmentUtils on Environment {
 
     return 0;
   }
+
+  /// Configure the Prisma client and engine.
+  ///
+  /// - [debug]: `DEBUG` is used to enable debugging output in Prisma Client. @see https://www.prisma.io/docs/orm/prisma-client/debugging-and-troubleshooting/debugging
+  /// - [noColor]: @see https://www.prisma.io/docs/orm/reference/environment-variables-reference#no_color
+  /// - [queryEngineBinary]: Custom binary query engine location, Only used by generators and binary engine. See https://www.prisma.io/docs/orm/reference/environment-variables-reference#prisma_query_engine_binary
+  void configure(String? debug, bool? noColor, String? queryEngineBinary) {
+    final configure = <String, String>{
+      if (debug != null) 'DEBUG': debug,
+      if (noColor != null) 'NO_COLOR': noColor ? 'true' : 'false',
+      if (queryEngineBinary != null)
+        'PRISMA_QUERY_ENGINE_BINARY': queryEngineBinary,
+    };
+
+    if (configure.isNotEmpty) {
+      add(configure);
+    }
+  }
 }

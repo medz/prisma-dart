@@ -22,7 +22,12 @@ class BinaryEngine extends Engine {
   final logger = Logger('prisma.binary-engine');
 
   /// Creates a new [BinaryEngine].
-  BinaryEngine({required super.schema, required super.datasources});
+  BinaryEngine({
+    required super.schema,
+    required super.datasources,
+    required super.options,
+    super.overwriteDatasources,
+  });
 
   /// Search for prisma binary query engine path.
   File get _executable {
