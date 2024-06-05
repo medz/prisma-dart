@@ -59,6 +59,7 @@ enum JsonQueryAction {
   findMany,
   createOne,
   createMany,
+  createManyAndReturn,
   updateOne,
   updateMany,
   deleteOne,

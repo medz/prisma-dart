@@ -1,3 +1,69 @@
+# Prisma Dart v4.4.0
+
+To install Prisma ORM for Dart v4.4.0 run this command:
+
+```bash
+dart pub add orm:4.4.0
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^4.4.0
+```
+
+## What's Changed
+
+* fix(deps): update dependency webfetch to ^0.0.17 by @renovate in https://github.com/medz/prisma-dart/pull/383
+* feat(client): support `createManyAndReturn` model delegate method by @medz in https://github.com/medz/prisma-dart/pull/386
+
+**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.3.0...orm-v4.4.0
+
+# Prisma Dart v4.3.0
+
+To install Prisma ORM for Dart v4.3.0 run this command:
+
+```bash
+dart pub add orm:4.3.0
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^4.3.0
+```
+
+## What's Changed
+
+* fix(deps): update dependency decimal to v3
+
+# Prisma Dart v4.2.1
+
+To install Prisma ORM for Dart v4.2.1 run this command:
+
+```bash
+dart pub add orm:4.2.1
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^4.2.1
+```
+
+## What's Changed
+
+* chore(deps): update dependency ffigen to v12 by @renovate in https://github.com/medz/prisma-dart/pull/368
+* Support flutter android by @medz in https://github.com/medz/prisma-dart/pull/377
+* fix: Update null fields fail by @medz in https://github.com/medz/prisma-dart/pull/381
+* fix(orm): Fix incorrect definition of `toJson` to `Object?` type. by @medz in https://github.com/medz/prisma-dart/pull/380
+
+
+**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.2.0...orm-v4.2.1
+
 # Prisma Dart v4.2.0
 
 To install Prisma Client for Dart v4.2.0 run:

@@ -21,6 +21,8 @@ extension ModelActionToJsonQueryAction on dmmf.ModelAction {
       dmmf.ModelAction.findMany => JsonQueryAction.findMany,
       dmmf.ModelAction.create => JsonQueryAction.createOne,
       dmmf.ModelAction.createMany => JsonQueryAction.createMany,
+      dmmf.ModelAction.createManyAndReturn =>
+        JsonQueryAction.createManyAndReturn,
       dmmf.ModelAction.update => JsonQueryAction.updateOne,
       dmmf.ModelAction.updateMany => JsonQueryAction.updateMany,
       dmmf.ModelAction.delete => JsonQueryAction.deleteOne,
@@ -142,10 +144,13 @@ Map<String, dynamic> _serializeFieldSelection(_Context context,
     _ => const <String, dynamic>{},
   };
 
+  final arguments = _serializeArgumentsObject(
+      context, args.withoutKeys(['select', 'include']));
+  final selection = _serializeSelection(context, select, include);
+
   return {
-    'arguments': _serializeArgumentsObject(
-        context, args.withoutKeys(['select', 'include'])),
-    'selection': _serializeSelection(context, select, include),
+    'arguments': _nullsSerialize(arguments),
+    'selection': _nullsSerialize(selection),
   };
 }
 
@@ -232,7 +237,7 @@ Map<String, dynamic> _createTypedValue(String type, dynamic value) => {
 dynamic _serializeArgumentValue(_Context context, dynamic value) {
   return switch (value) {
     String() || int() || double() || num() || bool() => value,
-    PrismaNull() => null,
+    PrismaNull() => value,
     BigInt value => _createTypedValue('BigInt', value.toString()),
     DateTime value =>
       _createTypedValue('DateTime', value.toUtc().toIso8601String()),
@@ -264,4 +269,13 @@ Iterable _serializeIterable(_Context context, Iterable iterable) {
 
     return _serializeArgumentValue(elementContext, element.$2);
   });
+}
+
+_nullsSerialize<T>(T value) {
+  return switch (value) {
+    Iterable value => value.map((e) => _nullsSerialize(e)).toList(),
+    Map value => value.map((k, v) => MapEntry(k, _nullsSerialize(v))),
+    PrismaNull _ => null,
+    _ => value,
+  };
 }
