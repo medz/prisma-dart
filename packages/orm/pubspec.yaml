@@ -17,10 +17,10 @@ dependencies:
   code_builder: ^4.8.0
   dart_style: ^2.3.4
   decimal: ^3.0.0
-  dotenv: ^4.2.0
   json_rpc_2: ^3.0.2
   logging: ^1.2.0
   path: ^1.8.3
+  rc: ^0.3.0
   recase: ^4.1.0
   retry: ^3.1.2
   stream_channel: ^2.1.2
