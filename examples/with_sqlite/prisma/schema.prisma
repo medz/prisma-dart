@@ -1,0 +1,19 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "dart run orm"
+  output   = "../lib/src/generated_prisma_client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id   String @id @default(uuid()) @map("game_id")
+  name String @map("game_name")
+
+  @@map("games")
+}

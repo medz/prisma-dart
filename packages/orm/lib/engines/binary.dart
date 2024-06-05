@@ -82,10 +82,7 @@ class BinaryEngine extends Engine {
     arguments.addAll(['--overwrite-datasources', _overwriteDatasources]);
 
     final process = await Process.start(
-      path.join(
-        '.',
-        path.relative(_executable.path, from: path.current),
-      ),
+      _executable.path,
       arguments,
       workingDirectory: path.current,
       includeParentEnvironment: true,
@@ -143,6 +140,8 @@ class BinaryEngine extends Engine {
       if (message.isEmpty) return;
       try {
         final data = json.decode(message);
+        logger.info(data);
+
         if (data
             case {
               'level': "INFO",
@@ -150,6 +149,9 @@ class BinaryEngine extends Engine {
               'fields': {'ip': final String host, 'port': final String port}
             }) {
           _endpoint = Uri(scheme: 'http', host: host, port: int.parse(port));
+          return;
+        } else if (data case {'is_panic': _, 'message': final String message}) {
+          throw StateError(message);
         }
       } catch (e, s) {
         logger.severe('Unable to parse message: $message', e, s);
