@@ -27,3 +27,6 @@ export 'src/runtime/metrics/metrics_format.dart';
 
 // Raw
 export 'src/runtime/raw/raw_client.dart';
+
+// Engines
+export 'src/runtime/engines/binary_engine.dart';
