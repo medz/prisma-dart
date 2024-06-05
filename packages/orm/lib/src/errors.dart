@@ -63,7 +63,7 @@ class PrismaClientKnownRequestError extends PrismaClientError {
   /// ```json
   /// { target: [ 'email' ] }
   /// ```
-  final Object? meta;
+  final Map<String, dynamic>? meta;
 
   PrismaClientKnownRequestError(
       {required this.code,
