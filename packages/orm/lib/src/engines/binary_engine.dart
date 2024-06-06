@@ -208,7 +208,7 @@ extension on BinaryEngine {
       if (options.datasourceUrl != null) {
         return MapEntry(
           name,
-          Prisma.validateDatasourceURL(options.datasourceUrl!, isPorxy: false),
+          Prisma.validateDatasourceURL(options.datasourceUrl!, isProxy: false),
         );
       }
 
@@ -216,7 +216,7 @@ extension on BinaryEngine {
         return MapEntry(
           name,
           Prisma.validateDatasourceURL(options.datasources![name]!,
-              isPorxy: false),
+              isProxy: false),
         );
       }
 
@@ -231,7 +231,7 @@ extension on BinaryEngine {
           ),
       };
 
-      return MapEntry(name, Prisma.validateDatasourceURL(url, isPorxy: false));
+      return MapEntry(name, Prisma.validateDatasourceURL(url, isProxy: false));
     });
 
     final datasources = overwriteDatasources.entries

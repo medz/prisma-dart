@@ -10,12 +10,12 @@ const _allowdProtocels = <String>[
 PrismaClientInitializationError _createInvalidDatasourceError(String message) =>
     PrismaClientInitializationError(errorCode: 'P1013', message: message);
 
-String validateDatasourceURL(String datasourceUrl, {bool isPorxy = false}) {
+String validateDatasourceURL(String datasourceUrl, {bool isProxy = false}) {
   final url = Uri.tryParse(datasourceUrl);
 
-  if (isPorxy && url?.scheme == 'prisma') {
+  if (isProxy && url?.scheme == 'prisma') {
     return url.toString();
-  } else if (isPorxy) {
+  } else if (isProxy) {
     throw _createInvalidDatasourceError(
         "Proxy connection URL must use the `prisma://` protocol");
   }
