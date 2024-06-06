@@ -34,4 +34,7 @@ abstract class BasePrismaClient<Client extends BasePrismaClient<Client>> {
 
   Future<void> $connect() => $engine.start();
   Future<void> $disconnect() => $engine.stop();
+
+  void $on(LogLevel level, void Function(EngineEvent event) listener) =>
+      $options.logEmitter.on(level, listener);
 }

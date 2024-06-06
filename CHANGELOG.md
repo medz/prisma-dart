@@ -1,4 +1,4 @@
-# Prisma Dart v5.0.0
+# Prisma Dart v5.0.0 & Flutter integration 0.1.0
 
 To install Prisma ORM for Dart v5.0.0 run this command:
 
@@ -13,6 +13,15 @@ dependencies:
   orm: ^5.0.0
 ```
 
+---
+
+FLutter integration:
+
+```yaml
+dependencies:
+  orm_flutter: ^0.1.0
+```
+
 ## What's Changed
 
 * refactor: throws prisma client errors
@@ -20,5 +29,6 @@ dependencies:
 * refactor(client): add base client and client options
 * feat(client): add `env` support
 * feat(client): add logging
+* refactor(Flutter integration): Refactoring the Flutter integration engine.
 
-**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.4.0...orm-v5.0.0
+**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.4.0...orm-v5.0.0+orm_flutter-v0.1.0

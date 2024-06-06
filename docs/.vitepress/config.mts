@@ -6,7 +6,7 @@ export default defineConfig({
   },
   title: "Prisma Dart",
   description:
-    "Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Prisma Client JS/TS APIs.",
+    "Prisma Client Dart is an auto-generated type-safe ORM. It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Client JS/TS APIs.",
   lastUpdated: true,
   head: [
     [
@@ -60,6 +60,8 @@ export default defineConfig({
           { text: "Setup", link: "/getting-started/setup" },
           { text: "Schema", link: "/getting-started/schema" },
           { text: "Flutter Integration", link: "/getting-started/flutter" },
+          { text: "Deployment", link: "/getting-started/deployment" },
+          { text: "Upgrade Guides", link: "/getting-started/upgrade_guides" },
         ],
       },
       {
@@ -101,15 +103,6 @@ export default defineConfig({
           {
             text: "package:orm Reference",
             link: "https://pub.dev/documentation/orm",
-          },
-        ],
-      },
-      {
-        text: "Deployment",
-        items: [
-          {
-            text: "Docker",
-            link: "/deployment/docker",
           },
         ],
       },
