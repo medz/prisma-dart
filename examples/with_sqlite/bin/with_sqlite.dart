@@ -1,10 +1,6 @@
-import 'dart:io';
-
 import 'package:with_sqlite/with_sqlite.dart';
 
-final datasourceUrl =
-    'file:${File.fromUri(Platform.script).parent.parent.path}/prisma/dev.db';
-final prisma = PrismaClient(datasourceUrl: datasourceUrl);
+final prisma = PrismaClient();
 
 Future<void> main() async {
   try {

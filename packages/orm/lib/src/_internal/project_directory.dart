@@ -1,16 +1,20 @@
 import 'dart:io';
 
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 
-final Directory projectDirectory = _findProjectDirectory(Directory.current);
+Directory? findProjectDirectory() =>
+    _nestFindPubspecDirectory(File.fromUri(Platform.script).parent);
 
-Directory _findProjectDirectory(Directory directory) {
-  final pubspec = File(join(directory.path, 'pubspec.yaml'));
-  if (pubspec.existsSync() || _isOsRoot(directory)) {
-    return directory;
+Directory? _nestFindPubspecDirectory(Directory directory) {
+  try {
+    final pubspec = File(path.join(directory.path, 'pubspec.yaml'));
+    if (pubspec.existsSync()) return directory;
+    if (_isOsRoot(directory)) return null;
+
+    return _nestFindPubspecDirectory(directory.parent);
+  } catch (_) {
+    return null;
   }
-
-  return _findProjectDirectory(directory.parent);
 }
 
 bool _isOsRoot(Directory directory) {
@@ -18,5 +22,5 @@ bool _isOsRoot(Directory directory) {
     return directory.path.endsWith(':\\');
   }
 
-  return relative(directory.path, from: '/') == '.';
+  return path.relative(directory.path, from: '/') == '.';
 }

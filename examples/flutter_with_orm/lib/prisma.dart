@@ -11,16 +11,14 @@ Future<void> initPrismaClient() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final supportDir = await getApplicationSupportDirectory();
-  final database = join(supportDir.path, 'database.sqlite');
+  final database = join(supportDir.path, 'database.sqlite.db');
 
-  late final PrismaFlutterEngine engine;
-  prisma = PrismaClient.use((schema, datasources) {
-    return engine = PrismaFlutterEngine(schema: schema, datasources: {
-      ...datasources,
-      'db': 'file:$database',
-    });
-  });
+  prisma = PrismaClient(datasourceUrl: 'file:$database');
+  final engine = switch (prisma.$engine) {
+    LibraryEngine engine => engine,
+    _ => null,
+  };
 
   await prisma.$connect();
-  await engine.applyMigrations(path: 'prisma/migrations');
+  await engine?.applyMigrations(path: 'prisma/migrations');
 }

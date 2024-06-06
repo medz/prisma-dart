@@ -47,23 +47,15 @@ dependencies:
 
 ## Integration
 
-In the regular method of `orm`, we use `PrismaClient(...)` to create the client, but this does not work in Flutter, so we now use the `PrismaClient.use` method to create the client:
+Set your generator engine type to `flutter` in your Prisma schema (`schema.prisma`):
 
-```dart
-import '<You generated client path>/client.dart';
-
-final prisma = PrismaClient.use((schema, datasources) {
-     final dbFilePath = "<You custon db file path>";
-
-     return engine = PrismaFlutterEngine(schema: schema, datasources: {
-         ...datasources,
-         'db': 'file:$dbFilePath',
-         // ...More options
-     });
-});
+```prisma
+generator client {
+  provider   = "dart run orm"
+  output     = "../lib/_generated_prisma_client"
+  engineType = "flutter" // [!code focus]
+}
 ```
-
-> Note: In Flutter, the client will not automatically connect to the database, and you need to manually call `prisma.$connect()` to establish a connection with the database.
 
 ## Migrations
 
@@ -106,7 +98,7 @@ flutter:
 ### Run migration
 
 ```dart
-final engine = PrismaFlutterEngine(...);
+final engine = prisma.$engine as LibraryEngine;
 
 await engine.applyMigrations(
      path: 'prisma/migrations/', // Your define in `flutter.assets` .igrations root dir
@@ -140,31 +132,30 @@ We install the database in the `<Application Support Directory>/database.sqlite`
 
 ```dart [lib/prisma.dart]
 import 'package:flutter/widgets.dart';
+import 'package:orm_flutter/orm_flutter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:orm_flutter/orm_flutter.dart';
 
 import '_generated_prisma_client/client.dart';
 
 late final PrismaClient prisma;
 
 Future<void> initPrismaClient() async {
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-   final supportDir = await getApplicationSupportDirectory();
-   final database = join(supportDir.path, 'database.sqlite');
+  final supportDir = await getApplicationSupportDirectory();
+  final database = join(supportDir.path, 'database.sqlite.db');
 
-   late final PrismaFlutterEngine engine;
-   prisma = PrismaClient.use((schema, datasources) {
-     return engine = PrismaFlutterEngine(schema: schema, datasources: {
-       ...datasources,
-       'db': 'file:$database',
-     });
-   });
+  prisma = PrismaClient(datasourceUrl: 'file:$database');
+  final engine = switch (prisma.$engine) {
+    LibraryEngine engine => engine,
+    _ => null,
+  };
 
-   await prisma.$connect();
-   await engine.applyMigrations(path: 'prisma/migrations');
+  await prisma.$connect();
+  await engine?.applyMigrations(path: 'prisma/migrations');
 }
+
 ```
 
 ```dart [lib/main.dart]
@@ -178,28 +169,6 @@ Future<void> main() async {
 ```
 
 :::
-
-## Platform specific engines
-
-The generator will generate references to all engines by default, but usually you will not use other engines. If you only want to use the Flutter integration engine, you should configure the engine type in the Prisma schema:
-
-::: code-group
-
-```prisma [schema.prisma]
-generator client {
-   provider   = "dart run orm"
-   engineType = "flutter" // [!code focus]
-}
-
-datasource db {
-   provider = "sqlite"
-   url      = "file:./db.sqlite"
-}
-```
-
-:::
-
-When you configure `engineType` in `generator` to `flutter`, the binary engine will no longer be referenced.
 
 ## Example App
 

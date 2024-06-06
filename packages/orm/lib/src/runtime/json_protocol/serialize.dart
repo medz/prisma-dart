@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:typed_data';
 
 import '../../../../dmmf.dart' as dmmf;
+import '../../errors.dart';
 import '../json_convertible.dart';
 import '../prisma_enum.dart';
 import '../prisma_json.dart';
@@ -88,11 +89,7 @@ class _Context {
   }
 
   Never throwValidationError(String message) {
-    throw ArgumentError.value(
-      message,
-      'args',
-      'Invalid arguments for `${action.toApiFunctionName()}` action on `$modelName` model',
-    );
+    throw PrismaClientValidationError(message: message);
   }
 
   dmmf.Model? get model => datamodel.models

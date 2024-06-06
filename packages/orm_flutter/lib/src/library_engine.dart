@@ -39,30 +39,19 @@ final DynamicLibrary _dylib = () {
 final _bindingsInstance = QueryEngineBindings(_dylib);
 int _evalEngineId = 0;
 
-enum LogLevel { error, warn, info, debug, trace }
+class LibraryEngine extends Engine implements Finalizable {
+  late final Pointer<QueryEngine> _qe;
+  bool _started = false;
 
-class PrismaFlutterEngine extends Engine implements Finalizable {
-  final Pointer<QueryEngine> _qe;
-
-  PrismaFlutterEngine._(this._qe,
-      {required super.schema, required super.datasources});
-
-  factory PrismaFlutterEngine(
-      {required String schema,
-      required Map<String, String> datasources,
-      LogLevel logLevel = LogLevel.info,
-      bool logQueries = false,
-      void Function(String message)? logCallback,
-      Map<String, String>? env,
-      bool ignoreEnvVarErrors = false,
-      String nativeConfigDir = ''}) {
+  LibraryEngine({
+    required super.schema,
+    required super.datasources,
+    required super.options,
+  }) {
     final currentEngindId = _evalEngineId.toString();
 
     void logCallbackProxy(Pointer<Char> idptr, Pointer<Char> message) {
-      final id = idptr.cast<Utf8>().toDartString();
-      if (id == currentEngindId && logCallback != null) {
-        logCallback(message.cast<Utf8>().toString());
-      }
+      // TODO: log callback. C-ABI engine bug, unable to parse message
     }
 
     final logNativeCallable =
@@ -70,19 +59,32 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
             logCallbackProxy);
 
     final native = Struct.create<ConstructorOptionsNative>()
-      ..config_dir = nativeConfigDir.toNativeUtf8().cast();
+      ..config_dir = ''.toNativeUtf8().cast();
+
+    final logLevel = this.options.logEmitter.definition.fold<String?>(null,
+        (value, current) {
+      if (current.$1 == LogLevel.query) return value;
+      if (value == null) return current.$1.name;
+      if (value == 'info' || current.$1 == LogLevel.info) {
+        return 'info';
+      }
+
+      return current.$1.name;
+    });
 
     final options = Struct.create<ConstructorOptions>()
       ..id = currentEngindId.toNativeUtf8().cast()
       ..datamodel = schema.toNativeUtf8().cast()
       ..base_path = nullptr
-      ..log_level = logLevel.name.toNativeUtf8().cast()
-      ..log_queries = logQueries
+      ..log_level = (logLevel ?? 'info').toNativeUtf8().cast()
+      ..log_queries =
+          this.options.logEmitter.definition.any((e) => e.$1 == LogLevel.query)
       ..log_callback = logNativeCallable.nativeFunction
-      ..env = json.encode(env ?? const <String, String>{}).toNativeUtf8().cast()
-      ..ignore_env_var_errors = ignoreEnvVarErrors
+      ..env = json.encode(createQueryEngineEnvironment()).toNativeUtf8().cast()
+      ..ignore_env_var_errors = true
       ..native = native
-      ..datasource_overrides = json.encode(datasources).toNativeUtf8().cast();
+      ..datasource_overrides =
+          json.encode(createOverwriteDatasources()).toNativeUtf8().cast();
 
     final enginePtr = malloc<Pointer<QueryEngine>>();
     final errorPtr = malloc<Pointer<Char>>();
@@ -99,8 +101,8 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
       _evalEngineId++;
       malloc.free(errorPtr);
 
-      return PrismaFlutterEngine._(enginePtr.value,
-          schema: schema, datasources: datasources);
+      _qe = enginePtr.value;
+      return;
     } else if (status == Status.err) {
       final message = errorPtr.value.cast<Utf8>().toDartString();
       cleanup();
@@ -124,6 +126,8 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
 
   @override
   Future<void> start() async {
+    if (_started) return;
+
     final errorPtr = malloc<Pointer<Char>>();
     final status =
         _bindingsInstance.start(_qe, '00'.toNativeUtf8().cast(), errorPtr);
@@ -139,14 +143,18 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
     }
 
     malloc.free(errorPtr);
+    _started = true;
   }
 
   @override
   Future<void> stop() async {
+    if (!_started) return;
+
     final status = _bindingsInstance.stop(_qe, nullptr);
     if (status != Status.ok) {
       throw StateError('Could not stop from prisma query engine');
     }
+    _started = false;
   }
 
   Future<void> applyMigrations(
@@ -231,6 +239,8 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
       int maxWait = 2000,
       int timeout = 5000,
       TransactionIsolationLevel? isolationLevel}) async {
+    await start();
+
     final Pointer<Char> trace =
         headers.traceparent?.toNativeUtf8().cast() ?? nullptr;
     final options = json.encode({
@@ -257,6 +267,8 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
   @override
   Future<Map> request(JsonQuery query,
       {TransactionHeaders? headers, Transaction? transaction}) async {
+    await start();
+
     final Pointer<Char> body =
         json.encode(query.toJson()).toNativeUtf8().cast();
     final Pointer<Char> trace =
@@ -291,5 +303,62 @@ class PrismaFlutterEngine extends Engine implements Finalizable {
   Future metrics(
       {Map<String, String>? globalLabels, required MetricsFormat format}) {
     throw UnimplementedError('Prisma Flutter engine not support metrics.');
+  }
+}
+
+extension on LibraryEngine {
+  Map<String, String> createQueryEngineEnvironment() {
+    final environment = Map<String, String>.from(Prisma.environment);
+
+    // log queries
+    if (options.logEmitter.definition.any((e) => e.$1 == LogLevel.query)) {
+      environment['LOG_QUERIES'] = 'true';
+    }
+
+    // no color
+    if (!Prisma.envAsBoolean('NO_COLOR') &&
+        options.errorFormat == ErrorFormat.pretty) {
+      environment['CLICOLOR_FORCE'] = "1";
+    }
+
+    environment['RUST_BACKTRACE'] = Prisma.env('RUST_BACKTRACE').or(() => '1');
+    environment['RUST_LOG'] =
+        Prisma.env('RUST_LOG').or(() => LogLevel.info.name);
+
+    return environment;
+  }
+
+  /// Creates overwrite datasources string.
+  Map<String, String> createOverwriteDatasources() {
+    return datasources.map((name, datasource) {
+      if (options.datasourceUrl != null) {
+        return MapEntry(name, options.datasourceUrl!);
+      }
+
+      if (options.datasources?.containsKey(name) == true) {
+        return MapEntry(name, options.datasources![name]!);
+      }
+
+      final url = switch (datasource) {
+        Datasource(type: DatasourceType.url, value: final url) => url,
+        Datasource(type: DatasourceType.environment, value: final name) =>
+          Prisma.env(name).or(
+            () => throw PrismaClientInitializationError(
+              errorCode: "P1013",
+              message: 'The environment variable "$name" does not exist',
+            ),
+          ),
+      };
+
+      return MapEntry(name, Prisma.validateDatasourceURL(url, isPorxy: false));
+    });
+  }
+}
+
+extension<T> on T? {
+  T or(T Function() fn) {
+    if (this != null) return this as T;
+
+    return fn();
   }
 }

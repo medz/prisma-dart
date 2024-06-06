@@ -147,7 +147,7 @@ extension on Generator {
 
   Code generateResult() {
     final request =
-        refer('_client').property('_engine').property('request').call([
+        refer('_client').property('\$engine').property('request').call([
       refer('query')
     ], {
       'headers': refer('_client').property('\$transaction').property('headers'),

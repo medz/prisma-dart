@@ -1,3 +1,3 @@
 library prisma.version;
 
-const version = '4.1.0';
+const version = '5.0.0';

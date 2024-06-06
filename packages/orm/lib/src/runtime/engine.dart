@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../datasources/datasources.dart';
+import '../prisma_client_options.dart';
 import 'json_protocol/protocol.dart';
 import 'metrics/metrics_format.dart';
 import 'transaction/isolation_level.dart';
@@ -8,9 +10,12 @@ import 'transaction/transaction.dart';
 
 abstract class Engine {
   final String schema;
-  final Map<String, String> datasources;
+  final Datasources datasources;
+
+  final PrismaClientOptions options;
 
   const Engine({
+    required this.options,
     required this.schema,
     required this.datasources,
   });

@@ -1,4 +1,4 @@
-# Docker
+# Deployment
 
 This page presents how to deploy Dart server application into a docker container avoiding common issues.
 

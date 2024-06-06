@@ -5,7 +5,7 @@ layout: home
 hero:
   name: Prisma Client Dart
   text: Auto-generated type-safe ORM
-  tagline: It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Prisma Client JS/TS APIs
+  tagline: It uses Prisma Engine as the data access layer and is as consistent as possible with the Prisma Client JS/TS APIs
   image:
     src: /prisma-dart.logo.svg
     alt: Prisma Dart client logo
