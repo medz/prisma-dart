@@ -7,8 +7,11 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "sqlite"
+  url       = env("DATABASE_URL")
+  // Why need directUrl ?
+  // The Prisma CLI tool uses the file URL relative to the prisma directory when it is configured at runtime. The Dart runtime uses PWD
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 model Game {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
+import '../_internal/project_directory.dart';
 import '../errors.dart';
 import '_validate_datasource_url.dart' as shared;
 
@@ -11,9 +12,10 @@ String validateDatasourceURL(String datasourceUrl, {bool isPorxy = false}) {
     return shared.validateDatasourceURL(datasourceUrl, isPorxy: isPorxy);
   }
 
-  final databaseFile = File.fromUri(url);
-  final databasePath = path.relative(databaseFile.path);
-  if (databaseFile.existsSync()) {
+  final pwd = findProjectDirectory()?.path ?? Directory.current.path;
+  final databasePath =
+      path.relative(path.join(pwd, datasourceUrl.substring(5)));
+  if (File(databasePath).existsSync()) {
     return 'file:$databasePath';
   }
 

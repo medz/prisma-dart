@@ -54,7 +54,7 @@ Future<void> generate(GeneratorOptions options) async {
     await output.writeAsString(formated);
   }
 
-  if (isFlutterEngineType(options.generator.config)) {
+  if (!isFlutterEngineType(options.generator.config)) {
     // Copy prisma query engine.
     final engineDownloadPath =
         options.binaryPaths.queryEngine?.values.firstOrNull;

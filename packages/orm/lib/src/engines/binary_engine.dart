@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
-import 'package:retry/retry.dart';
 import 'package:webfetch/webfetch.dart' show fetch;
 
 import '../_internal/project_directory.dart';
@@ -189,7 +188,7 @@ extension on BinaryEngine {
     final enginePaths = generateEnginePaths([
       Directory.current,
       if (projectDirectory != null) projectDirectory,
-    ]);
+    ]).toSet();
 
     for (final enginePath in enginePaths) {
       final file = File(enginePath);
@@ -199,7 +198,7 @@ extension on BinaryEngine {
     throw PrismaClientInitializationError(
         errorCode: "QE404",
         message:
-            'No binary engine found, please make sure any of the following locations contain the executable file: $enginePaths');
+            'No binary engine found, please make sure any of the following locations contain the executable file: ${enginePaths.map((e) => path.relative(e)).toSet()}');
   }
 
   /// Creates overwrite datasources string.
@@ -306,10 +305,11 @@ extension on BinaryEngine {
       }
     });
 
-    final endpointCompleter = Completer<Uri>.sync();
+    Uri? endpoint;
     final stdoutSubscription = process.stdout.byline().listen((event) {
+      print(event);
       final payload = tryParseJSON(event);
-      tryCompleteEndpoint(endpointCompleter, payload);
+      tryCompleteEndpoint(payload, (uri) => endpoint = uri);
 
       if (payload case {'span': true, 'spans': final List _}) {
         // TODO: Tracing engine span. current print payload to console.
@@ -336,18 +336,55 @@ extension on BinaryEngine {
       await stdoutSubscription.cancel();
     }
 
-    final endpoint = await retry<Uri>(() async {
-      return endpointCompleter.future.timeout(Duration(seconds: 1),
-          onTimeout: () {
-        throw PrismaClientInitializationError(
-            message: 'Prisma binary query engine not ready');
-      });
-    }).catchError((e) {
-      stop();
-      throw e;
-    });
+    for (int count = 0;; count++) {
+      options.logEmitter.emit(
+        LogLevel.info,
+        LogEvent(
+          timestamp: DateTime.now(),
+          target: 'prisma:client',
+          message:
+              'Whether the engine has started for the ${count + 1} th time.',
+        ),
+      );
 
-    return (endpoint, stop);
+      if (endpoint != null) break;
+      if (count >= 10) {
+        await stop();
+        throw PrismaClientInitializationError(
+            message: 'Engine startup failed.');
+      }
+
+      await Future.delayed(Duration(milliseconds: 300 * count));
+    }
+
+    for (int count = 0;; count++) {
+      options.logEmitter.emit(
+        LogLevel.info,
+        LogEvent(
+            timestamp: DateTime.now(),
+            target: 'prisma:client',
+            message:
+                'Whether the engine has ready for the ${count + 1} th time.'),
+      );
+
+      try {
+        final response = await fetch(endpoint!.replace(path: '/status'));
+        final result = await response.json();
+        if (result case {"status": "ok"}) {
+          break;
+        }
+      } catch (_) {}
+
+      if (count >= 10) {
+        await stop();
+        throw PrismaClientInitializationError(
+            message: 'Engine startup failed.');
+      }
+
+      await Future.delayed(Duration(milliseconds: 300 * count));
+    }
+
+    return (endpoint!, stop);
   }
 
   (LogLevel, EngineEvent) createEngineEvent(payload) {
@@ -399,7 +436,7 @@ extension on BinaryEngine {
     );
   }
 
-  void tryCompleteEndpoint(Completer<Uri> completer, payload) {
+  void tryCompleteEndpoint(payload, void Function(Uri) setter) {
     if (payload
         case {
           'level': 'INFO',
@@ -412,10 +449,10 @@ extension on BinaryEngine {
         }
         when message.startsWith('Started query engine http server') &&
             ip.isNotEmpty &&
-            port.isNotEmpty &&
-            !completer.isCompleted) {
+            port.isNotEmpty) {
       final endpoint = Uri.http('$ip:$port');
-      completer.complete(endpoint);
+
+      setter(endpoint);
     }
   }
 
