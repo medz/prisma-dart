@@ -22,6 +22,8 @@ dependencies:
   orm_flutter: ^0.1.0
 ```
 
+[**"Prisma Dart v4 -> v5 & Flutter integration" Upgrade Guides**](https://prisma.pub/getting-started/upgrade_guides.html)
+
 ## What's Changed
 
 * refactor: throws prisma client errors
