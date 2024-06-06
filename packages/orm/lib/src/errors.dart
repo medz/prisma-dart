@@ -10,6 +10,9 @@ abstract class PrismaClientError extends Error {
 
   /// Creates a new Prisma client error.
   PrismaClientError({required this.message, this.clientVersion = version});
+
+  @override
+  toString() => '$runtimeType: $message';
 }
 
 /// Prisma Client throws a [PrismaClientValidationError] exception if validation fails - for example:
@@ -46,10 +49,13 @@ class PrismaClientRustPanicError extends PrismaClientError {
 /// * The query engine binary for the current platform could not be found (`generator` block)
 class PrismaClientInitializationError extends PrismaClientError {
   /// A Prisma-specific error code.
-  final String errorCode;
+  final String? errorCode;
 
   PrismaClientInitializationError(
-      {required this.errorCode, required super.message, super.clientVersion});
+      {this.errorCode, required super.message, super.clientVersion});
+
+  @override
+  toString() => '$runtimeType: $errorCode $message';
 }
 
 /// Prisma Client throws a [PrismaClientKnownRequestError] exception if the query engine returns a known error related to the request - for example, a unique constraint violation.
@@ -70,4 +76,7 @@ class PrismaClientKnownRequestError extends PrismaClientError {
       required super.message,
       super.clientVersion,
       this.meta});
+
+  @override
+  toString() => '$runtimeType: $code $message';
 }

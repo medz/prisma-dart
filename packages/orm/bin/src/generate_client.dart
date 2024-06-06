@@ -137,7 +137,8 @@ extension on Generator {
               .add(Parameter((p) => p.name = 'defaultDataSources'));
 
           final engine =
-              refer('BinaryEngine', 'package:orm/orm.dart').newInstance([], {
+              refer('BinaryEngine', 'package:orm/engines/binary.dart')
+                  .newInstance([], {
             'schema': refer('schema'),
             'datasources': refer('datasourceOverrides'),
           });

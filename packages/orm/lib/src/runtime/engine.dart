@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../datasources/datasources.dart';
 import '../prisma_client_options.dart';
 import 'json_protocol/protocol.dart';
 import 'metrics/metrics_format.dart';
@@ -7,28 +8,16 @@ import 'transaction/isolation_level.dart';
 import 'transaction/transaction_headers.dart';
 import 'transaction/transaction.dart';
 
-enum DatasourceType { url, enviroment }
-
-class Datasource {
-  final DatasourceType type;
-  final String value;
-
-  const Datasource(this.type, this.value);
-}
-
-typedef Datasources = Map<String, Datasource>;
-
 abstract class Engine {
   final String schema;
   final Datasources datasources;
-  final Datasources? overwriteDatasources;
+
   final PrismaClientOptions options;
 
   const Engine({
     required this.options,
     required this.schema,
     required this.datasources,
-    this.overwriteDatasources,
   });
 
   /// Starts the engine.

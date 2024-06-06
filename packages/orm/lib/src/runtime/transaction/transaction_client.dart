@@ -1,9 +1,10 @@
+import '../../base_prisma_client.dart';
 import '../engine.dart';
 import 'isolation_level.dart';
 import 'transaction_headers.dart';
 import 'transaction.dart';
 
-class TransactionClient<T> {
+class TransactionClient<T extends BasePrismaClient> {
   final Engine _engine;
   final T Function(TransactionClient<T> transactionClient) _factory;
 

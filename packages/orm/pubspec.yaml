@@ -20,7 +20,7 @@ dependencies:
   json_rpc_2: ^3.0.2
   logging: ^1.2.0
   path: ^1.8.3
-  rc: ^0.3.0
+  rc: ^0.3.2
   recase: ^4.1.0
   retry: ^3.1.2
   stream_channel: ^2.1.2

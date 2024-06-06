@@ -31,7 +31,7 @@ final class LogEvent extends EngineEvent {
 final class QueryEvent extends EngineEvent {
   final String query;
   final String params;
-  final double duration;
+  final Duration duration;
 
   const QueryEvent(
       {required super.timestamp,
@@ -46,10 +46,11 @@ typedef LogListener = void Function(EngineEvent event);
 
 /// Prisma log event emitter.
 class LogEmitter {
-  final LogDefinition _definition;
+  final LogDefinition definition;
   final _listeners = <(LogLevel, LogListener)>[];
 
-  LogEmitter(LogDefinition definition) : _definition = definition;
+  LogEmitter(LogDefinition definition)
+      : definition = LogDefinition.unmodifiable(definition);
 
   void on(LogLevel level, LogListener listener) {
     final extsis = _listeners.any((e) => e.$1 == level && e.$2 == listener);
@@ -64,7 +65,7 @@ class LogEmitter {
   }
 
   void _emitStdout(LogLevel level, EngineEvent event) {
-    if (_definition.should(level, LogEmit.stdout)) {
+    if (definition.should(level, LogEmit.stdout)) {
       final name = 'prisma:${level.name}';
       final message = switch (event) {
         LogEvent(message: final String message) => message,
@@ -78,7 +79,7 @@ class LogEmitter {
   }
 
   void _emitEvent(LogLevel level, EngineEvent event) {
-    if (!_definition.should(level, LogEmit.event)) return;
+    if (!definition.should(level, LogEmit.event)) return;
 
     final listeners = _listeners.where((e) => e.$1 == level).map((e) => e.$2);
     for (final listener in listeners) {

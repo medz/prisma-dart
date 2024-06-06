@@ -23,4 +23,7 @@ abstract class BasePrismaClient<E extends Engine> {
 
   /// Returns the [Engine] instance typeof [E].
   E get $engine;
+
+  Future<void> $connect() => $engine.start();
+  Future<void> $disconnect() => $engine.stop();
 }

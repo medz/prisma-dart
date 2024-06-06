@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../base_prisma_client.dart';
 import '../../dmmf/datamodel.dart' show DataModel;
 import '../engine.dart';
 import '../json_protocol/protocol.dart';
@@ -7,7 +8,7 @@ import '../json_protocol/serialize.dart';
 import '../transaction/transaction_client.dart';
 import '_internal/raw_parameter_codec.dart';
 
-class RawClient<T> {
+class RawClient<T extends BasePrismaClient> {
   final Engine _engine;
   final DataModel _datamodel;
   final TransactionClient<T> _client;
