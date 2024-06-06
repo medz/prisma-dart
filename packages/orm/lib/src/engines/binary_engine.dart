@@ -205,6 +205,21 @@ extension on BinaryEngine {
   String createOverwriteDatasourcesString() {
     Map<String, String> overwriteDatasources =
         this.datasources.map((name, datasource) {
+      if (options.datasourceUrl != null) {
+        return MapEntry(
+          name,
+          Prisma.validateDatasourceURL(options.datasourceUrl!, isPorxy: false),
+        );
+      }
+
+      if (options.datasources?.containsKey(name) == true) {
+        return MapEntry(
+          name,
+          Prisma.validateDatasourceURL(options.datasources![name]!,
+              isPorxy: false),
+        );
+      }
+
       final url = switch (datasource) {
         Datasource(type: DatasourceType.url, value: final url) => url,
         Datasource(type: DatasourceType.environment, value: final name) =>
@@ -218,17 +233,6 @@ extension on BinaryEngine {
 
       return MapEntry(name, Prisma.validateDatasourceURL(url, isPorxy: false));
     });
-
-    if (options.datasources?.isNotEmpty == true) {
-      overwriteDatasources.addAll(options.datasources!);
-    }
-
-    if (options.datasourceUrl != null) {
-      final url =
-          Prisma.validateDatasourceURL(options.datasourceUrl!, isPorxy: false);
-      overwriteDatasources =
-          overwriteDatasources.map((name, _) => MapEntry(name, url));
-    }
 
     final datasources = overwriteDatasources.entries
         .map((e) => {'name': e.key, 'url': e.value})

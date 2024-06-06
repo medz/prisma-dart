@@ -81,7 +81,7 @@ extension on Generator {
   Method createEngineGetter() {
     final engine = switch (options.generator.config['engineType']) {
       'flutter' =>
-        refer('PrismaFlutterEngine', 'package:orm_flutter/orm_flutter.dart'),
+        refer('LibraryEngine', 'package:orm_flutter/orm_flutter.dart'),
       _ => refer('BinaryEngine', 'package:orm/engines/binary.dart'),
     };
 

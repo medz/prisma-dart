@@ -1,3 +1,3 @@
 library dev.odroe.prisma.flutter;
 
-export 'src/prisma_flutter_engine.dart';
+export 'src/library_engine.dart' show LibraryEngine;
