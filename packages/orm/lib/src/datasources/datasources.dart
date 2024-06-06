@@ -1,4 +1,4 @@
-enum DatasourceType { url, enviroment }
+enum DatasourceType { url, environment }
 
 class Datasource {
   final DatasourceType type;

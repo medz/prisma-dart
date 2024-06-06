@@ -204,7 +204,7 @@ extension on BinaryEngine {
         this.datasources.map((name, datasource) {
       final url = switch (datasource) {
         Datasource(type: DatasourceType.url, value: final url) => url,
-        Datasource(type: DatasourceType.enviroment, value: final name) =>
+        Datasource(type: DatasourceType.environment, value: final name) =>
           Prisma.env(name).or(
             () => throw PrismaClientInitializationError(
               errorCode: "P1013",
