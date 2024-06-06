@@ -44,7 +44,7 @@ Previously, we relied on the `logging` package for logging. Then you needed to l
 
 Now, Prisma Dart implements the same logging as the Prisma TS/JS client.
 
-For more loging information, see 👉 [Prisma Logging](https://www.prisma.io/docs/orm/prisma-client/observability-and-logging/logging).
+For more logging information, see 👉 [Prisma Logging](https://www.prisma.io/docs/orm/prisma-client/observability-and-logging/logging).
 
 #### Output to console
 
