@@ -15,6 +15,10 @@ dependencies:
 
 ## What's Changed
 
-<!-- TODO -->
+* refactor: throws prisma client errors
+* refactor(engine): Refactoring binary engines
+* refactor(client): add base client and client options
+* feat(client): add `env` support
+* feat(client): add logging
 
 **Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.4.0...orm-v5.0.0
