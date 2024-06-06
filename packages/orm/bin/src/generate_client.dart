@@ -6,39 +6,78 @@ import 'package:orm/generator_helper.dart' as gh;
 
 import 'generate_delegate.dart';
 import 'generator.dart';
-import 'utils/is_flutter_engine_type.dart';
 import 'utils/dart_style_fixer.dart';
-import 'utils/reference.dart';
 
 extension GenerateClient on Generator {
   Class generateClient() {
     return Class((builder) {
       builder.name = 'PrismaClient';
 
-      builder.extend = refer('BasePrismaClient', 'package:orm/orm.dart');
+      builder.extend = TypeReference((builder) {
+        builder.symbol = 'BasePrismaClient';
+        builder.url = 'package:orm/orm.dart';
+        builder.types.add(refer('PrismaClient'));
+      });
+
+      builder.constructors.add(_defaultConstructor);
 
       builder.fields.add(generateDatamodel());
       builder.fields.add(_engineField);
+      builder.fields.add(Field((builder) {
+        builder.name = '_transaction';
+        builder.type =
+            refer('TransactionClient<PrismaClient>?', 'package:orm/orm.dart');
+      }));
 
-      builder.constructors.add(_defaultConstructor);
+      builder.methods.add(createTransactionGetter());
       builder.methods.add(createEngineGetter());
+      builder.methods.add(Method((getter) {
+        getter.name = '\$datamodel';
+        getter.annotations.add(refer('override'));
+        getter.lambda = true;
+        getter.type = MethodType.getter;
+        getter.body = Code('datamodel');
+      }));
 
       for (final mapping in options.dmmf.mappings.modelOperations) {
         final method = generateModelOperation(mapping);
         builder.methods.add(method);
-      }
-
-      final allowRaw = options.dmmf.mappings.otherOperations.write
-              .contains('queryRaw') &&
-          options.dmmf.mappings.otherOperations.write.contains('executeRaw');
-      if (allowRaw) {
-        // builder.methods.add(_rawClientGetter);
       }
     });
   }
 }
 
 extension on Generator {
+  Method createTransactionGetter() {
+    return Method((getter) {
+      getter.type = MethodType.getter;
+      getter.name = '\$transaction';
+      getter.annotations.add(refer('override'));
+      getter.body = Block.of([
+        Code('if (_transaction != null) return _transaction!;'),
+        Code('PrismaClient factory('),
+        refer('TransactionClient<PrismaClient>', 'package:orm/orm.dart').code,
+        Code('transaction) {'),
+        Code('''
+        final client = PrismaClient(
+          datasources: \$options.datasources,
+          datasourceUrl: \$options.datasourceUrl,
+          errorFormat: \$options.errorFormat,
+          log: \$options.logEmitter.definition,
+        );
+        client.\$options.logEmitter = \$options.logEmitter;
+        client._transaction = transaction;
+
+        return client;
+        '''),
+        Code('}'),
+        Code('return _transaction ='),
+        refer('TransactionClient<PrismaClient>', 'package:orm/orm.dart').code,
+        Code('(\$engine, factory);'),
+      ]);
+    });
+  }
+
   Method createEngineGetter() {
     final engine = switch (options.generator.config['engineType']) {
       'flutter' =>

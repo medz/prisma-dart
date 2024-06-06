@@ -30,10 +30,10 @@ class PrismaClientOptions {
   final ErrorFormat errorFormat;
 
   /// Log emitter.
-  final LogEmitter logEmitter;
+  LogEmitter logEmitter;
 
   /// Create Prisma client options
-  const PrismaClientOptions({
+  PrismaClientOptions({
     this.datasourceUrl,
     this.datasources,
     required this.errorFormat,

@@ -1,23 +1,14 @@
 import 'dart:convert';
 
 import '../../base_prisma_client.dart';
-import '../../dmmf/datamodel.dart' show DataModel;
-import '../engine.dart';
 import '../json_protocol/protocol.dart';
 import '../json_protocol/serialize.dart';
-import '../transaction/transaction_client.dart';
 import '_internal/raw_parameter_codec.dart';
 
-class RawClient<T extends BasePrismaClient> {
-  final Engine _engine;
-  final DataModel _datamodel;
-  final TransactionClient<T> _client;
+class RawClient<Client extends BasePrismaClient<Client>> {
+  final Client _client;
 
-  const RawClient(
-      Engine engine, DataModel datamodel, TransactionClient<T> transaction)
-      : _engine = engine,
-        _datamodel = datamodel,
-        _client = transaction;
+  const RawClient(Client client) : _client = client;
 
   Future<dynamic> query(String sql, [Iterable<dynamic>? parameters]) => _inner(
         action: JsonQueryAction.queryRaw,
@@ -42,13 +33,16 @@ class RawClient<T extends BasePrismaClient> {
       'parameters': json.encode(rawParameter.encode(parameters ?? const [])),
     };
 
-    final query =
-        serializeJsonQuery(datamodel: _datamodel, action: action, args: args);
+    final query = serializeJsonQuery(
+      datamodel: _client.$datamodel,
+      action: action,
+      args: args,
+    );
 
-    final result = await _engine.request(
+    final result = await _client.$engine.request(
       query,
-      headers: _client.headers,
-      transaction: _client.transaction,
+      headers: _client.$transaction.headers,
+      transaction: _client.$transaction.transaction,
     );
 
     return rawParameter.decode(result[action.name]);

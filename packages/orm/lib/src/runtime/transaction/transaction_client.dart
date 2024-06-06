@@ -1,18 +1,19 @@
 import '../../base_prisma_client.dart';
+import '../../errors.dart';
 import '../engine.dart';
 import 'isolation_level.dart';
 import 'transaction_headers.dart';
 import 'transaction.dart';
 
-class TransactionClient<T extends BasePrismaClient> {
+class TransactionClient<Client extends BasePrismaClient<Client>> {
   final Engine _engine;
-  final T Function(TransactionClient<T> transactionClient) _factory;
+  final Client Function(TransactionClient<Client> transactionClient) _factory;
 
   final TransactionHeaders? headers;
   final Transaction? transaction;
 
   const TransactionClient._({
-    required T Function(TransactionClient<T>) factory,
+    required Client Function(TransactionClient<Client>) factory,
     required Engine engine,
     required this.headers,
     required this.transaction,
@@ -20,14 +21,14 @@ class TransactionClient<T extends BasePrismaClient> {
         _engine = engine;
 
   const TransactionClient(
-      Engine engine, T Function(TransactionClient<T>) factory)
+      Engine engine, Client Function(TransactionClient<Client>) factory)
       : _factory = factory,
         _engine = engine,
         headers = null,
         transaction = null;
 
   /// Start a new transaction.
-  Future<T> start({
+  Future<Client> start({
     TransactionHeaders? headers,
     int maxWait = 2000,
     int timeout = 5000,
@@ -59,7 +60,8 @@ class TransactionClient<T extends BasePrismaClient> {
   /// Commit a transaction.
   Future<void> commit() {
     if (headers == null || transaction == null) {
-      throw Exception('Cannot commit a transaction that has not been started.');
+      throw PrismaClientValidationError(
+          message: 'Cannot commit a transaction that has not been started.');
     }
 
     return _engine.commitTransaction(
@@ -71,8 +73,8 @@ class TransactionClient<T extends BasePrismaClient> {
   /// Rollback a transaction.
   Future<void> rollback() {
     if (headers == null || transaction == null) {
-      throw Exception(
-          'Cannot rollback a transaction that has not been started.');
+      throw PrismaClientValidationError(
+          message: 'Cannot rollback a transaction that has not been started.');
     }
 
     return _engine.rollbackTransaction(
@@ -92,7 +94,7 @@ class TransactionClient<T extends BasePrismaClient> {
   /// });
   /// ```
   Future<R> call<R>(
-    Future<R> Function(T tx) fn, {
+    Future<R> Function(Client prisma) fn, {
     int maxWait = 2000,
     int timeout = 5000,
     TransactionIsolationLevel? isolationLevel,

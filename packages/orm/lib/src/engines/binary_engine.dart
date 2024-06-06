@@ -71,8 +71,10 @@ class BinaryEngine extends Engine {
 
     return switch (result) {
       {'data': final Map data} => deserializeJsonResponse(data),
-      {'errors': final Iterable errors} => throw Exception(errors),
-      _ => throw Exception(result),
+      {'errors': final Iterable errors} => throwErrors(errors),
+      _ => throw PrismaClientUnknownRequestError(
+          message: json.encode(PrismaClientUnknownRequestError),
+        ),
     };
   }
 
@@ -91,7 +93,7 @@ class BinaryEngine extends Engine {
     final result = await response.json();
 
     return switch (result) {
-      {'errors': final Iterable errors} => throw Exception(errors),
+      {'errors': final Iterable errors} => throwErrors(errors),
       _ => null,
     };
   }
@@ -139,8 +141,10 @@ class BinaryEngine extends Engine {
 
     return switch (result) {
       {'id': final String id} => Transaction(id),
-      {'errors': final Iterable errors} => throw Exception(errors),
-      _ => throw Exception(result),
+      {'errors': final Iterable errors} => throwErrors(errors),
+      _ => throw PrismaClientUnknownRequestError(
+          message: json.encode(PrismaClientUnknownRequestError),
+        ),
     };
   }
 
@@ -422,6 +426,41 @@ extension on BinaryEngine {
       // TODO, debug
       return null;
     }
+  }
+
+  Never throwErrors(Iterable errors) {
+    if (errors.length == 1) {
+      throw switch (errors.single) {
+        Map payload => throwPrismaKnowError(payload),
+        Object message =>
+          throw PrismaClientUnknownRequestError(message: json.encode(message)),
+        _ =>
+          throw PrismaClientUnknownRequestError(message: json.encode(errors)),
+      };
+    }
+
+    throw PrismaClientUnknownRequestError(message: json.encode(errors));
+  }
+
+  Never throwPrismaKnowError(Map payload) {
+    final userFacingError = payload['user_facing_error'];
+
+    if (userFacingError
+        case {
+          'error_code': final String errorCode,
+          'message': final String message
+        }) {
+      throw PrismaClientKnownRequestError(
+        code: errorCode,
+        message: message,
+        meta: switch (userFacingError['meta']) {
+          Map meta => meta.map((k, v) => MapEntry(k.toString(), v)),
+          _ => null,
+        },
+      );
+    }
+
+    throw PrismaClientUnknownRequestError(message: payload['error']!);
   }
 }
 
