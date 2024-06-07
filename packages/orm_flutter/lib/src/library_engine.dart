@@ -350,7 +350,7 @@ extension on LibraryEngine {
           ),
       };
 
-      return MapEntry(name, Prisma.validateDatasourceURL(url, isPorxy: false));
+      return MapEntry(name, Prisma.validateDatasourceURL(url, isProxy: false));
     });
   }
 }

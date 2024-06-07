@@ -101,7 +101,7 @@ flutter:
 final engine = prisma.$engine as LibraryEngine;
 
 await engine.applyMigrations(
-     path: 'prisma/migrations/', // Your define in `flutter.assets` .igrations root dir
+     path: 'prisma/migrations/', // You define in `flutter.assets` migrations root dir
 );
 ```
 

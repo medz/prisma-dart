@@ -34,7 +34,7 @@ final prisma = PrismaClient.use((schema, datasoruce) {
 Now:
 
 ```dart
-final engine = ...; // You created engine instandce.
+final engine = ...; // You created engine instance.
 final prisma = PrismaClient(engine: engine);
 ```
 
