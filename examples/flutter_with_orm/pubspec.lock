@@ -273,14 +273,14 @@ packages:
       path: "../../packages/orm"
       relative: true
     source: path
-    version: "5.0.0"
+    version: "5.0.1"
   orm_flutter:
     dependency: "direct main"
     description:
       path: "../../packages/orm_flutter"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   package_config:
     dependency: transitive
     description:
