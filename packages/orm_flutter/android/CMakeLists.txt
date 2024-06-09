@@ -22,14 +22,7 @@ else()
     set (QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/query_engine/${ANDROID_ABI}/libquery_engine.a)
 endif()
 
-add_custom_command(OUTPUT ${QUERY_ENGINE_LIB}
-    COMMAND dart run orm_flutter:dl_engine
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../
-)
-
-add_custom_target(query_engine DEPENDS ${QUERY_ENGINE_LIB})
-
-# add_library(query_engine STATIC IMPORTED)
+add_library(query_engine STATIC IMPORTED)
 
 set_target_properties(query_engine PROPERTIES
     IMPORTED_LOCATION ${QUERY_ENGINE_LIB}

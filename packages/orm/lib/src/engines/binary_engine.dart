@@ -208,15 +208,14 @@ extension on BinaryEngine {
       if (options.datasourceUrl != null) {
         return MapEntry(
           name,
-          Prisma.validateDatasourceURL(options.datasourceUrl!, isProxy: false),
+          Prisma.validateDatasourceURL(options.datasourceUrl!),
         );
       }
 
       if (options.datasources?.containsKey(name) == true) {
         return MapEntry(
           name,
-          Prisma.validateDatasourceURL(options.datasources![name]!,
-              isProxy: false),
+          Prisma.validateDatasourceURL(options.datasources![name]!),
         );
       }
 
@@ -231,12 +230,23 @@ extension on BinaryEngine {
           ),
       };
 
-      return MapEntry(name, Prisma.validateDatasourceURL(url, isProxy: false));
+      return MapEntry(name, Prisma.validateDatasourceURL(url));
     });
 
-    final datasources = overwriteDatasources.entries
-        .map((e) => {'name': e.key, 'url': e.value})
-        .toList();
+    Map<String, String> generateDatasourceItem(MapEntry<String, String> e) {
+      if (e.value.startsWith('prisma://')) {
+        throw PrismaClientInitializationError(
+          errorCode: 'P1013',
+          message:
+              'The binary engine does not support Prisma Proxy connection URL',
+        );
+      }
+
+      return {'name': e.key, 'url': e.value};
+    }
+
+    final datasources =
+        overwriteDatasources.entries.map(generateDatasourceItem).toList();
 
     return base64.encode(utf8.encode(json.encode(datasources)));
   }

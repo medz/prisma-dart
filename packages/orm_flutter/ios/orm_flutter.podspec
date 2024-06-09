@@ -13,12 +13,6 @@ The engine of Prisma ORM for Flutter, Library for binding Prisma's C-Abi engine 
   s.license          = { :file => '../LICENSE', :type => "BSD-3" }
   s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
 
-  s.prepare_command = <<-CMD
-    cd ..
-    dart run orm_flutter:dl_engine
-    cd -
-  CMD
-
   # This will ensure the source files in Classes/ are included in the native
   # builds of apps using this FFI plugin. Podspec does not support relative
   # paths, so Classes contains a forwarder C file that relatively imports

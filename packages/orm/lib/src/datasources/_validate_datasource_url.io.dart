@@ -6,10 +6,10 @@ import '../_internal/project_directory.dart';
 import '../errors.dart';
 import '_validate_datasource_url.dart' as shared;
 
-String validateDatasourceURL(String datasourceUrl, {bool isProxy = false}) {
+String validateDatasourceURL(String datasourceUrl) {
   final url = Uri.tryParse(datasourceUrl);
   if (url?.scheme != 'file' || url == null) {
-    return shared.validateDatasourceURL(datasourceUrl, isProxy: isProxy);
+    return shared.validateDatasourceURL(datasourceUrl);
   }
 
   final pwd = findProjectDirectory()?.path ?? Directory.current.path;
