@@ -27,13 +27,9 @@ Future<void> downloadEngine(GeneratorOptions options) async {
   }
 
   final target =
-      File(path.join(options.generator.output!.value, 'prisma-query-engine'));
+      File(path.join(path.dirname(options.schemaPath), 'prisma-query-engine'));
   if (await target.exists()) {
     await target.delete(recursive: true);
-  }
-
-  if (!await target.parent.exists()) {
-    await target.parent.create(recursive: true);
   }
 
   await source.copy(target.path);
