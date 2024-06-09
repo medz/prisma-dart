@@ -1,3 +1,39 @@
+# Prisma Dart v5.0.2 & Flutter integration 0.1.2
+
+To install Prisma ORM for Dart v5.0.2 run this command:
+
+```bash
+dart pub add orm:^5.0.2
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^5.0.1
+```
+
+* [**"Prisma Dart v4 -> v5 & Flutter integration" Upgrade Guides**](https://prisma.pub/getting-started/upgrade_guides.html)
+
+---
+
+FLutter integration:
+
+```yaml
+dependencies:
+  orm_flutter: ^0.1.1
+```
+
+* [**"Flutter Integration FAQ**](https://prisma.pub/getting-started/flutter.html#faq)
+
+## What's Changed
+
+* Generator regressed to previous version
+* Prisma C-ABI query engine is provided by default in Flutter integration
+* Flutter integration Android downloads Prisma C-ABI query engine in cmake script
+
+**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v5.0.2+orm_flutter-v0.1.2...orm-v5.0.2+orm_flutter-v0.1.2
+
 # Prisma Dart v5.0.1 & Flutter integration 0.1.1
 
 To install Prisma ORM for Dart v5.0.1 run this command:

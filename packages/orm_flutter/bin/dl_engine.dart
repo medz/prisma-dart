@@ -25,18 +25,10 @@ main() async {
   }
 
   final root = Directory.fromUri(ormFlutterPackage.root).path;
-  final version = File(join(root, '.version', 'prisma-engines'))
+  final version = File(join(root, 'prisma-engines-version.txt'))
       .readAsLinesSync()
       .join()
       .trim();
-  final lockFile = File(join(root, '.version', 'prisma-engines.lock'));
-  final String? lockVersion = () {
-    if (lockFile.existsSync()) {
-      return lockFile.readAsLinesSync().join().trim();
-    }
-
-    return null;
-  }();
 
   final zip = File(join(root, '.dart_tool', 'prisma-libqueryengine.zip'));
   Future<void> download() async {
@@ -87,13 +79,15 @@ main() async {
   void copyAndroidStaticLibrary() {
     stdout.writeln('Copy static librart to Android');
 
-    final lib = join(source, 'android', 'jniLibs');
-    final target = Directory(join(root, 'android', 'query_engine'));
+    final target =
+        Directory(join(root, 'android', '.prisma-query-engines', version));
     if (target.existsSync()) {
       target.deleteSync(recursive: true);
     }
 
-    $('cp -rf ${relative(lib)}/ ${relative(target.path)}');
+    target.createSync(recursive: true);
+
+    $('cp -rf ${relative(source)}/ ${relative(target.path)}');
   }
 
   void copyiOSStaticLibrary() {
@@ -113,17 +107,8 @@ main() async {
     $('cp -rf ${relative(lib)}/ ${relative(target.path)}');
   }
 
-  if (!zip.existsSync() || lockVersion != version) {
-    await download();
-  }
-
+  await download();
   unzip();
   copyAndroidStaticLibrary();
   copyiOSStaticLibrary();
-
-  if (!lockFile.existsSync()) {
-    lockFile.createSync(recursive: true);
-  }
-
-  lockFile.writeAsString(version);
 }
