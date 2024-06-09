@@ -1,5 +1,5 @@
 #include "query_engine.h"
-#include "orm_flutter.h"
+#include "query_engine_bridge.h"
 
 /**
     Create a new [QueryEngine]
