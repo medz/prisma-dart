@@ -10,7 +10,7 @@ or update your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm: ^5.0.1
+  orm: ^5.0.2
 ```
 
 * [**"Prisma Dart v4 -> v5 & Flutter integration" Upgrade Guides**](https://prisma.pub/getting-started/upgrade_guides.html)
@@ -21,7 +21,7 @@ FLutter integration:
 
 ```yaml
 dependencies:
-  orm_flutter: ^0.1.1
+  orm_flutter: ^0.1.2
 ```
 
 * [**"Flutter Integration FAQ**](https://prisma.pub/getting-started/flutter.html#faq)
