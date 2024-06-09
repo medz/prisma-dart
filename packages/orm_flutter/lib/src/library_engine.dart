@@ -330,7 +330,7 @@ extension on LibraryEngine {
 
   /// Creates overwrite datasources string.
   Map<String, String> createOverwriteDatasources() {
-    return datasources.map((name, datasource) {
+    final overwriteDatasources = datasources.map((name, datasource) {
       if (options.datasourceUrl != null) {
         return MapEntry(name, options.datasourceUrl!);
       }
@@ -350,8 +350,20 @@ extension on LibraryEngine {
           ),
       };
 
-      return MapEntry(name, Prisma.validateDatasourceURL(url, isPorxy: false));
+      return MapEntry(name, Prisma.validateDatasourceURL(url));
     });
+
+    final shouldThrowUrlError =
+        overwriteDatasources.entries.any((e) => !e.value.startsWith('file:'));
+    if (shouldThrowUrlError) {
+      throw PrismaClientInitializationError(
+        errorCode: "P1013",
+        message:
+            'Prisma and Flutter integration engine only support SQLite connection strings (start with the `file:`)',
+      );
+    }
+
+    return overwriteDatasources;
   }
 }
 

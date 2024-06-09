@@ -2,8 +2,14 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
-Directory? findProjectDirectory() =>
-    _nestFindPubspecDirectory(File.fromUri(Platform.script).parent);
+Directory? findProjectDirectory([String? directory]) {
+  if (directory != null) {
+    return _nestFindPubspecDirectory(Directory(directory));
+  }
+
+  return _nestFindPubspecDirectory(Directory.current) ??
+      _nestFindPubspecDirectory(File.fromUri(Platform.script).parent);
+}
 
 Directory? _nestFindPubspecDirectory(Directory directory) {
   try {

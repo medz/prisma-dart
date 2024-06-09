@@ -8,7 +8,7 @@ import 'package:path/path.dart';
 
 import 'src/generator.dart';
 import 'src/utils/is_flutter_engine_type.dart';
-// import 'src/generator+client.dart';
+import 'src/download_engine.dart';
 
 void main() async {
   final app = GeneratorApp.stdio(stdin: stdin, stdout: stderr);
@@ -54,14 +54,7 @@ Future<void> generate(GeneratorOptions options) async {
     await output.writeAsString(formated);
   }
 
-  if (!isFlutterEngineType(options.generator.config)) {
-    // Copy prisma query engine.
-    final engineDownloadPath =
-        options.binaryPaths.queryEngine?.values.firstOrNull;
-    if (engineDownloadPath != null) {
-      await File(engineDownloadPath).copy('prisma-query-engine');
-    }
-  }
+  await downloadEngine(options);
 }
 
 extension on File {

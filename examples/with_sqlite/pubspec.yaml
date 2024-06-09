@@ -8,7 +8,6 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  logging: ^1.2.0
   orm:
     path: ../../packages/orm
 

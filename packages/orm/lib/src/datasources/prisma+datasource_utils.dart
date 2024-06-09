@@ -6,7 +6,6 @@ import '_validate_datasource_url.dart'
     as validate_datasource_url;
 
 extension Prisma$DatasourceUtils on PrismaNamespace {
-  String validateDatasourceURL(String datasourceUrl, {bool isProxy = false}) =>
-      validate_datasource_url.validateDatasourceURL(datasourceUrl,
-          isProxy: isProxy);
+  String validateDatasourceURL(String datasourceUrl) =>
+      validate_datasource_url.validateDatasourceURL(datasourceUrl);
 }

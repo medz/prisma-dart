@@ -235,14 +235,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
-  logging:
-    dependency: transitive
-    description:
-      name: logging
-      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
   matcher:
     dependency: transitive
     description:
@@ -288,7 +280,7 @@ packages:
       path: "../../packages/orm_flutter"
       relative: true
     source: path
-    version: "0.0.6"
+    version: "0.1.0"
   package_config:
     dependency: transitive
     description:
