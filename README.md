@@ -71,7 +71,7 @@ The documentation is divided into the following sections:
 
 ## Examples
 
-You can also find them in the [`example` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/example).
+You can also find them in the [`example` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/examples).
 
 ## Query engine support matrix
 
