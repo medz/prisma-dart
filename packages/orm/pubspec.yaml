@@ -11,12 +11,7 @@ topics:
   - orm
   - prisma
   - database
-  - PostgreSQL
-  - MySQL
-  - MariaDB
-  - SQL Server
-  - MongoDB
-  - CockroachDB
+  - db
 
 environment:
   sdk: ^3.2.0
