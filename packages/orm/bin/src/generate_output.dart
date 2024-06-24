@@ -127,6 +127,20 @@ extension on Generator {
 
   Expression generageOtherField(dmmf.OutputField field) {
     final type = refer('json').index(literalString(field.name));
+
+    if (field.outputType.type == 'DateTime') {
+      return CodeExpression(Block.of([
+        Code('switch ('),
+        type.code,
+        Code(') {'),
+        Code('DateTime value => value,'),
+        Code('String value => DateTime.parse(value),'),
+        Code('_ =>'),
+        type.code,
+        Code('}')
+      ]));
+    }
+
     if (!field.outputType.isList) return type;
 
     final when = type
