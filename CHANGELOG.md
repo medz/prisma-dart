@@ -1,3 +1,22 @@
+# Prisma Dart v5.0.4
+
+To install Prisma ORM for Dart v5.0.4 run this command:
+
+```bash
+dart pub add orm:^5.0.4
+```
+
+or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^5.0.4
+```
+
+## What's Changed
+
+* `bug`/`generator`: Fixed `<model>.fromJson` not handling time strings.
+
 # Prisma Dart v5.0.3
 
 To install Prisma ORM for Dart v5.0.3 run this command:
@@ -17,7 +36,7 @@ dependencies:
 
 ## What's Changed
 
-* **BUG**: Fixed binary engine copy location error.
+* **bug**: Fixed binary engine copy location error.
 
 **Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v5.0.2+orm_flutter-v0.1.2...orm-v5.0.3
 
