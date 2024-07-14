@@ -87,7 +87,7 @@ We welcome contributions! Please read our [contributing guide](CONTRIBUTING.md) 
 
 Thank you to all the people who already contributed to Odroe!
 
-[![Contributors](https://opencollective.com/openodroe/contributors.svg?width=890)](https://github.com/odroe/prisma-dart/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=medz/prisma-dart)](https://github.com/odroe/prisma-dart/graphs/contributors)
 
 ## Code of Conduct
 
