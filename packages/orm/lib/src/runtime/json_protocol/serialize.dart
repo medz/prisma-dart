@@ -38,22 +38,6 @@ extension ModelActionToJsonQueryAction on dmmf.ModelAction {
   }
 }
 
-// TODO: What's this?
-//
-// I wrote it myself, but I forgot why I wrote it and why it is not used.
-//
-// Maybe I need to re-verify the Prisma JSON protocol
-//
-// -----------------------------------
-//
-// extension on JsonQueryAction {
-//   String toApiFunctionName() {
-//     if (name.endsWith('One')) return name.substring(0, name.length - 3);
-
-//     return name;
-//   }
-// }
-
 extension<K, V> on Map<K, V> {
   Map<K, V> withoutKeys(Iterable<K> keys) =>
       Map.from(this)..removeWhere((k, _) => keys.contains(k));
