@@ -85,7 +85,7 @@ You can also find them in the [`example` folder in the `main` branch](https://gi
 
 We welcome contributions! Please read our [contributing guide](CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Prisma.
 
-Thank you to all the people who already contributed to Odroe!
+Thank you to all the people who already contributed to Prisma Dart!
 
 [![Contributors](https://contrib.rocks/image?repo=medz/prisma-dart)](https://github.com/odroe/prisma-dart/graphs/contributors)
 
