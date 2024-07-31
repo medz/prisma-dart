@@ -6,7 +6,7 @@
 
     Returns a [Status] code.
 */
-FFI_PLUGIN_EXPORT int create(struct ConstructorOptions options,
+FFI_PLUGIN_EXPORT enum Status create(struct ConstructorOptions options,
                              struct QueryEngine **qePtr,
                              char **errorStringPtr)
 {
@@ -16,25 +16,25 @@ FFI_PLUGIN_EXPORT int create(struct ConstructorOptions options,
 /**
     Destroy a [QueryEngine]
 */
-FFI_PLUGIN_EXPORT int destroy(struct QueryEngine *qe) {
+FFI_PLUGIN_EXPORT enum Status destroy(struct QueryEngine *qe) {
     return prisma_destroy(qe);
 }
 
 /** Start a [QueryEngine] */
-FFI_PLUGIN_EXPORT int start(struct QueryEngine *qe,
+FFI_PLUGIN_EXPORT enum Status start(struct QueryEngine *qe,
                             const char *trace,
                             char **errorStringPtr) {
     return prisma_connect(qe, trace, errorStringPtr);
 }
 
 /** Stop a [QueryEngine] */
-FFI_PLUGIN_EXPORT int stop(struct QueryEngine *qe,
+FFI_PLUGIN_EXPORT enum Status stop(struct QueryEngine *qe,
                            const char *headerStr) {
     return prisma_disconnect(qe, headerStr);
 }
 
 /** Apply migrations */
-FFI_PLUGIN_EXPORT int applyMigrations(struct QueryEngine *qe,
+FFI_PLUGIN_EXPORT enum Status applyMigrations(struct QueryEngine *qe,
                                       const char *migrationsPath,
                                       char **errorStringPtr) {
     return prisma_apply_pending_migrations(qe, migrationsPath, errorStringPtr);

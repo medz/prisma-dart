@@ -1,8 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "@prisma/client": "^5.14.0",
-    "prisma": "^5.14.0",
+    "prisma": "^5.17.0",
     "vitepress": "^1.2.2"
   },
   "scripts": {
