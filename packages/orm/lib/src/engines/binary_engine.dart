@@ -259,14 +259,6 @@ extension on BinaryEngine {
 
     // Set port is dynamic free port
     yield* ['--port', '0'];
-
-    // Sets datamodel
-    yield '--datamodel';
-    yield base64.encode(utf8.encode(schema));
-
-    // Set overwrite datasources
-    yield '--overwrite-datasources';
-    yield createOverwriteDatasourcesString();
   }
 
   Map<String, String> createQueryEngineEnvironment() {
@@ -286,6 +278,8 @@ extension on BinaryEngine {
     environment['RUST_BACKTRACE'] = Prisma.env('RUST_BACKTRACE').or(() => '1');
     environment['RUST_LOG'] =
         Prisma.env('RUST_LOG').or(() => LogLevel.info.name);
+    environment['OVERWRITE_DATASOURCES'] = createOverwriteDatasourcesString();
+    environment['PRISMA_DML'] = base64.encode(utf8.encode(schema));
 
     return environment;
   }
