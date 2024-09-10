@@ -1,173 +1,22 @@
-# Prisma Dart v5.0.5
+## v5.1.0
 
-To install Prisma ORM for Dart v5.0.5 run this command:
-
-```bash
-dart pub add orm:^5.0.5
-```
-
-or update your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  orm: ^5.0.5
-```
-
-## What's Changed
-
-- Fixed `File name or extension too long` on Windows - #418 ([ProcessException: File name or extension too long | ORM 5.0.4](https://github.com/medz/prisma-dart/issues/418))
-
-## ‼️Important Tips
-
-Please use Prisma CLI version `5.17.0` and do not upgrade to a higher version. The RAW protocol has been changed since version 5.18.0.
-
-Prisma Dart is not yet adapted to the new protocol. If you do not use the RAW SQL function, you can upgrade with confidence.
-
-# Prisma Dart v5.0.4
-
-To install Prisma ORM for Dart v5.0.4 run this command:
+To install Prisma ORM for Dart v5.1.0 run this command
 
 ```bash
-dart pub add orm:^5.0.4
+dart pub add orm:^5.1.0
 ```
 
-or update your `pubspec.yaml` file:
+Or update your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm: ^5.0.4
+  orm: ^5.1.0
 ```
 
-## What's Changed
+## Runtime & CLI
 
-- `bug`/`generator`: Fixed `<model>.fromJson` not handling time strings.
+- **deps**: Upgrade the Dart SDK min version to `^3.4.0`.
 
-# Prisma Dart v5.0.3
+## Flutter Integration
 
-To install Prisma ORM for Dart v5.0.3 run this command:
-
-```bash
-dart pub add orm:^5.0.3
-```
-
-or update your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  orm: ^5.0.3
-```
-
-- [**"Prisma Dart v4 -> v5 & Flutter integration" Upgrade Guides**](https://prisma.pub/getting-started/upgrade_guides.html)
-
-## What's Changed
-
-- **bug**: Fixed binary engine copy location error.
-
-**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v5.0.2+orm_flutter-v0.1.2...orm-v5.0.3
-
-# Prisma Dart v5.0.2 & Flutter integration 0.1.2
-
-To install Prisma ORM for Dart v5.0.2 run this command:
-
-```bash
-dart pub add orm:^5.0.2
-```
-
-or update your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  orm: ^5.0.2
-```
-
-- [**"Prisma Dart v4 -> v5 & Flutter integration" Upgrade Guides**](https://prisma.pub/getting-started/upgrade_guides.html)
-
----
-
-FLutter integration:
-
-```yaml
-dependencies:
-  orm_flutter: ^0.1.2
-```
-
-- [**"Flutter Integration FAQ**](https://prisma.pub/getting-started/flutter.html#faq)
-
-## What's Changed
-
-- Generator regressed to previous version
-- Prisma C-ABI query engine is provided by default in Flutter integration
-- Flutter integration Android downloads Prisma C-ABI query engine in cmake script
-
-**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v5.0.1+orm_flutter-v0.1.1...orm-v5.0.2+orm_flutter-v0.1.2
-
-# Prisma Dart v5.0.1 & Flutter integration 0.1.1
-
-To install Prisma ORM for Dart v5.0.1 run this command:
-
-```bash
-dart pub add orm:^5.0.1
-```
-
-or update your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  orm: ^5.0.1
-```
-
----
-
-FLutter integration:
-
-```yaml
-dependencies:
-  orm_flutter: ^0.1.1
-```
-
-- [**"Prisma Dart v4 -> v5 & Flutter integration" Upgrade Guides**](https://prisma.pub/getting-started/upgrade_guides.html)
-- [**"Flutter Integration FAQ**](https://prisma.pub/getting-started/flutter.html#faq)
-
-## What's Changed
-
-- Remove the `isProxy` for `Prisma.validateDatasourceURL` utils.
-- When building the client, automatically download the Prisma C-ABI engine if `engineType` is `flutter`.
-
-**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v5.0.0+orm_flutter-v0.1.0...orm-v5.0.1+orm_flutter-v0.1.1
-
-# Prisma Dart v5.0.0 & Flutter integration 0.1.0
-
-To install Prisma ORM for Dart v5.0.0 run this command:
-
-```bash
-dart pub add orm:^5.0.0
-```
-
-or update your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  orm: ^5.0.0
-```
-
----
-
-FLutter integration:
-
-```yaml
-dependencies:
-  orm_flutter: ^0.1.0
-```
-
-[**"Prisma Dart v4 -> v5 & Flutter integration" Upgrade Guides**](https://prisma.pub/getting-started/upgrade_guides.html)
-
-## What's Changed
-
-- refactor: throws prisma client errors
-- refactor(engine): Refactoring binary engines
-- refactor(client): add base client and client options
-- feat(client): add `env` support
-- feat(client): add logging
-- refactor(Flutter integration): Refactoring the Flutter integration engine.
-
-**Full Changelog**: https://github.com/medz/prisma-dart/compare/orm-v4.4.0...orm-v5.0.0+orm_flutter-v0.1.0
+- **deps**: Reset the Dart SDK to `^3.4.0`
