@@ -15,4 +15,5 @@ dependencies:
 
 ## What's Changed
 
-- **deps**: Upgrade the Dart SDK min version to `^3.4.0`.
+- **deps**: Upgrade the Dart SDK min version to `^3.4.0`
+- **deps**: Upgrade `path` package version to `^1.9.0`

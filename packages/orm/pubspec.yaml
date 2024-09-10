@@ -24,7 +24,7 @@ dependencies:
   dart_style: ^2.3.4
   decimal: ^3.0.0
   json_rpc_2: ^3.0.2
-  path: ^1.8.3
+  path: ^1.9.0
   rc: ^0.3.3
   recase: ^4.1.0
   stream_channel: ^2.1.2
