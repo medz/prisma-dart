@@ -1,1 +1,18 @@
-../../CHANGELOG.md
+## v5.1.0
+
+To install Prisma ORM for Dart v5.1.0 run this command
+
+```bash
+dart pub add orm:^5.1.0
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^5.1.0
+```
+
+## What's Changed
+
+- **deps**: Upgrade the Dart SDK min version to `^3.4.0`.

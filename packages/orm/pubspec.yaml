@@ -28,7 +28,7 @@ dependencies:
   rc: ^0.3.3
   recase: ^4.1.0
   stream_channel: ^2.1.2
-  webfetch: ^0.0.17
+  webfetch: ^0.1.0
 
 dev_dependencies:
   lints: ^4.0.0
