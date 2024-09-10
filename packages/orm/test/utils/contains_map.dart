@@ -1,8 +1,5 @@
 import 'package:test/test.dart';
 
-// Matcher containsMap<T extends Map>(T parts) {}
-//
-
 class ContainsMap extends Matcher {
   final Map parts;
 

@@ -259,8 +259,8 @@ class LibraryEngine extends Engine implements Finalizable {
       }
 
       throw 'Not match transcation ID';
-    } catch (_) {
-      throw StateError('Prisma engine did not start transaction. -> $_');
+    } catch (e) {
+      throw StateError('Prisma engine did not start transaction. -> $e');
     }
   }
 
