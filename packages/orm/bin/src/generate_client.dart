@@ -60,6 +60,7 @@ extension on Generator {
         Code('transaction) {'),
         Code('''
         final client = PrismaClient(
+          engine: \$engine,
           datasources: \$options.datasources,
           datasourceUrl: \$options.datasourceUrl,
           errorFormat: \$options.errorFormat,
@@ -148,13 +149,13 @@ extension on Generator {
 final _defaultConstructor = Constructor((builder) {
   builder.constant = false;
 
-  const superPptionalParameters = [
+  const superOptionalParameters = [
     'datasourceUrl',
     'datasources',
     'errorFormat',
     'log'
   ];
-  for (final parameter in superPptionalParameters) {
+  for (final parameter in superOptionalParameters) {
     builder.optionalParameters.add(Parameter((builder) {
       builder.name = parameter;
       builder.named = true;

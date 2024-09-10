@@ -315,7 +315,6 @@ extension on BinaryEngine {
 
     Uri? endpoint;
     final stdoutSubscription = process.stdout.byline().listen((event) {
-      print(event);
       final payload = tryParseJSON(event);
       tryCompleteEndpoint(payload, (uri) => endpoint = uri);
 

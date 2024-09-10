@@ -1,4 +1,4 @@
-## v5.1.0
+## v5.0.6
 
 To install Prisma ORM for Dart v5.1.0 run this command
 
@@ -19,3 +19,4 @@ dependencies:
 - **deps**: Upgrade `path` package version to `^1.9.0`
 - **deps**: Upgrade `code_builder` package version to `^4.10.0`
 - **docs**: Fixed generate via bun command for setup doc
+- **fix**: Error of restarting the engine every time a query is made
