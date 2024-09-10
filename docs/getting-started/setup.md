@@ -90,7 +90,7 @@ Generate the Prisma Dart client by running the following command:
 ::: code-group
 
 ```bash [Bun.js]
-bun prisma init --generator-provider="dart run orm"
+bun prisma generate
 ```
 
 ```bash [NPM]
