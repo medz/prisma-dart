@@ -17,3 +17,5 @@ dependencies:
 
 - **deps**: Upgrade the Dart SDK min version to `^3.4.0`
 - **deps**: Upgrade `path` package version to `^1.9.0`
+- **deps**: Upgrade `code_builder` package version to `^4.10.0`
+- **docs**: Fixed generate via bun command for setup doc

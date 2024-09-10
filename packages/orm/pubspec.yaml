@@ -20,7 +20,7 @@ executables:
   prisma-client-dart: orm
 
 dependencies:
-  code_builder: ^4.8.0
+  code_builder: ^4.10.0
   dart_style: ^2.3.4
   decimal: ^3.0.0
   json_rpc_2: ^3.0.2

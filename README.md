@@ -29,13 +29,13 @@ This will add a like this to you packages `pubspec.yaml` (and run an implicit `d
 
 ```yaml
 dependencies:
-  orm: latest
+  orm: ^5.1.0
 ```
 
 Or you can run the following command:
 
 ```bash
-dart pub add orm
+dart pub add orm:^5.1.0
 ```
 
 ## Sponsors
@@ -43,7 +43,7 @@ dart pub add orm
 Prisma Client Dart is an [BSD-3 Clause licensed](https://github.com/medz/prisma-dart/blob/main/LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring Seven(@medz)](https://github.com/sponsors/medz) or [Odroe](https://opencollective.com/openodroe) on GitHub.
 
 <p align="center">
-  <a target="_blank" href="https://github.com/sponsors/odroe#sponsors">
+  <a target="_blank" href="https://github.com/sponsors/medz#sponsors">
     <img alt="sponsors" src="https://github.com/odroe/.github/raw/main/sponsors.svg">
   </a>
 </p>
