@@ -1,14 +1,18 @@
 ## v0.2.0-WIP
 
-To install Prisma ORM for Dart v5.1.0 run this command
+To install Prisma Flutter Integration v0.2.0 run this command
 
 ```bash
-dart pub add orm:^5.1.0
+dart pub add orm_flutter:^0.2.0
 ```
 
 Or update your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm: ^5.1.0
+  orm_flutter: ^0.2.0
 ```
+
+### What's Changed
+
+- **deps**: Upgrade the `webfetch` to `^0.1.0` version.
