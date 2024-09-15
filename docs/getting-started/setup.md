@@ -5,15 +5,15 @@ Install Prisma Dart Client, you need to create a `prisma/schema.prisma` file in 
 ::: code-group
 
 ```bash [Bun.js]
-bun prisma init --generator-provider="dart run orm"
+bun prisma init
 ```
 
 ```bash [NPM]
-npx prisma init --generator-provider="dart run orm"
+npx prisma init
 ```
 
 ```bash [pnpm]
-pnpx prisma init --generator-provider="dart run orm"
+pnpx prisma init
 ```
 
 :::
