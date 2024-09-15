@@ -8,25 +8,25 @@ Prisma ORM for Dart allows you to integrate it in Flutter Project.
 
 ## Platform Support
 
-| Platform | Support | Nots |
-|------|------|------|
-| iOS | ✅ | |
-| Android | ✅ | |
-| macOS | ❌ | Prisma C-ABI not support |
-| Linux | ❌ | Prisma C-ABI not support |
-| Windows | ❌ | Prisma C-ABI not support |
-| Web | ❌ | No plans at the moment |
+| Platform | Support | Nots                     |
+| -------- | ------- | ------------------------ |
+| iOS      | ✅      |                          |
+| Android  | ✅      |                          |
+| macOS    | ❌      | Prisma C-ABI not support |
+| Linux    | ❌      | Prisma C-ABI not support |
+| Windows  | ❌      | Prisma C-ABI not support |
+| Web      | ❌      | No plans at the moment   |
 
 ## Database Support
 
-| Database | Suppoprt | Notes |
-|------|------|------|
-| Sqlite | ✅ | |
-| MySQL/MariaDB | ❌ | Prisma C-ABI not support |
-| PostgreSQL | ❌ | Prisma C-ABI not support |
-| MongoDB | ❌ | Prisma C-ABI not support |
-| Microsoft SQL Server | ❌ | Prisma C-ABI not support |
-| CockroachDB | ❌ | Prisma C-ABI not support |
+| Database             | Suppoprt | Notes                    |
+| -------------------- | -------- | ------------------------ |
+| Sqlite               | ✅       |                          |
+| MySQL/MariaDB        | ❌       | Prisma C-ABI not support |
+| PostgreSQL           | ❌       | Prisma C-ABI not support |
+| MongoDB              | ❌       | Prisma C-ABI not support |
+| Microsoft SQL Server | ❌       | Prisma C-ABI not support |
+| CockroachDB          | ❌       | Prisma C-ABI not support |
 
 ## Installation
 
@@ -42,7 +42,7 @@ Or edit your Flutter project’s `pubspce.yaml` file:
 
 ```yaml
 dependencies:
-   orm_flutter: latest
+  orm_flutter: latest
 ```
 
 ## Integration
@@ -87,10 +87,10 @@ Now, let's edit your `pubspec.yaml`:
 
 ```yaml
 flutter:
-   assets:
-     - prisma/migrations/ # Migrations root dir
-     - prisma/migrations/<dir>/ # Set first migration files dir
-     # ... More assets
+  assets:
+    - prisma/migrations/ # Migrations root dir
+    - prisma/migrations/<dir>/ # Set first migration files dir
+    # ... More assets
 ```
 
 > Notes: Each migration folder generated using the `prisma migrate dev` command needs to be added.
@@ -108,6 +108,7 @@ await engine.applyMigrations(
 > Notes:
 >
 > In addition to using `flutter.assets`, you can customize `AssetBundle` to achieve:
+>
 > ```dart
 > await engine.applyMigrations(
 >   path: '<Your migration dir prefix>',

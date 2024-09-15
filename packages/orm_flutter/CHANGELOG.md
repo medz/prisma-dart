@@ -1,4 +1,4 @@
-## v0.2.0-WIP
+## v0.2.0
 
 To install Prisma Flutter Integration v0.2.0 run this command
 
@@ -15,4 +15,5 @@ dependencies:
 
 ### What's Changed
 
-- **deps**: Upgrade the `webfetch` to `^0.1.0` version.
+- **deps**: Upgrade the `webfetch` to `^0.1.0` version
+- **upstream**: Adapt the `orm` package `5.0.*` version
