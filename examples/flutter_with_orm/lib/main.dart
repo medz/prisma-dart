@@ -89,19 +89,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> onRefresh() {
-    return prisma.user
-        .findMany(
-      orderBy: PrismaUnion.$2(UserOrderByWithRelationInput(id: sort)),
-    )
-        .then((users) {
-      setState(() {
-        this.users.clear();
-        this.users.addAll(users);
-      });
-    });
-  }
-
   void onCreate() {
     showModalBottomSheet(
       context: context,
@@ -137,18 +124,29 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void create(String name) {
-    prisma.user
-        .create(data: PrismaUnion.$2(UserUncheckedCreateInput(name: name)))
-        .then((user) {
-      setState(() {
-        if (sort == SortOrder.asc) {
-          users.add(user);
-        } else {
-          users.insert(0, user);
-        }
-      });
-      Navigator.of(context).pop();
+  Future<void> onRefresh() async {
+    final users = await prisma.user.findMany(
+      orderBy: PrismaUnion.$2(UserOrderByWithRelationInput(id: sort)),
+    );
+
+    setState(() {
+      this.users.clear();
+      this.users.addAll(users);
+    });
+  }
+
+  Future<void> create(String name) async {
+    final created = await prisma.user
+        .create(data: PrismaUnion.$2(UserUncheckedCreateInput(name: name)));
+
+    setState(() {
+      switch (sort) {
+        case SortOrder.asc:
+          users.add(created);
+          break;
+        default:
+          users.insert(0, created);
+      }
     });
   }
 
