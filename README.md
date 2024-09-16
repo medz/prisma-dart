@@ -34,7 +34,7 @@ dependencies:
 
 Or you can run the following command:
 
-```bash
+```sh
 dart pub add orm:^5.1.0
 ```
 
