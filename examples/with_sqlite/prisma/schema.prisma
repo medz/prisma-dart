@@ -15,8 +15,9 @@ datasource db {
 }
 
 model Game {
-  id   String @id @default(uuid()) @map("game_id")
-  name String @map("game_name")
+  id       String    @id @default(uuid()) @map("game_id")
+  name     String    @map("game_name")
+  startsAt DateTime?
 
   @@map("games")
 }

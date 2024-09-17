@@ -25,6 +25,7 @@ List<Map<String, Object?>> deserializeRawResult(Map result) {
 }
 
 Object? _decode(String type, Object? value) {
+  if (value == null) return null;
   return switch (type) {
     'bigint' => BigInt.parse(value.toString()),
     'bytes' => base64.decode(value.toString()),
