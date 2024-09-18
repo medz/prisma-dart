@@ -1,4 +1,7 @@
 .DS_Store
+.env
 .idea/
+prisma-query-engine*
+generated_*/
 node_modules/
 dev/

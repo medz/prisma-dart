@@ -1,0 +1,15 @@
+name: with_postgres
+description: A sample command-line application.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.5.1
+
+# Add regular dependencies here.
+dependencies:
+  orm:
+    path: ../../packages/orm
+
+dev_dependencies:
+  lints: ^4.0.0
