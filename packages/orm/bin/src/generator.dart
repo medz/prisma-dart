@@ -22,14 +22,12 @@ class Generator {
 
   Generator(this.options);
 
-  Iterable<(String, Library)> generate() {
+  Iterable<(String, Library)> generate() sync* {
     libraries.prisma.ignoreForFile.add('non_constant_identifier_names');
     libraries.client.body.add(generateClient());
 
-    return [
-      ('client.dart', libraries.client.build()),
-      ('prisma.dart', libraries.prisma.build()),
-      ('model.dart', libraries.model.build()),
-    ];
+    yield ('client.dart', libraries.client.build());
+    yield ('prisma.dart', libraries.prisma.build());
+    yield ('model.dart', libraries.model.build());
   }
 }

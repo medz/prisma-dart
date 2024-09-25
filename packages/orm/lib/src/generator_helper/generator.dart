@@ -51,6 +51,8 @@ class GeneratorApp {
       final options = GeneratorOptions.fromJson(params.asMap);
       final result = await handler(options);
 
+      print(options.typedSql);
+
       return result;
     });
   }

@@ -1,7 +1,17 @@
 /// Log level
+///
+/// Defines different levels of log importance:
+/// - [info]: General information
+/// - [query]: Database queries
+/// - [warn]: Warning messages
+/// - [error]: Error messages
 enum LogLevel { info, query, warn, error }
 
-/// Log emit
+/// Log emission method
+///
+/// Defines the output channels for logs:
+/// - [stdout]: Standard output stream
+/// - [event]: Event triggering
 enum LogEmit { stdout, event }
 
 /// Prisma engine log event.

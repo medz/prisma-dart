@@ -2,6 +2,46 @@ import '../dmmf/dmmf.dart';
 import 'config.dart';
 import 'env_value.dart';
 
+typedef _Source = Map<String, dynamic>;
+
+/// Represents a column in an SQL query
+extension type SqlQueryColumn(_Source _) implements _Source {
+  /// The name of the column
+  String get name => _['name'];
+
+  /// The data type of the column
+  String get typ => _['typ'];
+
+  /// Indicates whether the column can contain null values
+  bool get nullable => _['nullable'];
+}
+
+/// Represents a parameter in an SQL query
+extension type SqlQueryParam(SqlQueryColumn _) implements _Source {
+  /// Optional documentation for the parameter
+  String? get documentation => _['documentation'];
+}
+
+/// Represents an SQL query
+extension type SqlQuery(_Source _) implements _Source {
+  /// The name of the query
+  String get name => _['name'];
+
+  /// The source code of the query
+  String get source => _['source'];
+
+  /// Optional documentation for the query
+  String? get documentation => _['documentation'];
+
+  /// The list of parameters for the query
+  Iterable<SqlQueryParam> get parameters =>
+      (_['parameters'] as Iterable).cast();
+
+  /// The list of result columns for the query
+  Iterable<SqlQueryColumn> get resultColumns =>
+      (_['resultColumns'] as Iterable).cast();
+}
+
 class GeneratorOptions {
   final GeneratorConfig generator;
   final Iterable<GeneratorConfig> otherGenerators;
@@ -13,6 +53,7 @@ class GeneratorOptions {
   final BinaryPaths binaryPaths;
   final bool postinstall;
   final bool noEngine;
+  final Iterable<SqlQuery>? typedSql;
 
   const GeneratorOptions({
     required this.generator,
@@ -23,6 +64,7 @@ class GeneratorOptions {
     required this.datasources,
     required this.version,
     required this.binaryPaths,
+    this.typedSql,
     this.postinstall = false,
     this.noEngine = false,
   });
@@ -41,6 +83,7 @@ class GeneratorOptions {
       binaryPaths: BinaryPaths.fromJson(json['binaryPaths'] ?? const {}),
       postinstall: json['postinstall'] ?? false,
       noEngine: json['noEngine'] ?? false,
+      typedSql: (json['typedSql'] as Iterable?)?.cast(),
     );
   }
 }

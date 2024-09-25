@@ -2,9 +2,10 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider   = "dart run orm"
-  output     = "client"
-  engineType = "binary"
+  provider        = "dart run orm"
+  output          = "client"
+  engineType      = "binary"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -12,10 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
+  age       Int?
   name      String?
+  role      Role     @default(USER)
   posts     Post[]
   createdAt DateTime @default(now())
 }
