@@ -37,7 +37,7 @@ abstract interface class Generator {
 Generator createGenerator({
   Stream<String>? stream,
   StreamSink<String>? sink,
-  FutureOr Function(Config config)? getManifest,
+  FutureOr<Manifest?> Function(Config config)? getManifest,
 }) {
   final channel = StreamChannel<String>(
     stream?.transform(const LineSplitter()) ??
