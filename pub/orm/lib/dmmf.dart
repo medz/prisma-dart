@@ -1,6 +1,22 @@
-library prisma.dmmf;
+import 'package:json/json.dart';
 
-export 'src/dmmf/dmmf.dart';
-export 'src/dmmf/datamodel.dart';
-export 'src/dmmf/mappings.dart';
-export 'src/dmmf/schema.dart';
+@JsonCodable()
+class Document {
+  final Datemodel datamodel;
+}
+
+@JsonCodable()
+class Datemodel {
+  final List<Model> models;
+}
+
+@JsonCodable()
+class Model {
+  final String name;
+  final String? dbName;
+  final List<Field> fields;
+  final List<UniqueIndex> uniqueIndexes;
+  final String? documentation;
+  final PrimaryKey? primaryKey;
+  final bool isGenerated;
+}
