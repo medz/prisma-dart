@@ -150,6 +150,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
+  json:
+    dependency: transitive
+    description:
+      name: json
+      sha256: "40a98ec3715f40f3723c20ee68dce3640f32d24d278262de4eddae885c060180"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.2"
   json_rpc_2:
     dependency: transitive
     description:
@@ -201,7 +209,7 @@ packages:
   orm:
     dependency: "direct main"
     description:
-      path: "../../packages/orm"
+      path: "../../pub/orm"
       relative: true
     source: path
     version: "5.1.1"

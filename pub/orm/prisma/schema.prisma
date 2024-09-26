@@ -5,6 +5,7 @@ generator client {
   provider   = "dart run orm"
   output     = "client"
   engineType = "binary"
+  demo       = env("DATABASE_URL")
 }
 
 datasource db {

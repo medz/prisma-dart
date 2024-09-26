@@ -19,13 +19,5 @@ include: package:lints/recommended.yaml
 #     non_constant_identifier_names: false
 
 analyzer:
-  exclude:
-    - node_modules/*
-# language:
-#   non-constant-identifier-names: false
-
-# For more information about the core and recommended set of lints, see
-# https://dart.dev/go/core-lints
-
-# For additional information about configuring this file, see
-# https://dart.dev/guides/language/analysis-options
+  enable-experiment:
+    - macros
