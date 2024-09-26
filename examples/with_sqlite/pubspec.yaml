@@ -9,7 +9,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   orm:
-    path: ../../packages/orm
+    path: ../../pub/orm
 
 dev_dependencies:
   lints: ^3.0.0

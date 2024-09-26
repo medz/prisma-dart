@@ -35,9 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   orm:
-    path: ../../packages/orm
+    path: ../../pub/orm
   orm_flutter:
-    path: ../../packages/orm_flutter
+    path: ../../pub/orm_flutter
   path_provider: ^2.1.4
   path: ^1.9.0
 
