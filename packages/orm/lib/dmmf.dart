@@ -39,7 +39,7 @@ extension type const Datamodel(Map<String, dynamic> _)
   /// the structure and relationships of your data.
   ///
   /// Returns: An [Iterable] of [Model] objects representing all models in the datamodel.
-  Iterable<Model> get models => (_['models']).cast();
+  Iterable<Model> get models => (_['models'] as Iterable).map((e) => Model(e));
 
   /// Returns an iterable of all enums in the datamodel.
   ///
@@ -47,7 +47,8 @@ extension type const Datamodel(Map<String, dynamic> _)
   /// in your models, providing a way to constrain a field to a specific set of allowed values.
   ///
   /// Returns: An [Iterable] of [DatamodelEnum] objects representing all enums in the datamodel.
-  Iterable<DatamodelEnum> get enums => (_['enums']).cast();
+  Iterable<DatamodelEnum> get enums =>
+      (_['enums'] as Iterable).map((e) => DatamodelEnum(e));
 
   /// Returns an iterable of all types in the datamodel.
   ///
@@ -55,7 +56,7 @@ extension type const Datamodel(Map<String, dynamic> _)
   /// These can include composite types or other custom type definitions.
   ///
   /// Returns: An [Iterable] of [Model] objects representing all custom types in the datamodel.
-  Iterable<Model> get types => (_['types']).cast();
+  Iterable<Model> get types => (_['types'] as Iterable).map((e) => Model(e));
 
   /// Returns an iterable of all indexes in the datamodel.
   ///
@@ -64,7 +65,8 @@ extension type const Datamodel(Map<String, dynamic> _)
   /// database to enhance query performance.
   ///
   /// Returns: An [Iterable] of [Index] objects representing all indexes defined in the datamodel.
-  Iterable<Index> get indexes => (_['indexes']).cast();
+  Iterable<Index> get indexes =>
+      (_['indexes'] as Iterable).map((e) => Index(e));
 }
 
 /// Represents a model in the Prisma datamodel.
@@ -389,7 +391,8 @@ extension type const InputObjectTypes(Map<String, dynamic> _)
   Iterable<InputType>? get model => _['model']?.cast();
 
   /// The Prisma input types
-  Iterable<InputType> get prisma => _['prisma'].cast();
+  Iterable<InputType> get prisma =>
+      (_['prisma'] as Iterable).map((e) => InputType(e));
 }
 
 /// Represents an input type in the schema
@@ -554,7 +557,8 @@ extension type const OutputObjectTypes(Map<String, dynamic> _)
   /// Returns an iterable of output types representing user-defined models.
   ///
   /// These types correspond to the models defined in the Prisma schema.
-  Iterable<OutputType> get model => _['model'].cast();
+  Iterable<OutputType> get model =>
+      (_['model'] as Iterable).map((e) => OutputType(e));
 
   /// Returns an iterable of output types representing Prisma's built-in types.
   ///
@@ -786,7 +790,8 @@ enum FieldRefLocation {
 extension type const Mappings(Map _) implements Map {
   /// Returns an iterable of ModelMapping objects representing the operations
   /// associated with each model in the schema.
-  Iterable<ModelMapping> get modelOperations => _['modelOperations'].cast();
+  Iterable<ModelMapping> get modelOperations =>
+      (_['modelOperations'] as Iterable).map((e) => ModelMapping(e));
 
   /// Returns an OtherOperations object representing operations that are not
   /// directly associated with specific models.
@@ -802,13 +807,14 @@ extension type const OtherOperations(Map _) implements Map {
   ///
   /// These operations typically include queries and other read-only actions
   /// that do not modify the database.
-  Iterable<String> get read => _['read'].cast();
+  Iterable<String> get read => (_['read'] as List?)?.cast<String>() ?? const [];
 
   /// Returns an iterable of strings representing write operations.
   ///
   /// These operations typically include mutations and other actions
   /// that modify the database state.
-  Iterable<String> get write => _['write'].cast();
+  Iterable<String> get write =>
+      (_['write'] as List?)?.cast<String>() ?? const [];
 }
 
 /// Represents a mapping between a model and its associated operations in the Prisma schema.

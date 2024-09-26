@@ -15,7 +15,7 @@ Future<void> main() async {
 Future<GeneratorManifest> manifest(GeneratorConfig config) async {
   return GeneratorManifest(
     prettyName: 'Prisma DMMF',
-    defaultOutput: 'dmmf.json',
+    defaultOutput: 'test/fixtures/dmmf.json',
   );
 }
 
