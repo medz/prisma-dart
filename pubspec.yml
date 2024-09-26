@@ -1,0 +1,8 @@
+name: workspace
+description: Prisma Dart workspace.
+publish_to: none
+environment:
+  sdk: ^3.5.0
+workspace:
+  - pub/orm
+  - pub/orm_flutter
