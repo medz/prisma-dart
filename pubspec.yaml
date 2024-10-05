@@ -6,3 +6,9 @@ environment:
 workspace:
   - packages/orm
   - packages/orm_flutter
+
+  # Documentation example
+  - docs-example
+
+  # Examples
+  - examples/with_sqlite
