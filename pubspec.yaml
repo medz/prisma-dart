@@ -12,3 +12,4 @@ workspace:
 
   # Examples
   - examples/with_sqlite
+  - examples/with_postgres
