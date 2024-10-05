@@ -5,3 +5,4 @@ environment:
 
 workspace:
   - packages/orm
+  - packages/orm_flutter
