@@ -1,5 +1,3 @@
-library prisma.runtime;
-
 export 'src/errors.dart';
 export 'src/runtime/action_client.dart';
 export 'src/runtime/decimal.dart';
