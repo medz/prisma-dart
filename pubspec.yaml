@@ -1,0 +1,7 @@
+name: workspace
+
+environment:
+  sdk: ^3.5.3
+
+workspace:
+  - packages/orm
