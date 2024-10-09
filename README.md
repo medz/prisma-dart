@@ -29,13 +29,13 @@ This will add a like this to you packages `pubspec.yaml` (and run an implicit `d
 
 ```yaml
 dependencies:
-  orm: ^5.1.1
+  orm: latest
 ```
 
 Or you can run the following command:
 
 ```sh
-dart pub add orm:^5.1.1
+dart pub add orm
 ```
 
 ## Sponsors
@@ -76,10 +76,10 @@ You can also find them in the [`example` folder in the `main` branch](https://gi
 ## Query engine support matrix
 
 | Engine     | Dart Native | Dart Web | Flutter Native | Flutter Web |
-| :--------- | :---------: | :------: | :------------: | :---------: |
-| Binary     |     ✅      |    ❌    |       ❌       |     ❌      |
-| Library    |     ✅      |    ❌    |       ✅       |     ❌      |
-| Data Proxy |     ✅      |    ✅    |       ✅       |     ✅      |
+|------------|:-----------:|:--------:|:--------------:|:-----------:|
+| Binary     |      ✅      |    ❌    |       ❌        |     ❌      |
+| Library    |      ✅      |    ❌    |       ✅       |     ❌      |
+| Data Proxy |      ✅      |    ✅   |       ✅       |     ✅     |
 
 ## Contributing
 
