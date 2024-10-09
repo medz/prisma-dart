@@ -1,6 +1,8 @@
 .DS_Store
 .env
 .idea/
+.vscode/
+.dart_tool/
 prisma-query-engine*
 generated_*/
 node_modules/

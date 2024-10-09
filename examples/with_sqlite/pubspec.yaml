@@ -1,10 +1,11 @@
-name: with_sqlite
+name: prisma_with_sqlite
 description: A sample command-line application.
 version: 1.0.0
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: ^3.4.1
+  sdk: ^3.5.0
 
 # Add regular dependencies here.
 dependencies:
@@ -12,4 +13,4 @@ dependencies:
     path: ../../packages/orm
 
 dev_dependencies:
-  lints: ^3.0.0
+  lints: ^5.0.0

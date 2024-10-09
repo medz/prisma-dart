@@ -1,5 +1,5 @@
 import 'package:orm/orm.dart';
-import 'package:with_sqlite/with_sqlite.dart';
+import 'package:prisma_with_sqlite/with_sqlite.dart';
 
 final prisma = PrismaClient(log: {
   (LogLevel.query, LogEmit.stdout),
