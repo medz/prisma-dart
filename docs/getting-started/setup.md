@@ -161,10 +161,9 @@ import 'package:shelf_docker_shutdown/shelf_docker_shutdown.dart';
 
 Future<void> main() async{
   final prisma = PrismaClient();
+  final handler = MyHandler();
 
-  try {
-     final handler = MyHandler();
-
+  try { // [!code focus:10]
     final server = await io.serve(handler, 'localhost', 8080);
     await server.closeOnTermSignal();
 
