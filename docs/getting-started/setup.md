@@ -157,7 +157,7 @@ When running a shelf server you can use the following main method to gracefully 
 
 ```dart
 import 'package:shelf/shelf_io.dart' as io;
-import 'package:shelf_modular/shelf_modular.dart';
+import 'package:shelf_docker_shutdown/shelf_docker_shutdown.dart';
 
 Future<void> main() async{
   final prisma = PrismaClient();
