@@ -34,17 +34,17 @@ dependencies:
 
 Or you can run the following command:
 
-```bash
+```sh
 dart pub add orm
 ```
 
 ## Sponsors
 
-Prisma Client Dart is an [BSD-3 Clause licensed](https://github.com/medz/prisma-dart/blob/main/LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring Seven(@medz)](https://github.com/sponsors/medz) or [Odroe](https://opencollective.com/openodroe) on GitHub.
+Prisma Client Dart is an [BSD-3 Clause licensed](https://github.com/medz/prisma-dart/blob/main/LICENSE) open source project with its ongoing development made possible entirely by the support of these awesome backers. If you'd like to join them, please consider [sponsoring Seven(@medz)](https://github.com/sponsors/medz) on GitHub.
 
 <p align="center">
-  <a target="_blank" href="https://github.com/sponsors/odroe#sponsors">
-    <img alt="sponsors" src="https://github.com/odroe/.github/raw/main/sponsors.svg">
+  <a target="_blank" href="https://github.com/sponsors/medz#:~:text=Featured-,sponsors,-Current%20sponsors">
+    <img alt="sponsors" src="https://github.com/medz/public/raw/main/sponsors.tiers.svg">
   </a>
 </p>
 
@@ -71,23 +71,23 @@ The documentation is divided into the following sections:
 
 ## Examples
 
-You can also find them in the [`example` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/example).
+You can also find them in the [`example` folder in the `main` branch](https://github.com/odroe/prisma-dart/tree/main/examples).
 
 ## Query engine support matrix
 
 | Engine     | Dart Native | Dart Web | Flutter Native | Flutter Web |
-| :--------- | :---------: | :------: | :------------: | :---------: |
-| Binary     |     ✅      |    ❌    |       ❌       |     ❌      |
-| Library    |     ✅      |    ❌    |       ✅       |     ❌      |
-| Data Proxy |     ✅      |    ✅    |       ✅       |     ✅      |
+|------------|:-----------:|:--------:|:--------------:|:-----------:|
+| Binary     |      ✅      |    ❌    |       ❌        |     ❌      |
+| Library    |      ✅      |    ❌    |       ✅       |     ❌      |
+| Data Proxy |      ✅      |    ✅   |       ✅       |     ✅     |
 
 ## Contributing
 
 We welcome contributions! Please read our [contributing guide](CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Prisma.
 
-Thank you to all the people who already contributed to Odroe!
+Thank you to all the people who already contributed to Prisma Dart!
 
-[![Contributors](https://opencollective.com/openodroe/contributors.svg?width=890)](https://github.com/odroe/prisma-dart/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=medz/prisma-dart)](https://github.com/odroe/prisma-dart/graphs/contributors)
 
 ## Code of Conduct
 

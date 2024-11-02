@@ -35,7 +35,8 @@ class TransactionClient<Client extends BasePrismaClient<Client>> {
     TransactionIsolationLevel? isolationLevel,
   }) async {
     if (this.transaction?.id != null) {
-      throw Exception('Cannot nest start transactions.');
+      throw PrismaClientUnknownRequestError(
+          message: 'Cannot nest start transactions.');
     }
 
     headers ??= TransactionHeaders();
@@ -100,6 +101,7 @@ class TransactionClient<Client extends BasePrismaClient<Client>> {
     TransactionIsolationLevel? isolationLevel,
   }) async {
     final client = await start(
+      headers: headers,
       maxWait: maxWait,
       timeout: timeout,
       isolationLevel: isolationLevel,
@@ -107,11 +109,11 @@ class TransactionClient<Client extends BasePrismaClient<Client>> {
 
     try {
       final result = await fn(client);
-      await commit();
+      await client.$transaction.commit();
 
       return result;
     } catch (e) {
-      await rollback();
+      await client.$transaction.rollback();
 
       rethrow;
     }

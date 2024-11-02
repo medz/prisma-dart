@@ -40,26 +40,26 @@ FFI_PLUGIN_EXPORT enum Status {
 
     Returns a [Status] code.
 */
-FFI_PLUGIN_EXPORT int create(struct ConstructorOptions options,
+FFI_PLUGIN_EXPORT enum Status create(struct ConstructorOptions options,
                              struct QueryEngine **qePtr,
                              char **errorStringPtr);
 
 /**
     Destroy a [QueryEngine]
 */
-FFI_PLUGIN_EXPORT int destroy(struct QueryEngine *qe);
+FFI_PLUGIN_EXPORT enum Status destroy(struct QueryEngine *qe);
 
 /** Start a [QueryEngine] */
-FFI_PLUGIN_EXPORT int start(struct QueryEngine *qe,
+FFI_PLUGIN_EXPORT enum Status start(struct QueryEngine *qe,
                             const char *trace,
                             char **errorStringPtr);
 
 /** Stop a [QueryEngine] */
-FFI_PLUGIN_EXPORT int stop(struct QueryEngine *qe,
+FFI_PLUGIN_EXPORT enum Status stop(struct QueryEngine *qe,
                            const char *headerStr);
 
 /** Apply migrations */
-FFI_PLUGIN_EXPORT int applyMigrations(struct QueryEngine *qe,
+FFI_PLUGIN_EXPORT enum Status applyMigrations(struct QueryEngine *qe,
                                       const char *migrationsPath,
                                       char **errorStringPtr);
 

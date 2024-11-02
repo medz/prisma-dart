@@ -6,7 +6,7 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
-/// Bindings for `src/prisma_flutter.h`.
+/// Bindings for `src/orm_flutter.h`.
 ///
 /// Regenerate bindings with `dart run ffigen --config ffigen.yaml`.
 ///
@@ -28,21 +28,21 @@ class QueryEngineBindings {
   /// Create a new [QueryEngine]
   ///
   /// Returns a [Status] code.
-  int create(
+  Status create(
     ConstructorOptions options,
     ffi.Pointer<ffi.Pointer<QueryEngine>> qePtr,
     ffi.Pointer<ffi.Pointer<ffi.Char>> errorStringPtr,
   ) {
-    return _create(
+    return Status.fromValue(_create(
       options,
       qePtr,
       errorStringPtr,
-    );
+    ));
   }
 
   late final _createPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(
+          ffi.UnsignedInt Function(
               ConstructorOptions,
               ffi.Pointer<ffi.Pointer<QueryEngine>>,
               ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('create');
@@ -51,75 +51,79 @@ class QueryEngineBindings {
           ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   /// Destroy a [QueryEngine]
-  int destroy(
+  Status destroy(
     ffi.Pointer<QueryEngine> qe,
   ) {
-    return _destroy(
+    return Status.fromValue(_destroy(
       qe,
-    );
+    ));
   }
 
-  late final _destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<QueryEngine>)>>(
-          'destroy');
+  late final _destroyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.UnsignedInt Function(ffi.Pointer<QueryEngine>)>>('destroy');
   late final _destroy =
       _destroyPtr.asFunction<int Function(ffi.Pointer<QueryEngine>)>();
 
   /// Start a [QueryEngine]
-  int start(
+  Status start(
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> trace,
     ffi.Pointer<ffi.Pointer<ffi.Char>> errorStringPtr,
   ) {
-    return _start(
+    return Status.fromValue(_start(
       qe,
       trace,
       errorStringPtr,
-    );
+    ));
   }
 
   late final _startPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>,
+          ffi.UnsignedInt Function(
+              ffi.Pointer<QueryEngine>,
+              ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('start');
   late final _start = _startPtr.asFunction<
       int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   /// Stop a [QueryEngine]
-  int stop(
+  Status stop(
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> headerStr,
   ) {
-    return _stop(
+    return Status.fromValue(_stop(
       qe,
       headerStr,
-    );
+    ));
   }
 
   late final _stopPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(
+          ffi.UnsignedInt Function(
               ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>)>>('stop');
   late final _stop = _stopPtr.asFunction<
       int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>)>();
 
   /// Apply migrations
-  int applyMigrations(
+  Status applyMigrations(
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> migrationsPath,
     ffi.Pointer<ffi.Pointer<ffi.Char>> errorStringPtr,
   ) {
-    return _applyMigrations(
+    return Status.fromValue(_applyMigrations(
       qe,
       migrationsPath,
       errorStringPtr,
-    );
+    ));
   }
 
   late final _applyMigrationsPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>,
+          ffi.UnsignedInt Function(
+              ffi.Pointer<QueryEngine>,
+              ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('applyMigrations');
   late final _applyMigrations = _applyMigrationsPtr.asFunction<
       int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>,
@@ -272,13 +276,23 @@ final class ConstructorOptions extends ffi.Struct {
 /// - [QueryEngineBindings.start]
 /// - [QueryEngineBindings.stop]
 /// - [QueryEngineBindings.applyMigrations]
-abstract class Status {
+enum Status {
   /// Success
-  static const int ok = 0;
+  ok(0),
 
   /// Error
-  static const int err = 1;
+  err(1),
 
   /// Missing pointer, only create returns.
-  static const int miss = 2;
+  miss(2);
+
+  final int value;
+  const Status(this.value);
+
+  static Status fromValue(int value) => switch (value) {
+        0 => ok,
+        1 => err,
+        2 => miss,
+        _ => throw ArgumentError("Unknown value for Status: $value"),
+      };
 }

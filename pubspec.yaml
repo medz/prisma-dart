@@ -1,0 +1,17 @@
+name: _
+publish_to: none
+
+environment:
+  sdk: ^3.5.3
+
+workspace:
+  - packages/orm
+  - packages/orm_flutter
+
+  # Documentation example
+  - docs-example
+
+  # Examples
+  - examples/with_sqlite
+  - examples/with_postgres
+  - examples/flutter_with_orm

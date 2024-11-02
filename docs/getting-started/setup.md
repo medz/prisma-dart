@@ -5,15 +5,15 @@ Install Prisma Dart Client, you need to create a `prisma/schema.prisma` file in 
 ::: code-group
 
 ```bash [Bun.js]
-bun prisma init --generator-provider="dart run orm"
+bun prisma init
 ```
 
 ```bash [NPM]
-npx prisma init --generator-provider="dart run orm"
+npx prisma init
 ```
 
 ```bash [pnpm]
-pnpx prisma init --generator-provider="dart run orm"
+pnpx prisma init
 ```
 
 :::
@@ -90,7 +90,7 @@ Generate the Prisma Dart client by running the following command:
 ::: code-group
 
 ```bash [Bun.js]
-bun prisma init --generator-provider="dart run orm"
+bun prisma generate
 ```
 
 ```bash [NPM]
@@ -150,3 +150,28 @@ If you don't wrap `try/catch` in your application, when your application throws 
 > Currently, I have not found a good way to automatically close the engine process. If you have any suggestions, please feel free to [issue](https://github.com/medz/prisma-dart/issues/new) or create a [PR](https://github.com/medz/prisma-dart/pulls) for it.
 
 :::
+
+### Shelf Server
+
+When running a shelf server you can use the following main method to gracefully handle errors and wait for the server to close before disconnecting the Prisma client:
+
+```dart
+import 'package:shelf/shelf_io.dart' as io;
+import 'package:shelf_docker_shutdown/shelf_docker_shutdown.dart';
+
+Future<void> main() async{
+  final prisma = PrismaClient();
+  final handler = MyHandler();
+
+  try { // [!code focus:10]
+    final server = await io.serve(handler, 'localhost', 8080);
+    await server.closeOnTermSignal();
+
+    await prisma.$disconnect();
+  } catch (e) {
+    // Handle error here
+
+    await prisma.$disconnect();
+  } 
+}
+```
