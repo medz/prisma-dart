@@ -22,7 +22,7 @@ ffigen:
     Bindings for `query_engine_bridge.h`.
 
     Regenerate bindings with `dart run ffigen`.
-  output: lib/src/bindings.dart
+  output: lib/orm_flutter_ffi.dart
   language: c
   headers:
     entry-points:

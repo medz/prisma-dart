@@ -89,3 +89,8 @@ await write(
   ),
   file(new URL("./android/query_engine.h", target)),
 );
+await $`
+  cd ${Bun.fileURLToPath(new URL(import.meta.resolve("../packages/orm_flutter_ffi/")))}
+  dart run ffigen
+  cd -
+`;
