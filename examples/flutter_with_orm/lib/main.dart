@@ -159,7 +159,11 @@ class _HomeState extends State<Home> {
   }
 
   void onDelete(int id) async {
-    prisma.user.delete(where: UserWhereUniqueInput(id: id)).then((_) {
+    prisma.$transaction((tx) async {
+      final res = await tx.user.delete(where: UserWhereUniqueInput(id: id));
+      print('TX delete user:');
+      print(res?.toJson());
+    }).then((_) {
       setState(() {
         users.removeWhere((u) => u.id == id);
       });

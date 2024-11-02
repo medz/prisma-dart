@@ -213,7 +213,7 @@ class LibraryEngine extends Engine implements Finalizable {
       required Transaction transaction}) async {
     final Pointer<Char> trace =
         headers.traceparent?.toNativeUtf8().cast() ?? nullptr;
-    final response = _bindingsInstance.rollbackTransaction(
+    final response = _bindingsInstance.commitTransaction(
         _qe, transaction.id.toNativeUtf8().cast(), trace);
     if (response == nullptr) {
       throw StateError('Prisma engine did not commit transaction.');
