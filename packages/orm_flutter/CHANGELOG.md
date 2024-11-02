@@ -16,6 +16,7 @@ dependencies:
 ### What's New
 
 - **bug**: Fixed an issue where a transaction was not committed, Thx @Joschiller REF [#443](https://github.com/medz/prisma-dart/issues/443)
+- **upstream**: Upgrade CABI engine to `bf0e5e8a04cada8225617067eaa03d041e2bba36` (v5.21.1)
 
 ### Notes
 
