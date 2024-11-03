@@ -11,12 +11,15 @@ import 'package:path/path.dart';
 import '_generate_bindings.dart';
 import 'bindings.dart';
 
+/// Current query engine ID counter
 int _currentEngineId = 0;
 
+/// Callback function for logging from the query engine
 void _logCallback(Pointer<Char> idPtr, Pointer<Char> msgPtr) {
   // TODO
 }
 
+/// Implementation of the Prisma Query Engine using FFI bindings
 class LibraryEngine extends Engine implements Finalizable {
   LibraryEngine({
     required super.options,
@@ -211,6 +214,7 @@ class LibraryEngine extends Engine implements Finalizable {
     throw UnsupportedError('Prisma Flutter engine not support metrics.');
   }
 
+  /// Destroy the query engine instance
   void destroy() {
     final status = bindings.destroy(_qeptr.value);
     if (status != Status.ok) {
@@ -218,6 +222,7 @@ class LibraryEngine extends Engine implements Finalizable {
     }
   }
 
+  /// Apply Prisma migrations from Flutter assets
   Future<void> applyMigrations({
     required String path,
     AssetBundle? bundle,
@@ -274,7 +279,9 @@ class LibraryEngine extends Engine implements Finalizable {
   }
 }
 
+/// Extension methods for LibraryEngine
 extension on LibraryEngine {
+  /// Create environment pointer for query engine
   Pointer<Utf8> createEnvironmentPtr() {
     final environment = Map<String, String>.from(Prisma.environment);
 
@@ -295,11 +302,13 @@ extension on LibraryEngine {
     return json.encode(environment).toNativeUtf8();
   }
 
+  /// Create native options for query engine constructor
   ConstructorOptionsNative createOptionsNative() {
     return Struct.create<ConstructorOptionsNative>()
       ..config_dir = "".toNativeUtf8().cast();
   }
 
+  /// Create datasource overrides pointer for query engine
   Pointer<Utf8> createOverwriteDatasourcesPtr() {
     final overwriteDatasources = datasources.map((name, datasource) {
       if (options.datasourceUrl != null) {
@@ -338,6 +347,7 @@ extension on LibraryEngine {
   }
 }
 
+/// Extension to provide an "or" operator for nullable types
 extension<T> on T? {
   T or(T Function() factory) => factory();
 }

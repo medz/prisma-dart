@@ -1,0 +1,1 @@
+../../../template/example_stub.md
