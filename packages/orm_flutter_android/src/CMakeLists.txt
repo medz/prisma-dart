@@ -24,9 +24,9 @@ endif()
 add_library(prisma_query_engine STATIC IMPORTED)
 
 if ((CMAKE_VERSION GREATER 3.20) OR (CMAKE_VERSION EQUAL 3.20))
-    cmake_path(SET PRISMA_QUERY_ENGINE_LIB jniLibs/${ANDROID_ABI}/libquery_engine.a NORMALIZE)
+    cmake_path(SET PRISMA_QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libquery_engine.a NORMALIZE)
 else()
-    set(PRISMA_QUERY_ENGINE_LIB jniLibs/${ANDROID_ABI}/libquery_engine.a)
+    set(PRISMA_QUERY_ENGINE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libquery_engine.a)
 endif()
 
 set_target_properties(prisma_query_engine PROPERTIES
