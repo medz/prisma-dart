@@ -1,0 +1,35 @@
+name: orm_flutter_ffi
+description: A starting point for Dart libraries or applications.
+version: 0.0.0
+resolution: workspace
+
+environment:
+  sdk: ^3.5.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  ffigen: ^15.0.0
+
+ffigen:
+  name: QueryEngineBindings
+  description: |
+    Bindings for `query_engine_bridge.h`.
+
+    Regenerate bindings with `dart run ffigen`.
+  output: lib/orm_flutter_ffi.dart
+  language: c
+  headers:
+    entry-points:
+      - ../query_engine_bridge/headers/bridge.h
+    include-directives:
+      - ../query_engine_bridge/**
+  comments:
+    style: any
+    length: full
+  silence-enum-warning: true
+  functions:
+    exclude:
+      - prisma_.*
+  globals:
+    exclude:
+      - PRISMA_.*

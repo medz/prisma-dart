@@ -84,11 +84,17 @@ await (async () => {
 
 // Write C header file to bridege
 await write(
-  new URL(import.meta.resolve("../packages/orm_flutter/clang/query_engine.h")),
+  new URL(
+    import.meta.resolve(
+      "../packages/query_engine_bridge/include/query_engine.h",
+    ),
+  ),
   file(new URL("./android/query_engine.h", target)),
 );
+
+// Rebuild FFI bindings
 await $`
-  cd ${Bun.fileURLToPath(new URL(import.meta.resolve("../packages/orm_flutter")))}
+  cd ${Bun.fileURLToPath(new URL(import.meta.resolve("../packages/orm_flutter_ffi")))}
   dart run ffigen
   cd -
 `;
