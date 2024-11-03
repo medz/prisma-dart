@@ -1,0 +1,16 @@
+name: orm_flutter_android
+description: "Prisma Query Engine implementation for Android platform (FFI)"
+homepage: https://prisma.pub
+
+resolution: workspace
+version: 0.0.1
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.3.0"
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true

@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - orm_flutter (0.0.1):
+  - orm_flutter_ios (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -8,20 +8,20 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - orm_flutter (from `.symlinks/plugins/orm_flutter/ios`)
+  - orm_flutter_ios (from `.symlinks/plugins/orm_flutter_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  orm_flutter:
-    :path: ".symlinks/plugins/orm_flutter/ios"
+  orm_flutter_ios:
+    :path: ".symlinks/plugins/orm_flutter_ios/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  orm_flutter: af9dae2b195d82487326dc0e1a014159f6b21887
+  orm_flutter_ios: a5a6382a845a5cf5f0887f67c2aa4a9d712e3a5a
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
