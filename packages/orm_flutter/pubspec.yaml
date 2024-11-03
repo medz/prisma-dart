@@ -49,9 +49,9 @@ ffigen:
   language: c
   headers:
     entry-points:
-      - src/query_engine_bridge.h
+      - clang/query_engine_bridge.h
     include-directives:
-      - "src/**"
+      - "clang/**"
   comments:
     style: any
     length: full

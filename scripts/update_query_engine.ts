@@ -84,13 +84,34 @@ await (async () => {
 
 // Write C header file to bridege
 await write(
-  new URL(
-    import.meta.resolve("../packages/query_engine_bridge/query_engine.h"),
-  ),
+  new URL(import.meta.resolve("../packages/orm_flutter/clang/query_engine.h")),
   file(new URL("./android/query_engine.h", target)),
 );
 await $`
-  cd ${Bun.fileURLToPath(new URL(import.meta.resolve("../packages/orm_flutter_ffi/")))}
+  cd ${Bun.fileURLToPath(new URL(import.meta.resolve("../packages/orm_flutter")))}
   dart run ffigen
   cd -
 `;
+
+// Copy QueryEngine.xcfoamework
+await (async () => {
+  const source = Bun.fileURLToPath(
+    new URL(
+      import.meta.resolve(
+        "../.dart_tool/prisma-dart/query-engine.cabi/ios/QueryEngine.xcframework",
+      ),
+    ),
+  );
+  const target = Bun.fileURLToPath(
+    new URL(
+      import.meta.resolve("../packages/orm_flutter/ios/orm_flutter/Frameworks"),
+    ),
+  );
+
+  if (await exists(target)) {
+    await rmdir(target, { recursive: true });
+  }
+  await mkdir(target, { recursive: true });
+
+  await $`cp -rvf ${source} ${target}/`;
+})();
