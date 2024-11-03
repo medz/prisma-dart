@@ -1,5 +1,7 @@
 name: orm_flutter_ffi
 description: FFI implementation of Prisma and Flutter integration query engine, acknowledged by `orm_flutter`.
+homepage: https://prisma.pub
+repository: https://github.com/medz/prisma-dart
 
 resolution: workspace
 version: 0.0.1
