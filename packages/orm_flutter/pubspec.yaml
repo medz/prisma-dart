@@ -5,7 +5,6 @@ repository: https://github.com/medz/prisma-dart
 
 resolution: workspace
 version: 0.3.1
-query_engine_hash: bf0e5e8a04cada8225617067eaa03d041e2bba36
 
 funding:
   - https://github.com/sponsors/medz
@@ -20,45 +19,17 @@ dependencies:
     sdk: flutter
   ffi: ^2.1.3
   orm: ^5.2.0
-  package_config: ^2.1.0
   path: ^1.9.0
   path_provider: ^2.1.4
-  webfetch: ^0.1.0
+  orm_flutter_ios: ^0.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  ffigen: ^15.0.0
 
 flutter:
   plugin:
     platforms:
-      android:
-        ffiPlugin: true
       ios:
-        ffiPlugin: true
-
-ffigen:
-  name: QueryEngineBindings
-  description: |
-    Bindings for `query_engine_bridge.h`.
-
-    Regenerate bindings with `dart run ffigen`.
-  output: lib/src/query_engine_bindings.dart
-  language: c
-  headers:
-    entry-points:
-      - clang/query_engine_bridge.h
-    include-directives:
-      - "clang/**"
-  comments:
-    style: any
-    length: full
-  silence-enum-warning: true
-  functions:
-    exclude:
-      - prisma_.*
-  globals:
-    exclude:
-      - PRISMA_.*
+        default_package: orm_flutter_ios

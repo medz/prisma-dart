@@ -1,5 +1,7 @@
 name: orm_flutter_ios
-description: "A new Flutter FFI plugin project."
+description: "Prisma Query Engine implementation for iOS platform (FFI)"
+
+resolution: workspace
 version: 0.0.1
 
 environment:
@@ -9,13 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
   plugin:
+    implements: orm_flutter
     platforms:
       ios:
         ffiPlugin: true
+        dartPluginClass: Demo

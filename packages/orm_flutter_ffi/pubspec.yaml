@@ -1,7 +1,8 @@
 name: orm_flutter_ffi
-description: A starting point for Dart libraries or applications.
-version: 0.0.0
+description: Prisma C-ABI query engine FFI bindings.
+
 resolution: workspace
+version: 0.0.1
 
 environment:
   sdk: ^3.5.0
