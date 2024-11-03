@@ -96,29 +96,26 @@ class _HomeState extends State<Home> {
       enableDrag: true,
       showDragHandle: true,
       builder: (context) {
-        final controller = TextEditingController();
+        String name = '';
 
-        return BottomSheet(
-          onClosing: controller.clear,
-          builder: (BuildContext context) {
-            return Column(
-              children: [
-                Text('Create User',
-                    style: Theme.of(context).textTheme.titleLarge),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: TextField(
-                    controller: controller,
-                    decoration: const InputDecoration(label: Text('Name')),
-                  ),
-                ),
-                FilledButton(
-                  child: const Text('Create'),
-                  onPressed: () => create(controller.text),
-                ),
-              ],
-            );
-          },
+        return Column(
+          children: [
+            Text('Create User', style: Theme.of(context).textTheme.titleLarge),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: TextField(
+                decoration: const InputDecoration(label: Text('Name')),
+                onChanged: (value) {
+                  print('On changed: $value');
+                  name = value;
+                },
+              ),
+            ),
+            FilledButton(
+              child: const Text('Create'),
+              onPressed: () => create(name),
+            ),
+          ],
         );
       },
     );
@@ -128,6 +125,9 @@ class _HomeState extends State<Home> {
     final users = await prisma.user.findMany(
       orderBy: PrismaUnion.$2(UserOrderByWithRelationInput(id: sort)),
     );
+
+    print('Refresh users:');
+    print(users);
 
     setState(() {
       this.users.clear();

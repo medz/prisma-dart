@@ -13,38 +13,16 @@ import 'bindings.dart';
 
 int _currentEngineId = 0;
 
+void _logCallback(Pointer<Char> idPtr, Pointer<Char> msgPtr) {
+  // TODO
+}
+
 class LibraryEngine extends Engine implements Finalizable {
   LibraryEngine({
     required super.options,
     required super.schema,
     required super.datasources,
-  }) : id = _currentEngineId++;
-
-  final int id;
-  late final _qeptr = malloc<Pointer<QueryEngine>>();
-  late bool _started = false;
-
-  // Lifecycle methods
-  @override
-  Future<void> start() async {
-    if (!_started && _qeptr != nullptr) {
-      final errPtr = malloc<Pointer<Char>>();
-      try {
-        final status =
-            bindings.start(_qeptr.value, '00'.toNativeUtf8().cast(), errPtr);
-        if (status == Status.err) {
-          if (errPtr.value == nullptr) {
-            throw StateError('Start query engine fail.');
-          }
-
-          final message = errPtr.value.cast<Utf8>().toDartString();
-          throw StateError(message);
-        }
-      } finally {
-        malloc.free(errPtr);
-      }
-    }
-
+  }) : id = _currentEngineId++ {
     final logLevel =
         this.options.logEmitter.definition.fold<String?>(null, (prev, e) {
       if (prev == 'info' || e.$1 == LogLevel.info) {
@@ -56,15 +34,14 @@ class LibraryEngine extends Engine implements Finalizable {
     final logQueries =
         this.options.logEmitter.definition.any((e) => e.$1 == LogLevel.query);
 
-    final basePath = await getApplicationDocumentsDirectory();
     final options = Struct.create<ConstructorOptions>()
-      ..base_path = basePath.path.toNativeUtf8().cast()
+      ..base_path = nullptr
       ..datamodel = schema.toNativeUtf8().cast()
       ..datasource_overrides = createOverwriteDatasourcesPtr().cast()
       ..env = createEnvironmentPtr().cast()
       ..id = id.toString().toNativeUtf8().cast()
       ..ignore_env_var_errors = true
-      ..log_callback = Pointer.fromFunction(logCallback)
+      ..log_callback = Pointer.fromFunction(_logCallback)
       ..log_level = (logLevel ?? 'info').toNativeUtf8().cast()
       ..log_queries = logQueries
       ..native = createOptionsNative();
@@ -82,11 +59,36 @@ class LibraryEngine extends Engine implements Finalizable {
       } else if (status == Status.miss) {
         throw StateError('Missing create query engine.');
       }
-
-      _started = false;
-      await start();
     } catch (_) {
       rethrow;
+    } finally {
+      malloc.free(errPtr);
+    }
+  }
+
+  final int id;
+  late final _qeptr = malloc<Pointer<QueryEngine>>();
+  late bool _started = false;
+
+  // Lifecycle methods
+  @override
+  Future<void> start() async {
+    if (_started) return;
+
+    final errPtr = malloc<Pointer<Char>>();
+    try {
+      final status =
+          bindings.start(_qeptr.value, '00'.toNativeUtf8().cast(), errPtr);
+      if (status == Status.err) {
+        if (errPtr.value == nullptr) {
+          throw StateError('Start query engine fail.');
+        }
+
+        final message = errPtr.value.cast<Utf8>().toDartString();
+        throw StateError(message);
+      }
+
+      _started = true;
     } finally {
       malloc.free(errPtr);
     }
@@ -273,10 +275,6 @@ class LibraryEngine extends Engine implements Finalizable {
 }
 
 extension on LibraryEngine {
-  void logCallback(Pointer<Char> idPtr, Pointer<Char> msgPtr) {
-    // TODO
-  }
-
   Pointer<Utf8> createEnvironmentPtr() {
     final environment = Map<String, String>.from(Prisma.environment);
 
