@@ -3,7 +3,11 @@ description: "Dynamic library implementation library for Prisma Dart and Flutter
 homepage: https://prisma.pub
 
 resolution: workspace
-version: 0.0.1
+version: 0.0.2
+
+funding:
+  - https://github.com/sponsors/medz
+  - https://opencollective.com/openodroe
 
 environment:
   sdk: ^3.5.0
