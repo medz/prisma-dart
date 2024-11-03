@@ -123,3 +123,24 @@ await (async () => {
 
   await $`cp -rvf ${source} ${target}`;
 })();
+
+// Sync Bridge(C Lang) for iOS
+await (async () => {
+  const source = Bun.fileURLToPath(
+    new URL(import.meta.resolve("../packages/query_engine_bridge")),
+  );
+  const target = Bun.fileURLToPath(
+    new URL(
+      import.meta.resolve(
+        "../packages/orm_flutter_ios/ios/orm_flutter_ios/Sources",
+      ),
+    ),
+  );
+
+  if (await exists(target)) {
+    await rmdir(target, { recursive: true });
+  }
+  await mkdir(target, { recursive: true });
+
+  await $`cp -rvf ${source} ${target}`;
+})();

@@ -7,6 +7,9 @@ version: 0.0.1
 environment:
   sdk: ^3.5.0
 
+dependencies:
+  orm_flutter_ios: ^0.0.1
+
 dev_dependencies:
   lints: ^5.0.0
   ffigen: ^15.0.0

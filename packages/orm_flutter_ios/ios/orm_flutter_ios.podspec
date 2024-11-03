@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
 
   s.source           = { :path => '.' }
-  s.source_files = 'orm_flutter_ios/Sources/orm_flutter/**/*'
+  s.source_files = 'orm_flutter_ios/Sources/**/*'
   s.dependency 'Flutter'
   s.vendored_frameworks = 'orm_flutter_ios/Frameworks/QueryEngine.xcframework'
   s.platform = :ios, '12.0'

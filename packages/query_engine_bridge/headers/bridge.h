@@ -1,25 +1,52 @@
-#include "headers/bridge.h"
+#include "../include/query_engine.h"
+
+#if _WIN32
+#include <windows.h>
+#endif
+
+#if _WIN32
+#define FFI_PLUGIN_EXPORT __declspec(dllexport)
+#else
+#define FFI_PLUGIN_EXPORT
+#endif
+
+#ifndef QueryEngine
+typedef struct QueryEngine {} QueryEngine;
+#endif
+
+/**
+ * function returns status code.
+ *
+ * see:
+ *  - [QueryEngineBindings.create]
+ *  - [QueryEngineBindings.destroy]
+ *  - [QueryEngineBindings.start]
+ *  - [QueryEngineBindings.stop]
+ *  - [QueryEngineBindings.applyMigrations]
+ */
+FFI_PLUGIN_EXPORT enum Status {
+    /** Success */
+    ok = 0,
+    /** Error */
+    err = 1,
+    /** Missing pointer, only create returns. */
+    miss = 2
+};
 
 /**
  * Create a new [QueryEngine]
- *
  * Returns a [Status] code.
  */
 FFI_PLUGIN_EXPORT enum Status create(
     struct ConstructorOptions options,
     struct QueryEngine **qePtr,
-    char **errorStringPtr)
-{
-    return prisma_create(options, qePtr, errorStringPtr);
-}
+    char **errorStringPtr
+);
 
 /**
  * Destroy a [QueryEngine]
  */
-FFI_PLUGIN_EXPORT enum Status destroy(struct QueryEngine *qe)
-{
-    return prisma_destroy(qe);
-}
+FFI_PLUGIN_EXPORT enum Status destroy(struct QueryEngine *qe);
 
 /**
  * Start a [QueryEngine]
@@ -27,20 +54,16 @@ FFI_PLUGIN_EXPORT enum Status destroy(struct QueryEngine *qe)
 FFI_PLUGIN_EXPORT enum Status start(
     struct QueryEngine *qe,
     const char *trace,
-    char **errorStringPtr)
-{
-    return prisma_connect(qe, trace, errorStringPtr);
-}
+    char **errorStringPtr
+);
 
 /**
  * Stop a [QueryEngine]
  */
 FFI_PLUGIN_EXPORT enum Status stop(
     struct QueryEngine *qe,
-    const char *headerStr)
-{
-    return prisma_disconnect(qe, headerStr);
-}
+    const char *headerStr
+);
 
 /**
  * Apply migrations
@@ -48,10 +71,8 @@ FFI_PLUGIN_EXPORT enum Status stop(
 FFI_PLUGIN_EXPORT enum Status applyMigrations(
     struct QueryEngine *qe,
     const char *migrationsPath,
-    char **errorStringPtr)
-{
-    return prisma_apply_pending_migrations(qe, migrationsPath, errorStringPtr);
-}
+    char **errorStringPtr
+);
 
 /**
  * Query a prisma request
@@ -61,10 +82,8 @@ FFI_PLUGIN_EXPORT const char *query(
     const char *bodyStr,
     const char *headerStr,
     const char *txIdStr,
-    char **errorStringPtr)
-{
-    return prisma_query(qe, bodyStr, headerStr, txIdStr, errorStringPtr);
-}
+    char **errorStringPtr
+);
 
 /**
  * Start a transaction
@@ -72,21 +91,17 @@ FFI_PLUGIN_EXPORT const char *query(
 FFI_PLUGIN_EXPORT const char *startTransaction(
     struct QueryEngine *qe,
     const char *optionsStr,
-    const char *headerStr)
-{
-    return prisma_start_transaction(qe, optionsStr, headerStr);
-}
+    const char *headerStr
+);
 
 /**
- * Commit a transaction querys
+ * Commit a transaction queries
  */
 FFI_PLUGIN_EXPORT const char *commitTransaction(
     struct QueryEngine *qe,
     const char *txIdStr,
-    const char *headerStr)
-{
-    return prisma_commit_transaction(qe, txIdStr, headerStr);
-}
+    const char *headerStr
+);
 
 /**
  * Rollback a transaction
@@ -94,7 +109,5 @@ FFI_PLUGIN_EXPORT const char *commitTransaction(
 FFI_PLUGIN_EXPORT const char *rollbackTransaction(
     struct QueryEngine *qe,
     const char *txIdStr,
-    const char *headerStr)
-{
-    return prisma_rollback_transaction(qe, txIdStr, headerStr);
-}
+    const char *headerStr
+);
