@@ -8,6 +8,7 @@ workspace:
   - packages/orm
   - packages/orm_flutter
   - packages/orm_flutter_ffi
+  - packages/orm_flutter_android
   - packages/orm_flutter_ios
 
   # Documentation example

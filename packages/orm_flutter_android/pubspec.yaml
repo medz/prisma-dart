@@ -1,7 +1,9 @@
 name: orm_flutter_android
-description: "A new Flutter FFI plugin project."
-version: 0.0.1
+description: "Prisma Query Engine implementation for Android platform (FFI)"
 homepage: https://prisma.pub
+
+resolution: workspace
+version: 0.0.1
 
 environment:
   sdk: ^3.5.0
