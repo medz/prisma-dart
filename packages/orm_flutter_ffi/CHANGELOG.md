@@ -1,3 +1,3 @@
-## 1.0.0
+## v0.0.1
 
-- Initial version.
+- FFI implementation of Prisma and Flutter integration query engine, acknowledged by `orm_flutter`

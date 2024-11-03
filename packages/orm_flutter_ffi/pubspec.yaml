@@ -1,8 +1,12 @@
 name: orm_flutter_ffi
-description: Prisma C-ABI query engine FFI bindings.
+description: FFI implementation of Prisma and Flutter integration query engine, acknowledged by `orm_flutter`.
 
 resolution: workspace
 version: 0.0.1
+
+funding:
+  - https://github.com/sponsors/medz
+  - https://opencollective.com/openodroe
 
 environment:
   sdk: ^3.5.0
@@ -12,9 +16,9 @@ dependencies:
   flutter:
     sdk: flutter
   ffi: ^2.1.3
-  orm: ^5.2.0
+  orm: ^5.2.1
   orm_flutter_android: ^0.0.1
-  orm_flutter_ios: ^0.0.1
+  orm_flutter_ios: ^0.0.2
   path_provider: ^2.1.5
   path: ^1.9.0
 
