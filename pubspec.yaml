@@ -7,7 +7,6 @@ environment:
 workspace:
   - packages/orm
   - packages/orm_flutter
-  - packages/orm_flutter_ffi
 
   # Documentation example
   - docs-example
