@@ -4,7 +4,17 @@ import 'package:flutter/services.dart';
 import 'package:orm/orm.dart';
 import 'package:orm_flutter_ffi/orm_flutter_ffi.dart' as ffi;
 
+/// Unified query engine implementation for Prisma and Flutter integration.
+///
+/// Supported platforms:
+/// - **iOS** at [orm_flutter_ffi](https://pub.dev/packages/orm_flutter_ffi) followed by [orm_flutter_ios](https://pub.dev/packages/orm_flutter_ios)
+/// - **Android** at [orm_flutter_ffi](https://pub.dev/packages/orm_flutter_ffi) followed by [orm_flutter_android](https://pub.dev/packages/orm_flutter_android)
 class LibraryEngine implements Engine {
+  /// Create a new library engine instance
+  ///
+  /// The [datasources] parameter is required and contains the database connection information
+  /// The [options] parameter is required and contains the Prisma client options
+  /// The [schema] parameter is required and contains the Prisma schema
   factory LibraryEngine({
     required Datasources datasources,
     required PrismaClientOptions options,
@@ -70,6 +80,10 @@ class LibraryEngine implements Engine {
           {Map<String, String>? globalLabels, required MetricsFormat format}) =>
       _pe.metrics(globalLabels: globalLabels, format: format);
 
+  /// Apply migrations from the specified path
+  ///
+  /// The [path] parameter is required and contains the path to the migrations
+  /// The [bundle] parameter is optional and contains the asset bundle to load migrations from
   Future<void> applyMigrations({
     required String path,
     AssetBundle? bundle,

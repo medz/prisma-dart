@@ -1,10 +1,10 @@
 name: orm_flutter
 description: "The engine of Prisma ORM for Flutter, Library for binding Prisma's C-Abi engine with Flutter."
-homepage: https://prisma.pub/getting-started/flutter.html
+homepage: https://prisma.pub
 repository: https://github.com/medz/prisma-dart
 
 resolution: workspace
-version: 0.3.1
+version: 0.4.0
 
 funding:
   - https://github.com/sponsors/medz
@@ -17,7 +17,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  orm: ^5.2.0
+  orm: ^5.2.1
   orm_flutter_ffi: ^0.0.1
 
 dev_dependencies:

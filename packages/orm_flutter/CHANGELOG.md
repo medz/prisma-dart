@@ -1,3 +1,31 @@
+## v0.4.0
+
+To install Prisma Flutter Integration v0.4.0 run this command
+
+```bash
+dart pub add orm_flutter:^v0.4.0
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm_flutter: ^v0.4.0
+```
+
+### What's New
+
+- **upstream**: Upgrade `orm` package to `v5.2.1` version
+- **BREAKING CHANGE**: Engine is no longer implemented internally, only forwards platform-specific implementations, with iOS and Android support currently implemented.
+
+### Optimizations
+
+Now `orm_flutter` no longer implements the engine itself, but forwards platform-specific engine implementations.
+
+Implemented `orm_flutter_ffi` for Prisma query engine (CABI) implementation:
+  - `orm_flutter_android`: Dynamic library for Android platform.
+  - `orm_flutter_ios`: Dynamic library for iOS platform.
+
 ## v0.3.1
 
 To install Prisma Flutter Integration v0.3.1 run this command
