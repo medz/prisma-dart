@@ -1,5 +1,5 @@
 name: orm_flutter_ios
-description: "Prisma Query Engine implementation for iOS platform (FFI)"
+description: "Dynamic library implementation library for Prisma Dart and Flutter integration on iOS platform."
 homepage: https://prisma.pub
 
 resolution: workspace

@@ -1,9 +1,13 @@
 name: orm_flutter_android
-description: "Prisma Query Engine implementation for Android platform (FFI)"
+description: "Dynamic library implementation library for Prisma Dart and Flutter integration on Android platform."
 homepage: https://prisma.pub
 
 resolution: workspace
 version: 0.0.1
+
+funding:
+  - https://github.com/sponsors/medz
+  - https://opencollective.com/openodroe
 
 environment:
   sdk: ^3.5.0
