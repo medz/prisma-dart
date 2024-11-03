@@ -1,0 +1,14 @@
+name: orm_flutter_android
+description: "A new Flutter FFI plugin project."
+version: 0.0.1
+homepage: https://prisma.pub
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.3.0"
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true

@@ -2,13 +2,33 @@ import { $, file, write } from "bun";
 import { unlink, exists, mkdir, rmdir } from "node:fs/promises";
 import { dirname, relative } from "node:path";
 
+async function ensureEmptyDirectory(path: string) {
+  if (await exists(path)) {
+    await rmdir(path, { recursive: true });
+  }
+  await mkdir(path, { recursive: true });
+}
+
+async function copyDirectory(source: string, target: string) {
+  await ensureEmptyDirectory(target);
+  await $`cp -rvf ${source} ${dirname(target)}`.quiet();
+  console.log(
+    "Copy",
+    relative(import.meta.dir, source),
+    " to ",
+    relative(import.meta.dir, target),
+  );
+}
+
 const binariesURL = new URL(
   import.meta.resolve(`../.dart_tool/prisma-dart/query-engine.zip`),
 );
 await (async () => {
   const path = Bun.fileURLToPath(binariesURL);
   if (await exists(path)) {
-    console.info(`Removing existing binaries: ${path}`);
+    console.info(
+      `Removing existing binaries: ${relative(import.meta.dir, path)}`,
+    );
     await unlink(path);
   }
 
@@ -74,11 +94,7 @@ await (async () => {
     `Unzip ${relative(import.meta.dirname, path)} to ${relative(import.meta.dirname, targetPath)}`,
   );
 
-  if (await exists(targetPath)) {
-    await rmdir(targetPath, { recursive: true });
-  }
-
-  await mkdir(targetPath, { recursive: true });
+  await ensureEmptyDirectory(targetPath);
   await $`unzip ${path} -d ${targetPath}`.quiet();
 })();
 
@@ -100,47 +116,61 @@ await $`
 `;
 
 // Copy QueryEngine.xcfoamework
-await (async () => {
-  const source = Bun.fileURLToPath(
+await copyDirectory(
+  Bun.fileURLToPath(
     new URL(
       import.meta.resolve(
         "../.dart_tool/prisma-dart/query-engine.cabi/ios/QueryEngine.xcframework",
       ),
     ),
-  );
-  const target = Bun.fileURLToPath(
+  ),
+  Bun.fileURLToPath(
     new URL(
       import.meta.resolve(
-        "../packages/orm_flutter_ios/ios/orm_flutter_ios/Frameworks/",
+        "../packages/orm_flutter_ios/ios/orm_flutter_ios/Frameworks/QueryEngine.xcframework",
       ),
     ),
-  );
-
-  if (await exists(target)) {
-    await rmdir(target, { recursive: true });
-  }
-  await mkdir(target, { recursive: true });
-
-  await $`cp -rvf ${source} ${target}`;
-})();
+  ),
+);
 
 // Sync Bridge(C Lang) for iOS
-await (async () => {
-  const source = Bun.fileURLToPath(
+await copyDirectory(
+  Bun.fileURLToPath(
     new URL(import.meta.resolve("../packages/query_engine_bridge")),
-  );
-  const target = Bun.fileURLToPath(
+  ),
+  Bun.fileURLToPath(
     new URL(
       import.meta.resolve(
-        "../packages/orm_flutter_ios/ios/orm_flutter_ios/Sources",
+        "../packages/orm_flutter_ios/ios/orm_flutter_ios/Sources/query_engine_bridge",
       ),
     ),
-  );
+  ),
+);
 
-  if (await exists(target)) {
-    await rmdir(target, { recursive: true });
-  }
-  await mkdir(target, { recursive: true });
+// Copy jni libs
+await copyDirectory(
+  Bun.fileURLToPath(
+    new URL(
+      import.meta.resolve(
+        "../.dart_tool/prisma-dart/query-engine.cabi/android/jniLibs",
+      ),
+    ),
+  ),
+  Bun.fileURLToPath(
+    new URL(import.meta.resolve("../packages/orm_flutter_android/src/jniLibs")),
+  ),
+);
 
-  await $`cp -rvf ${source} ${target}`;
-})();
+// Sync Bridge(C Lang) for Android
+await copyDirectory(
+  Bun.fileURLToPath(
+    new URL(import.meta.resolve("../packages/query_engine_bridge")),
+  ),
+  Bun.fileURLToPath(
+    new URL(
+      import.meta.resolve(
+        "../packages/orm_flutter_android/src/query_engine_bridge",
+      ),
+    ),
+  ),
+);
