@@ -1,26 +1,35 @@
+require 'yaml'
+
+pubspec = YAML.load_file(
+  File.join(__dir__, '../pubspec.yaml')
+)
+
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint prisma_flutter.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'orm_flutter'
-  s.version          = '0.0.1'
+  s.subspec "PrismaQueryEngine" do |qe|
+    qe.source = {
+      :http => "https://binaries.prisma.sh/all_commits/#{pubspec['query_engine_hash']}/react-native/binaries.zip",
+      :type => :zip
+    }
+    qe.preserve_paths = 'ios/QueryEngine.xcframework'
+    qe.vendored_frameworks = 'ios/QueryEngine.xcframework'
+  end
+
+  s.name             = pubspec['name']
+  s.version          = pubspec['version']
   s.summary          = 'The engine of Prisma ORM for Flutter.'
-  s.description      = <<-DESC
-The engine of Prisma ORM for Flutter, Library for binding Prisma's C-Abi engine with Flutter.
-                       DESC
-  s.homepage         = 'https://prisma.pub'
+  s.description      = pubspec['description']
+  s.homepage         = pubspec['homepage']
   s.license          = { :file => '../LICENSE', :type => "BSD-3" }
   s.author           = { 'Odroe Inc.' => 'hello@odroe.dev' }
 
-  # This will ensure the source files in Classes/ are included in the native
-  # builds of apps using this FFI plugin. Podspec does not support relative
-  # paths, so Classes contains a forwarder C file that relatively imports
-  # `../src/*` so that the C sources can be shared among all target platforms.
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.vendored_frameworks = 'Frameworks/QueryEngine.xcframework'
+  s.source_files = 'orm_flutter/Sources/orm_flutter/**/*'
   s.dependency 'Flutter'
+  s.dependency 'PrismaQueryEngine'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.
