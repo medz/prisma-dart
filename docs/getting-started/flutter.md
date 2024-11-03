@@ -187,16 +187,6 @@ Solution: Run the command:
 flutter clean
 ```
 
-### Not fond `*/query_engine/*/libquery_engine.a` file
-
-This is because the automatic download of the Prisma static query engine library failed.
-
-To fix it, run the following command:
-
-```bash
-dart run orm_flutter:dl_engine
-```
-
 ### Other unknown error solutions:
 
 Most problems can be solved by using the following combination of commands:
@@ -204,20 +194,5 @@ Most problems can be solved by using the following combination of commands:
 ```bash
 flutter clean # Clean flutter cache files
 flutter pub get # Reinstall deps
-dart run orm_flutter:dl_engine # Download prisma engine static library
 <bun/npx/pnpx/yarn> prisma generate # Regenerate prisma client
 ```
-
-### Every time you update the `orm_flutter` version
-
-Since the Prisma C-ABI engine is available on CDN, the Flutter plugin does not support running a script before `build`. Plus, `pub.dev` has a package size limit.
-
-So, after you install the new `orm_flutter` package, it does not include the Prisma Engine, and you need to run the following command to download it:
-
-```bash
-dart run orm_flutter:dl_engine
-```
-
-It is best to run `flutter clean` to reset the native build after re-downloading the engine. Note that the cleanup is only required for iOS.
-
-If you have installed both `orm` and `orm_flutter` dependencies and generated the Prisma client for Flutter, you only need to run `prisma generate`, which will automatically find and download the engine. This greatly simplifies the initialization work.
