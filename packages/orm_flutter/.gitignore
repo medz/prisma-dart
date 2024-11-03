@@ -32,5 +32,4 @@ build/
 .version/prisma-engines.lock
 example/*
 !example/README.md
-src/CMakeLists.txt
 android/.prisma-query-engines/
