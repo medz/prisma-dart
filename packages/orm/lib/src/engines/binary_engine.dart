@@ -67,12 +67,11 @@ class BinaryEngine extends Engine {
     );
 
     final result = await response.json();
-
     return switch (result) {
       {'data': final Map data} => deserializeJsonResponse(data),
       {'errors': final Iterable errors} => throwErrors(errors),
       _ => throw PrismaClientUnknownRequestError(
-          message: json.encode(PrismaClientUnknownRequestError),
+          message: json.encode(result),
         ),
     };
   }

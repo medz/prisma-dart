@@ -1,20 +1,50 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:orm/orm.dart';
 import 'package:ffi/ffi.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 import '_generate_bindings.dart';
 import 'bindings.dart';
 
 int _currentEngineId = 0;
 
-class LibraryEngine extends Engine {
+class LibraryEngine extends Engine implements Finalizable {
   LibraryEngine({
     required super.options,
     required super.schema,
     required super.datasources,
-  }) : id = _currentEngineId++ {
+  }) : id = _currentEngineId++;
+
+  final int id;
+  late final _qeptr = malloc<Pointer<QueryEngine>>();
+  late bool _started = false;
+
+  // Lifecycle methods
+  @override
+  Future<void> start() async {
+    if (!_started && _qeptr != nullptr) {
+      final errPtr = malloc<Pointer<Char>>();
+      try {
+        final status =
+            bindings.start(_qeptr.value, '00'.toNativeUtf8().cast(), errPtr);
+        if (status == Status.err) {
+          if (errPtr.value == nullptr) {
+            throw StateError('Start query engine fail.');
+          }
+
+          final message = errPtr.value.cast<Utf8>().toDartString();
+          throw StateError(message);
+        }
+      } finally {
+        malloc.free(errPtr);
+      }
+    }
+
     final logLevel =
         this.options.logEmitter.definition.fold<String?>(null, (prev, e) {
       if (prev == 'info' || e.$1 == LogLevel.info) {
@@ -26,8 +56,9 @@ class LibraryEngine extends Engine {
     final logQueries =
         this.options.logEmitter.definition.any((e) => e.$1 == LogLevel.query);
 
+    final basePath = await getApplicationDocumentsDirectory();
     final options = Struct.create<ConstructorOptions>()
-      ..base_path = nullptr
+      ..base_path = basePath.path.toNativeUtf8().cast()
       ..datamodel = schema.toNativeUtf8().cast()
       ..datasource_overrides = createOverwriteDatasourcesPtr().cast()
       ..env = createEnvironmentPtr().cast()
@@ -38,78 +69,206 @@ class LibraryEngine extends Engine {
       ..log_queries = logQueries
       ..native = createOptionsNative();
 
-    final err = malloc<Pointer<Char>>();
-
+    final errPtr = malloc<Pointer<Char>>();
     try {
-      final status = bindings.create(options, qe, err);
+      final status = bindings.create(options, _qeptr, errPtr);
       if (status == Status.err) {
-        final message = err.value.cast<Utf8>().toDartString();
+        if (errPtr.value == nullptr) {
+          throw StateError('Unknown query engine error');
+        }
+
+        final message = errPtr.value.cast<Utf8>().toDartString();
         throw StateError('Failed to create query engine: $message');
       } else if (status == Status.miss) {
         throw StateError('Missing create query engine.');
       }
+
+      _started = false;
+      await start();
     } catch (_) {
-      malloc.free(qe);
+      rethrow;
     } finally {
-      malloc.free(err);
+      malloc.free(errPtr);
     }
   }
 
-  final int id;
-  late final qe = malloc<Pointer<QueryEngine>>();
-
-  // Lifecycle methods
   @override
-  Future<void> start() {
-    // TODO: implement start
-    throw UnimplementedError();
+  Future<void> stop() async {
+    if (_qeptr.value == nullptr || !_started) return;
+    try {
+      final status = bindings.stop(_qeptr.value, nullptr);
+      if (status != Status.ok) {
+        throw StateError('Could not stop from prisma query engine');
+      }
+    } finally {
+      _started = false;
+    }
   }
 
-  @override
-  Future<void> stop() {
-    // TODO: implement stop
-    throw UnimplementedError();
-  }
-
-  // Query methods
   @override
   Future<Map> request(JsonQuery query,
-      {TransactionHeaders? headers, Transaction? transaction}) {
-    // TODO: implement request
-    throw UnimplementedError();
+      {TransactionHeaders? headers, Transaction? transaction}) async {
+    await start();
+
+    final Pointer<Char> body =
+        json.encode(query.toJson()).toNativeUtf8().cast();
+    final Pointer<Char> trace =
+        (headers?.traceparent ?? '00').toNativeUtf8().cast();
+    final Pointer<Char> txId = transaction?.id.toNativeUtf8().cast() ?? nullptr;
+    final errptr = malloc<Pointer<Char>>();
+
+    try {
+      final response = bindings.query(_qeptr.value, body, trace, txId, errptr);
+      if (response == nullptr || errptr.value != nullptr) {
+        if (errptr.value == nullptr) {
+          throw StateError('Prisma engine did not request.');
+        }
+
+        final message = errptr.value.cast<Utf8>().toDartString();
+        throw StateError(message);
+      }
+
+      final result = response.cast<Utf8>().toDartString();
+
+      // TODO error parse.
+      return switch (json.decode(result)) {
+        {'data': final Map data} => deserializeJsonResponse(data),
+        {'errors': final Iterable errors} => throw Exception(errors),
+        _ => throw PrismaClientUnknownRequestError(message: result),
+      };
+    } finally {
+      malloc.free(errptr);
+    }
   }
 
   // Transaction methods
   @override
-  Future<Transaction> startTransaction(
-      {required TransactionHeaders headers,
-      int maxWait = 2000,
-      int timeout = 5000,
-      TransactionIsolationLevel? isolationLevel}) {
-    // TODO: implement startTransaction
-    throw UnimplementedError();
+  Future<Transaction> startTransaction({
+    required TransactionHeaders headers,
+    int maxWait = 2000,
+    int timeout = 5000,
+    TransactionIsolationLevel? isolationLevel,
+  }) async {
+    await start();
+
+    final Pointer<Char> trace =
+        headers.traceparent?.toNativeUtf8().cast() ?? nullptr;
+    final options = json.encode({
+      'max_wait': maxWait,
+      'timeout': timeout,
+      if (isolationLevel != null) 'isolation_level': isolationLevel.name,
+    }).toNativeUtf8();
+
+    try {
+      final response =
+          bindings.startTransaction(_qeptr.value, options.cast(), trace);
+      final result = json.decode(response.cast<Utf8>().toDartString());
+      if (result case {'id': final String id}) {
+        return Transaction(id);
+      }
+
+      throw 'Not match transcation ID';
+    } catch (e) {
+      throw StateError('Prisma engine did not start transaction. -> $e');
+    }
   }
 
   @override
-  Future<void> commitTransaction(
-      {required TransactionHeaders headers, required Transaction transaction}) {
-    // TODO: implement commitTransaction
-    throw UnimplementedError();
+  Future<void> commitTransaction({
+    required TransactionHeaders headers,
+    required Transaction transaction,
+  }) async {
+    final Pointer<Char> trace =
+        headers.traceparent?.toNativeUtf8().cast() ?? nullptr;
+    final response = bindings.commitTransaction(
+        _qeptr.value, transaction.id.toNativeUtf8().cast(), trace);
+    if (response == nullptr) {
+      throw StateError('Prisma engine did not commit transaction.');
+    }
   }
 
   @override
-  Future<void> rollbackTransaction(
-      {required TransactionHeaders headers, required Transaction transaction}) {
-    // TODO: implement rollbackTransaction
-    throw UnimplementedError();
+  Future<void> rollbackTransaction({
+    required TransactionHeaders headers,
+    required Transaction transaction,
+  }) async {
+    final Pointer<Char> trace =
+        headers.traceparent?.toNativeUtf8().cast() ?? nullptr;
+    final response = bindings.rollbackTransaction(
+        _qeptr.value, transaction.id.toNativeUtf8().cast(), trace);
+    if (response == nullptr) {
+      throw StateError('Prisma engine did not rollback transaction.');
+    }
   }
 
-  // Monitoring methods
   @override
-  Future metrics(
-      {Map<String, String>? globalLabels, required MetricsFormat format}) {
-    // TODO: implement metrics
-    throw UnimplementedError();
+  Future metrics({
+    Map<String, String>? globalLabels,
+    required MetricsFormat format,
+  }) {
+    throw UnsupportedError('Prisma Flutter engine not support metrics.');
+  }
+
+  void destroy() {
+    final status = bindings.destroy(_qeptr.value);
+    if (status != Status.ok) {
+      throw StateError('Destory engine fail.');
+    }
+  }
+
+  Future<void> applyMigrations({
+    required String path,
+    AssetBundle? bundle,
+  }) async {
+    final resoolvedPath = normalize(path);
+    final resolvedBundle = bundle ?? rootBundle;
+    final assetManifest =
+        await AssetManifest.loadFromAssetBundle(resolvedBundle);
+    final lock =
+        assetManifest.getAssetVariants('$resoolvedPath/migration_lock.toml');
+    if (lock?.isEmpty == true) {
+      throw ArgumentError(
+          'Path($resoolvedPath) is not a Prisma migrations directory');
+    }
+
+    final temporary = await getTemporaryDirectory();
+    final mark = (DateTime.timestamp().millisecondsSinceEpoch ~/ 1000);
+    final migrationTempDir = await temporary.createTemp('prisma_${mark}_');
+
+    for (final asset in assetManifest.listAssets()) {
+      if (!asset.startsWith(resoolvedPath)) {
+        continue;
+      }
+
+      final basename = asset.substring(resoolvedPath.length);
+      final file = File(
+        normalize(join(
+          migrationTempDir.path,
+          basename.startsWith('/') ? '.$basename' : basename,
+        )),
+      );
+      if (!await file.exists()) {
+        await file.create(recursive: true);
+      }
+
+      final bytes = await resolvedBundle.load(asset);
+      await file.writeAsBytes(bytes.buffer.asUint8List());
+    }
+
+    final errorPtr = malloc<Pointer<Char>>();
+    try {
+      final status = bindings.applyMigrations(
+          _qeptr.value, migrationTempDir.path.toNativeUtf8().cast(), errorPtr);
+
+      if (status != Status.ok) {
+        final message = errorPtr.value.cast<Utf8>().toDartString();
+        malloc.free(errorPtr);
+
+        throw StateError(message);
+      }
+    } finally {
+      malloc.free(errorPtr);
+    }
   }
 }
 
