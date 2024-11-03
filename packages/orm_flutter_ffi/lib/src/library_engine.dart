@@ -5,6 +5,7 @@ import 'package:orm/orm.dart';
 import 'package:ffi/ffi.dart';
 
 import '_generate_bindings.dart';
+import 'bindings.dart';
 
 int _currentEngineId = 0;
 
@@ -36,9 +37,26 @@ class LibraryEngine extends Engine {
       ..log_level = (logLevel ?? 'info').toNativeUtf8().cast()
       ..log_queries = logQueries
       ..native = createOptionsNative();
+
+    final err = malloc<Pointer<Char>>();
+
+    try {
+      final status = bindings.create(options, qe, err);
+      if (status == Status.err) {
+        final message = err.value.cast<Utf8>().toDartString();
+        throw StateError('Failed to create query engine: $message');
+      } else if (status == Status.miss) {
+        throw StateError('Missing create query engine.');
+      }
+    } catch (_) {
+      malloc.free(qe);
+    } finally {
+      malloc.free(err);
+    }
   }
 
   final int id;
+  late final qe = malloc<Pointer<QueryEngine>>();
 
   // Lifecycle methods
   @override
