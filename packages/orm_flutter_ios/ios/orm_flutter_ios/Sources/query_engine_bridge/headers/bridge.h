@@ -1,4 +1,4 @@
-#include "include/query_engine.h"
+#include "../include/query_engine.h"
 
 #if _WIN32
 #include <windows.h>
