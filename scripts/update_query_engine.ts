@@ -110,7 +110,9 @@ await (async () => {
   );
   const target = Bun.fileURLToPath(
     new URL(
-      import.meta.resolve("../packages/orm_flutter/ios/orm_flutter/Frameworks"),
+      import.meta.resolve(
+        "../packages/orm_flutter_ios/ios/orm_flutter_ios/Frameworks/",
+      ),
     ),
   );
 
@@ -119,5 +121,5 @@ await (async () => {
   }
   await mkdir(target, { recursive: true });
 
-  await $`cp -rvf ${source} ${target}/`;
+  await $`cp -rvf ${source} ${target}`;
 })();

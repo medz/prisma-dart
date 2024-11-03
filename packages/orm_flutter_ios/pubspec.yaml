@@ -1,11 +1,11 @@
 name: orm_flutter_ios
 description: "Prisma Query Engine implementation for iOS platform (FFI)"
+homepage: https://prisma.pub
 
 resolution: workspace
 version: 0.0.1
 
 environment:
-  sdk: ^3.5.0
   flutter: ">=3.3.0"
 
 dependencies:
@@ -17,8 +17,6 @@ dev_dependencies:
 
 flutter:
   plugin:
-    implements: orm_flutter
     platforms:
       ios:
         ffiPlugin: true
-        dartPluginClass: Demo
