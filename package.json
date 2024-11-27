@@ -1,5 +1,4 @@
 {
-  "name": "_",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +11,6 @@
   },
   "devDependencies": {
     "@types/bun": "^1.1.12",
-    "prisma": "^5.21.1"
+    "prisma": "^5.22.0"
   }
 }
