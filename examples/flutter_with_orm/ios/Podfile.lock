@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - orm_flutter_ios (0.0.1):
+  - orm_flutter_ios (0.0.3):
     - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  orm_flutter_ios: a5a6382a845a5cf5f0887f67c2aa4a9d712e3a5a
+  orm_flutter_ios: a86280da5be8ad09f28571bdab395ad0cb022b82
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
