@@ -5,28 +5,29 @@ import PackageDescription
 let package = Package(
     name: "orm_flutter_ios",
     platforms: [
-        .iOS(.v12),
+        .iOS(.v12)
     ],
     products: [
-        .library(name: "orm-flutter-ios", targets: ["PrismaQueryEngineBridge"]),
+        .library(
+            name: "orm-flutter-ios",
+            type: .dynamic,
+            targets: ["query_engine_bridge"]
+        )
     ],
     targets: [
         .target(
-            name: "PrismaQueryEngineBridge",
-            dependencies: ["PrismaQueryEngine"],
-            path: "Sources/query_engine_bridge",
-            sources: ["bridge.c"],
-            cSettings: [
-                .headerSearchPath("headers"),
-                .headerSearchPath("include")
+            name: "query_engine_bridge",
+            dependencies: [
+                .target(name: "PrismaQueryEngine")
             ],
             linkerSettings: [
-                .linkedFramework("PrismaQueryEngine")
+                .linkedFramework("CoreFoundation"),
+                .linkedFramework("Security"),
             ]
         ),
         .binaryTarget(
             name: "PrismaQueryEngine",
             path: "Frameworks/QueryEngine.xcframework"
-        )
+        ),
     ]
 )
