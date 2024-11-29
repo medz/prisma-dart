@@ -1,3 +1,23 @@
+## v0.5.0
+
+To install Prisma Flutter Integration v0.5.0 run this command
+
+```bash
+dart pub add orm_flutter:^v0.5.0
+```
+
+Or update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm_flutter: ^0.5.0
+```
+
+### What's New
+
+- Upgrade Prisma CABI engine to `v6.0.0`
+- Support Swift Package Manager
+
 ## v0.4.0
 
 To install Prisma Flutter Integration v0.4.0 run this command
@@ -10,7 +30,7 @@ Or update your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  orm_flutter: ^v0.4.0
+  orm_flutter: ^0.4.0
 ```
 
 ### What's New
