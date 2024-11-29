@@ -3,7 +3,7 @@
 To install Prisma Flutter Integration v0.5.0 run this command
 
 ```bash
-dart pub add orm_flutter:^v0.5.0
+dart pub add orm_flutter:^0.5.0
 ```
 
 Or update your `pubspec.yaml` file:
