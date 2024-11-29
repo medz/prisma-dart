@@ -4,7 +4,7 @@ homepage: https://prisma.pub
 repository: https://github.com/medz/prisma-dart
 
 resolution: workspace
-version: 0.4.0
+version: 0.5.0
 
 funding:
   - https://github.com/sponsors/medz
@@ -18,7 +18,7 @@ dependencies:
   flutter:
     sdk: flutter
   orm: ^5.2.1
-  orm_flutter_ffi: ^0.0.1
+  orm_flutter_ffi: ^0.0.2
 
 dev_dependencies:
   flutter_lints: ^5.0.0

@@ -96,7 +96,7 @@ class _HomeState extends State<Home> {
       enableDrag: true,
       showDragHandle: true,
       builder: (context) {
-        String name = '';
+        final controller = TextEditingController();
 
         return Column(
           children: [
@@ -104,16 +104,16 @@ class _HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.all(12),
               child: TextField(
+                controller: controller,
                 decoration: const InputDecoration(label: Text('Name')),
-                onChanged: (value) {
-                  print('On changed: $value');
-                  name = value;
-                },
               ),
             ),
             FilledButton(
               child: const Text('Create'),
-              onPressed: () => create(name),
+              onPressed: () {
+                create(controller.text);
+                Navigator.pop(context);
+              },
             ),
           ],
         );
