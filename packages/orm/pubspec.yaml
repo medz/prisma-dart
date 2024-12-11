@@ -23,7 +23,7 @@ executables:
 
 dependencies:
   code_builder: ^4.10.0
-  dart_style: ^2.3.4
+  dart_style: ^3.0.0
   decimal: ^3.0.0
   json_rpc_2: ^3.0.2
   path: ^1.9.0
