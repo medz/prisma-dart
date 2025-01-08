@@ -4,7 +4,7 @@ homepage: https://prisma.pub
 repository: https://github.com/medz/prisma-dart
 
 resolution: workspace
-version: 5.2.1
+version: 5.3.0
 
 funding:
   - https://github.com/sponsors/medz
@@ -23,8 +23,8 @@ executables:
 
 dependencies:
   code_builder: ^4.10.0
-  dart_style: ^3.0.0
-  decimal: ^3.0.0
+  dart_style: any
+  decimal: ^3.1.0
   json_rpc_2: ^3.0.2
   path: ^1.9.0
   rc: ^0.3.3

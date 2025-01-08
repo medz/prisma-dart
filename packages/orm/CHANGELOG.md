@@ -1,6 +1,26 @@
+## v5.3.0
+
+To install Prisma ORM for Dart v5.3.0 run this command
+
+```bash
+dart pub add orm:^5.3.0
+```
+
+Otherwise, update your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  orm: ^5.3.0
+```
+
+### What's New
+
+- **feat**: support `updateManyAndReturn`
+- **engine**: upgrade `prisma-engines` to `6.2.0`
+
 ## v5.2.1
 
-To install Prisma ORM for Dart v5.2.0 run this command
+To install Prisma ORM for Dart v5.2.1 run this command
 
 ```bash
 dart pub add orm:^5.2.1
@@ -13,7 +33,7 @@ dependencies:
   orm: ^5.2.1
 ```
 
-## What's New
+### What's New
 
 - **bug**: Fixed an issue where unknown errors from the binary engine query were not being properly thrown as exceptions.
 
