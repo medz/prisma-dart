@@ -1,3 +1,8 @@
+## v0.6.0
+
+* upgrade `orm` to `5.3.0`
+* upgrade `orm_flutter_ffi` to `0.0.3`
+
 ## v0.5.0
 
 To install Prisma Flutter Integration v0.5.0 run this command

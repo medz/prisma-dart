@@ -54,6 +54,7 @@ FFI_PLUGIN_EXPORT enum Status destroy(struct QueryEngine *qe);
 FFI_PLUGIN_EXPORT enum Status start(
     struct QueryEngine *qe,
     const char *trace,
+    const char *requestId,
     char **errorStringPtr
 );
 
@@ -62,7 +63,8 @@ FFI_PLUGIN_EXPORT enum Status start(
  */
 FFI_PLUGIN_EXPORT enum Status stop(
     struct QueryEngine *qe,
-    const char *headerStr
+    const char *headerStr,
+    const char *requestId
 );
 
 /**
@@ -82,6 +84,7 @@ FFI_PLUGIN_EXPORT const char *query(
     const char *bodyStr,
     const char *headerStr,
     const char *txIdStr,
+    const char *requestId,
     char **errorStringPtr
 );
 
@@ -91,7 +94,8 @@ FFI_PLUGIN_EXPORT const char *query(
 FFI_PLUGIN_EXPORT const char *startTransaction(
     struct QueryEngine *qe,
     const char *optionsStr,
-    const char *headerStr
+    const char *headerStr,
+    const char *requestId
 );
 
 /**
@@ -100,7 +104,8 @@ FFI_PLUGIN_EXPORT const char *startTransaction(
 FFI_PLUGIN_EXPORT const char *commitTransaction(
     struct QueryEngine *qe,
     const char *txIdStr,
-    const char *headerStr
+    const char *headerStr,
+    const char *requestId
 );
 
 /**
@@ -109,5 +114,6 @@ FFI_PLUGIN_EXPORT const char *commitTransaction(
 FFI_PLUGIN_EXPORT const char *rollbackTransaction(
     struct QueryEngine *qe,
     const char *txIdStr,
-    const char *headerStr
+    const char *headerStr,
+    const char *requestId
 );

@@ -66,11 +66,13 @@ class QueryEngineBindings {
   Status start(
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> trace,
+    ffi.Pointer<ffi.Char> requestId,
     ffi.Pointer<ffi.Pointer<ffi.Char>> errorStringPtr,
   ) {
     return Status.fromValue(_start(
       qe,
       trace,
+      requestId,
       errorStringPtr,
     ));
   }
@@ -80,28 +82,32 @@ class QueryEngineBindings {
           ffi.UnsignedInt Function(
               ffi.Pointer<QueryEngine>,
               ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('start');
   late final _start = _startPtr.asFunction<
       int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   /// Stop a [QueryEngine]
   Status stop(
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> headerStr,
+    ffi.Pointer<ffi.Char> requestId,
   ) {
     return Status.fromValue(_stop(
       qe,
       headerStr,
+      requestId,
     ));
   }
 
   late final _stopPtr = _lookup<
       ffi.NativeFunction<
-          ffi.UnsignedInt Function(
-              ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>)>>('stop');
+          ffi.UnsignedInt Function(ffi.Pointer<QueryEngine>,
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('stop');
   late final _stop = _stopPtr.asFunction<
-      int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>)>();
+      int Function(ffi.Pointer<QueryEngine>, ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
 
   /// Apply migrations
   Status applyMigrations(
@@ -132,6 +138,7 @@ class QueryEngineBindings {
     ffi.Pointer<ffi.Char> bodyStr,
     ffi.Pointer<ffi.Char> headerStr,
     ffi.Pointer<ffi.Char> txIdStr,
+    ffi.Pointer<ffi.Char> requestId,
     ffi.Pointer<ffi.Pointer<ffi.Char>> errorStringPtr,
   ) {
     return _query(
@@ -139,6 +146,7 @@ class QueryEngineBindings {
       bodyStr,
       headerStr,
       txIdStr,
+      requestId,
       errorStringPtr,
     );
   }
@@ -150,10 +158,12 @@ class QueryEngineBindings {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('query');
   late final _query = _queryPtr.asFunction<
       ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<QueryEngine>,
+          ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
@@ -164,11 +174,13 @@ class QueryEngineBindings {
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> optionsStr,
     ffi.Pointer<ffi.Char> headerStr,
+    ffi.Pointer<ffi.Char> requestId,
   ) {
     return _startTransaction(
       qe,
       optionsStr,
       headerStr,
+      requestId,
     );
   }
 
@@ -177,21 +189,27 @@ class QueryEngineBindings {
           ffi.Pointer<ffi.Char> Function(
               ffi.Pointer<QueryEngine>,
               ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>>('startTransaction');
   late final _startTransaction = _startTransactionPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<QueryEngine>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<QueryEngine>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
 
   /// Commit a transaction queries
   ffi.Pointer<ffi.Char> commitTransaction(
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> txIdStr,
     ffi.Pointer<ffi.Char> headerStr,
+    ffi.Pointer<ffi.Char> requestId,
   ) {
     return _commitTransaction(
       qe,
       txIdStr,
       headerStr,
+      requestId,
     );
   }
 
@@ -200,21 +218,27 @@ class QueryEngineBindings {
           ffi.Pointer<ffi.Char> Function(
               ffi.Pointer<QueryEngine>,
               ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>>('commitTransaction');
   late final _commitTransaction = _commitTransactionPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<QueryEngine>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<QueryEngine>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
 
   /// Rollback a transaction
   ffi.Pointer<ffi.Char> rollbackTransaction(
     ffi.Pointer<QueryEngine> qe,
     ffi.Pointer<ffi.Char> txIdStr,
     ffi.Pointer<ffi.Char> headerStr,
+    ffi.Pointer<ffi.Char> requestId,
   ) {
     return _rollbackTransaction(
       qe,
       txIdStr,
       headerStr,
+      requestId,
     );
   }
 
@@ -223,10 +247,14 @@ class QueryEngineBindings {
           ffi.Pointer<ffi.Char> Function(
               ffi.Pointer<QueryEngine>,
               ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>>('rollbackTransaction');
   late final _rollbackTransaction = _rollbackTransactionPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<QueryEngine>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<QueryEngine>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
 }
 
 final class QueryEngine extends ffi.Opaque {}
@@ -249,6 +277,9 @@ final class ConstructorOptions extends ffi.Struct {
 
   @ffi.Bool()
   external bool log_queries;
+
+  @ffi.Bool()
+  external bool enable_tracing;
 
   external ffi.Pointer<ffi.Char> datasource_overrides;
 

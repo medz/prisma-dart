@@ -1,3 +1,7 @@
+## v5.3.1
+
+* fix cli version
+
 ## v5.3.0
 
 To install Prisma ORM for Dart v5.3.0 run this command

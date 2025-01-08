@@ -19,6 +19,6 @@ Future<void> initPrismaClient() async {
     _ => null,
   };
 
-  await prisma.$connect();
   await engine?.applyMigrations(path: 'prisma/migrations');
+  await prisma.$connect();
 }

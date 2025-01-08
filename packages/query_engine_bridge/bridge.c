@@ -27,9 +27,10 @@ FFI_PLUGIN_EXPORT enum Status destroy(struct QueryEngine *qe)
 FFI_PLUGIN_EXPORT enum Status start(
     struct QueryEngine *qe,
     const char *trace,
+    const char *requestId,
     char **errorStringPtr)
 {
-    return prisma_connect(qe, trace, errorStringPtr);
+    return prisma_connect(qe, trace, requestId, errorStringPtr);
 }
 
 /**
@@ -37,9 +38,10 @@ FFI_PLUGIN_EXPORT enum Status start(
  */
 FFI_PLUGIN_EXPORT enum Status stop(
     struct QueryEngine *qe,
-    const char *headerStr)
-{
-    return prisma_disconnect(qe, headerStr);
+    const char *headerStr,
+    const char *requestId
+) {
+    return prisma_disconnect(qe, requestId, headerStr);
 }
 
 /**
@@ -61,9 +63,10 @@ FFI_PLUGIN_EXPORT const char *query(
     const char *bodyStr,
     const char *headerStr,
     const char *txIdStr,
+    const char *requestId,
     char **errorStringPtr)
 {
-    return prisma_query(qe, bodyStr, headerStr, txIdStr, errorStringPtr);
+    return prisma_query(qe, bodyStr, headerStr, txIdStr, requestId, errorStringPtr);
 }
 
 /**
@@ -72,9 +75,10 @@ FFI_PLUGIN_EXPORT const char *query(
 FFI_PLUGIN_EXPORT const char *startTransaction(
     struct QueryEngine *qe,
     const char *optionsStr,
-    const char *headerStr)
+    const char *headerStr,
+    const char *requestId)
 {
-    return prisma_start_transaction(qe, optionsStr, headerStr);
+    return prisma_start_transaction(qe, optionsStr, headerStr, requestId);
 }
 
 /**
@@ -83,9 +87,10 @@ FFI_PLUGIN_EXPORT const char *startTransaction(
 FFI_PLUGIN_EXPORT const char *commitTransaction(
     struct QueryEngine *qe,
     const char *txIdStr,
-    const char *headerStr)
+    const char *headerStr,
+    const char *requestId)
 {
-    return prisma_commit_transaction(qe, txIdStr, headerStr);
+    return prisma_commit_transaction(qe, txIdStr, headerStr, requestId);
 }
 
 /**
@@ -94,7 +99,8 @@ FFI_PLUGIN_EXPORT const char *commitTransaction(
 FFI_PLUGIN_EXPORT const char *rollbackTransaction(
     struct QueryEngine *qe,
     const char *txIdStr,
-    const char *headerStr)
+    const char *headerStr,
+    const char *requestId)
 {
-    return prisma_rollback_transaction(qe, txIdStr, headerStr);
+    return prisma_rollback_transaction(qe, txIdStr, headerStr, requestId);
 }

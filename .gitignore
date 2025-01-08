@@ -3,6 +3,7 @@
 .idea/
 .vscode/
 .dart_tool/
+.flutter-*
 prisma-query-engine*
 generated_*/
 node_modules/

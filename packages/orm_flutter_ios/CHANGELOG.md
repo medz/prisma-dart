@@ -1,3 +1,7 @@
+## v0.0.5
+
+* upgrade `prisma-query-engine-cabi` to `v6.2.0`
+
 ## v0.0.4
 
 * Support Swift Package Manager
