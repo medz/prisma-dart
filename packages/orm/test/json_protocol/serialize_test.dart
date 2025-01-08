@@ -2,30 +2,44 @@ import 'package:orm/orm.dart';
 import 'package:test/test.dart';
 
 import '../_generated/client.dart';
-import '../utils/contains_map.dart';
 
 void main() {
-  test('createManyAndReturn', tags: ['sqlite', 'postgresql', 'cockroachdb'],
-      () {
+  test('createManyAndReturn', () {
     final query = serializeJsonQuery(
       datamodel: PrismaClient.datamodel,
       action: JsonQueryAction.createManyAndReturn,
       modelName: "User",
     );
 
-    expect(
-      query.toJson(),
-      ContainsMap({
-        'modelName': 'User',
-        'action': "createManyAndReturn",
-        'query': {
-          'arguments': allOf(isMap, isEmpty),
-          'selection': {
-            '\$composites': equals(true),
-            '\$scalars': equals(true),
-          },
+    expect(query.toJson(), {
+      'modelName': 'User',
+      'action': "createManyAndReturn",
+      'query': {
+        'arguments': allOf(isMap, isEmpty),
+        'selection': {
+          '\$composites': equals(true),
+          '\$scalars': equals(true),
         },
-      }),
+      },
+    });
+  });
+
+  test('updateManyAndReturn', () {
+    final query = serializeJsonQuery(
+      datamodel: PrismaClient.datamodel,
+      action: JsonQueryAction.updateManyAndReturn,
+      modelName: "User",
     );
+    expect(query.toJson(), {
+      'modelName': 'User',
+      'action': "updateManyAndReturn",
+      'query': {
+        'arguments': allOf(isMap, isEmpty),
+        'selection': {
+          '\$composites': equals(true),
+          '\$scalars': equals(true),
+        },
+      },
+    });
   });
 }
