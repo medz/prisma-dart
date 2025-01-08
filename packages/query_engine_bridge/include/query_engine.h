@@ -33,6 +33,7 @@ typedef struct ConstructorOptions {
   const char *base_path;
   const char *log_level;
   bool log_queries;
+  bool enable_tracing;
   const char *datasource_overrides;
   const char *env;
   bool ignore_env_var_errors;
@@ -67,6 +68,7 @@ int prisma_create(struct ConstructorOptions options,
  */
 int prisma_connect(struct QueryEngine *qe,
                    const char *trace,
+                   const char *request_id,
                    char **error_string_ptr);
 
 /**
@@ -79,6 +81,7 @@ const char *prisma_query(struct QueryEngine *qe,
                          const char *body_str,
                          const char *header_str,
                          const char *tx_id_str,
+                         const char *request_id,
                          char **error_string_ptr);
 
 /**
@@ -89,7 +92,8 @@ const char *prisma_query(struct QueryEngine *qe,
  */
 const char *prisma_start_transaction(struct QueryEngine *qe,
                                      const char *options_str,
-                                     const char *header_str);
+                                     const char *header_str,
+                                     const char *request_id);
 
 /**
  * # Safety
@@ -98,7 +102,8 @@ const char *prisma_start_transaction(struct QueryEngine *qe,
  */
 const char *prisma_commit_transaction(struct QueryEngine *qe,
                                       const char *tx_id_str,
-                                      const char *header_str);
+                                      const char *header_str,
+                                      const char *request_id);
 
 /**
  * # Safety
@@ -107,7 +112,8 @@ const char *prisma_commit_transaction(struct QueryEngine *qe,
  */
 const char *prisma_rollback_transaction(struct QueryEngine *qe,
                                         const char *tx_id_str,
-                                        const char *header_str);
+                                        const char *header_str,
+                                        const char *request_id);
 
 /**
  * # Safety
@@ -115,7 +121,19 @@ const char *prisma_rollback_transaction(struct QueryEngine *qe,
  * The calling context needs to pass a valid pointer that will store the reference to the error string
  */
 int prisma_disconnect(struct QueryEngine *qe,
-                      const char *header_str);
+                      const char *header_str,
+                      const char *request_id);
+
+/**
+ * Returns the trace data for a given request ID as a JSON string.
+ * If the request is not found, it will return null.
+ *
+ * # Safety
+ *
+ * The caller must pass a pointer to a location to store the pointer to the error string in.
+ * If it is not null, the caller is responsible for deallocating the string.
+ */
+const char *prisma_trace(struct QueryEngine *qe, const char *request_id, char **error_string_ptr);
 
 /**
  * # Safety

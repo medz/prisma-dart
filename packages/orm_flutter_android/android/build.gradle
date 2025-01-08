@@ -1,7 +1,7 @@
 // The Android Gradle Plugin builds the native code with the Android NDK.
 
 group = "dev.odroe.orm_flutter_android"
-version = "0.0.2"
+version = "0.0.3"
 
 buildscript {
     repositories {

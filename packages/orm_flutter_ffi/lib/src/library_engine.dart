@@ -25,7 +25,16 @@ class LibraryEngine extends Engine implements Finalizable {
     required super.options,
     required super.schema,
     required super.datasources,
-  }) : id = _currentEngineId++ {
+  }) : id = _currentEngineId++;
+
+  final int id;
+  late final _qeptr = malloc<Pointer<QueryEngine>>();
+  bool _started = false;
+  bool _qeCreated = false;
+
+  Future<void> _createQueryEngine() async {
+    if (_qeCreated) return;
+
     final logLevel =
         this.options.logEmitter.definition.fold<String?>(null, (prev, e) {
       if (prev == 'info' || e.$1 == LogLevel.info) {
@@ -37,8 +46,10 @@ class LibraryEngine extends Engine implements Finalizable {
     final logQueries =
         this.options.logEmitter.definition.any((e) => e.$1 == LogLevel.query);
 
+    final basePath = await getTemporaryDirectory().then((dir) => dir.path);
+
     final options = Struct.create<ConstructorOptions>()
-      ..base_path = nullptr
+      ..base_path = basePath.toNativeUtf8().cast()
       ..datamodel = schema.toNativeUtf8().cast()
       ..datasource_overrides = createOverwriteDatasourcesPtr().cast()
       ..env = createEnvironmentPtr().cast()
@@ -47,7 +58,7 @@ class LibraryEngine extends Engine implements Finalizable {
       ..log_callback = Pointer.fromFunction(_logCallback)
       ..log_level = (logLevel ?? 'info').toNativeUtf8().cast()
       ..log_queries = logQueries
-      ..native = createOptionsNative();
+      ..native = createOptionsNative(basePath);
 
     final errPtr = malloc<Pointer<Char>>();
     try {
@@ -62,6 +73,8 @@ class LibraryEngine extends Engine implements Finalizable {
       } else if (status == Status.miss) {
         throw StateError('Missing create query engine.');
       }
+
+      _qeCreated = true;
     } catch (_) {
       rethrow;
     } finally {
@@ -69,19 +82,20 @@ class LibraryEngine extends Engine implements Finalizable {
     }
   }
 
-  final int id;
-  late final _qeptr = malloc<Pointer<QueryEngine>>();
-  late bool _started = false;
-
   // Lifecycle methods
   @override
   Future<void> start() async {
+    await _createQueryEngine();
     if (_started) return;
 
     final errPtr = malloc<Pointer<Char>>();
     try {
-      final status =
-          bindings.start(_qeptr.value, '00'.toNativeUtf8().cast(), errPtr);
+      final status = bindings.start(
+        _qeptr.value,
+        '00'.toNativeUtf8().cast(),
+        nullptr,
+        errPtr,
+      );
       if (status == Status.err) {
         if (errPtr.value == nullptr) {
           throw StateError('Start query engine fail.');
@@ -101,7 +115,7 @@ class LibraryEngine extends Engine implements Finalizable {
   Future<void> stop() async {
     if (_qeptr.value == nullptr || !_started) return;
     try {
-      final status = bindings.stop(_qeptr.value, nullptr);
+      final status = bindings.stop(_qeptr.value, nullptr, nullptr);
       if (status != Status.ok) {
         throw StateError('Could not stop from prisma query engine');
       }
@@ -123,7 +137,8 @@ class LibraryEngine extends Engine implements Finalizable {
     final errptr = malloc<Pointer<Char>>();
 
     try {
-      final response = bindings.query(_qeptr.value, body, trace, txId, errptr);
+      final response =
+          bindings.query(_qeptr.value, body, trace, txId, nullptr, errptr);
       if (response == nullptr || errptr.value != nullptr) {
         if (errptr.value == nullptr) {
           throw StateError('Prisma engine did not request.');
@@ -165,8 +180,12 @@ class LibraryEngine extends Engine implements Finalizable {
     }).toNativeUtf8();
 
     try {
-      final response =
-          bindings.startTransaction(_qeptr.value, options.cast(), trace);
+      final response = bindings.startTransaction(
+        _qeptr.value,
+        options.cast(),
+        trace,
+        nullptr,
+      );
       final result = json.decode(response.cast<Utf8>().toDartString());
       if (result case {'id': final String id}) {
         return Transaction(id);
@@ -186,7 +205,11 @@ class LibraryEngine extends Engine implements Finalizable {
     final Pointer<Char> trace =
         headers.traceparent?.toNativeUtf8().cast() ?? nullptr;
     final response = bindings.commitTransaction(
-        _qeptr.value, transaction.id.toNativeUtf8().cast(), trace);
+      _qeptr.value,
+      transaction.id.toNativeUtf8().cast(),
+      trace,
+      nullptr,
+    );
     if (response == nullptr) {
       throw StateError('Prisma engine did not commit transaction.');
     }
@@ -200,7 +223,11 @@ class LibraryEngine extends Engine implements Finalizable {
     final Pointer<Char> trace =
         headers.traceparent?.toNativeUtf8().cast() ?? nullptr;
     final response = bindings.rollbackTransaction(
-        _qeptr.value, transaction.id.toNativeUtf8().cast(), trace);
+      _qeptr.value,
+      transaction.id.toNativeUtf8().cast(),
+      trace,
+      nullptr,
+    );
     if (response == nullptr) {
       throw StateError('Prisma engine did not rollback transaction.');
     }
@@ -227,6 +254,7 @@ class LibraryEngine extends Engine implements Finalizable {
     required String path,
     AssetBundle? bundle,
   }) async {
+    await _createQueryEngine();
     final resoolvedPath = normalize(path);
     final resolvedBundle = bundle ?? rootBundle;
     final assetManifest =
@@ -263,6 +291,7 @@ class LibraryEngine extends Engine implements Finalizable {
     }
 
     final errorPtr = malloc<Pointer<Char>>();
+    print('MDIR: ${migrationTempDir.path}');
     try {
       final status = bindings.applyMigrations(
           _qeptr.value, migrationTempDir.path.toNativeUtf8().cast(), errorPtr);
@@ -303,9 +332,9 @@ extension on LibraryEngine {
   }
 
   /// Create native options for query engine constructor
-  ConstructorOptionsNative createOptionsNative() {
+  ConstructorOptionsNative createOptionsNative(String basePath) {
     return Struct.create<ConstructorOptionsNative>()
-      ..config_dir = "".toNativeUtf8().cast();
+      ..config_dir = basePath.toNativeUtf8().cast();
   }
 
   /// Create datasource overrides pointer for query engine

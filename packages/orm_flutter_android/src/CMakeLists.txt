@@ -3,7 +3,7 @@
 # the plugin to fail to compile for some customers of the plugin.
 cmake_minimum_required(VERSION 3.10)
 
-project(orm_flutter_android_library VERSION 0.0.2 LANGUAGES C)
+project(orm_flutter_android_library VERSION 0.0.3 LANGUAGES C)
 
 add_library(orm_flutter_android SHARED
   "query_engine_bridge/bridge.c"

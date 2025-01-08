@@ -1,3 +1,8 @@
+## v0.0.3
+
+- Upgrade `orm_flutter_android` to 0.0.3 version
+- Upgrade `orm_flutter_ios` to 0.0.5 version
+
 ## v0.0.2
 
 - Upgrade `orm_flutter_android` to 0.0.2 version
