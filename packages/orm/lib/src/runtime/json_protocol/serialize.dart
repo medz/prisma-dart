@@ -26,6 +26,8 @@ extension ModelActionToJsonQueryAction on dmmf.ModelAction {
         JsonQueryAction.createManyAndReturn,
       dmmf.ModelAction.update => JsonQueryAction.updateOne,
       dmmf.ModelAction.updateMany => JsonQueryAction.updateMany,
+      dmmf.ModelAction.updateManyAndReturn =>
+        JsonQueryAction.updateManyAndReturn,
       dmmf.ModelAction.delete => JsonQueryAction.deleteOne,
       dmmf.ModelAction.deleteMany => JsonQueryAction.deleteMany,
       dmmf.ModelAction.upsert => JsonQueryAction.upsertOne,

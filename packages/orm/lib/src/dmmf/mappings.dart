@@ -74,6 +74,7 @@ enum ModelAction {
   createManyAndReturn,
   update,
   updateMany,
+  updateManyAndReturn,
   upsert,
   delete,
   deleteMany,
