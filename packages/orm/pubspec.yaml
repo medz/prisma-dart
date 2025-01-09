@@ -23,7 +23,7 @@ executables:
 
 dependencies:
   code_builder: ^4.10.0
-  dart_style: ^2.3.7 # TODO: await ffigen update the dep
+  dart_style: ^3.0.0 # TODO: await ffigen update the dep
   decimal: ^3.1.0
   json_rpc_2: ^3.0.2
   path: ^1.9.0
