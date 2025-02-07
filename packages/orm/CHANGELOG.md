@@ -1,3 +1,7 @@
+## v5.3.2
+
+* **fix**: Add locks to ensure that only one binary is started
+
 ## v5.3.1
 
 * **fix**: Downgrade dart_style version.

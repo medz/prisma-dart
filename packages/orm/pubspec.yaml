@@ -4,7 +4,7 @@ homepage: https://prisma.pub
 repository: https://github.com/medz/prisma-dart
 
 resolution: workspace
-version: 5.3.1
+version: 5.3.2
 
 funding:
   - https://github.com/sponsors/medz
