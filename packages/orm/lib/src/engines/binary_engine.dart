@@ -23,9 +23,6 @@ import '../runtime/transaction/transaction_headers.dart';
 
 /// Prisma branary engine.
 class BinaryEngine extends Engine {
-  late Uri _endpoint;
-  Future<void> Function()? _stopCallback;
-
   /// Creates a new [BinaryEngine].
   BinaryEngine({
     required super.schema,
@@ -33,14 +30,31 @@ class BinaryEngine extends Engine {
     required super.options,
   });
 
+  late Uri _endpoint;
+  Future<void> Function()? _stopCallback;
+  Future<void>? _startingFuture;
+
   @override
   Future<void> start() async {
     if (_stopCallback != null) return;
+    if (_startingFuture != null) {
+      return await _startingFuture;
+    }
 
-    final (endpoint, stop) = await createServer();
+    final completer = Completer<void>();
+    _startingFuture = completer.future;
 
-    _endpoint = endpoint;
-    _stopCallback = stop;
+    try {
+      final (endpoint, stop) = await createServer();
+      _endpoint = endpoint;
+      _stopCallback = stop;
+      completer.complete();
+    } catch (e) {
+      _stopCallback = null;
+      completer.completeError(e);
+    } finally {
+      _startingFuture = null;
+    }
   }
 
   @override
