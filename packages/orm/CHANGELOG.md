@@ -1,3 +1,7 @@
+## v5.3.3
+
+- fix: bytes serialization support in JSON protocol
+
 ## v5.3.2
 
 * **fix**: Add locks to ensure that only one binary is started
