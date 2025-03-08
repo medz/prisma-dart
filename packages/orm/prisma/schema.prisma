@@ -28,3 +28,8 @@ model Post {
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
 }
+
+model Test {
+  id String @id @default(uuid(7))
+  bytes Bytes
+}

@@ -28,6 +28,11 @@ model Post {
   publishAt DateTime?
 }
 
+model Test {
+  id Int @id @default(autoincrement())
+  bytes Bytes
+}
+
 enum Role {
   Admin
   User

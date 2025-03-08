@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 /// An abstract interface for objects that can be converted to JSON.
 ///
 /// The `JsonConvertible` interface provides a method `toJson()` that converts
@@ -22,8 +24,10 @@ abstract interface class JsonConvertible<T> {
   static serialize(value) {
     return switch (value) {
       JsonConvertible value => serialize(value.toJson()),
-      Iterable values => values.map((e) => serialize(e)).toList(),
+      Uint8List bytes => bytes,
+      TypedData bytes => bytes,
       Map values => values.map((key, value) => MapEntry(key, serialize(value))),
+      Iterable values => values.map((e) => serialize(e)).toList(),
       _ => value,
     };
   }
