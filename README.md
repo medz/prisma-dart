@@ -1,5 +1,7 @@
 # Prisma Client Dart
 
+> ⚠️ **IMPORTANT NOTICE**: Development of Prisma Dart Client has been suspended until after June 2025 due to Prisma's architectural changes from Rust to TypeScript. Current versions will continue to work with existing Prisma versions but will not be updated to support Prisma v7 and beyond until after the suspension period. For more details, please see the [official announcement](https://github.com/medz/prisma-dart/issues/471).
+
 [![Pub Version](https://img.shields.io/pub/v/orm?include_prereleases)](https://pub.dev/packages/orm)
 [![GitHub License](https://img.shields.io/github/license/medz/prisma-dart)](https://github.com/medz/prisma-dart/blob/main/LICENSE)
 [![Docs website](https://img.shields.io/badge/docs-prisma.pub-brightgreen)](https://prisma.pub/)
@@ -76,10 +78,10 @@ You can also find them in the [`example` folder in the `main` branch](https://gi
 ## Query engine support matrix
 
 | Engine     | Dart Native | Dart Web | Flutter Native | Flutter Web |
-|------------|:-----------:|:--------:|:--------------:|:-----------:|
-| Binary     |      ✅      |    ❌    |       ❌        |     ❌      |
-| Library    |      ✅      |    ❌    |       ✅       |     ❌      |
-| Data Proxy |      ✅      |    ✅   |       ✅       |     ✅     |
+| ---------- | :---------: | :------: | :------------: | :---------: |
+| Binary     |     ✅      |    ❌    |       ❌       |     ❌      |
+| Library    |     ✅      |    ❌    |       ✅       |     ❌      |
+| Data Proxy |     ✅      |    ✅    |       ✅       |     ✅      |
 
 ## Contributing
 
