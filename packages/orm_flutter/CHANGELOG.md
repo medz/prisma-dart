@@ -1,3 +1,7 @@
+## v0.5.1
+
+chore: update `orm_flutter_ffi` to `v0.0.3` version
+
 ## v0.5.0
 
 To install Prisma Flutter Integration v0.5.0 run this command
