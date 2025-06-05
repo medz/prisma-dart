@@ -39,7 +39,8 @@ Future<void> generate(GeneratorOptions options) async {
 
   final generator = Generator(options);
   final libraries = generator.generate();
-  final formatter = DartFormatter();
+  final formatter =
+      DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
 
   for (final (filename, library) in libraries) {
     final emitter = DartEmitter.scoped(

@@ -45,10 +45,11 @@ main() async {
       print(333);
       await prisma.$disconnect();
     }
-  }, onError: (e) async {
-    print(e);
-    await prisma.$disconnect();
-  });
+  }, zoneSpecification:
+      ZoneSpecification(errorCallback: (zone, parent, ___, e, s) {
+    prisma.$disconnect();
+    return parent.errorCallback(zone, e, s) ?? AsyncError(e, s);
+  }));
 
   print(444);
 }
