@@ -1,3 +1,8 @@
+## v5.3.4
+
+- chore: update `dart_style` to `3.1.0`
+- chore: update `json_rpc_2` to `4.0.0`
+
 ## v5.3.3
 
 - fix: bytes serialization support in JSON protocol
