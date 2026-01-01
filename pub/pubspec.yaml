@@ -6,6 +6,7 @@ environment:
 
 workspace:
   - orm
+  - orm_sqlite
 
 dev_dependencies:
   lints: ^6.0.0

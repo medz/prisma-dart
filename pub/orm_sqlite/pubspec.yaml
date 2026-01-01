@@ -1,0 +1,16 @@
+name: orm_sqlite
+description: SQLite adapter for ORM
+version: 6.0.0-dev.1
+publish_to: none
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  orm:
+    path: ../orm
+  sqlite3: ^2.4.6
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6
