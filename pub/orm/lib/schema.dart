@@ -1,2 +1,1 @@
-export 'src/schema/model.dart';
-export 'src/schema/schema.dart';
+export 'src/schema/annotations.dart';

@@ -1,27 +1,24 @@
 import 'package:orm/schema.dart';
 
-@Schema()
-mixin PublicSchema implements Schema {
-  @override
-  String get schema => 'public';
-}
+const public = Schema('public');
 
-@Model()
-abstract class User with PublicSchema {
+@public
+@model
+abstract class User {
   int get id;
   String get email;
 }
 
-@Model()
-abstract class Post with PublicSchema {
+@public
+@model
+abstract class Post {
+  @ID()
   int get id;
+
   String get title;
+
   int get userId;
 
-  @Relation<Post, User>(
-    references: {.userId},
-    onUpdate: .cascade,
-    onDelete: .setNull,
-  )
+  @Relation(references: {"userId"})
   User get user;
 }
