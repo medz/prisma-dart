@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:orm/src/analyzer/rules/config_required_rule.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -8,13 +7,14 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 @reflectiveTest
 class ConfigRequiredRuleTest extends AnalysisRuleTest {
   @override
-  String get analysisRule => 'orm_config_required';
-
-  @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(ConfigRequiredRule());
+    rule = ConfigRequiredRule();
     super.setUp();
     newPubspecYamlFile(testPackageRootPath, 'name: orm\n');
+    newSinglePackageConfigJsonFile(
+      packagePath: testPackageRootPath,
+      name: 'orm',
+    );
     newFile(join(testPackageRootPath, 'lib', 'config.dart'), r'''
 enum DatabaseProvider { sqlite }
 
@@ -41,6 +41,7 @@ class Config {
 
   void test_missingConfig() async {
     await _assertMissingConfig(r'''
+// ignore_for_file: unused_import
 import 'package:orm/config.dart';
 ''');
   }
