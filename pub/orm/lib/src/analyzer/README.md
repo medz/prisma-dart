@@ -6,6 +6,7 @@ Structure
 - `rules/`: analysis rules (diagnostics).
 - `fixes/`: quick fixes for rule diagnostics.
 - `assists/`: assists not tied to diagnostics.
+- `utils/`: shared helpers and constants.
 
 Naming
 - Rule file: `*_rule.dart` (class `*Rule`).

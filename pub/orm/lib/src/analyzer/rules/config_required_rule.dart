@@ -5,18 +5,21 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 
+import '../utils/analyzer_constants.dart';
+import '../utils/config_ast_utils.dart';
+
 class ConfigRequiredRule extends AnalysisRule {
-  static const code = LintCode(
-    'orm_config_required',
-    "Missing required 'const config = Config(...);' in orm.config.dart.",
+  static const LintCode code = LintCode(
+    configRequiredRuleName,
+    "Missing required '$configFixSnippet' in $ormConfigFileName.",
     correctionMessage:
-        "Add a top-level 'const config = Config(...);' to orm.config.dart.",
-    severity: .ERROR,
+        "Add a top-level '$configFixSnippet' to $ormConfigFileName.",
+    severity: DiagnosticSeverity.ERROR,
   );
 
   ConfigRequiredRule()
     : super(
-        name: 'orm_config_required',
+        name: configRequiredRuleName,
         description:
             'Ensures orm.config.dart defines a top-level const Config.',
       );
@@ -47,7 +50,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    final configFile = packageRoot.getChildAssumingFile('orm.config.dart');
+    final configFile = packageRoot.getChildAssumingFile(ormConfigFileName);
     if (currentUnit.file.path != configFile.path) {
       return;
     }
@@ -58,8 +61,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _hasRequiredConfig(CompilationUnit unit) {
-    final configImport = _findConfigImport(unit);
-    final hasLocalConfig = _hasLocalConfigDeclaration(unit);
+    final configImport = findOrmConfigImport(unit);
+    final hasLocalConfig = hasLocalConfigDeclaration(unit);
     for (final declaration in unit.declarations) {
       if (declaration is! TopLevelVariableDeclaration) {
         continue;
@@ -71,7 +74,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
 
       for (final variable in variables.variables) {
-        if (variable.name.lexeme != 'config') {
+        if (!isConfigVariable(variable)) {
           continue;
         }
 
@@ -89,38 +92,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     return false;
   }
 
-  ImportDirective? _findConfigImport(CompilationUnit unit) {
-    for (final directive in unit.directives) {
-      if (directive is! ImportDirective) {
-        continue;
-      }
-      final uri = directive.uri.stringValue;
-      if (uri == 'package:orm/config.dart') {
-        return directive;
-      }
-    }
-    return null;
-  }
-
-  bool _hasLocalConfigDeclaration(CompilationUnit unit) {
-    for (final declaration in unit.declarations) {
-      if (declaration is FunctionDeclaration) {
-        continue;
-      }
-      if (declaration is NamedCompilationUnitMember &&
-          declaration.name.lexeme == 'Config') {
-        return true;
-      }
-    }
-    return false;
-  }
-
   bool _isOrmConfigInitializer(
     InstanceCreationExpression initializer,
     ImportDirective? configImport,
     bool hasLocalConfig,
   ) {
-    if (initializer.constructorName.type.name.lexeme != 'Config') {
+    if (initializer.constructorName.type.name.lexeme != configClassName) {
       return false;
     }
 
@@ -129,8 +106,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     final library = classElement?.library;
     final libraryUri = library?.firstFragment.source.uri;
     if (libraryUri != null) {
-      return libraryUri.scheme == 'package' &&
-          libraryUri.path == 'orm/config.dart';
+      return libraryUri.toString() == ormConfigImportUri;
     }
 
     if (configImport == null) {
