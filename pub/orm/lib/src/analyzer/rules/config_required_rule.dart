@@ -11,6 +11,7 @@ class ConfigRequiredRule extends AnalysisRule {
     "Missing required 'const config = Config(...);' in orm.config.dart.",
     correctionMessage:
         "Add a top-level 'const config = Config(...);' to orm.config.dart.",
+    severity: DiagnosticSeverity.ERROR,
   );
 
   ConfigRequiredRule()
@@ -57,6 +58,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _hasRequiredConfig(CompilationUnit unit) {
+    final configImport = _findConfigImport(unit);
+    final hasLocalConfig = _hasLocalConfigDeclaration(unit);
     for (final declaration in unit.declarations) {
       if (declaration is! TopLevelVariableDeclaration) {
         continue;
@@ -74,11 +77,78 @@ class _Visitor extends SimpleAstVisitor<void> {
 
         final initializer = variable.initializer;
         if (initializer is InstanceCreationExpression &&
-            initializer.constructorName.type.name.lexeme == 'Config') {
+            _isOrmConfigInitializer(
+              initializer,
+              configImport,
+              hasLocalConfig,
+            )) {
           return true;
         }
       }
     }
     return false;
+  }
+
+  ImportDirective? _findConfigImport(CompilationUnit unit) {
+    for (final directive in unit.directives) {
+      if (directive is! ImportDirective) {
+        continue;
+      }
+      final uri = directive.uri.stringValue;
+      if (uri == 'package:orm/config.dart') {
+        return directive;
+      }
+    }
+    return null;
+  }
+
+  bool _hasLocalConfigDeclaration(CompilationUnit unit) {
+    for (final declaration in unit.declarations) {
+      if (declaration is FunctionDeclaration) {
+        continue;
+      }
+      if (declaration is NamedCompilationUnitMember &&
+          declaration.name.lexeme == 'Config') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool _isOrmConfigInitializer(
+    InstanceCreationExpression initializer,
+    ImportDirective? configImport,
+    bool hasLocalConfig,
+  ) {
+    if (initializer.constructorName.type.name.lexeme != 'Config') {
+      return false;
+    }
+
+    final ctorElement = initializer.constructorName.element;
+    final classElement = ctorElement?.enclosingElement;
+    final library = classElement?.library;
+    final libraryUri = library?.firstFragment.source.uri;
+    if (libraryUri != null) {
+      return libraryUri.scheme == 'package' &&
+          libraryUri.path == 'orm/config.dart';
+    }
+
+    if (configImport == null) {
+      return false;
+    }
+
+    final importPrefix = configImport.prefix?.name;
+    final usagePrefix =
+        initializer.constructorName.type.importPrefix?.name.lexeme;
+
+    if (importPrefix != null) {
+      return usagePrefix == importPrefix;
+    }
+
+    if (usagePrefix != null) {
+      return false;
+    }
+
+    return !hasLocalConfig;
   }
 }

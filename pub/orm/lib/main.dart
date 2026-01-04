@@ -11,10 +11,7 @@ class AnalysisPlugin extends Plugin {
   @override
   void register(PluginRegistry registry) {
     registry.registerWarningRule(ConfigRequiredRule());
-    registry.registerFixForRule(
-      ConfigRequiredRule.code,
-      AddConfigConstantFix.new,
-    );
+    registry.registerFixForRule(ConfigRequiredRule.code, ConfigRequiredFix.new);
   }
 }
 

@@ -4,14 +4,14 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 
-class AddConfigConstantFix extends ResolvedCorrectionProducer {
+class ConfigRequiredFix extends ResolvedCorrectionProducer {
   static const FixKind _kind = FixKind(
-    'orm.fix.addConfigConstant',
+    'orm.fix.config_required',
     DartFixKindPriority.standard,
     "Define ORM config: const config = Config(...)",
   );
 
-  AddConfigConstantFix({required super.context});
+  ConfigRequiredFix({required super.context});
 
   @override
   CorrectionApplicability get applicability =>
@@ -22,6 +22,10 @@ class AddConfigConstantFix extends ResolvedCorrectionProducer {
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
+    if (_hasConfigVariable(unit)) {
+      return;
+    }
+
     final eol = utils.endOfLine;
     final configImport = _findConfigImport(unit);
     final prefix = configImport?.prefix?.name;
@@ -68,6 +72,20 @@ class AddConfigConstantFix extends ResolvedCorrectionProducer {
       }
     }
     return null;
+  }
+
+  bool _hasConfigVariable(CompilationUnit unit) {
+    for (final declaration in unit.declarations) {
+      if (declaration is! TopLevelVariableDeclaration) {
+        continue;
+      }
+      for (final variable in declaration.variables.variables) {
+        if (variable.name.lexeme == 'config') {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   int _configInsertOffset(CompilationUnit unit) {
