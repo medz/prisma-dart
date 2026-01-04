@@ -6,4 +6,3 @@
 prisma-query-engine*
 generated_*/
 node_modules/
-dev/

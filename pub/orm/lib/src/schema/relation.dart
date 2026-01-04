@@ -1,24 +1,4 @@
 import 'package:meta/meta.dart';
-import 'package:meta/meta_meta.dart';
-
-/// Annotation to map a model or field to a database name.
-@immutable
-final class Map {
-  final String name;
-
-  /// Creates a mapping annotation with the given database name.
-  const Map(this.name);
-}
-
-/// Marks a typedef as a model in the schema.
-const model = _Model();
-
-@immutable
-@Target({.typedefType})
-final class _Model {
-  @literal
-  const _Model();
-}
 
 /// Actions for referential integrity on update/delete.
 enum ReferenceAction {

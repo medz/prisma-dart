@@ -9,6 +9,7 @@ final class Config {
   final String? schema;
   final String? migrations;
 
+  @literal
   const Config({
     required this.provider,
     required this.output,
