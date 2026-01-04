@@ -12,5 +12,5 @@ typedef Post = ({
   @ID() int id,
   String title,
   int userId,
-  @Relation(references: {'userId'}) User user,
+  @Relation(references: {'id', 'title', 'userId'}) User user,
 });

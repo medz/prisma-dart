@@ -3,7 +3,11 @@ import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart' show DiagnosticMessage;
 import 'package:analyzer/error/error.dart';
+// ignore: implementation_imports
+import 'package:analyzer/src/diagnostic/diagnostic.dart'
+    show DiagnosticMessageImpl;
 
 import '../relation_utils.dart';
 
@@ -17,7 +21,7 @@ class RelationReferencesRule extends MultiAnalysisRule {
 
   static const LintCode unknownField = LintCode(
     'orm_relation_unknown_reference',
-    "Unknown reference field '{0}' in @Relation. Allowed fields: {1}.",
+    "Unknown reference field '{0}' in @Relation.",
     correctionMessage: 'Use a field declared on the same record.',
     severity: DiagnosticSeverity.ERROR,
   );
@@ -37,26 +41,32 @@ class RelationReferencesRule extends MultiAnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    registry.addGenericTypeAlias(this, _Visitor(this));
+    registry.addGenericTypeAlias(this, _Visitor(this, context));
   }
 
   void reportInvalid(AstNode node) {
     reportAtNode(node, diagnosticCode: invalidLiteral);
   }
 
-  void reportUnknown(AstNode node, String name, Set<String> allowed) {
+  void reportUnknown(
+    AstNode node,
+    String name, {
+    List<DiagnosticMessage>? contextMessages,
+  }) {
     reportAtNode(
       node,
       diagnosticCode: unknownField,
-      arguments: [name, _formatAllowedFields(allowed)],
+      arguments: [name],
+      contextMessages: contextMessages,
     );
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final RelationReferencesRule rule;
+  final RuleContext context;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, this.context);
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
@@ -68,7 +78,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     var namedFields = record.namedFields?.fields;
     if (namedFields == null || namedFields.isEmpty) return;
 
-    var availableNames = collectNonRelationRecordFieldNames(record);
+    var availableNamesList = collectNonRelationRecordFieldNamesInOrder(record);
+    var availableNames = availableNamesList.toSet();
     for (var field in namedFields) {
       var relation = findRelationAnnotation(field.metadata);
       if (relation == null) continue;
@@ -84,20 +95,38 @@ class _Visitor extends SimpleAstVisitor<void> {
           continue;
         }
         if (!availableNames.contains(value)) {
-          rule.reportUnknown(entry.node, value, availableNames);
+          rule.reportUnknown(
+            entry.node,
+            value,
+            contextMessages: _allowedFieldsContextMessages(
+              entry.node,
+              availableNamesList,
+              context,
+            ),
+          );
         }
       }
     }
   }
 }
 
-String _formatAllowedFields(Set<String> allowed) {
-  if (allowed.isEmpty) return '(none)';
-  var list = allowed.toList()..sort();
-  const maxItems = 10;
-  if (list.length <= maxItems) {
-    return list.join(', ');
-  }
-  var head = list.take(maxItems).join(', ');
-  return '$head, ...';
+List<DiagnosticMessage> _allowedFieldsContextMessages(
+  AstNode node,
+  List<String> allowed,
+  RuleContext context,
+) {
+  var message = allowed.isEmpty
+      ? 'Allowed fields: (none).'
+      : 'Allowed fields: ${allowed.join(', ')}.';
+  var filePath =
+      context.currentUnit?.file.path ?? context.definingUnit.file.path;
+  return [
+    DiagnosticMessageImpl(
+      filePath: filePath,
+      offset: node.offset,
+      length: node.length,
+      message: message,
+      url: null,
+    ),
+  ];
 }

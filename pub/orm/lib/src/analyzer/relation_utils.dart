@@ -67,7 +67,13 @@ Set<String> collectNonRelationFieldNames(ClassDeclaration declaration) {
 }
 
 Set<String> collectNonRelationRecordFieldNames(RecordTypeAnnotation record) {
-  var names = <String>{};
+  return collectNonRelationRecordFieldNamesInOrder(record).toSet();
+}
+
+List<String> collectNonRelationRecordFieldNamesInOrder(
+  RecordTypeAnnotation record,
+) {
+  var names = <String>[];
   var namedFields = record.namedFields?.fields;
   if (namedFields == null) return names;
   for (var field in namedFields) {
