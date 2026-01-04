@@ -1,6 +1,6 @@
 import 'package:orm/config.dart';
 
 const config = Config(
-  provider: DatabaseProvider.sqlite,
+  provider: .sqlite,
   output: '', // TODO: update output path
 );

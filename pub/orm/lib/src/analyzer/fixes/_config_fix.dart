@@ -67,7 +67,7 @@ abstract class ConfigFix extends ResolvedCorrectionProducer {
         : '.sqlite';
     return [
       'const config = ${qualifier}Config(',
-      '${utils.oneIndent}$provider,',
+      '${utils.oneIndent}provider: $provider,',
       "${utils.oneIndent}output: '', // TODO: update output path",
       ');',
     ].join(eol);
