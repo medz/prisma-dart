@@ -17,7 +17,7 @@ class RelationReferencesRule extends MultiAnalysisRule {
 
   static const LintCode unknownField = LintCode(
     'orm_relation_unknown_reference',
-    "Unknown reference field '{0}' in @Relation.",
+    "Unknown reference field '{0}' in @Relation. Allowed fields: {1}.",
     correctionMessage: 'Use a field declared on the same record.',
     severity: DiagnosticSeverity.ERROR,
   );
@@ -44,8 +44,12 @@ class RelationReferencesRule extends MultiAnalysisRule {
     reportAtNode(node, diagnosticCode: invalidLiteral);
   }
 
-  void reportUnknown(AstNode node, String name) {
-    reportAtNode(node, diagnosticCode: unknownField, arguments: [name]);
+  void reportUnknown(AstNode node, String name, Set<String> allowed) {
+    reportAtNode(
+      node,
+      diagnosticCode: unknownField,
+      arguments: [name, _formatAllowedFields(allowed)],
+    );
   }
 }
 
@@ -80,9 +84,20 @@ class _Visitor extends SimpleAstVisitor<void> {
           continue;
         }
         if (!availableNames.contains(value)) {
-          rule.reportUnknown(entry.node, value);
+          rule.reportUnknown(entry.node, value, availableNames);
         }
       }
     }
   }
+}
+
+String _formatAllowedFields(Set<String> allowed) {
+  if (allowed.isEmpty) return '(none)';
+  var list = allowed.toList()..sort();
+  const maxItems = 10;
+  if (list.length <= maxItems) {
+    return list.join(', ');
+  }
+  var head = list.take(maxItems).join(', ');
+  return '$head, ...';
 }
