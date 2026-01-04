@@ -22,12 +22,14 @@ enum ReferenceAction { noAction, restrict, cascade, setNull, setDefault }
 
 class Relation {
   final Iterable<String> references;
+  final Iterable<String>? fields;
   final ReferenceAction? onDelete;
   final ReferenceAction? onUpdate;
 
   @literal
   const Relation({
     @mustBeConst required this.references,
+    @mustBeConst this.fields,
     @mustBeConst this.onDelete,
     @mustBeConst this.onUpdate,
   });

@@ -1,7 +1,6 @@
 import 'package:analysis_server_plugin/plugin.dart';
 import 'package:analysis_server_plugin/registry.dart';
 
-import 'src/analyzer/assists/relation_reference_assists.dart';
 import 'src/analyzer/fixes/relation_reference_fix.dart';
 import 'src/analyzer/relation_suggestions.dart';
 import 'src/analyzer/rules/relation_references_rule.dart';
@@ -16,15 +15,12 @@ class AnalysisServerPlugin extends Plugin {
     for (var i = 0; i < maxRelationReferenceFixes; i++) {
       registry.registerFixForRule(
         RelationReferencesRule.unknownField,
-        ({required context}) =>
-            ReplaceWithRelationReferenceFix(
-              context: context,
-              candidateIndex: i,
-            ),
+        ({required context}) => ReplaceWithRelationReferenceFix(
+          context: context,
+          candidateIndex: i,
+        ),
       );
     }
-    registry.registerAssist(ReplaceWithClosestRelationReferenceAssist.new);
-    registry.registerAssist(FillRelationReferencesAssist.new);
   }
 }
 

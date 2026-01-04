@@ -4,13 +4,13 @@ const public = Schema('public');
 
 @public
 @model
-typedef User = ({@ID() int id, String email});
+typedef User = ({@id int id, String email});
 
 @public
 @model
 typedef Post = ({
-  @ID() int id,
+  @id int id,
   String title,
   int userId,
-  @Relation(references: {'id', 'title', 'userId'}) User user,
+  @Relation(references: {"userId"}) User user,
 });
