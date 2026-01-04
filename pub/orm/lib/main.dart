@@ -1,22 +1,16 @@
-// import 'dart:async';
+import 'dart:async';
 
-// import 'package:analysis_server_plugin/registry.dart';
+import 'package:analysis_server_plugin/plugin.dart';
+import 'package:analysis_server_plugin/registry.dart';
 
-// // import 'src/analyzer/plugin.dart';
+class AnalysisPlugin extends Plugin {
+  @override
+  String get name => 'orm';
 
-// // mixin A on Plugin {
-// //   @override
-// //   Future<void> register(PluginRegistry registry) async {
-// //     await super.register(registry);
-// //   }
-// // }
+  @override
+  Future<void> register(PluginRegistry registry) async {
+    // TODO: implement register
+  }
+}
 
-// // class AnalysisPlugin extends Plugin with SchemaAnalyzerPlugin, A {
-// //   @override
-// //   Future<void> register(PluginRegistry registry) async {
-// //     await super.register(registry);
-// //     // TODO: implement register
-// //   }
-// // }
-
-// // final plugin = AnalysisPlugin();
+final plugin = AnalysisPlugin();
