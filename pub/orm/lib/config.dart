@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-enum DatabaseProvider { sqlite, mysql, postgresql, sqlserver }
+enum DatabaseProvider { sqlite }
 
 @immutable
 final class Config {
