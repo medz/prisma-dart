@@ -1,4 +1,4 @@
 include: package:lints/recommended.yaml
-plugins:
-  orm:
-    path: ./orm
+# plugins:
+#   orm:
+#     path: ./orm

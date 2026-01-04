@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   analyzer: ^9.0.0
-  analyzer_plugin: ^0.13.11
   analysis_server_plugin: ^0.3.4
   meta: ^1.17.0
 
