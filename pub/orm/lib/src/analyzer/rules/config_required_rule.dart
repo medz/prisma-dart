@@ -6,12 +6,12 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 
 class ConfigRequiredRule extends AnalysisRule {
-  static const LintCode code = LintCode(
+  static const code = LintCode(
     'orm_config_required',
     "Missing required 'const config = Config(...);' in orm.config.dart.",
     correctionMessage:
         "Add a top-level 'const config = Config(...);' to orm.config.dart.",
-    severity: DiagnosticSeverity.ERROR,
+    severity: .ERROR,
   );
 
   ConfigRequiredRule()
