@@ -5,14 +5,14 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 
 import '_config_fix.dart';
 
-class ConfigRequiredFix extends ConfigFix {
+class ConfigRequiredReplaceFix extends ConfigFix {
   static const FixKind _kind = FixKind(
-    'orm.fix.config_required',
+    'orm.fix.config_required_replace',
     DartFixKindPriority.standard,
-    "Define ORM config: const config = Config(...)",
+    "Replace ORM config: const config = Config(...)",
   );
 
-  ConfigRequiredFix({required super.context});
+  ConfigRequiredReplaceFix({required super.context});
 
   @override
   CorrectionApplicability get applicability =>
@@ -23,10 +23,15 @@ class ConfigRequiredFix extends ConfigFix {
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
-    if (findConfigVariable(unit) != null) {
+    final info = findConfigVariable(unit);
+    if (info == null) {
       return;
     }
 
-    await insertConfig(builder, configDeclOffset: configInsertOffset(unit));
+    if (!info.isSingle || info.declaration.metadata.isNotEmpty) {
+      return;
+    }
+
+    await replaceConfig(builder, info: info);
   }
 }
