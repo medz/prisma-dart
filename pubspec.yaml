@@ -2,19 +2,10 @@ name: _
 publish_to: none
 
 environment:
-  sdk: ^3.5.3
+  sdk: ^3.10.1
 
 workspace:
-  - packages/orm
-  - packages/orm_flutter
-  - packages/orm_flutter_ffi
-  - packages/orm_flutter_android
-  - packages/orm_flutter_ios
+  - pub/orm
 
-  # Documentation example
-  - docs-example
-
-  # Examples
-  - examples/with_sqlite
-  - examples/with_postgres
-  - examples/flutter_with_orm
+dev_dependencies:
+  lints: ^6.0.0
