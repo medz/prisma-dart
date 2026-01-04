@@ -45,14 +45,14 @@ class Config {
     await assertNoDiagnosticsInFile(path);
   }
 
-  void test_missingConfig() async {
+  Future<void> test_missingConfig() async {
     await _assertMissingConfig(r'''
 // ignore_for_file: unused_import
 import 'package:orm/config.dart';
 ''');
   }
 
-  void test_validConfig() async {
+  Future<void> test_validConfig() async {
     await _assertValidConfig(r'''
 import 'package:orm/config.dart';
 
@@ -63,7 +63,7 @@ const config = Config(
 ''');
   }
 
-  void test_prefixedImport() async {
+  Future<void> test_prefixedImport() async {
     await _assertValidConfig(r'''
 import 'package:orm/config.dart' as orm;
 
@@ -74,7 +74,7 @@ const config = orm.Config(
 ''');
   }
 
-  void test_localConfigClass() async {
+  Future<void> test_localConfigClass() async {
     await _assertMissingConfig(r'''
 class Config {
   const Config();
@@ -84,7 +84,7 @@ const config = Config();
 ''');
   }
 
-  void test_notConst() async {
+  Future<void> test_notConst() async {
     await _assertMissingConfig(r'''
 import 'package:orm/config.dart';
 
