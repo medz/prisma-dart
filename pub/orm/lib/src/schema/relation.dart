@@ -29,10 +29,10 @@ final class Relation {
   final String? map;
 
   /// A list of fields of the model on the other side of the relation
-  final Iterable<String> references;
+  final Set<String> references;
 
   /// A list of fields of the current model
-  final Iterable<String>? fields;
+  final Set<String>? fields;
 
   /// Defines the referential action to perform when a referenced
   /// entry in the referenced model is being deleted.
