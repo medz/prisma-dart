@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:meta/meta_meta.dart';
 
 @immutable
-@Target({.classType})
+@Target({.typedefType})
 class Schema {
   final String schema;
 
@@ -10,7 +10,7 @@ class Schema {
   const Schema(@mustBeConst this.schema);
 }
 
-@Target({.classType})
+@Target({.typedefType})
 class _Model {
   @literal
   const _Model();
@@ -20,7 +20,6 @@ const model = _Model();
 
 enum ReferenceAction { noAction, restrict, cascade, setNull, setDefault }
 
-@Target({.getter})
 class Relation {
   final Iterable<String> references;
   final ReferenceAction? onDelete;
@@ -34,13 +33,14 @@ class Relation {
   });
 }
 
-@Target({.classType, .getter})
 class ID {
   final Iterable<String>? fields;
 
   @literal
   const ID([@mustBeConst this.fields]);
 }
+
+const id = ID();
 
 class Map {
   final String name;

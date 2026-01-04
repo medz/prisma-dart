@@ -8,9 +8,10 @@ environment:
   sdk: ^3.10.1
 
 dependencies:
-  meta: ^1.17.0
   analyzer: ^9.0.0
+  analyzer_plugin: ^0.13.11
   analysis_server_plugin: ^0.3.4
+  meta: ^1.17.0
 
 dev_dependencies:
   lints: ^6.0.0
