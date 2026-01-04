@@ -10,5 +10,5 @@ typedef Post = ({
   String content,
   String authorId,
 
-  @Relation(references: {'authorId'}) User author,
+  @Relation(fields: {'authorId'}) User author,
 });

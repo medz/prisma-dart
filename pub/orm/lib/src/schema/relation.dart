@@ -29,10 +29,10 @@ final class Relation {
   final String? map;
 
   /// A list of fields of the model on the other side of the relation
-  final Set<String> references;
+  final Set<String>? references;
 
   /// A list of fields of the current model
-  final Set<String>? fields;
+  final Set<String> fields;
 
   /// Defines the referential action to perform when a referenced
   /// entry in the referenced model is being deleted.
@@ -45,10 +45,10 @@ final class Relation {
   @literal
   /// Creates a relation annotation describing a model relationship.
   const Relation({
-    required this.references,
+    required this.fields,
+    this.references,
     this.name,
     this.map,
-    this.fields,
     this.onDelete,
     this.onUpdate,
   });
