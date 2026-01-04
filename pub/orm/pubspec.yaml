@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   meta: ^1.17.0
+  analyzer: ^9.0.0
+  analysis_server_plugin: ^0.3.4
 
 dev_dependencies:
   lints: ^6.0.0

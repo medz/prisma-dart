@@ -19,6 +19,6 @@ abstract class Post {
 
   int get userId;
 
-  @Relation(references: {"userId"})
+  @Relation(references: {"a"})
   User get user;
 }
