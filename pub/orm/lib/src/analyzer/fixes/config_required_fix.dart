@@ -3,14 +3,13 @@ import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 
-import '../utils/analyzer_constants.dart';
 import '../utils/config_utils.dart';
 
-class ConfigRequiredFix extends ResolvedCorrectionProducer with ConfigUtils {
+class ConfigRequiredFix extends ResolvedCorrectionProducer {
   static const FixKind _kind = FixKind(
-    configFixIdRequired,
+    'orm.fix.config_required',
     DartFixKindPriority.standard,
-    configFixMessageDefine,
+    'Define ORM config: const config = Config(...)',
   );
 
   ConfigRequiredFix({required super.context});
@@ -28,6 +27,35 @@ class ConfigRequiredFix extends ResolvedCorrectionProducer with ConfigUtils {
       return;
     }
 
-    await insertConfig(builder, configDeclOffset: configInsertOffset(unit));
+    final eol = utils.endOfLine;
+    final configImport = findConfigImport(unit);
+    final prefix = configImport?.prefix?.name;
+    final needsImport = configImport == null;
+
+    final importOffset = importInsertOffset(unit);
+    final configDeclOffset = configInsertOffset(unit);
+    final configText = buildConfigText(prefix, eol, indent: utils.oneIndent);
+    final importText = buildImportText(eol);
+
+    await builder.addDartFileEdit(file, (builder) {
+      if (needsImport && importOffset == configDeclOffset) {
+        builder.addInsertion(importOffset, (builder) {
+          builder.write(importText);
+          builder.write(eol);
+          builder.write(configText);
+        });
+        return;
+      }
+
+      if (needsImport) {
+        builder.addInsertion(importOffset, (builder) {
+          builder.write(importText);
+        });
+      }
+
+      builder.addInsertion(configDeclOffset, (builder) {
+        builder.write(configText);
+      });
+    });
   }
 }

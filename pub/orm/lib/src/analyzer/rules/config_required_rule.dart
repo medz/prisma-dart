@@ -5,21 +5,20 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 
-import '../utils/analyzer_constants.dart';
-import '../utils/config_ast_utils.dart';
+import '../utils/config_utils.dart';
 
 class ConfigRequiredRule extends AnalysisRule {
   static const LintCode code = LintCode(
-    configRequiredRuleName,
-    "Missing required '$configFixSnippet' in $ormConfigFileName.",
+    'orm_config_required',
+    "Missing required 'const config = Config(...)' in orm.config.dart.",
     correctionMessage:
-        "Add a top-level '$configFixSnippet' to $ormConfigFileName.",
+        "Add a top-level 'const config = Config(...)' to orm.config.dart.",
     severity: DiagnosticSeverity.ERROR,
   );
 
   ConfigRequiredRule()
     : super(
-        name: configRequiredRuleName,
+        name: 'orm_config_required',
         description:
             'Ensures orm.config.dart defines a top-level const Config.',
       );
@@ -50,7 +49,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    final configFile = packageRoot.getChildAssumingFile(ormConfigFileName);
+    final configFile = packageRoot.getChildAssumingFile('orm.config.dart');
     if (currentUnit.file.path != configFile.path) {
       return;
     }
@@ -61,7 +60,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _hasRequiredConfig(CompilationUnit unit) {
-    final configImport = findOrmConfigImport(unit);
+    final configImport = findConfigImport(unit);
     final hasLocalConfig = hasLocalConfigDeclaration(unit);
     for (final declaration in unit.declarations) {
       if (declaration is! TopLevelVariableDeclaration) {
@@ -97,7 +96,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     ImportDirective? configImport,
     bool hasLocalConfig,
   ) {
-    if (initializer.constructorName.type.name.lexeme != configClassName) {
+    if (initializer.constructorName.type.name.lexeme != 'Config') {
       return false;
     }
 
@@ -106,7 +105,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     final library = classElement?.library;
     final libraryUri = library?.firstFragment.source.uri;
     if (libraryUri != null) {
-      return libraryUri.toString() == ormConfigImportUri;
+      return libraryUri.toString() == 'package:orm/config.dart';
     }
 
     if (configImport == null) {
