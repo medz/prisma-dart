@@ -1,4 +1,0 @@
-include: package:lints/recommended.yaml
-# plugins:
-#   orm:
-#     path: ./orm
