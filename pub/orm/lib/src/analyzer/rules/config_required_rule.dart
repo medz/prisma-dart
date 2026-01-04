@@ -55,8 +55,22 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     if (!_hasRequiredConfig(node)) {
-      rule.reportAtNode(node);
+      rule.reportAtNode(_diagnosticNode(node));
     }
+  }
+
+  AstNode _diagnosticNode(CompilationUnit unit) {
+    final configInfo = findConfigVariable(unit);
+    if (configInfo != null) {
+      return configInfo.variable;
+    }
+    if (unit.declarations.isNotEmpty) {
+      return unit.declarations.first;
+    }
+    if (unit.directives.isNotEmpty) {
+      return unit.directives.last;
+    }
+    return unit;
   }
 
   bool _hasRequiredConfig(CompilationUnit unit) {

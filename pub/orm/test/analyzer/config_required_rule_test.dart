@@ -1,7 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:orm/src/analyzer/rules/config_required_rule.dart';
+import 'package:orm/src/analyzer/utils/config_utils.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 @reflectiveTest
@@ -30,7 +32,11 @@ class Config {
   Future<void> _assertMissingConfig(String content) async {
     final path = join(testPackageRootPath, 'orm.config.dart');
     newFile(path, content);
-    await assertDiagnosticsInFile(path, [lint(0, content.length)]);
+    final resolved = await resolveFile(path);
+    final diagnosticNode = _diagnosticNode(resolved.unit);
+    await assertDiagnosticsInFile(path, [
+      lint(diagnosticNode.offset, diagnosticNode.length),
+    ]);
   }
 
   Future<void> _assertValidConfig(String content) async {
@@ -88,6 +94,20 @@ final config = Config(
 );
 ''');
   }
+}
+
+AstNode _diagnosticNode(CompilationUnit unit) {
+  final configInfo = findConfigVariable(unit);
+  if (configInfo != null) {
+    return configInfo.variable;
+  }
+  if (unit.declarations.isNotEmpty) {
+    return unit.declarations.first;
+  }
+  if (unit.directives.isNotEmpty) {
+    return unit.directives.last;
+  }
+  return unit;
 }
 
 void main() {
