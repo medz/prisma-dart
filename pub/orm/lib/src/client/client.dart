@@ -1376,6 +1376,9 @@ class ModelDelegate {
     if (where.isEmpty) {
       return const <String, Object?>{};
     }
+    if (_client.contract.target == 'sql-family') {
+      return where;
+    }
     return _rewriteRelationWhere(model: model, where: where);
   }
 

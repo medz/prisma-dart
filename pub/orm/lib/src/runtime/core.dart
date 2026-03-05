@@ -9,6 +9,12 @@ import 'types.dart';
 
 typedef MarkerHashReader = Future<String?> Function();
 const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
+const Set<String> _toManyRelationWhereOperators = <String>{
+  'some',
+  'every',
+  'none',
+};
+const Set<String> _toOneRelationWhereOperators = <String>{'is', 'isNot'};
 
 abstract interface class ContractMarkerReader {
   Future<String?> readContractHash();
@@ -389,6 +395,15 @@ final class OrmRuntimeCore implements RuntimeCore {
         );
         continue;
       }
+      final relation = model.relations[key];
+      if (relation != null) {
+        _assertRelationWhereFields(
+          relation: relation,
+          operand: entry.value,
+          source: source,
+        );
+        continue;
+      }
       _assertKnownFields(model: model, fields: <String>[key], source: source);
     }
   }
@@ -414,11 +429,80 @@ final class OrmRuntimeCore implements RuntimeCore {
     }
   }
 
+  void _assertRelationWhereFields({
+    required ModelRelationContract relation,
+    required Object? operand,
+    required String source,
+  }) {
+    final relationWhere = _coerceWhereMap(operand);
+    if (relationWhere == null || relationWhere.isEmpty) {
+      return;
+    }
+
+    final supportedOperators = _relationWhereOperatorsFor(
+      cardinality: relation.cardinality,
+    );
+    final unknownOperators = relationWhere.keys
+        .where((key) => !supportedOperators.contains(key))
+        .toList(growable: false);
+    if (unknownOperators.isNotEmpty) {
+      throw runtimeError(
+        'PLAN.RELATION_WHERE_OPERATOR_INVALID',
+        'Relation where contains unknown operators.',
+        details: <String, Object?>{
+          'relation': relation.name,
+          'unknownOperators': unknownOperators,
+          'supportedOperators': supportedOperators.toList(growable: false),
+          'source': source,
+        },
+      );
+    }
+
+    final relatedModel = contract.models[relation.relatedModel];
+    if (relatedModel == null) {
+      throw ModelNotFoundException(relation.relatedModel, contract.models.keys);
+    }
+
+    for (final entry in relationWhere.entries) {
+      final value = entry.value;
+      if (value == null) {
+        continue;
+      }
+
+      final nestedWhere = _coerceWhereMap(value);
+      if (nestedWhere == null) {
+        throw runtimeError(
+          'PLAN.RELATION_WHERE_VALUE_INVALID',
+          'Relation where operator expects a nested where map.',
+          details: <String, Object?>{
+            'relation': relation.name,
+            'operator': entry.key,
+            'source': source,
+          },
+        );
+      }
+      _assertWhereFields(
+        model: relatedModel,
+        where: nestedWhere,
+        source: source,
+      );
+    }
+  }
+
   void _ensureConnected() {
     if (_connected) {
       return;
     }
     throw ClientNotConnectedException();
+  }
+
+  Set<String> _relationWhereOperatorsFor({
+    required RelationCardinality cardinality,
+  }) {
+    return switch (cardinality) {
+      RelationCardinality.many => _toManyRelationWhereOperators,
+      RelationCardinality.one => _toOneRelationWhereOperators,
+    };
   }
 }
 

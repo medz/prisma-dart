@@ -953,6 +953,42 @@ void main() {
       await client.disconnect();
     });
 
+    test('skips relation where rewrite when target is sql-family', () async {
+      final sqlTargetContract = OrmContract(
+        version: relationalContract.version,
+        hash: 'contract-rel-sql-v1',
+        target: 'sql-family',
+        models: relationalContract.models,
+        aliases: relationalContract.aliases,
+        capabilities: relationalContract.capabilities,
+      );
+      final countingEngine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(
+        contract: sqlTargetContract,
+        engine: countingEngine,
+      );
+      await client.connect();
+
+      await client
+          .model('User')
+          .findMany(
+            where: <String, Object?>{
+              'posts': <String, Object?>{
+                'some': <String, Object?>{'title': 'Post A'},
+              },
+            },
+          );
+
+      expect(countingEngine.executeCount, 1);
+      expect(countingEngine.executedPlans.single.model, 'User');
+      expect(countingEngine.executedPlans.single.where, <String, Object?>{
+        'posts': <String, Object?>{
+          'some': <String, Object?>{'title': 'Post A'},
+        },
+      });
+      await client.disconnect();
+    });
+
     test('supports include for one-to-many relation', () async {
       final client = OrmClient(
         contract: relationalContract,
