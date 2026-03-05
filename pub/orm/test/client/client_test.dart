@@ -257,6 +257,116 @@ void main() {
       await client.disconnect();
     });
 
+    test('supports findFirst, count and exists helpers', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(
+        data: <String, Object?>{'id': 'u1', 'email': 'b@x.com'},
+      );
+      await users.create(
+        data: <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+      );
+      await users.create(
+        data: <String, Object?>{'id': 'u3', 'email': 'c@x.com'},
+      );
+
+      final first = await users.findFirst(
+        orderBy: const <OrmOrderBy>[OrmOrderBy('email')],
+      );
+      expect(first?['id'], 'u2');
+
+      final total = await users.count();
+      expect(total, 3);
+
+      final existsU1 = await users.exists(where: <String, Object?>{'id': 'u1'});
+      final existsUx = await users.exists(where: <String, Object?>{'id': 'ux'});
+      expect(existsU1, isTrue);
+      expect(existsUx, isFalse);
+      await client.disconnect();
+    });
+
+    test('supports upsert create and update branches', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      final created = await users.upsert(
+        where: <String, Object?>{'id': 'u1'},
+        create: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
+        update: <String, Object?>{'email': 'b@example.com'},
+      );
+      expect(created['email'], 'a@example.com');
+
+      final updated = await users.upsert(
+        where: <String, Object?>{'id': 'u1'},
+        create: <String, Object?>{'id': 'u1', 'email': 'x@example.com'},
+        update: <String, Object?>{'email': 'b@example.com'},
+      );
+      expect(updated['email'], 'b@example.com');
+      await client.disconnect();
+    });
+
+    test('supports createMany and deleteMany helpers', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      final createdRows = await users.createMany(
+        data: <JsonMap>[
+          <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+          <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+        ],
+      );
+      expect(createdRows, hasLength(3));
+
+      final deleted = await users.deleteMany(
+        where: <String, Object?>{'email': 'a@x.com'},
+      );
+      expect(deleted, 2);
+
+      final remaining = await users.count();
+      expect(remaining, 1);
+      await client.disconnect();
+    });
+
+    test(
+      'supports query state helpers for first/count/exists/upsert/deleteMany',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+
+        final users = client.model('User');
+        await users.create(
+          data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+        );
+
+        final query = users.where(<String, Object?>{'email': 'a@x.com'});
+        final first = await query.orderByField('id').findFirst();
+        expect(first?['id'], 'u1');
+        expect(await query.count(), 2);
+        expect(await query.exists(), isTrue);
+
+        final upserted = await users
+            .where(<String, Object?>{'id': 'u3'})
+            .upsert(
+              create: <String, Object?>{'id': 'u3', 'email': 'z@x.com'},
+              update: <String, Object?>{'email': 'q@x.com'},
+            );
+        expect(upserted['id'], 'u3');
+
+        final removed = await query.deleteMany();
+        expect(removed, 2);
+        expect(await users.count(), 1);
+        await client.disconnect();
+      },
+    );
+
     test('supports include for one-to-many relation', () async {
       final client = OrmClient(
         contract: relationalContract,

@@ -361,6 +361,40 @@ class ModelDelegate {
     );
   }
 
+  Future<JsonMap?> findFirst({
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) async {
+    final rows = await _findManyInternal(
+      action: OrmAction.findMany,
+      where: where,
+      skip: skip,
+      take: 1,
+      orderBy: orderBy,
+      select: select,
+      include: include,
+      includeDepth: 0,
+    );
+    return _firstOrNull(rows);
+  }
+
+  Future<int> count({JsonMap where = const <String, Object?>{}}) async {
+    final rows = await _findManyInternal(
+      action: OrmAction.findMany,
+      where: where,
+      includeDepth: 0,
+    );
+    return rows.length;
+  }
+
+  Future<bool> exists({JsonMap where = const <String, Object?>{}}) async {
+    final row = await findFirst(where: where, select: const <String>[]);
+    return row != null;
+  }
+
   Future<JsonMap> create({
     required JsonMap data,
     List<String> select = const <String>[],
@@ -413,6 +447,73 @@ class ModelDelegate {
         create: create,
         select: select,
         include: include,
+      );
+    });
+  }
+
+  Future<List<JsonMap>> createMany({
+    required List<JsonMap> data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _client.transaction((tx) async {
+      final scoped = tx.model(modelName);
+      final rows = <JsonMap>[];
+      for (final item in data) {
+        final created = await scoped.create(
+          data: item,
+          select: select,
+          include: include,
+        );
+        rows.add(created);
+      }
+      return rows;
+    });
+  }
+
+  Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) {
+    return _client.transaction((tx) async {
+      final scoped = tx.model(modelName);
+      var deleted = 0;
+      while (true) {
+        final row = await scoped.delete(where: where);
+        if (row == null) {
+          break;
+        }
+        deleted += 1;
+      }
+      return deleted;
+    });
+  }
+
+  Future<JsonMap> upsert({
+    required JsonMap where,
+    required JsonMap create,
+    required JsonMap update,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _client.transaction((tx) async {
+      final scoped = tx.model(modelName);
+      final existing = await scoped.findUnique(where: where);
+      if (existing == null) {
+        return scoped.create(data: create, select: select, include: include);
+      }
+
+      final updated = await scoped.update(
+        where: where,
+        data: update,
+        select: select,
+        include: include,
+      );
+      if (updated != null) {
+        return updated;
+      }
+
+      throw runtimeError(
+        'RUNTIME.UPSERT_UPDATE_MISSING',
+        'Upsert update branch did not return a row.',
+        details: <String, Object?>{'model': modelName, 'where': where},
       );
     });
   }
@@ -1089,9 +1190,41 @@ final class ModelQuery {
     include: _state.include,
   );
 
+  Future<JsonMap?> findFirst() => _delegate.findFirst(
+    where: _state.where,
+    skip: _state.skip,
+    orderBy: _state.orderBy,
+    select: _state.select,
+    include: _state.include,
+  );
+
+  Future<int> count() => _delegate.count(where: _state.where);
+
+  Future<bool> exists() => _delegate.exists(where: _state.where);
+
   Future<JsonMap> create({required JsonMap data}) {
     return _delegate.create(
       data: data,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
+
+  Future<List<JsonMap>> createMany({required List<JsonMap> data}) {
+    return _delegate.createMany(
+      data: data,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
+
+  Future<int> deleteMany() => _delegate.deleteMany(where: _state.where);
+
+  Future<JsonMap> upsert({required JsonMap create, required JsonMap update}) {
+    return _delegate.upsert(
+      where: _state.where,
+      create: create,
+      update: update,
       select: _state.select,
       include: _state.include,
     );
