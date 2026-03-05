@@ -296,6 +296,68 @@ void main() {
         );
       });
 
+      test('generates relation where some/every/none filter classes', () async {
+        final fixtureDir = _copyFixture(fixturesRoot, 'relation_output');
+        addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+        final run = await _runGenerate(
+          entryPath: generatorEntry.path,
+          workingDirectory: fixtureDir.path,
+        );
+
+        expect(run.exitCode, 0, reason: run.debugOutput);
+
+        var generatedDartFiles = _findDartFiles(
+          Directory(_path(<String>[fixtureDir.path, 'generated'])),
+        );
+        if (generatedDartFiles.isEmpty) {
+          generatedDartFiles = _findDartFiles(
+            Directory(_path(<String>[fixtureDir.path, 'lib'])),
+          );
+        }
+        expect(
+          generatedDartFiles,
+          isNotEmpty,
+          reason: 'Expected generated Dart files to assert relation where DSL.',
+        );
+
+        final generatedSource = generatedDartFiles
+            .map((file) => file.readAsStringSync())
+            .join('\n');
+
+        expect(
+          RegExp(
+            r'\bclass UserPostsRelationWhereFilter\b',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected relation where filter class for User.posts.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsRelationWhereFilter\s*\{[\s\S]*?final\s+PostWhereInput\?\s+some;[\s\S]*?final\s+PostWhereInput\?\s+every;[\s\S]*?final\s+PostWhereInput\?\s+none;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation where filter to expose some/every/none typed operands.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserWhereInput\s*\{[\s\S]*?final\s+UserPostsRelationWhereFilter\?\s+posts;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserWhereInput relation field to use relation where filter class.',
+        );
+        expect(
+          RegExp(
+            r"if\s*\(posts\s*!=\s*null\s*&&\s*!posts!\.isEmpty\)\s*'posts':\s*posts!\.toJsonValue\(\)",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation where filter serialization to skip empty filter.',
+        );
+      });
+
       test('prints actionable error message for invalid config', () async {
         final fixtureDir = _copyFixture(fixturesRoot, 'missing_config');
         addTearDown(() => fixtureDir.deleteSync(recursive: true));

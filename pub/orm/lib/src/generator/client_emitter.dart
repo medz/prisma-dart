@@ -25,7 +25,7 @@ TypedField _toTypedField(SchemaFieldDefinition field) {
       model: relationModel,
       isNullable: parsed.isNullable,
       isList: parsed.isList,
-      includeInWhere: false,
+      includeInWhere: parsed.isList,
       includeInCreate: false,
       includeInUpdate: false,
     );

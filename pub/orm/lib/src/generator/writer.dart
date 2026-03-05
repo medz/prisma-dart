@@ -37,6 +37,14 @@ final class TypedClientWriter {
     }
 
     for (final model in resolvedModels) {
+      _writeRelationWhereFilterClasses(
+        buffer: buffer,
+        model: model,
+        lookup: modelLookup,
+      );
+    }
+
+    for (final model in resolvedModels) {
       _writeDataOrInputClass(
         buffer: buffer,
         model: model,
@@ -1155,6 +1163,71 @@ final class TypedClientWriter {
     buffer.writeln();
   }
 
+  void _writeRelationWhereFilterClasses({
+    required StringBuffer buffer,
+    required _ResolvedModel model,
+    required Map<String, _ResolvedModel> lookup,
+  }) {
+    final relationFields = model.model.fields
+        .where((field) => field.isRelation && field.isList)
+        .toList(growable: false);
+
+    for (final relation in relationFields) {
+      final relationModelName = relation.relationModel;
+      final relationModel = relationModelName == null
+          ? null
+          : lookup[relationModelName];
+      if (relationModel == null) {
+        continue;
+      }
+
+      final className = _relationWhereFilterClassName(
+        owner: model,
+        relationFieldName: relation.name,
+      );
+      buffer.writeln('class $className {');
+      buffer.writeln('  final ${relationModel.whereInputClassName}? some;');
+      buffer.writeln('  final ${relationModel.whereInputClassName}? every;');
+      buffer.writeln('  final ${relationModel.whereInputClassName}? none;');
+      buffer.writeln();
+      buffer.writeln('  const $className({this.some, this.every, this.none});');
+      buffer.writeln();
+      buffer.writeln('  factory $className.fromJsonValue(Object? value) {');
+      buffer.writeln('    if (value is Map<String, Object?>) {');
+      buffer.writeln('      return $className(');
+      buffer.writeln(
+        "        some: _readRelation(value['some'], ${relationModel.whereInputClassName}.fromJson),",
+      );
+      buffer.writeln(
+        "        every: _readRelation(value['every'], ${relationModel.whereInputClassName}.fromJson),",
+      );
+      buffer.writeln(
+        "        none: _readRelation(value['none'], ${relationModel.whereInputClassName}.fromJson),",
+      );
+      buffer.writeln('      );');
+      buffer.writeln('    }');
+      buffer.writeln('    return const $className();');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln('  Object? toJsonValue() {');
+      buffer.writeln('    if (isEmpty) {');
+      buffer.writeln('      return null;');
+      buffer.writeln('    }');
+      buffer.writeln('    return <String, Object?>{');
+      buffer.writeln("      if (some != null) 'some': some!.toJson(),");
+      buffer.writeln("      if (every != null) 'every': every!.toJson(),");
+      buffer.writeln("      if (none != null) 'none': none!.toJson(),");
+      buffer.writeln('    };');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln(
+        '  bool get isEmpty => some == null && every == null && none == null;',
+      );
+      buffer.writeln('}');
+      buffer.writeln();
+    }
+  }
+
   void _writeDataOrInputClass({
     required StringBuffer buffer,
     required _ResolvedModel model,
@@ -1169,6 +1242,7 @@ final class TypedClientWriter {
 
     for (final field in fields) {
       final type = _fieldType(
+        owner: model,
         field: field.field,
         classKind: classKind,
         lookup: lookup,
@@ -1207,6 +1281,7 @@ final class TypedClientWriter {
     buffer.writeln('    return $className(');
     for (final field in fields) {
       final decodeExpression = _decodeExpression(
+        owner: model,
         field: field.field,
         classKind: classKind,
         accessor: "json['${_escapeString(field.field.name)}']",
@@ -1216,6 +1291,7 @@ final class TypedClientWriter {
         buffer.writeln('      ${field.memberName}: $decodeExpression,');
       } else {
         final type = _fieldType(
+          owner: model,
           field: field.field,
           classKind: classKind,
           lookup: lookup,
@@ -1247,16 +1323,18 @@ final class TypedClientWriter {
       final isOptional = _isOptionalField(field.field, classKind: classKind);
       final memberName = isOptional ? '${field.memberName}!' : field.memberName;
       final valueExpression = _encodeExpression(
+        owner: model,
         field: field.field,
         classKind: classKind,
         memberName: memberName,
         lookup: lookup,
       );
-      final isWhereScalarFilter =
-          _isWhereFilterClassKind(classKind) && field.field.isScalar;
+      final isWhereFilter =
+          (_isWhereFilterClassKind(classKind) && field.field.isScalar) ||
+          _isRelationWhereFilterField(field: field.field, classKind: classKind);
 
       if (isOptional) {
-        if (isWhereScalarFilter) {
+        if (isWhereFilter) {
           buffer.writeln(
             "      if (${field.memberName} != null && !${field.memberName}!.isEmpty) '${_escapeString(field.field.name)}': $valueExpression,",
           );
@@ -1577,12 +1655,14 @@ final class TypedClientWriter {
   }
 
   String _fieldType({
+    required _ResolvedModel owner,
     required TypedField field,
     required _TemplateClassKind classKind,
     required Map<String, _ResolvedModel> lookup,
   }) {
     final optional = _isOptionalField(field, classKind: classKind);
     final baseType = _baseType(
+      owner: owner,
       field: field,
       classKind: classKind,
       lookup: lookup,
@@ -1595,12 +1675,19 @@ final class TypedClientWriter {
   }
 
   String _baseType({
+    required _ResolvedModel owner,
     required TypedField field,
     required _TemplateClassKind classKind,
     required Map<String, _ResolvedModel> lookup,
   }) {
     if (_isWhereFilterClassKind(classKind) && field.isScalar) {
       return _whereFilterClassName(field.scalarType);
+    }
+    if (_isRelationWhereFilterField(field: field, classKind: classKind)) {
+      return _relationWhereFilterClassName(
+        owner: owner,
+        relationFieldName: field.name,
+      );
     }
 
     if (field.isRelation) {
@@ -1634,6 +1721,7 @@ final class TypedClientWriter {
   }
 
   String _decodeExpression({
+    required _ResolvedModel owner,
     required TypedField field,
     required _TemplateClassKind classKind,
     required String accessor,
@@ -1641,6 +1729,13 @@ final class TypedClientWriter {
   }) {
     if (_isWhereFilterClassKind(classKind) && field.isScalar) {
       final filterClass = _whereFilterClassName(field.scalarType);
+      return '$filterClass.fromJsonValue($accessor)';
+    }
+    if (_isRelationWhereFilterField(field: field, classKind: classKind)) {
+      final filterClass = _relationWhereFilterClassName(
+        owner: owner,
+        relationFieldName: field.name,
+      );
       return '$filterClass.fromJsonValue($accessor)';
     }
 
@@ -1696,12 +1791,16 @@ final class TypedClientWriter {
   }
 
   String _encodeExpression({
+    required _ResolvedModel owner,
     required TypedField field,
     required _TemplateClassKind classKind,
     required String memberName,
     required Map<String, _ResolvedModel> lookup,
   }) {
     if (_isWhereFilterClassKind(classKind) && field.isScalar) {
+      return '$memberName.toJsonValue()';
+    }
+    if (_isRelationWhereFilterField(field: field, classKind: classKind)) {
       return '$memberName.toJsonValue()';
     }
 
@@ -1758,6 +1857,15 @@ final class TypedClientWriter {
         classKind == _TemplateClassKind.whereUnique;
   }
 
+  bool _isRelationWhereFilterField({
+    required TypedField field,
+    required _TemplateClassKind classKind,
+  }) {
+    return classKind == _TemplateClassKind.where &&
+        field.isRelation &&
+        field.isList;
+  }
+
   bool _includeInWhereUnique(TypedField field) {
     if (!field.isScalar || field.isList) {
       return false;
@@ -1781,6 +1889,17 @@ final class TypedClientWriter {
       fallback: 'Relation',
     );
     return '${owner.classBaseName}${relationPart}Include';
+  }
+
+  String _relationWhereFilterClassName({
+    required _ResolvedModel owner,
+    required String relationFieldName,
+  }) {
+    final relationPart = _toUpperCamelIdentifier(
+      relationFieldName,
+      fallback: 'Relation',
+    );
+    return '${owner.classBaseName}${relationPart}RelationWhereFilter';
   }
 
   String _makeUnique({required String base, required Set<String> used}) {
