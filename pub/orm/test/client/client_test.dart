@@ -804,6 +804,120 @@ void main() {
     });
 
     test(
+      'updateNested updates parent and creates child rows with include payload',
+      () async {
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: MemoryEngine(),
+        );
+        await client.connect();
+        await _seedRelationalData(client);
+
+        final updated = await client
+            .model('User')
+            .updateNested(
+              where: <String, Object?>{'id': 'u1'},
+              data: <String, Object?>{'email': 'u1+updated@example.com'},
+              create: <String, List<JsonMap>>{
+                'posts': <JsonMap>[
+                  <String, Object?>{'id': 'p4', 'title': 'Post D'},
+                ],
+              },
+              include: <String, IncludeSpec>{
+                'posts': IncludeSpec(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                ),
+              },
+            );
+
+        expect(updated, isNotNull);
+        expect(updated?['email'], 'u1+updated@example.com');
+        final includedPosts = _readRowsValue(updated?['posts']);
+        expect(includedPosts, hasLength(3));
+        expect(includedPosts.last['id'], 'p4');
+        expect(includedPosts.last['userId'], 'u1');
+
+        final persistedUser = await client
+            .model('User')
+            .findUnique(where: <String, Object?>{'id': 'u1'});
+        expect(persistedUser?['email'], 'u1+updated@example.com');
+
+        final persistedChild = await client
+            .model('Post')
+            .findUnique(where: <String, Object?>{'id': 'p4'});
+        expect(persistedChild?['userId'], 'u1');
+        await client.disconnect();
+      },
+    );
+
+    test('updateNested returns null when parent record is missing', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      final updated = await client
+          .model('User')
+          .updateNested(
+            where: <String, Object?>{'id': 'ux'},
+            data: <String, Object?>{'email': 'missing@example.com'},
+            create: <String, List<JsonMap>>{
+              'posts': <JsonMap>[
+                <String, Object?>{'id': 'p9', 'title': 'Post Missing Parent'},
+              ],
+            },
+          );
+
+      expect(updated, isNull);
+      final createdChild = await client
+          .model('Post')
+          .findUnique(where: <String, Object?>{'id': 'p9'});
+      expect(createdChild, isNull);
+      await client.disconnect();
+    });
+
+    test('updateNested rolls back when child create fails', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      await expectLater(
+        client
+            .model('User')
+            .updateNested(
+              where: <String, Object?>{'id': 'u1'},
+              data: <String, Object?>{'email': 'u1+rollback@example.com'},
+              create: <String, List<JsonMap>>{
+                'posts': <JsonMap>[
+                  <String, Object?>{
+                    'id': 'p10',
+                    'title': 'Post Rollback',
+                    'bad': 1,
+                  },
+                ],
+              },
+            ),
+        throwsA(isA<PlanFieldNotFoundException>()),
+      );
+
+      final rolledBackUser = await client
+          .model('User')
+          .findUnique(where: <String, Object?>{'id': 'u1'});
+      expect(rolledBackUser?['email'], 'u1@example.com');
+
+      final rolledBackChild = await client
+          .model('Post')
+          .findUnique(where: <String, Object?>{'id': 'p10'});
+      expect(rolledBackChild, isNull);
+      await client.disconnect();
+    });
+
+    test(
       'supports include and includeRelation on chained query APIs',
       () async {
         final client = OrmClient(
