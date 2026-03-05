@@ -337,6 +337,111 @@ void main() {
       await client.disconnect();
     });
 
+    test(
+      'supports groupBy having filters and aggregate orderBy in memory engine',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        final users = client.model('User');
+
+        await users.create(
+          data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 2, 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 10, 'email': 'b@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 20, 'email': 'b@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 5, 'email': 'c@x.com'},
+        );
+
+        final grouped = await users
+            .query()
+            .orderByField('_sum.id', order: SortOrder.desc)
+            .groupBy(
+              by: const <String>['email'],
+              having: <String, Object?>{
+                '_count': <String, Object?>{
+                  'all': <String, Object?>{'gte': 2},
+                },
+              },
+              countAll: true,
+              sum: const <String>['id'],
+            );
+
+        expect(grouped, hasLength(2));
+        expect(
+          grouped.map((row) => row['email']).toList(growable: false),
+          <Object?>['b@x.com', 'a@x.com'],
+        );
+        expect(grouped.first['count'], <String, Object?>{'all': 2});
+        expect(grouped.first['sum'], <String, Object?>{'id': 30});
+        expect(grouped.last['count'], <String, Object?>{'all': 2});
+        expect(grouped.last['sum'], <String, Object?>{'id': 3});
+        await client.disconnect();
+      },
+    );
+
+    test('rejects invalid groupBy aggregate orderBy fields', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+
+      await expectLater(
+        users
+            .query()
+            .orderByField('sum.email')
+            .groupBy(
+              by: const <String>['email'],
+              countAll: true,
+              sum: const <String>['id'],
+            ),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.GROUP_BY_ORDER_BY_INVALID',
+          ),
+        ),
+      );
+      await client.disconnect();
+    });
+
+    test('rejects invalid groupBy having aggregate fields', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+
+      await expectLater(
+        users.groupBy(
+          by: const <String>['email'],
+          having: <String, Object?>{
+            '_sum': <String, Object?>{
+              'email': <String, Object?>{'gte': 1},
+            },
+          },
+          sum: const <String>['id'],
+        ),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.GROUP_BY_HAVING_FIELD_INVALID',
+          ),
+        ),
+      );
+      await client.disconnect();
+    });
+
     test('supports where operators gt/in/notIn in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();

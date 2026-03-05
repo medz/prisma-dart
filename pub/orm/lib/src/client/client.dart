@@ -28,6 +28,46 @@ typedef IncludeExecutionStrategySelector =
 
 const int _defaultMaxIncludeDepth = 4;
 const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
+const List<String> _filterOperatorOrder = <String>[
+  'equals',
+  'not',
+  'in',
+  'notIn',
+  'contains',
+  'startsWith',
+  'endsWith',
+  'gt',
+  'gte',
+  'lt',
+  'lte',
+];
+const Set<String> _filterOperators = <String>{
+  'equals',
+  'not',
+  'in',
+  'notIn',
+  'contains',
+  'startsWith',
+  'endsWith',
+  'gt',
+  'gte',
+  'lt',
+  'lte',
+};
+const Set<String> _groupByAggregateBuckets = <String>{
+  'count',
+  'min',
+  'max',
+  'sum',
+  'avg',
+};
+const Map<String, String> _groupByAggregateBucketAliases = <String, String>{
+  '_count': 'count',
+  '_min': 'min',
+  '_max': 'max',
+  '_sum': 'sum',
+  '_avg': 'avg',
+};
 const Set<String> _toManyRelationWhereOperators = <String>{
   'some',
   'every',
@@ -480,6 +520,7 @@ class ModelDelegate {
   Future<List<JsonMap>> groupBy({
     required List<String> by,
     JsonMap where = const <String, Object?>{},
+    JsonMap having = const <String, Object?>{},
     int? skip,
     int? take,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
@@ -497,6 +538,12 @@ class ModelDelegate {
         details: <String, Object?>{'model': modelName},
       );
     }
+    if (skip case final offset? when offset < 0) {
+      throw PlanInvalidPaginationException(key: 'skip', value: offset);
+    }
+    if (take case final limit? when limit < 0) {
+      throw PlanInvalidPaginationException(key: 'take', value: limit);
+    }
 
     _assertKnownAggregateFields(fields: by, source: 'groupBy.by');
     _assertKnownAggregateFields(fields: count, source: 'groupBy.count');
@@ -504,22 +551,26 @@ class ModelDelegate {
     _assertKnownAggregateFields(fields: max, source: 'groupBy.max');
     _assertKnownAggregateFields(fields: sum, source: 'groupBy.sum');
     _assertKnownAggregateFields(fields: avg, source: 'groupBy.avg');
-
-    final bySet = by.toSet();
-    for (final clause in orderBy) {
-      if (bySet.contains(clause.field)) {
-        continue;
-      }
-      throw runtimeError(
-        'PLAN.GROUP_BY_ORDER_BY_FIELD_INVALID',
-        'GroupBy orderBy fields must be included in by.',
-        details: <String, Object?>{
-          'model': modelName,
-          'field': clause.field,
-          'by': by.toList(growable: false),
-        },
-      );
-    }
+    _assertGroupByOrderByFields(
+      orderBy: orderBy,
+      by: by,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    );
+    _assertGroupByHavingFields(
+      having: having,
+      by: by,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    );
 
     final rows = await _findManyInternal(
       action: OrmAction.findMany,
@@ -544,7 +595,7 @@ class ModelDelegate {
       groupedRows.putIfAbsent(key, () => <JsonMap>[]).add(row);
     }
 
-    final results = <JsonMap>[];
+    var results = <JsonMap>[];
     for (final entry in groupedRows.entries) {
       final groupRows = entry.value;
       if (groupRows.isEmpty) {
@@ -570,9 +621,19 @@ class ModelDelegate {
       results.add(groupResult);
     }
 
+    if (having.isNotEmpty) {
+      results = results
+          .where((row) => _matchesGroupByHaving(row: row, having: having))
+          .toList(growable: false);
+    }
+
     if (orderBy.isNotEmpty) {
       results.sort(
-        (left, right) => _compareRowsForOrderBy(left, right, orderBy),
+        (left, right) => _compareRowsForGroupByOrderBy(
+          left: left,
+          right: right,
+          orderBy: orderBy,
+        ),
       );
     }
 
@@ -1502,6 +1563,570 @@ class ModelDelegate {
     }
   }
 
+  void _assertGroupByOrderByFields({
+    required List<OrmOrderBy> orderBy,
+    required List<String> by,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    if (orderBy.isEmpty) {
+      return;
+    }
+
+    final allowedFields = _groupByOrderableFields(
+      by: by,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    );
+    for (final clause in orderBy) {
+      if (allowedFields.contains(clause.field)) {
+        continue;
+      }
+      throw runtimeError(
+        'PLAN.GROUP_BY_ORDER_BY_INVALID',
+        'GroupBy orderBy field is not available in grouped results.',
+        details: <String, Object?>{
+          'model': modelName,
+          'field': clause.field,
+          'allowedFields': allowedFields.toList(growable: false),
+        },
+      );
+    }
+  }
+
+  void _assertGroupByHavingFields({
+    required JsonMap having,
+    required List<String> by,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    if (having.isEmpty) {
+      return;
+    }
+    _assertGroupByHavingClause(
+      clause: having,
+      source: 'groupBy.having',
+      by: by,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    );
+  }
+
+  void _assertGroupByHavingClause({
+    required JsonMap clause,
+    required String source,
+    required List<String> by,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    for (final entry in clause.entries) {
+      final key = entry.key;
+      final value = entry.value;
+      if (_whereLogicalKeys.contains(key)) {
+        final nestedMap = _coerceWhereMap(value);
+        if (nestedMap != null) {
+          _assertGroupByHavingClause(
+            clause: nestedMap,
+            source: '$source.$key',
+            by: by,
+            countAll: countAll,
+            count: count,
+            min: min,
+            max: max,
+            sum: sum,
+            avg: avg,
+          );
+          continue;
+        }
+
+        final nestedList = _coerceWhereList(value);
+        if (nestedList == null) {
+          throw runtimeError(
+            'PLAN.GROUP_BY_HAVING_INVALID',
+            'GroupBy having logical operator expects a map or list of maps.',
+            details: <String, Object?>{
+              'model': modelName,
+              'source': '$source.$key',
+            },
+          );
+        }
+        for (var index = 0; index < nestedList.length; index++) {
+          _assertGroupByHavingClause(
+            clause: nestedList[index],
+            source: '$source.$key[$index]',
+            by: by,
+            countAll: countAll,
+            count: count,
+            min: min,
+            max: max,
+            sum: sum,
+            avg: avg,
+          );
+        }
+        continue;
+      }
+
+      if (by.contains(key)) {
+        _assertGroupByHavingCondition(condition: value, source: '$source.$key');
+        continue;
+      }
+
+      final aggregateBucket = _normalizeGroupByAggregateBucket(key);
+      if (aggregateBucket != null) {
+        final aggregateFilters = _coerceWhereMap(value);
+        if (aggregateFilters == null) {
+          throw runtimeError(
+            'PLAN.GROUP_BY_HAVING_INVALID',
+            'GroupBy having aggregate bucket expects a map.',
+            details: <String, Object?>{
+              'model': modelName,
+              'source': '$source.$key',
+              'bucket': key,
+            },
+          );
+        }
+        final allowedFields = _groupByAggregateBucketFields(
+          bucket: aggregateBucket,
+          countAll: countAll,
+          count: count,
+          min: min,
+          max: max,
+          sum: sum,
+          avg: avg,
+        );
+        for (final aggregateEntry in aggregateFilters.entries) {
+          final aggregateField = aggregateEntry.key;
+          if (!allowedFields.contains(aggregateField)) {
+            throw runtimeError(
+              'PLAN.GROUP_BY_HAVING_FIELD_INVALID',
+              'GroupBy having references an aggregate field that is not selected.',
+              details: <String, Object?>{
+                'model': modelName,
+                'source': '$source.$key.$aggregateField',
+                'bucket': key,
+                'field': aggregateField,
+                'allowedFields': allowedFields.toList(growable: false),
+              },
+            );
+          }
+          _assertGroupByHavingCondition(
+            condition: aggregateEntry.value,
+            source: '$source.$key.$aggregateField',
+          );
+        }
+        continue;
+      }
+
+      throw runtimeError(
+        'PLAN.GROUP_BY_HAVING_FIELD_INVALID',
+        'GroupBy having field is not groupable or aggregated.',
+        details: <String, Object?>{
+          'model': modelName,
+          'source': '$source.$key',
+          'field': key,
+          'allowedFields': <String>[
+            ...by,
+            ..._groupByAggregateBuckets,
+            ..._groupByAggregateBucketAliases.keys,
+            ..._whereLogicalKeys,
+          ],
+        },
+      );
+    }
+  }
+
+  void _assertGroupByHavingCondition({
+    required Object? condition,
+    required String source,
+  }) {
+    final conditionMap = _coerceWhereMap(condition);
+    if (conditionMap == null || conditionMap.isEmpty) {
+      return;
+    }
+
+    final unknownOperators = conditionMap.keys
+        .where((operator) => !_filterOperators.contains(operator))
+        .toList(growable: false);
+    if (unknownOperators.isNotEmpty) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_HAVING_OPERATOR_INVALID',
+        'GroupBy having contains unknown filter operators.',
+        details: <String, Object?>{
+          'model': modelName,
+          'source': source,
+          'unknownOperators': unknownOperators,
+          'supportedOperators': _filterOperators.toList(growable: false),
+        },
+      );
+    }
+
+    for (final entry in conditionMap.entries) {
+      final operator = entry.key;
+      final operand = entry.value;
+      if ((operator == 'in' || operator == 'notIn') && operand is! List) {
+        throw runtimeError(
+          'PLAN.GROUP_BY_HAVING_OPERATOR_INVALID',
+          'GroupBy having in/notIn expects a list operand.',
+          details: <String, Object?>{
+            'model': modelName,
+            'source': '$source.$operator',
+            'operator': operator,
+          },
+        );
+      }
+      if (operator == 'not') {
+        _assertGroupByHavingCondition(
+          condition: operand,
+          source: '$source.$operator',
+        );
+      }
+    }
+  }
+
+  Set<String> _groupByOrderableFields({
+    required List<String> by,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    final fields = <String>{...by};
+    for (final bucket in _groupByAggregateBuckets) {
+      final bucketFields = _groupByAggregateBucketFields(
+        bucket: bucket,
+        countAll: countAll,
+        count: count,
+        min: min,
+        max: max,
+        sum: sum,
+        avg: avg,
+      );
+      for (final field in bucketFields) {
+        fields.add('$bucket.$field');
+        fields.addAll(_groupByAggregateBucketAliasFieldPaths(bucket, field));
+      }
+    }
+    return fields;
+  }
+
+  Set<String> _groupByAggregateBucketFields({
+    required String bucket,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    return switch (bucket) {
+      'count' => <String>{if (countAll) 'all', ...count},
+      'min' => <String>{...min},
+      'max' => <String>{...max},
+      'sum' => <String>{...sum},
+      'avg' => <String>{...avg},
+      _ => const <String>{},
+    };
+  }
+
+  String? _normalizeGroupByAggregateBucket(String bucket) {
+    if (_groupByAggregateBuckets.contains(bucket)) {
+      return bucket;
+    }
+    return _groupByAggregateBucketAliases[bucket];
+  }
+
+  Set<String> _groupByAggregateBucketAliasFieldPaths(
+    String bucket,
+    String field,
+  ) {
+    final paths = <String>{};
+    for (final alias in _groupByAggregateBucketAliases.entries) {
+      if (alias.value != bucket) {
+        continue;
+      }
+      paths.add('${alias.key}.$field');
+    }
+    return paths;
+  }
+
+  bool _matchesGroupByHaving({required JsonMap row, required JsonMap having}) {
+    for (final entry in having.entries) {
+      final key = entry.key;
+      final value = entry.value;
+
+      if (_whereLogicalKeys.contains(key)) {
+        final logicalMatches = _matchesGroupByHavingLogical(
+          row: row,
+          operator: key,
+          operand: value,
+        );
+        if (!logicalMatches) {
+          return false;
+        }
+        continue;
+      }
+
+      final aggregateBucket = _normalizeGroupByAggregateBucket(key);
+      if (aggregateBucket != null) {
+        final aggregateFilters = _coerceWhereMap(value);
+        if (aggregateFilters == null) {
+          return false;
+        }
+        for (final aggregateEntry in aggregateFilters.entries) {
+          final aggregateValue = _readGroupByAggregateValue(
+            row: row,
+            bucket: aggregateBucket,
+            field: aggregateEntry.key,
+          );
+          if (!_matchesGroupByHavingCondition(
+            actual: aggregateValue,
+            condition: aggregateEntry.value,
+          )) {
+            return false;
+          }
+        }
+        continue;
+      }
+
+      if (!_matchesGroupByHavingCondition(actual: row[key], condition: value)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  bool _matchesGroupByHavingLogical({
+    required JsonMap row,
+    required String operator,
+    required Object? operand,
+  }) {
+    final nestedMap = _coerceWhereMap(operand);
+    if (nestedMap != null) {
+      final matched = _matchesGroupByHaving(row: row, having: nestedMap);
+      return operator == 'NOT' ? !matched : matched;
+    }
+
+    final nestedList = _coerceWhereList(operand);
+    if (nestedList == null) {
+      return false;
+    }
+
+    return switch (operator) {
+      'AND' => nestedList.every(
+        (clause) => _matchesGroupByHaving(row: row, having: clause),
+      ),
+      'OR' => nestedList.any(
+        (clause) => _matchesGroupByHaving(row: row, having: clause),
+      ),
+      'NOT' => nestedList.every(
+        (clause) => !_matchesGroupByHaving(row: row, having: clause),
+      ),
+      _ => false,
+    };
+  }
+
+  bool _matchesGroupByHavingCondition({
+    required Object? actual,
+    required Object? condition,
+  }) {
+    final conditionMap = _coerceWhereMap(condition);
+    if (conditionMap == null || conditionMap.isEmpty) {
+      return actual == condition;
+    }
+
+    if (conditionMap.keys.any(
+      (operator) => !_filterOperators.contains(operator),
+    )) {
+      return false;
+    }
+
+    for (final operator in _filterOperatorOrder) {
+      if (!conditionMap.containsKey(operator)) {
+        continue;
+      }
+      final operand = conditionMap[operator];
+      if (!_matchesGroupByHavingOperator(
+        actual: actual,
+        operator: operator,
+        operand: operand,
+      )) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _matchesGroupByHavingOperator({
+    required Object? actual,
+    required String operator,
+    required Object? operand,
+  }) {
+    return switch (operator) {
+      'equals' => actual == operand,
+      'not' =>
+        operand is Map
+            ? !_matchesGroupByHavingCondition(
+                actual: actual,
+                condition: operand,
+              )
+            : actual != operand,
+      'in' => _matchInList(actual: actual, operand: operand),
+      'notIn' => _matchNotInList(actual: actual, operand: operand),
+      'contains' =>
+        actual is String && operand is String && actual.contains(operand),
+      'startsWith' =>
+        actual is String && operand is String && actual.startsWith(operand),
+      'endsWith' =>
+        actual is String && operand is String && actual.endsWith(operand),
+      'gt' => _matchesGroupByHavingComparison(
+        actual: actual,
+        operand: operand,
+        predicate: (comparison) => comparison > 0,
+      ),
+      'gte' => _matchesGroupByHavingComparison(
+        actual: actual,
+        operand: operand,
+        predicate: (comparison) => comparison >= 0,
+      ),
+      'lt' => _matchesGroupByHavingComparison(
+        actual: actual,
+        operand: operand,
+        predicate: (comparison) => comparison < 0,
+      ),
+      'lte' => _matchesGroupByHavingComparison(
+        actual: actual,
+        operand: operand,
+        predicate: (comparison) => comparison <= 0,
+      ),
+      _ => false,
+    };
+  }
+
+  bool _matchInList({required Object? actual, required Object? operand}) {
+    if (operand is! List) {
+      return false;
+    }
+    return List<Object?>.from(operand).contains(actual);
+  }
+
+  bool _matchNotInList({required Object? actual, required Object? operand}) {
+    if (operand is! List) {
+      return false;
+    }
+    return !List<Object?>.from(operand).contains(actual);
+  }
+
+  bool _matchesGroupByHavingComparison({
+    required Object? actual,
+    required Object? operand,
+    required bool Function(int comparison) predicate,
+  }) {
+    final comparison = _compareGroupByHavingValues(actual, operand);
+    if (comparison == null) {
+      return false;
+    }
+    return predicate(comparison);
+  }
+
+  int? _compareGroupByHavingValues(Object? left, Object? right) {
+    if (left == null || right == null) {
+      return null;
+    }
+    if (left is num && right is num) {
+      return left.compareTo(right);
+    }
+    if (left is String && right is String) {
+      return left.compareTo(right);
+    }
+    if (left is DateTime && right is DateTime) {
+      return left.compareTo(right);
+    }
+    if (left is bool && right is bool) {
+      final leftValue = left ? 1 : 0;
+      final rightValue = right ? 1 : 0;
+      return leftValue.compareTo(rightValue);
+    }
+    if (left is Comparable<Object?> && left.runtimeType == right.runtimeType) {
+      return left.compareTo(right);
+    }
+    return null;
+  }
+
+  Object? _readGroupByAggregateValue({
+    required JsonMap row,
+    required String bucket,
+    required String field,
+  }) {
+    final bucketValue = row[bucket];
+    if (bucketValue is! Map<Object?, Object?>) {
+      return null;
+    }
+    return bucketValue[field];
+  }
+
+  Object? _readGroupByOrderByValue({
+    required JsonMap row,
+    required String field,
+  }) {
+    if (row.containsKey(field)) {
+      return row[field];
+    }
+    final fieldPath = field.split('.');
+    if (fieldPath.length != 2) {
+      return row[field];
+    }
+    final normalizedBucket = _normalizeGroupByAggregateBucket(fieldPath[0]);
+    if (normalizedBucket == null) {
+      return row[field];
+    }
+    return _readGroupByAggregateValue(
+      row: row,
+      bucket: normalizedBucket,
+      field: fieldPath[1],
+    );
+  }
+
+  int _compareRowsForGroupByOrderBy({
+    required JsonMap left,
+    required JsonMap right,
+    required List<OrmOrderBy> orderBy,
+  }) {
+    for (final clause in orderBy) {
+      final compared = _compareOrderByValues(
+        _readGroupByOrderByValue(row: left, field: clause.field),
+        _readGroupByOrderByValue(row: right, field: clause.field),
+      );
+      if (compared == 0) {
+        continue;
+      }
+      return clause.order == SortOrder.desc ? -compared : compared;
+    }
+    return 0;
+  }
+
   List<String> _buildAggregateSelect({
     required List<String> count,
     required List<String> min,
@@ -1737,24 +2362,6 @@ class ModelDelegate {
       }
     }
     return deduplicated;
-  }
-
-  int _compareRowsForOrderBy(
-    JsonMap left,
-    JsonMap right,
-    List<OrmOrderBy> orderBy,
-  ) {
-    for (final clause in orderBy) {
-      final compared = _compareOrderByValues(
-        left[clause.field],
-        right[clause.field],
-      );
-      if (compared == 0) {
-        continue;
-      }
-      return clause.order == SortOrder.desc ? -compared : compared;
-    }
-    return 0;
   }
 
   int _compareOrderByValues(Object? left, Object? right) {
@@ -2470,6 +3077,7 @@ final class ModelQuery {
 
   Future<List<JsonMap>> groupBy({
     required List<String> by,
+    JsonMap having = const <String, Object?>{},
     bool countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
@@ -2480,6 +3088,7 @@ final class ModelQuery {
     return _delegate.groupBy(
       by: by,
       where: _state.where,
+      having: having,
       skip: _state.skip,
       take: _state.take,
       orderBy: _state.orderBy,

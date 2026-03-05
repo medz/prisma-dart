@@ -770,6 +770,9 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
+    buffer.writeln(
+      '    ${model.whereInputClassName} having = const ${model.whereInputClassName}(),',
+    );
     buffer.writeln('    int? skip,');
     buffer.writeln('    int? take,');
     buffer.writeln(
@@ -1121,6 +1124,7 @@ final class TypedClientWriter {
       '      by: by.map((entry) => entry.value).toList(growable: false),',
     );
     buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('      having: having.toJson(),');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
     buffer.writeln('      orderBy: runtimeOrderBy,');
@@ -1404,6 +1408,9 @@ final class TypedClientWriter {
 
     buffer.writeln('  Future<List<Map<String, Object?>>> groupBy({');
     buffer.writeln('    required List<${model.distinctClassName}> by,');
+    buffer.writeln(
+      '    ${model.whereInputClassName} having = const ${model.whereInputClassName}(),',
+    );
     buffer.writeln('    bool countAll = false,');
     buffer.writeln(
       '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
@@ -1424,6 +1431,7 @@ final class TypedClientWriter {
     buffer.writeln('    return _delegate.groupBy(');
     buffer.writeln('      by: by,');
     buffer.writeln('      where: _where,');
+    buffer.writeln('      having: having.toJson(),');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');

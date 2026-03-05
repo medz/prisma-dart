@@ -324,6 +324,29 @@ void main() {
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserDelegate.groupBy(...) to expose typed having.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?having:\s*having\.toJson\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.groupBy(...) to serialize having to runtime JSON.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),[\s\S]*?having:\s*having\.toJson\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.groupBy(...) to expose and forward typed having.',
+        );
+        expect(
+          RegExp(
             r'Future<List<UserData>>\s+createMany\(\{\s*required\s+List<UserCreateInput>\s+data,',
           ).hasMatch(generatedSource),
           isTrue,
