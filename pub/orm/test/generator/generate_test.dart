@@ -199,6 +199,29 @@ void main() {
           isTrue,
           reason: 'Missing typed delegate marker in generated source.',
         );
+        expect(
+          RegExp(
+            r'class\s+GeneratedOrmClient\s*\{[\s\S]*?late\s+final\s+GeneratedOrmDb\s+db\s*=\s*GeneratedOrmDb\(_context\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected GeneratedOrmClient to expose db entrypoint.',
+        );
+        expect(
+          RegExp(
+            r'class\s+GeneratedOrmDb\s*\{[\s\S]*?late\s+final\s+GeneratedOrmCollections\s+orm\s*=\s*GeneratedOrmCollections\(_context\);[\s\S]*?OrmSqlApi\s+get\s+sql\s*=>\s*_context\.sql;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected GeneratedOrmDb to expose db.orm and db.sql namespaces.',
+        );
+        expect(
+          RegExp(
+            r'class\s+GeneratedOrmCollections\s*\{[\s\S]*?_context\.model\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected GeneratedOrmCollections to materialize typed delegates.',
+        );
 
         expect(
           RegExp(

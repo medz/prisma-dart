@@ -121,6 +121,56 @@ void main() {
       );
     });
 
+    test('supports db.sql select and mutation builders', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+
+      final insertResult = await client.sql
+          .insertInto('users')
+          .values(<String, Object?>{'id': 'u1', 'email': 'a@example.com'})
+          .returning(const <String>['id', 'email'])
+          .execute();
+      expect(insertResult.affectedRows, 1);
+      expect(insertResult.row?['id'], 'u1');
+
+      final selectedRows = await client.sql
+          .from('User')
+          .where(<String, Object?>{'id': 'u1'})
+          .select(const <String>['email'])
+          .query();
+      expect(selectedRows, hasLength(1));
+      expect(selectedRows.single['email'], 'a@example.com');
+
+      final updated = await client.sql
+          .update('User')
+          .where(<String, Object?>{'id': 'u1'})
+          .set(<String, Object?>{'email': 'b@example.com'})
+          .returning(const <String>['email'])
+          .execute();
+      expect(updated.affectedRows, 1);
+      expect(updated.row?['email'], 'b@example.com');
+
+      final deleted = await client.sql
+          .deleteFrom('User')
+          .where(<String, Object?>{'id': 'u1'})
+          .returning(const <String>['id'])
+          .execute();
+      expect(deleted.affectedRows, 1);
+      expect(deleted.row?['id'], 'u1');
+
+      final remaining = await client.sql.from('User').query();
+      expect(remaining, isEmpty);
+      await client.disconnect();
+    });
+
+    test('db.sql requires explicit connect', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await expectLater(
+        client.sql.from('User').query(),
+        throwsA(isA<ClientNotConnectedException>()),
+      );
+    });
+
     test('rejects plan with mismatched contract hash', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -1883,6 +1933,23 @@ void main() {
       await client.disconnect();
     });
 
+    test('withConnection exposes scoped sql api', () async {
+      final engine = _TrackingConnectionEngine();
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      await client.withConnection((connection) async {
+        final rows = await connection.sql.from('User').take(1).query();
+        expect(rows, isEmpty);
+      });
+
+      expect(engine.connectionCount, 1);
+      expect(engine.connectionExecutePlans, hasLength(1));
+      expect(engine.connectionExecutePlans.single.action, OrmAction.findMany);
+      expect(engine.connectionExecutePlans.single.take, 1);
+      await client.disconnect();
+    });
+
     test(
       'withConnection executes callback and always releases connection',
       () async {
@@ -1913,6 +1980,24 @@ void main() {
             .create(
               data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
             );
+      });
+
+      final row = await client
+          .model('User')
+          .findUnique(where: <String, Object?>{'id': 'u1'});
+      expect(row?['email'], 'a@example.com');
+      await client.disconnect();
+    });
+
+    test('withTransaction exposes scoped sql api', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+
+      await client.withTransaction((transaction) async {
+        await transaction.sql.insertInto('User').values(<String, Object?>{
+          'id': 'u1',
+          'email': 'a@example.com',
+        }).execute();
       });
 
       final row = await client
@@ -2291,6 +2376,20 @@ void main() {
     await client.disconnect();
   });
 
+  test('db.sql invokes plugin hooks in order', () async {
+    final plugin = _TrackingPlugin();
+    final client = OrmClient(
+      contract: contract,
+      engine: MemoryEngine(),
+      plugins: <OrmPlugin>[plugin],
+    );
+    await client.connect();
+    await client.sql.from('User').query();
+
+    expect(plugin.events, <String>['before:findMany', 'after:findMany']);
+    await client.disconnect();
+  });
+
   test('invokes onError when engine execution fails', () async {
     final plugin = _TrackingPlugin();
     final client = OrmClient(
@@ -2396,6 +2495,17 @@ void main() {
 
     await expectLater(
       client.model('User').findMany(),
+      throwsA(isA<RuntimeResponseShapeException>()),
+    );
+    await client.disconnect();
+  });
+
+  test('db.sql returns structured runtime response shape errors', () async {
+    final client = OrmClient(contract: contract, engine: _BadShapeEngine());
+    await client.connect();
+
+    await expectLater(
+      client.sql.from('User').query(),
       throwsA(isA<RuntimeResponseShapeException>()),
     );
     await client.disconnect();

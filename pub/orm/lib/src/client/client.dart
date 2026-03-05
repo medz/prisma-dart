@@ -113,6 +113,8 @@ final class IncludeSpec {
 abstract interface class OrmModelContext {
   OrmContract get contract;
 
+  OrmSqlApi get sql;
+
   IncludeExecutionStrategySelector get includeStrategySelector;
 
   int get maxIncludeDepth;
@@ -134,6 +136,7 @@ final class OrmClient implements OrmModelContext {
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
   final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
+  late final OrmSqlApi _sql = OrmSqlApi(this);
   @override
   final IncludeExecutionStrategySelector includeStrategySelector;
   @override
@@ -226,6 +229,9 @@ final class OrmClient implements OrmModelContext {
   RuntimeTelemetryEvent? telemetry() => _runtime.telemetry();
 
   @override
+  OrmSqlApi get sql => _sql;
+
+  @override
   ModelDelegate model(String modelKey) {
     final modelName = _resolveModelOrThrow(modelKey: modelKey);
     return _delegates.putIfAbsent(modelName, () {
@@ -279,6 +285,7 @@ final class OrmScopedClient implements OrmModelContext {
   final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
+  late final OrmSqlApi _sql = OrmSqlApi(this);
   @override
   final IncludeExecutionStrategySelector includeStrategySelector;
   @override
@@ -311,6 +318,9 @@ final class OrmScopedClient implements OrmModelContext {
   ModelDelegate collection(String modelKey) => model(modelKey);
 
   @override
+  OrmSqlApi get sql => _sql;
+
+  @override
   Future<EngineResponse> execute(OrmPlan plan) => _executePlan(plan);
 
   @override
@@ -340,6 +350,388 @@ final class OrmScopedClient implements OrmModelContext {
     }
     return contract.resolveModel(modelKey);
   }
+}
+
+@immutable
+final class OrmSqlMutationResult {
+  final JsonMap? row;
+  final int affectedRows;
+
+  const OrmSqlMutationResult({this.row, this.affectedRows = 0});
+}
+
+final class OrmSqlApi {
+  final OrmModelContext _client;
+
+  const OrmSqlApi(this._client);
+
+  OrmSqlSelectBuilder from(String modelKey) {
+    return OrmSqlSelectBuilder._(
+      client: _client,
+      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+    );
+  }
+
+  OrmSqlInsertBuilder insertInto(String modelKey) {
+    return OrmSqlInsertBuilder._(
+      client: _client,
+      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+    );
+  }
+
+  OrmSqlUpdateBuilder update(String modelKey) {
+    return OrmSqlUpdateBuilder._(
+      client: _client,
+      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+    );
+  }
+
+  OrmSqlDeleteBuilder deleteFrom(String modelKey) {
+    return OrmSqlDeleteBuilder._(
+      client: _client,
+      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+    );
+  }
+}
+
+@immutable
+final class OrmSqlSelectBuilder {
+  final OrmModelContext _client;
+  final String _modelName;
+  final JsonMap _where;
+  final int? _skip;
+  final int? _take;
+  final List<OrmOrderBy> _orderBy;
+  final List<String> _distinct;
+  final List<String> _select;
+
+  OrmSqlSelectBuilder._({
+    required OrmModelContext client,
+    required String modelName,
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+  }) : _client = client,
+       _modelName = modelName,
+       _where = Map<String, Object?>.unmodifiable(
+         Map<String, Object?>.from(where),
+       ),
+       _skip = skip,
+       _take = take,
+       _orderBy = List<OrmOrderBy>.unmodifiable(orderBy),
+       _distinct = List<String>.unmodifiable(distinct),
+       _select = List<String>.unmodifiable(select);
+
+  OrmSqlSelectBuilder where(JsonMap where) => _copy(where: where);
+
+  OrmSqlSelectBuilder orderBy(List<OrmOrderBy> orderBy) =>
+      _copy(orderBy: orderBy);
+
+  OrmSqlSelectBuilder orderByField(
+    String field, {
+    SortOrder order = SortOrder.asc,
+    bool append = true,
+  }) {
+    final nextOrderBy = append
+        ? <OrmOrderBy>[..._orderBy, OrmOrderBy(field, order: order)]
+        : <OrmOrderBy>[OrmOrderBy(field, order: order)];
+    return _copy(orderBy: nextOrderBy);
+  }
+
+  OrmSqlSelectBuilder distinct(List<String> distinct) =>
+      _copy(distinct: distinct);
+
+  OrmSqlSelectBuilder select(List<String> fields) => _copy(select: fields);
+
+  OrmSqlSelectBuilder selectField(String field, {bool append = true}) {
+    final nextSelect = append ? <String>[..._select, field] : <String>[field];
+    return _copy(select: nextSelect);
+  }
+
+  OrmSqlSelectBuilder skip(int? value) => _copy(skip: value);
+
+  OrmSqlSelectBuilder take(int? value) => _copy(take: value);
+
+  OrmPlan build() {
+    return _buildSqlPlan(
+      client: _client,
+      modelName: _modelName,
+      action: OrmAction.findMany,
+      where: _where,
+      skip: _skip,
+      take: _take,
+      orderBy: _orderBy,
+      distinct: _distinct,
+      select: _select,
+    );
+  }
+
+  Future<List<JsonMap>> query() async {
+    final response = await _client.execute(build());
+    return _readRows(response.data, action: 'sql.query');
+  }
+
+  Future<JsonMap?> first() async {
+    final response = await _client.execute(take(1).build());
+    return _readRow(response.data, action: 'sql.first');
+  }
+
+  Stream<JsonMap> stream() async* {
+    final rows = await query();
+    for (final row in rows) {
+      yield row;
+    }
+  }
+
+  OrmSqlSelectBuilder _copy({
+    JsonMap? where,
+    Object? skip = _sqlKeepToken,
+    Object? take = _sqlKeepToken,
+    List<OrmOrderBy>? orderBy,
+    List<String>? distinct,
+    List<String>? select,
+  }) {
+    return OrmSqlSelectBuilder._(
+      client: _client,
+      modelName: _modelName,
+      where: where ?? _where,
+      skip: identical(skip, _sqlKeepToken) ? _skip : skip as int?,
+      take: identical(take, _sqlKeepToken) ? _take : take as int?,
+      orderBy: orderBy ?? _orderBy,
+      distinct: distinct ?? _distinct,
+      select: select ?? _select,
+    );
+  }
+}
+
+@immutable
+final class OrmSqlInsertBuilder {
+  final OrmModelContext _client;
+  final String _modelName;
+  final JsonMap _data;
+  final List<String> _select;
+
+  OrmSqlInsertBuilder._({
+    required OrmModelContext client,
+    required String modelName,
+    JsonMap data = const <String, Object?>{},
+    List<String> select = const <String>[],
+  }) : _client = client,
+       _modelName = modelName,
+       _data = Map<String, Object?>.unmodifiable(
+         Map<String, Object?>.from(data),
+       ),
+       _select = List<String>.unmodifiable(select);
+
+  OrmSqlInsertBuilder values(JsonMap data) => _copy(data: data);
+
+  OrmSqlInsertBuilder returning(List<String> fields) => _copy(select: fields);
+
+  OrmSqlInsertBuilder returningField(String field, {bool append = true}) {
+    final nextSelect = append ? <String>[..._select, field] : <String>[field];
+    return _copy(select: nextSelect);
+  }
+
+  OrmPlan build() {
+    return _buildSqlPlan(
+      client: _client,
+      modelName: _modelName,
+      action: OrmAction.create,
+      data: _data,
+      select: _select,
+    );
+  }
+
+  Future<OrmSqlMutationResult> execute() async {
+    final response = await _client.execute(build());
+    return OrmSqlMutationResult(
+      row: _readRow(response.data, action: 'sql.insert'),
+      affectedRows: response.affectedRows,
+    );
+  }
+
+  Future<JsonMap?> one() async => (await execute()).row;
+
+  OrmSqlInsertBuilder _copy({JsonMap? data, List<String>? select}) {
+    return OrmSqlInsertBuilder._(
+      client: _client,
+      modelName: _modelName,
+      data: data ?? _data,
+      select: select ?? _select,
+    );
+  }
+}
+
+@immutable
+final class OrmSqlUpdateBuilder {
+  final OrmModelContext _client;
+  final String _modelName;
+  final JsonMap _where;
+  final JsonMap _data;
+  final List<String> _select;
+
+  OrmSqlUpdateBuilder._({
+    required OrmModelContext client,
+    required String modelName,
+    JsonMap where = const <String, Object?>{},
+    JsonMap data = const <String, Object?>{},
+    List<String> select = const <String>[],
+  }) : _client = client,
+       _modelName = modelName,
+       _where = Map<String, Object?>.unmodifiable(
+         Map<String, Object?>.from(where),
+       ),
+       _data = Map<String, Object?>.unmodifiable(
+         Map<String, Object?>.from(data),
+       ),
+       _select = List<String>.unmodifiable(select);
+
+  OrmSqlUpdateBuilder where(JsonMap where) => _copy(where: where);
+
+  OrmSqlUpdateBuilder set(JsonMap data) => _copy(data: data);
+
+  OrmSqlUpdateBuilder returning(List<String> fields) => _copy(select: fields);
+
+  OrmSqlUpdateBuilder returningField(String field, {bool append = true}) {
+    final nextSelect = append ? <String>[..._select, field] : <String>[field];
+    return _copy(select: nextSelect);
+  }
+
+  OrmPlan build() {
+    return _buildSqlPlan(
+      client: _client,
+      modelName: _modelName,
+      action: OrmAction.update,
+      where: _where,
+      data: _data,
+      select: _select,
+    );
+  }
+
+  Future<OrmSqlMutationResult> execute() async {
+    final response = await _client.execute(build());
+    return OrmSqlMutationResult(
+      row: _readRow(response.data, action: 'sql.update'),
+      affectedRows: response.affectedRows,
+    );
+  }
+
+  Future<JsonMap?> one() async => (await execute()).row;
+
+  OrmSqlUpdateBuilder _copy({
+    JsonMap? where,
+    JsonMap? data,
+    List<String>? select,
+  }) {
+    return OrmSqlUpdateBuilder._(
+      client: _client,
+      modelName: _modelName,
+      where: where ?? _where,
+      data: data ?? _data,
+      select: select ?? _select,
+    );
+  }
+}
+
+@immutable
+final class OrmSqlDeleteBuilder {
+  final OrmModelContext _client;
+  final String _modelName;
+  final JsonMap _where;
+  final List<String> _select;
+
+  OrmSqlDeleteBuilder._({
+    required OrmModelContext client,
+    required String modelName,
+    JsonMap where = const <String, Object?>{},
+    List<String> select = const <String>[],
+  }) : _client = client,
+       _modelName = modelName,
+       _where = Map<String, Object?>.unmodifiable(
+         Map<String, Object?>.from(where),
+       ),
+       _select = List<String>.unmodifiable(select);
+
+  OrmSqlDeleteBuilder where(JsonMap where) => _copy(where: where);
+
+  OrmSqlDeleteBuilder returning(List<String> fields) => _copy(select: fields);
+
+  OrmSqlDeleteBuilder returningField(String field, {bool append = true}) {
+    final nextSelect = append ? <String>[..._select, field] : <String>[field];
+    return _copy(select: nextSelect);
+  }
+
+  OrmPlan build() {
+    return _buildSqlPlan(
+      client: _client,
+      modelName: _modelName,
+      action: OrmAction.delete,
+      where: _where,
+      select: _select,
+    );
+  }
+
+  Future<OrmSqlMutationResult> execute() async {
+    final response = await _client.execute(build());
+    return OrmSqlMutationResult(
+      row: _readRow(response.data, action: 'sql.delete'),
+      affectedRows: response.affectedRows,
+    );
+  }
+
+  Future<JsonMap?> one() async => (await execute()).row;
+
+  OrmSqlDeleteBuilder _copy({JsonMap? where, List<String>? select}) {
+    return OrmSqlDeleteBuilder._(
+      client: _client,
+      modelName: _modelName,
+      where: where ?? _where,
+      select: select ?? _select,
+    );
+  }
+}
+
+const Object _sqlKeepToken = Object();
+
+String _resolveSqlModelName({
+  required OrmModelContext client,
+  required String modelKey,
+}) {
+  final delegate = client.model(modelKey);
+  return delegate.modelName;
+}
+
+OrmPlan _buildSqlPlan({
+  required OrmModelContext client,
+  required String modelName,
+  required OrmAction action,
+  JsonMap where = const <String, Object?>{},
+  JsonMap data = const <String, Object?>{},
+  int? skip,
+  int? take,
+  List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+  List<String> distinct = const <String>[],
+  List<String> select = const <String>[],
+}) {
+  final contract = client.contract;
+  return OrmPlan(
+    contractHash: contract.hash,
+    target: contract.target,
+    storageHash: contract.markerStorageHash,
+    profileHash: contract.profileHash,
+    model: modelName,
+    action: action,
+    where: where,
+    data: data,
+    skip: skip,
+    take: take,
+    orderBy: orderBy,
+    distinct: distinct,
+    select: select,
+  );
 }
 
 class ModelDelegate {
@@ -3229,19 +3621,19 @@ Map<String, CollectionFactory> _createCollectionRegistry(
   return registry;
 }
 
-List<JsonMap> _readRows(Object? data) {
+List<JsonMap> _readRows(Object? data, {String action = 'findMany'}) {
   if (data == null) {
     return const <JsonMap>[];
   }
   if (data is! List<Object?>) {
     throw RuntimeResponseShapeException(
-      action: 'findMany',
+      action: action,
       expected: 'List<Map<String, Object?>>',
       actual: data,
     );
   }
   return data
-      .map((value) => _coerceRow(value, action: 'findMany'))
+      .map((value) => _coerceRow(value, action: action))
       .toList(growable: false);
 }
 

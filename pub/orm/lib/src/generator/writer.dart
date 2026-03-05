@@ -535,6 +535,40 @@ final class TypedClientWriter {
     buffer.writeln();
     buffer.writeln('  GeneratedOrmClient(this._context);');
     buffer.writeln();
+    buffer.writeln(
+      '  late final GeneratedOrmDb db = GeneratedOrmDb(_context);',
+    );
+    buffer.writeln();
+
+    for (final model in models) {
+      buffer.writeln(
+        '  late final ${model.delegateClassName} ${model.getterName} =',
+      );
+      buffer.writeln('      db.orm.${model.getterName};');
+      buffer.writeln();
+    }
+
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class GeneratedOrmDb {');
+    buffer.writeln('  final OrmModelContext _context;');
+    buffer.writeln();
+    buffer.writeln('  GeneratedOrmDb(this._context);');
+    buffer.writeln();
+    buffer.writeln(
+      '  late final GeneratedOrmCollections orm = GeneratedOrmCollections(_context);',
+    );
+    buffer.writeln();
+    buffer.writeln('  OrmSqlApi get sql => _context.sql;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class GeneratedOrmCollections {');
+    buffer.writeln('  final OrmModelContext _context;');
+    buffer.writeln();
+    buffer.writeln('  GeneratedOrmCollections(this._context);');
+    buffer.writeln();
 
     for (final model in models) {
       buffer.writeln(
