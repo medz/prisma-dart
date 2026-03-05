@@ -451,11 +451,17 @@ void main() {
         );
         expect(
           RegExp(
-            r'Future<Map<String,\s*Object\?>>\s+aggregate\(\{',
+            r'Future<UserAggregateResult>\s+aggregate\(\{',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
               'Expected generated delegate/query to expose aggregate helper.',
+        );
+        expect(
+          RegExp(r'\bclass UserAggregateResult\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include aggregate result wrapper.',
         );
         expect(
           RegExp(

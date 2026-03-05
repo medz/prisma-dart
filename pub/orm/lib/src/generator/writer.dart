@@ -945,6 +945,39 @@ final class TypedClientWriter {
     buffer.writeln('}');
     buffer.writeln();
 
+    buffer.writeln('class ${model.aggregateResultClassName} {');
+    buffer.writeln('  final Map<String, Object?> value;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.aggregateResultClassName}._(this.value);');
+    buffer.writeln();
+    buffer.writeln(
+      '  factory ${model.aggregateResultClassName}.fromJson(Map<String, Object?> value) {',
+    );
+    buffer.writeln('    return ${model.aggregateResultClassName}._(');
+    buffer.writeln(
+      '      Map<String, Object?>.unmodifiable(Map<String, Object?>.from(value)),',
+    );
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  int? get countAll {');
+    buffer.writeln("    final count = _readJsonMap(value['count']);");
+    buffer.writeln("    return _readInt(count?['all']);");
+    buffer.writeln('  }');
+    buffer.writeln();
+    for (final bucket in const <String>['count', 'min', 'max', 'sum', 'avg']) {
+      buffer.writeln('  Map<String, Object?> get $bucket {');
+      buffer.writeln("    return _readJsonMap(value['$bucket']) ??");
+      buffer.writeln('        const <String, Object?>{};');
+      buffer.writeln('  }');
+      buffer.writeln();
+    }
+    buffer.writeln('  Map<String, Object?> toJson() {');
+    buffer.writeln('    return Map<String, Object?>.from(value);');
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+
     buffer.writeln('class ${model.selectClassName} {');
     for (final field in scalarFields) {
       final memberName = _toLowerCamelIdentifier(field.name, fallback: 'field');
@@ -1375,7 +1408,7 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<Map<String, Object?>> aggregate({');
+    buffer.writeln('  Future<${model.aggregateResultClassName}> aggregate({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
@@ -1395,8 +1428,8 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
-    buffer.writeln('  }) {');
-    buffer.writeln('    return _delegate.aggregate(');
+    buffer.writeln('  }) async {');
+    buffer.writeln('    final value = await _delegate.aggregate(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln(
@@ -1415,6 +1448,9 @@ final class TypedClientWriter {
       '      avg: avg.map((entry) => entry.value).toList(growable: false),',
     );
     buffer.writeln('    );');
+    buffer.writeln(
+      '    return ${model.aggregateResultClassName}.fromJson(value);',
+    );
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1953,7 +1989,7 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<Map<String, Object?>> aggregate({');
+    buffer.writeln('  Future<${model.aggregateResultClassName}> aggregate({');
     buffer.writeln('    bool countAll = false,');
     buffer.writeln(
       '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
@@ -2996,6 +3032,8 @@ final class _ResolvedModel {
 
   String get groupByHavingConditionClassName =>
       '${classBaseName}GroupByHavingCondition';
+
+  String get aggregateResultClassName => '${classBaseName}AggregateResult';
 
   String get selectClassName => '${classBaseName}Select';
 
