@@ -137,6 +137,7 @@ final class OrmClient implements OrmModelContext {
   final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
   late final OrmSqlApi _sql = OrmSqlApi(this);
+  late final OrmDbNamespace _db = OrmDbNamespace(this);
   @override
   final IncludeExecutionStrategySelector includeStrategySelector;
   @override
@@ -231,6 +232,8 @@ final class OrmClient implements OrmModelContext {
   @override
   OrmSqlApi get sql => _sql;
 
+  OrmDbNamespace get db => _db;
+
   @override
   ModelDelegate model(String modelKey) {
     final modelName = _resolveModelOrThrow(modelKey: modelKey);
@@ -286,6 +289,7 @@ final class OrmScopedClient implements OrmModelContext {
   final Map<String, CollectionFactory> _collectionRegistry;
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
   late final OrmSqlApi _sql = OrmSqlApi(this);
+  late final OrmDbNamespace _db = OrmDbNamespace(this);
   @override
   final IncludeExecutionStrategySelector includeStrategySelector;
   @override
@@ -319,6 +323,8 @@ final class OrmScopedClient implements OrmModelContext {
 
   @override
   OrmSqlApi get sql => _sql;
+
+  OrmDbNamespace get db => _db;
 
   @override
   Future<EngineResponse> execute(OrmPlan plan) => _executePlan(plan);
@@ -358,6 +364,27 @@ final class OrmSqlMutationResult {
   final int affectedRows;
 
   const OrmSqlMutationResult({this.row, this.affectedRows = 0});
+}
+
+final class OrmDbNamespace {
+  final OrmModelContext _context;
+  late final OrmModelNamespace orm = OrmModelNamespace(_context);
+
+  OrmDbNamespace(this._context);
+
+  OrmSqlApi get sql => _context.sql;
+}
+
+final class OrmModelNamespace {
+  final OrmModelContext _context;
+
+  OrmModelNamespace(this._context);
+
+  ModelDelegate model(String modelKey) => _context.model(modelKey);
+
+  ModelDelegate collection(String modelKey) => _context.collection(modelKey);
+
+  ModelDelegate operator [](String modelKey) => model(modelKey);
 }
 
 final class OrmSqlApi {
@@ -476,7 +503,8 @@ final class OrmSqlSelectBuilder {
 
   Future<JsonMap?> first() async {
     final response = await _client.execute(take(1).build());
-    return _readRow(response.data, action: 'sql.first');
+    final rows = _readRows(response.data, action: 'sql.first');
+    return _firstOrNull(rows);
   }
 
   Stream<JsonMap> stream() async* {

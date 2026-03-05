@@ -171,6 +171,27 @@ void main() {
       );
     });
 
+    test('supports db namespace for orm and sql access', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+
+      final users = client.db.orm.collection('users');
+      await users.create(
+        data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
+      );
+
+      final sqlRow = await client.db.sql.from('User').where(<String, Object?>{
+        'id': 'u1',
+      }).first();
+      expect(sqlRow?['email'], 'a@example.com');
+
+      final ormRow = await client.db.orm['User'].findUnique(
+        where: <String, Object?>{'id': 'u1'},
+      );
+      expect(ormRow?['id'], 'u1');
+      await client.disconnect();
+    });
+
     test('rejects plan with mismatched contract hash', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
