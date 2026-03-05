@@ -1598,6 +1598,33 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Stream<${model.dataClassName}> stream({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('  }) async* {');
+    buffer.writeln('    await for (final row in selectPlan(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('    ).stream()) {');
+    buffer.writeln('      yield ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('    }');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<${model.dataClassName}?> first({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',

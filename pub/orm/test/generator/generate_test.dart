@@ -296,6 +296,13 @@ void main() {
         );
         expect(
           RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Stream<UserData>\s+stream\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose typed stream helper.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserSql\s*\{[\s\S]*?Future<UserData\?>\s+insert\(',
           ).hasMatch(generatedSource),
           isTrue,
