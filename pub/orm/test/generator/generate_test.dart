@@ -105,6 +105,37 @@ void main() {
           reason: 'Missing typed input/data marker in generated source.',
         );
         expect(
+          RegExp(r'\bclass UserQuery\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing chain query class UserQuery in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?\bUserQuery\s+query\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserDelegate.query(...) in generated source.',
+        );
+        expect(
+          RegExp(r'\bUserQuery\s+where\(').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.where(...) in generated source.',
+        );
+        expect(
+          RegExp(
+            r'\bFuture<List<UserData>>\s+all\s*\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.all() in generated source.',
+        );
+        expect(
+          RegExp(
+            r'\bFuture<UserData\?>\s+first\s*\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.first() in generated source.',
+        );
+        expect(
           RegExp(r'\bclass UserWhereUniqueInput\b').hasMatch(generatedSource),
           isTrue,
           reason: 'Missing typed where unique input class in generated source.',

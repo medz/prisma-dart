@@ -470,6 +470,30 @@ final class TypedClientWriter {
     buffer.writeln('  const ${model.delegateClassName}(this._delegate);');
     buffer.writeln();
 
+    buffer.writeln('  ${model.queryClassName} query({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: this,');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.dataClassName}>> findMany({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
@@ -705,6 +729,172 @@ final class TypedClientWriter {
     buffer.writeln('    }');
     buffer.writeln('  }');
 
+    buffer.writeln('}');
+    buffer.writeln();
+    _writeTypedQueryClass(buffer: buffer, model: model);
+  }
+
+  void _writeTypedQueryClass({
+    required StringBuffer buffer,
+    required _ResolvedModel model,
+  }) {
+    buffer.writeln('class ${model.queryClassName} {');
+    buffer.writeln('  final ${model.delegateClassName} _delegate;');
+    buffer.writeln('  final ${model.whereInputClassName} _where;');
+    buffer.writeln('  final int? _skip;');
+    buffer.writeln('  final int? _take;');
+    buffer.writeln('  final List<${model.orderByClassName}> _orderBy;');
+    buffer.writeln('  final ${model.selectClassName}? _select;');
+    buffer.writeln('  final ${model.includeClassName}? _include;');
+    buffer.writeln();
+    buffer.writeln('  ${model.queryClassName}._({');
+    buffer.writeln('    required ${model.delegateClassName} delegate,');
+    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    required int? skip,');
+    buffer.writeln('    required int? take,');
+    buffer.writeln('    required List<${model.orderByClassName}> orderBy,');
+    buffer.writeln('    required ${model.selectClassName}? select,');
+    buffer.writeln('    required ${model.includeClassName}? include,');
+    buffer.writeln('  }) : _delegate = delegate,');
+    buffer.writeln('       _where = where,');
+    buffer.writeln('       _skip = skip,');
+    buffer.writeln('       _take = take,');
+    buffer.writeln(
+      '       _orderBy = List<${model.orderByClassName}>.unmodifiable(orderBy),',
+    );
+    buffer.writeln('       _select = select,');
+    buffer.writeln('       _include = include;');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} where(${model.whereInputClassName} where) {',
+    );
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  ${model.queryClassName} skip(int? skip) {');
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  ${model.queryClassName} take(int? take) {');
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} orderBy(List<${model.orderByClassName}> orderBy) {',
+    );
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} select(${model.selectClassName}? select) {',
+    );
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} include(${model.includeClassName}? include) {',
+    );
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<${model.dataClassName}>> all() {');
+    buffer.writeln('    return _delegate.findMany(');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> first() {');
+    buffer.writeln('    return _delegate.findFirst(');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Stream<${model.dataClassName}> stream() {');
+    buffer.writeln('    return _delegate.stream(');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<int> count() {');
+    buffer.writeln('    return _delegate.count(where: _where);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<bool> exists() {');
+    buffer.writeln('    return _delegate.exists(where: _where);');
+    buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();
   }
@@ -1415,6 +1605,8 @@ final class _ResolvedModel {
   });
 
   String get delegateClassName => '${classBaseName}Delegate';
+
+  String get queryClassName => '${classBaseName}Query';
 
   String get dataClassName => '${classBaseName}Data';
 
