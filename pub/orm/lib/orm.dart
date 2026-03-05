@@ -12,3 +12,6 @@ export 'src/runtime/plugin.dart';
 export 'src/runtime/plugins/budgets.dart';
 export 'src/runtime/plugins/lints.dart';
 export 'src/runtime/types.dart';
+export 'src/target/adapter.dart';
+export 'src/target/driver.dart';
+export 'src/target/engine.dart';

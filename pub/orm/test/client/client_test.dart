@@ -289,6 +289,105 @@ void main() {
       await client.disconnect();
     });
 
+    test('supports include for direct mutation methods', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+      final posts = client.model('Post');
+
+      final created = await posts.create(
+        data: <String, Object?>{'id': 'p4', 'userId': 'u1', 'title': 'Post D'},
+        include: <String, IncludeSpec>{
+          'author': IncludeSpec(select: const <String>['email']),
+        },
+      );
+      final createdAuthor = _readRowValue(created['author']);
+      expect(createdAuthor?['email'], 'u1@example.com');
+
+      final updated = await posts.update(
+        where: <String, Object?>{'id': 'p4'},
+        data: <String, Object?>{'title': 'Post D2'},
+        include: <String, IncludeSpec>{
+          'author': IncludeSpec(select: const <String>['id']),
+        },
+      );
+      final updatedAuthor = _readRowValue(updated?['author']);
+      expect(updatedAuthor?['id'], 'u1');
+
+      final deleted = await posts.delete(
+        where: <String, Object?>{'id': 'p4'},
+        include: <String, IncludeSpec>{
+          'author': IncludeSpec(select: const <String>['email']),
+        },
+      );
+      final deletedAuthor = _readRowValue(deleted?['author']);
+      expect(deletedAuthor?['email'], 'u1@example.com');
+      await client.disconnect();
+    });
+
+    test('supports include and includeRelation on chained query APIs', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+      final users = client.model('User');
+
+      final delegatedRows = await users
+          .include(
+            <String, IncludeSpec>{
+              'posts': IncludeSpec(
+                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                take: 1,
+              ),
+            },
+          )
+          .findMany();
+      expect(delegatedRows, hasLength(2));
+      expect(_readRowsValue(delegatedRows.first['posts']), hasLength(1));
+
+      final base = users.query().where(<String, Object?>{'id': 'u1'});
+      final withInclude = base.include(
+        <String, IncludeSpec>{
+          'posts': IncludeSpec(
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            take: 1,
+          ),
+        },
+      );
+
+      expect(base.includeValues, isEmpty);
+      expect(withInclude.includeValues.keys, <String>['posts']);
+
+      final includeRow = await withInclude.findUnique();
+      final includePosts = _readRowsValue(includeRow?['posts']);
+      expect(includePosts, hasLength(1));
+      expect(includePosts.single['id'], 'p1');
+
+      final includeRelationRow = await users
+          .where(<String, Object?>{'id': 'u1'})
+          .includeRelation(
+            'posts',
+            spec: IncludeSpec(
+              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+              include: <String, IncludeSpec>{
+                'author': IncludeSpec(select: const <String>['email']),
+              },
+            ),
+          )
+          .findUnique();
+
+      final relationPosts = _readRowsValue(includeRelationRow?['posts']);
+      expect(relationPosts, hasLength(2));
+      final relationAuthor = _readRowValue(relationPosts.first['author']);
+      expect(relationAuthor?['email'], 'u1@example.com');
+      await client.disconnect();
+    });
+
     test('supports nested include for relation traversal', () async {
       final client = OrmClient(
         contract: relationalContract,
