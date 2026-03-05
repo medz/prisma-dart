@@ -308,6 +308,31 @@ final class OrmRuntimeCore implements RuntimeCore {
       );
     }
 
+    final planTarget = plan.target ?? contract.target;
+    if (planTarget != contract.target) {
+      throw PlanTargetMismatchException(
+        expected: contract.target,
+        actual: planTarget,
+      );
+    }
+
+    final planStorageHash = plan.storageHash ?? contract.markerStorageHash;
+    if (planStorageHash != contract.markerStorageHash) {
+      throw PlanStorageHashMismatchException(
+        expected: contract.markerStorageHash,
+        actual: planStorageHash,
+      );
+    }
+
+    final expectedProfileHash = contract.profileHash;
+    final planProfileHash = plan.profileHash ?? expectedProfileHash;
+    if (planProfileHash != expectedProfileHash) {
+      throw PlanProfileHashMismatchException(
+        expected: expectedProfileHash,
+        actual: planProfileHash,
+      );
+    }
+
     if (!contract.models.containsKey(plan.model)) {
       throw ModelNotFoundException(plan.model, contract.models.keys);
     }

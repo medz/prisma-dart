@@ -73,6 +73,9 @@ final class ContractCapabilities {
 final class OrmContract {
   final String version;
   final String hash;
+  final String target;
+  final String markerStorageHash;
+  final String? profileHash;
   final Map<String, ModelContract> models;
   final Map<String, String> aliases;
   final ContractCapabilities capabilities;
@@ -80,10 +83,14 @@ final class OrmContract {
   OrmContract({
     required this.version,
     required this.hash,
+    this.target = 'generic',
+    String? markerStorageHash,
+    this.profileHash,
     required Map<String, ModelContract> models,
     Map<String, String> aliases = const {},
     this.capabilities = const ContractCapabilities(),
-  }) : models = Map.unmodifiable(models),
+  }) : markerStorageHash = markerStorageHash ?? hash,
+       models = Map.unmodifiable(models),
        aliases = Map.unmodifiable(aliases) {
     _validateRelations(this.models);
   }

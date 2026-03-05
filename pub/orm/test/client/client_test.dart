@@ -137,6 +137,74 @@ void main() {
       );
     });
 
+    test(
+      'rejects plan with mismatched target/storage/profile metadata',
+      () async {
+        final profileContract = OrmContract(
+          version: '1',
+          hash: 'contract-meta-v1',
+          target: 'sql-family',
+          markerStorageHash: 'storage-v1',
+          profileHash: 'profile-v1',
+          models: <String, ModelContract>{
+            'User': ModelContract(
+              name: 'User',
+              table: 'users',
+              fields: <String>{'id', 'email'},
+            ),
+          },
+        );
+        final client = OrmClient(
+          contract: profileContract,
+          engine: MemoryEngine(),
+        );
+        await client.connect();
+
+        await expectLater(
+          client.execute(
+            OrmPlan(
+              contractHash: profileContract.hash,
+              target: 'other-target',
+              storageHash: profileContract.markerStorageHash,
+              profileHash: profileContract.profileHash,
+              model: 'User',
+              action: OrmAction.findMany,
+            ),
+          ),
+          throwsA(isA<PlanTargetMismatchException>()),
+        );
+
+        await expectLater(
+          client.execute(
+            OrmPlan(
+              contractHash: profileContract.hash,
+              target: profileContract.target,
+              storageHash: 'other-storage',
+              profileHash: profileContract.profileHash,
+              model: 'User',
+              action: OrmAction.findMany,
+            ),
+          ),
+          throwsA(isA<PlanStorageHashMismatchException>()),
+        );
+
+        await expectLater(
+          client.execute(
+            OrmPlan(
+              contractHash: profileContract.hash,
+              target: profileContract.target,
+              storageHash: profileContract.markerStorageHash,
+              profileHash: 'other-profile',
+              model: 'User',
+              action: OrmAction.findMany,
+            ),
+          ),
+          throwsA(isA<PlanProfileHashMismatchException>()),
+        );
+        await client.disconnect();
+      },
+    );
+
     test('supports ordering and pagination in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();

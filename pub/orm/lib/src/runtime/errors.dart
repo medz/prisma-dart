@@ -77,6 +77,51 @@ final class ContractHashMismatchException extends OrmRuntimeError {
       );
 }
 
+final class PlanTargetMismatchException extends OrmRuntimeError {
+  final String expected;
+  final String actual;
+
+  PlanTargetMismatchException({required this.expected, required this.actual})
+    : super(
+        code: 'PLAN.TARGET_MISMATCH',
+        category: RuntimeErrorCategory.plan,
+        message: 'Plan target does not match runtime contract target.',
+        details: <String, Object?>{'expected': expected, 'actual': actual},
+      );
+}
+
+final class PlanStorageHashMismatchException extends OrmRuntimeError {
+  final String expected;
+  final String actual;
+
+  PlanStorageHashMismatchException({
+    required this.expected,
+    required this.actual,
+  }) : super(
+         code: 'PLAN.STORAGE_HASH_MISMATCH',
+         category: RuntimeErrorCategory.plan,
+         message:
+             'Plan storage hash does not match contract marker storage hash.',
+         details: <String, Object?>{'expected': expected, 'actual': actual},
+       );
+}
+
+final class PlanProfileHashMismatchException extends OrmRuntimeError {
+  final String? expected;
+  final String? actual;
+
+  PlanProfileHashMismatchException({
+    required this.expected,
+    required this.actual,
+  }) : super(
+         code: 'PLAN.PROFILE_HASH_MISMATCH',
+         category: RuntimeErrorCategory.plan,
+         message:
+             'Plan profile hash does not match runtime contract profile hash.',
+         details: <String, Object?>{'expected': expected, 'actual': actual},
+       );
+}
+
 final class ModelNotFoundException extends OrmRuntimeError {
   final String model;
   final Iterable<String> availableModels;

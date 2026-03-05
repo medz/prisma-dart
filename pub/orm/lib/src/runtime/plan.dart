@@ -16,6 +16,9 @@ final class OrmOrderBy {
 @immutable
 final class OrmPlan {
   final String contractHash;
+  final String? target;
+  final String? storageHash;
+  final String? profileHash;
   final String model;
   final OrmAction action;
   final JsonMap where;
@@ -27,6 +30,9 @@ final class OrmPlan {
 
   OrmPlan({
     required this.contractHash,
+    this.target,
+    this.storageHash,
+    this.profileHash,
     required this.model,
     required this.action,
     JsonMap where = const <String, Object?>{},

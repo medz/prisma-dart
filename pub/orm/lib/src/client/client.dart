@@ -407,6 +407,9 @@ class ModelDelegate {
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
+        target: _client.contract.target,
+        storageHash: _client.contract.markerStorageHash,
+        profileHash: _client.contract.profileHash,
         model: modelName,
         action: OrmAction.create,
         data: data,
@@ -574,6 +577,9 @@ class ModelDelegate {
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
+        target: _client.contract.target,
+        storageHash: _client.contract.markerStorageHash,
+        profileHash: _client.contract.profileHash,
         model: modelName,
         action: OrmAction.findMany,
         where: where,
@@ -610,6 +616,9 @@ class ModelDelegate {
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
+        target: _client.contract.target,
+        storageHash: _client.contract.markerStorageHash,
+        profileHash: _client.contract.profileHash,
         model: modelName,
         action: OrmAction.findUnique,
         where: where,
@@ -668,6 +677,9 @@ class ModelDelegate {
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
+        target: _client.contract.target,
+        storageHash: _client.contract.markerStorageHash,
+        profileHash: _client.contract.profileHash,
         model: modelName,
         action: action,
         where: where,
