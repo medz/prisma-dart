@@ -106,6 +106,27 @@ void main() {
             isTrue,
             reason: 'Missing typed input/data marker in generated source.',
           );
+
+          expect(
+            RegExp(r'\bclass UserOrderBy\b').hasMatch(generatedSource),
+            isTrue,
+            reason: 'Missing typed orderBy DSL class in generated source.',
+          );
+          expect(
+            RegExp(r'\bclass UserSelect\b').hasMatch(generatedSource),
+            isTrue,
+            reason: 'Missing typed select DSL class in generated source.',
+          );
+          expect(
+            RegExp(r'\bclass UserInclude\b').hasMatch(generatedSource),
+            isTrue,
+            reason: 'Missing typed include DSL class in generated source.',
+          );
+          expect(
+            generatedSource.contains('List<UserOrderBy> orderBy'),
+            isTrue,
+            reason: 'Expected typed delegate signature to use UserOrderBy.',
+          );
         },
       );
 

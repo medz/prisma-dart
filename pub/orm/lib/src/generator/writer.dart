@@ -31,6 +31,7 @@ final class TypedClientWriter {
     _writeGeneratedClientClass(buffer: buffer, models: resolvedModels);
 
     for (final model in resolvedModels) {
+      _writeQueryDslClasses(buffer: buffer, model: model, lookup: modelLookup);
       _writeTypedDelegateClass(buffer: buffer, model: model);
     }
 
@@ -119,6 +120,180 @@ final class TypedClientWriter {
     buffer.writeln();
   }
 
+  void _writeQueryDslClasses({
+    required StringBuffer buffer,
+    required _ResolvedModel model,
+    required Map<String, _ResolvedModel> lookup,
+  }) {
+    final scalarFields = model.model.fields
+        .where((field) => field.isScalar)
+        .toList(growable: false);
+    final relationFields = model.model.fields
+        .where((field) => field.isRelation)
+        .toList(growable: false);
+
+    buffer.writeln('class ${model.orderByClassName} {');
+    buffer.writeln('  final OrmOrderBy value;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.orderByClassName}._(this.value);');
+    buffer.writeln();
+    for (final field in scalarFields) {
+      final methodName = _toLowerCamelIdentifier(field.name, fallback: 'field');
+      buffer.writeln(
+        '  static ${model.orderByClassName} $methodName({SortOrder order = SortOrder.asc}) {',
+      );
+      buffer.writeln(
+        "    return ${model.orderByClassName}._(OrmOrderBy('${_escapeString(field.name)}', order: order));",
+      );
+      buffer.writeln('  }');
+      buffer.writeln();
+    }
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class ${model.selectClassName} {');
+    for (final field in scalarFields) {
+      final memberName = _toLowerCamelIdentifier(field.name, fallback: 'field');
+      buffer.writeln('  final bool $memberName;');
+    }
+    if (scalarFields.isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('  const ${model.selectClassName}({');
+      for (final field in scalarFields) {
+        final memberName = _toLowerCamelIdentifier(
+          field.name,
+          fallback: 'field',
+        );
+        buffer.writeln('    this.$memberName = false,');
+      }
+      buffer.writeln('  });');
+    } else {
+      buffer.writeln();
+      buffer.writeln('  const ${model.selectClassName}();');
+    }
+    buffer.writeln();
+    buffer.writeln('  List<String> toFields() {');
+    if (scalarFields.isEmpty) {
+      buffer.writeln('    return const <String>[];');
+    } else {
+      buffer.writeln('    final fields = <String>[];');
+      for (final field in scalarFields) {
+        final memberName = _toLowerCamelIdentifier(
+          field.name,
+          fallback: 'field',
+        );
+        buffer.writeln(
+          "    if ($memberName) fields.add('${_escapeString(field.name)}');",
+        );
+      }
+      buffer.writeln('    return List<String>.unmodifiable(fields);');
+    }
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    for (final relation in relationFields) {
+      final relationModelName = relation.relationModel;
+      final relationModel = relationModelName == null
+          ? null
+          : lookup[relationModelName];
+      if (relationModel == null) {
+        continue;
+      }
+      final includeClassName = _relationIncludeClassName(
+        owner: model,
+        relationFieldName: relation.name,
+      );
+      buffer.writeln('class $includeClassName {');
+      buffer.writeln('  final ${relationModel.whereInputClassName} where;');
+      buffer.writeln('  final int? skip;');
+      buffer.writeln('  final int? take;');
+      buffer.writeln(
+        '  final List<${relationModel.orderByClassName}> orderBy;',
+      );
+      buffer.writeln('  final ${relationModel.selectClassName}? select;');
+      buffer.writeln('  final ${relationModel.includeClassName}? include;');
+      buffer.writeln();
+      buffer.writeln('  const $includeClassName({');
+      buffer.writeln(
+        '    this.where = const ${relationModel.whereInputClassName}(),',
+      );
+      buffer.writeln('    this.skip,');
+      buffer.writeln('    this.take,');
+      buffer.writeln(
+        '    this.orderBy = const <${relationModel.orderByClassName}>[],',
+      );
+      buffer.writeln('    this.select,');
+      buffer.writeln('    this.include,');
+      buffer.writeln('  });');
+      buffer.writeln();
+      buffer.writeln('  IncludeSpec toIncludeSpec() {');
+      buffer.writeln('    return IncludeSpec(');
+      buffer.writeln('      where: where.toJson(),');
+      buffer.writeln('      skip: skip,');
+      buffer.writeln('      take: take,');
+      buffer.writeln(
+        '      orderBy: orderBy.map((entry) => entry.value).toList(growable: false),',
+      );
+      buffer.writeln('      select: select?.toFields() ?? const <String>[],');
+      buffer.writeln(
+        '      include: include?.toIncludeMap() ?? const <String, IncludeSpec>{},',
+      );
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln('}');
+      buffer.writeln();
+    }
+
+    buffer.writeln('class ${model.includeClassName} {');
+    for (final relation in relationFields) {
+      final includeClassName = _relationIncludeClassName(
+        owner: model,
+        relationFieldName: relation.name,
+      );
+      final memberName = _toLowerCamelIdentifier(
+        relation.name,
+        fallback: 'relation',
+      );
+      buffer.writeln('  final $includeClassName? $memberName;');
+    }
+    if (relationFields.isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('  const ${model.includeClassName}({');
+      for (final relation in relationFields) {
+        final memberName = _toLowerCamelIdentifier(
+          relation.name,
+          fallback: 'relation',
+        );
+        buffer.writeln('    this.$memberName,');
+      }
+      buffer.writeln('  });');
+    } else {
+      buffer.writeln();
+      buffer.writeln('  const ${model.includeClassName}();');
+    }
+    buffer.writeln();
+    buffer.writeln('  Map<String, IncludeSpec> toIncludeMap() {');
+    if (relationFields.isEmpty) {
+      buffer.writeln('    return const <String, IncludeSpec>{};');
+    } else {
+      buffer.writeln('    final include = <String, IncludeSpec>{};');
+      for (final relation in relationFields) {
+        final memberName = _toLowerCamelIdentifier(
+          relation.name,
+          fallback: 'relation',
+        );
+        buffer.writeln(
+          "    if ($memberName != null) include['${_escapeString(relation.name)}'] = $memberName!.toIncludeSpec();",
+        );
+      }
+      buffer.writeln('    return include;');
+    }
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+  }
+
   void _writeTypedDelegateClass({
     required StringBuffer buffer,
     required _ResolvedModel model,
@@ -135,19 +310,28 @@ final class TypedClientWriter {
     );
     buffer.writeln('    int? skip,');
     buffer.writeln('    int? take,');
-    buffer.writeln('    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],');
-    buffer.writeln('    List<String> select = const <String>[],');
     buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    final rows = await _delegate.findMany(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
-    buffer.writeln('      orderBy: orderBy,');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln(
       '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
@@ -157,15 +341,19 @@ final class TypedClientWriter {
 
     buffer.writeln('  Future<${model.dataClassName}?> findUnique({');
     buffer.writeln('    required ${model.whereInputClassName} where,');
-    buffer.writeln('    List<String> select = const <String>[],');
-    buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
-    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    final row = await _delegate.findUnique(');
     buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
@@ -179,18 +367,27 @@ final class TypedClientWriter {
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
     buffer.writeln('    int? skip,');
-    buffer.writeln('    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],');
-    buffer.writeln('    List<String> select = const <String>[],');
     buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    final row = await _delegate.findFirst(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      skip: skip,');
-    buffer.writeln('      orderBy: orderBy,');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
@@ -201,15 +398,19 @@ final class TypedClientWriter {
 
     buffer.writeln('  Future<${model.dataClassName}> create({');
     buffer.writeln('    required ${model.createInputClassName} data,');
-    buffer.writeln('    List<String> select = const <String>[],');
-    buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
-    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    final row = await _delegate.create(');
     buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
     buffer.writeln('  }');
@@ -218,16 +419,20 @@ final class TypedClientWriter {
     buffer.writeln('  Future<${model.dataClassName}?> update({');
     buffer.writeln('    required ${model.whereInputClassName} where,');
     buffer.writeln('    required ${model.updateInputClassName} data,');
-    buffer.writeln('    List<String> select = const <String>[],');
-    buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
-    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    final row = await _delegate.update(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
@@ -238,15 +443,19 @@ final class TypedClientWriter {
 
     buffer.writeln('  Future<${model.dataClassName}?> delete({');
     buffer.writeln('    required ${model.whereInputClassName} where,');
-    buffer.writeln('    List<String> select = const <String>[],');
-    buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
-    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    final row = await _delegate.delete(');
     buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
@@ -259,17 +468,21 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.whereInputClassName} where,');
     buffer.writeln('    required ${model.createInputClassName} create,');
     buffer.writeln('    required ${model.updateInputClassName} update,');
-    buffer.writeln('    List<String> select = const <String>[],');
-    buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
-    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    final row = await _delegate.upsert(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      create: create.toJson(),');
     buffer.writeln('      update: update.toJson(),');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
     buffer.writeln('  }');
@@ -299,19 +512,28 @@ final class TypedClientWriter {
     );
     buffer.writeln('    int? skip,');
     buffer.writeln('    int? take,');
-    buffer.writeln('    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],');
-    buffer.writeln('    List<String> select = const <String>[],');
     buffer.writeln(
-      '    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},',
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async* {');
+    buffer.writeln(
+      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
     buffer.writeln('    await for (final row in _delegate.streamMany(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
-    buffer.writeln('      orderBy: orderBy,');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    )) {');
     buffer.writeln('      yield ${model.dataClassName}.fromJson(row);');
     buffer.writeln('    }');
@@ -850,6 +1072,17 @@ final class TypedClientWriter {
     };
   }
 
+  String _relationIncludeClassName({
+    required _ResolvedModel owner,
+    required String relationFieldName,
+  }) {
+    final relationPart = _toUpperCamelIdentifier(
+      relationFieldName,
+      fallback: 'Relation',
+    );
+    return '${owner.classBaseName}${relationPart}Include';
+  }
+
   String _makeUnique({required String base, required Set<String> used}) {
     if (!used.contains(base)) {
       used.add(base);
@@ -967,6 +1200,12 @@ final class _ResolvedModel {
   String get createInputClassName => '${classBaseName}CreateInput';
 
   String get updateInputClassName => '${classBaseName}UpdateInput';
+
+  String get orderByClassName => '${classBaseName}OrderBy';
+
+  String get selectClassName => '${classBaseName}Select';
+
+  String get includeClassName => '${classBaseName}Include';
 }
 
 final class _FieldBinding {
