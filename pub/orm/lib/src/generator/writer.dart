@@ -770,9 +770,6 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
-    buffer.writeln(
-      '    ${model.whereInputClassName} having = const ${model.whereInputClassName}(),',
-    );
     buffer.writeln('    int? skip,');
     buffer.writeln('    int? take,');
     buffer.writeln(
@@ -1093,6 +1090,9 @@ final class TypedClientWriter {
     buffer.writeln('    required List<${model.distinctClassName}> by,');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln(
+      '    ${model.whereInputClassName} having = const ${model.whereInputClassName}(),',
     );
     buffer.writeln('    int? skip,');
     buffer.writeln('    int? take,');

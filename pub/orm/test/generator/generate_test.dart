@@ -324,10 +324,11 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),',
+            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),\s*UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserDelegate.groupBy(...) to expose typed having.',
+          reason:
+              'Expected UserDelegate.groupBy(...) to expose where + typed having in signature.',
         );
         expect(
           RegExp(
@@ -344,6 +345,14 @@ void main() {
           isTrue,
           reason:
               'Expected UserQuery.groupBy(...) to expose and forward typed having.',
+        );
+        expect(
+          RegExp(
+            r'UserQuery\s+query\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),\s*int\?\s+skip,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.query(...) to keep only row-level where (no having parameter).',
         );
         expect(
           RegExp(
