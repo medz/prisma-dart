@@ -562,6 +562,38 @@ final class TypedClientWriter {
         .where((field) => field.isRelation)
         .toList(growable: false);
 
+    buffer.writeln('class ${model.distinctClassName} {');
+    buffer.writeln('  final String value;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.distinctClassName}._(this.value);');
+    if (scalarFields.isNotEmpty) {
+      for (final field in scalarFields) {
+        final memberName = _toLowerCamelIdentifier(
+          field.name,
+          fallback: 'field',
+        );
+        buffer.writeln(
+          "  static const ${model.distinctClassName} $memberName = ${model.distinctClassName}._('${_escapeString(field.name)}');",
+        );
+      }
+      final fieldEntries = scalarFields
+          .map(
+            (field) => _toLowerCamelIdentifier(field.name, fallback: 'field'),
+          )
+          .join(', ');
+      buffer.writeln();
+      buffer.writeln(
+        '  static const List<${model.distinctClassName}> values = <${model.distinctClassName}>[$fieldEntries];',
+      );
+    } else {
+      buffer.writeln();
+      buffer.writeln(
+        '  static const List<${model.distinctClassName}> values = <${model.distinctClassName}>[];',
+      );
+    }
+    buffer.writeln('}');
+    buffer.writeln();
+
     buffer.writeln('class ${model.orderByClassName} {');
     buffer.writeln('  final OrmOrderBy value;');
     buffer.writeln();
@@ -743,6 +775,9 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) {');
@@ -752,6 +787,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
     buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: select,');
     buffer.writeln('      include: include,');
     buffer.writeln('    );');
@@ -767,11 +803,17 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
     buffer.writeln(
       '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
     );
     buffer.writeln(
       '    final runtimeSelect = select?.toFields() ?? const <String>[];',
@@ -784,6 +826,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
     buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('      distinct: runtimeDistinct,');
     buffer.writeln('      select: runtimeSelect,');
     buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
@@ -824,11 +867,17 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
     buffer.writeln(
       '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
     );
     buffer.writeln(
       '    final runtimeSelect = select?.toFields() ?? const <String>[];',
@@ -840,6 +889,7 @@ final class TypedClientWriter {
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('      distinct: runtimeDistinct,');
     buffer.writeln('      select: runtimeSelect,');
     buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
@@ -1002,11 +1052,17 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async* {');
     buffer.writeln(
       '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
     );
     buffer.writeln(
       '    final runtimeSelect = select?.toFields() ?? const <String>[];',
@@ -1019,6 +1075,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
     buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('      distinct: runtimeDistinct,');
     buffer.writeln('      select: runtimeSelect,');
     buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    )) {');
@@ -1041,6 +1098,7 @@ final class TypedClientWriter {
     buffer.writeln('  final int? _skip;');
     buffer.writeln('  final int? _take;');
     buffer.writeln('  final List<${model.orderByClassName}> _orderBy;');
+    buffer.writeln('  final List<${model.distinctClassName}> _distinct;');
     buffer.writeln('  final ${model.selectClassName}? _select;');
     buffer.writeln('  final ${model.includeClassName}? _include;');
     buffer.writeln();
@@ -1050,6 +1108,7 @@ final class TypedClientWriter {
     buffer.writeln('    required int? skip,');
     buffer.writeln('    required int? take,');
     buffer.writeln('    required List<${model.orderByClassName}> orderBy,');
+    buffer.writeln('    required List<${model.distinctClassName}> distinct,');
     buffer.writeln('    required ${model.selectClassName}? select,');
     buffer.writeln('    required ${model.includeClassName}? include,');
     buffer.writeln('  }) : _delegate = delegate,');
@@ -1058,6 +1117,9 @@ final class TypedClientWriter {
     buffer.writeln('       _take = take,');
     buffer.writeln(
       '       _orderBy = List<${model.orderByClassName}>.unmodifiable(orderBy),',
+    );
+    buffer.writeln(
+      '       _distinct = List<${model.distinctClassName}>.unmodifiable(distinct),',
     );
     buffer.writeln('       _select = select,');
     buffer.writeln('       _include = include;');
@@ -1072,6 +1134,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -1085,6 +1148,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -1098,6 +1162,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -1113,6 +1178,23 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: _distinct,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} distinct(List<${model.distinctClassName}> distinct) {',
+    );
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -1128,6 +1210,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -1143,6 +1226,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: include,');
     buffer.writeln('    );');
@@ -1155,6 +1239,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -1166,6 +1251,7 @@ final class TypedClientWriter {
     buffer.writeln('      where: _where,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -1178,6 +1264,7 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -2132,6 +2219,8 @@ final class _ResolvedModel {
   String get delegateClassName => '${classBaseName}Delegate';
 
   String get queryClassName => '${classBaseName}Query';
+
+  String get distinctClassName => '${classBaseName}Distinct';
 
   String get dataClassName => '${classBaseName}Data';
 

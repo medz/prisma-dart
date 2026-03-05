@@ -230,6 +230,56 @@ void main() {
       await client.disconnect();
     });
 
+    test(
+      'supports distinct with order and pagination in memory engine',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        final users = client.model('User');
+
+        await users.create(
+          data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+        );
+
+        final distinctRows = await users.findMany(
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+          distinct: const <String>['email'],
+        );
+        expect(
+          distinctRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u1', 'u3'],
+        );
+
+        final pagedDistinctRows = await users.findMany(
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+          distinct: const <String>['email'],
+          skip: 1,
+          take: 1,
+        );
+        expect(
+          pagedDistinctRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u3'],
+        );
+
+        final distinctFromQuery = await users
+            .query()
+            .orderByField('id')
+            .distinctField('email')
+            .findMany();
+        expect(
+          distinctFromQuery.map((row) => row['id']).toList(growable: false),
+          <Object?>['u1', 'u3'],
+        );
+        await client.disconnect();
+      },
+    );
+
     test('supports where operators gt/in/notIn in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -2040,6 +2090,10 @@ void main() {
       );
       await expectLater(
         client.model('User').findMany(select: const <String>['age']),
+        throwsA(isA<PlanFieldNotFoundException>()),
+      );
+      await expectLater(
+        client.model('User').findMany(distinct: const <String>['age']),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await client.disconnect();

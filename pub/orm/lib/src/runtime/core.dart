@@ -352,6 +352,7 @@ final class OrmRuntimeCore implements RuntimeCore {
       fields: plan.orderBy.map((entry) => entry.field),
       source: 'orderBy',
     );
+    _assertKnownFields(model: model, fields: plan.distinct, source: 'distinct');
     _assertKnownFields(model: model, fields: plan.select, source: 'select');
 
     if (plan.skip case final skip? when skip < 0) {

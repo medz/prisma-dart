@@ -263,6 +263,51 @@ void main() {
         );
         expect(
           RegExp(
+            r'Future<List<UserData>>\s+findMany\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected findMany to expose typed distinct parameter in generated delegate.',
+        );
+        expect(
+          RegExp(
+            r'Future<UserData\?>\s+findFirst\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected findFirst to expose typed distinct parameter in generated delegate.',
+        );
+        expect(
+          RegExp(
+            r'Stream<UserData>\s+stream\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected stream to expose typed distinct parameter in generated delegate.',
+        );
+        expect(
+          RegExp(r'\bclass UserDistinct\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed distinct DSL class in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDistinct\s*\{[\s\S]*?static\s+const\s+UserDistinct\s+id\s*=\s*UserDistinct\._\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDistinct class to expose static scalar field members.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+distinct\(List<UserDistinct>\s+distinct\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.distinct(...) to support typed distinct chaining.',
+        );
+        expect(
+          RegExp(
             r'Future<List<UserData>>\s+createMany\(\{\s*required\s+List<UserCreateInput>\s+data,',
           ).hasMatch(generatedSource),
           isTrue,

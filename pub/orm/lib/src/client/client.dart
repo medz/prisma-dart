@@ -329,6 +329,11 @@ class ModelDelegate {
 
   ModelQuery selectField(String field) => query().selectField(field);
 
+  ModelQuery distinct(List<String> fields, {bool append = false}) =>
+      query().distinct(fields, append: append);
+
+  ModelQuery distinctField(String field) => query().distinctField(field);
+
   ModelQuery include(Map<String, IncludeSpec> include) =>
       query().include(include);
 
@@ -342,6 +347,7 @@ class ModelDelegate {
     int? skip,
     int? take,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) {
@@ -351,6 +357,7 @@ class ModelDelegate {
       skip: skip,
       take: take,
       orderBy: orderBy,
+      distinct: distinct,
       select: select,
       include: include,
       includeDepth: 0,
@@ -362,6 +369,7 @@ class ModelDelegate {
     int? skip,
     int? take,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async* {
@@ -370,6 +378,7 @@ class ModelDelegate {
       skip: skip,
       take: take,
       orderBy: orderBy,
+      distinct: distinct,
       select: select,
       include: include,
     );
@@ -397,6 +406,7 @@ class ModelDelegate {
     JsonMap where = const <String, Object?>{},
     int? skip,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
@@ -406,6 +416,7 @@ class ModelDelegate {
       skip: skip,
       take: 1,
       orderBy: orderBy,
+      distinct: distinct,
       select: select,
       include: include,
       includeDepth: 0,
@@ -617,10 +628,18 @@ class ModelDelegate {
     int? skip,
     int? take,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     required int includeDepth,
   }) async {
+    if (skip case final offset? when offset < 0) {
+      throw PlanInvalidPaginationException(key: 'skip', value: offset);
+    }
+    if (take case final limit? when limit < 0) {
+      throw PlanInvalidPaginationException(key: 'take', value: limit);
+    }
+
     final normalizedInclude = _normalizeInclude(include);
     final normalizedWhere = await _normalizeWhereForExecution(
       model: modelName,
@@ -635,18 +654,24 @@ class ModelDelegate {
         model: modelName,
         action: OrmAction.findMany,
         where: normalizedWhere,
-        skip: skip,
-        take: take,
+        skip: distinct.isEmpty ? skip : null,
+        take: distinct.isEmpty ? take : null,
         orderBy: orderBy,
-        select: _expandSelectForInclude(
+        distinct: distinct,
+        select: _expandSelectForExecution(
           model: modelName,
           select: select,
           include: normalizedInclude,
+          distinct: distinct,
         ),
       ),
     );
 
-    final rows = _readRows(response.data);
+    var rows = _readRows(response.data);
+    if (distinct.isNotEmpty) {
+      rows = _applyDistinctRows(rows: rows, distinct: distinct);
+      rows = _sliceRows(rows: rows, skip: skip, take: take);
+    }
     final hydratedRows = await _resolveIncludeRows(
       action: action,
       rows: rows,
@@ -1270,25 +1295,45 @@ class ModelDelegate {
     return List<JsonMap>.from(window, growable: false);
   }
 
+  List<String> _expandSelectForExecution({
+    required String model,
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+    required List<String> distinct,
+  }) {
+    if (select.isEmpty) {
+      return select;
+    }
+
+    if (include.isEmpty && distinct.isEmpty) {
+      return select;
+    }
+
+    final expanded = <String>{...select, ...distinct};
+    if (include.isNotEmpty) {
+      for (final relationName in include.keys) {
+        final relation = _resolveRelation(
+          model: model,
+          relationName: relationName,
+        );
+        expanded.addAll(relation.sourceFields);
+      }
+    }
+
+    return expanded.toList(growable: false);
+  }
+
   List<String> _expandSelectForInclude({
     required String model,
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
-    if (select.isEmpty || include.isEmpty) {
-      return select;
-    }
-
-    final expanded = <String>{...select};
-    for (final relationName in include.keys) {
-      final relation = _resolveRelation(
-        model: model,
-        relationName: relationName,
-      );
-      expanded.addAll(relation.sourceFields);
-    }
-
-    return expanded.toList(growable: false);
+    return _expandSelectForExecution(
+      model: model,
+      select: select,
+      include: include,
+      distinct: const <String>[],
+    );
   }
 
   List<String> _expandSelectForNestedCreate({
@@ -1360,6 +1405,29 @@ class ModelDelegate {
   JsonMap _attachInclude(JsonMap row, String relation, Object? value) {
     final next = <String, Object?>{...row, relation: value};
     return next;
+  }
+
+  List<JsonMap> _applyDistinctRows({
+    required List<JsonMap> rows,
+    required List<String> distinct,
+  }) {
+    if (rows.isEmpty || distinct.isEmpty) {
+      return rows;
+    }
+
+    final seen = <_RelationMergeKey>{};
+    final deduplicated = <JsonMap>[];
+    for (final row in rows) {
+      final key = _RelationMergeKey(
+        distinct
+            .map((field) => row.containsKey(field) ? row[field] : null)
+            .toList(growable: false),
+      );
+      if (seen.add(key)) {
+        deduplicated.add(row);
+      }
+    }
+    return deduplicated;
   }
 
   JsonMap? _fallbackCreateRow({required JsonMap data}) {
@@ -1806,6 +1874,7 @@ final class ModelQueryState {
   final int? skip;
   final int? take;
   final List<OrmOrderBy> orderBy;
+  final List<String> distinct;
   final List<String> select;
   final Map<String, IncludeSpec> include;
 
@@ -1814,6 +1883,7 @@ final class ModelQueryState {
     this.skip,
     this.take,
     this.orderBy = const <OrmOrderBy>[],
+    this.distinct = const <String>[],
     this.select = const <String>[],
     this.include = const <String, IncludeSpec>{},
   });
@@ -1834,6 +1904,8 @@ final class ModelQuery {
 
   List<OrmOrderBy> get orderByValues => _state.orderBy;
 
+  List<String> get distinctValues => _state.distinct;
+
   List<String> get selectedFields => _state.select;
 
   Map<String, IncludeSpec> get includeValues => _state.include;
@@ -1848,6 +1920,7 @@ final class ModelQuery {
         skip: _state.skip,
         take: _state.take,
         orderBy: _state.orderBy,
+        distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
       ),
@@ -1864,6 +1937,7 @@ final class ModelQuery {
         skip: _state.skip,
         take: _state.take,
         orderBy: nextOrderBy,
+        distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
       ),
@@ -1872,6 +1946,27 @@ final class ModelQuery {
 
   ModelQuery orderByField(String field, {SortOrder order = SortOrder.asc}) {
     return orderBy(<OrmOrderBy>[OrmOrderBy(field, order: order)]);
+  }
+
+  ModelQuery distinct(List<String> fields, {bool append = false}) {
+    final nextDistinct = append
+        ? <String>[..._state.distinct, ...fields]
+        : <String>[...fields];
+    return _next(
+      ModelQueryState(
+        where: _state.where,
+        skip: _state.skip,
+        take: _state.take,
+        orderBy: _state.orderBy,
+        distinct: nextDistinct,
+        select: _state.select,
+        include: _state.include,
+      ),
+    );
+  }
+
+  ModelQuery distinctField(String field) {
+    return distinct(<String>[field], append: true);
   }
 
   ModelQuery select(List<String> fields, {bool append = false}) {
@@ -1884,6 +1979,7 @@ final class ModelQuery {
         skip: _state.skip,
         take: _state.take,
         orderBy: _state.orderBy,
+        distinct: _state.distinct,
         select: nextSelect,
         include: _state.include,
       ),
@@ -1905,6 +2001,7 @@ final class ModelQuery {
         skip: _state.skip,
         take: _state.take,
         orderBy: _state.orderBy,
+        distinct: _state.distinct,
         select: _state.select,
         include: nextInclude,
       ),
@@ -1925,6 +2022,7 @@ final class ModelQuery {
         skip: value,
         take: _state.take,
         orderBy: _state.orderBy,
+        distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
       ),
@@ -1938,6 +2036,7 @@ final class ModelQuery {
         skip: _state.skip,
         take: value,
         orderBy: _state.orderBy,
+        distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
       ),
@@ -1951,6 +2050,7 @@ final class ModelQuery {
         skip: _state.skip,
         take: null,
         orderBy: _state.orderBy,
+        distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
       ),
@@ -1963,6 +2063,7 @@ final class ModelQuery {
       skip: _state.skip,
       take: _state.take,
       orderBy: _state.orderBy,
+      distinct: _state.distinct,
       select: _state.select,
       include: _state.include,
     );
@@ -1974,6 +2075,7 @@ final class ModelQuery {
       skip: _state.skip,
       take: _state.take,
       orderBy: _state.orderBy,
+      distinct: _state.distinct,
       select: _state.select,
       include: _state.include,
     );
@@ -1989,6 +2091,7 @@ final class ModelQuery {
     where: _state.where,
     skip: _state.skip,
     orderBy: _state.orderBy,
+    distinct: _state.distinct,
     select: _state.select,
     include: _state.include,
   );

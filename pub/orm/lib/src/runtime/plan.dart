@@ -26,6 +26,7 @@ final class OrmPlan {
   final int? skip;
   final int? take;
   final List<OrmOrderBy> orderBy;
+  final List<String> distinct;
   final List<String> select;
 
   OrmPlan({
@@ -40,9 +41,11 @@ final class OrmPlan {
     this.skip,
     this.take,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
     List<String> select = const <String>[],
   }) : where = Map.unmodifiable(where),
        data = Map.unmodifiable(data),
        orderBy = List.unmodifiable(orderBy),
+       distinct = List.unmodifiable(distinct),
        select = List.unmodifiable(select);
 }
