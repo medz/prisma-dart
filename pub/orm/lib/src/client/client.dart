@@ -350,6 +350,28 @@ class ModelDelegate {
     );
   }
 
+  Stream<JsonMap> streamMany({
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) async* {
+    final rows = await findMany(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      select: select,
+      include: include,
+    );
+
+    for (final row in rows) {
+      yield row;
+    }
+  }
+
   Future<JsonMap?> findUnique({
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
@@ -1241,6 +1263,17 @@ final class ModelQuery {
 
   Future<List<JsonMap>> findMany() {
     return _delegate.findMany(
+      where: _state.where,
+      skip: _state.skip,
+      take: _state.take,
+      orderBy: _state.orderBy,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
+
+  Stream<JsonMap> stream() {
+    return _delegate.streamMany(
       where: _state.where,
       skip: _state.skip,
       take: _state.take,

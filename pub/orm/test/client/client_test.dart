@@ -382,6 +382,37 @@ void main() {
       await client.disconnect();
     });
 
+    test('supports stream-first reads on delegate and query', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(
+        data: <String, Object?>{'id': 'u1', 'email': 'c@x.com'},
+      );
+      await users.create(
+        data: <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+      );
+      await users.create(
+        data: <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+      );
+
+      final delegateRows = await users
+          .streamMany(orderBy: const <OrmOrderBy>[OrmOrderBy('email')])
+          .toList();
+      expect(delegateRows, hasLength(3));
+      expect(delegateRows.first['id'], 'u2');
+
+      final queryRows = await users
+          .orderByField('email')
+          .take(2)
+          .stream()
+          .toList();
+      expect(queryRows, hasLength(2));
+      expect(queryRows.last['id'], 'u3');
+      await client.disconnect();
+    });
+
     test('supports upsert create and update branches', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
