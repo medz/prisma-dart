@@ -38,6 +38,31 @@ void main(List<String> args) {
         outputPath: options.outputPath,
       );
       return;
+    case 'contract':
+      final parseResult = _parseContractEmitArgs(commandArgs);
+      if (parseResult.helpRequested) {
+        _printContractHelp();
+        exitCode = 0;
+        return;
+      }
+
+      if (parseResult.errorMessage != null) {
+        stderr.writeln(parseResult.errorMessage);
+        _printContractHelp(stream: stderr);
+        exitCode = 64;
+        return;
+      }
+
+      final options = parseResult.options!;
+      exitCode = runContractEmitCommand(
+        cwd: Directory.current,
+        out: stdout,
+        err: stderr,
+        configPath: options.configPath,
+        schemaPath: options.schemaPath,
+        outputPath: options.outputPath,
+      );
+      return;
     default:
       stderr.writeln('Unknown command: $command');
       _printUsage(stream: stderr);
@@ -49,6 +74,33 @@ bool _isHelp(String value) =>
     value == '--help' || value == '-h' || value == 'help';
 
 _GenerateCliParseResult _parseGenerateArgs(List<String> args) {
+  return _parsePathOptionsArgs(args, commandName: 'generate');
+}
+
+_GenerateCliParseResult _parseContractEmitArgs(List<String> args) {
+  if (args.isEmpty) {
+    return const _GenerateCliParseResult.error(
+      'Missing contract subcommand. Expected: emit',
+    );
+  }
+
+  final subcommand = args.first;
+  if (_isHelp(subcommand)) {
+    return const _GenerateCliParseResult.help();
+  }
+  if (subcommand != 'emit') {
+    return _GenerateCliParseResult.error(
+      'Unknown contract subcommand: $subcommand',
+    );
+  }
+
+  return _parsePathOptionsArgs(args.sublist(1), commandName: 'contract emit');
+}
+
+_GenerateCliParseResult _parsePathOptionsArgs(
+  List<String> args, {
+  required String commandName,
+}) {
   String? configPath;
   String? schemaPath;
   String? outputPath;
@@ -61,7 +113,7 @@ _GenerateCliParseResult _parseGenerateArgs(List<String> args) {
 
     if (!argument.startsWith('--')) {
       return _GenerateCliParseResult.error(
-        'Unexpected arguments for generate: ${args.join(' ')}',
+        'Unexpected arguments for $commandName: ${args.join(' ')}',
       );
     }
 
@@ -76,7 +128,7 @@ _GenerateCliParseResult _parseGenerateArgs(List<String> args) {
 
     if (!_isGenerateOption(optionName)) {
       return _GenerateCliParseResult.error(
-        'Unexpected arguments for generate: ${args.join(' ')}',
+        'Unexpected arguments for $commandName: ${args.join(' ')}',
       );
     }
 
@@ -134,8 +186,12 @@ void _printUsage({IOSink? stream}) {
   sink.writeln(
     '  generate    Generate typed client from orm.config.dart and schema',
   );
+  sink.writeln(
+    '  contract    Emit runtime contract artifact from orm.schema.dart',
+  );
   sink.writeln('');
   sink.writeln('Run `dart run orm generate --help` for generate details.');
+  sink.writeln('Run `dart run orm contract --help` for contract details.');
 }
 
 void _printGenerateHelp({IOSink? stream}) {
@@ -160,6 +216,28 @@ void _printGenerateHelp({IOSink? stream}) {
   sink.writeln(
     '  - config.output, or lib/orm_client.g.dart when output is empty',
   );
+}
+
+void _printContractHelp({IOSink? stream}) {
+  final sink = stream ?? stdout;
+  sink.writeln('Emit runtime contract artifact.');
+  sink.writeln('Usage: dart run orm contract emit [options]');
+  sink.writeln('');
+  sink.writeln('Options:');
+  sink.writeln(
+    '  --config <path>   Override config file path (default: orm.config.dart)',
+  );
+  sink.writeln('  --schema <path>   Override schema path from config.schema');
+  sink.writeln('  --output <path>   Override output artifact path');
+  sink.writeln('');
+  sink.writeln('Defaults from current working directory:');
+  sink.writeln('  - config: orm.config.dart');
+  sink.writeln(
+    '  - schema: config.schema, or orm.schema.dart when config.schema is not set',
+  );
+  sink.writeln('');
+  sink.writeln('Default output:');
+  sink.writeln('  - orm.contract.json');
 }
 
 final class _GenerateCliOptions {

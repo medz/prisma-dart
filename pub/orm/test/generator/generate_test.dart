@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:test/test.dart';
@@ -107,6 +108,57 @@ void main() {
           generatedSource.contains("_context.model('ConfigOnlyUser')"),
           isFalse,
           reason: 'Did not expect config schema model after --schema override.',
+        );
+      });
+
+      test('contract emit writes default artifact path', () async {
+        final fixtureDir = _copyFixture(fixturesRoot, 'default_output');
+        addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+        final run = await _runContractEmit(
+          entryPath: generatorEntry.path,
+          workingDirectory: fixtureDir.path,
+        );
+
+        expect(run.exitCode, 0, reason: run.debugOutput);
+
+        final output = File(
+          _path(<String>[fixtureDir.path, 'orm.contract.json']),
+        );
+        expect(
+          output.existsSync(),
+          isTrue,
+          reason: 'Expected default contract output.\n${run.debugOutput}',
+        );
+
+        final decoded = jsonDecode(output.readAsStringSync());
+        expect(decoded is Map<String, Object?>, isTrue);
+        expect((decoded as Map<String, Object?>).containsKey('hash'), isTrue);
+        expect(
+          (decoded['models'] as Map<Object?, Object?>).containsKey('User'),
+          isTrue,
+        );
+      });
+
+      test('contract emit supports --output override path', () async {
+        final fixtureDir = _copyFixture(fixturesRoot, 'default_output');
+        addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+        final run = await _runContractEmit(
+          entryPath: generatorEntry.path,
+          workingDirectory: fixtureDir.path,
+          emitArgs: <String>['--output', 'generated/contract.custom.json'],
+        );
+
+        expect(run.exitCode, 0, reason: run.debugOutput);
+
+        final output = File(
+          _path(<String>[fixtureDir.path, 'generated', 'contract.custom.json']),
+        );
+        expect(
+          output.existsSync(),
+          isTrue,
+          reason: 'Expected overridden contract output.\n${run.debugOutput}',
         );
       });
 
@@ -701,6 +753,25 @@ Future<_GenerateRun> _runGenerate({
   List<String> generateArgs = const <String>[],
 }) async {
   final args = <String>[entryPath, 'generate', ...generateArgs];
+  final result = await Process.run(
+    'dart',
+    args,
+    workingDirectory: workingDirectory,
+  );
+  return _GenerateRun(
+    args: args,
+    exitCode: result.exitCode,
+    stdout: '${result.stdout}',
+    stderr: '${result.stderr}',
+  );
+}
+
+Future<_GenerateRun> _runContractEmit({
+  required String entryPath,
+  required String workingDirectory,
+  List<String> emitArgs = const <String>[],
+}) async {
+  final args = <String>[entryPath, 'contract', 'emit', ...emitArgs];
   final result = await Process.run(
     'dart',
     args,
