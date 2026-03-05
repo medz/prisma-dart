@@ -572,6 +572,136 @@ void main() {
       await client.disconnect();
     });
 
+    test(
+      'singleQuery include matches multiQuery semantics for one-to-many',
+      () async {
+        Future<List<JsonMap>> readWithStrategy(
+          IncludeExecutionStrategy strategy,
+        ) async {
+          final client = OrmClient(
+            contract: relationalContract,
+            engine: MemoryEngine(),
+            includeStrategySelector:
+                ({
+                  required OrmContract contract,
+                  required String modelName,
+                  required OrmAction action,
+                  required Map<String, IncludeSpec> include,
+                  required int depth,
+                }) => strategy,
+          );
+          await client.connect();
+          try {
+            await _seedRelationalData(client);
+            final rows = await client
+                .model('User')
+                .findMany(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                  include: <String, IncludeSpec>{
+                    'posts': IncludeSpec(
+                      orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                      select: const <String>['id', 'title'],
+                    ),
+                  },
+                );
+            return rows;
+          } finally {
+            await client.disconnect();
+          }
+        }
+
+        final singleRows = await readWithStrategy(
+          IncludeExecutionStrategy.singleQuery,
+        );
+        final multiRows = await readWithStrategy(
+          IncludeExecutionStrategy.multiQuery,
+        );
+
+        expect(singleRows, equals(multiRows));
+        expect(singleRows, hasLength(2));
+        expect(_readRowsValue(singleRows.first['posts']), hasLength(2));
+        expect(_readRowsValue(singleRows.last['posts']), hasLength(1));
+      },
+    );
+
+    test('singleQuery include avoids parent fanout by execute count', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: engine,
+        includeStrategySelector:
+            ({
+              required OrmContract contract,
+              required String modelName,
+              required OrmAction action,
+              required Map<String, IncludeSpec> include,
+              required int depth,
+            }) => IncludeExecutionStrategy.singleQuery,
+      );
+      await client.connect();
+      try {
+        await _seedRelationalData(client);
+        engine.reset();
+
+        final rows = await client
+            .model('User')
+            .findMany(
+              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+              include: <String, IncludeSpec>{
+                'posts': IncludeSpec(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                ),
+              },
+            );
+
+        expect(rows, hasLength(2));
+        final findManyPlans = engine.executedPlans
+            .where((plan) => plan.action == OrmAction.findMany)
+            .toList(growable: false);
+        expect(
+          findManyPlans.length,
+          lessThanOrEqualTo(2),
+          reason:
+              'singleQuery include should execute at most one parent read '
+              'and one relation read for one-to-many includes.',
+        );
+      } finally {
+        await client.disconnect();
+      }
+    });
+
+    test(
+      'singleQuery include throws structured error for unsupported response shape',
+      () async {
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: _BadRelatedFindManyShapeEngine(inner: MemoryEngine()),
+          includeStrategySelector:
+              ({
+                required OrmContract contract,
+                required String modelName,
+                required OrmAction action,
+                required Map<String, IncludeSpec> include,
+                required int depth,
+              }) => IncludeExecutionStrategy.singleQuery,
+        );
+        await client.connect();
+        try {
+          await _seedRelationalData(client);
+          await expectLater(
+            client
+                .model('User')
+                .findMany(
+                  include: <String, IncludeSpec>{'posts': const IncludeSpec()},
+                ),
+            throwsA(isA<RuntimeResponseShapeException>()),
+          );
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
+
     test('supports include for direct mutation methods', () async {
       final client = OrmClient(
         contract: relationalContract,
@@ -949,22 +1079,25 @@ void main() {
       await client.disconnect();
     });
 
-    test('withConnection executes callback and always releases connection', () async {
-      final engine = _TrackingConnectionEngine();
-      final client = OrmClient(contract: contract, engine: engine);
-      await client.connect();
+    test(
+      'withConnection executes callback and always releases connection',
+      () async {
+        final engine = _TrackingConnectionEngine();
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
 
-      await client.withConnection((connection) async {
-        final rows = await connection.model('User').findMany();
-        expect(rows, isEmpty);
-      });
+        await client.withConnection((connection) async {
+          final rows = await connection.model('User').findMany();
+          expect(rows, isEmpty);
+        });
 
-      expect(engine.connectionCount, 1);
-      expect(engine.connectionExecutePlans, hasLength(1));
-      expect(engine.connectionExecutePlans.single.action, OrmAction.findMany);
-      expect(engine.releaseCount, 1);
-      await client.disconnect();
-    });
+        expect(engine.connectionCount, 1);
+        expect(engine.connectionExecutePlans, hasLength(1));
+        expect(engine.connectionExecutePlans.single.action, OrmAction.findMany);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
 
     test('withTransaction commits on success', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -985,25 +1118,31 @@ void main() {
       await client.disconnect();
     });
 
-    test('withTransaction success branch commits and releases connection', () async {
-      final engine = _TrackingConnectionEngine();
-      final client = OrmClient(contract: contract, engine: engine);
-      await client.connect();
+    test(
+      'withTransaction success branch commits and releases connection',
+      () async {
+        final engine = _TrackingConnectionEngine();
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
 
-      await client.withTransaction((transaction) async {
-        final rows = await transaction.model('User').findMany();
-        expect(rows, isEmpty);
-      });
+        await client.withTransaction((transaction) async {
+          final rows = await transaction.model('User').findMany();
+          expect(rows, isEmpty);
+        });
 
-      expect(engine.connectionCount, 1);
-      expect(engine.transactionCount, 1);
-      expect(engine.transactionExecutePlans, hasLength(1));
-      expect(engine.transactionExecutePlans.single.action, OrmAction.findMany);
-      expect(engine.commitCount, 1);
-      expect(engine.rollbackCount, 0);
-      expect(engine.releaseCount, 1);
-      await client.disconnect();
-    });
+        expect(engine.connectionCount, 1);
+        expect(engine.transactionCount, 1);
+        expect(engine.transactionExecutePlans, hasLength(1));
+        expect(
+          engine.transactionExecutePlans.single.action,
+          OrmAction.findMany,
+        );
+        expect(engine.commitCount, 1);
+        expect(engine.rollbackCount, 0);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
 
     test('withTransaction rolls back on error', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -1028,28 +1167,34 @@ void main() {
       await client.disconnect();
     });
 
-    test('withTransaction error branch rolls back and releases connection', () async {
-      final engine = _TrackingConnectionEngine();
-      final client = OrmClient(contract: contract, engine: engine);
-      await client.connect();
+    test(
+      'withTransaction error branch rolls back and releases connection',
+      () async {
+        final engine = _TrackingConnectionEngine();
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
 
-      await expectLater(
-        () => client.withTransaction((transaction) async {
-          await transaction.model('User').findMany();
-          throw StateError('stop');
-        }),
-        throwsA(isA<StateError>()),
-      );
+        await expectLater(
+          () => client.withTransaction((transaction) async {
+            await transaction.model('User').findMany();
+            throw StateError('stop');
+          }),
+          throwsA(isA<StateError>()),
+        );
 
-      expect(engine.connectionCount, 1);
-      expect(engine.transactionCount, 1);
-      expect(engine.transactionExecutePlans, hasLength(1));
-      expect(engine.transactionExecutePlans.single.action, OrmAction.findMany);
-      expect(engine.commitCount, 0);
-      expect(engine.rollbackCount, 1);
-      expect(engine.releaseCount, 1);
-      await client.disconnect();
-    });
+        expect(engine.connectionCount, 1);
+        expect(engine.transactionCount, 1);
+        expect(engine.transactionExecutePlans, hasLength(1));
+        expect(
+          engine.transactionExecutePlans.single.action,
+          OrmAction.findMany,
+        );
+        expect(engine.commitCount, 0);
+        expect(engine.rollbackCount, 1);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
 
     test(
       'throws RuntimeConnectionNotSupportedException when engine has no connection support',
@@ -1553,6 +1698,56 @@ final class _NoMutationReturnEngine implements OrmEngine {
       return EngineResponse(affectedRows: response.affectedRows);
     }
     return response;
+  }
+
+  @override
+  Future<void> open() => inner.open();
+}
+
+final class _CountingEngine implements OrmEngine {
+  final OrmEngine inner;
+  var executeCount = 0;
+  final List<OrmPlan> executedPlans = <OrmPlan>[];
+
+  _CountingEngine({required this.inner});
+
+  @override
+  Future<void> close() => inner.close();
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    executeCount += 1;
+    executedPlans.add(plan);
+    return inner.execute(plan);
+  }
+
+  @override
+  Future<void> open() => inner.open();
+
+  void reset() {
+    executeCount = 0;
+    executedPlans.clear();
+  }
+}
+
+final class _BadRelatedFindManyShapeEngine implements OrmEngine {
+  final OrmEngine inner;
+  final String relatedModel;
+
+  _BadRelatedFindManyShapeEngine({
+    required this.inner,
+    this.relatedModel = 'Post',
+  });
+
+  @override
+  Future<void> close() => inner.close();
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    if (plan.model == relatedModel && plan.action == OrmAction.findMany) {
+      return const EngineResponse(data: 'bad-shape');
+    }
+    return inner.execute(plan);
   }
 
   @override
