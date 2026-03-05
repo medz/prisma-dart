@@ -35,6 +35,8 @@ const Set<String> _whereOperators = <String>{
   'lte',
 };
 
+const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
+
 final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
   final OrmContract contract;
   final String identifierQuote;
@@ -239,33 +241,206 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       return '';
     }
 
+    final predicate = _buildWhereExpression(
+      model: model,
+      where: where,
+      params: params,
+    );
+    return ' WHERE $predicate';
+  }
+
+  String _buildWhereExpression({
+    required String model,
+    required JsonMap where,
+    required List<Object?> params,
+  }) {
     final predicates = <String>[];
+
     for (final entry in where.entries) {
-      final operatorMap = _coerceOperatorMap(entry.value);
-      if (operatorMap == null) {
-        predicates.add('${_id(entry.key)} = ?');
-        params.add(
-          _encodeWhereValue(model: model, field: entry.key, value: entry.value),
+      final key = entry.key;
+      if (_whereLogicalKeys.contains(key)) {
+        predicates.add(
+          _buildWhereLogicalPredicate(
+            model: model,
+            key: key,
+            operand: entry.value,
+            params: params,
+          ),
         );
         continue;
       }
 
-      for (final operator in _whereOperatorOrder) {
-        if (!operatorMap.containsKey(operator)) {
-          continue;
-        }
-        _appendWhereOperatorPredicate(
-          predicates: predicates,
-          params: params,
+      predicates.addAll(
+        _buildWhereFieldPredicates(
           model: model,
-          field: entry.key,
-          operator: operator,
-          operand: operatorMap[operator],
-        );
-      }
+          field: key,
+          condition: entry.value,
+          params: params,
+        ),
+      );
     }
 
-    return ' WHERE ${predicates.join(' AND ')}';
+    if (predicates.isEmpty) {
+      return '1 = 1';
+    }
+
+    return predicates.join(' AND ');
+  }
+
+  String _buildWhereLogicalPredicate({
+    required String model,
+    required String key,
+    required Object? operand,
+    required List<Object?> params,
+  }) {
+    return switch (key) {
+      'AND' => _buildWhereAndPredicate(
+        model: model,
+        operand: operand,
+        params: params,
+      ),
+      'OR' => _buildWhereOrPredicate(
+        model: model,
+        operand: operand,
+        params: params,
+      ),
+      'NOT' => _buildWhereNotPredicate(
+        model: model,
+        operand: operand,
+        params: params,
+      ),
+      _ => '1 = 0',
+    };
+  }
+
+  String _buildWhereAndPredicate({
+    required String model,
+    required Object? operand,
+    required List<Object?> params,
+  }) {
+    final where = _coerceWhereMap(operand);
+    if (where != null) {
+      final nested = _buildWhereExpression(
+        model: model,
+        where: where,
+        params: params,
+      );
+      return '($nested)';
+    }
+
+    final whereList = _coerceWhereList(operand);
+    if (whereList == null) {
+      return '1 = 0';
+    }
+    if (whereList.isEmpty) {
+      return '1 = 1';
+    }
+
+    final predicates = whereList
+        .map(
+          (item) =>
+              _buildWhereExpression(model: model, where: item, params: params),
+        )
+        .toList(growable: false);
+    return '(${predicates.join(' AND ')})';
+  }
+
+  String _buildWhereOrPredicate({
+    required String model,
+    required Object? operand,
+    required List<Object?> params,
+  }) {
+    final where = _coerceWhereMap(operand);
+    if (where != null) {
+      final nested = _buildWhereExpression(
+        model: model,
+        where: where,
+        params: params,
+      );
+      return '($nested)';
+    }
+
+    final whereList = _coerceWhereList(operand);
+    if (whereList == null) {
+      return '1 = 0';
+    }
+    if (whereList.isEmpty) {
+      return '1 = 0';
+    }
+
+    final predicates = whereList
+        .map(
+          (item) =>
+              _buildWhereExpression(model: model, where: item, params: params),
+        )
+        .toList(growable: false);
+    return '(${predicates.join(' OR ')})';
+  }
+
+  String _buildWhereNotPredicate({
+    required String model,
+    required Object? operand,
+    required List<Object?> params,
+  }) {
+    final where = _coerceWhereMap(operand);
+    if (where != null) {
+      final nested = _buildWhereExpression(
+        model: model,
+        where: where,
+        params: params,
+      );
+      return 'NOT ($nested)';
+    }
+
+    final whereList = _coerceWhereList(operand);
+    if (whereList == null) {
+      return '1 = 0';
+    }
+    if (whereList.isEmpty) {
+      return '1 = 1';
+    }
+
+    final predicates = whereList
+        .map(
+          (item) =>
+              _buildWhereExpression(model: model, where: item, params: params),
+        )
+        .map((item) => 'NOT ($item)')
+        .toList(growable: false);
+    return '(${predicates.join(' AND ')})';
+  }
+
+  List<String> _buildWhereFieldPredicates({
+    required String model,
+    required String field,
+    required Object? condition,
+    required List<Object?> params,
+  }) {
+    final predicates = <String>[];
+    final operatorMap = _coerceOperatorMap(condition);
+    if (operatorMap == null) {
+      predicates.add('${_id(field)} = ?');
+      params.add(
+        _encodeWhereValue(model: model, field: field, value: condition),
+      );
+      return predicates;
+    }
+
+    for (final operator in _whereOperatorOrder) {
+      if (!operatorMap.containsKey(operator)) {
+        continue;
+      }
+      _appendWhereOperatorPredicate(
+        predicates: predicates,
+        params: params,
+        model: model,
+        field: field,
+        operator: operator,
+        operand: operatorMap[operator],
+      );
+    }
+
+    return predicates;
   }
 
   Map<String, Object?>? _coerceOperatorMap(Object? value) {
@@ -288,6 +463,38 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       normalized[key] = entry.value;
     }
     return normalized;
+  }
+
+  JsonMap? _coerceWhereMap(Object? value) {
+    if (value is! Map) {
+      return null;
+    }
+
+    final normalized = <String, Object?>{};
+    for (final entry in value.entries) {
+      final key = entry.key;
+      if (key is! String) {
+        return null;
+      }
+      normalized[key] = entry.value;
+    }
+    return normalized;
+  }
+
+  List<JsonMap>? _coerceWhereList(Object? value) {
+    if (value is! List) {
+      return null;
+    }
+
+    final whereList = <JsonMap>[];
+    for (final item in value) {
+      final where = _coerceWhereMap(item);
+      if (where == null) {
+        return null;
+      }
+      whereList.add(where);
+    }
+    return whereList;
   }
 
   void _appendWhereOperatorPredicate({

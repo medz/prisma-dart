@@ -267,6 +267,29 @@ void main() {
               'Expected UserWhereInput fields to use typed where filter classes.',
         );
         expect(
+          RegExp(
+            r"class\s+UserWhereInput\s*\{[\s\S]*?\['AND'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserWhereInput to include AND logical field marker.',
+        );
+        expect(
+          RegExp(
+            r"class\s+UserWhereInput\s*\{[\s\S]*?\['OR'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserWhereInput to include OR logical field marker.',
+        );
+        expect(
+          RegExp(
+            r"class\s+UserWhereInput\s*\{[\s\S]*?\['NOT'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserWhereInput to include NOT logical field marker.',
+        );
+        expect(
           generatedSource.contains('List<UserOrderBy> orderBy'),
           isTrue,
           reason: 'Expected typed delegate signature to use UserOrderBy.',

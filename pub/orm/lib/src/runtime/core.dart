@@ -8,6 +8,7 @@ import 'plugin.dart';
 import 'types.dart';
 
 typedef MarkerHashReader = Future<String?> Function();
+const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
 
 abstract interface class ContractMarkerReader {
   Future<String?> readContractHash();
@@ -338,7 +339,7 @@ final class OrmRuntimeCore implements RuntimeCore {
     }
 
     final model = contract.models[plan.model]!;
-    _assertKnownFields(model: model, fields: plan.where.keys, source: 'where');
+    _assertWhereFields(model: model, where: plan.where, source: 'where');
     _assertKnownFields(model: model, fields: plan.data.keys, source: 'data');
     _assertKnownFields(
       model: model,
@@ -373,12 +374,84 @@ final class OrmRuntimeCore implements RuntimeCore {
     }
   }
 
+  void _assertWhereFields({
+    required ModelContract model,
+    required JsonMap where,
+    required String source,
+  }) {
+    for (final entry in where.entries) {
+      final key = entry.key;
+      if (_whereLogicalKeys.contains(key)) {
+        _assertWhereLogicalOperand(
+          model: model,
+          operand: entry.value,
+          source: source,
+        );
+        continue;
+      }
+      _assertKnownFields(model: model, fields: <String>[key], source: source);
+    }
+  }
+
+  void _assertWhereLogicalOperand({
+    required ModelContract model,
+    required Object? operand,
+    required String source,
+  }) {
+    final nestedWhere = _coerceWhereMap(operand);
+    if (nestedWhere != null) {
+      _assertWhereFields(model: model, where: nestedWhere, source: source);
+      return;
+    }
+
+    final nestedWhereList = _coerceWhereList(operand);
+    if (nestedWhereList == null) {
+      return;
+    }
+
+    for (final item in nestedWhereList) {
+      _assertWhereFields(model: model, where: item, source: source);
+    }
+  }
+
   void _ensureConnected() {
     if (_connected) {
       return;
     }
     throw ClientNotConnectedException();
   }
+}
+
+JsonMap? _coerceWhereMap(Object? value) {
+  if (value is! Map) {
+    return null;
+  }
+
+  final normalized = <String, Object?>{};
+  for (final entry in value.entries) {
+    final key = entry.key;
+    if (key is! String) {
+      return null;
+    }
+    normalized[key] = entry.value;
+  }
+  return normalized;
+}
+
+List<JsonMap>? _coerceWhereList(Object? value) {
+  if (value is! List) {
+    return null;
+  }
+
+  final whereList = <JsonMap>[];
+  for (final item in value) {
+    final where = _coerceWhereMap(item);
+    if (where == null) {
+      return null;
+    }
+    whereList.add(where);
+  }
+  return whereList;
 }
 
 List<JsonMap> _extractRows(Object? data, {required String action}) {

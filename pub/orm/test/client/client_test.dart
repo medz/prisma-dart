@@ -336,6 +336,76 @@ void main() {
     );
 
     test(
+      'supports logical AND/OR/NOT where composition in memory engine',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        final users = client.model('User');
+
+        await users.create(
+          data: <String, Object?>{'id': 1, 'email': 'a@example.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 2, 'email': 'b@example.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 3, 'email': 'alpha@sample.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 4, 'email': 'z@sample.com'},
+        );
+
+        final andRows = await users.findMany(
+          where: <String, Object?>{
+            'AND': <Object?>[
+              <String, Object?>{
+                'id': <String, Object?>{'gt': 1},
+              },
+              <String, Object?>{
+                'email': <String, Object?>{'contains': 'example.com'},
+              },
+            ],
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          andRows.map((row) => row['id']).toList(growable: false),
+          <Object?>[2],
+        );
+
+        final orRows = await users.findMany(
+          where: <String, Object?>{
+            'OR': <Object?>[
+              <String, Object?>{'id': 1},
+              <String, Object?>{'id': 4},
+            ],
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          orRows.map((row) => row['id']).toList(growable: false),
+          <Object?>[1, 4],
+        );
+
+        final notRows = await users.findMany(
+          where: <String, Object?>{
+            'NOT': <Object?>[
+              <String, Object?>{
+                'email': <String, Object?>{'endsWith': 'sample.com'},
+              },
+            ],
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          notRows.map((row) => row['id']).toList(growable: false),
+          <Object?>[1, 2],
+        );
+        await client.disconnect();
+      },
+    );
+
+    test(
       'supports select projection for direct read/mutation methods',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -1626,7 +1696,33 @@ void main() {
       await client.connect();
 
       await expectLater(
+        client
+            .model('User')
+            .findMany(
+              where: <String, Object?>{
+                'OR': <Object?>[
+                  <String, Object?>{'id': 'u1'},
+                  <String, Object?>{'email': 'a@x.com'},
+                ],
+              },
+            ),
+        completes,
+      );
+      await expectLater(
         client.model('User').findMany(where: <String, Object?>{'age': 1}),
+        throwsA(isA<PlanFieldNotFoundException>()),
+      );
+      await expectLater(
+        client
+            .model('User')
+            .findMany(
+              where: <String, Object?>{
+                'AND': <Object?>[
+                  <String, Object?>{'id': 'u1'},
+                  <String, Object?>{'age': 1},
+                ],
+              },
+            ),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(

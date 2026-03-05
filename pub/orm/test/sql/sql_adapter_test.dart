@@ -111,6 +111,48 @@ void main() {
     expect(statement.parameters, <Object?>['%a\\%b%', 'x\\_y%', '%tail\\\\']);
   });
 
+  test('lowers logical where AND/OR/NOT with field filters', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = OrmPlan(
+      contractHash: contract.hash,
+      model: 'User',
+      action: OrmAction.findMany,
+      where: <String, Object?>{
+        'id': 'u1',
+        'AND': <Object?>[
+          <String, Object?>{
+            'email': <String, Object?>{'startsWith': 'a'},
+          },
+          <String, Object?>{
+            'OR': <Object?>[
+              <String, Object?>{'email': 'a@example.com'},
+              <String, Object?>{'email': 'b@example.com'},
+            ],
+          },
+        ],
+        'NOT': <String, Object?>{
+          'email': <String, Object?>{'contains': 'blocked'},
+        },
+      },
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      "SELECT * FROM \"users\" WHERE "
+      "\"id\" = ? AND "
+      "(\"email\" LIKE ? ESCAPE '\\' AND (\"email\" = ? OR \"email\" = ?)) AND "
+      "NOT (\"email\" LIKE ? ESCAPE '\\')",
+    );
+    expect(statement.parameters, <Object?>[
+      'u1',
+      'a%',
+      'a@example.com',
+      'b@example.com',
+      '%blocked%',
+    ]);
+  });
+
   test(
     'keeps scalar where compatibility and does not misclassify normal maps',
     () {

@@ -164,15 +164,84 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
 
   bool _matches(JsonMap row, JsonMap where) {
     for (final entry in where.entries) {
-      if (!_matchesWhereField(
-        row: row,
-        field: entry.key,
-        condition: entry.value,
-      )) {
+      final matched = switch (entry.key) {
+        'AND' => _matchesWhereAnd(row, entry.value),
+        'OR' => _matchesWhereOr(row, entry.value),
+        'NOT' => _matchesWhereNot(row, entry.value),
+        _ => _matchesWhereField(
+          row: row,
+          field: entry.key,
+          condition: entry.value,
+        ),
+      };
+      if (!matched) {
         return false;
       }
     }
     return true;
+  }
+
+  bool _matchesWhereAnd(JsonMap row, Object? operand) {
+    final whereList = _coerceWhereList(operand);
+    if (whereList != null) {
+      if (whereList.isEmpty) {
+        return true;
+      }
+      for (final where in whereList) {
+        if (!_matches(row, where)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    final where = _coerceWhereMap(operand);
+    if (where != null) {
+      return _matches(row, where);
+    }
+    return false;
+  }
+
+  bool _matchesWhereOr(JsonMap row, Object? operand) {
+    final whereList = _coerceWhereList(operand);
+    if (whereList != null) {
+      if (whereList.isEmpty) {
+        return false;
+      }
+      for (final where in whereList) {
+        if (_matches(row, where)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    final where = _coerceWhereMap(operand);
+    if (where != null) {
+      return _matches(row, where);
+    }
+    return false;
+  }
+
+  bool _matchesWhereNot(JsonMap row, Object? operand) {
+    final whereList = _coerceWhereList(operand);
+    if (whereList != null) {
+      if (whereList.isEmpty) {
+        return true;
+      }
+      for (final where in whereList) {
+        if (_matches(row, where)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    final where = _coerceWhereMap(operand);
+    if (where != null) {
+      return !_matches(row, where);
+    }
+    return false;
   }
 
   bool _matchesWhereField({
@@ -240,6 +309,38 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
     }
 
     return normalized;
+  }
+
+  JsonMap? _coerceWhereMap(Object? value) {
+    if (value is! Map) {
+      return null;
+    }
+
+    final normalized = <String, Object?>{};
+    for (final entry in value.entries) {
+      final key = entry.key;
+      if (key is! String) {
+        return null;
+      }
+      normalized[key] = entry.value;
+    }
+    return normalized;
+  }
+
+  List<JsonMap>? _coerceWhereList(Object? value) {
+    if (value is! List) {
+      return null;
+    }
+
+    final whereList = <JsonMap>[];
+    for (final item in value) {
+      final where = _coerceWhereMap(item);
+      if (where == null) {
+        return null;
+      }
+      whereList.add(where);
+    }
+    return whereList;
   }
 
   bool _matchIn(Object? actualValue, Object? operand) {

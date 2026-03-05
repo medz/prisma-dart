@@ -1163,6 +1163,7 @@ final class TypedClientWriter {
   }) {
     final className = _className(model, classKind);
     final fields = _buildFieldBindings(_fieldsForClass(model.model, classKind));
+    final includeLogicalWhere = classKind == _TemplateClassKind.where;
 
     buffer.writeln('class $className {');
 
@@ -1174,14 +1175,24 @@ final class TypedClientWriter {
       );
       buffer.writeln('  final $type ${field.memberName};');
     }
+    if (includeLogicalWhere) {
+      buffer.writeln('  final List<$className>? and;');
+      buffer.writeln('  final List<$className>? or;');
+      buffer.writeln('  final $className? not;');
+    }
 
-    if (fields.isNotEmpty) {
+    if (fields.isNotEmpty || includeLogicalWhere) {
       buffer.writeln();
       buffer.writeln('  const $className({');
       for (final field in fields) {
         final isOptional = _isOptionalField(field.field, classKind: classKind);
         final prefix = isOptional ? '' : 'required ';
         buffer.writeln('    ${prefix}this.${field.memberName},');
+      }
+      if (includeLogicalWhere) {
+        buffer.writeln('    this.and,');
+        buffer.writeln('    this.or,');
+        buffer.writeln('    this.not,');
       }
       buffer.writeln('  });');
     } else {
@@ -1214,6 +1225,17 @@ final class TypedClientWriter {
           "      ${field.memberName}: _requiredValue<$nonNullableType>($decodeExpression, '${_escapeString(field.field.name)}'),",
         );
       }
+    }
+    if (includeLogicalWhere) {
+      buffer.writeln(
+        "      and: _readRelationList(json['AND'], $className.fromJson),",
+      );
+      buffer.writeln(
+        "      or: _readRelationList(json['OR'], $className.fromJson),",
+      );
+      buffer.writeln(
+        "      not: _readRelation(json['NOT'], $className.fromJson),",
+      );
     }
     buffer.writeln('    );');
     buffer.writeln('  }');
@@ -1248,6 +1270,15 @@ final class TypedClientWriter {
           "      '${_escapeString(field.field.name)}': $valueExpression,",
         );
       }
+    }
+    if (includeLogicalWhere) {
+      buffer.writeln(
+        "      if (and != null) 'AND': and!.map((value) => value.toJson()).toList(growable: false),",
+      );
+      buffer.writeln(
+        "      if (or != null) 'OR': or!.map((value) => value.toJson()).toList(growable: false),",
+      );
+      buffer.writeln("      if (not != null) 'NOT': not!.toJson(),");
     }
     buffer.writeln('    };');
     buffer.writeln('  }');
