@@ -839,7 +839,7 @@ class ModelDelegate {
     );
 
     return switch (strategy) {
-      IncludeExecutionStrategy.singleQuery => _resolveIncludeRowsMultiQuery(
+      IncludeExecutionStrategy.singleQuery => _resolveIncludeRowsSingleQuery(
         rows: rows,
         include: include,
         depth: depth,
@@ -850,6 +850,75 @@ class ModelDelegate {
         depth: depth,
       ),
     };
+  }
+
+  Future<List<JsonMap>> _resolveIncludeRowsSingleQuery({
+    required List<JsonMap> rows,
+    required Map<String, IncludeSpec> include,
+    required int depth,
+  }) async {
+    var hydrated = rows;
+
+    for (final entry in include.entries) {
+      final relationName = entry.key;
+      final relationInclude = entry.value;
+      final relation = _resolveRelation(
+        model: modelName,
+        relationName: relationName,
+      );
+      final relatedDelegate = _client.model(relation.relatedModel);
+      _validateIncludePagination(include: relationInclude);
+
+      final relatedRows = await _loadRelationRowsSingleQuery(
+        relatedDelegate: relatedDelegate,
+        relation: relation,
+        relationInclude: relationInclude,
+        depth: depth,
+      );
+      final rowsByRelationKey = _groupRowsByRelationFields(
+        rows: relatedRows,
+        fields: relation.targetFields,
+      );
+
+      final nextRows = <JsonMap>[];
+      for (final row in hydrated) {
+        final relationWhere = _buildRelationWhere(row: row, relation: relation);
+        if (relationWhere == null) {
+          final emptyValue = relation.cardinality == RelationCardinality.one
+              ? null
+              : const <JsonMap>[];
+          nextRows.add(_attachInclude(row, relationName, emptyValue));
+          continue;
+        }
+
+        final relationKey = _buildRelationMergeKeyFromRow(
+          row: relationWhere,
+          fields: relation.targetFields,
+        );
+        final matchedRows = relationKey == null
+            ? const <JsonMap>[]
+            : (rowsByRelationKey[relationKey] ?? const <JsonMap>[]);
+        final windowRows = _sliceRows(
+          rows: matchedRows,
+          skip: relationInclude.skip,
+          take: relationInclude.take,
+        );
+        final shapedRows = relatedDelegate._shapeRows(
+          windowRows,
+          select: relationInclude.select,
+          include: relationInclude.include,
+        );
+        final relationValue = relation.cardinality == RelationCardinality.one
+            ? _firstOrNull(shapedRows)
+            : shapedRows;
+
+        nextRows.add(_attachInclude(row, relationName, relationValue));
+      }
+
+      hydrated = nextRows;
+    }
+
+    return hydrated;
   }
 
   Future<List<JsonMap>> _resolveIncludeRowsMultiQuery({
@@ -951,6 +1020,147 @@ class ModelDelegate {
     }
 
     return where;
+  }
+
+  Future<List<JsonMap>> _loadRelationRowsSingleQuery({
+    required ModelDelegate relatedDelegate,
+    required ModelRelationContract relation,
+    required IncludeSpec relationInclude,
+    required int depth,
+  }) {
+    final baseWhere = _buildSingleQueryRelationBaseWhere(
+      includeWhere: relationInclude.where,
+      relation: relation,
+    );
+
+    return relatedDelegate._findManyInternal(
+      action: OrmAction.findMany,
+      where: baseWhere,
+      orderBy: relationInclude.orderBy,
+      select: _buildSingleQueryRelationSelect(
+        include: relationInclude,
+        relation: relation,
+      ),
+      include: relationInclude.include,
+      includeDepth: depth + 1,
+    );
+  }
+
+  JsonMap _buildSingleQueryRelationBaseWhere({
+    required JsonMap includeWhere,
+    required ModelRelationContract relation,
+  }) {
+    if (includeWhere.isEmpty) {
+      return const <String, Object?>{};
+    }
+
+    final targetFields = relation.targetFields.toSet();
+    final baseWhere = <String, Object?>{};
+    var removedTargetField = false;
+    for (final entry in includeWhere.entries) {
+      if (targetFields.contains(entry.key)) {
+        removedTargetField = true;
+        continue;
+      }
+      baseWhere[entry.key] = entry.value;
+    }
+
+    if (!removedTargetField) {
+      return includeWhere;
+    }
+
+    if (baseWhere.isEmpty) {
+      return const <String, Object?>{};
+    }
+    return baseWhere;
+  }
+
+  List<String> _buildSingleQueryRelationSelect({
+    required IncludeSpec include,
+    required ModelRelationContract relation,
+  }) {
+    if (include.select.isEmpty) {
+      return const <String>[];
+    }
+
+    final expanded = <String>{...include.select, ...relation.targetFields};
+    return expanded.toList(growable: false);
+  }
+
+  void _validateIncludePagination({required IncludeSpec include}) {
+    if (include.skip case final skip?) {
+      if (skip < 0) {
+        throw PlanInvalidPaginationException(key: 'skip', value: skip);
+      }
+    }
+    if (include.take case final take?) {
+      if (take < 0) {
+        throw PlanInvalidPaginationException(key: 'take', value: take);
+      }
+    }
+  }
+
+  Map<_RelationMergeKey, List<JsonMap>> _groupRowsByRelationFields({
+    required List<JsonMap> rows,
+    required List<String> fields,
+  }) {
+    final grouped = <_RelationMergeKey, List<JsonMap>>{};
+    for (final row in rows) {
+      final key = _buildRelationMergeKeyFromRow(row: row, fields: fields);
+      if (key == null) {
+        continue;
+      }
+      grouped.putIfAbsent(key, () => <JsonMap>[]).add(row);
+    }
+    return grouped;
+  }
+
+  _RelationMergeKey? _buildRelationMergeKeyFromRow({
+    required JsonMap row,
+    required List<String> fields,
+  }) {
+    final values = <Object?>[];
+    for (final field in fields) {
+      if (!row.containsKey(field)) {
+        return null;
+      }
+      final value = row[field];
+      if (value == null) {
+        return null;
+      }
+      values.add(value);
+    }
+
+    return _RelationMergeKey(values);
+  }
+
+  List<JsonMap> _sliceRows({
+    required List<JsonMap> rows,
+    required int? skip,
+    required int? take,
+  }) {
+    if (rows.isEmpty) {
+      return const <JsonMap>[];
+    }
+
+    var window = rows;
+    if (skip case final offset?) {
+      if (offset >= window.length) {
+        return const <JsonMap>[];
+      }
+      window = window.sublist(offset);
+    }
+
+    if (take case final limit?) {
+      if (limit == 0) {
+        return const <JsonMap>[];
+      }
+      if (limit < window.length) {
+        window = window.sublist(0, limit);
+      }
+    }
+
+    return List<JsonMap>.from(window, growable: false);
   }
 
   List<String> _expandSelectForInclude({
@@ -1348,6 +1558,28 @@ final class ModelQuery {
       ModelQuery._(_delegate, nextState);
 }
 
+@immutable
+final class _RelationMergeKey {
+  final List<Object?> parts;
+
+  _RelationMergeKey(List<Object?> values)
+    : parts = List<Object?>.unmodifiable(values);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! _RelationMergeKey) {
+      return false;
+    }
+    return _listEquals(parts, other.parts);
+  }
+
+  @override
+  int get hashCode => Object.hashAll(parts);
+}
+
 Map<String, String> _createModelAliases(OrmContract contract) {
   final aliases = <String, String>{};
 
@@ -1436,6 +1668,21 @@ T? _firstOrNull<T>(List<T> values) {
     return null;
   }
   return values.first;
+}
+
+bool _listEquals(List<Object?> left, List<Object?> right) {
+  if (identical(left, right)) {
+    return true;
+  }
+  if (left.length != right.length) {
+    return false;
+  }
+  for (var index = 0; index < left.length; index++) {
+    if (left[index] != right[index]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 String _lowercaseFirst(String value) {
