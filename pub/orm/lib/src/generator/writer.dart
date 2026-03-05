@@ -613,6 +613,292 @@ final class TypedClientWriter {
     buffer.writeln('}');
     buffer.writeln();
 
+    buffer.writeln('class ${model.groupByHavingConditionClassName} {');
+    buffer.writeln('  final Object? value;');
+    buffer.writeln();
+    buffer.writeln(
+      '  const ${model.groupByHavingConditionClassName}._(this.value);',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} equals(Object? value) {',
+    );
+    buffer.writeln(
+      '    return ${model.groupByHavingConditionClassName}._(value);',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} notEquals(Object? value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'not': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} not(${model.groupByHavingConditionClassName} condition) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'not': condition.toJsonValue()});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} inList(List<Object?> values) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'in': values});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} notInList(List<Object?> values) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'notIn': values});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} contains(String value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'contains': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} startsWith(String value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'startsWith': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} endsWith(String value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'endsWith': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} gt(Object? value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'gt': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} gte(Object? value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'gte': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} lt(Object? value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'lt': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingConditionClassName} lte(Object? value) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'lte': value});",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Object? toJsonValue() => value;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class ${model.groupByHavingClassName} {');
+    buffer.writeln('  final Map<String, Object?> value;');
+    buffer.writeln();
+    buffer.writeln(
+      '  const ${model.groupByHavingClassName}() : value = const <String, Object?>{};',
+    );
+    buffer.writeln();
+    buffer.writeln('  const ${model.groupByHavingClassName}._(this.value);');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingClassName} raw(Map<String, Object?> value) {',
+    );
+    buffer.writeln(
+      '    return ${model.groupByHavingClassName}._(Map<String, Object?>.from(value));',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingClassName} and(List<${model.groupByHavingClassName}> clauses) {',
+    );
+    buffer.writeln('    return ${model.groupByHavingClassName}._(');
+    buffer.writeln('      <String, Object?>{');
+    buffer.writeln(
+      "        'AND': clauses.map((clause) => clause.toJson()).toList(growable: false),",
+    );
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingClassName} or(List<${model.groupByHavingClassName}> clauses) {',
+    );
+    buffer.writeln('    return ${model.groupByHavingClassName}._(');
+    buffer.writeln('      <String, Object?>{');
+    buffer.writeln(
+      "        'OR': clauses.map((clause) => clause.toJson()).toList(growable: false),",
+    );
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingClassName} not(List<${model.groupByHavingClassName}> clauses) {',
+    );
+    buffer.writeln('    return ${model.groupByHavingClassName}._(');
+    buffer.writeln('      <String, Object?>{');
+    buffer.writeln(
+      "        'NOT': clauses.map((clause) => clause.toJson()).toList(growable: false),",
+    );
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingClassName} by('
+      '${model.distinctClassName} field, '
+      '${model.groupByHavingConditionClassName} condition'
+      ') {',
+    );
+    buffer.writeln('    return ${model.groupByHavingClassName}._(');
+    buffer.writeln(
+      '      <String, Object?>{field.value: condition.toJsonValue()},',
+    );
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingClassName} count('
+      '${model.distinctClassName} field, '
+      '${model.groupByHavingConditionClassName} condition'
+      ') {',
+    );
+    buffer.writeln('    return ${model.groupByHavingClassName}._(');
+    buffer.writeln('      <String, Object?>{');
+    buffer.writeln(
+      "        '_count': <String, Object?>{field.value: condition.toJsonValue()},",
+    );
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByHavingClassName} countAll('
+      '${model.groupByHavingConditionClassName} condition'
+      ') {',
+    );
+    buffer.writeln('    return ${model.groupByHavingClassName}._(');
+    buffer.writeln('      <String, Object?>{');
+    buffer.writeln(
+      "        '_count': <String, Object?>{'all': condition.toJsonValue()},",
+    );
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    for (final bucket in const <String>['min', 'max', 'sum', 'avg']) {
+      buffer.writeln(
+        '  static ${model.groupByHavingClassName} $bucket('
+        '${model.distinctClassName} field, '
+        '${model.groupByHavingConditionClassName} condition'
+        ') {',
+      );
+      buffer.writeln('    return ${model.groupByHavingClassName}._(');
+      buffer.writeln('      <String, Object?>{');
+      buffer.writeln(
+        "        '_$bucket': <String, Object?>{field.value: condition.toJsonValue()},",
+      );
+      buffer.writeln('      },');
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
+    }
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} merge(${model.groupByHavingClassName} other) {',
+    );
+    buffer.writeln(
+      '    return ${model.groupByHavingClassName}._(<String, Object?>{...value, ...other.value});',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Map<String, Object?> toJson() {');
+    buffer.writeln('    return Map<String, Object?>.from(value);');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  bool get isEmpty => value.isEmpty;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class ${model.groupByOrderByClassName} {');
+    buffer.writeln('  final OrmOrderBy value;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.groupByOrderByClassName}._(this.value);');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByOrderByClassName} by('
+      '${model.distinctClassName} field, '
+      '{SortOrder order = SortOrder.asc}'
+      ') {',
+    );
+    buffer.writeln(
+      '    return ${model.groupByOrderByClassName}._(OrmOrderBy(field.value, order: order));',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByOrderByClassName} count('
+      '${model.distinctClassName} field, '
+      '{SortOrder order = SortOrder.asc}'
+      ') {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByOrderByClassName}._(OrmOrderBy('_count.\${field.value}', order: order));",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  static ${model.groupByOrderByClassName} countAll({SortOrder order = SortOrder.asc}) {',
+    );
+    buffer.writeln(
+      "    return ${model.groupByOrderByClassName}._(OrmOrderBy('_count.all', order: order));",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    for (final bucket in const <String>['min', 'max', 'sum', 'avg']) {
+      buffer.writeln(
+        '  static ${model.groupByOrderByClassName} $bucket('
+        '${model.distinctClassName} field, '
+        '{SortOrder order = SortOrder.asc}'
+        ') {',
+      );
+      buffer.writeln(
+        "    return ${model.groupByOrderByClassName}._(OrmOrderBy('_$bucket.\${field.value}', order: order));",
+      );
+      buffer.writeln('  }');
+      buffer.writeln();
+    }
+    buffer.writeln('}');
+    buffer.writeln();
+
     buffer.writeln('class ${model.selectClassName} {');
     for (final field in scalarFields) {
       final memberName = _toLowerCamelIdentifier(field.name, fallback: 'field');
@@ -1099,6 +1385,12 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
     );
+    buffer.writeln(
+      '    List<${model.groupByOrderByClassName}> groupByOrderBy = const <${model.groupByOrderByClassName}>[],',
+    );
+    buffer.writeln(
+      '    ${model.groupByHavingClassName} typedHaving = const ${model.groupByHavingClassName}(),',
+    );
     buffer.writeln('    bool countAll = false,');
     buffer.writeln(
       '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
@@ -1116,15 +1408,22 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
+    buffer.writeln('    final runtimeOrderBy = groupByOrderBy.isNotEmpty');
     buffer.writeln(
-      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+      '        ? groupByOrderBy.map((entry) => entry.value).toList(growable: false)',
+    );
+    buffer.writeln(
+      '        : orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeHaving = typedHaving.isEmpty ? having.toJson() : typedHaving.toJson();',
     );
     buffer.writeln('    return _delegate.groupBy(');
     buffer.writeln(
       '      by: by.map((entry) => entry.value).toList(growable: false),',
     );
     buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      having: having.toJson(),');
+    buffer.writeln('      having: runtimeHaving,');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
     buffer.writeln('      orderBy: runtimeOrderBy,');
@@ -1411,6 +1710,12 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.whereInputClassName} having = const ${model.whereInputClassName}(),',
     );
+    buffer.writeln(
+      '    ${model.groupByHavingClassName} typedHaving = const ${model.groupByHavingClassName}(),',
+    );
+    buffer.writeln(
+      '    List<${model.groupByOrderByClassName}> groupByOrderBy = const <${model.groupByOrderByClassName}>[],',
+    );
     buffer.writeln('    bool countAll = false,');
     buffer.writeln(
       '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
@@ -1431,10 +1736,12 @@ final class TypedClientWriter {
     buffer.writeln('    return _delegate.groupBy(');
     buffer.writeln('      by: by,');
     buffer.writeln('      where: _where,');
-    buffer.writeln('      having: having.toJson(),');
+    buffer.writeln('      having: having,');
+    buffer.writeln('      typedHaving: typedHaving,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      groupByOrderBy: groupByOrderBy,');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln('      count: count,');
     buffer.writeln('      min: min,');
@@ -2407,6 +2714,13 @@ final class _ResolvedModel {
   String get updateInputClassName => '${classBaseName}UpdateInput';
 
   String get orderByClassName => '${classBaseName}OrderBy';
+
+  String get groupByOrderByClassName => '${classBaseName}GroupByOrderBy';
+
+  String get groupByHavingClassName => '${classBaseName}GroupByHaving';
+
+  String get groupByHavingConditionClassName =>
+      '${classBaseName}GroupByHavingCondition';
 
   String get selectClassName => '${classBaseName}Select';
 

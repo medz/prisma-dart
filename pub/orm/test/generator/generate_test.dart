@@ -316,35 +316,35 @@ void main() {
         );
         expect(
           RegExp(
-            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,',
+            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,[\s\S]*?UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected generated delegate/query to expose typed groupBy helper.',
+              'Expected generated delegate/query to expose groupBy helper with row-level having.',
         );
         expect(
           RegExp(
-            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),\s*UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.groupBy(...) to expose where + typed having in signature.',
+              'Expected UserDelegate.groupBy(...) to expose typedHaving parameter.',
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?having:\s*having\.toJson\(\),',
+            r'class\s+UserDelegate\s*\{[\s\S]*?final\s+runtimeHaving\s*=\s*typedHaving\.isEmpty\s*\?\s*having\.toJson\(\)\s*:\s*typedHaving\.toJson\(\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.groupBy(...) to serialize having to runtime JSON.',
+              'Expected UserDelegate.groupBy(...) to resolve typedHaving before runtime call.',
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),[\s\S]*?having:\s*having\.toJson\(\),',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?List<UserGroupByOrderBy>\s+groupByOrderBy\s*=\s*const\s+<UserGroupByOrderBy>\[\],[\s\S]*?typedHaving:\s*typedHaving,[\s\S]*?groupByOrderBy:\s*groupByOrderBy,',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.groupBy(...) to expose and forward typed having.',
+              'Expected UserQuery.groupBy(...) to expose and forward typed groupBy helpers.',
         );
         expect(
           RegExp(
@@ -353,6 +353,26 @@ void main() {
           isTrue,
           reason:
               'Expected UserDelegate.query(...) to keep only row-level where (no having parameter).',
+        );
+        expect(
+          RegExp(
+            r'\bclass UserGroupByHavingCondition\b',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed groupBy having condition helper.',
+        );
+        expect(
+          RegExp(r'\bclass UserGroupByHaving\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed groupBy having helper.',
+        );
+        expect(
+          RegExp(r'\bclass UserGroupByOrderBy\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed groupBy orderBy helper.',
         );
         expect(
           RegExp(
