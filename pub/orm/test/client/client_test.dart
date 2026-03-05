@@ -949,6 +949,23 @@ void main() {
       await client.disconnect();
     });
 
+    test('withConnection executes callback and always releases connection', () async {
+      final engine = _TrackingConnectionEngine();
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      await client.withConnection((connection) async {
+        final rows = await connection.model('User').findMany();
+        expect(rows, isEmpty);
+      });
+
+      expect(engine.connectionCount, 1);
+      expect(engine.connectionExecutePlans, hasLength(1));
+      expect(engine.connectionExecutePlans.single.action, OrmAction.findMany);
+      expect(engine.releaseCount, 1);
+      await client.disconnect();
+    });
+
     test('withTransaction commits on success', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -965,6 +982,26 @@ void main() {
           .model('User')
           .findUnique(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
+      await client.disconnect();
+    });
+
+    test('withTransaction success branch commits and releases connection', () async {
+      final engine = _TrackingConnectionEngine();
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      await client.withTransaction((transaction) async {
+        final rows = await transaction.model('User').findMany();
+        expect(rows, isEmpty);
+      });
+
+      expect(engine.connectionCount, 1);
+      expect(engine.transactionCount, 1);
+      expect(engine.transactionExecutePlans, hasLength(1));
+      expect(engine.transactionExecutePlans.single.action, OrmAction.findMany);
+      expect(engine.commitCount, 1);
+      expect(engine.rollbackCount, 0);
+      expect(engine.releaseCount, 1);
       await client.disconnect();
     });
 
@@ -990,6 +1027,47 @@ void main() {
       expect(row, isNull);
       await client.disconnect();
     });
+
+    test('withTransaction error branch rolls back and releases connection', () async {
+      final engine = _TrackingConnectionEngine();
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      await expectLater(
+        () => client.withTransaction((transaction) async {
+          await transaction.model('User').findMany();
+          throw StateError('stop');
+        }),
+        throwsA(isA<StateError>()),
+      );
+
+      expect(engine.connectionCount, 1);
+      expect(engine.transactionCount, 1);
+      expect(engine.transactionExecutePlans, hasLength(1));
+      expect(engine.transactionExecutePlans.single.action, OrmAction.findMany);
+      expect(engine.commitCount, 0);
+      expect(engine.rollbackCount, 1);
+      expect(engine.releaseCount, 1);
+      await client.disconnect();
+    });
+
+    test(
+      'throws RuntimeConnectionNotSupportedException when engine has no connection support',
+      () async {
+        final client = OrmClient(contract: contract, engine: _ThrowingEngine());
+        await client.connect();
+
+        await expectLater(
+          client.withConnection((_) async => null),
+          throwsA(isA<RuntimeConnectionNotSupportedException>()),
+        );
+        await expectLater(
+          client.withTransaction((_) async => null),
+          throwsA(isA<RuntimeConnectionNotSupportedException>()),
+        );
+        await client.disconnect();
+      },
+    );
 
     test('rollback keeps original data in transaction API', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -1479,6 +1557,79 @@ final class _NoMutationReturnEngine implements OrmEngine {
 
   @override
   Future<void> open() => inner.open();
+}
+
+final class _TrackingConnectionEngine
+    implements OrmEngine, ConnectionCapableEngine {
+  var connectionCount = 0;
+  var transactionCount = 0;
+  var releaseCount = 0;
+  var commitCount = 0;
+  var rollbackCount = 0;
+  final List<OrmPlan> connectionExecutePlans = <OrmPlan>[];
+  final List<OrmPlan> transactionExecutePlans = <OrmPlan>[];
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<EngineConnection> connection() async {
+    connectionCount += 1;
+    return _TrackingEngineConnection(this);
+  }
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    return const EngineResponse(data: <JsonMap>[]);
+  }
+
+  @override
+  Future<void> open() async {}
+}
+
+final class _TrackingEngineConnection implements EngineConnection {
+  final _TrackingConnectionEngine _engine;
+
+  _TrackingEngineConnection(this._engine);
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    _engine.connectionExecutePlans.add(plan);
+    return const EngineResponse(data: <JsonMap>[]);
+  }
+
+  @override
+  Future<void> release() async {
+    _engine.releaseCount += 1;
+  }
+
+  @override
+  Future<EngineTransaction> transaction() async {
+    _engine.transactionCount += 1;
+    return _TrackingEngineTransaction(_engine);
+  }
+}
+
+final class _TrackingEngineTransaction implements EngineTransaction {
+  final _TrackingConnectionEngine _engine;
+
+  _TrackingEngineTransaction(this._engine);
+
+  @override
+  Future<void> commit() async {
+    _engine.commitCount += 1;
+  }
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    _engine.transactionExecutePlans.add(plan);
+    return const EngineResponse(data: <JsonMap>[]);
+  }
+
+  @override
+  Future<void> rollback() async {
+    _engine.rollbackCount += 1;
+  }
 }
 
 final class _EmptyNamePlugin extends OrmPlugin {
