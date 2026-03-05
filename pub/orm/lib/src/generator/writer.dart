@@ -113,6 +113,9 @@ final class TypedClientWriter {
     buffer.writeln('  final String? gte;');
     buffer.writeln('  final String? lt;');
     buffer.writeln('  final String? lte;');
+    buffer.writeln('  final String? contains;');
+    buffer.writeln('  final String? startsWith;');
+    buffer.writeln('  final String? endsWith;');
     buffer.writeln();
     buffer.writeln('  const StringWhereFilter({');
     buffer.writeln('    this.equals,');
@@ -123,6 +126,9 @@ final class TypedClientWriter {
     buffer.writeln('    this.gte,');
     buffer.writeln('    this.lt,');
     buffer.writeln('    this.lte,');
+    buffer.writeln('    this.contains,');
+    buffer.writeln('    this.startsWith,');
+    buffer.writeln('    this.endsWith,');
     buffer.writeln('  });');
     buffer.writeln();
     buffer.writeln(
@@ -141,6 +147,9 @@ final class TypedClientWriter {
     buffer.writeln("        gte: _readString(value['gte']),");
     buffer.writeln("        lt: _readString(value['lt']),");
     buffer.writeln("        lte: _readString(value['lte']),");
+    buffer.writeln("        contains: _readString(value['contains']),");
+    buffer.writeln("        startsWith: _readString(value['startsWith']),");
+    buffer.writeln("        endsWith: _readString(value['endsWith']),");
     buffer.writeln('      );');
     buffer.writeln('    }');
     buffer.writeln('    return const StringWhereFilter();');
@@ -151,7 +160,7 @@ final class TypedClientWriter {
     buffer.writeln('      return null;');
     buffer.writeln('    }');
     buffer.writeln(
-      '    if (equals != null && not == null && inValues == null && notIn == null && gt == null && gte == null && lt == null && lte == null) {',
+      '    if (equals != null && not == null && inValues == null && notIn == null && gt == null && gte == null && lt == null && lte == null && contains == null && startsWith == null && endsWith == null) {',
     );
     buffer.writeln('      return equals;');
     buffer.writeln('    }');
@@ -164,6 +173,9 @@ final class TypedClientWriter {
     buffer.writeln("      if (gte != null) 'gte': gte,");
     buffer.writeln("      if (lt != null) 'lt': lt,");
     buffer.writeln("      if (lte != null) 'lte': lte,");
+    buffer.writeln("      if (contains != null) 'contains': contains,");
+    buffer.writeln("      if (startsWith != null) 'startsWith': startsWith,");
+    buffer.writeln("      if (endsWith != null) 'endsWith': endsWith,");
     buffer.writeln('    };');
     buffer.writeln('  }');
     buffer.writeln();
@@ -175,7 +187,10 @@ final class TypedClientWriter {
     buffer.writeln('      gt == null &&');
     buffer.writeln('      gte == null &&');
     buffer.writeln('      lt == null &&');
-    buffer.writeln('      lte == null;');
+    buffer.writeln('      lte == null &&');
+    buffer.writeln('      contains == null &&');
+    buffer.writeln('      startsWith == null &&');
+    buffer.writeln('      endsWith == null;');
     buffer.writeln('}');
     buffer.writeln();
 

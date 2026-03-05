@@ -8,6 +8,9 @@ const List<String> _whereOperatorOrder = <String>[
   'not',
   'in',
   'notIn',
+  'contains',
+  'startsWith',
+  'endsWith',
   'gt',
   'gte',
   'lt',
@@ -19,6 +22,9 @@ const Set<String> _whereOperators = <String>{
   'not',
   'in',
   'notIn',
+  'contains',
+  'startsWith',
+  'endsWith',
   'gt',
   'gte',
   'lt',
@@ -195,6 +201,9 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
         'not' => actualValue != operand,
         'in' => _matchIn(actualValue, operand),
         'notIn' => _matchNotIn(actualValue, operand),
+        'contains' => _matchStringOperation(actualValue, operand, operator),
+        'startsWith' => _matchStringOperation(actualValue, operand, operator),
+        'endsWith' => _matchStringOperation(actualValue, operand, operator),
         'gt' => _matchComparison(actualValue, operand, operator),
         'gte' => _matchComparison(actualValue, operand, operator),
         'lt' => _matchComparison(actualValue, operand, operator),
@@ -247,6 +256,23 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
       return true;
     }
     return !values.contains(actualValue);
+  }
+
+  bool _matchStringOperation(
+    Object? actualValue,
+    Object? operand,
+    String operator,
+  ) {
+    if (actualValue is! String || operand is! String) {
+      return false;
+    }
+
+    return switch (operator) {
+      'contains' => actualValue.contains(operand),
+      'startsWith' => actualValue.startsWith(operand),
+      'endsWith' => actualValue.endsWith(operand),
+      _ => false,
+    };
   }
 
   List<Object?> _coerceListOperand(Object? operand) {

@@ -85,11 +85,40 @@ void main() {
     ]);
   });
 
+  test('lowers string operators with LIKE and escaped patterns', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = OrmPlan(
+      contractHash: contract.hash,
+      model: 'User',
+      action: OrmAction.findMany,
+      where: <String, Object?>{
+        'email': <String, Object?>{
+          'contains': 'a%b',
+          'startsWith': 'x_y',
+          'endsWith': 'tail\\',
+        },
+      },
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      "SELECT * FROM \"users\" WHERE "
+      "\"email\" LIKE ? ESCAPE '\\' AND "
+      "\"email\" LIKE ? ESCAPE '\\' AND "
+      "\"email\" LIKE ? ESCAPE '\\'",
+    );
+    expect(statement.parameters, <Object?>['%a\\%b%', 'x\\_y%', '%tail\\\\']);
+  });
+
   test(
     'keeps scalar where compatibility and does not misclassify normal maps',
     () {
       final adapter = SqlAdapter(contract: contract);
-      final jsonPayload = <String, Object?>{'profile': 'standard'};
+      final jsonPayload = <String, Object?>{
+        'contains': 'literal',
+        'profile': 'standard',
+      };
       final plan = OrmPlan(
         contractHash: contract.hash,
         model: 'User',
@@ -364,6 +393,49 @@ void main() {
       'wire:b@example.com',
       'wire:m@example.com',
       'u9',
+    ]);
+  });
+
+  test('encodes string where operators via codec resolver', () {
+    final codecRegistry = SqlCodecRegistry().withField(
+      model: 'User',
+      field: 'email',
+      codec: SqlLambdaFieldCodec(
+        encode: (value) => value == null ? null : 'wire:$value',
+        decode: (value) => value,
+      ),
+    );
+    final adapter = SqlAdapter(
+      contract: contract,
+      codecResolver: codecRegistry,
+    );
+
+    final statement = adapter.lower(
+      OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.findMany,
+        where: <String, Object?>{
+          'email': <String, Object?>{
+            'contains': 'example',
+            'startsWith': 'head',
+            'endsWith': 'tail',
+          },
+        },
+      ),
+    );
+
+    expect(
+      statement.text,
+      "SELECT * FROM \"users\" WHERE "
+      "\"email\" LIKE ? ESCAPE '\\' AND "
+      "\"email\" LIKE ? ESCAPE '\\' AND "
+      "\"email\" LIKE ? ESCAPE '\\'",
+    );
+    expect(statement.parameters, <Object?>[
+      '%wire:example%',
+      'wire:head%',
+      '%wire:tail',
     ]);
   });
 

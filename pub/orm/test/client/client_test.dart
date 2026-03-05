@@ -280,6 +280,62 @@ void main() {
     });
 
     test(
+      'supports string where operators contains/startsWith/endsWith in memory engine',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        final users = client.model('User');
+
+        await users.create(
+          data: <String, Object?>{'id': 'u1', 'email': 'alpha@example.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u2', 'email': 'beta@example.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u3', 'email': 'alphonse@example.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u4', 'email': 'gamma@sample.com'},
+        );
+
+        final containsRows = await users.findMany(
+          where: <String, Object?>{
+            'email': <String, Object?>{'contains': 'example.com'},
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          containsRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u1', 'u2', 'u3'],
+        );
+
+        final startsWithRows = await users.findMany(
+          where: <String, Object?>{
+            'email': <String, Object?>{'startsWith': 'alph'},
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          startsWithRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u1', 'u3'],
+        );
+
+        final endsWithRows = await users.findMany(
+          where: <String, Object?>{
+            'email': <String, Object?>{'endsWith': 'sample.com'},
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          endsWithRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u4'],
+        );
+        await client.disconnect();
+      },
+    );
+
+    test(
       'supports select projection for direct read/mutation methods',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());

@@ -12,6 +12,9 @@ const List<String> _whereOperatorOrder = <String>[
   'not',
   'in',
   'notIn',
+  'contains',
+  'startsWith',
+  'endsWith',
   'gt',
   'gte',
   'lt',
@@ -23,6 +26,9 @@ const Set<String> _whereOperators = <String>{
   'not',
   'in',
   'notIn',
+  'contains',
+  'startsWith',
+  'endsWith',
   'gt',
   'gte',
   'lt',
@@ -310,6 +316,19 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
         params.add(
           _encodeWhereValue(model: model, field: field, value: operand),
         );
+      case 'contains' || 'startsWith' || 'endsWith':
+        final likePattern = _encodeLikePattern(
+          model: model,
+          field: field,
+          operator: operator,
+          operand: operand,
+        );
+        if (likePattern == null) {
+          predicates.add('1 = 0');
+          return;
+        }
+        predicates.add("$idField LIKE ? ESCAPE '\\'");
+        params.add(likePattern);
       case 'gte':
         predicates.add('$idField >= ?');
         params.add(
@@ -361,6 +380,37 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required Object? value,
   }) {
     return _encodeValue(model: model, field: field, value: value);
+  }
+
+  String? _encodeLikePattern({
+    required String model,
+    required String field,
+    required String operator,
+    required Object? operand,
+  }) {
+    final encodedValue = _encodeWhereValue(
+      model: model,
+      field: field,
+      value: operand,
+    );
+    if (encodedValue is! String) {
+      return null;
+    }
+
+    final escaped = _escapeLikePattern(encodedValue);
+    return switch (operator) {
+      'contains' => '%$escaped%',
+      'startsWith' => '$escaped%',
+      'endsWith' => '%$escaped',
+      _ => null,
+    };
+  }
+
+  String _escapeLikePattern(String value) {
+    return value
+        .replaceAll('\\', '\\\\')
+        .replaceAll('%', '\\%')
+        .replaceAll('_', '\\_');
   }
 
   String _buildOrderByClause(List<OrmOrderBy> orderBy) {

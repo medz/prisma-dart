@@ -230,6 +230,30 @@ void main() {
           reason: 'Expected StringWhereFilter to contain gt operator marker.',
         );
         expect(
+          RegExp(
+            r"class\s+StringWhereFilter\s*\{[\s\S]*?value\['contains'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected StringWhereFilter to contain contains operator marker.',
+        );
+        expect(
+          RegExp(
+            r"class\s+StringWhereFilter\s*\{[\s\S]*?value\['startsWith'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected StringWhereFilter to contain startsWith operator marker.',
+        );
+        expect(
+          RegExp(
+            r"class\s+StringWhereFilter\s*\{[\s\S]*?value\['endsWith'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected StringWhereFilter to contain endsWith operator marker.',
+        );
+        expect(
           RegExp(r'\bclass IntWhereFilter\b').hasMatch(generatedSource),
           isTrue,
           reason: 'Missing int where filter class in generated source.',
