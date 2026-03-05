@@ -1377,14 +1377,8 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
-    buffer.writeln(
-      '    ${model.whereInputClassName} having = const ${model.whereInputClassName}(),',
-    );
     buffer.writeln('    int? skip,');
     buffer.writeln('    int? take,');
-    buffer.writeln(
-      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
-    );
     buffer.writeln(
       '    List<${model.groupByOrderByClassName}> groupByOrderBy = const <${model.groupByOrderByClassName}>[],',
     );
@@ -1408,16 +1402,10 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    final runtimeOrderBy = groupByOrderBy.isNotEmpty');
     buffer.writeln(
-      '        ? groupByOrderBy.map((entry) => entry.value).toList(growable: false)',
+      '    final runtimeOrderBy = groupByOrderBy.map((entry) => entry.value).toList(growable: false);',
     );
-    buffer.writeln(
-      '        : orderBy.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final runtimeHaving = typedHaving.isEmpty ? having.toJson() : typedHaving.toJson();',
-    );
+    buffer.writeln('    final runtimeHaving = typedHaving.toJson();');
     buffer.writeln('    return _delegate.groupBy(');
     buffer.writeln(
       '      by: by.map((entry) => entry.value).toList(growable: false),',
@@ -1708,9 +1696,6 @@ final class TypedClientWriter {
     buffer.writeln('  Future<List<Map<String, Object?>>> groupBy({');
     buffer.writeln('    required List<${model.distinctClassName}> by,');
     buffer.writeln(
-      '    ${model.whereInputClassName} having = const ${model.whereInputClassName}(),',
-    );
-    buffer.writeln(
       '    ${model.groupByHavingClassName} typedHaving = const ${model.groupByHavingClassName}(),',
     );
     buffer.writeln(
@@ -1736,11 +1721,9 @@ final class TypedClientWriter {
     buffer.writeln('    return _delegate.groupBy(');
     buffer.writeln('      by: by,');
     buffer.writeln('      where: _where,');
-    buffer.writeln('      having: having,');
     buffer.writeln('      typedHaving: typedHaving,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _orderBy,');
     buffer.writeln('      groupByOrderBy: groupByOrderBy,');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln('      count: count,');

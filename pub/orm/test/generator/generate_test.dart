@@ -316,11 +316,19 @@ void main() {
         );
         expect(
           RegExp(
-            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,[\s\S]*?UserWhereInput\s+having\s*=\s*const\s+UserWhereInput\(\),',
+            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected generated delegate/query to expose groupBy helper with row-level having.',
+              'Expected generated delegate/query to expose typed groupBy helper.',
+        );
+        expect(
+          generatedSource.contains(
+            'UserWhereInput having = const UserWhereInput()',
+          ),
+          isFalse,
+          reason:
+              'Expected generated groupBy surfaces to remove row-level having parameter.',
         );
         expect(
           RegExp(
@@ -332,11 +340,11 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?final\s+runtimeHaving\s*=\s*typedHaving\.isEmpty\s*\?\s*having\.toJson\(\)\s*:\s*typedHaving\.toJson\(\);',
+            r'class\s+UserDelegate\s*\{[\s\S]*?final\s+runtimeHaving\s*=\s*typedHaving\.toJson\(\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.groupBy(...) to resolve typedHaving before runtime call.',
+              'Expected UserDelegate.groupBy(...) to resolve runtime having from typedHaving only.',
         );
         expect(
           RegExp(
@@ -345,6 +353,14 @@ void main() {
           isTrue,
           reason:
               'Expected UserQuery.groupBy(...) to expose and forward typed groupBy helpers.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?orderBy:\s*_orderBy,',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserQuery.groupBy(...) to stop forwarding query orderBy state.',
         );
         expect(
           RegExp(
