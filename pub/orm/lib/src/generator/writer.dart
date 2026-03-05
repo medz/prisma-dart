@@ -1043,6 +1043,107 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<Map<String, Object?>> aggregate({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    bool countAll = false,');
+    buffer.writeln(
+      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return _delegate.aggregate(');
+    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('      countAll: countAll,');
+    buffer.writeln(
+      '      count: count.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      min: min.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      max: max.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<Map<String, Object?>>> groupBy({');
+    buffer.writeln('    required List<${model.distinctClassName}> by,');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln('    bool countAll = false,');
+    buffer.writeln(
+      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln('    return _delegate.groupBy(');
+    buffer.writeln(
+      '      by: by.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('      countAll: countAll,');
+    buffer.writeln(
+      '      count: count.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      min: min.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      max: max.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Stream<${model.dataClassName}> stream({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
@@ -1267,6 +1368,71 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<Map<String, Object?>> aggregate({');
+    buffer.writeln('    bool countAll = false,');
+    buffer.writeln(
+      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return _delegate.aggregate(');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      countAll: countAll,');
+    buffer.writeln('      count: count,');
+    buffer.writeln('      min: min,');
+    buffer.writeln('      max: max,');
+    buffer.writeln('      sum: sum,');
+    buffer.writeln('      avg: avg,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<Map<String, Object?>>> groupBy({');
+    buffer.writeln('    required List<${model.distinctClassName}> by,');
+    buffer.writeln('    bool countAll = false,');
+    buffer.writeln(
+      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return _delegate.groupBy(');
+    buffer.writeln('      by: by,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      countAll: countAll,');
+    buffer.writeln('      count: count,');
+    buffer.writeln('      min: min,');
+    buffer.writeln('      max: max,');
+    buffer.writeln('      sum: sum,');
+    buffer.writeln('      avg: avg,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();

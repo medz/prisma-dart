@@ -308,6 +308,22 @@ void main() {
         );
         expect(
           RegExp(
+            r'Future<Map<String,\s*Object\?>>\s+aggregate\(\{',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate/query to expose aggregate helper.',
+        );
+        expect(
+          RegExp(
+            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate/query to expose typed groupBy helper.',
+        );
+        expect(
+          RegExp(
             r'Future<List<UserData>>\s+createMany\(\{\s*required\s+List<UserCreateInput>\s+data,',
           ).hasMatch(generatedSource),
           isTrue,

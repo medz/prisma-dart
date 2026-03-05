@@ -438,6 +438,147 @@ class ModelDelegate {
     return row != null;
   }
 
+  Future<JsonMap> aggregate({
+    JsonMap where = const <String, Object?>{},
+    bool countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) async {
+    _assertKnownAggregateFields(fields: count, source: 'aggregate.count');
+    _assertKnownAggregateFields(fields: min, source: 'aggregate.min');
+    _assertKnownAggregateFields(fields: max, source: 'aggregate.max');
+    _assertKnownAggregateFields(fields: sum, source: 'aggregate.sum');
+    _assertKnownAggregateFields(fields: avg, source: 'aggregate.avg');
+
+    final rows = await _findManyInternal(
+      action: OrmAction.findMany,
+      where: where,
+      select: _buildAggregateSelect(
+        count: count,
+        min: min,
+        max: max,
+        sum: sum,
+        avg: avg,
+      ),
+      includeDepth: 0,
+    );
+
+    return _buildAggregateResult(
+      rows: rows,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    );
+  }
+
+  Future<List<JsonMap>> groupBy({
+    required List<String> by,
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    bool countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) async {
+    if (by.isEmpty) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_FIELDS_EMPTY',
+        'GroupBy requires at least one field in by.',
+        details: <String, Object?>{'model': modelName},
+      );
+    }
+
+    _assertKnownAggregateFields(fields: by, source: 'groupBy.by');
+    _assertKnownAggregateFields(fields: count, source: 'groupBy.count');
+    _assertKnownAggregateFields(fields: min, source: 'groupBy.min');
+    _assertKnownAggregateFields(fields: max, source: 'groupBy.max');
+    _assertKnownAggregateFields(fields: sum, source: 'groupBy.sum');
+    _assertKnownAggregateFields(fields: avg, source: 'groupBy.avg');
+
+    final bySet = by.toSet();
+    for (final clause in orderBy) {
+      if (bySet.contains(clause.field)) {
+        continue;
+      }
+      throw runtimeError(
+        'PLAN.GROUP_BY_ORDER_BY_FIELD_INVALID',
+        'GroupBy orderBy fields must be included in by.',
+        details: <String, Object?>{
+          'model': modelName,
+          'field': clause.field,
+          'by': by.toList(growable: false),
+        },
+      );
+    }
+
+    final rows = await _findManyInternal(
+      action: OrmAction.findMany,
+      where: where,
+      select: _buildAggregateSelect(
+        count: by.followedBy(count).toList(growable: false),
+        min: min,
+        max: max,
+        sum: sum,
+        avg: avg,
+      ),
+      includeDepth: 0,
+    );
+
+    final groupedRows = <_RelationMergeKey, List<JsonMap>>{};
+    for (final row in rows) {
+      final key = _RelationMergeKey(
+        by
+            .map((field) => row.containsKey(field) ? row[field] : null)
+            .toList(growable: false),
+      );
+      groupedRows.putIfAbsent(key, () => <JsonMap>[]).add(row);
+    }
+
+    final results = <JsonMap>[];
+    for (final entry in groupedRows.entries) {
+      final groupRows = entry.value;
+      if (groupRows.isEmpty) {
+        continue;
+      }
+
+      final groupResult = <String, Object?>{};
+      final first = groupRows.first;
+      for (final field in by) {
+        groupResult[field] = first[field];
+      }
+      groupResult.addAll(
+        _buildAggregateResult(
+          rows: groupRows,
+          countAll: countAll,
+          count: count,
+          min: min,
+          max: max,
+          sum: sum,
+          avg: avg,
+        ),
+      );
+      results.add(groupResult);
+    }
+
+    if (orderBy.isNotEmpty) {
+      results.sort(
+        (left, right) => _compareRowsForOrderBy(left, right, orderBy),
+      );
+    }
+
+    return _sliceRows(rows: results, skip: skip, take: take);
+  }
+
   Future<JsonMap> create({
     required JsonMap data,
     List<String> select = const <String>[],
@@ -889,7 +1030,7 @@ class ModelDelegate {
     final normalizedCreate = _normalizeNestedCreate(create);
     final normalizedInclude = _normalizeInclude(include);
 
-    final updated = await this.update(
+    final updated = await update(
       where: where,
       data: data,
       select: _expandSelectForNestedCreate(
@@ -1336,6 +1477,174 @@ class ModelDelegate {
     );
   }
 
+  void _assertKnownAggregateFields({
+    required List<String> fields,
+    required String source,
+  }) {
+    if (fields.isEmpty) {
+      return;
+    }
+
+    final model = _client.contract.models[modelName];
+    if (model == null) {
+      throw ModelNotFoundException(modelName, _client.contract.models.keys);
+    }
+
+    for (final field in fields) {
+      if (model.fields.contains(field)) {
+        continue;
+      }
+      throw PlanFieldNotFoundException(
+        model: modelName,
+        field: field,
+        source: source,
+      );
+    }
+  }
+
+  List<String> _buildAggregateSelect({
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    final fields = <String>{...count, ...min, ...max, ...sum, ...avg};
+    if (fields.isEmpty) {
+      return const <String>[];
+    }
+    return fields.toList(growable: false);
+  }
+
+  JsonMap _buildAggregateResult({
+    required List<JsonMap> rows,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    final result = <String, Object?>{};
+
+    if (countAll || count.isNotEmpty) {
+      final countResult = <String, Object?>{};
+      if (countAll) {
+        countResult['all'] = rows.length;
+      }
+      for (final field in count) {
+        countResult[field] = rows.where((row) => row[field] != null).length;
+      }
+      result['count'] = countResult;
+    }
+
+    if (min.isNotEmpty) {
+      final minResult = <String, Object?>{};
+      for (final field in min) {
+        minResult[field] = _aggregateMin(rows: rows, field: field);
+      }
+      result['min'] = minResult;
+    }
+
+    if (max.isNotEmpty) {
+      final maxResult = <String, Object?>{};
+      for (final field in max) {
+        maxResult[field] = _aggregateMax(rows: rows, field: field);
+      }
+      result['max'] = maxResult;
+    }
+
+    if (sum.isNotEmpty) {
+      final sumResult = <String, Object?>{};
+      for (final field in sum) {
+        sumResult[field] = _aggregateSum(rows: rows, field: field);
+      }
+      result['sum'] = sumResult;
+    }
+
+    if (avg.isNotEmpty) {
+      final avgResult = <String, Object?>{};
+      for (final field in avg) {
+        avgResult[field] = _aggregateAvg(rows: rows, field: field);
+      }
+      result['avg'] = avgResult;
+    }
+
+    return result;
+  }
+
+  Object? _aggregateMin({required List<JsonMap> rows, required String field}) {
+    Object? current;
+    for (final row in rows) {
+      final value = row[field];
+      if (value == null) {
+        continue;
+      }
+      if (current == null ||
+          _compareAggregateValues(left: value, right: current) < 0) {
+        current = value;
+      }
+    }
+    return current;
+  }
+
+  Object? _aggregateMax({required List<JsonMap> rows, required String field}) {
+    Object? current;
+    for (final row in rows) {
+      final value = row[field];
+      if (value == null) {
+        continue;
+      }
+      if (current == null ||
+          _compareAggregateValues(left: value, right: current) > 0) {
+        current = value;
+      }
+    }
+    return current;
+  }
+
+  num? _aggregateSum({required List<JsonMap> rows, required String field}) {
+    num? sum;
+    for (final row in rows) {
+      final value = row[field];
+      if (value is! num) {
+        continue;
+      }
+      sum = (sum ?? 0) + value;
+    }
+    return sum;
+  }
+
+  double? _aggregateAvg({required List<JsonMap> rows, required String field}) {
+    var count = 0;
+    var sum = 0.0;
+    for (final row in rows) {
+      final value = row[field];
+      if (value is! num) {
+        continue;
+      }
+      sum += value.toDouble();
+      count += 1;
+    }
+    if (count == 0) {
+      return null;
+    }
+    return sum / count;
+  }
+
+  int _compareAggregateValues({required Object left, required Object right}) {
+    if (left is num && right is num) {
+      return left.compareTo(right);
+    }
+    if (left is DateTime && right is DateTime) {
+      return left.compareTo(right);
+    }
+    if (left is Comparable<Object?> && left.runtimeType == right.runtimeType) {
+      return left.compareTo(right);
+    }
+    return left.toString().compareTo(right.toString());
+  }
+
   List<String> _expandSelectForNestedCreate({
     required String model,
     required List<String> select,
@@ -1428,6 +1737,46 @@ class ModelDelegate {
       }
     }
     return deduplicated;
+  }
+
+  int _compareRowsForOrderBy(
+    JsonMap left,
+    JsonMap right,
+    List<OrmOrderBy> orderBy,
+  ) {
+    for (final clause in orderBy) {
+      final compared = _compareOrderByValues(
+        left[clause.field],
+        right[clause.field],
+      );
+      if (compared == 0) {
+        continue;
+      }
+      return clause.order == SortOrder.desc ? -compared : compared;
+    }
+    return 0;
+  }
+
+  int _compareOrderByValues(Object? left, Object? right) {
+    if (left == null && right == null) {
+      return 0;
+    }
+    if (left == null) {
+      return -1;
+    }
+    if (right == null) {
+      return 1;
+    }
+    if (left is num && right is num) {
+      return left.compareTo(right);
+    }
+    if (left is DateTime && right is DateTime) {
+      return left.compareTo(right);
+    }
+    if (left is Comparable<Object?> && left.runtimeType == right.runtimeType) {
+      return left.compareTo(right);
+    }
+    return left.toString().compareTo(right.toString());
   }
 
   JsonMap? _fallbackCreateRow({required JsonMap data}) {
@@ -2099,6 +2448,49 @@ final class ModelQuery {
   Future<int> count() => _delegate.count(where: _state.where);
 
   Future<bool> exists() => _delegate.exists(where: _state.where);
+
+  Future<JsonMap> aggregate({
+    bool countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) {
+    return _delegate.aggregate(
+      where: _state.where,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    );
+  }
+
+  Future<List<JsonMap>> groupBy({
+    required List<String> by,
+    bool countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) {
+    return _delegate.groupBy(
+      by: by,
+      where: _state.where,
+      skip: _state.skip,
+      take: _state.take,
+      orderBy: _state.orderBy,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    );
+  }
 
   Future<JsonMap> create({required JsonMap data}) {
     return _delegate.create(

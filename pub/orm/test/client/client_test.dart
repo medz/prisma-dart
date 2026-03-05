@@ -280,6 +280,63 @@ void main() {
       },
     );
 
+    test('supports aggregate helpers in memory engine', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 2, 'email': null});
+      await users.create(data: <String, Object?>{'id': 3, 'email': 'b@x.com'});
+
+      final aggregate = await users.aggregate(
+        countAll: true,
+        count: const <String>['email'],
+        min: const <String>['id'],
+        max: const <String>['id'],
+        sum: const <String>['id'],
+        avg: const <String>['id'],
+      );
+
+      expect(aggregate['count'], <String, Object?>{'all': 3, 'email': 2});
+      expect(aggregate['min'], <String, Object?>{'id': 1});
+      expect(aggregate['max'], <String, Object?>{'id': 3});
+      expect(aggregate['sum'], <String, Object?>{'id': 6});
+      expect(aggregate['avg'], <String, Object?>{'id': 2.0});
+      await client.disconnect();
+    });
+
+    test('supports groupBy helpers in memory engine', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 2, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 4, 'email': 'b@x.com'});
+
+      final grouped = await users
+          .query()
+          .orderByField('email')
+          .groupBy(
+            by: const <String>['email'],
+            countAll: true,
+            sum: const <String>['id'],
+            avg: const <String>['id'],
+          );
+
+      expect(grouped, hasLength(2));
+      expect(grouped.first['email'], 'a@x.com');
+      expect(grouped.first['count'], <String, Object?>{'all': 2});
+      expect(grouped.first['sum'], <String, Object?>{'id': 3});
+      expect(grouped.first['avg'], <String, Object?>{'id': 1.5});
+      expect(grouped.last['email'], 'b@x.com');
+      expect(grouped.last['count'], <String, Object?>{'all': 1});
+      expect(grouped.last['sum'], <String, Object?>{'id': 4});
+      expect(grouped.last['avg'], <String, Object?>{'id': 4.0});
+      await client.disconnect();
+    });
+
     test('supports where operators gt/in/notIn in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
