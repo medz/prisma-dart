@@ -592,6 +592,8 @@ final class TypedClientWriter {
     buffer.writeln();
     buffer.writeln('  GeneratedOrmSql(this._context);');
     buffer.writeln();
+    buffer.writeln('  OrmSqlApi get raw => _api;');
+    buffer.writeln();
     for (final model in models) {
       buffer.writeln(
         '  late final ${model.sqlClassName} ${model.getterName} =',
