@@ -7,6 +7,28 @@ import '../target/adapter.dart';
 import 'codec.dart';
 import 'types.dart';
 
+const List<String> _whereOperatorOrder = <String>[
+  'equals',
+  'not',
+  'in',
+  'notIn',
+  'gt',
+  'gte',
+  'lt',
+  'lte',
+];
+
+const Set<String> _whereOperators = <String>{
+  'equals',
+  'not',
+  'in',
+  'notIn',
+  'gt',
+  'gte',
+  'lt',
+  'lte',
+};
+
 final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
   final OrmContract contract;
   final String identifierQuote;
@@ -213,13 +235,132 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
 
     final predicates = <String>[];
     for (final entry in where.entries) {
-      predicates.add('${_id(entry.key)} = ?');
-      params.add(
-        _encodeValue(model: model, field: entry.key, value: entry.value),
-      );
+      final operatorMap = _coerceOperatorMap(entry.value);
+      if (operatorMap == null) {
+        predicates.add('${_id(entry.key)} = ?');
+        params.add(
+          _encodeWhereValue(model: model, field: entry.key, value: entry.value),
+        );
+        continue;
+      }
+
+      for (final operator in _whereOperatorOrder) {
+        if (!operatorMap.containsKey(operator)) {
+          continue;
+        }
+        _appendWhereOperatorPredicate(
+          predicates: predicates,
+          params: params,
+          model: model,
+          field: entry.key,
+          operator: operator,
+          operand: operatorMap[operator],
+        );
+      }
     }
 
     return ' WHERE ${predicates.join(' AND ')}';
+  }
+
+  Map<String, Object?>? _coerceOperatorMap(Object? value) {
+    if (value is! Map) {
+      return null;
+    }
+    if (value.isEmpty) {
+      return null;
+    }
+
+    final normalized = <String, Object?>{};
+    for (final entry in value.entries) {
+      final key = entry.key;
+      if (key is! String) {
+        return null;
+      }
+      if (!_whereOperators.contains(key)) {
+        return null;
+      }
+      normalized[key] = entry.value;
+    }
+    return normalized;
+  }
+
+  void _appendWhereOperatorPredicate({
+    required List<String> predicates,
+    required List<Object?> params,
+    required String model,
+    required String field,
+    required String operator,
+    required Object? operand,
+  }) {
+    final idField = _id(field);
+
+    switch (operator) {
+      case 'equals':
+        predicates.add('$idField = ?');
+        params.add(
+          _encodeWhereValue(model: model, field: field, value: operand),
+        );
+      case 'not':
+        predicates.add('$idField <> ?');
+        params.add(
+          _encodeWhereValue(model: model, field: field, value: operand),
+        );
+      case 'gt':
+        predicates.add('$idField > ?');
+        params.add(
+          _encodeWhereValue(model: model, field: field, value: operand),
+        );
+      case 'gte':
+        predicates.add('$idField >= ?');
+        params.add(
+          _encodeWhereValue(model: model, field: field, value: operand),
+        );
+      case 'lt':
+        predicates.add('$idField < ?');
+        params.add(
+          _encodeWhereValue(model: model, field: field, value: operand),
+        );
+      case 'lte':
+        predicates.add('$idField <= ?');
+        params.add(
+          _encodeWhereValue(model: model, field: field, value: operand),
+        );
+      case 'in' || 'notIn':
+        final values = _coerceListOperand(operand);
+        if (values.isEmpty) {
+          predicates.add(operator == 'in' ? '1 = 0' : '1 = 1');
+          return;
+        }
+
+        final placeholders = List<String>.filled(values.length, '?').join(', ');
+        final sqlOperator = operator == 'in' ? 'IN' : 'NOT IN';
+        predicates.add('$idField $sqlOperator ($placeholders)');
+        for (final value in values) {
+          params.add(
+            _encodeWhereValue(model: model, field: field, value: value),
+          );
+        }
+      default:
+        throw StateError('Unsupported where operator: $operator');
+    }
+  }
+
+  List<Object?> _coerceListOperand(Object? value) {
+    if (value is List<Object?>) {
+      return value;
+    }
+    if (value is List) {
+      return List<Object?>.from(value);
+    }
+    return const <Object?>[];
+  }
+
+  Object? _encodeWhereValue({
+    required String model,
+    required String field,
+    required Object? value,
+  }) {
+    return _encodeValue(model: model, field: field, value: value);
   }
 
   String _buildOrderByClause(List<OrmOrderBy> orderBy) {

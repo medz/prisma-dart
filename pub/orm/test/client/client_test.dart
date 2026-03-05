@@ -230,6 +230,55 @@ void main() {
       await client.disconnect();
     });
 
+    test('supports where operators gt/in/notIn in memory engine', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
+      await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
+      await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
+
+      final gtRows = await users.findMany(
+        where: <String, Object?>{
+          'id': <String, Object?>{'gt': 2},
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(gtRows.map((row) => row['id']).toList(growable: false), <Object?>[
+        3,
+        4,
+      ]);
+
+      final inRows = await users.findMany(
+        where: <String, Object?>{
+          'email': <String, Object?>{
+            'in': <Object?>['a@x.com', 'c@x.com'],
+          },
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(inRows.map((row) => row['id']).toList(growable: false), <Object?>[
+        1,
+        3,
+      ]);
+
+      final notInRows = await users.findMany(
+        where: <String, Object?>{
+          'id': <String, Object?>{
+            'notIn': <Object?>[2, 3],
+          },
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(
+        notInRows.map((row) => row['id']).toList(growable: false),
+        <Object?>[1, 4],
+      );
+      await client.disconnect();
+    });
+
     test(
       'supports select projection for direct read/mutation methods',
       () async {

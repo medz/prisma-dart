@@ -41,6 +41,88 @@ void main() {
     expect(statement.parameters, <Object?>['a@example.com', 10, 5]);
   });
 
+  test('lowers where operators with deterministic SQL and parameters', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = OrmPlan(
+      contractHash: contract.hash,
+      model: 'User',
+      action: OrmAction.findMany,
+      where: <String, Object?>{
+        'email': <String, Object?>{
+          'lt': 'z@example.com',
+          'gte': 'a@example.com',
+          'in': <Object?>['a@example.com', 'b@example.com'],
+          'notIn': <Object?>['x@example.com'],
+          'not': 'blocked@example.com',
+        },
+        'id': <String, Object?>{'lte': 'u9', 'gt': 'u0', 'equals': 'u1'},
+      },
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT * FROM "users" WHERE '
+      '"email" <> ? AND '
+      '"email" IN (?, ?) AND '
+      '"email" NOT IN (?) AND '
+      '"email" >= ? AND '
+      '"email" < ? AND '
+      '"id" = ? AND '
+      '"id" > ? AND '
+      '"id" <= ?',
+    );
+    expect(statement.parameters, <Object?>[
+      'blocked@example.com',
+      'a@example.com',
+      'b@example.com',
+      'x@example.com',
+      'a@example.com',
+      'z@example.com',
+      'u1',
+      'u0',
+      'u9',
+    ]);
+  });
+
+  test(
+    'keeps scalar where compatibility and does not misclassify normal maps',
+    () {
+      final adapter = SqlAdapter(contract: contract);
+      final jsonPayload = <String, Object?>{'profile': 'standard'};
+      final plan = OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.findMany,
+        where: <String, Object?>{'id': 'u1', 'email': jsonPayload},
+      );
+
+      final statement = adapter.lower(plan);
+      expect(
+        statement.text,
+        'SELECT * FROM "users" WHERE "id" = ? AND "email" = ?',
+      );
+      expect(statement.parameters, <Object?>['u1', jsonPayload]);
+    },
+  );
+
+  test('uses deterministic empty semantics for in/notIn', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = OrmPlan(
+      contractHash: contract.hash,
+      model: 'User',
+      action: OrmAction.findMany,
+      where: <String, Object?>{
+        'id': <String, Object?>{'in': const <Object?>[]},
+        'email': <String, Object?>{'notIn': const <Object?>[]},
+      },
+    );
+
+    final statement = adapter.lower(plan);
+    expect(statement.text, 'SELECT * FROM "users" WHERE 1 = 0 AND 1 = 1');
+    expect(statement.parameters, isEmpty);
+  });
+
   test('lowers mutation statements', () {
     final contract = buildContract(mutationReturning: false);
     final adapter = SqlAdapter(contract: contract);
@@ -242,6 +324,47 @@ void main() {
     } else {
       fail('Expected row map for codec decode.');
     }
+  });
+
+  test('encodes where operator values via codec resolver', () {
+    final codecRegistry = SqlCodecRegistry().withField(
+      model: 'User',
+      field: 'email',
+      codec: SqlLambdaFieldCodec(
+        encode: (value) => value == null ? null : 'wire:$value',
+        decode: (value) => value,
+      ),
+    );
+    final adapter = SqlAdapter(
+      contract: contract,
+      codecResolver: codecRegistry,
+    );
+
+    final statement = adapter.lower(
+      OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.findMany,
+        where: <String, Object?>{
+          'email': <String, Object?>{
+            'in': <Object?>['a@example.com', 'b@example.com'],
+            'gt': 'm@example.com',
+          },
+          'id': <String, Object?>{'not': 'u9'},
+        },
+      ),
+    );
+
+    expect(
+      statement.text,
+      'SELECT * FROM "users" WHERE "email" IN (?, ?) AND "email" > ? AND "id" <> ?',
+    );
+    expect(statement.parameters, <Object?>[
+      'wire:a@example.com',
+      'wire:b@example.com',
+      'wire:m@example.com',
+      'u9',
+    ]);
   });
 
   test('keeps default no-codec behavior unchanged', () {

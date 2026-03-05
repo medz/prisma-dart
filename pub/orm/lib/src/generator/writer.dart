@@ -106,8 +106,24 @@ final class TypedClientWriter {
   void _writeWhereFilterClasses(StringBuffer buffer) {
     buffer.writeln('class StringWhereFilter {');
     buffer.writeln('  final String? equals;');
+    buffer.writeln('  final String? not;');
+    buffer.writeln('  final List<String>? inValues;');
+    buffer.writeln('  final List<String>? notIn;');
+    buffer.writeln('  final String? gt;');
+    buffer.writeln('  final String? gte;');
+    buffer.writeln('  final String? lt;');
+    buffer.writeln('  final String? lte;');
     buffer.writeln();
-    buffer.writeln('  const StringWhereFilter({this.equals});');
+    buffer.writeln('  const StringWhereFilter({');
+    buffer.writeln('    this.equals,');
+    buffer.writeln('    this.not,');
+    buffer.writeln('    this.inValues,');
+    buffer.writeln('    this.notIn,');
+    buffer.writeln('    this.gt,');
+    buffer.writeln('    this.gte,');
+    buffer.writeln('    this.lt,');
+    buffer.writeln('    this.lte,');
+    buffer.writeln('  });');
     buffer.writeln();
     buffer.writeln(
       '  factory StringWhereFilter.fromJsonValue(Object? value) {',
@@ -116,23 +132,73 @@ final class TypedClientWriter {
     buffer.writeln('      return StringWhereFilter(equals: value);');
     buffer.writeln('    }');
     buffer.writeln('    if (value is Map<String, Object?>) {');
-    buffer.writeln(
-      "      return StringWhereFilter(equals: _readString(value['equals']));",
-    );
+    buffer.writeln('      return StringWhereFilter(');
+    buffer.writeln("        equals: _readString(value['equals']),");
+    buffer.writeln("        not: _readString(value['not']),");
+    buffer.writeln("        inValues: _readStringList(value['in']),");
+    buffer.writeln("        notIn: _readStringList(value['notIn']),");
+    buffer.writeln("        gt: _readString(value['gt']),");
+    buffer.writeln("        gte: _readString(value['gte']),");
+    buffer.writeln("        lt: _readString(value['lt']),");
+    buffer.writeln("        lte: _readString(value['lte']),");
+    buffer.writeln('      );');
     buffer.writeln('    }');
     buffer.writeln('    return const StringWhereFilter();');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln('  Object? toJsonValue() {');
+    buffer.writeln('    if (isEmpty) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    if (equals != null && not == null && inValues == null && notIn == null && gt == null && gte == null && lt == null && lte == null) {',
+    );
+    buffer.writeln('      return equals;');
+    buffer.writeln('    }');
+    buffer.writeln('    return <String, Object?>{');
+    buffer.writeln("      if (equals != null) 'equals': equals,");
+    buffer.writeln("      if (not != null) 'not': not,");
+    buffer.writeln("      if (inValues != null) 'in': inValues,");
+    buffer.writeln("      if (notIn != null) 'notIn': notIn,");
+    buffer.writeln("      if (gt != null) 'gt': gt,");
+    buffer.writeln("      if (gte != null) 'gte': gte,");
+    buffer.writeln("      if (lt != null) 'lt': lt,");
+    buffer.writeln("      if (lte != null) 'lte': lte,");
+    buffer.writeln('    };');
+    buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('  bool get isEmpty =>');
+    buffer.writeln('      equals == null &&');
+    buffer.writeln('      not == null &&');
+    buffer.writeln('      inValues == null &&');
+    buffer.writeln('      notIn == null &&');
+    buffer.writeln('      gt == null &&');
+    buffer.writeln('      gte == null &&');
+    buffer.writeln('      lt == null &&');
+    buffer.writeln('      lte == null;');
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class IntWhereFilter {');
     buffer.writeln('  final int? equals;');
+    buffer.writeln('  final int? not;');
+    buffer.writeln('  final List<int>? inValues;');
+    buffer.writeln('  final List<int>? notIn;');
+    buffer.writeln('  final int? gt;');
+    buffer.writeln('  final int? gte;');
+    buffer.writeln('  final int? lt;');
+    buffer.writeln('  final int? lte;');
     buffer.writeln();
-    buffer.writeln('  const IntWhereFilter({this.equals});');
+    buffer.writeln('  const IntWhereFilter({');
+    buffer.writeln('    this.equals,');
+    buffer.writeln('    this.not,');
+    buffer.writeln('    this.inValues,');
+    buffer.writeln('    this.notIn,');
+    buffer.writeln('    this.gt,');
+    buffer.writeln('    this.gte,');
+    buffer.writeln('    this.lt,');
+    buffer.writeln('    this.lte,');
+    buffer.writeln('  });');
     buffer.writeln();
     buffer.writeln('  factory IntWhereFilter.fromJsonValue(Object? value) {');
     buffer.writeln('    if (value is int) {');
@@ -142,23 +208,73 @@ final class TypedClientWriter {
     buffer.writeln('      return IntWhereFilter(equals: value.toInt());');
     buffer.writeln('    }');
     buffer.writeln('    if (value is Map<String, Object?>) {');
-    buffer.writeln(
-      "      return IntWhereFilter(equals: _readInt(value['equals']));",
-    );
+    buffer.writeln('      return IntWhereFilter(');
+    buffer.writeln("        equals: _readInt(value['equals']),");
+    buffer.writeln("        not: _readInt(value['not']),");
+    buffer.writeln("        inValues: _readIntList(value['in']),");
+    buffer.writeln("        notIn: _readIntList(value['notIn']),");
+    buffer.writeln("        gt: _readInt(value['gt']),");
+    buffer.writeln("        gte: _readInt(value['gte']),");
+    buffer.writeln("        lt: _readInt(value['lt']),");
+    buffer.writeln("        lte: _readInt(value['lte']),");
+    buffer.writeln('      );');
     buffer.writeln('    }');
     buffer.writeln('    return const IntWhereFilter();');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln('  Object? toJsonValue() {');
+    buffer.writeln('    if (isEmpty) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    if (equals != null && not == null && inValues == null && notIn == null && gt == null && gte == null && lt == null && lte == null) {',
+    );
+    buffer.writeln('      return equals;');
+    buffer.writeln('    }');
+    buffer.writeln('    return <String, Object?>{');
+    buffer.writeln("      if (equals != null) 'equals': equals,");
+    buffer.writeln("      if (not != null) 'not': not,");
+    buffer.writeln("      if (inValues != null) 'in': inValues,");
+    buffer.writeln("      if (notIn != null) 'notIn': notIn,");
+    buffer.writeln("      if (gt != null) 'gt': gt,");
+    buffer.writeln("      if (gte != null) 'gte': gte,");
+    buffer.writeln("      if (lt != null) 'lt': lt,");
+    buffer.writeln("      if (lte != null) 'lte': lte,");
+    buffer.writeln('    };');
+    buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('  bool get isEmpty =>');
+    buffer.writeln('      equals == null &&');
+    buffer.writeln('      not == null &&');
+    buffer.writeln('      inValues == null &&');
+    buffer.writeln('      notIn == null &&');
+    buffer.writeln('      gt == null &&');
+    buffer.writeln('      gte == null &&');
+    buffer.writeln('      lt == null &&');
+    buffer.writeln('      lte == null;');
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class DoubleWhereFilter {');
     buffer.writeln('  final double? equals;');
+    buffer.writeln('  final double? not;');
+    buffer.writeln('  final List<double>? inValues;');
+    buffer.writeln('  final List<double>? notIn;');
+    buffer.writeln('  final double? gt;');
+    buffer.writeln('  final double? gte;');
+    buffer.writeln('  final double? lt;');
+    buffer.writeln('  final double? lte;');
     buffer.writeln();
-    buffer.writeln('  const DoubleWhereFilter({this.equals});');
+    buffer.writeln('  const DoubleWhereFilter({');
+    buffer.writeln('    this.equals,');
+    buffer.writeln('    this.not,');
+    buffer.writeln('    this.inValues,');
+    buffer.writeln('    this.notIn,');
+    buffer.writeln('    this.gt,');
+    buffer.writeln('    this.gte,');
+    buffer.writeln('    this.lt,');
+    buffer.writeln('    this.lte,');
+    buffer.writeln('  });');
     buffer.writeln();
     buffer.writeln(
       '  factory DoubleWhereFilter.fromJsonValue(Object? value) {',
@@ -170,46 +286,126 @@ final class TypedClientWriter {
     buffer.writeln('      return DoubleWhereFilter(equals: value.toDouble());');
     buffer.writeln('    }');
     buffer.writeln('    if (value is Map<String, Object?>) {');
-    buffer.writeln(
-      "      return DoubleWhereFilter(equals: _readDouble(value['equals']));",
-    );
+    buffer.writeln('      return DoubleWhereFilter(');
+    buffer.writeln("        equals: _readDouble(value['equals']),");
+    buffer.writeln("        not: _readDouble(value['not']),");
+    buffer.writeln("        inValues: _readDoubleList(value['in']),");
+    buffer.writeln("        notIn: _readDoubleList(value['notIn']),");
+    buffer.writeln("        gt: _readDouble(value['gt']),");
+    buffer.writeln("        gte: _readDouble(value['gte']),");
+    buffer.writeln("        lt: _readDouble(value['lt']),");
+    buffer.writeln("        lte: _readDouble(value['lte']),");
+    buffer.writeln('      );');
     buffer.writeln('    }');
     buffer.writeln('    return const DoubleWhereFilter();');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln('  Object? toJsonValue() {');
+    buffer.writeln('    if (isEmpty) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    if (equals != null && not == null && inValues == null && notIn == null && gt == null && gte == null && lt == null && lte == null) {',
+    );
+    buffer.writeln('      return equals;');
+    buffer.writeln('    }');
+    buffer.writeln('    return <String, Object?>{');
+    buffer.writeln("      if (equals != null) 'equals': equals,");
+    buffer.writeln("      if (not != null) 'not': not,");
+    buffer.writeln("      if (inValues != null) 'in': inValues,");
+    buffer.writeln("      if (notIn != null) 'notIn': notIn,");
+    buffer.writeln("      if (gt != null) 'gt': gt,");
+    buffer.writeln("      if (gte != null) 'gte': gte,");
+    buffer.writeln("      if (lt != null) 'lt': lt,");
+    buffer.writeln("      if (lte != null) 'lte': lte,");
+    buffer.writeln('    };');
+    buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('  bool get isEmpty =>');
+    buffer.writeln('      equals == null &&');
+    buffer.writeln('      not == null &&');
+    buffer.writeln('      inValues == null &&');
+    buffer.writeln('      notIn == null &&');
+    buffer.writeln('      gt == null &&');
+    buffer.writeln('      gte == null &&');
+    buffer.writeln('      lt == null &&');
+    buffer.writeln('      lte == null;');
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class BoolWhereFilter {');
     buffer.writeln('  final bool? equals;');
+    buffer.writeln('  final bool? not;');
+    buffer.writeln('  final List<bool>? inValues;');
+    buffer.writeln('  final List<bool>? notIn;');
     buffer.writeln();
-    buffer.writeln('  const BoolWhereFilter({this.equals});');
+    buffer.writeln('  const BoolWhereFilter({');
+    buffer.writeln('    this.equals,');
+    buffer.writeln('    this.not,');
+    buffer.writeln('    this.inValues,');
+    buffer.writeln('    this.notIn,');
+    buffer.writeln('  });');
     buffer.writeln();
     buffer.writeln('  factory BoolWhereFilter.fromJsonValue(Object? value) {');
     buffer.writeln('    if (value is bool) {');
     buffer.writeln('      return BoolWhereFilter(equals: value);');
     buffer.writeln('    }');
     buffer.writeln('    if (value is Map<String, Object?>) {');
-    buffer.writeln(
-      "      return BoolWhereFilter(equals: _readBool(value['equals']));",
-    );
+    buffer.writeln('      return BoolWhereFilter(');
+    buffer.writeln("        equals: _readBool(value['equals']),");
+    buffer.writeln("        not: _readBool(value['not']),");
+    buffer.writeln("        inValues: _readBoolList(value['in']),");
+    buffer.writeln("        notIn: _readBoolList(value['notIn']),");
+    buffer.writeln('      );');
     buffer.writeln('    }');
     buffer.writeln('    return const BoolWhereFilter();');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln('  Object? toJsonValue() {');
+    buffer.writeln('    if (isEmpty) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    if (equals != null && not == null && inValues == null && notIn == null) {',
+    );
+    buffer.writeln('      return equals;');
+    buffer.writeln('    }');
+    buffer.writeln('    return <String, Object?>{');
+    buffer.writeln("      if (equals != null) 'equals': equals,");
+    buffer.writeln("      if (not != null) 'not': not,");
+    buffer.writeln("      if (inValues != null) 'in': inValues,");
+    buffer.writeln("      if (notIn != null) 'notIn': notIn,");
+    buffer.writeln('    };');
+    buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('  bool get isEmpty =>');
+    buffer.writeln('      equals == null &&');
+    buffer.writeln('      not == null &&');
+    buffer.writeln('      inValues == null &&');
+    buffer.writeln('      notIn == null;');
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class DateTimeWhereFilter {');
     buffer.writeln('  final DateTime? equals;');
+    buffer.writeln('  final DateTime? not;');
+    buffer.writeln('  final List<DateTime>? inValues;');
+    buffer.writeln('  final List<DateTime>? notIn;');
+    buffer.writeln('  final DateTime? gt;');
+    buffer.writeln('  final DateTime? gte;');
+    buffer.writeln('  final DateTime? lt;');
+    buffer.writeln('  final DateTime? lte;');
     buffer.writeln();
-    buffer.writeln('  const DateTimeWhereFilter({this.equals});');
+    buffer.writeln('  const DateTimeWhereFilter({');
+    buffer.writeln('    this.equals,');
+    buffer.writeln('    this.not,');
+    buffer.writeln('    this.inValues,');
+    buffer.writeln('    this.notIn,');
+    buffer.writeln('    this.gt,');
+    buffer.writeln('    this.gte,');
+    buffer.writeln('    this.lt,');
+    buffer.writeln('    this.lte,');
+    buffer.writeln('  });');
     buffer.writeln();
     buffer.writeln(
       '  factory DateTimeWhereFilter.fromJsonValue(Object? value) {',
@@ -223,16 +419,56 @@ final class TypedClientWriter {
     );
     buffer.writeln('    }');
     buffer.writeln('    if (value is Map<String, Object?>) {');
-    buffer.writeln(
-      "      return DateTimeWhereFilter(equals: _readDateTime(value['equals']));",
-    );
+    buffer.writeln('      return DateTimeWhereFilter(');
+    buffer.writeln("        equals: _readDateTime(value['equals']),");
+    buffer.writeln("        not: _readDateTime(value['not']),");
+    buffer.writeln("        inValues: _readDateTimeList(value['in']),");
+    buffer.writeln("        notIn: _readDateTimeList(value['notIn']),");
+    buffer.writeln("        gt: _readDateTime(value['gt']),");
+    buffer.writeln("        gte: _readDateTime(value['gte']),");
+    buffer.writeln("        lt: _readDateTime(value['lt']),");
+    buffer.writeln("        lte: _readDateTime(value['lte']),");
+    buffer.writeln('      );');
     buffer.writeln('    }');
     buffer.writeln('    return const DateTimeWhereFilter();');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Object? toJsonValue() => equals?.toIso8601String();');
+    buffer.writeln('  Object? toJsonValue() {');
+    buffer.writeln('    if (isEmpty) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    if (equals != null && not == null && inValues == null && notIn == null && gt == null && gte == null && lt == null && lte == null) {',
+    );
+    buffer.writeln('      return equals!.toIso8601String();');
+    buffer.writeln('    }');
+    buffer.writeln('    return <String, Object?>{');
+    buffer.writeln(
+      "      if (equals != null) 'equals': equals!.toIso8601String(),",
+    );
+    buffer.writeln("      if (not != null) 'not': not!.toIso8601String(),");
+    buffer.writeln(
+      "      if (inValues != null) 'in': inValues!.map((value) => value.toIso8601String()).toList(growable: false),",
+    );
+    buffer.writeln(
+      "      if (notIn != null) 'notIn': notIn!.map((value) => value.toIso8601String()).toList(growable: false),",
+    );
+    buffer.writeln("      if (gt != null) 'gt': gt!.toIso8601String(),");
+    buffer.writeln("      if (gte != null) 'gte': gte!.toIso8601String(),");
+    buffer.writeln("      if (lt != null) 'lt': lt!.toIso8601String(),");
+    buffer.writeln("      if (lte != null) 'lte': lte!.toIso8601String(),");
+    buffer.writeln('    };');
+    buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('  bool get isEmpty =>');
+    buffer.writeln('      equals == null &&');
+    buffer.writeln('      not == null &&');
+    buffer.writeln('      inValues == null &&');
+    buffer.writeln('      notIn == null &&');
+    buffer.writeln('      gt == null &&');
+    buffer.writeln('      gte == null &&');
+    buffer.writeln('      lt == null &&');
+    buffer.writeln('      lte == null;');
     buffer.writeln('}');
     buffer.writeln();
 
@@ -243,7 +479,7 @@ final class TypedClientWriter {
     buffer.writeln();
     buffer.writeln('  factory JsonWhereFilter.fromJsonValue(Object? value) {');
     buffer.writeln(
-      '    if (value is Map<String, Object?> && value.containsKey(\'equals\')) {',
+      '    if (value is Map<String, Object?> && value.length == 1 && value.containsKey(\'equals\')) {',
     );
     buffer.writeln("      return JsonWhereFilter(equals: value['equals']);");
     buffer.writeln('    }');
@@ -255,7 +491,12 @@ final class TypedClientWriter {
     buffer.writeln('    return const JsonWhereFilter();');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln('  Object? toJsonValue() {');
+    buffer.writeln('    if (isEmpty) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln("    return <String, Object?>{'equals': equals};");
+    buffer.writeln('  }');
     buffer.writeln();
     buffer.writeln('  bool get isEmpty => equals == null;');
     buffer.writeln('}');

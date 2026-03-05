@@ -209,6 +209,27 @@ void main() {
           reason: 'Missing string where filter class in generated source.',
         );
         expect(
+          RegExp(
+            r"class\s+StringWhereFilter\s*\{[\s\S]*?value\['in'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected StringWhereFilter to contain in operator marker.',
+        );
+        expect(
+          RegExp(
+            r"class\s+StringWhereFilter\s*\{[\s\S]*?value\['not'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected StringWhereFilter to contain not operator marker.',
+        );
+        expect(
+          RegExp(
+            r"class\s+StringWhereFilter\s*\{[\s\S]*?value\['gt'\]",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected StringWhereFilter to contain gt operator marker.',
+        );
+        expect(
           RegExp(r'\bclass IntWhereFilter\b').hasMatch(generatedSource),
           isTrue,
           reason: 'Missing int where filter class in generated source.',

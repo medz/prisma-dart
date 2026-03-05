@@ -3,6 +3,28 @@ import '../runtime/plan.dart';
 import '../runtime/types.dart';
 import 'engine.dart';
 
+const List<String> _whereOperatorOrder = <String>[
+  'equals',
+  'not',
+  'in',
+  'notIn',
+  'gt',
+  'gte',
+  'lt',
+  'lte',
+];
+
+const Set<String> _whereOperators = <String>{
+  'equals',
+  'not',
+  'in',
+  'notIn',
+  'gt',
+  'gte',
+  'lt',
+  'lte',
+};
+
 final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
   final Map<String, List<JsonMap>> _store;
   bool _opened = false;
@@ -136,15 +158,143 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
 
   bool _matches(JsonMap row, JsonMap where) {
     for (final entry in where.entries) {
-      if (!row.containsKey(entry.key)) {
-        return false;
-      }
-
-      if (row[entry.key] != entry.value) {
+      if (!_matchesWhereField(
+        row: row,
+        field: entry.key,
+        condition: entry.value,
+      )) {
         return false;
       }
     }
     return true;
+  }
+
+  bool _matchesWhereField({
+    required JsonMap row,
+    required String field,
+    required Object? condition,
+  }) {
+    if (!row.containsKey(field)) {
+      return false;
+    }
+
+    final actualValue = row[field];
+    final operatorMap = _coerceOperatorMap(condition);
+    if (operatorMap == null) {
+      return actualValue == condition;
+    }
+
+    for (final operator in _whereOperatorOrder) {
+      if (!operatorMap.containsKey(operator)) {
+        continue;
+      }
+
+      final operand = operatorMap[operator];
+      final matched = switch (operator) {
+        'equals' => actualValue == operand,
+        'not' => actualValue != operand,
+        'in' => _matchIn(actualValue, operand),
+        'notIn' => _matchNotIn(actualValue, operand),
+        'gt' => _matchComparison(actualValue, operand, operator),
+        'gte' => _matchComparison(actualValue, operand, operator),
+        'lt' => _matchComparison(actualValue, operand, operator),
+        'lte' => _matchComparison(actualValue, operand, operator),
+        _ => false,
+      };
+
+      if (!matched) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  Map<String, Object?>? _coerceOperatorMap(Object? value) {
+    if (value is! Map) {
+      return null;
+    }
+    if (value.isEmpty) {
+      return null;
+    }
+
+    final normalized = <String, Object?>{};
+    for (final entry in value.entries) {
+      final key = entry.key;
+      if (key is! String) {
+        return null;
+      }
+      if (!_whereOperators.contains(key)) {
+        return null;
+      }
+      normalized[key] = entry.value;
+    }
+
+    return normalized;
+  }
+
+  bool _matchIn(Object? actualValue, Object? operand) {
+    final values = _coerceListOperand(operand);
+    if (values.isEmpty) {
+      return false;
+    }
+    return values.contains(actualValue);
+  }
+
+  bool _matchNotIn(Object? actualValue, Object? operand) {
+    final values = _coerceListOperand(operand);
+    if (values.isEmpty) {
+      return true;
+    }
+    return !values.contains(actualValue);
+  }
+
+  List<Object?> _coerceListOperand(Object? operand) {
+    if (operand is List<Object?>) {
+      return operand;
+    }
+    if (operand is List) {
+      return List<Object?>.from(operand);
+    }
+    return const <Object?>[];
+  }
+
+  bool _matchComparison(Object? actualValue, Object? operand, String operator) {
+    final comparison = _compareWhereValues(actualValue, operand);
+    if (comparison == null) {
+      return false;
+    }
+    return switch (operator) {
+      'gt' => comparison > 0,
+      'gte' => comparison >= 0,
+      'lt' => comparison < 0,
+      'lte' => comparison <= 0,
+      _ => false,
+    };
+  }
+
+  int? _compareWhereValues(Object? left, Object? right) {
+    if (left == null || right == null) {
+      return null;
+    }
+    if (left is num && right is num) {
+      return left.compareTo(right);
+    }
+    if (left is String && right is String) {
+      return left.compareTo(right);
+    }
+    if (left is DateTime && right is DateTime) {
+      return left.compareTo(right);
+    }
+    if (left is bool && right is bool) {
+      final leftInt = left ? 1 : 0;
+      final rightInt = right ? 1 : 0;
+      return leftInt.compareTo(rightInt);
+    }
+    if (left is Comparable<Object?> && left.runtimeType == right.runtimeType) {
+      return left.compareTo(right);
+    }
+    return null;
   }
 
   int _compareRows(JsonMap left, JsonMap right, List<OrmOrderBy> orderBy) {
