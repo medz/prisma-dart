@@ -1,5 +1,9 @@
 # AI 团队协作规范（ORM）
 
+## 当前执行文档
+- 蓝图：`docs/orm-v6-blueprint.md`
+- 路线图与门禁：`docs/orm-v6-execution-plan.md`
+
 ## 1. 目标
 - 以多 agents 并行协作推进 ORM 开发。
 - 角色固定为：产品、测试、开发1（Core/Runtime）、开发2（Repository/Target）。
