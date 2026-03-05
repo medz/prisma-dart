@@ -28,7 +28,12 @@ typedef IncludeExecutionStrategySelector =
 
 const int _defaultMaxIncludeDepth = 4;
 const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
-const Set<String> _relationWhereOperators = <String>{'some', 'every', 'none'};
+const Set<String> _toManyRelationWhereOperators = <String>{
+  'some',
+  'every',
+  'none',
+};
+const Set<String> _toOneRelationWhereOperators = <String>{'is', 'isNot'};
 
 IncludeExecutionStrategy defaultIncludeExecutionStrategySelector({
   required OrmContract contract,
@@ -1400,23 +1405,23 @@ class ModelDelegate {
       }
 
       final relation = modelContract.relations[key];
-      if (relation == null ||
-          relation.cardinality != RelationCardinality.many) {
+      if (relation == null) {
         normalizedWhere[key] = entry.value;
         continue;
       }
 
       final relationWhere = _coerceWhereMap(entry.value);
       if (relationWhere == null) {
+        final supportedOperators = _relationWhereOperatorsFor(
+          cardinality: relation.cardinality,
+        );
         throw runtimeError(
           'PLAN.RELATION_WHERE_INVALID',
           'Relation where expects a map of operators.',
           details: <String, Object?>{
             'model': model,
             'relation': key,
-            'expectedOperators': _relationWhereOperators.toList(
-              growable: false,
-            ),
+            'expectedOperators': supportedOperators.toList(growable: false),
           },
         );
       }
@@ -1468,8 +1473,11 @@ class ModelDelegate {
       return null;
     }
 
+    final supportedOperators = _relationWhereOperatorsFor(
+      cardinality: relation.cardinality,
+    );
     final unknownOperators = where.keys
-        .where((key) => !_relationWhereOperators.contains(key))
+        .where((key) => !supportedOperators.contains(key))
         .toList(growable: false);
     if (unknownOperators.isNotEmpty) {
       throw runtimeError(
@@ -1479,59 +1487,92 @@ class ModelDelegate {
           'model': modelName,
           'relation': relationName,
           'unknownOperators': unknownOperators,
-          'supportedOperators': _relationWhereOperators.toList(growable: false),
+          'supportedOperators': supportedOperators.toList(growable: false),
         },
       );
     }
 
     final clauses = <JsonMap>[];
-
-    if (where.containsKey('some')) {
-      final relationWhere = await _normalizeRelationOperatorWhere(
-        relationName: relationName,
-        relation: relation,
-        operator: 'some',
-        operand: where['some'],
-      );
-      clauses.add(
-        await _buildRelationMembershipClause(
+    if (relation.cardinality == RelationCardinality.many) {
+      if (where.containsKey('some')) {
+        final relationWhere = await _normalizeRelationOperatorWhere(
+          relationName: relationName,
           relation: relation,
-          relatedWhere: relationWhere,
-          include: true,
-        ),
-      );
-    }
+          operator: 'some',
+          operand: where['some'],
+        );
+        clauses.add(
+          await _buildRelationMembershipClause(
+            relation: relation,
+            relatedWhere: relationWhere,
+            include: true,
+          ),
+        );
+      }
 
-    if (where.containsKey('none')) {
-      final relationWhere = await _normalizeRelationOperatorWhere(
-        relationName: relationName,
-        relation: relation,
-        operator: 'none',
-        operand: where['none'],
-      );
-      clauses.add(
-        await _buildRelationMembershipClause(
+      if (where.containsKey('none')) {
+        final relationWhere = await _normalizeRelationOperatorWhere(
+          relationName: relationName,
           relation: relation,
-          relatedWhere: relationWhere,
-          include: false,
-        ),
-      );
-    }
+          operator: 'none',
+          operand: where['none'],
+        );
+        clauses.add(
+          await _buildRelationMembershipClause(
+            relation: relation,
+            relatedWhere: relationWhere,
+            include: false,
+          ),
+        );
+      }
 
-    if (where.containsKey('every')) {
-      final relationWhere = await _normalizeRelationOperatorWhere(
-        relationName: relationName,
-        relation: relation,
-        operator: 'every',
-        operand: where['every'],
-      );
-      clauses.add(
-        await _buildRelationMembershipClause(
+      if (where.containsKey('every')) {
+        final relationWhere = await _normalizeRelationOperatorWhere(
+          relationName: relationName,
           relation: relation,
-          relatedWhere: <String, Object?>{'NOT': relationWhere},
-          include: false,
-        ),
-      );
+          operator: 'every',
+          operand: where['every'],
+        );
+        clauses.add(
+          await _buildRelationMembershipClause(
+            relation: relation,
+            relatedWhere: <String, Object?>{'NOT': relationWhere},
+            include: false,
+          ),
+        );
+      }
+    } else {
+      if (where.containsKey('is')) {
+        final relationWhere = await _normalizeRelationOperatorWhere(
+          relationName: relationName,
+          relation: relation,
+          operator: 'is',
+          operand: where['is'],
+        );
+        clauses.add(
+          await _buildRelationMembershipClause(
+            relation: relation,
+            relatedWhere: relationWhere,
+            include: true,
+          ),
+        );
+      }
+
+      if (where.containsKey('isNot')) {
+        final relationWhere = await _normalizeRelationOperatorWhere(
+          relationName: relationName,
+          relation: relation,
+          operator: 'isNot',
+          operand: where['isNot'],
+        );
+        clauses.add(
+          await _buildRelationMembershipClause(
+            relation: relation,
+            relatedWhere: relationWhere,
+            include: false,
+          ),
+        );
+      }
     }
 
     if (clauses.isEmpty) {
@@ -1671,6 +1712,15 @@ class ModelDelegate {
     }
 
     where['AND'] = <JsonMap>[clause];
+  }
+
+  Set<String> _relationWhereOperatorsFor({
+    required RelationCardinality cardinality,
+  }) {
+    return switch (cardinality) {
+      RelationCardinality.many => _toManyRelationWhereOperators,
+      RelationCardinality.one => _toOneRelationWhereOperators,
+    };
   }
 
   Map<String, IncludeSpec> _normalizeInclude(Map<String, IncludeSpec> include) {

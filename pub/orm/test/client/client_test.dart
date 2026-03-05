@@ -777,6 +777,60 @@ void main() {
       },
     );
 
+    test('supports relation where is/isNot for to-one relation', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+      final posts = client.model('Post');
+
+      await posts.create(
+        data: <String, Object?>{'id': 'p4', 'userId': 'ux', 'title': 'Post D'},
+      );
+
+      final isRows = await posts.findMany(
+        where: <String, Object?>{
+          'author': <String, Object?>{
+            'is': <String, Object?>{
+              'email': <String, Object?>{'contains': 'u1@'},
+            },
+          },
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(isRows.map((row) => row['id']).toList(growable: false), <Object?>[
+        'p1',
+        'p2',
+      ]);
+
+      final isNotRows = await posts.findMany(
+        where: <String, Object?>{
+          'author': <String, Object?>{
+            'isNot': <String, Object?>{'id': 'u1'},
+          },
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(
+        isNotRows.map((row) => row['id']).toList(growable: false),
+        <Object?>['p3', 'p4'],
+      );
+
+      final relationMissingRows = await posts.findMany(
+        where: <String, Object?>{
+          'author': <String, Object?>{'isNot': const <String, Object?>{}},
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(
+        relationMissingRows.map((row) => row['id']).toList(growable: false),
+        <Object?>['p4'],
+      );
+      await client.disconnect();
+    });
+
     test('supports relation where with nested logical operators', () async {
       final client = OrmClient(
         contract: relationalContract,
@@ -848,6 +902,32 @@ void main() {
         where: <String, Object?>{'id': 'u2'},
       );
       expect(persisted?['email'], 'u2+updated@example.com');
+      await client.disconnect();
+    });
+
+    test('supports to-one relation where on mutation paths', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+      final posts = client.model('Post');
+
+      final updated = await posts.update(
+        where: <String, Object?>{
+          'author': <String, Object?>{
+            'is': <String, Object?>{'id': 'u2'},
+          },
+        },
+        data: <String, Object?>{'title': 'Post C updated'},
+      );
+      expect(updated?['id'], 'p3');
+
+      final persisted = await posts.findUnique(
+        where: <String, Object?>{'id': 'p3'},
+      );
+      expect(persisted?['title'], 'Post C updated');
       await client.disconnect();
     });
 
