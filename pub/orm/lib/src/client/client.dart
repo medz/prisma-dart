@@ -487,6 +487,25 @@ class ModelDelegate {
     });
   }
 
+  Future<JsonMap?> updateNested({
+    JsonMap where = const <String, Object?>{},
+    required JsonMap data,
+    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _client.transaction((tx) async {
+      final scoped = tx.model(modelName);
+      return scoped._updateNestedInScope(
+        where: where,
+        data: data,
+        create: create,
+        select: select,
+        include: include,
+      );
+    });
+  }
+
   Future<List<JsonMap>> createMany({
     required List<JsonMap> data,
     List<String> select = const <String>[],
@@ -805,6 +824,75 @@ class ModelDelegate {
     final hydratedRows = await _resolveIncludeRows(
       action: OrmAction.create,
       rows: <JsonMap>[created],
+      include: includeForReturn,
+      depth: 0,
+    );
+
+    return _shapeRows(
+      hydratedRows,
+      select: select,
+      include: includeForReturn,
+    ).single;
+  }
+
+  Future<JsonMap?> _updateNestedInScope({
+    required JsonMap where,
+    required JsonMap data,
+    required Map<String, List<JsonMap>> create,
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+  }) async {
+    final normalizedCreate = _normalizeNestedCreate(create);
+    final normalizedInclude = _normalizeInclude(include);
+
+    final updated = await this.update(
+      where: where,
+      data: data,
+      select: _expandSelectForNestedCreate(
+        model: modelName,
+        select: select,
+        create: normalizedCreate,
+      ),
+    );
+
+    if (updated == null) {
+      return null;
+    }
+
+    for (final entry in normalizedCreate.entries) {
+      final relation = _resolveRelation(
+        model: modelName,
+        relationName: entry.key,
+      );
+      final related = _client.model(relation.relatedModel);
+      for (final child in entry.value) {
+        final linkedData = _linkNestedData(
+          parent: updated,
+          relationName: entry.key,
+          relation: relation,
+          data: child,
+        );
+        await related.create(data: linkedData);
+      }
+    }
+
+    final includeForReturn = <String, IncludeSpec>{
+      for (final relationName in normalizedCreate.keys)
+        relationName: const IncludeSpec(),
+      ...normalizedInclude,
+    };
+
+    if (includeForReturn.isEmpty) {
+      return _shapeRows(
+        <JsonMap>[updated],
+        select: select,
+        include: const <String, IncludeSpec>{},
+      ).single;
+    }
+
+    final hydratedRows = await _resolveIncludeRows(
+      action: OrmAction.update,
+      rows: <JsonMap>[updated],
       include: includeForReturn,
       depth: 0,
     );
@@ -1543,6 +1631,19 @@ final class ModelQuery {
     return _delegate.update(
       where: _state.where,
       data: data,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
+
+  Future<JsonMap?> updateNested({
+    required JsonMap data,
+    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
+  }) {
+    return _delegate.updateNested(
+      where: _state.where,
+      data: data,
+      create: create,
       select: _state.select,
       include: _state.include,
     );
