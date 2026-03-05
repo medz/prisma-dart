@@ -1227,21 +1227,34 @@ final class TypedClientWriter {
           '  bool get isEmpty => some == null && every == null && none == null;',
         );
       } else {
-        buffer.writeln(
-          '  final ${relationModel.whereInputClassName}? isValue;',
-        );
+        buffer.writeln('  final ${relationModel.whereInputClassName}? is_;');
         buffer.writeln('  final ${relationModel.whereInputClassName}? isNot;');
+        buffer.writeln('  final bool isNull;');
+        buffer.writeln('  final bool isNotNull;');
         buffer.writeln();
-        buffer.writeln('  const $className({this.isValue, this.isNot});');
+        buffer.writeln('  const $className({');
+        buffer.writeln('    this.is_,');
+        buffer.writeln('    this.isNot,');
+        buffer.writeln('    this.isNull = false,');
+        buffer.writeln('    this.isNotNull = false,');
+        buffer.writeln('  }) : assert(!((is_ != null) && isNull)),');
+        buffer.writeln('       assert(!((isNot != null) && isNotNull)),');
+        buffer.writeln('       assert(!(isNull && isNotNull));');
         buffer.writeln();
         buffer.writeln('  factory $className.fromJsonValue(Object? value) {');
         buffer.writeln('    if (value is Map<String, Object?>) {');
+        buffer.writeln("      final hasIs = value.containsKey('is');");
+        buffer.writeln("      final hasIsNot = value.containsKey('isNot');");
         buffer.writeln('      return $className(');
         buffer.writeln(
-          "        isValue: _readRelation(value['is'], ${relationModel.whereInputClassName}.fromJson),",
+          "        is_: hasIs && value['is'] != null ? _readRelation(value['is'], ${relationModel.whereInputClassName}.fromJson) : null,",
         );
         buffer.writeln(
-          "        isNot: _readRelation(value['isNot'], ${relationModel.whereInputClassName}.fromJson),",
+          "        isNot: hasIsNot && value['isNot'] != null ? _readRelation(value['isNot'], ${relationModel.whereInputClassName}.fromJson) : null,",
+        );
+        buffer.writeln("        isNull: hasIs && value['is'] == null,");
+        buffer.writeln(
+          "        isNotNull: hasIsNot && value['isNot'] == null,",
         );
         buffer.writeln('      );');
         buffer.writeln('    }');
@@ -1253,14 +1266,18 @@ final class TypedClientWriter {
         buffer.writeln('      return null;');
         buffer.writeln('    }');
         buffer.writeln('    return <String, Object?>{');
-        buffer.writeln("      if (isValue != null) 'is': isValue!.toJson(),");
+        buffer.writeln("      if (is_ != null) 'is': is_!.toJson(),");
+        buffer.writeln("      if (isNull) 'is': null,");
         buffer.writeln("      if (isNot != null) 'isNot': isNot!.toJson(),");
+        buffer.writeln("      if (isNotNull) 'isNot': null,");
         buffer.writeln('    };');
         buffer.writeln('  }');
         buffer.writeln();
-        buffer.writeln(
-          '  bool get isEmpty => isValue == null && isNot == null;',
-        );
+        buffer.writeln('  bool get isEmpty =>');
+        buffer.writeln('      is_ == null &&');
+        buffer.writeln('      isNot == null &&');
+        buffer.writeln('      !isNull &&');
+        buffer.writeln('      !isNotNull;');
       }
       buffer.writeln('}');
       buffer.writeln();

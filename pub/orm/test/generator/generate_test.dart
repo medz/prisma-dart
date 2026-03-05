@@ -357,7 +357,7 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+PostAuthorRelationWhereFilter\s*\{[\s\S]*?final\s+UserWhereInput\?\s+isValue;[\s\S]*?final\s+UserWhereInput\?\s+isNot;',
+            r'class\s+PostAuthorRelationWhereFilter\s*\{[\s\S]*?final\s+UserWhereInput\?\s+is_;[\s\S]*?final\s+UserWhereInput\?\s+isNot;',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -386,6 +386,14 @@ void main() {
           isTrue,
           reason:
               'Expected to-one relation where serialization to skip empty filter.',
+        );
+        expect(
+          RegExp(
+            r'class\s+PostAuthorRelationWhereFilter\s*\{[\s\S]*?final\s+bool\s+isNull;[\s\S]*?final\s+bool\s+isNotNull;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected to-one relation filter to support is:null and isNot:null.',
         );
       });
 
