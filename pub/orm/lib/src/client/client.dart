@@ -72,6 +72,8 @@ abstract interface class OrmModelContext {
   ModelDelegate model(String modelKey);
 
   ModelDelegate collection(String modelKey);
+
+  Future<T> transaction<T>(Future<T> Function(OrmModelContext tx) run);
 }
 
 final class OrmClient implements OrmModelContext {
@@ -191,6 +193,11 @@ final class OrmClient implements OrmModelContext {
   @override
   Future<EngineResponse> execute(OrmPlan plan) => _runtime.execute(plan);
 
+  @override
+  Future<T> transaction<T>(Future<T> Function(OrmModelContext tx) run) {
+    return withTransaction((scoped) => run(scoped));
+  }
+
   String _resolveModelOrThrow({required String modelKey}) {
     final resolved = _resolveModel(modelKey);
     if (resolved != null) {
@@ -255,6 +262,11 @@ final class OrmScopedClient implements OrmModelContext {
 
   @override
   Future<EngineResponse> execute(OrmPlan plan) => _executePlan(plan);
+
+  @override
+  Future<T> transaction<T>(Future<T> Function(OrmModelContext tx) run) {
+    return run(this);
+  }
 
   String _resolveModelOrThrow({required String modelKey}) {
     final resolved = _resolveModel(modelKey);
@@ -386,6 +398,23 @@ class ModelDelegate {
       select: select,
       include: normalizedInclude,
     ).single;
+  }
+
+  Future<JsonMap> createNested({
+    required JsonMap data,
+    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _client.transaction((tx) async {
+      final scoped = tx.model(modelName);
+      return scoped._createNestedInScope(
+        data: data,
+        create: create,
+        select: select,
+        include: include,
+      );
+    });
   }
 
   Future<JsonMap?> update({
@@ -539,6 +568,69 @@ class ModelDelegate {
       hydratedRows,
       select: select,
       include: normalizedInclude,
+    ).single;
+  }
+
+  Future<JsonMap> _createNestedInScope({
+    required JsonMap data,
+    required Map<String, List<JsonMap>> create,
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+  }) async {
+    final normalizedCreate = _normalizeNestedCreate(create);
+    final normalizedInclude = _normalizeInclude(include);
+
+    final created = await this.create(
+      data: data,
+      select: _expandSelectForNestedCreate(
+        model: modelName,
+        select: select,
+        create: normalizedCreate,
+      ),
+    );
+
+    for (final entry in normalizedCreate.entries) {
+      final relation = _resolveRelation(
+        model: modelName,
+        relationName: entry.key,
+      );
+      final related = _client.model(relation.relatedModel);
+      for (final child in entry.value) {
+        final linkedData = _linkNestedData(
+          parent: created,
+          relationName: entry.key,
+          relation: relation,
+          data: child,
+        );
+        await related.create(data: linkedData);
+      }
+    }
+
+    final includeForReturn = <String, IncludeSpec>{
+      for (final relationName in normalizedCreate.keys)
+        relationName: const IncludeSpec(),
+      ...normalizedInclude,
+    };
+
+    if (includeForReturn.isEmpty) {
+      return _shapeRows(
+        <JsonMap>[created],
+        select: select,
+        include: const <String, IncludeSpec>{},
+      ).single;
+    }
+
+    final hydratedRows = await _resolveIncludeRows(
+      action: OrmAction.create,
+      rows: <JsonMap>[created],
+      include: includeForReturn,
+      depth: 0,
+    );
+
+    return _shapeRows(
+      hydratedRows,
+      select: select,
+      include: includeForReturn,
     ).single;
   }
 
@@ -700,6 +792,27 @@ class ModelDelegate {
     return expanded.toList(growable: false);
   }
 
+  List<String> _expandSelectForNestedCreate({
+    required String model,
+    required List<String> select,
+    required Map<String, List<JsonMap>> create,
+  }) {
+    if (select.isEmpty || create.isEmpty) {
+      return select;
+    }
+
+    final expanded = <String>{...select};
+    for (final relationName in create.keys) {
+      final relation = _resolveRelation(
+        model: model,
+        relationName: relationName,
+      );
+      expanded.addAll(relation.sourceFields);
+    }
+
+    return expanded.toList(growable: false);
+  }
+
   List<JsonMap> _shapeRows(
     List<JsonMap> rows, {
     required List<String> select,
@@ -755,6 +868,50 @@ class ModelDelegate {
       return const <String, IncludeSpec>{};
     }
     return include;
+  }
+
+  Map<String, List<JsonMap>> _normalizeNestedCreate(
+    Map<String, List<JsonMap>> create,
+  ) {
+    if (create.isEmpty) {
+      return const <String, List<JsonMap>>{};
+    }
+
+    final normalized = <String, List<JsonMap>>{};
+    for (final entry in create.entries) {
+      normalized[entry.key] = entry.value
+          .map((row) => Map<String, Object?>.from(row))
+          .toList(growable: false);
+    }
+    return normalized;
+  }
+
+  JsonMap _linkNestedData({
+    required JsonMap parent,
+    required String relationName,
+    required ModelRelationContract relation,
+    required JsonMap data,
+  }) {
+    final relationFields = <String, Object?>{};
+    for (var index = 0; index < relation.sourceFields.length; index++) {
+      final sourceField = relation.sourceFields[index];
+      final targetField = relation.targetFields[index];
+      if (!parent.containsKey(sourceField) || parent[sourceField] == null) {
+        throw runtimeError(
+          'PLAN.RELATION_SOURCE_FIELD_MISSING',
+          'Missing source field for nested create relation linking.',
+          details: <String, Object?>{
+            'model': modelName,
+            'relation': relationName,
+            'sourceField': sourceField,
+            'targetField': targetField,
+          },
+        );
+      }
+      relationFields[targetField] = parent[sourceField];
+    }
+
+    return <String, Object?>{...data, ...relationFields};
   }
 }
 

@@ -328,65 +328,124 @@ void main() {
       await client.disconnect();
     });
 
-    test('supports include and includeRelation on chained query APIs', () async {
+    test(
+      'supports explicit nested create orchestration with transaction',
+      () async {
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: MemoryEngine(),
+        );
+        await client.connect();
+
+        final created = await client
+            .model('User')
+            .createNested(
+              data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
+              create: <String, List<JsonMap>>{
+                'posts': <JsonMap>[
+                  <String, Object?>{'id': 'p4', 'title': 'Post D'},
+                  <String, Object?>{'id': 'p5', 'title': 'Post E'},
+                ],
+              },
+            );
+
+        expect(created['id'], 'u3');
+        final createdPosts = _readRowsValue(created['posts']);
+        expect(createdPosts, hasLength(2));
+        expect(createdPosts.first['userId'], 'u3');
+
+        final persistedPosts = await client
+            .model('Post')
+            .findMany(where: <String, Object?>{'userId': 'u3'});
+        expect(persistedPosts, hasLength(2));
+        await client.disconnect();
+      },
+    );
+
+    test('nested create rolls back when child mutation fails', () async {
       final client = OrmClient(
         contract: relationalContract,
         engine: MemoryEngine(),
       );
       await client.connect();
-      await _seedRelationalData(client);
-      final users = client.model('User');
 
-      final delegatedRows = await users
-          .include(
-            <String, IncludeSpec>{
-              'posts': IncludeSpec(
-                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-                take: 1,
-              ),
-            },
-          )
-          .findMany();
-      expect(delegatedRows, hasLength(2));
-      expect(_readRowsValue(delegatedRows.first['posts']), hasLength(1));
+      await expectLater(
+        client
+            .model('User')
+            .createNested(
+              data: <String, Object?>{'id': 'u4', 'email': 'u4@example.com'},
+              create: <String, List<JsonMap>>{
+                'posts': <JsonMap>[
+                  <String, Object?>{'id': 'p6', 'title': 'Post F', 'bad': 1},
+                ],
+              },
+            ),
+        throwsA(isA<PlanFieldNotFoundException>()),
+      );
 
-      final base = users.query().where(<String, Object?>{'id': 'u1'});
-      final withInclude = base.include(
-        <String, IncludeSpec>{
+      final rolledBackUser = await client
+          .model('User')
+          .findUnique(where: <String, Object?>{'id': 'u4'});
+      expect(rolledBackUser, isNull);
+      await client.disconnect();
+    });
+
+    test(
+      'supports include and includeRelation on chained query APIs',
+      () async {
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: MemoryEngine(),
+        );
+        await client.connect();
+        await _seedRelationalData(client);
+        final users = client.model('User');
+
+        final delegatedRows = await users.include(<String, IncludeSpec>{
           'posts': IncludeSpec(
             orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
             take: 1,
           ),
-        },
-      );
+        }).findMany();
+        expect(delegatedRows, hasLength(2));
+        expect(_readRowsValue(delegatedRows.first['posts']), hasLength(1));
 
-      expect(base.includeValues, isEmpty);
-      expect(withInclude.includeValues.keys, <String>['posts']);
+        final base = users.query().where(<String, Object?>{'id': 'u1'});
+        final withInclude = base.include(<String, IncludeSpec>{
+          'posts': IncludeSpec(
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            take: 1,
+          ),
+        });
 
-      final includeRow = await withInclude.findUnique();
-      final includePosts = _readRowsValue(includeRow?['posts']);
-      expect(includePosts, hasLength(1));
-      expect(includePosts.single['id'], 'p1');
+        expect(base.includeValues, isEmpty);
+        expect(withInclude.includeValues.keys, <String>['posts']);
 
-      final includeRelationRow = await users
-          .where(<String, Object?>{'id': 'u1'})
-          .includeRelation(
-            'posts',
-            spec: IncludeSpec(
-              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-              include: <String, IncludeSpec>{
-                'author': IncludeSpec(select: const <String>['email']),
-              },
-            ),
-          )
-          .findUnique();
+        final includeRow = await withInclude.findUnique();
+        final includePosts = _readRowsValue(includeRow?['posts']);
+        expect(includePosts, hasLength(1));
+        expect(includePosts.single['id'], 'p1');
 
-      final relationPosts = _readRowsValue(includeRelationRow?['posts']);
-      expect(relationPosts, hasLength(2));
-      final relationAuthor = _readRowValue(relationPosts.first['author']);
-      expect(relationAuthor?['email'], 'u1@example.com');
-      await client.disconnect();
-    });
+        final includeRelationRow = await users
+            .where(<String, Object?>{'id': 'u1'})
+            .includeRelation(
+              'posts',
+              spec: IncludeSpec(
+                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                include: <String, IncludeSpec>{
+                  'author': IncludeSpec(select: const <String>['email']),
+                },
+              ),
+            )
+            .findUnique();
+
+        final relationPosts = _readRowsValue(includeRelationRow?['posts']);
+        expect(relationPosts, hasLength(2));
+        final relationAuthor = _readRowValue(relationPosts.first['author']);
+        expect(relationAuthor?['email'], 'u1@example.com');
+        await client.disconnect();
+      },
+    );
 
     test('supports nested include for relation traversal', () async {
       final client = OrmClient(
