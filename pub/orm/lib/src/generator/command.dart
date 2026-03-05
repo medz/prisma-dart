@@ -18,15 +18,7 @@ int runGenerateCommand({Directory? cwd, IOSink? out, IOSink? err}) {
       configuredOutputPath: config.outputPath,
     );
 
-    final schemaImportPath = _relativeImportPath(
-      fromDirectoryPath: outputFile.parent.path,
-      targetFilePath: schema.schemaFile.path,
-    );
-
-    final generated = emitTypedClient(
-      schema: schema,
-      schemaImportPath: schemaImportPath,
-    );
+    final generated = emitTypedClient(schema: schema);
 
     outputFile.parent.createSync(recursive: true);
     outputFile.writeAsStringSync(generated);
@@ -53,38 +45,6 @@ File _resolveOutputFile({
   }
 
   return File(_join(cwd.path, configuredOutputPath));
-}
-
-String _relativeImportPath({
-  required String fromDirectoryPath,
-  required String targetFilePath,
-}) {
-  final fromSegments = _pathSegments(fromDirectoryPath);
-  final targetSegments = _pathSegments(targetFilePath);
-
-  var commonLength = 0;
-  while (commonLength < fromSegments.length &&
-      commonLength < targetSegments.length &&
-      fromSegments[commonLength] == targetSegments[commonLength]) {
-    commonLength += 1;
-  }
-
-  final upwardCount = fromSegments.length - commonLength;
-  final segments = <String>[
-    ...List<String>.filled(upwardCount, '..'),
-    ...targetSegments.sublist(commonLength),
-  ];
-
-  if (segments.isEmpty) {
-    return './${File(targetFilePath).uri.pathSegments.last}';
-  }
-
-  return segments.join('/');
-}
-
-List<String> _pathSegments(String path) {
-  final normalized = path.replaceAll('\\', '/');
-  return normalized.split('/').where((segment) => segment.isNotEmpty).toList();
 }
 
 String _join(String base, String child) {

@@ -958,7 +958,7 @@ final class _ResolvedModel {
     required this.getterName,
   });
 
-  String get delegateClassName => '${classBaseName}TypedDelegate';
+  String get delegateClassName => '${classBaseName}Delegate';
 
   String get dataClassName => '${classBaseName}Data';
 
