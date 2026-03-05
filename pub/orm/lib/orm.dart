@@ -1,6 +1,7 @@
 export 'config.dart';
 export 'core.dart';
 export 'schema.dart';
+export 'src/generator/generator.dart';
 export 'src/client/client.dart';
 export 'src/contract/contract.dart';
 export 'src/engine/engine.dart';

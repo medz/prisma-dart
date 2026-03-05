@@ -3,6 +3,9 @@ description: A starting point for Dart libraries or applications.
 version: 6.0.0-dev.1
 # repository: https://github.com/my_org/my_repo
 
+executables:
+  orm:
+
 resolution: workspace
 environment:
   sdk: ^3.10.1
