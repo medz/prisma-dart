@@ -40,6 +40,7 @@ TypedField _toTypedField(SchemaFieldDefinition field) {
     type: scalarType,
     isNullable: parsed.isNullable,
     isList: parsed.isList,
+    includeInWhere: !parsed.isList,
   );
 }
 

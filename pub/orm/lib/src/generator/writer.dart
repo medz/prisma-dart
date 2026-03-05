@@ -28,6 +28,7 @@ final class TypedClientWriter {
 
     final buffer = StringBuffer();
     _writeHeader(buffer: buffer, options: options);
+    _writeWhereFilterClasses(buffer);
     _writeGeneratedClientClass(buffer: buffer, models: resolvedModels);
 
     for (final model in resolvedModels) {
@@ -93,6 +94,165 @@ final class TypedClientWriter {
 
     buffer.writeln();
     buffer.writeln("import '${options.ormImport}';");
+    buffer.writeln();
+  }
+
+  void _writeWhereFilterClasses(StringBuffer buffer) {
+    buffer.writeln('class StringWhereFilter {');
+    buffer.writeln('  final String? equals;');
+    buffer.writeln();
+    buffer.writeln('  const StringWhereFilter({this.equals});');
+    buffer.writeln();
+    buffer.writeln(
+      '  factory StringWhereFilter.fromJsonValue(Object? value) {',
+    );
+    buffer.writeln('    if (value is String) {');
+    buffer.writeln('      return StringWhereFilter(equals: value);');
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is Map<String, Object?>) {');
+    buffer.writeln(
+      "      return StringWhereFilter(equals: _readString(value['equals']));",
+    );
+    buffer.writeln('    }');
+    buffer.writeln('    return const StringWhereFilter();');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln();
+    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class IntWhereFilter {');
+    buffer.writeln('  final int? equals;');
+    buffer.writeln();
+    buffer.writeln('  const IntWhereFilter({this.equals});');
+    buffer.writeln();
+    buffer.writeln('  factory IntWhereFilter.fromJsonValue(Object? value) {');
+    buffer.writeln('    if (value is int) {');
+    buffer.writeln('      return IntWhereFilter(equals: value);');
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is num) {');
+    buffer.writeln('      return IntWhereFilter(equals: value.toInt());');
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is Map<String, Object?>) {');
+    buffer.writeln(
+      "      return IntWhereFilter(equals: _readInt(value['equals']));",
+    );
+    buffer.writeln('    }');
+    buffer.writeln('    return const IntWhereFilter();');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln();
+    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class DoubleWhereFilter {');
+    buffer.writeln('  final double? equals;');
+    buffer.writeln();
+    buffer.writeln('  const DoubleWhereFilter({this.equals});');
+    buffer.writeln();
+    buffer.writeln(
+      '  factory DoubleWhereFilter.fromJsonValue(Object? value) {',
+    );
+    buffer.writeln('    if (value is double) {');
+    buffer.writeln('      return DoubleWhereFilter(equals: value);');
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is num) {');
+    buffer.writeln('      return DoubleWhereFilter(equals: value.toDouble());');
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is Map<String, Object?>) {');
+    buffer.writeln(
+      "      return DoubleWhereFilter(equals: _readDouble(value['equals']));",
+    );
+    buffer.writeln('    }');
+    buffer.writeln('    return const DoubleWhereFilter();');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln();
+    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class BoolWhereFilter {');
+    buffer.writeln('  final bool? equals;');
+    buffer.writeln();
+    buffer.writeln('  const BoolWhereFilter({this.equals});');
+    buffer.writeln();
+    buffer.writeln('  factory BoolWhereFilter.fromJsonValue(Object? value) {');
+    buffer.writeln('    if (value is bool) {');
+    buffer.writeln('      return BoolWhereFilter(equals: value);');
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is Map<String, Object?>) {');
+    buffer.writeln(
+      "      return BoolWhereFilter(equals: _readBool(value['equals']));",
+    );
+    buffer.writeln('    }');
+    buffer.writeln('    return const BoolWhereFilter();');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln();
+    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class DateTimeWhereFilter {');
+    buffer.writeln('  final DateTime? equals;');
+    buffer.writeln();
+    buffer.writeln('  const DateTimeWhereFilter({this.equals});');
+    buffer.writeln();
+    buffer.writeln(
+      '  factory DateTimeWhereFilter.fromJsonValue(Object? value) {',
+    );
+    buffer.writeln('    if (value is DateTime) {');
+    buffer.writeln('      return DateTimeWhereFilter(equals: value);');
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is String) {');
+    buffer.writeln(
+      '      return DateTimeWhereFilter(equals: DateTime.tryParse(value));',
+    );
+    buffer.writeln('    }');
+    buffer.writeln('    if (value is Map<String, Object?>) {');
+    buffer.writeln(
+      "      return DateTimeWhereFilter(equals: _readDateTime(value['equals']));",
+    );
+    buffer.writeln('    }');
+    buffer.writeln('    return const DateTimeWhereFilter();');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Object? toJsonValue() => equals?.toIso8601String();');
+    buffer.writeln();
+    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class JsonWhereFilter {');
+    buffer.writeln('  final Object? equals;');
+    buffer.writeln();
+    buffer.writeln('  const JsonWhereFilter({this.equals});');
+    buffer.writeln();
+    buffer.writeln('  factory JsonWhereFilter.fromJsonValue(Object? value) {');
+    buffer.writeln(
+      '    if (value is Map<String, Object?> && value.containsKey(\'equals\')) {',
+    );
+    buffer.writeln("      return JsonWhereFilter(equals: value['equals']);");
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    if (value is Map<String, Object?> || value is List<Object?> || value is String || value is num || value is bool || value == null) {',
+    );
+    buffer.writeln('      return JsonWhereFilter(equals: value);');
+    buffer.writeln('    }');
+    buffer.writeln('    return const JsonWhereFilter();');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Object? toJsonValue() => equals;');
+    buffer.writeln();
+    buffer.writeln('  bool get isEmpty => equals == null;');
+    buffer.writeln('}');
     buffer.writeln();
   }
 
@@ -618,11 +778,19 @@ final class TypedClientWriter {
         memberName: memberName,
         lookup: lookup,
       );
+      final isWhereScalarFilter =
+          classKind == _TemplateClassKind.where && field.field.isScalar;
 
       if (isOptional) {
-        buffer.writeln(
-          "      if (${field.memberName} != null) '${_escapeString(field.field.name)}': $valueExpression,",
-        );
+        if (isWhereScalarFilter) {
+          buffer.writeln(
+            "      if (${field.memberName} != null && !${field.memberName}!.isEmpty) '${_escapeString(field.field.name)}': $valueExpression,",
+          );
+        } else {
+          buffer.writeln(
+            "      if (${field.memberName} != null) '${_escapeString(field.field.name)}': $valueExpression,",
+          );
+        }
       } else {
         buffer.writeln(
           "      '${_escapeString(field.field.name)}': $valueExpression,",
@@ -943,6 +1111,10 @@ final class TypedClientWriter {
     required _TemplateClassKind classKind,
     required Map<String, _ResolvedModel> lookup,
   }) {
+    if (classKind == _TemplateClassKind.where && field.isScalar) {
+      return _whereFilterClassName(field.scalarType);
+    }
+
     if (field.isRelation) {
       final relationModelName = field.relationModel;
       final relation = relationModelName == null
@@ -979,6 +1151,11 @@ final class TypedClientWriter {
     required String accessor,
     required Map<String, _ResolvedModel> lookup,
   }) {
+    if (classKind == _TemplateClassKind.where && field.isScalar) {
+      final filterClass = _whereFilterClassName(field.scalarType);
+      return '$filterClass.fromJsonValue($accessor)';
+    }
+
     if (field.isRelation) {
       final relationModelName = field.relationModel;
       final relation = relationModelName == null
@@ -1036,6 +1213,10 @@ final class TypedClientWriter {
     required String memberName,
     required Map<String, _ResolvedModel> lookup,
   }) {
+    if (classKind == _TemplateClassKind.where && field.isScalar) {
+      return '$memberName.toJsonValue()';
+    }
+
     if (field.isRelation) {
       final relationModelName = field.relationModel;
       final relation = relationModelName == null
@@ -1061,6 +1242,17 @@ final class TypedClientWriter {
     }
 
     return memberName;
+  }
+
+  String _whereFilterClassName(TypedScalarType? scalarType) {
+    return switch (scalarType) {
+      TypedScalarType.string => 'StringWhereFilter',
+      TypedScalarType.integer => 'IntWhereFilter',
+      TypedScalarType.floating => 'DoubleWhereFilter',
+      TypedScalarType.boolean => 'BoolWhereFilter',
+      TypedScalarType.dateTime => 'DateTimeWhereFilter',
+      TypedScalarType.json || null => 'JsonWhereFilter',
+    };
   }
 
   String _classSuffix(_TemplateClassKind classKind) {

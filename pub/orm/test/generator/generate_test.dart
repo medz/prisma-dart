@@ -123,6 +123,24 @@ void main() {
             reason: 'Missing typed include DSL class in generated source.',
           );
           expect(
+            RegExp(r'\bclass StringWhereFilter\b').hasMatch(generatedSource),
+            isTrue,
+            reason: 'Missing string where filter class in generated source.',
+          );
+          expect(
+            RegExp(r'\bclass IntWhereFilter\b').hasMatch(generatedSource),
+            isTrue,
+            reason: 'Missing int where filter class in generated source.',
+          );
+          expect(
+            RegExp(
+              r'class\s+UserWhereInput\s*\{[\s\S]*?final\s+IntWhereFilter\?\s+id;[\s\S]*?final\s+StringWhereFilter\?\s+email;',
+            ).hasMatch(generatedSource),
+            isTrue,
+            reason:
+                'Expected UserWhereInput fields to use typed where filter classes.',
+          );
+          expect(
             generatedSource.contains('List<UserOrderBy> orderBy'),
             isTrue,
             reason: 'Expected typed delegate signature to use UserOrderBy.',
