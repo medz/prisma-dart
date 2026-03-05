@@ -191,6 +191,42 @@ void main() {
     ]);
   });
 
+  test('sql_logical_operand_edge_semantics_are_deterministic', () {
+    final adapter = SqlAdapter(contract: contract);
+
+    final emptyOperandStatement = adapter.lower(
+      OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.findMany,
+        where: <String, Object?>{
+          'AND': const <Object?>[],
+          'OR': const <Object?>[],
+          'NOT': const <Object?>[],
+        },
+      ),
+    );
+    expect(
+      emptyOperandStatement.text,
+      'SELECT * FROM "users" WHERE 1 = 1 AND 1 = 0 AND 1 = 1',
+    );
+    expect(emptyOperandStatement.parameters, isEmpty);
+
+    final invalidOperandStatement = adapter.lower(
+      OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.findMany,
+        where: <String, Object?>{'AND': 'bad', 'OR': 1, 'NOT': true},
+      ),
+    );
+    expect(
+      invalidOperandStatement.text,
+      'SELECT * FROM "users" WHERE 1 = 0 AND 1 = 0 AND 1 = 0',
+    );
+    expect(invalidOperandStatement.parameters, isEmpty);
+  });
+
   test('lowers to-many relation where using EXISTS predicates', () {
     final contract = buildRelationalContract();
     final adapter = SqlAdapter(contract: contract);

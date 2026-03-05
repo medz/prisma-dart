@@ -633,6 +633,35 @@ void main() {
       await client.disconnect();
     });
 
+    test('createMany_rolls_back_on_partial_failure', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      await users.create(
+        data: <String, Object?>{'id': 'seed', 'email': 'seed@x.com'},
+      );
+
+      await expectLater(
+        users.createMany(
+          data: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u2', 'email': 'b@x.com', 'bad': true},
+            <String, Object?>{'id': 'u3', 'email': 'c@x.com'},
+          ],
+        ),
+        throwsA(isA<PlanFieldNotFoundException>()),
+      );
+
+      final rows = await users.findMany(
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(rows.map((row) => row['id']).toList(growable: false), <Object?>[
+        'seed',
+      ]);
+      await client.disconnect();
+    });
+
     test(
       'falls back for create/update/delete when mutation returning is disabled',
       () async {
