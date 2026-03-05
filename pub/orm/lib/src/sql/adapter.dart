@@ -40,11 +40,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       ),
       OrmAction.create => _lowerCreate(plan: plan, table: model.table),
       OrmAction.update => _lowerUpdate(plan: plan, table: model.table),
-      OrmAction.delete => SqlStatement(
-        action: plan.action,
-        text: 'DELETE FROM ${_id(model.table)}$whereClause',
-        parameters: params,
-      ),
+      OrmAction.delete => _lowerDelete(plan: plan, table: model.table),
     };
   }
 
@@ -79,7 +75,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       action: plan.action,
       text:
           'INSERT INTO ${_id(table)} (${columns.map(_id).join(', ')}) '
-          'VALUES ($placeholders)',
+          'VALUES ($placeholders)${_buildMutationReturningClause(plan.select)}',
       parameters: values,
     );
   }
@@ -98,7 +94,20 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       text:
           'UPDATE ${_id(table)} SET '
           '${setColumns.map((column) => '${_id(column)} = ?').join(', ')}'
-          '$wherePart',
+          '$wherePart${_buildMutationReturningClause(plan.select)}',
+      parameters: params,
+    );
+  }
+
+  SqlStatement _lowerDelete({required OrmPlan plan, required String table}) {
+    final params = <Object?>[];
+    final wherePart = _buildWhereClause(plan.where, params);
+
+    return SqlStatement(
+      action: plan.action,
+      text:
+          'DELETE FROM ${_id(table)}'
+          '$wherePart${_buildMutationReturningClause(plan.select)}',
       parameters: params,
     );
   }
@@ -108,6 +117,14 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       return '*';
     }
     return select.map(_id).join(', ');
+  }
+
+  String _buildMutationReturningClause(List<String> select) {
+    if (!contract.capabilities.mutationReturning) {
+      return '';
+    }
+
+    return ' RETURNING ${_buildSelectColumns(select)}';
   }
 
   String _buildWhereClause(JsonMap where, List<Object?> params) {

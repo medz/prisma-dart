@@ -2,17 +2,22 @@ import 'package:orm/orm.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final contract = OrmContract(
-    version: '1',
-    hash: 'hash',
-    models: <String, ModelContract>{
-      'User': ModelContract(
-        name: 'User',
-        table: 'users',
-        fields: <String>{'id', 'email'},
-      ),
-    },
-  );
+  OrmContract buildContract({bool mutationReturning = true}) {
+    return OrmContract(
+      version: '1',
+      hash: 'hash',
+      models: <String, ModelContract>{
+        'User': ModelContract(
+          name: 'User',
+          table: 'users',
+          fields: <String>{'id', 'email'},
+        ),
+      },
+      capabilities: ContractCapabilities(mutationReturning: mutationReturning),
+    );
+  }
+
+  final contract = buildContract();
 
   test('lowers findMany with where/order/pagination/select', () {
     final adapter = SqlAdapter(contract: contract);
@@ -37,6 +42,7 @@ void main() {
   });
 
   test('lowers mutation statements', () {
+    final contract = buildContract(mutationReturning: false);
     final adapter = SqlAdapter(contract: contract);
 
     final createStatement = adapter.lower(
@@ -78,6 +84,55 @@ void main() {
     );
     expect(deleteStatement.text, 'DELETE FROM "users" WHERE "id" = ?');
     expect(deleteStatement.parameters, <Object?>['u1']);
+  });
+
+  test('lowers mutation statements with returning clause when enabled', () {
+    final adapter = SqlAdapter(contract: buildContract());
+
+    final createDefaultSelect = adapter.lower(
+      OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.create,
+        data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
+      ),
+    );
+    expect(
+      createDefaultSelect.text,
+      'INSERT INTO "users" ("id", "email") VALUES (?, ?) RETURNING *',
+    );
+    expect(createDefaultSelect.parameters, <Object?>['u1', 'a@example.com']);
+
+    final updateSelectedColumns = adapter.lower(
+      OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.update,
+        where: <String, Object?>{'id': 'u1'},
+        data: <String, Object?>{'email': 'b@example.com'},
+        select: const <String>['id'],
+      ),
+    );
+    expect(
+      updateSelectedColumns.text,
+      'UPDATE "users" SET "email" = ? WHERE "id" = ? RETURNING "id"',
+    );
+    expect(updateSelectedColumns.parameters, <Object?>['b@example.com', 'u1']);
+
+    final deleteSelectedColumns = adapter.lower(
+      OrmPlan(
+        contractHash: contract.hash,
+        model: 'User',
+        action: OrmAction.delete,
+        where: <String, Object?>{'id': 'u1'},
+        select: const <String>['id', 'email'],
+      ),
+    );
+    expect(
+      deleteSelectedColumns.text,
+      'DELETE FROM "users" WHERE "id" = ? RETURNING "id", "email"',
+    );
+    expect(deleteSelectedColumns.parameters, <Object?>['u1']);
   });
 
   test('decodes SQL result by action response shape', () {
