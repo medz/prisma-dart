@@ -5,13 +5,25 @@ import 'config_loader.dart';
 import 'error.dart';
 import 'schema_loader.dart';
 
-int runGenerateCommand({Directory? cwd, IOSink? out, IOSink? err}) {
+int runGenerateCommand({
+  Directory? cwd,
+  IOSink? out,
+  IOSink? err,
+  String? configPath,
+  String? schemaPath,
+  String? outputPath,
+}) {
   final workingDirectory = cwd ?? Directory.current;
   final output = out ?? stdout;
   final error = err ?? stderr;
 
   try {
-    final config = loadGeneratorConfig(cwd: workingDirectory);
+    final config = loadGeneratorConfig(
+      cwd: workingDirectory,
+      configPath: configPath,
+      schemaOverridePath: schemaPath,
+      outputOverridePath: outputPath,
+    );
     final schema = loadSchema(cwd: workingDirectory, config: config);
     final outputFile = _resolveOutputFile(
       cwd: workingDirectory,

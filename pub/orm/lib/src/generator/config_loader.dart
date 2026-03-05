@@ -8,13 +8,26 @@ import 'snapshot.dart';
 
 const _defaultOutputPath = 'lib/orm_client.g.dart';
 
-GeneratorConfigSnapshot loadGeneratorConfig({required Directory cwd}) {
-  final configFile = File(_join(cwd.path, 'orm.config.dart'));
+GeneratorConfigSnapshot loadGeneratorConfig({
+  required Directory cwd,
+  String? configPath,
+  String? schemaOverridePath,
+  String? outputOverridePath,
+}) {
+  final configFile = _resolveConfigFile(cwd: cwd, configPath: configPath);
   if (!configFile.existsSync()) {
+    final configOverride = _readOverridePath(
+      configPath,
+      optionName: '--config',
+    );
     throw GeneratorException(
-      'Cannot find orm.config.dart in current working directory.',
+      configOverride == null
+          ? 'Cannot find orm.config.dart in current working directory.'
+          : 'Cannot find config file.',
       path: configFile.path,
-      hint: 'Create orm.config.dart with a top-level config declaration.',
+      hint: configOverride == null
+          ? 'Create orm.config.dart with a top-level config declaration.'
+          : 'Check the --config path and ensure it points to a Dart file.',
     );
   }
 
@@ -29,7 +42,7 @@ GeneratorConfigSnapshot loadGeneratorConfig({required Directory cwd}) {
     final diagnostic = parsed.errors.first;
     final location = parsed.lineInfo.getLocation(diagnostic.offset);
     throw GeneratorException(
-      'orm.config.dart contains invalid Dart syntax.',
+      'Config file contains invalid Dart syntax.',
       path: configFile.path,
       line: location.lineNumber,
       column: location.columnNumber,
@@ -50,23 +63,53 @@ GeneratorConfigSnapshot loadGeneratorConfig({required Directory cwd}) {
   }
 
   final namedArguments = _readNamedArguments(configArguments);
-  final output = _readStringArg(
-    namedArguments,
-    key: 'output',
-    file: configFile,
-    defaultValue: _defaultOutputPath,
-  );
-  final schema = _readNullableStringArg(
-    namedArguments,
-    key: 'schema',
-    file: configFile,
-  );
+  final output =
+      _readOverridePath(outputOverridePath, optionName: '--output') ??
+      _readStringArg(
+        namedArguments,
+        key: 'output',
+        file: configFile,
+        defaultValue: _defaultOutputPath,
+      );
+  final schema =
+      _readOverridePath(schemaOverridePath, optionName: '--schema') ??
+      _readNullableStringArg(namedArguments, key: 'schema', file: configFile);
 
   return GeneratorConfigSnapshot(
     configFile: configFile,
     outputPath: output,
     schemaPath: schema,
   );
+}
+
+File _resolveConfigFile({required Directory cwd, required String? configPath}) {
+  final configuredPath = _readOverridePath(configPath, optionName: '--config');
+  if (configuredPath == null) {
+    return File(_join(cwd.path, 'orm.config.dart'));
+  }
+
+  final configuredFile = File(configuredPath);
+  if (configuredFile.isAbsolute) {
+    return configuredFile;
+  }
+
+  return File(_join(cwd.path, configuredPath));
+}
+
+String? _readOverridePath(String? value, {required String optionName}) {
+  if (value == null) {
+    return null;
+  }
+
+  final normalized = value.trim();
+  if (normalized.isEmpty) {
+    throw GeneratorException(
+      'Generate option $optionName requires a non-empty path.',
+      hint: 'Pass a non-empty file path to $optionName.',
+    );
+  }
+
+  return normalized;
 }
 
 ArgumentList? _findConfigArguments(

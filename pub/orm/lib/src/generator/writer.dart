@@ -870,6 +870,30 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<List<${model.dataClassName}>> createMany({');
+    buffer.writeln('    required List<${model.createInputClassName}> data,');
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
+    buffer.writeln('    final rows = await _delegate.createMany(');
+    buffer.writeln(
+      '      data: data.map((entry) => entry.toJson()).toList(growable: false),',
+    );
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln(
+      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<${model.dataClassName}?> update({');
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    required ${model.updateInputClassName} data,');
@@ -939,6 +963,15 @@ final class TypedClientWriter {
     buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<int> deleteMany({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return _delegate.deleteMany(where: where.toJson());');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1148,6 +1181,22 @@ final class TypedClientWriter {
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<List<${model.dataClassName}>> createMany({required List<${model.createInputClassName}> data}) {',
+    );
+    buffer.writeln('    return _delegate.createMany(');
+    buffer.writeln('      data: data,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<int> deleteMany() {');
+    buffer.writeln('    return _delegate.deleteMany(where: _where);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1482,6 +1531,17 @@ final class TypedClientWriter {
     buffer.writeln('  return value;');
     buffer.writeln('}');
     buffer.writeln();
+    buffer.writeln('Object? _readWhereUniqueEquals(Object? value) {');
+    buffer.writeln('  final map = _readJsonMap(value);');
+    buffer.writeln('  if (map == null) {');
+    buffer.writeln('    return value;');
+    buffer.writeln('  }');
+    buffer.writeln("  if (!map.containsKey('equals')) {");
+    buffer.writeln('    return null;');
+    buffer.writeln('  }');
+    buffer.writeln("  return map['equals'];");
+    buffer.writeln('}');
+    buffer.writeln();
     buffer.writeln('List<String>? _readStringList(Object? value) {');
     buffer.writeln('  if (value is! List) {');
     buffer.writeln('    return null;');
@@ -1787,6 +1847,12 @@ final class TypedClientWriter {
       final filterClass = _whereFilterClassName(field.scalarType);
       return '$filterClass.fromJsonValue($accessor)';
     }
+    if (classKind == _TemplateClassKind.whereUnique && field.isScalar) {
+      return _decodeScalar(
+        field,
+        accessor: '_readWhereUniqueEquals($accessor)',
+      );
+    }
     if (_isRelationWhereFilterField(field: field, classKind: classKind)) {
       final filterClass = _relationWhereFilterClassName(
         owner: owner,
@@ -1909,8 +1975,7 @@ final class TypedClientWriter {
   }
 
   bool _isWhereFilterClassKind(_TemplateClassKind classKind) {
-    return classKind == _TemplateClassKind.where ||
-        classKind == _TemplateClassKind.whereUnique;
+    return classKind == _TemplateClassKind.where;
   }
 
   bool _isRelationWhereFilterField({

@@ -59,6 +59,57 @@ void main() {
         );
       });
 
+      test('cli options override config, schema, and output paths', () async {
+        final fixtureDir = _copyFixture(fixturesRoot, 'schema_override');
+        addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+        final run = await _runGenerate(
+          entryPath: generatorEntry.path,
+          workingDirectory: fixtureDir.path,
+          generateArgs: <String>[
+            '--config',
+            'config/override.config.dart',
+            '--schema=schema/from_cli.dart',
+            '--output',
+            'generated/from_cli.g.dart',
+          ],
+        );
+
+        expect(run.exitCode, 0, reason: run.debugOutput);
+
+        final cliOutput = File(
+          _path(<String>[fixtureDir.path, 'generated', 'from_cli.g.dart']),
+        );
+        expect(
+          cliOutput.existsSync(),
+          isTrue,
+          reason:
+              'Expected CLI output at ${cliOutput.path}.\n${run.debugOutput}',
+        );
+
+        final configOutput = File(
+          _path(<String>[fixtureDir.path, 'generated', 'from_config.g.dart']),
+        );
+        expect(
+          configOutput.existsSync(),
+          isFalse,
+          reason:
+              'Did not expect config output when --output override is provided.',
+        );
+
+        final generatedSource = cliOutput.readAsStringSync();
+        expect(
+          generatedSource.contains("_context.model('CliOnlyUser')"),
+          isTrue,
+          reason: 'Expected CLI schema model in generated output.',
+        );
+        expect(
+          generatedSource.contains("_context.model('ConfigOnlyUser')"),
+          isFalse,
+          reason: 'Did not expect config schema model after --schema override.',
+        );
+      });
+
       test('generated code contains typed delegate and typed input/data markers', () async {
         final fixtureDir = _copyFixture(fixturesRoot, 'config_output');
         addTearDown(() => fixtureDir.deleteSync(recursive: true));
@@ -142,11 +193,34 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+UserWhereUniqueInput\s*\{[\s\S]*?final\s+IntWhereFilter\?\s+id;',
+            r'class\s+UserWhereUniqueInput\s*\{[\s\S]*?final\s+int\?\s+id;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserWhereUniqueInput to expose scalar unique id.',
+        );
+        expect(
+          RegExp(
+            r"class\s+UserWhereUniqueInput\s*\{[\s\S]*?_readInt\(_readWhereUniqueEquals\(json\['id'\]\)\)",
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserWhereUniqueInput to expose typed unique id filter.',
+              'Expected UserWhereUniqueInput.fromJson to accept scalar or equals map input.',
+        );
+        expect(
+          RegExp(
+            r"class\s+UserWhereUniqueInput\s*\{[\s\S]*?if\s*\(id\s*!=\s*null\)\s*'id':\s*id!",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserWhereUniqueInput.toJson to emit runtime-compatible scalar where value.',
+        );
+        expect(
+          RegExp(
+            r'Object\?\s+_readWhereUniqueEquals\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include where unique equals compatibility helper.',
         );
         expect(
           RegExp(
@@ -186,6 +260,37 @@ void main() {
           ).hasMatch(generatedSource),
           isTrue,
           reason: 'Expected non-unique findMany to keep UserWhereInput.',
+        );
+        expect(
+          RegExp(
+            r'Future<List<UserData>>\s+createMany\(\{\s*required\s+List<UserCreateInput>\s+data,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.createMany(...) to accept typed input list.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserData>>\s+createMany\(\{\s*required\s+List<UserCreateInput>\s+data\}\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.createMany(...) to exist with typed input list.',
+        );
+        expect(
+          RegExp(
+            r'Future<int>\s+deleteMany\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.deleteMany(...) to accept typed where input.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<int>\s+deleteMany\s*\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.deleteMany() to exist.',
         );
 
         expect(
@@ -464,8 +569,9 @@ Directory _copyFixture(Directory fixturesRoot, String name) {
 Future<_GenerateRun> _runGenerate({
   required String entryPath,
   required String workingDirectory,
+  List<String> generateArgs = const <String>[],
 }) async {
-  final args = <String>[entryPath, 'generate'];
+  final args = <String>[entryPath, 'generate', ...generateArgs];
   final result = await Process.run(
     'dart',
     args,
