@@ -135,6 +135,7 @@ List<SchemaModelDefinition> _readModels(
       final fieldName = field.name.lexeme;
       final fieldTypeSource = field.type.toSource().trim();
       final isId = _hasAnnotationIgnoreCase(field.metadata, 'id');
+      final relation = _readRelationAnnotation(field.metadata);
       if (fieldTypeSource.isEmpty) {
         throw GeneratorException(
           'Model $modelName field $fieldName has invalid type.',
@@ -148,6 +149,7 @@ List<SchemaModelDefinition> _readModels(
           name: fieldName,
           typeSource: fieldTypeSource,
           isId: isId,
+          relation: relation,
         ),
       );
     }
@@ -175,6 +177,89 @@ bool _hasAnnotationIgnoreCase(NodeList<Annotation> metadata, String name) {
     }
   }
   return false;
+}
+
+SchemaRelationAnnotationDefinition? _readRelationAnnotation(
+  NodeList<Annotation> metadata,
+) {
+  for (final annotation in metadata) {
+    if (annotation.name.name.toLowerCase() != 'relation') {
+      continue;
+    }
+
+    final arguments = annotation.arguments?.arguments;
+    if (arguments == null || arguments.isEmpty) {
+      return const SchemaRelationAnnotationDefinition();
+    }
+
+    Set<String>? fields;
+    Set<String>? references;
+    String? name;
+
+    for (final argument in arguments) {
+      if (argument is! NamedExpression) {
+        continue;
+      }
+
+      final label = argument.name.label.name;
+      switch (label) {
+        case 'fields':
+          fields = _readStringCollection(argument.expression);
+          break;
+        case 'references':
+          references = _readStringCollection(argument.expression);
+          break;
+        case 'name':
+          name = _readStringLiteral(argument.expression);
+          break;
+      }
+    }
+
+    return SchemaRelationAnnotationDefinition(
+      fields: fields,
+      references: references,
+      name: name,
+    );
+  }
+
+  return null;
+}
+
+Set<String>? _readStringCollection(Expression expression) {
+  if (expression is SetOrMapLiteral) {
+    if (expression.isMap) {
+      return null;
+    }
+    return _readCollectionElements(expression.elements);
+  }
+
+  if (expression is ListLiteral) {
+    return _readCollectionElements(expression.elements);
+  }
+
+  return null;
+}
+
+Set<String>? _readCollectionElements(NodeList<CollectionElement> elements) {
+  final values = <String>{};
+  for (final element in elements) {
+    if (element is! Expression) {
+      return null;
+    }
+    final literal = _readStringLiteral(element);
+    if (literal == null) {
+      return null;
+    }
+    values.add(literal);
+  }
+  return values;
+}
+
+String? _readStringLiteral(Expression expression) {
+  if (expression is StringLiteral) {
+    return expression.stringValue;
+  }
+  return null;
 }
 
 String _join(String base, String child) {

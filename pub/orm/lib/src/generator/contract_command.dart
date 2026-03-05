@@ -31,7 +31,7 @@ int runContractEmitCommand({
       outputPath: outputPath,
     );
 
-    final emitted = emitContractArtifact(schema: schema);
+    final emitted = emitContractArtifact(schema: schema, config: config);
     outputFile.parent.createSync(recursive: true);
     outputFile.writeAsStringSync(emitted);
 

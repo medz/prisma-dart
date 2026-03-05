@@ -74,9 +74,11 @@ GeneratorConfigSnapshot loadGeneratorConfig({
   final schema =
       _readOverridePath(schemaOverridePath, optionName: '--schema') ??
       _readNullableStringArg(namedArguments, key: 'schema', file: configFile);
+  final provider = _readProviderArg(namedArguments, file: configFile);
 
   return GeneratorConfigSnapshot(
     configFile: configFile,
+    provider: provider,
     outputPath: output,
     schemaPath: schema,
   );
@@ -227,6 +229,71 @@ String? _readNullableStringArg(
   }
 
   return value;
+}
+
+String? _readProviderArg(
+  Map<String, Expression> namedArguments, {
+  required File file,
+}) {
+  final expression = namedArguments['provider'];
+  if (expression == null || expression is NullLiteral) {
+    return null;
+  }
+
+  final identifier = _readProviderIdentifier(expression);
+  final literal = _readSimpleStringLiteral(expression);
+  final value = identifier ?? literal;
+  if (value == null || value.trim().isEmpty) {
+    throw GeneratorException(
+      'Config.provider must be an enum value or string literal.',
+      path: file.path,
+      hint: "Example: provider: DatabaseProvider.sqlite or provider: 'sqlite'",
+    );
+  }
+
+  return _normalizeProvider(value);
+}
+
+String? _readProviderIdentifier(Expression expression) {
+  if (expression is SimpleIdentifier) {
+    return expression.name;
+  }
+
+  if (expression is PrefixedIdentifier) {
+    return expression.identifier.name;
+  }
+
+  if (expression is PropertyAccess) {
+    if (_isSimpleNameChain(expression.target)) {
+      return expression.propertyName.name;
+    }
+  }
+
+  return null;
+}
+
+bool _isSimpleNameChain(Expression? expression) {
+  if (expression == null) {
+    return true;
+  }
+
+  if (expression is SimpleIdentifier || expression is PrefixedIdentifier) {
+    return true;
+  }
+
+  if (expression is PropertyAccess) {
+    return _isSimpleNameChain(expression.target);
+  }
+
+  return false;
+}
+
+String _normalizeProvider(String provider) {
+  final normalized = provider.trim();
+  final marker = normalized.contains('.')
+      ? normalized.split('.').last
+      : normalized;
+  return marker.toLowerCase();
 }
 
 String? _readSimpleStringLiteral(Expression expression) {

@@ -133,12 +133,108 @@ void main() {
 
         final decoded = jsonDecode(output.readAsStringSync());
         expect(decoded is Map<String, Object?>, isTrue);
-        expect((decoded as Map<String, Object?>).containsKey('hash'), isTrue);
-        expect(
-          (decoded['models'] as Map<Object?, Object?>).containsKey('User'),
-          isTrue,
-        );
+        final contract = decoded as Map<String, Object?>;
+        expect(contract.containsKey('hash'), isTrue);
+        expect(contract['target'], 'generic');
+
+        final capabilities = contract['capabilities'];
+        expect(capabilities is Map<Object?, Object?>, isTrue);
+        final capabilityMap = capabilities as Map<Object?, Object?>;
+        expect(capabilityMap.containsKey('includeSingleQuery'), isTrue);
+        expect(capabilityMap['includeSingleQuery'], isFalse);
+        expect(capabilityMap.containsKey('mutationReturning'), isTrue);
+        expect(capabilityMap['mutationReturning'], isTrue);
+
+        final aliases = contract['aliases'];
+        expect(aliases is Map<Object?, Object?>, isTrue);
+        final aliasMap = aliases as Map<Object?, Object?>;
+        expect(aliasMap['user'], 'User');
+        expect(aliasMap['users'], 'User');
+
+        final models = contract['models'] as Map<Object?, Object?>;
+        expect(models.containsKey('User'), isTrue);
+        final user = models['User'];
+        expect(user is Map<Object?, Object?>, isTrue);
+        final relations = (user as Map<Object?, Object?>)['relations'];
+        expect(relations is Map<Object?, Object?>, isTrue);
+        expect((relations as Map<Object?, Object?>).isEmpty, isTrue);
       });
+
+      test('contract emit maps provider to target and capabilities', () async {
+        final fixtureDir = _copyFixture(fixturesRoot, 'default_output');
+        addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+        final configFile = File(
+          _path(<String>[fixtureDir.path, 'orm.config.dart']),
+        );
+        configFile.writeAsStringSync('''
+class Config {
+  final String? output;
+  final String? schema;
+  final String? provider;
+
+  const Config({this.output, this.schema, this.provider});
+}
+
+const config = Config(provider: 'sqlite');
+''');
+
+        final run = await _runContractEmit(
+          entryPath: generatorEntry.path,
+          workingDirectory: fixtureDir.path,
+        );
+
+        expect(run.exitCode, 0, reason: run.debugOutput);
+
+        final output = File(
+          _path(<String>[fixtureDir.path, 'orm.contract.json']),
+        );
+        final contract =
+            jsonDecode(output.readAsStringSync()) as Map<Object?, Object?>;
+        expect(contract['target'], 'sql-family');
+
+        final capabilities = contract['capabilities'] as Map<Object?, Object?>;
+        expect(capabilities['includeSingleQuery'], isFalse);
+        expect(capabilities['mutationReturning'], isFalse);
+      });
+
+      test(
+        'contract emit infers relation metadata from schema fields',
+        () async {
+          final fixtureDir = _copyFixture(fixturesRoot, 'relation_output');
+          addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+          final run = await _runContractEmit(
+            entryPath: generatorEntry.path,
+            workingDirectory: fixtureDir.path,
+          );
+
+          expect(run.exitCode, 0, reason: run.debugOutput);
+
+          final output = File(
+            _path(<String>[fixtureDir.path, 'orm.contract.json']),
+          );
+          final contract =
+              jsonDecode(output.readAsStringSync()) as Map<Object?, Object?>;
+          final models = contract['models'] as Map<Object?, Object?>;
+
+          final userModel = models['User'] as Map<Object?, Object?>;
+          final userRelations = userModel['relations'] as Map<Object?, Object?>;
+          final posts = userRelations['posts'] as Map<Object?, Object?>;
+          expect(posts['relatedModel'], 'Post');
+          expect(posts['cardinality'], 'many');
+          expect(posts['sourceFields'], <Object?>['id']);
+          expect(posts['targetFields'], <Object?>['userId']);
+
+          final postModel = models['Post'] as Map<Object?, Object?>;
+          final postRelations = postModel['relations'] as Map<Object?, Object?>;
+          final author = postRelations['author'] as Map<Object?, Object?>;
+          expect(author['relatedModel'], 'User');
+          expect(author['cardinality'], 'one');
+          expect(author['sourceFields'], <Object?>['userId']);
+          expect(author['targetFields'], <Object?>['id']);
+        },
+      );
 
       test('contract emit supports --output override path', () async {
         final fixtureDir = _copyFixture(fixturesRoot, 'default_output');
