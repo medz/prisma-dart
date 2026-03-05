@@ -51,6 +51,33 @@ void main() {
     aliases: <String, String>{'users': 'User', 'posts': 'Post'},
   );
   group('OrmClient + MemoryEngine', () {
+    test('default include strategy selector follows contract capabilities', () {
+      final multi = defaultIncludeExecutionStrategySelector(
+        contract: contract,
+        modelName: 'User',
+        action: OrmAction.findMany,
+        include: const <String, IncludeSpec>{'posts': IncludeSpec()},
+        depth: 0,
+      );
+      expect(multi, IncludeExecutionStrategy.multiQuery);
+
+      final singleContract = OrmContract(
+        version: '1',
+        hash: 'contract-single',
+        models: contract.models,
+        aliases: contract.aliases,
+        capabilities: const ContractCapabilities(includeSingleQuery: true),
+      );
+      final single = defaultIncludeExecutionStrategySelector(
+        contract: singleContract,
+        modelName: 'User',
+        action: OrmAction.findMany,
+        include: const <String, IncludeSpec>{'posts': IncludeSpec()},
+        depth: 0,
+      );
+      expect(single, IncludeExecutionStrategy.singleQuery);
+    });
+
     test('runs CRUD flow', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -331,6 +358,53 @@ void main() {
       expect(remaining, 1);
       await client.disconnect();
     });
+
+    test(
+      'falls back for create/update/delete when mutation returning is disabled',
+      () async {
+        final noReturningContract = OrmContract(
+          version: contract.version,
+          hash: contract.hash,
+          models: contract.models,
+          aliases: contract.aliases,
+          capabilities: const ContractCapabilities(mutationReturning: false),
+        );
+        final client = OrmClient(
+          contract: noReturningContract,
+          engine: _NoMutationReturnEngine(inner: MemoryEngine()),
+        );
+        await client.connect();
+        final users = client.model('User');
+
+        final created = await users.create(
+          data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          select: const <String>['id', 'email'],
+        );
+        expect(created['id'], 'u1');
+        expect(created['email'], 'a@x.com');
+
+        final updated = await users.update(
+          where: <String, Object?>{'id': 'u1'},
+          data: <String, Object?>{'email': 'b@x.com'},
+          select: const <String>['id', 'email'],
+        );
+        expect(updated?['id'], 'u1');
+        expect(updated?['email'], 'b@x.com');
+
+        final removed = await users.delete(
+          where: <String, Object?>{'id': 'u1'},
+          select: const <String>['id', 'email'],
+        );
+        expect(removed?['id'], 'u1');
+        expect(removed?['email'], 'b@x.com');
+
+        final remaining = await users.findUnique(
+          where: <String, Object?>{'id': 'u1'},
+        );
+        expect(remaining, isNull);
+        await client.disconnect();
+      },
+    );
 
     test(
       'supports query state helpers for first/count/exists/upsert/deleteMany',
@@ -1283,6 +1357,29 @@ final class _BadShapeEngine implements OrmEngine {
 
   @override
   Future<void> open() async {}
+}
+
+final class _NoMutationReturnEngine implements OrmEngine {
+  final OrmEngine inner;
+
+  _NoMutationReturnEngine({required this.inner});
+
+  @override
+  Future<void> close() => inner.close();
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    final response = await inner.execute(plan);
+    if (plan.action == OrmAction.create ||
+        plan.action == OrmAction.update ||
+        plan.action == OrmAction.delete) {
+      return EngineResponse(affectedRows: response.affectedRows);
+    }
+    return response;
+  }
+
+  @override
+  Future<void> open() => inner.open();
 }
 
 final class _EmptyNamePlugin extends OrmPlugin {

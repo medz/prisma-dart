@@ -52,9 +52,21 @@ final class ModelContract {
     required this.name,
     required this.table,
     required Set<String> fields,
-    Map<String, ModelRelationContract> relations = const <String, ModelRelationContract>{},
+    Map<String, ModelRelationContract> relations =
+        const <String, ModelRelationContract>{},
   }) : fields = Set.unmodifiable(fields),
        relations = Map<String, ModelRelationContract>.unmodifiable(relations);
+}
+
+@immutable
+final class ContractCapabilities {
+  final bool includeSingleQuery;
+  final bool mutationReturning;
+
+  const ContractCapabilities({
+    this.includeSingleQuery = false,
+    this.mutationReturning = true,
+  });
 }
 
 @immutable
@@ -63,12 +75,14 @@ final class OrmContract {
   final String hash;
   final Map<String, ModelContract> models;
   final Map<String, String> aliases;
+  final ContractCapabilities capabilities;
 
   OrmContract({
     required this.version,
     required this.hash,
     required Map<String, ModelContract> models,
     Map<String, String> aliases = const {},
+    this.capabilities = const ContractCapabilities(),
   }) : models = Map.unmodifiable(models),
        aliases = Map.unmodifiable(aliases) {
     _validateRelations(this.models);

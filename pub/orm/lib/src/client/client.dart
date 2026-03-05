@@ -35,6 +35,9 @@ IncludeExecutionStrategy defaultIncludeExecutionStrategySelector({
   required Map<String, IncludeSpec> include,
   required int depth,
 }) {
+  if (contract.capabilities.includeSingleQuery) {
+    return IncludeExecutionStrategy.singleQuery;
+  }
   return IncludeExecutionStrategy.multiQuery;
 }
 
@@ -415,7 +418,15 @@ class ModelDelegate {
       ),
     );
 
-    final row = _readRow(response.data, action: 'create');
+    var row = _readRow(response.data, action: 'create');
+    if (row == null) {
+      if (_client.contract.capabilities.mutationReturning &&
+          response.affectedRows > 0) {
+        throw RuntimeCreateResultMissingException(model: modelName);
+      }
+      row = _fallbackCreateRow(data: data);
+    }
+
     if (row == null) {
       throw RuntimeCreateResultMissingException(model: modelName);
     }
@@ -638,6 +649,22 @@ class ModelDelegate {
     required String responseAction,
   }) async {
     final normalizedInclude = _normalizeInclude(include);
+    JsonMap? preDeleteRow;
+    if (action == OrmAction.delete &&
+        !(_client.contract.capabilities.mutationReturning)) {
+      preDeleteRow = await _findUniqueInternal(
+        action: OrmAction.findUnique,
+        where: where,
+        select: _expandSelectForInclude(
+          model: modelName,
+          select: select,
+          include: normalizedInclude,
+        ),
+        include: const <String, IncludeSpec>{},
+        includeDepth: 0,
+      );
+    }
+
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
@@ -653,7 +680,27 @@ class ModelDelegate {
       ),
     );
 
-    final row = _readRow(response.data, action: responseAction);
+    var row = _readRow(response.data, action: responseAction);
+    if (row == null &&
+        response.affectedRows > 0 &&
+        !(_client.contract.capabilities.mutationReturning)) {
+      row = switch (action) {
+        OrmAction.update => await _findUniqueInternal(
+          action: OrmAction.findUnique,
+          where: where,
+          select: _expandSelectForInclude(
+            model: modelName,
+            select: select,
+            include: normalizedInclude,
+          ),
+          include: const <String, IncludeSpec>{},
+          includeDepth: 0,
+        ),
+        OrmAction.delete => preDeleteRow,
+        _ => row,
+      };
+    }
+
     if (row == null) {
       return null;
     }
@@ -962,6 +1009,13 @@ class ModelDelegate {
   JsonMap _attachInclude(JsonMap row, String relation, Object? value) {
     final next = <String, Object?>{...row, relation: value};
     return next;
+  }
+
+  JsonMap? _fallbackCreateRow({required JsonMap data}) {
+    if (_client.contract.capabilities.mutationReturning) {
+      return null;
+    }
+    return Map<String, Object?>.from(data);
   }
 
   Map<String, IncludeSpec> _normalizeInclude(Map<String, IncludeSpec> include) {
