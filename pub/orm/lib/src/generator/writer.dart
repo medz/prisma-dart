@@ -34,6 +34,7 @@ final class TypedClientWriter {
     for (final model in resolvedModels) {
       _writeQueryDslClasses(buffer: buffer, model: model, lookup: modelLookup);
       _writeTypedDelegateClass(buffer: buffer, model: model);
+      _writeTypedSqlClass(buffer: buffer, model: model);
     }
 
     for (final model in resolvedModels) {
@@ -560,7 +561,9 @@ final class TypedClientWriter {
       '  late final GeneratedOrmCollections orm = GeneratedOrmCollections(_context);',
     );
     buffer.writeln();
-    buffer.writeln('  OrmSqlApi get sql => _context.sql;');
+    buffer.writeln(
+      '  late final GeneratedOrmSql sql = GeneratedOrmSql(_context);',
+    );
     buffer.writeln('}');
     buffer.writeln();
 
@@ -580,6 +583,22 @@ final class TypedClientWriter {
       buffer.writeln();
     }
 
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class GeneratedOrmSql {');
+    buffer.writeln('  final OrmModelContext _context;');
+    buffer.writeln('  late final OrmSqlApi _api = _context.sql;');
+    buffer.writeln();
+    buffer.writeln('  GeneratedOrmSql(this._context);');
+    buffer.writeln();
+    for (final model in models) {
+      buffer.writeln(
+        '  late final ${model.sqlClassName} ${model.getterName} =',
+      );
+      buffer.writeln('      ${model.sqlClassName}(_api);');
+      buffer.writeln();
+    }
     buffer.writeln('}');
     buffer.writeln();
   }
@@ -1512,6 +1531,192 @@ final class TypedClientWriter {
     buffer.writeln('}');
     buffer.writeln();
     _writeTypedQueryClass(buffer: buffer, model: model);
+  }
+
+  void _writeTypedSqlClass({
+    required StringBuffer buffer,
+    required _ResolvedModel model,
+  }) {
+    final runtimeName = _escapeString(model.model.runtimeName);
+    buffer.writeln('class ${model.sqlClassName} {');
+    buffer.writeln('  final OrmSqlApi _sql;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.sqlClassName}(this._sql);');
+    buffer.writeln();
+
+    buffer.writeln('  OrmSqlSelectBuilder selectPlan({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln("    return _sql.from('$runtimeName')");
+    buffer.writeln('        .where(where.toJson())');
+    buffer.writeln('        .skip(skip)');
+    buffer.writeln('        .take(take)');
+    buffer.writeln('        .orderBy(runtimeOrderBy)');
+    buffer.writeln('        .distinct(runtimeDistinct)');
+    buffer.writeln('        .select(runtimeSelect);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<${model.dataClassName}>> query({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('  }) async {');
+    buffer.writeln('    final rows = await selectPlan(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('    ).query();');
+    buffer.writeln(
+      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> first({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('  }) async {');
+    buffer.writeln('    final row = await selectPlan(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: 1,');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('    ).first();');
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  OrmSqlInsertBuilder insertPlan({');
+    buffer.writeln('    required ${model.createInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    final runtimeReturning = returning?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      "    return _sql.insertInto('$runtimeName').values(data.toJson()).returning(runtimeReturning);",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> insert({');
+    buffer.writeln('    required ${model.createInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final row = await insertPlan(data: data, returning: returning).one();',
+    );
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  OrmSqlUpdateBuilder updatePlan({');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    final runtimeReturning = returning?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      "    return _sql.update('$runtimeName').where(where.toJson()).set(data.toJson()).returning(runtimeReturning);",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> update({');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final row = await updatePlan(where: where, data: data, returning: returning).one();',
+    );
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  OrmSqlDeleteBuilder deletePlan({');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    final runtimeReturning = returning?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      "    return _sql.deleteFrom('$runtimeName').where(where.toJson()).returning(runtimeReturning);",
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> delete({');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final row = await deletePlan(where: where, returning: returning).one();',
+    );
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+
+    buffer.writeln('}');
+    buffer.writeln();
   }
 
   void _writeTypedQueryClass({
@@ -2715,6 +2920,8 @@ final class _ResolvedModel {
   });
 
   String get delegateClassName => '${classBaseName}Delegate';
+
+  String get sqlClassName => '${classBaseName}Sql';
 
   String get queryClassName => '${classBaseName}Query';
 

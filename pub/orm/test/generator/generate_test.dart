@@ -208,11 +208,19 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+GeneratedOrmDb\s*\{[\s\S]*?late\s+final\s+GeneratedOrmCollections\s+orm\s*=\s*GeneratedOrmCollections\(_context\);[\s\S]*?OrmSqlApi\s+get\s+sql\s*=>\s*_context\.sql;',
+            r'class\s+GeneratedOrmDb\s*\{[\s\S]*?late\s+final\s+GeneratedOrmCollections\s+orm\s*=\s*GeneratedOrmCollections\(_context\);[\s\S]*?late\s+final\s+GeneratedOrmSql\s+sql\s*=\s*GeneratedOrmSql\(_context\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
               'Expected GeneratedOrmDb to expose db.orm and db.sql namespaces.',
+        );
+        expect(
+          RegExp(
+            r'class\s+GeneratedOrmSql\s*\{[\s\S]*?late\s+final\s+OrmSqlApi\s+_api\s*=\s*_context\.sql;[\s\S]*?UserSql\s+user\s*=',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected GeneratedOrmSql to expose typed model sql delegates.',
         );
         expect(
           RegExp(
@@ -260,6 +268,32 @@ void main() {
           ).hasMatch(generatedSource),
           isTrue,
           reason: 'Expected UserQuery.first() in generated source.',
+        );
+        expect(
+          RegExp(r'\bclass UserSql\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected generated source to include typed UserSql class.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?OrmSqlSelectBuilder\s+selectPlan\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose selectPlan builder.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<List<UserData>>\s+query\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose typed query helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<UserData\?>\s+insert\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose typed insert helper.',
         );
         expect(
           RegExp(r'\bclass UserWhereUniqueInput\b').hasMatch(generatedSource),
