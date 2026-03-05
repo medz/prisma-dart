@@ -183,22 +183,67 @@ void main() {
     });
   });
 
-  group('SqlContractMarkerReader runtime integration', () {
-    test('can be consumed by RuntimeVerifyOptions', () async {
+  group('sqlRuntimeVerifyOptions', () {
+    test('creates runtime verify options with defaults', () {
+      final options = sqlRuntimeVerifyOptions(
+        executor: CallbackSqlMarkerQueryExecutor(
+          (_) async => const SqlMarkerQueryResult(),
+        ),
+      );
+
+      expect(options.mode, RuntimeVerifyMode.onFirstUse);
+      expect(options.requireMarker, isTrue);
+      expect(options.markerReader, isA<SqlContractMarkerReader>());
+
+      final reader = options.markerReader! as SqlContractMarkerReader;
+      expect(reader.hashColumn, SqlContractMarkerReader.defaultHashColumn);
+      expect(
+        reader.query.sql,
+        'SELECT storage_hash FROM orm_contract.marker WHERE id = ?',
+      );
+      expect(reader.query.parameters, <Object?>[1]);
+    });
+
+    test('supports overriding helper options', () {
+      final options = sqlRuntimeVerifyOptions(
+        executor: CallbackSqlMarkerQueryExecutor(
+          (_) async => const SqlMarkerQueryResult(),
+        ),
+        mode: RuntimeVerifyMode.always,
+        requireMarker: false,
+        query: SqlMarkerQuery(
+          sql: 'SELECT core_hash FROM contract_marker WHERE marker_id = ?',
+          parameters: const <Object?>[7],
+        ),
+        hashColumn: 'core_hash',
+      );
+
+      expect(options.mode, RuntimeVerifyMode.always);
+      expect(options.requireMarker, isFalse);
+      expect(options.markerReader, isA<SqlContractMarkerReader>());
+
+      final reader = options.markerReader! as SqlContractMarkerReader;
+      expect(
+        reader.query.sql,
+        'SELECT core_hash FROM contract_marker WHERE marker_id = ?',
+      );
+      expect(reader.query.parameters, <Object?>[7]);
+      expect(reader.hashColumn, 'core_hash');
+    });
+  });
+
+  group('sqlRuntimeVerifyOptions runtime integration', () {
+    test('can be consumed by runtime client', () async {
       final contract = _contract(hash: 'hash-v1');
       final client = OrmClient(
         contract: contract,
         engine: MemoryEngine(),
-        verify: RuntimeVerifyOptions(
-          mode: RuntimeVerifyMode.onFirstUse,
-          requireMarker: true,
-          markerReader: SqlContractMarkerReader(
-            executor: CallbackSqlMarkerQueryExecutor(
-              (_) async => const SqlMarkerQueryResult(
-                rows: <JsonMap>[
-                  <String, Object?>{'storage_hash': 'hash-v1'},
-                ],
-              ),
+        verify: sqlRuntimeVerifyOptions(
+          executor: CallbackSqlMarkerQueryExecutor(
+            (_) async => const SqlMarkerQueryResult(
+              rows: <JsonMap>[
+                <String, Object?>{'storage_hash': 'hash-v1'},
+              ],
             ),
           ),
         ),
@@ -214,13 +259,9 @@ void main() {
       final client = OrmClient(
         contract: contract,
         engine: MemoryEngine(),
-        verify: RuntimeVerifyOptions(
-          mode: RuntimeVerifyMode.onFirstUse,
-          requireMarker: true,
-          markerReader: SqlContractMarkerReader(
-            executor: CallbackSqlMarkerQueryExecutor(
-              (_) async => const SqlMarkerQueryResult(),
-            ),
+        verify: sqlRuntimeVerifyOptions(
+          executor: CallbackSqlMarkerQueryExecutor(
+            (_) async => const SqlMarkerQueryResult(),
           ),
         ),
       );

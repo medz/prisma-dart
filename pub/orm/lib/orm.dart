@@ -16,6 +16,7 @@ export 'src/sql/adapter.dart';
 export 'src/sql/codec.dart';
 export 'src/sql/marker_reader.dart';
 export 'src/sql/types.dart';
+export 'src/sql/verify.dart';
 export 'src/target/adapter.dart';
 export 'src/target/driver.dart';
 export 'src/target/engine.dart';
