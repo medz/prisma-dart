@@ -302,6 +302,27 @@ void main() {
           reason: 'Expected UserSql to expose typed insert helper.',
         );
         expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<OrmSqlMutationResult>\s+insertResult\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose insertResult helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<OrmSqlMutationResult>\s+updateResult\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose updateResult helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<OrmSqlMutationResult>\s+deleteResult\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose deleteResult helper.',
+        );
+        expect(
           RegExp(r'\bclass UserWhereUniqueInput\b').hasMatch(generatedSource),
           isTrue,
           reason: 'Missing typed where unique input class in generated source.',

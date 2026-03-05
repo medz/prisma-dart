@@ -1639,12 +1639,22 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<OrmSqlMutationResult> insertResult({');
+    buffer.writeln('    required ${model.createInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    return insertPlan(data: data, returning: returning).execute();',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<${model.dataClassName}?> insert({');
     buffer.writeln('    required ${model.createInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) async {');
     buffer.writeln(
-      '    final row = await insertPlan(data: data, returning: returning).one();',
+      '    final row = (await insertResult(data: data, returning: returning)).row;',
     );
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
@@ -1667,13 +1677,24 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<OrmSqlMutationResult> updateResult({');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    return updatePlan(where: where, data: data, returning: returning).execute();',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<${model.dataClassName}?> update({');
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    required ${model.updateInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) async {');
     buffer.writeln(
-      '    final row = await updatePlan(where: where, data: data, returning: returning).one();',
+      '    final row = (await updateResult(where: where, data: data, returning: returning)).row;',
     );
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
@@ -1695,12 +1716,22 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<OrmSqlMutationResult> deleteResult({');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
+    buffer.writeln('    ${model.selectClassName}? returning,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    return deletePlan(where: where, returning: returning).execute();',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<${model.dataClassName}?> delete({');
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) async {');
     buffer.writeln(
-      '    final row = await deletePlan(where: where, returning: returning).one();',
+      '    final row = (await deleteResult(where: where, returning: returning)).row;',
     );
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
