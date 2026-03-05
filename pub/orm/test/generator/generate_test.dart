@@ -465,11 +465,17 @@ void main() {
         );
         expect(
           RegExp(
-            r'Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
+            r'Future<List<UserGroupByResult>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
               'Expected generated delegate/query to expose typed groupBy helper.',
+        );
+        expect(
+          RegExp(r'\bclass UserGroupByResult\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed groupBy result wrapper.',
         );
         expect(
           generatedSource.contains(
@@ -481,7 +487,7 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -497,7 +503,7 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?List<UserGroupByOrderBy>\s+groupByOrderBy\s*=\s*const\s+<UserGroupByOrderBy>\[\],[\s\S]*?typedHaving:\s*typedHaving,[\s\S]*?groupByOrderBy:\s*groupByOrderBy,',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?List<UserGroupByOrderBy>\s+groupByOrderBy\s*=\s*const\s+<UserGroupByOrderBy>\[\],[\s\S]*?typedHaving:\s*typedHaving,[\s\S]*?groupByOrderBy:\s*groupByOrderBy,',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -505,7 +511,7 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<Map<String,\s*Object\?>>>\s+groupBy\(\{[\s\S]*?orderBy:\s*_orderBy,',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?orderBy:\s*_orderBy,',
           ).hasMatch(generatedSource),
           isFalse,
           reason:
