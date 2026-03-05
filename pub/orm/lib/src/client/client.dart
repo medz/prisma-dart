@@ -1543,35 +1543,57 @@ class ModelDelegate {
       }
     } else {
       if (where.containsKey('is')) {
-        final relationWhere = await _normalizeRelationOperatorWhere(
-          relationName: relationName,
-          relation: relation,
-          operator: 'is',
-          operand: where['is'],
-        );
-        clauses.add(
-          await _buildRelationMembershipClause(
+        final isOperand = where['is'];
+        if (isOperand == null) {
+          clauses.add(
+            await _buildRelationMembershipClause(
+              relation: relation,
+              relatedWhere: const <String, Object?>{},
+              include: false,
+            ),
+          );
+        } else {
+          final relationWhere = await _normalizeRelationOperatorWhere(
+            relationName: relationName,
             relation: relation,
-            relatedWhere: relationWhere,
-            include: true,
-          ),
-        );
+            operator: 'is',
+            operand: isOperand,
+          );
+          clauses.add(
+            await _buildRelationMembershipClause(
+              relation: relation,
+              relatedWhere: relationWhere,
+              include: true,
+            ),
+          );
+        }
       }
 
       if (where.containsKey('isNot')) {
-        final relationWhere = await _normalizeRelationOperatorWhere(
-          relationName: relationName,
-          relation: relation,
-          operator: 'isNot',
-          operand: where['isNot'],
-        );
-        clauses.add(
-          await _buildRelationMembershipClause(
+        final isNotOperand = where['isNot'];
+        if (isNotOperand == null) {
+          clauses.add(
+            await _buildRelationMembershipClause(
+              relation: relation,
+              relatedWhere: const <String, Object?>{},
+              include: true,
+            ),
+          );
+        } else {
+          final relationWhere = await _normalizeRelationOperatorWhere(
+            relationName: relationName,
             relation: relation,
-            relatedWhere: relationWhere,
-            include: false,
-          ),
-        );
+            operator: 'isNot',
+            operand: isNotOperand,
+          );
+          clauses.add(
+            await _buildRelationMembershipClause(
+              relation: relation,
+              relatedWhere: relationWhere,
+              include: false,
+            ),
+          );
+        }
       }
     }
 

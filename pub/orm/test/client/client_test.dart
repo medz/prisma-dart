@@ -828,6 +828,28 @@ void main() {
         relationMissingRows.map((row) => row['id']).toList(growable: false),
         <Object?>['p4'],
       );
+
+      final isNullRows = await posts.findMany(
+        where: <String, Object?>{
+          'author': <String, Object?>{'is': null},
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(
+        isNullRows.map((row) => row['id']).toList(growable: false),
+        <Object?>['p4'],
+      );
+
+      final isNotNullRows = await posts.findMany(
+        where: <String, Object?>{
+          'author': <String, Object?>{'isNot': null},
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+      expect(
+        isNotNullRows.map((row) => row['id']).toList(growable: false),
+        <Object?>['p1', 'p2', 'p3'],
+      );
       await client.disconnect();
     });
 
