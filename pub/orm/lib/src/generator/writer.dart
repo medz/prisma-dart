@@ -1169,7 +1169,7 @@ final class TypedClientWriter {
     required Map<String, _ResolvedModel> lookup,
   }) {
     final relationFields = model.model.fields
-        .where((field) => field.isRelation && field.isList)
+        .where((field) => field.isRelation)
         .toList(growable: false);
 
     for (final relation in relationFields) {
@@ -1186,43 +1186,82 @@ final class TypedClientWriter {
         relationFieldName: relation.name,
       );
       buffer.writeln('class $className {');
-      buffer.writeln('  final ${relationModel.whereInputClassName}? some;');
-      buffer.writeln('  final ${relationModel.whereInputClassName}? every;');
-      buffer.writeln('  final ${relationModel.whereInputClassName}? none;');
-      buffer.writeln();
-      buffer.writeln('  const $className({this.some, this.every, this.none});');
-      buffer.writeln();
-      buffer.writeln('  factory $className.fromJsonValue(Object? value) {');
-      buffer.writeln('    if (value is Map<String, Object?>) {');
-      buffer.writeln('      return $className(');
-      buffer.writeln(
-        "        some: _readRelation(value['some'], ${relationModel.whereInputClassName}.fromJson),",
-      );
-      buffer.writeln(
-        "        every: _readRelation(value['every'], ${relationModel.whereInputClassName}.fromJson),",
-      );
-      buffer.writeln(
-        "        none: _readRelation(value['none'], ${relationModel.whereInputClassName}.fromJson),",
-      );
-      buffer.writeln('      );');
-      buffer.writeln('    }');
-      buffer.writeln('    return const $className();');
-      buffer.writeln('  }');
-      buffer.writeln();
-      buffer.writeln('  Object? toJsonValue() {');
-      buffer.writeln('    if (isEmpty) {');
-      buffer.writeln('      return null;');
-      buffer.writeln('    }');
-      buffer.writeln('    return <String, Object?>{');
-      buffer.writeln("      if (some != null) 'some': some!.toJson(),");
-      buffer.writeln("      if (every != null) 'every': every!.toJson(),");
-      buffer.writeln("      if (none != null) 'none': none!.toJson(),");
-      buffer.writeln('    };');
-      buffer.writeln('  }');
-      buffer.writeln();
-      buffer.writeln(
-        '  bool get isEmpty => some == null && every == null && none == null;',
-      );
+      if (relation.isList) {
+        buffer.writeln('  final ${relationModel.whereInputClassName}? some;');
+        buffer.writeln('  final ${relationModel.whereInputClassName}? every;');
+        buffer.writeln('  final ${relationModel.whereInputClassName}? none;');
+        buffer.writeln();
+        buffer.writeln(
+          '  const $className({this.some, this.every, this.none});',
+        );
+        buffer.writeln();
+        buffer.writeln('  factory $className.fromJsonValue(Object? value) {');
+        buffer.writeln('    if (value is Map<String, Object?>) {');
+        buffer.writeln('      return $className(');
+        buffer.writeln(
+          "        some: _readRelation(value['some'], ${relationModel.whereInputClassName}.fromJson),",
+        );
+        buffer.writeln(
+          "        every: _readRelation(value['every'], ${relationModel.whereInputClassName}.fromJson),",
+        );
+        buffer.writeln(
+          "        none: _readRelation(value['none'], ${relationModel.whereInputClassName}.fromJson),",
+        );
+        buffer.writeln('      );');
+        buffer.writeln('    }');
+        buffer.writeln('    return const $className();');
+        buffer.writeln('  }');
+        buffer.writeln();
+        buffer.writeln('  Object? toJsonValue() {');
+        buffer.writeln('    if (isEmpty) {');
+        buffer.writeln('      return null;');
+        buffer.writeln('    }');
+        buffer.writeln('    return <String, Object?>{');
+        buffer.writeln("      if (some != null) 'some': some!.toJson(),");
+        buffer.writeln("      if (every != null) 'every': every!.toJson(),");
+        buffer.writeln("      if (none != null) 'none': none!.toJson(),");
+        buffer.writeln('    };');
+        buffer.writeln('  }');
+        buffer.writeln();
+        buffer.writeln(
+          '  bool get isEmpty => some == null && every == null && none == null;',
+        );
+      } else {
+        buffer.writeln(
+          '  final ${relationModel.whereInputClassName}? isValue;',
+        );
+        buffer.writeln('  final ${relationModel.whereInputClassName}? isNot;');
+        buffer.writeln();
+        buffer.writeln('  const $className({this.isValue, this.isNot});');
+        buffer.writeln();
+        buffer.writeln('  factory $className.fromJsonValue(Object? value) {');
+        buffer.writeln('    if (value is Map<String, Object?>) {');
+        buffer.writeln('      return $className(');
+        buffer.writeln(
+          "        isValue: _readRelation(value['is'], ${relationModel.whereInputClassName}.fromJson),",
+        );
+        buffer.writeln(
+          "        isNot: _readRelation(value['isNot'], ${relationModel.whereInputClassName}.fromJson),",
+        );
+        buffer.writeln('      );');
+        buffer.writeln('    }');
+        buffer.writeln('    return const $className();');
+        buffer.writeln('  }');
+        buffer.writeln();
+        buffer.writeln('  Object? toJsonValue() {');
+        buffer.writeln('    if (isEmpty) {');
+        buffer.writeln('      return null;');
+        buffer.writeln('    }');
+        buffer.writeln('    return <String, Object?>{');
+        buffer.writeln("      if (isValue != null) 'is': isValue!.toJson(),");
+        buffer.writeln("      if (isNot != null) 'isNot': isNot!.toJson(),");
+        buffer.writeln('    };');
+        buffer.writeln('  }');
+        buffer.writeln();
+        buffer.writeln(
+          '  bool get isEmpty => isValue == null && isNot == null;',
+        );
+      }
       buffer.writeln('}');
       buffer.writeln();
     }
@@ -1861,9 +1900,7 @@ final class TypedClientWriter {
     required TypedField field,
     required _TemplateClassKind classKind,
   }) {
-    return classKind == _TemplateClassKind.where &&
-        field.isRelation &&
-        field.isList;
+    return classKind == _TemplateClassKind.where && field.isRelation;
   }
 
   bool _includeInWhereUnique(TypedField field) {

@@ -296,7 +296,7 @@ void main() {
         );
       });
 
-      test('generates relation where some/every/none filter classes', () async {
+      test('generates relation where some/every/none and is/isNot filter classes', () async {
         final fixtureDir = _copyFixture(fixturesRoot, 'relation_output');
         addTearDown(() => fixtureDir.deleteSync(recursive: true));
 
@@ -350,11 +350,42 @@ void main() {
         );
         expect(
           RegExp(
+            r'\bclass PostAuthorRelationWhereFilter\b',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected relation where filter class for Post.author.',
+        );
+        expect(
+          RegExp(
+            r'class\s+PostAuthorRelationWhereFilter\s*\{[\s\S]*?final\s+UserWhereInput\?\s+isValue;[\s\S]*?final\s+UserWhereInput\?\s+isNot;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected to-one relation filter to expose is/isNot typed operands.',
+        );
+        expect(
+          RegExp(
+            r'class\s+PostWhereInput\s*\{[\s\S]*?final\s+PostAuthorRelationWhereFilter\?\s+author;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected PostWhereInput relation field to use to-one relation where filter class.',
+        );
+        expect(
+          RegExp(
             r"if\s*\(posts\s*!=\s*null\s*&&\s*!posts!\.isEmpty\)\s*'posts':\s*posts!\.toJsonValue\(\)",
           ).hasMatch(generatedSource),
           isTrue,
           reason:
               'Expected relation where filter serialization to skip empty filter.',
+        );
+        expect(
+          RegExp(
+            r"if\s*\(author\s*!=\s*null\s*&&\s*!author!\.isEmpty\)\s*'author':\s*author!\.toJsonValue\(\)",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected to-one relation where serialization to skip empty filter.',
         );
       });
 
