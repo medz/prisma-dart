@@ -715,6 +715,142 @@ void main() {
       },
     );
 
+    test(
+      'supports relation where some/none/every for to-many relation',
+      () async {
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: MemoryEngine(),
+        );
+        await client.connect();
+        await _seedRelationalData(client);
+        final users = client.model('User');
+        await users.create(
+          data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
+        );
+
+        final someRows = await users.findMany(
+          where: <String, Object?>{
+            'posts': <String, Object?>{
+              'some': <String, Object?>{
+                'title': <String, Object?>{'contains': 'A'},
+              },
+            },
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          someRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u1'],
+        );
+
+        final noneRows = await users.findMany(
+          where: <String, Object?>{
+            'posts': <String, Object?>{
+              'none': <String, Object?>{
+                'title': <String, Object?>{'contains': 'A'},
+              },
+            },
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          noneRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u2', 'u3'],
+        );
+
+        final everyRows = await users.findMany(
+          where: <String, Object?>{
+            'posts': <String, Object?>{
+              'every': <String, Object?>{
+                'title': <String, Object?>{'contains': 'A'},
+              },
+            },
+          },
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+        );
+        expect(
+          everyRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u3'],
+        );
+        await client.disconnect();
+      },
+    );
+
+    test('supports relation where with nested logical operators', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+      final users = client.model('User');
+      await users.create(
+        data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
+      );
+
+      final rows = await users.findMany(
+        where: <String, Object?>{
+          'AND': <Object?>[
+            <String, Object?>{
+              'posts': <String, Object?>{
+                'some': <String, Object?>{
+                  'title': <String, Object?>{'contains': 'Post'},
+                },
+              },
+            },
+            <String, Object?>{
+              'OR': <Object?>[
+                <String, Object?>{'id': 'u2'},
+                <String, Object?>{'id': 'u3'},
+              ],
+            },
+            <String, Object?>{
+              'NOT': <String, Object?>{
+                'posts': <String, Object?>{
+                  'some': <String, Object?>{
+                    'title': <String, Object?>{'contains': 'A'},
+                  },
+                },
+              },
+            },
+          ],
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+
+      expect(rows, hasLength(1));
+      expect(rows.single['id'], 'u2');
+      await client.disconnect();
+    });
+
+    test('supports relation where on mutation paths', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+      final users = client.model('User');
+
+      final updated = await users.update(
+        where: <String, Object?>{
+          'posts': <String, Object?>{
+            'some': <String, Object?>{'title': 'Post C'},
+          },
+        },
+        data: <String, Object?>{'email': 'u2+updated@example.com'},
+      );
+      expect(updated?['id'], 'u2');
+      expect(updated?['email'], 'u2+updated@example.com');
+
+      final persisted = await users.findUnique(
+        where: <String, Object?>{'id': 'u2'},
+      );
+      expect(persisted?['email'], 'u2+updated@example.com');
+      await client.disconnect();
+    });
+
     test('supports include for one-to-many relation', () async {
       final client = OrmClient(
         contract: relationalContract,

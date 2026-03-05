@@ -27,6 +27,8 @@ typedef IncludeExecutionStrategySelector =
     });
 
 const int _defaultMaxIncludeDepth = 4;
+const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
+const Set<String> _relationWhereOperators = <String>{'some', 'every', 'none'};
 
 IncludeExecutionStrategy defaultIncludeExecutionStrategySelector({
   required OrmContract contract,
@@ -615,6 +617,10 @@ class ModelDelegate {
     required int includeDepth,
   }) async {
     final normalizedInclude = _normalizeInclude(include);
+    final normalizedWhere = await _normalizeWhereForExecution(
+      model: modelName,
+      where: where,
+    );
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
@@ -623,7 +629,7 @@ class ModelDelegate {
         profileHash: _client.contract.profileHash,
         model: modelName,
         action: OrmAction.findMany,
-        where: where,
+        where: normalizedWhere,
         skip: skip,
         take: take,
         orderBy: orderBy,
@@ -654,6 +660,10 @@ class ModelDelegate {
     required int includeDepth,
   }) async {
     final normalizedInclude = _normalizeInclude(include);
+    final normalizedWhere = await _normalizeWhereForExecution(
+      model: modelName,
+      where: where,
+    );
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
@@ -662,7 +672,7 @@ class ModelDelegate {
         profileHash: _client.contract.profileHash,
         model: modelName,
         action: OrmAction.findUnique,
-        where: where,
+        where: normalizedWhere,
         select: _expandSelectForInclude(
           model: modelName,
           select: select,
@@ -699,12 +709,16 @@ class ModelDelegate {
     required String responseAction,
   }) async {
     final normalizedInclude = _normalizeInclude(include);
+    final normalizedWhere = await _normalizeWhereForExecution(
+      model: modelName,
+      where: where,
+    );
     JsonMap? preDeleteRow;
     if (action == OrmAction.delete &&
         !(_client.contract.capabilities.mutationReturning)) {
       preDeleteRow = await _findUniqueInternal(
         action: OrmAction.findUnique,
-        where: where,
+        where: normalizedWhere,
         select: _expandSelectForInclude(
           model: modelName,
           select: select,
@@ -723,7 +737,7 @@ class ModelDelegate {
         profileHash: _client.contract.profileHash,
         model: modelName,
         action: action,
-        where: where,
+        where: normalizedWhere,
         data: data,
         select: _expandSelectForInclude(
           model: modelName,
@@ -740,7 +754,7 @@ class ModelDelegate {
       row = switch (action) {
         OrmAction.update => await _findUniqueInternal(
           action: OrmAction.findUnique,
-          where: where,
+          where: normalizedWhere,
           select: _expandSelectForInclude(
             model: modelName,
             select: select,
