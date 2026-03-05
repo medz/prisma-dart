@@ -134,6 +134,7 @@ List<SchemaModelDefinition> _readModels(
     for (final field in namedFields) {
       final fieldName = field.name.lexeme;
       final fieldTypeSource = field.type.toSource().trim();
+      final isId = _hasAnnotationIgnoreCase(field.metadata, 'id');
       if (fieldTypeSource.isEmpty) {
         throw GeneratorException(
           'Model $modelName field $fieldName has invalid type.',
@@ -143,7 +144,11 @@ List<SchemaModelDefinition> _readModels(
       }
 
       fields.add(
-        SchemaFieldDefinition(name: fieldName, typeSource: fieldTypeSource),
+        SchemaFieldDefinition(
+          name: fieldName,
+          typeSource: fieldTypeSource,
+          isId: isId,
+        ),
       );
     }
 
@@ -156,6 +161,16 @@ List<SchemaModelDefinition> _readModels(
 bool _hasAnnotation(NodeList<Annotation> metadata, String name) {
   for (final annotation in metadata) {
     if (annotation.name.name == name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool _hasAnnotationIgnoreCase(NodeList<Annotation> metadata, String name) {
+  final normalized = name.toLowerCase();
+  for (final annotation in metadata) {
+    if (annotation.name.name.toLowerCase() == normalized) {
       return true;
     }
   }

@@ -52,6 +52,12 @@ final class TypedClientWriter {
       _writeDataOrInputClass(
         buffer: buffer,
         model: model,
+        classKind: _TemplateClassKind.whereUnique,
+        lookup: modelLookup,
+      );
+      _writeDataOrInputClass(
+        buffer: buffer,
+        model: model,
         classKind: _TemplateClassKind.create,
         lookup: modelLookup,
       );
@@ -500,7 +506,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<${model.dataClassName}?> findUnique({');
-    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
@@ -577,7 +583,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<${model.dataClassName}?> update({');
-    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    required ${model.updateInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
@@ -602,7 +608,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<${model.dataClassName}?> delete({');
-    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) async {');
@@ -625,7 +631,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<${model.dataClassName}> upsert({');
-    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    required ${model.createInputClassName} create,');
     buffer.writeln('    required ${model.updateInputClassName} update,');
     buffer.writeln('    ${model.selectClassName}? select,');
@@ -779,7 +785,7 @@ final class TypedClientWriter {
         lookup: lookup,
       );
       final isWhereScalarFilter =
-          classKind == _TemplateClassKind.where && field.field.isScalar;
+          _isWhereFilterClassKind(classKind) && field.field.isScalar;
 
       if (isOptional) {
         if (isWhereScalarFilter) {
@@ -1041,6 +1047,9 @@ final class TypedClientWriter {
       _TemplateClassKind.where => model.fields.where(
         (field) => field.includeInWhere,
       ),
+      _TemplateClassKind.whereUnique => model.fields.where(
+        _includeInWhereUnique,
+      ),
       _TemplateClassKind.create => model.fields.where(
         (field) => field.includeInCreate,
       ),
@@ -1067,6 +1076,7 @@ final class TypedClientWriter {
     return switch (classKind) {
       _TemplateClassKind.data => model.dataClassName,
       _TemplateClassKind.where => model.whereInputClassName,
+      _TemplateClassKind.whereUnique => model.whereUniqueInputClassName,
       _TemplateClassKind.create => model.createInputClassName,
       _TemplateClassKind.update => model.updateInputClassName,
     };
@@ -1083,6 +1093,7 @@ final class TypedClientWriter {
     return switch (classKind) {
       _TemplateClassKind.data => true,
       _TemplateClassKind.where => true,
+      _TemplateClassKind.whereUnique => true,
       _TemplateClassKind.create => field.isNullable,
       _TemplateClassKind.update => true,
     };
@@ -1111,7 +1122,7 @@ final class TypedClientWriter {
     required _TemplateClassKind classKind,
     required Map<String, _ResolvedModel> lookup,
   }) {
-    if (classKind == _TemplateClassKind.where && field.isScalar) {
+    if (_isWhereFilterClassKind(classKind) && field.isScalar) {
       return _whereFilterClassName(field.scalarType);
     }
 
@@ -1151,7 +1162,7 @@ final class TypedClientWriter {
     required String accessor,
     required Map<String, _ResolvedModel> lookup,
   }) {
-    if (classKind == _TemplateClassKind.where && field.isScalar) {
+    if (_isWhereFilterClassKind(classKind) && field.isScalar) {
       final filterClass = _whereFilterClassName(field.scalarType);
       return '$filterClass.fromJsonValue($accessor)';
     }
@@ -1213,7 +1224,7 @@ final class TypedClientWriter {
     required String memberName,
     required Map<String, _ResolvedModel> lookup,
   }) {
-    if (classKind == _TemplateClassKind.where && field.isScalar) {
+    if (_isWhereFilterClassKind(classKind) && field.isScalar) {
       return '$memberName.toJsonValue()';
     }
 
@@ -1259,9 +1270,29 @@ final class TypedClientWriter {
     return switch (classKind) {
       _TemplateClassKind.data => 'Data',
       _TemplateClassKind.where => 'WhereInput',
+      _TemplateClassKind.whereUnique => 'WhereUniqueInput',
       _TemplateClassKind.create => 'CreateInput',
       _TemplateClassKind.update => 'UpdateInput',
     };
+  }
+
+  bool _isWhereFilterClassKind(_TemplateClassKind classKind) {
+    return classKind == _TemplateClassKind.where ||
+        classKind == _TemplateClassKind.whereUnique;
+  }
+
+  bool _includeInWhereUnique(TypedField field) {
+    if (!field.isScalar || field.isList) {
+      return false;
+    }
+    if (field.includeInWhereUnique) {
+      return true;
+    }
+    return _isConventionalIdFieldName(field.name) && field.includeInWhere;
+  }
+
+  bool _isConventionalIdFieldName(String name) {
+    return name.trim().toLowerCase() == 'id';
   }
 
   String _relationIncludeClassName({
@@ -1370,7 +1401,7 @@ final class TypedClientWriter {
   }
 }
 
-enum _TemplateClassKind { data, where, create, update }
+enum _TemplateClassKind { data, where, whereUnique, create, update }
 
 final class _ResolvedModel {
   final TypedModel model;
@@ -1388,6 +1419,8 @@ final class _ResolvedModel {
   String get dataClassName => '${classBaseName}Data';
 
   String get whereInputClassName => '${classBaseName}WhereInput';
+
+  String get whereUniqueInputClassName => '${classBaseName}WhereUniqueInput';
 
   String get createInputClassName => '${classBaseName}CreateInput';
 

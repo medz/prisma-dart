@@ -48,6 +48,7 @@ final class TypedField {
   final bool isNullable;
   final bool isList;
   final bool includeInWhere;
+  final bool includeInWhereUnique;
   final bool includeInCreate;
   final bool includeInUpdate;
 
@@ -57,6 +58,7 @@ final class TypedField {
     this.isNullable = false,
     this.isList = false,
     this.includeInWhere = true,
+    this.includeInWhereUnique = false,
     this.includeInCreate = true,
     this.includeInUpdate = true,
   }) : kind = TypedFieldKind.scalar,
@@ -69,6 +71,7 @@ final class TypedField {
     this.isNullable = true,
     this.isList = false,
     this.includeInWhere = true,
+    this.includeInWhereUnique = false,
     this.includeInCreate = true,
     this.includeInUpdate = true,
   }) : kind = TypedFieldKind.relation,

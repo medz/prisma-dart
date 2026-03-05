@@ -41,6 +41,9 @@ TypedField _toTypedField(SchemaFieldDefinition field) {
     isNullable: parsed.isNullable,
     isList: parsed.isList,
     includeInWhere: !parsed.isList,
+    includeInWhereUnique:
+        (field.isId || _isConventionalIdFieldName(field.name)) &&
+        !parsed.isList,
   );
 }
 
@@ -102,6 +105,10 @@ String _relationModelName(String source) {
     return source;
   }
   return last;
+}
+
+bool _isConventionalIdFieldName(String name) {
+  return name.trim().toLowerCase() == 'id';
 }
 
 final class _ParsedType {

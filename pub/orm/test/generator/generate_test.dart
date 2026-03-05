@@ -59,94 +59,143 @@ void main() {
         );
       });
 
-      test(
-        'generated code contains typed delegate and typed input/data markers',
-        () async {
-          final fixtureDir = _copyFixture(fixturesRoot, 'config_output');
-          addTearDown(() => fixtureDir.deleteSync(recursive: true));
+      test('generated code contains typed delegate and typed input/data markers', () async {
+        final fixtureDir = _copyFixture(fixturesRoot, 'config_output');
+        addTearDown(() => fixtureDir.deleteSync(recursive: true));
 
-          final run = await _runGenerate(
-            entryPath: generatorEntry.path,
-            workingDirectory: fixtureDir.path,
-          );
+        final run = await _runGenerate(
+          entryPath: generatorEntry.path,
+          workingDirectory: fixtureDir.path,
+        );
 
-          expect(run.exitCode, 0, reason: run.debugOutput);
+        expect(run.exitCode, 0, reason: run.debugOutput);
 
-          var generatedDartFiles = _findDartFiles(
-            Directory(_path(<String>[fixtureDir.path, 'generated'])),
+        var generatedDartFiles = _findDartFiles(
+          Directory(_path(<String>[fixtureDir.path, 'generated'])),
+        );
+        if (generatedDartFiles.isEmpty) {
+          generatedDartFiles = _findDartFiles(
+            Directory(_path(<String>[fixtureDir.path, 'lib'])),
           );
-          if (generatedDartFiles.isEmpty) {
-            generatedDartFiles = _findDartFiles(
-              Directory(_path(<String>[fixtureDir.path, 'lib'])),
-            );
-          }
+        }
 
-          expect(
-            generatedDartFiles,
-            isNotEmpty,
-            reason: 'Expected generated Dart files to assert content.',
-          );
+        expect(
+          generatedDartFiles,
+          isNotEmpty,
+          reason: 'Expected generated Dart files to assert content.',
+        );
 
-          final generatedSource = generatedDartFiles
-              .map((file) => file.readAsStringSync())
-              .join('\n');
+        final generatedSource = generatedDartFiles
+            .map((file) => file.readAsStringSync())
+            .join('\n');
 
-          expect(
-            RegExp(
-              r'\b(UserDelegate|UserModelDelegateExtension)\b',
-            ).hasMatch(generatedSource),
-            isTrue,
-            reason: 'Missing typed delegate marker in generated source.',
-          );
+        expect(
+          RegExp(
+            r'\b(UserDelegate|UserModelDelegateExtension)\b',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed delegate marker in generated source.',
+        );
 
-          expect(
-            RegExp(
-              r'\b(User[A-Za-z0-9_]*(Input|Data)|UserRow)\b',
-            ).hasMatch(generatedSource),
-            isTrue,
-            reason: 'Missing typed input/data marker in generated source.',
-          );
+        expect(
+          RegExp(
+            r'\b(User[A-Za-z0-9_]*(Input|Data)|UserRow)\b',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed input/data marker in generated source.',
+        );
+        expect(
+          RegExp(r'\bclass UserWhereUniqueInput\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed where unique input class in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserWhereUniqueInput\s*\{[\s\S]*?final\s+IntWhereFilter\?\s+id;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserWhereUniqueInput to expose typed unique id filter.',
+        );
+        expect(
+          RegExp(
+            r'Future<UserData\?>\s+findUnique\(\{\s*required\s+UserWhereUniqueInput\s+where,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected findUnique where parameter to use UserWhereUniqueInput.',
+        );
+        expect(
+          RegExp(
+            r'Future<UserData\?>\s+update\(\{\s*required\s+UserWhereUniqueInput\s+where,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected update where parameter to use UserWhereUniqueInput.',
+        );
+        expect(
+          RegExp(
+            r'Future<UserData\?>\s+delete\(\{\s*required\s+UserWhereUniqueInput\s+where,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected delete where parameter to use UserWhereUniqueInput.',
+        );
+        expect(
+          RegExp(
+            r'Future<UserData>\s+upsert\(\{\s*required\s+UserWhereUniqueInput\s+where,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected upsert where parameter to use UserWhereUniqueInput.',
+        );
+        expect(
+          RegExp(
+            r'Future<List<UserData>>\s+findMany\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected non-unique findMany to keep UserWhereInput.',
+        );
 
-          expect(
-            RegExp(r'\bclass UserOrderBy\b').hasMatch(generatedSource),
-            isTrue,
-            reason: 'Missing typed orderBy DSL class in generated source.',
-          );
-          expect(
-            RegExp(r'\bclass UserSelect\b').hasMatch(generatedSource),
-            isTrue,
-            reason: 'Missing typed select DSL class in generated source.',
-          );
-          expect(
-            RegExp(r'\bclass UserInclude\b').hasMatch(generatedSource),
-            isTrue,
-            reason: 'Missing typed include DSL class in generated source.',
-          );
-          expect(
-            RegExp(r'\bclass StringWhereFilter\b').hasMatch(generatedSource),
-            isTrue,
-            reason: 'Missing string where filter class in generated source.',
-          );
-          expect(
-            RegExp(r'\bclass IntWhereFilter\b').hasMatch(generatedSource),
-            isTrue,
-            reason: 'Missing int where filter class in generated source.',
-          );
-          expect(
-            RegExp(
-              r'class\s+UserWhereInput\s*\{[\s\S]*?final\s+IntWhereFilter\?\s+id;[\s\S]*?final\s+StringWhereFilter\?\s+email;',
-            ).hasMatch(generatedSource),
-            isTrue,
-            reason:
-                'Expected UserWhereInput fields to use typed where filter classes.',
-          );
-          expect(
-            generatedSource.contains('List<UserOrderBy> orderBy'),
-            isTrue,
-            reason: 'Expected typed delegate signature to use UserOrderBy.',
-          );
-        },
-      );
+        expect(
+          RegExp(r'\bclass UserOrderBy\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed orderBy DSL class in generated source.',
+        );
+        expect(
+          RegExp(r'\bclass UserSelect\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed select DSL class in generated source.',
+        );
+        expect(
+          RegExp(r'\bclass UserInclude\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed include DSL class in generated source.',
+        );
+        expect(
+          RegExp(r'\bclass StringWhereFilter\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing string where filter class in generated source.',
+        );
+        expect(
+          RegExp(r'\bclass IntWhereFilter\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing int where filter class in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserWhereInput\s*\{[\s\S]*?final\s+IntWhereFilter\?\s+id;[\s\S]*?final\s+StringWhereFilter\?\s+email;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserWhereInput fields to use typed where filter classes.',
+        );
+        expect(
+          generatedSource.contains('List<UserOrderBy> orderBy'),
+          isTrue,
+          reason: 'Expected typed delegate signature to use UserOrderBy.',
+        );
+      });
 
       test('prints actionable error message for invalid config', () async {
         final fixtureDir = _copyFixture(fixturesRoot, 'missing_config');

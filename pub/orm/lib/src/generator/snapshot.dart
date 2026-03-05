@@ -15,8 +15,13 @@ final class GeneratorConfigSnapshot {
 final class SchemaFieldDefinition {
   final String name;
   final String typeSource;
+  final bool isId;
 
-  const SchemaFieldDefinition({required this.name, required this.typeSource});
+  const SchemaFieldDefinition({
+    required this.name,
+    required this.typeSource,
+    this.isId = false,
+  });
 }
 
 final class SchemaModelDefinition {
