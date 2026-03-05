@@ -36,6 +36,19 @@ const Set<String> _whereOperators = <String>{
 };
 
 const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
+const List<String> _toManyRelationWhereOperatorOrder = <String>[
+  'some',
+  'none',
+  'every',
+];
+const List<String> _toOneRelationWhereOperatorOrder = <String>['is', 'isNot'];
+const Set<String> _toManyRelationWhereOperators = <String>{
+  'some',
+  'every',
+  'none',
+};
+const Set<String> _toOneRelationWhereOperators = <String>{'is', 'isNot'};
+const String _relationWhereAlias = '_rel';
 
 final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
   final OrmContract contract;
@@ -241,10 +254,16 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       return '';
     }
 
+    final modelContract = contract.models[model];
+    if (modelContract == null) {
+      throw ModelNotFoundException(model, contract.models.keys);
+    }
     final predicate = _buildWhereExpression(
       model: model,
       where: where,
       params: params,
+      fieldRefPrefix: null,
+      rowRef: _id(modelContract.table),
     );
     return ' WHERE $predicate';
   }
@@ -253,7 +272,14 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String model,
     required JsonMap where,
     required List<Object?> params,
+    required String rowRef,
+    required String? fieldRefPrefix,
   }) {
+    final modelContract = contract.models[model];
+    if (modelContract == null) {
+      throw ModelNotFoundException(model, contract.models.keys);
+    }
+
     final predicates = <String>[];
 
     for (final entry in where.entries) {
@@ -265,6 +291,21 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
             key: key,
             operand: entry.value,
             params: params,
+            rowRef: rowRef,
+            fieldRefPrefix: fieldRefPrefix,
+          ),
+        );
+        continue;
+      }
+
+      final relation = modelContract.relations[key];
+      if (relation != null) {
+        predicates.addAll(
+          _buildWhereRelationPredicates(
+            relation: relation,
+            condition: entry.value,
+            params: params,
+            outerRowRef: rowRef,
           ),
         );
         continue;
@@ -276,6 +317,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
           field: key,
           condition: entry.value,
           params: params,
+          fieldRefPrefix: fieldRefPrefix,
         ),
       );
     }
@@ -292,22 +334,30 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String key,
     required Object? operand,
     required List<Object?> params,
+    required String rowRef,
+    required String? fieldRefPrefix,
   }) {
     return switch (key) {
       'AND' => _buildWhereAndPredicate(
         model: model,
         operand: operand,
         params: params,
+        rowRef: rowRef,
+        fieldRefPrefix: fieldRefPrefix,
       ),
       'OR' => _buildWhereOrPredicate(
         model: model,
         operand: operand,
         params: params,
+        rowRef: rowRef,
+        fieldRefPrefix: fieldRefPrefix,
       ),
       'NOT' => _buildWhereNotPredicate(
         model: model,
         operand: operand,
         params: params,
+        rowRef: rowRef,
+        fieldRefPrefix: fieldRefPrefix,
       ),
       _ => '1 = 0',
     };
@@ -317,6 +367,8 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String model,
     required Object? operand,
     required List<Object?> params,
+    required String rowRef,
+    required String? fieldRefPrefix,
   }) {
     final where = _coerceWhereMap(operand);
     if (where != null) {
@@ -324,6 +376,8 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
         model: model,
         where: where,
         params: params,
+        rowRef: rowRef,
+        fieldRefPrefix: fieldRefPrefix,
       );
       return '($nested)';
     }
@@ -338,8 +392,13 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
 
     final predicates = whereList
         .map(
-          (item) =>
-              _buildWhereExpression(model: model, where: item, params: params),
+          (item) => _buildWhereExpression(
+            model: model,
+            where: item,
+            params: params,
+            rowRef: rowRef,
+            fieldRefPrefix: fieldRefPrefix,
+          ),
         )
         .toList(growable: false);
     return '(${predicates.join(' AND ')})';
@@ -349,6 +408,8 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String model,
     required Object? operand,
     required List<Object?> params,
+    required String rowRef,
+    required String? fieldRefPrefix,
   }) {
     final where = _coerceWhereMap(operand);
     if (where != null) {
@@ -356,6 +417,8 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
         model: model,
         where: where,
         params: params,
+        rowRef: rowRef,
+        fieldRefPrefix: fieldRefPrefix,
       );
       return '($nested)';
     }
@@ -370,8 +433,13 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
 
     final predicates = whereList
         .map(
-          (item) =>
-              _buildWhereExpression(model: model, where: item, params: params),
+          (item) => _buildWhereExpression(
+            model: model,
+            where: item,
+            params: params,
+            rowRef: rowRef,
+            fieldRefPrefix: fieldRefPrefix,
+          ),
         )
         .toList(growable: false);
     return '(${predicates.join(' OR ')})';
@@ -381,6 +449,8 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String model,
     required Object? operand,
     required List<Object?> params,
+    required String rowRef,
+    required String? fieldRefPrefix,
   }) {
     final where = _coerceWhereMap(operand);
     if (where != null) {
@@ -388,6 +458,8 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
         model: model,
         where: where,
         params: params,
+        rowRef: rowRef,
+        fieldRefPrefix: fieldRefPrefix,
       );
       return 'NOT ($nested)';
     }
@@ -402,8 +474,13 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
 
     final predicates = whereList
         .map(
-          (item) =>
-              _buildWhereExpression(model: model, where: item, params: params),
+          (item) => _buildWhereExpression(
+            model: model,
+            where: item,
+            params: params,
+            rowRef: rowRef,
+            fieldRefPrefix: fieldRefPrefix,
+          ),
         )
         .map((item) => 'NOT ($item)')
         .toList(growable: false);
@@ -415,11 +492,14 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String field,
     required Object? condition,
     required List<Object?> params,
+    required String? fieldRefPrefix,
   }) {
     final predicates = <String>[];
     final operatorMap = _coerceOperatorMap(condition);
     if (operatorMap == null) {
-      predicates.add('${_id(field)} = ?');
+      predicates.add(
+        '${_fieldReference(field: field, fieldRefPrefix: fieldRefPrefix)} = ?',
+      );
       params.add(
         _encodeWhereValue(model: model, field: field, value: condition),
       );
@@ -437,9 +517,178 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
         field: field,
         operator: operator,
         operand: operatorMap[operator],
+        fieldRefPrefix: fieldRefPrefix,
       );
     }
 
+    return predicates;
+  }
+
+  List<String> _buildWhereRelationPredicates({
+    required ModelRelationContract relation,
+    required Object? condition,
+    required List<Object?> params,
+    required String outerRowRef,
+  }) {
+    final relationWhere = _coerceWhereMap(condition);
+    if (relationWhere == null) {
+      return const <String>['1 = 0'];
+    }
+    if (relationWhere.isEmpty) {
+      return const <String>['1 = 1'];
+    }
+
+    final supportedOperators = _relationWhereOperatorsFor(
+      cardinality: relation.cardinality,
+    );
+    if (relationWhere.keys.any((key) => !supportedOperators.contains(key))) {
+      return const <String>['1 = 0'];
+    }
+
+    final predicates = <String>[];
+    if (relation.cardinality == RelationCardinality.many) {
+      for (final operator in _toManyRelationWhereOperatorOrder) {
+        if (!relationWhere.containsKey(operator)) {
+          continue;
+        }
+        final relatedWhere = _normalizeRelationWhereOperand(
+          relationWhere[operator],
+        );
+        if (relatedWhere == null) {
+          return const <String>['1 = 0'];
+        }
+        switch (operator) {
+          case 'some':
+            predicates.add(
+              _buildRelationExistsPredicate(
+                relation: relation,
+                relatedWhere: relatedWhere,
+                params: params,
+                outerRowRef: outerRowRef,
+                negated: false,
+              ),
+            );
+          case 'none':
+            predicates.add(
+              _buildRelationExistsPredicate(
+                relation: relation,
+                relatedWhere: relatedWhere,
+                params: params,
+                outerRowRef: outerRowRef,
+                negated: true,
+              ),
+            );
+          case 'every':
+            predicates.add(
+              _buildRelationExistsPredicate(
+                relation: relation,
+                relatedWhere: <String, Object?>{'NOT': relatedWhere},
+                params: params,
+                outerRowRef: outerRowRef,
+                negated: true,
+              ),
+            );
+          default:
+            return const <String>['1 = 0'];
+        }
+      }
+      return predicates;
+    }
+
+    for (final operator in _toOneRelationWhereOperatorOrder) {
+      if (!relationWhere.containsKey(operator)) {
+        continue;
+      }
+      final operand = relationWhere[operator];
+      if (operand == null) {
+        predicates.add(
+          _buildRelationExistsPredicate(
+            relation: relation,
+            relatedWhere: const <String, Object?>{},
+            params: params,
+            outerRowRef: outerRowRef,
+            negated: operator == 'is',
+          ),
+        );
+        continue;
+      }
+
+      final relatedWhere = _normalizeRelationWhereOperand(operand);
+      if (relatedWhere == null) {
+        return const <String>['1 = 0'];
+      }
+      predicates.add(
+        _buildRelationExistsPredicate(
+          relation: relation,
+          relatedWhere: relatedWhere,
+          params: params,
+          outerRowRef: outerRowRef,
+          negated: operator == 'isNot',
+        ),
+      );
+    }
+    return predicates;
+  }
+
+  JsonMap? _normalizeRelationWhereOperand(Object? operand) {
+    if (operand == null) {
+      return const <String, Object?>{};
+    }
+    return _coerceWhereMap(operand);
+  }
+
+  String _buildRelationExistsPredicate({
+    required ModelRelationContract relation,
+    required JsonMap relatedWhere,
+    required List<Object?> params,
+    required String outerRowRef,
+    required bool negated,
+  }) {
+    final relatedModel = contract.models[relation.relatedModel];
+    if (relatedModel == null) {
+      throw ModelNotFoundException(relation.relatedModel, contract.models.keys);
+    }
+
+    final relationRowRef = _id(_relationWhereAlias);
+    final predicates = _buildRelationJoinPredicates(
+      relation: relation,
+      outerRowRef: outerRowRef,
+      relationRowRef: relationRowRef,
+    );
+    if (relatedWhere.isNotEmpty) {
+      predicates.add(
+        _buildWhereExpression(
+          model: relation.relatedModel,
+          where: relatedWhere,
+          params: params,
+          rowRef: relationRowRef,
+          fieldRefPrefix: relationRowRef,
+        ),
+      );
+    }
+
+    final existsSql =
+        'EXISTS (SELECT 1 FROM ${_id(relatedModel.table)} AS $relationRowRef '
+        'WHERE ${predicates.join(' AND ')})';
+    if (negated) {
+      return 'NOT $existsSql';
+    }
+    return existsSql;
+  }
+
+  List<String> _buildRelationJoinPredicates({
+    required ModelRelationContract relation,
+    required String outerRowRef,
+    required String relationRowRef,
+  }) {
+    final predicates = <String>[];
+    for (var index = 0; index < relation.sourceFields.length; index++) {
+      final sourceFieldRef =
+          '$outerRowRef.${_id(relation.sourceFields[index])}';
+      final targetFieldRef =
+          '$relationRowRef.${_id(relation.targetFields[index])}';
+      predicates.add('$targetFieldRef = $sourceFieldRef');
+    }
     return predicates;
   }
 
@@ -504,8 +753,12 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String field,
     required String operator,
     required Object? operand,
+    required String? fieldRefPrefix,
   }) {
-    final idField = _id(field);
+    final idField = _fieldReference(
+      field: field,
+      fieldRefPrefix: fieldRefPrefix,
+    );
 
     switch (operator) {
       case 'equals':
@@ -569,6 +822,25 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       default:
         throw StateError('Unsupported where operator: $operator');
     }
+  }
+
+  Set<String> _relationWhereOperatorsFor({
+    required RelationCardinality cardinality,
+  }) {
+    return switch (cardinality) {
+      RelationCardinality.many => _toManyRelationWhereOperators,
+      RelationCardinality.one => _toOneRelationWhereOperators,
+    };
+  }
+
+  String _fieldReference({
+    required String field,
+    required String? fieldRefPrefix,
+  }) {
+    if (fieldRefPrefix == null) {
+      return _id(field);
+    }
+    return '$fieldRefPrefix.${_id(field)}';
   }
 
   List<Object?> _coerceListOperand(Object? value) {

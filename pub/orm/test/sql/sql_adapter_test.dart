@@ -17,6 +17,44 @@ void main() {
     );
   }
 
+  OrmContract buildRelationalContract() {
+    return OrmContract(
+      version: '1',
+      hash: 'rel-hash',
+      target: 'sql-family',
+      models: <String, ModelContract>{
+        'User': ModelContract(
+          name: 'User',
+          table: 'users',
+          fields: <String>{'id', 'email'},
+          relations: <String, ModelRelationContract>{
+            'posts': ModelRelationContract(
+              name: 'posts',
+              relatedModel: 'Post',
+              sourceFields: <String>['id'],
+              targetFields: <String>['userId'],
+              cardinality: RelationCardinality.many,
+            ),
+          },
+        ),
+        'Post': ModelContract(
+          name: 'Post',
+          table: 'posts',
+          fields: <String>{'id', 'userId', 'title'},
+          relations: <String, ModelRelationContract>{
+            'author': ModelRelationContract(
+              name: 'author',
+              relatedModel: 'User',
+              sourceFields: <String>['userId'],
+              targetFields: <String>['id'],
+              cardinality: RelationCardinality.one,
+            ),
+          },
+        ),
+      },
+    );
+  }
+
   final contract = buildContract();
 
   test('lowers findMany with where/order/pagination/select', () {
@@ -151,6 +189,62 @@ void main() {
       'b@example.com',
       '%blocked%',
     ]);
+  });
+
+  test('lowers to-many relation where using EXISTS predicates', () {
+    final contract = buildRelationalContract();
+    final adapter = SqlAdapter(contract: contract);
+    final plan = OrmPlan(
+      contractHash: contract.hash,
+      model: 'User',
+      action: OrmAction.findMany,
+      where: <String, Object?>{
+        'posts': <String, Object?>{
+          'some': <String, Object?>{
+            'title': <String, Object?>{'contains': 'A'},
+          },
+          'none': <String, Object?>{'title': 'Z'},
+          'every': <String, Object?>{
+            'title': <String, Object?>{'startsWith': 'Post'},
+          },
+        },
+      },
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT * FROM "users" WHERE '
+      'EXISTS (SELECT 1 FROM "posts" AS "_rel" WHERE "_rel"."userId" = "users"."id" AND "_rel"."title" LIKE ? ESCAPE \'\\\') AND '
+      'NOT EXISTS (SELECT 1 FROM "posts" AS "_rel" WHERE "_rel"."userId" = "users"."id" AND "_rel"."title" = ?) AND '
+      'NOT EXISTS (SELECT 1 FROM "posts" AS "_rel" WHERE "_rel"."userId" = "users"."id" AND NOT ("_rel"."title" LIKE ? ESCAPE \'\\\'))',
+    );
+    expect(statement.parameters, <Object?>['%A%', 'Z', 'Post%']);
+  });
+
+  test('lowers to-one relation where including null semantics', () {
+    final contract = buildRelationalContract();
+    final adapter = SqlAdapter(contract: contract);
+    final plan = OrmPlan(
+      contractHash: contract.hash,
+      model: 'Post',
+      action: OrmAction.findMany,
+      where: <String, Object?>{
+        'author': <String, Object?>{
+          'is': <String, Object?>{'email': 'u1@example.com'},
+          'isNot': null,
+        },
+      },
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT * FROM "posts" WHERE '
+      'EXISTS (SELECT 1 FROM "users" AS "_rel" WHERE "_rel"."id" = "posts"."userId" AND "_rel"."email" = ?) AND '
+      'EXISTS (SELECT 1 FROM "users" AS "_rel" WHERE "_rel"."id" = "posts"."userId")',
+    );
+    expect(statement.parameters, <Object?>['u1@example.com']);
   });
 
   test(
