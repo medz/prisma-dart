@@ -207,6 +207,12 @@ void main() {
           reason: 'Expected GeneratedOrmClient to expose db entrypoint.',
         );
         expect(
+          generatedSource.contains('db.orm.user;'),
+          isFalse,
+          reason:
+              'Expected GeneratedOrmClient to remove direct model delegate getters.',
+        );
+        expect(
           RegExp(
             r'class\s+GeneratedOrmDb\s*\{[\s\S]*?late\s+final\s+GeneratedOrmCollections\s+orm\s*=\s*GeneratedOrmCollections\(_context\);[\s\S]*?late\s+final\s+GeneratedOrmSql\s+sql\s*=\s*GeneratedOrmSql\(_context\);',
           ).hasMatch(generatedSource),

@@ -539,15 +539,6 @@ final class TypedClientWriter {
     buffer.writeln(
       '  late final GeneratedOrmDb db = GeneratedOrmDb(_context);',
     );
-    buffer.writeln();
-
-    for (final model in models) {
-      buffer.writeln(
-        '  late final ${model.delegateClassName} ${model.getterName} =',
-      );
-      buffer.writeln('      db.orm.${model.getterName};');
-      buffer.writeln();
-    }
 
     buffer.writeln('}');
     buffer.writeln();
