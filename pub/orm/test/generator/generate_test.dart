@@ -465,6 +465,94 @@ void main() {
         );
         expect(
           RegExp(
+            r'\bclass UserAggregateCountBucket\b',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed aggregate count bucket.',
+        );
+        expect(
+          RegExp(r'\bclass UserAggregateMinBucket\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed aggregate min bucket.',
+        );
+        expect(
+          RegExp(r'\bclass UserAggregateMaxBucket\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed aggregate max bucket.',
+        );
+        expect(
+          RegExp(r'\bclass UserAggregateSumBucket\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed aggregate sum bucket.',
+        );
+        expect(
+          RegExp(r'\bclass UserAggregateAvgBucket\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed aggregate avg bucket.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateCountBucket\s+get\s+count',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserAggregateResult to expose typed count bucket getter.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateMinBucket\s+get\s+min',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserAggregateResult to expose typed min bucket getter.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateMaxBucket\s+get\s+max',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserAggregateResult to expose typed max bucket getter.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateSumBucket\s+get\s+sum',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserAggregateResult to expose typed sum bucket getter.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateAvgBucket\s+get\s+avg',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserAggregateResult to expose typed avg bucket getter.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?final\s+Map<String,\s*Object\?>\s+value;',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserAggregateResult to avoid exposing public map payload.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateCountBucket\s*\{[\s\S]*?field\(UserDistinct\s+field\)',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected typed aggregate buckets to avoid dynamic field(...) map-style accessor.',
+        );
+        expect(
+          RegExp(
             r'Future<List<UserGroupByResult>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
           ).hasMatch(generatedSource),
           isTrue,
@@ -476,6 +564,38 @@ void main() {
           isTrue,
           reason:
               'Expected generated source to include typed groupBy result wrapper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupByResult\s*\{[\s\S]*?int\?\s+get\s+id\s*=>',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupByResult to expose typed getter for scalar id.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupByResult\s*\{[\s\S]*?String\?\s+get\s+email\s*=>',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupByResult to expose typed getter for scalar email.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupByResult\s*\{[\s\S]*?Object\?\s+field\(UserDistinct\s+field\)',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupByResult to avoid dynamic field(...) map-style accessor.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupByResult\s*\{[\s\S]*?final\s+Map<String,\s*Object\?>\s+value;',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupByResult to avoid exposing public map payload.',
         );
         expect(
           generatedSource.contains(

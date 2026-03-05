@@ -607,6 +607,23 @@ final class TypedClientWriter {
     final relationFields = model.model.fields
         .where((field) => field.isRelation)
         .toList(growable: false);
+    final aggregateCountBucketClassName =
+        '${model.classBaseName}AggregateCountBucket';
+    final aggregateMinBucketClassName =
+        '${model.classBaseName}AggregateMinBucket';
+    final aggregateMaxBucketClassName =
+        '${model.classBaseName}AggregateMaxBucket';
+    final aggregateSumBucketClassName =
+        '${model.classBaseName}AggregateSumBucket';
+    final aggregateAvgBucketClassName =
+        '${model.classBaseName}AggregateAvgBucket';
+    final aggregateBucketClassNames = <String, String>{
+      'count': aggregateCountBucketClassName,
+      'min': aggregateMinBucketClassName,
+      'max': aggregateMaxBucketClassName,
+      'sum': aggregateSumBucketClassName,
+      'avg': aggregateAvgBucketClassName,
+    };
 
     buffer.writeln('class ${model.distinctClassName} {');
     buffer.writeln('  final String value;');
@@ -945,10 +962,19 @@ final class TypedClientWriter {
     buffer.writeln('}');
     buffer.writeln();
 
+    for (final entry in aggregateBucketClassNames.entries) {
+      _writeAggregateBucketClass(
+        buffer: buffer,
+        scalarFields: scalarFields,
+        className: entry.value,
+        bucket: entry.key,
+      );
+    }
+
     buffer.writeln('class ${model.aggregateResultClassName} {');
-    buffer.writeln('  final Map<String, Object?> value;');
+    buffer.writeln('  final Map<String, Object?> _value;');
     buffer.writeln();
-    buffer.writeln('  const ${model.aggregateResultClassName}._(this.value);');
+    buffer.writeln('  const ${model.aggregateResultClassName}._(this._value);');
     buffer.writeln();
     buffer.writeln(
       '  factory ${model.aggregateResultClassName}.fromJson(Map<String, Object?> value) {',
@@ -960,28 +986,28 @@ final class TypedClientWriter {
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  int? get countAll {');
-    buffer.writeln("    final count = _readJsonMap(value['count']);");
-    buffer.writeln("    return _readInt(count?['all']);");
-    buffer.writeln('  }');
+    buffer.writeln('  int? get countAll => count.all;');
     buffer.writeln();
-    for (final bucket in const <String>['count', 'min', 'max', 'sum', 'avg']) {
-      buffer.writeln('  Map<String, Object?> get $bucket {');
-      buffer.writeln("    return _readJsonMap(value['$bucket']) ??");
-      buffer.writeln('        const <String, Object?>{};');
+    for (final entry in aggregateBucketClassNames.entries) {
+      buffer.writeln('  ${entry.value} get ${entry.key} {');
+      buffer.writeln('    return ${entry.value}._(');
+      buffer.writeln(
+        "      _readJsonMap(_value['${entry.key}']) ?? const <String, Object?>{},",
+      );
+      buffer.writeln('    );');
       buffer.writeln('  }');
       buffer.writeln();
     }
     buffer.writeln('  Map<String, Object?> toJson() {');
-    buffer.writeln('    return Map<String, Object?>.from(value);');
+    buffer.writeln('    return Map<String, Object?>.from(_value);');
     buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class ${model.groupByResultClassName} {');
-    buffer.writeln('  final Map<String, Object?> value;');
+    buffer.writeln('  final Map<String, Object?> _value;');
     buffer.writeln();
-    buffer.writeln('  const ${model.groupByResultClassName}._(this.value);');
+    buffer.writeln('  const ${model.groupByResultClassName}._(this._value);');
     buffer.writeln();
     buffer.writeln(
       '  factory ${model.groupByResultClassName}.fromJson(Map<String, Object?> value) {',
@@ -992,35 +1018,39 @@ final class TypedClientWriter {
     );
     buffer.writeln('    );');
     buffer.writeln('  }');
+    for (final field in scalarFields) {
+      final memberName = _toLowerCamelIdentifier(field.name, fallback: 'field');
+      final fieldName = _escapeString(field.name);
+      final decode = _decodeScalar(field, accessor: "_value['$fieldName']");
+      final fieldType = _scalarResultType(field);
+      buffer.writeln();
+      buffer.writeln('  $fieldType get $memberName => $decode;');
+    }
     buffer.writeln();
-    buffer.writeln(
-      '  Object? field(${model.distinctClassName} field) => value[field.value];',
-    );
+    buffer.writeln('  int? get countAll => count.all;');
     buffer.writeln();
-    buffer.writeln('  int? get countAll {');
-    buffer.writeln("    final count = _readJsonMap(value['count']);");
-    buffer.writeln("    return _readInt(count?['all']);");
-    buffer.writeln('  }');
-    buffer.writeln();
-    for (final bucket in const <String>['count', 'min', 'max', 'sum', 'avg']) {
-      buffer.writeln('  Map<String, Object?> get $bucket {');
-      buffer.writeln("    return _readJsonMap(value['$bucket']) ??");
-      buffer.writeln('        const <String, Object?>{};');
+    for (final entry in aggregateBucketClassNames.entries) {
+      buffer.writeln('  ${entry.value} get ${entry.key} {');
+      buffer.writeln('    return ${entry.value}._(');
+      buffer.writeln(
+        "      _readJsonMap(_value['${entry.key}']) ?? const <String, Object?>{},",
+      );
+      buffer.writeln('    );');
       buffer.writeln('  }');
       buffer.writeln();
     }
     buffer.writeln('  ${model.aggregateResultClassName} get aggregate {');
     buffer.writeln('    return ${model.aggregateResultClassName}.fromJson(');
     buffer.writeln('      <String, Object?>{');
-    for (final bucket in const <String>['count', 'min', 'max', 'sum', 'avg']) {
-      buffer.writeln("        '$bucket': $bucket,");
+    for (final entry in aggregateBucketClassNames.entries) {
+      buffer.writeln("        '${entry.key}': ${entry.key}.toJson(),");
     }
     buffer.writeln('      },');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
     buffer.writeln('  Map<String, Object?> toJson() {');
-    buffer.writeln('    return Map<String, Object?>.from(value);');
+    buffer.writeln('    return Map<String, Object?>.from(_value);');
     buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();
@@ -1166,6 +1196,118 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();
+  }
+
+  void _writeAggregateBucketClass({
+    required StringBuffer buffer,
+    required List<TypedField> scalarFields,
+    required String className,
+    required String bucket,
+  }) {
+    final fields = scalarFields
+        .where(
+          (field) =>
+              _supportsAggregateBucketField(field: field, bucket: bucket),
+        )
+        .toList(growable: false);
+
+    buffer.writeln('class $className {');
+    buffer.writeln('  final Map<String, Object?> _value;');
+    buffer.writeln();
+    buffer.writeln('  const $className._(this._value);');
+    buffer.writeln();
+
+    if (bucket == 'count') {
+      buffer.writeln("  int? get all => _readInt(_value['all']);");
+      buffer.writeln();
+    }
+
+    for (final scalarField in fields) {
+      final memberName = _toLowerCamelIdentifier(
+        scalarField.name,
+        fallback: 'field',
+      );
+      final fieldName = _escapeString(scalarField.name);
+      final accessor = "_value['$fieldName']";
+      final decode = _aggregateBucketDecodeExpression(
+        field: scalarField,
+        bucket: bucket,
+        accessor: accessor,
+      );
+      final fieldType = _aggregateBucketFieldType(
+        field: scalarField,
+        bucket: bucket,
+      );
+      buffer.writeln('  $fieldType get $memberName => $decode;');
+      buffer.writeln();
+    }
+
+    buffer.writeln('  Map<String, Object?> toJson() {');
+    buffer.writeln('    return Map<String, Object?>.from(_value);');
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+  }
+
+  bool _supportsAggregateBucketField({
+    required TypedField field,
+    required String bucket,
+  }) {
+    if (!field.isScalar) {
+      return false;
+    }
+    if (bucket == 'sum' || bucket == 'avg') {
+      if (field.isList) {
+        return false;
+      }
+      return field.scalarType == TypedScalarType.integer ||
+          field.scalarType == TypedScalarType.floating;
+    }
+    return true;
+  }
+
+  String _aggregateBucketFieldType({
+    required TypedField field,
+    required String bucket,
+  }) {
+    return switch (bucket) {
+      'count' => 'int?',
+      'sum' => field.scalarType == TypedScalarType.integer ? 'int?' : 'double?',
+      'avg' => 'double?',
+      'min' || 'max' => _scalarResultType(field),
+      _ => 'Object?',
+    };
+  }
+
+  String _aggregateBucketDecodeExpression({
+    required TypedField field,
+    required String bucket,
+    required String accessor,
+  }) {
+    return switch (bucket) {
+      'count' => '_readInt($accessor)',
+      'sum' =>
+        field.scalarType == TypedScalarType.integer
+            ? '_readInt($accessor)'
+            : '_readDouble($accessor)',
+      'avg' => '_readDouble($accessor)',
+      'min' || 'max' => _decodeScalar(field, accessor: accessor),
+      _ => '_readJsonValue($accessor)',
+    };
+  }
+
+  String _scalarResultType(TypedField field) {
+    final scalarType = field.scalarType;
+    if (scalarType == null) {
+      return 'Object?';
+    }
+    if (field.isList) {
+      if (scalarType == TypedScalarType.json) {
+        return 'List<Object?>?';
+      }
+      return 'List<${scalarType.dartType}>?';
+    }
+    return '${scalarType.dartType}?';
   }
 
   void _writeTypedDelegateClass({
