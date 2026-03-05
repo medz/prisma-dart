@@ -13,6 +13,7 @@ export 'src/runtime/plugins/budgets.dart';
 export 'src/runtime/plugins/lints.dart';
 export 'src/runtime/types.dart';
 export 'src/sql/adapter.dart';
+export 'src/sql/marker_reader.dart';
 export 'src/sql/types.dart';
 export 'src/target/adapter.dart';
 export 'src/target/driver.dart';
