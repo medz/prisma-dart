@@ -15,8 +15,57 @@ typedef CollectionFactory =
       required String modelName,
     });
 
+enum IncludeExecutionStrategy { singleQuery, multiQuery }
+
+typedef IncludeExecutionStrategySelector =
+    IncludeExecutionStrategy Function({
+      required OrmContract contract,
+      required String modelName,
+      required OrmAction action,
+      required Map<String, IncludeSpec> include,
+      required int depth,
+    });
+
+const int _defaultMaxIncludeDepth = 4;
+
+IncludeExecutionStrategy defaultIncludeExecutionStrategySelector({
+  required OrmContract contract,
+  required String modelName,
+  required OrmAction action,
+  required Map<String, IncludeSpec> include,
+  required int depth,
+}) {
+  return IncludeExecutionStrategy.multiQuery;
+}
+
+@immutable
+final class IncludeSpec {
+  final JsonMap where;
+  final int? skip;
+  final int? take;
+  final List<OrmOrderBy> orderBy;
+  final List<String> select;
+  final Map<String, IncludeSpec> include;
+
+  const IncludeSpec({
+    JsonMap where = const <String, Object?>{},
+    this.skip,
+    this.take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) : where = where,
+       orderBy = orderBy,
+       select = select,
+       include = include;
+}
+
 abstract interface class OrmModelContext {
   OrmContract get contract;
+
+  IncludeExecutionStrategySelector get includeStrategySelector;
+
+  int get maxIncludeDepth;
 
   Future<EngineResponse> execute(OrmPlan plan);
 
@@ -33,6 +82,10 @@ final class OrmClient implements OrmModelContext {
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
   final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
+  @override
+  final IncludeExecutionStrategySelector includeStrategySelector;
+  @override
+  final int maxIncludeDepth;
 
   OrmClient({
     required this.contract,
@@ -43,7 +96,10 @@ final class OrmClient implements OrmModelContext {
     RuntimeLog log = const SilentRuntimeLog(),
     Map<String, CollectionFactory> collections =
         const <String, CollectionFactory>{},
-  }) : _runtime = OrmRuntimeCore(
+    this.includeStrategySelector = defaultIncludeExecutionStrategySelector,
+    this.maxIncludeDepth = _defaultMaxIncludeDepth,
+  }) : assert(maxIncludeDepth > 0, 'maxIncludeDepth must be greater than 0.'),
+       _runtime = OrmRuntimeCore(
          contract: contract,
          engine: engine,
          plugins: plugins,
@@ -72,6 +128,8 @@ final class OrmClient implements OrmModelContext {
       executePlan: connection.execute,
       modelAliases: _modelAliases,
       collectionRegistry: _collectionRegistry,
+      includeStrategySelector: includeStrategySelector,
+      maxIncludeDepth: maxIncludeDepth,
     );
 
     try {
@@ -91,6 +149,8 @@ final class OrmClient implements OrmModelContext {
       executePlan: transaction.execute,
       modelAliases: _modelAliases,
       collectionRegistry: _collectionRegistry,
+      includeStrategySelector: includeStrategySelector,
+      maxIncludeDepth: maxIncludeDepth,
     );
 
     try {
@@ -162,12 +222,18 @@ final class OrmScopedClient implements OrmModelContext {
   final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
+  @override
+  final IncludeExecutionStrategySelector includeStrategySelector;
+  @override
+  final int maxIncludeDepth;
 
   OrmScopedClient._({
     required this.contract,
     required Future<EngineResponse> Function(OrmPlan plan) executePlan,
     required Map<String, String> modelAliases,
     required Map<String, CollectionFactory> collectionRegistry,
+    required this.includeStrategySelector,
+    required this.maxIncludeDepth,
   }) : _executePlan = executePlan,
        _modelAliases = modelAliases,
        _collectionRegistry = collectionRegistry;
@@ -241,13 +307,129 @@ class ModelDelegate {
 
   ModelQuery selectField(String field) => query().selectField(field);
 
+  ModelQuery include(Map<String, IncludeSpec> include) =>
+      query().include(include);
+
+  ModelQuery includeRelation(
+    String relation, {
+    IncludeSpec spec = const IncludeSpec(),
+  }) => query().includeRelation(relation, spec: spec);
+
   Future<List<JsonMap>> findMany({
     JsonMap where = const <String, Object?>{},
     int? skip,
     int? take,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _findManyInternal(
+      action: OrmAction.findMany,
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      select: select,
+      include: include,
+      includeDepth: 0,
+    );
+  }
+
+  Future<JsonMap?> findUnique({
+    JsonMap where = const <String, Object?>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _findUniqueInternal(
+      action: OrmAction.findUnique,
+      where: where,
+      select: select,
+      include: include,
+      includeDepth: 0,
+    );
+  }
+
+  Future<JsonMap> create({
+    required JsonMap data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
+    final normalizedInclude = _normalizeInclude(include);
+    final response = await _client.execute(
+      OrmPlan(
+        contractHash: _client.contract.hash,
+        model: modelName,
+        action: OrmAction.create,
+        data: data,
+        select: _expandSelectForInclude(
+          model: modelName,
+          select: select,
+          include: normalizedInclude,
+        ),
+      ),
+    );
+
+    final row = _readRow(response.data, action: 'create');
+    if (row == null) {
+      throw RuntimeCreateResultMissingException(model: modelName);
+    }
+
+    final hydratedRows = await _resolveIncludeRows(
+      action: OrmAction.create,
+      rows: <JsonMap>[row],
+      include: normalizedInclude,
+      depth: 0,
+    );
+
+    return _shapeRows(
+      hydratedRows,
+      select: select,
+      include: normalizedInclude,
+    ).single;
+  }
+
+  Future<JsonMap?> update({
+    JsonMap where = const <String, Object?>{},
+    required JsonMap data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _runNullableMutation(
+      action: OrmAction.update,
+      where: where,
+      data: data,
+      select: select,
+      include: include,
+      responseAction: 'update',
+    );
+  }
+
+  Future<JsonMap?> delete({
+    JsonMap where = const <String, Object?>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) {
+    return _runNullableMutation(
+      action: OrmAction.delete,
+      where: where,
+      data: const <String, Object?>{},
+      select: select,
+      include: include,
+      responseAction: 'delete',
+    );
+  }
+
+  Future<List<JsonMap>> _findManyInternal({
+    required OrmAction action,
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required int includeDepth,
+  }) async {
+    final normalizedInclude = _normalizeInclude(include);
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
@@ -257,80 +439,322 @@ class ModelDelegate {
         skip: skip,
         take: take,
         orderBy: orderBy,
-        select: select,
+        select: _expandSelectForInclude(
+          model: modelName,
+          select: select,
+          include: normalizedInclude,
+        ),
       ),
     );
-    return _readRows(response.data);
+
+    final rows = _readRows(response.data);
+    final hydratedRows = await _resolveIncludeRows(
+      action: action,
+      rows: rows,
+      include: normalizedInclude,
+      depth: includeDepth,
+    );
+
+    return _shapeRows(hydratedRows, select: select, include: normalizedInclude);
   }
 
-  Future<JsonMap?> findUnique({
+  Future<JsonMap?> _findUniqueInternal({
+    required OrmAction action,
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required int includeDepth,
   }) async {
+    final normalizedInclude = _normalizeInclude(include);
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
         model: modelName,
         action: OrmAction.findUnique,
         where: where,
-        select: select,
+        select: _expandSelectForInclude(
+          model: modelName,
+          select: select,
+          include: normalizedInclude,
+        ),
       ),
     );
-    return _readRow(response.data, action: 'findUnique');
-  }
 
-  Future<JsonMap> create({
-    required JsonMap data,
-    List<String> select = const <String>[],
-  }) async {
-    final response = await _client.execute(
-      OrmPlan(
-        contractHash: _client.contract.hash,
-        model: modelName,
-        action: OrmAction.create,
-        data: data,
-        select: select,
-      ),
-    );
-    final row = _readRow(response.data, action: 'create');
+    final row = _readRow(response.data, action: 'findUnique');
     if (row == null) {
-      throw RuntimeCreateResultMissingException(model: modelName);
+      return null;
     }
-    return row;
+
+    final hydratedRows = await _resolveIncludeRows(
+      action: action,
+      rows: <JsonMap>[row],
+      include: normalizedInclude,
+      depth: includeDepth,
+    );
+
+    return _shapeRows(
+      hydratedRows,
+      select: select,
+      include: normalizedInclude,
+    ).single;
   }
 
-  Future<JsonMap?> update({
-    JsonMap where = const <String, Object?>{},
+  Future<JsonMap?> _runNullableMutation({
+    required OrmAction action,
+    required JsonMap where,
     required JsonMap data,
-    List<String> select = const <String>[],
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+    required String responseAction,
   }) async {
+    final normalizedInclude = _normalizeInclude(include);
     final response = await _client.execute(
       OrmPlan(
         contractHash: _client.contract.hash,
         model: modelName,
-        action: OrmAction.update,
+        action: action,
         where: where,
         data: data,
-        select: select,
+        select: _expandSelectForInclude(
+          model: modelName,
+          select: select,
+          include: normalizedInclude,
+        ),
       ),
     );
-    return _readRow(response.data, action: 'update');
+
+    final row = _readRow(response.data, action: responseAction);
+    if (row == null) {
+      return null;
+    }
+
+    final hydratedRows = await _resolveIncludeRows(
+      action: action,
+      rows: <JsonMap>[row],
+      include: normalizedInclude,
+      depth: 0,
+    );
+
+    return _shapeRows(
+      hydratedRows,
+      select: select,
+      include: normalizedInclude,
+    ).single;
   }
 
-  Future<JsonMap?> delete({
-    JsonMap where = const <String, Object?>{},
-    List<String> select = const <String>[],
-  }) async {
-    final response = await _client.execute(
-      OrmPlan(
-        contractHash: _client.contract.hash,
-        model: modelName,
-        action: OrmAction.delete,
-        where: where,
-        select: select,
-      ),
+  Future<List<JsonMap>> _resolveIncludeRows({
+    required OrmAction action,
+    required List<JsonMap> rows,
+    required Map<String, IncludeSpec> include,
+    required int depth,
+  }) {
+    if (rows.isEmpty || include.isEmpty) {
+      return Future<List<JsonMap>>.value(rows);
+    }
+
+    if (depth >= _client.maxIncludeDepth) {
+      throw IncludeDepthExceededException(maxDepth: _client.maxIncludeDepth);
+    }
+
+    final strategy = _client.includeStrategySelector(
+      contract: _client.contract,
+      modelName: modelName,
+      action: action,
+      include: include,
+      depth: depth,
     );
-    return _readRow(response.data, action: 'delete');
+
+    return switch (strategy) {
+      IncludeExecutionStrategy.singleQuery => _resolveIncludeRowsMultiQuery(
+        rows: rows,
+        include: include,
+        depth: depth,
+      ),
+      IncludeExecutionStrategy.multiQuery => _resolveIncludeRowsMultiQuery(
+        rows: rows,
+        include: include,
+        depth: depth,
+      ),
+    };
+  }
+
+  Future<List<JsonMap>> _resolveIncludeRowsMultiQuery({
+    required List<JsonMap> rows,
+    required Map<String, IncludeSpec> include,
+    required int depth,
+  }) async {
+    var hydrated = rows;
+
+    for (final entry in include.entries) {
+      final relationName = entry.key;
+      final relationInclude = entry.value;
+      final relation = _resolveRelation(
+        model: modelName,
+        relationName: relationName,
+      );
+      final relatedDelegate = _client.model(relation.relatedModel);
+
+      final nextRows = <JsonMap>[];
+      for (final row in hydrated) {
+        final relationWhere = _buildRelationWhere(row: row, relation: relation);
+        if (relationWhere == null) {
+          final emptyValue = relation.cardinality == RelationCardinality.one
+              ? null
+              : const <JsonMap>[];
+          nextRows.add(_attachInclude(row, relationName, emptyValue));
+          continue;
+        }
+
+        final relatedWhere = <String, Object?>{
+          ...relationInclude.where,
+          ...relationWhere,
+        };
+
+        final relatedRows = await relatedDelegate._findManyInternal(
+          action: OrmAction.findMany,
+          where: relatedWhere,
+          skip: relationInclude.skip,
+          take: relationInclude.take,
+          orderBy: relationInclude.orderBy,
+          select: relationInclude.select,
+          include: relationInclude.include,
+          includeDepth: depth + 1,
+        );
+
+        final relationValue = relation.cardinality == RelationCardinality.one
+            ? _firstOrNull(relatedRows)
+            : relatedRows;
+
+        nextRows.add(_attachInclude(row, relationName, relationValue));
+      }
+
+      hydrated = nextRows;
+    }
+
+    return hydrated;
+  }
+
+  ModelRelationContract _resolveRelation({
+    required String model,
+    required String relationName,
+  }) {
+    final modelContract = _client.contract.models[model];
+    if (modelContract == null) {
+      throw ModelNotFoundException(model, _client.contract.models.keys);
+    }
+
+    final relation = modelContract.relations[relationName];
+    if (relation != null) {
+      return relation;
+    }
+
+    throw IncludeRelationNotFoundException(
+      model: model,
+      relation: relationName,
+      availableRelations: modelContract.relations.keys,
+    );
+  }
+
+  JsonMap? _buildRelationWhere({
+    required JsonMap row,
+    required ModelRelationContract relation,
+  }) {
+    final where = <String, Object?>{};
+
+    for (var index = 0; index < relation.sourceFields.length; index++) {
+      final sourceField = relation.sourceFields[index];
+      final targetField = relation.targetFields[index];
+      if (!row.containsKey(sourceField)) {
+        return null;
+      }
+
+      final value = row[sourceField];
+      if (value == null) {
+        return null;
+      }
+
+      where[targetField] = value;
+    }
+
+    return where;
+  }
+
+  List<String> _expandSelectForInclude({
+    required String model,
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+  }) {
+    if (select.isEmpty || include.isEmpty) {
+      return select;
+    }
+
+    final expanded = <String>{...select};
+    for (final relationName in include.keys) {
+      final relation = _resolveRelation(
+        model: model,
+        relationName: relationName,
+      );
+      expanded.addAll(relation.sourceFields);
+    }
+
+    return expanded.toList(growable: false);
+  }
+
+  List<JsonMap> _shapeRows(
+    List<JsonMap> rows, {
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+  }) {
+    if (rows.isEmpty) {
+      return const <JsonMap>[];
+    }
+
+    if (select.isEmpty && include.isEmpty) {
+      return rows;
+    }
+
+    return rows
+        .map((row) => _shapeRow(row, select: select, include: include))
+        .toList(growable: false);
+  }
+
+  JsonMap _shapeRow(
+    JsonMap row, {
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+  }) {
+    if (select.isEmpty && include.isEmpty) {
+      return row;
+    }
+
+    final shaped = <String, Object?>{};
+    if (select.isEmpty) {
+      shaped.addAll(row);
+    } else {
+      for (final field in select) {
+        shaped[field] = row[field];
+      }
+    }
+
+    for (final relationName in include.keys) {
+      if (row.containsKey(relationName)) {
+        shaped[relationName] = row[relationName];
+      }
+    }
+
+    return shaped;
+  }
+
+  JsonMap _attachInclude(JsonMap row, String relation, Object? value) {
+    final next = <String, Object?>{...row, relation: value};
+    return next;
+  }
+
+  Map<String, IncludeSpec> _normalizeInclude(Map<String, IncludeSpec> include) {
+    if (include.isEmpty) {
+      return const <String, IncludeSpec>{};
+    }
+    return include;
   }
 }
 
@@ -341,6 +765,7 @@ final class ModelQueryState {
   final int? take;
   final List<OrmOrderBy> orderBy;
   final List<String> select;
+  final Map<String, IncludeSpec> include;
 
   const ModelQueryState({
     this.where = const <String, Object?>{},
@@ -348,6 +773,7 @@ final class ModelQueryState {
     this.take,
     this.orderBy = const <OrmOrderBy>[],
     this.select = const <String>[],
+    this.include = const <String, IncludeSpec>{},
   });
 }
 
@@ -368,13 +794,12 @@ final class ModelQuery {
 
   List<String> get selectedFields => _state.select;
 
+  Map<String, IncludeSpec> get includeValues => _state.include;
+
   ModelQuery where(JsonMap where, {bool merge = true}) {
     final nextWhere = merge
-        ? Map<String, Object?>.unmodifiable(<String, Object?>{
-            ..._state.where,
-            ...where,
-          })
-        : Map<String, Object?>.unmodifiable(where);
+        ? <String, Object?>{..._state.where, ...where}
+        : <String, Object?>{...where};
     return _next(
       ModelQueryState(
         where: nextWhere,
@@ -382,17 +807,15 @@ final class ModelQuery {
         take: _state.take,
         orderBy: _state.orderBy,
         select: _state.select,
+        include: _state.include,
       ),
     );
   }
 
   ModelQuery orderBy(List<OrmOrderBy> orderBy, {bool append = true}) {
     final nextOrderBy = append
-        ? List<OrmOrderBy>.unmodifiable(<OrmOrderBy>[
-            ..._state.orderBy,
-            ...orderBy,
-          ])
-        : List<OrmOrderBy>.unmodifiable(orderBy);
+        ? <OrmOrderBy>[..._state.orderBy, ...orderBy]
+        : <OrmOrderBy>[...orderBy];
     return _next(
       ModelQueryState(
         where: _state.where,
@@ -400,6 +823,7 @@ final class ModelQuery {
         take: _state.take,
         orderBy: nextOrderBy,
         select: _state.select,
+        include: _state.include,
       ),
     );
   }
@@ -410,8 +834,8 @@ final class ModelQuery {
 
   ModelQuery select(List<String> fields, {bool append = false}) {
     final nextSelect = append
-        ? List<String>.unmodifiable(<String>[..._state.select, ...fields])
-        : List<String>.unmodifiable(fields);
+        ? <String>[..._state.select, ...fields]
+        : <String>[...fields];
     return _next(
       ModelQueryState(
         where: _state.where,
@@ -419,12 +843,37 @@ final class ModelQuery {
         take: _state.take,
         orderBy: _state.orderBy,
         select: nextSelect,
+        include: _state.include,
       ),
     );
   }
 
   ModelQuery selectField(String field) {
     return select(<String>[field], append: true);
+  }
+
+  ModelQuery include(Map<String, IncludeSpec> include, {bool merge = true}) {
+    final nextInclude = merge
+        ? <String, IncludeSpec>{..._state.include, ...include}
+        : <String, IncludeSpec>{...include};
+
+    return _next(
+      ModelQueryState(
+        where: _state.where,
+        skip: _state.skip,
+        take: _state.take,
+        orderBy: _state.orderBy,
+        select: _state.select,
+        include: nextInclude,
+      ),
+    );
+  }
+
+  ModelQuery includeRelation(
+    String relation, {
+    IncludeSpec spec = const IncludeSpec(),
+  }) {
+    return include(<String, IncludeSpec>{relation: spec});
   }
 
   ModelQuery skip(int value) {
@@ -435,6 +884,7 @@ final class ModelQuery {
         take: _state.take,
         orderBy: _state.orderBy,
         select: _state.select,
+        include: _state.include,
       ),
     );
   }
@@ -447,6 +897,7 @@ final class ModelQuery {
         take: value,
         orderBy: _state.orderBy,
         select: _state.select,
+        include: _state.include,
       ),
     );
   }
@@ -459,6 +910,7 @@ final class ModelQuery {
         take: null,
         orderBy: _state.orderBy,
         select: _state.select,
+        include: _state.include,
       ),
     );
   }
@@ -470,14 +922,22 @@ final class ModelQuery {
       take: _state.take,
       orderBy: _state.orderBy,
       select: _state.select,
+      include: _state.include,
     );
   }
 
-  Future<JsonMap?> findUnique() =>
-      _delegate.findUnique(where: _state.where, select: _state.select);
+  Future<JsonMap?> findUnique() => _delegate.findUnique(
+    where: _state.where,
+    select: _state.select,
+    include: _state.include,
+  );
 
   Future<JsonMap> create({required JsonMap data}) {
-    return _delegate.create(data: data, select: _state.select);
+    return _delegate.create(
+      data: data,
+      select: _state.select,
+      include: _state.include,
+    );
   }
 
   Future<JsonMap?> update({required JsonMap data}) {
@@ -485,11 +945,15 @@ final class ModelQuery {
       where: _state.where,
       data: data,
       select: _state.select,
+      include: _state.include,
     );
   }
 
-  Future<JsonMap?> delete() =>
-      _delegate.delete(where: _state.where, select: _state.select);
+  Future<JsonMap?> delete() => _delegate.delete(
+    where: _state.where,
+    select: _state.select,
+    include: _state.include,
+  );
 
   ModelQuery _next(ModelQueryState nextState) =>
       ModelQuery._(_delegate, nextState);
@@ -538,7 +1002,7 @@ Map<String, CollectionFactory> _createCollectionRegistry(
     registry[model] = entry.value;
   }
 
-  return Map<String, CollectionFactory>.unmodifiable(registry);
+  return registry;
 }
 
 List<JsonMap> _readRows(Object? data) {
@@ -552,9 +1016,9 @@ List<JsonMap> _readRows(Object? data) {
       actual: data,
     );
   }
-  return List<JsonMap>.unmodifiable(
-    data.map((value) => _coerceRow(value, action: 'findMany')),
-  );
+  return data
+      .map((value) => _coerceRow(value, action: 'findMany'))
+      .toList(growable: false);
 }
 
 JsonMap? _readRow(Object? data, {required String action}) {
@@ -566,18 +1030,23 @@ JsonMap? _readRow(Object? data, {required String action}) {
 
 JsonMap _coerceRow(Object? value, {required String action}) {
   if (value is Map<String, Object?>) {
-    return Map<String, Object?>.unmodifiable(value);
+    return Map<String, Object?>.from(value);
   }
   if (value is Map<Object?, Object?>) {
-    return Map<String, Object?>.unmodifiable(
-      value.map((key, item) => MapEntry(key.toString(), item)),
-    );
+    return value.map((key, item) => MapEntry(key.toString(), item));
   }
   throw RuntimeResponseShapeException(
     action: action,
     expected: 'Map<String, Object?>',
     actual: value,
   );
+}
+
+T? _firstOrNull<T>(List<T> values) {
+  if (values.isEmpty) {
+    return null;
+  }
+  return values.first;
 }
 
 String _lowercaseFirst(String value) {

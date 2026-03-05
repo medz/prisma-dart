@@ -15,6 +15,41 @@ void main() {
     aliases: <String, String>{'users': 'User'},
   );
 
+  final relationalContract = OrmContract(
+    version: '1',
+    hash: 'contract-rel-v1',
+    models: <String, ModelContract>{
+      'User': ModelContract(
+        name: 'User',
+        table: 'users',
+        fields: <String>{'id', 'email'},
+        relations: <String, ModelRelationContract>{
+          'posts': ModelRelationContract(
+            name: 'posts',
+            relatedModel: 'Post',
+            sourceFields: <String>['id'],
+            targetFields: <String>['userId'],
+            cardinality: RelationCardinality.many,
+          ),
+        },
+      ),
+      'Post': ModelContract(
+        name: 'Post',
+        table: 'posts',
+        fields: <String>{'id', 'userId', 'title'},
+        relations: <String, ModelRelationContract>{
+          'author': ModelRelationContract(
+            name: 'author',
+            relatedModel: 'User',
+            sourceFields: <String>['userId'],
+            targetFields: <String>['id'],
+            cardinality: RelationCardinality.one,
+          ),
+        },
+      ),
+    },
+    aliases: <String, String>{'users': 'User', 'posts': 'Post'},
+  );
   group('OrmClient + MemoryEngine', () {
     test('runs CRUD flow', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -219,6 +254,183 @@ void main() {
         'id': 'u1',
       }).findUnique();
       expect(remaining, isNull);
+      await client.disconnect();
+    });
+
+    test('supports include for one-to-many relation', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      final rows = await client
+          .model('User')
+          .findMany(
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            include: <String, IncludeSpec>{
+              'posts': IncludeSpec(
+                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                select: const <String>['id', 'title'],
+              ),
+            },
+          );
+
+      expect(rows, hasLength(2));
+      final firstPosts = _readRowsValue(rows.first['posts']);
+      expect(firstPosts, hasLength(2));
+      expect(firstPosts.first['id'], 'p1');
+      expect(firstPosts.first['title'], 'Post A');
+
+      final secondPosts = _readRowsValue(rows.last['posts']);
+      expect(secondPosts, hasLength(1));
+      expect(secondPosts.single['id'], 'p3');
+      await client.disconnect();
+    });
+
+    test('supports nested include for relation traversal', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      final row = await client
+          .model('Post')
+          .findUnique(
+            where: <String, Object?>{'id': 'p1'},
+            include: <String, IncludeSpec>{
+              'author': IncludeSpec(
+                select: const <String>['id', 'email'],
+                include: <String, IncludeSpec>{
+                  'posts': IncludeSpec(
+                    orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                    select: const <String>['id'],
+                  ),
+                },
+              ),
+            },
+          );
+
+      final author = _readRowValue(row?['author']);
+      expect(author?['id'], 'u1');
+      expect(author?['email'], 'u1@example.com');
+
+      final authorPosts = _readRowsValue(author?['posts']);
+      expect(authorPosts, hasLength(2));
+      expect(authorPosts.first['id'], 'p1');
+      expect(authorPosts.last['id'], 'p2');
+      await client.disconnect();
+    });
+
+    test('throws when include relation is missing on model', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      await expectLater(
+        client
+            .model('User')
+            .findMany(
+              include: <String, IncludeSpec>{'unknown': const IncludeSpec()},
+            ),
+        throwsA(isA<IncludeRelationNotFoundException>()),
+      );
+      await client.disconnect();
+    });
+
+    test('throws when nested include depth exceeds configured limit', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+        maxIncludeDepth: 1,
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      await expectLater(
+        client
+            .model('User')
+            .findMany(
+              include: <String, IncludeSpec>{
+                'posts': IncludeSpec(
+                  include: <String, IncludeSpec>{'author': const IncludeSpec()},
+                ),
+              },
+            ),
+        throwsA(isA<IncludeDepthExceededException>()),
+      );
+      await client.disconnect();
+    });
+
+    test('keeps root select shape when include is present', () async {
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      final row = await client
+          .model('User')
+          .findUnique(
+            where: <String, Object?>{'id': 'u1'},
+            select: const <String>['email'],
+            include: <String, IncludeSpec>{
+              'posts': IncludeSpec(select: const <String>['title']),
+            },
+          );
+
+      expect(row, isNotNull);
+      expect(row?.containsKey('email'), isTrue);
+      expect(row?.containsKey('posts'), isTrue);
+      expect(row?.containsKey('id'), isFalse);
+
+      final posts = _readRowsValue(row?['posts']);
+      expect(posts, hasLength(2));
+      expect(posts.first.containsKey('title'), isTrue);
+      expect(posts.first.containsKey('userId'), isFalse);
+      await client.disconnect();
+    });
+
+    test('calls include strategy selector during include execution', () async {
+      var callCount = 0;
+      final callModels = <String>[];
+      final callDepths = <int>[];
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: MemoryEngine(),
+        includeStrategySelector:
+            ({
+              required OrmContract contract,
+              required String modelName,
+              required OrmAction action,
+              required Map<String, IncludeSpec> include,
+              required int depth,
+            }) {
+              callCount += 1;
+              callModels.add(modelName);
+              callDepths.add(depth);
+              return IncludeExecutionStrategy.multiQuery;
+            },
+      );
+      await client.connect();
+      await _seedRelationalData(client);
+
+      await client
+          .model('User')
+          .findMany(
+            include: <String, IncludeSpec>{'posts': const IncludeSpec()},
+          );
+
+      expect(callCount, greaterThan(0));
+      expect(callModels.first, 'User');
+      expect(callDepths.first, 0);
       await client.disconnect();
     });
 
@@ -690,6 +902,62 @@ void main() {
     );
     await client.disconnect();
   });
+}
+
+Future<void> _seedRelationalData(OrmClient client) async {
+  final users = client.model('User');
+  final posts = client.model('Post');
+
+  await users.create(
+    data: <String, Object?>{'id': 'u1', 'email': 'u1@example.com'},
+  );
+  await users.create(
+    data: <String, Object?>{'id': 'u2', 'email': 'u2@example.com'},
+  );
+
+  await posts.create(
+    data: <String, Object?>{'id': 'p1', 'userId': 'u1', 'title': 'Post A'},
+  );
+  await posts.create(
+    data: <String, Object?>{'id': 'p2', 'userId': 'u1', 'title': 'Post B'},
+  );
+  await posts.create(
+    data: <String, Object?>{'id': 'p3', 'userId': 'u2', 'title': 'Post C'},
+  );
+}
+
+JsonMap? _readRowValue(Object? value) {
+  if (value == null) {
+    return null;
+  }
+  if (value is Map<String, Object?>) {
+    return Map<String, Object?>.unmodifiable(value);
+  }
+  if (value is Map<Object?, Object?>) {
+    return Map<String, Object?>.unmodifiable(
+      value.map((key, item) => MapEntry(key.toString(), item)),
+    );
+  }
+  fail('Expected row map but got ${value.runtimeType}.');
+}
+
+List<JsonMap> _readRowsValue(Object? value) {
+  if (value == null) {
+    return const <JsonMap>[];
+  }
+  if (value is! List<Object?>) {
+    fail('Expected row list but got ${value.runtimeType}.');
+  }
+
+  final rows = <JsonMap>[];
+  for (final entry in value) {
+    final row = _readRowValue(entry);
+    if (row == null) {
+      fail('Expected row map entry but got null.');
+    }
+    rows.add(row);
+  }
+  return List<JsonMap>.unmodifiable(rows);
 }
 
 final class _TrackingPlugin extends OrmPlugin {
