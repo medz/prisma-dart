@@ -58,11 +58,11 @@ void main() {
       );
       expect(
         RegExp(
-          r'class\s+ModelDelegate\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(\{[\s\S]*?required\s+OrmGroupBySpec\s+groupBy,[\s\S]*?\)\s*=>\s*groupedBy\(groupBy\.by,\s*where:\s*where\)\.configure\(groupBy\)\._execute\(\);',
+          r'class\s+ModelDelegate\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(',
         ).hasMatch(source),
-        isTrue,
+        isFalse,
         reason:
-            'Expected ModelDelegate.groupByWith(...) to route structured groupBy execution through the grouped builder.',
+            'Expected ModelDelegate to avoid redundant groupByWith(...) wrappers.',
       );
     });
 
@@ -95,19 +95,19 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupBy\(\{[\s\S]*?return\s+groupedBy\(by\)\s*\.having\(having,\s*merge:\s*false\)\s*\.aggregate\(',
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupBy\(',
           ).hasMatch(source),
-          isTrue,
+          isFalse,
           reason:
-              'Expected ModelQuery.groupBy(...) to route convenience arguments through the grouped builder.',
+              'Expected ModelQuery to avoid redundant groupBy(...) convenience terminals.',
         );
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(OrmGroupBySpec\s+groupBy\)\s*=>\s*groupedBy\(groupBy\.by\)\.configure\(groupBy\)\._execute\(\);',
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(',
           ).hasMatch(source),
-          isTrue,
+          isFalse,
           reason:
-              'Expected ModelQuery.groupByWith(...) to execute via the grouped builder.',
+              'Expected ModelQuery to avoid redundant groupByWith(...) terminals.',
         );
         expect(
           RegExp(

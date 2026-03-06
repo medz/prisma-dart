@@ -721,15 +721,14 @@ void main() {
       await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
 
       await expectLater(
-        users.groupBy(
-          by: const <String>['email'],
-          having: <String, Object?>{
-            '_sum': <String, Object?>{
-              'email': <String, Object?>{'gte': 1},
-            },
-          },
-          sum: const <String>['id'],
-        ),
+        users
+            .groupedBy(const <String>['email'])
+            .having(<String, Object?>{
+              '_sum': <String, Object?>{
+                'email': <String, Object?>{'gte': 1},
+              },
+            }, merge: false)
+            .aggregate(sum: const <String>['id']),
         throwsA(
           isA<OrmRuntimeError>().having(
             (error) => error.code,

@@ -2030,58 +2030,6 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<List<${model.groupByResultClassName}>> groupBy({');
-    buffer.writeln('    required List<${model.distinctClassName}> by,');
-    buffer.writeln(
-      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
-    );
-    buffer.writeln(
-      '    ${model.groupByHavingClassName} typedHaving = const ${model.groupByHavingClassName}(),',
-    );
-    buffer.writeln('    bool countAll = false,');
-    buffer.writeln(
-      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln('  }) {');
-    buffer.writeln('    return groupedBy(by, where: where)');
-    buffer.writeln('        .having(typedHaving, merge: false)');
-    buffer.writeln('        .aggregate(');
-    buffer.writeln('          countAll: countAll,');
-    buffer.writeln('          count: count,');
-    buffer.writeln('          min: min,');
-    buffer.writeln('          max: max,');
-    buffer.writeln('          sum: sum,');
-    buffer.writeln('          avg: avg,');
-    buffer.writeln('        );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln(
-      '  Future<List<${model.groupByResultClassName}>> groupByWith({',
-    );
-    buffer.writeln(
-      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
-    );
-    buffer.writeln('    required ${model.groupBySpecClassName} groupBy,');
-    buffer.writeln('  }) {');
-    buffer.writeln('    return groupedBy(groupBy.by, where: where)');
-    buffer.writeln('        .configure(groupBy)');
-    buffer.writeln('        ._execute();');
-    buffer.writeln('  }');
-    buffer.writeln();
-
     buffer.writeln('  Stream<${model.dataClassName}> stream({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
@@ -2944,50 +2892,6 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<List<${model.groupByResultClassName}>> groupBy({');
-    buffer.writeln('    required List<${model.distinctClassName}> by,');
-    buffer.writeln(
-      '    ${model.groupByHavingClassName} typedHaving = const ${model.groupByHavingClassName}(),',
-    );
-    buffer.writeln('    bool countAll = false,');
-    buffer.writeln(
-      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln('  }) {');
-    buffer.writeln(
-      '    return groupedBy(by).having(typedHaving, merge: false).aggregate(',
-    );
-    buffer.writeln('      countAll: countAll,');
-    buffer.writeln('      count: count,');
-    buffer.writeln('      min: min,');
-    buffer.writeln('      max: max,');
-    buffer.writeln('      sum: sum,');
-    buffer.writeln('      avg: avg,');
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln(
-      '  Future<List<${model.groupByResultClassName}>> groupByWith(${model.groupBySpecClassName} groupBy) {',
-    );
-    buffer.writeln(
-      '    return groupedBy(groupBy.by).configure(groupBy)._execute();',
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-
     buffer.writeln('  Future<${model.dataClassName}> create({');
     buffer.writeln('    required ${model.createInputClassName} data,');
     buffer.writeln('  }) async {');
@@ -3189,7 +3093,7 @@ final class TypedClientWriter {
     buffer.writeln('      throw runtimeError(');
     buffer.writeln("        'PLAN.GROUP_BY_FIELDS_MISMATCH',");
     buffer.writeln(
-      "        'groupByWith() cannot replace the grouped fields after groupedBy().',",
+      "        'configure() cannot replace the grouped fields after groupedBy().',",
     );
     buffer.writeln('        details: <String, Object?>{');
     buffer.writeln("          'model': '$runtimeName',");

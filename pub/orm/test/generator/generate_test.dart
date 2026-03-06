@@ -1303,17 +1303,17 @@ typedef Post = ({
           RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?return\s+groupedBy\(by,\s*where:\s*where\)[\s\S]*?\.aggregate\(',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected generated delegate groupBy(...) to route through the typed grouped builder.',
+              'Expected generated delegate to avoid redundant groupBy(...) wrappers.',
         );
         expect(
           RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupByWith\(\{[\s\S]*?required\s+UserGroupBySpec\s+groupBy,[\s\S]*?return\s+groupedBy\(groupBy\.by,\s*where:\s*where\)[\s\S]*?\.configure\(groupBy\)[\s\S]*?\._execute\(\);',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected generated delegate groupByWith(...) to route structured groupBy specs through the typed grouped builder.',
+              'Expected generated delegate to avoid redundant groupByWith(...) wrappers.',
         );
         expect(
           generatedSource.contains('Future<List<UserData>> findMany('),
@@ -1486,9 +1486,9 @@ typedef Post = ({
           RegExp(
             r'Future<List<UserGroupByResult>>\s+groupBy\(\{\s*required\s+List<UserDistinct>\s+by,[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected generated delegate/query to expose typed groupBy helper.',
+              'Expected generated source to avoid redundant typed groupBy convenience helpers.',
         );
         expect(
           RegExp(r'\bclass UserGroupByResult\b').hasMatch(generatedSource),
@@ -1540,17 +1540,17 @@ typedef Post = ({
           RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected UserDelegate.groupBy(...) to expose typedHaving parameter.',
+              'Expected UserDelegate to avoid redundant groupBy(...) terminals.',
         );
         expect(
           RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?return\s+groupedBy\(by,\s*where:\s*where\)[\s\S]*?typedHaving[\s\S]*?\.aggregate\(',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected UserDelegate.groupBy(...) to route typed groupBy execution through the grouped builder.',
+              'Expected UserDelegate to route grouped aggregation only through groupedBy(...).aggregate(...).',
         );
         expect(
           RegExp(
@@ -1580,17 +1580,17 @@ typedef Post = ({
           RegExp(
             r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?return\s+groupedBy\(by\)\s*\.having\(typedHaving,\s*merge:\s*false\)\s*\.aggregate\(',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected UserQuery.groupBy(...) to route convenience arguments through the typed grouped builder.',
+              'Expected UserQuery to avoid redundant groupBy(...) terminals.',
         );
         expect(
           RegExp(
             r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupByWith\(UserGroupBySpec\s+groupBy\)\s*\{?[\s\S]*?return\s+groupedBy\(groupBy\.by\)\.configure\(groupBy\)\._execute\(\);',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected UserQuery.groupByWith(...) to route through the typed grouped builder.',
+              'Expected UserQuery to avoid redundant groupByWith(...) terminals.',
         );
         expect(
           RegExp(r'\bclass UserGroupedQuery\b').hasMatch(generatedSource),

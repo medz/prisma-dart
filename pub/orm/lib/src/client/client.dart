@@ -1506,32 +1506,6 @@ class ModelDelegate {
     JsonMap where = const <String, Object?>{},
   }) => _queryFromSpec(OrmReadQuerySpec(where: where)).groupedBy(by);
 
-  Future<List<JsonMap>> groupBy({
-    required List<String> by,
-    JsonMap where = const <String, Object?>{},
-    JsonMap having = const <String, Object?>{},
-    bool countAll = false,
-    List<String> count = const <String>[],
-    List<String> min = const <String>[],
-    List<String> max = const <String>[],
-    List<String> sum = const <String>[],
-    List<String> avg = const <String>[],
-  }) => groupedBy(by, where: where)
-      .having(having, merge: false)
-      .aggregate(
-        countAll: countAll,
-        count: count,
-        min: min,
-        max: max,
-        sum: sum,
-        avg: avg,
-      );
-
-  Future<List<JsonMap>> groupByWith({
-    JsonMap where = const <String, Object?>{},
-    required OrmGroupBySpec groupBy,
-  }) => groupedBy(groupBy.by, where: where).configure(groupBy)._execute();
-
   Future<JsonMap> create({
     required JsonMap data,
     List<String> select = const <String>[],
@@ -3067,31 +3041,6 @@ final class ModelQuery {
     );
   }
 
-  Future<List<JsonMap>> groupBy({
-    required List<String> by,
-    JsonMap having = const <String, Object?>{},
-    bool countAll = false,
-    List<String> count = const <String>[],
-    List<String> min = const <String>[],
-    List<String> max = const <String>[],
-    List<String> sum = const <String>[],
-    List<String> avg = const <String>[],
-  }) {
-    return groupedBy(by)
-        .having(having, merge: false)
-        .aggregate(
-          countAll: countAll,
-          count: count,
-          min: min,
-          max: max,
-          sum: sum,
-          avg: avg,
-        );
-  }
-
-  Future<List<JsonMap>> groupByWith(OrmGroupBySpec groupBy) =>
-      groupedBy(groupBy.by).configure(groupBy)._execute();
-
   void _assertReadExecutionSupported(String terminal) {
     if ((_state.cursor != null || _state.page != null) &&
         _state.distinct.isNotEmpty) {
@@ -3249,7 +3198,7 @@ final class ModelGroupedQuery {
     if (!_sameStringList(left: _groupBy.by, right: groupBy.by)) {
       throw runtimeError(
         'PLAN.GROUP_BY_FIELDS_MISMATCH',
-        'groupByWith() cannot replace the grouped fields after groupedBy().',
+        'configure() cannot replace the grouped fields after groupedBy().',
         details: <String, Object?>{
           'model': _delegate.modelName,
           'currentBy': _groupBy.by,
@@ -3330,17 +3279,6 @@ final class ModelGroupedQuery {
   Future<JsonMap> inspectPlan() async {
     return (await _prepareGrouped(groupBy: _groupBy)).inspectPlan();
   }
-
-  Future<List<JsonMap>> _execute() => aggregateWith(
-    OrmAggregateSpec(
-      countAll: _groupBy.countAll,
-      count: _groupBy.count,
-      min: _groupBy.min,
-      max: _groupBy.max,
-      sum: _groupBy.sum,
-      avg: _groupBy.avg,
-    ),
-  );
 
   Future<OrmPreparedGroupedQuery> _prepareGrouped({
     required OrmGroupBySpec groupBy,
