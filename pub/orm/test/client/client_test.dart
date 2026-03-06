@@ -1705,14 +1705,52 @@ void main() {
             take: 1,
           ),
         });
+        final withIncludeWith = base.includeWith(
+          (include) => <String, IncludeSpec>{
+            ...include,
+            'posts': IncludeSpec(
+              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+              take: 1,
+            ),
+          },
+        );
+        final deepMergedInclude = withIncludeWith.includeWith(
+          (include) => <String, IncludeSpec>{
+            ...include,
+            'posts': IncludeSpec(
+              include: <String, IncludeSpec>{
+                'author': IncludeSpec(select: const <String>['email']),
+              },
+            ),
+          },
+        );
 
         expect(base.includeValues, isEmpty);
         expect(withInclude.includeValues.keys, <String>['posts']);
+        expect(withIncludeWith.includeValues.keys, <String>['posts']);
+        expect(withIncludeWith.includeValues['posts']?.include, isEmpty);
+        final deepMergedPostsSpec = deepMergedInclude.includeValues['posts'];
+        expect(deepMergedPostsSpec, isNotNull);
+        expect(deepMergedPostsSpec?.take, 1);
+        expect(deepMergedPostsSpec?.orderBy, hasLength(1));
+        expect(deepMergedPostsSpec?.orderBy.single.field, 'id');
+        expect(deepMergedPostsSpec?.include.keys, <String>['author']);
+        expect(
+          deepMergedPostsSpec?.include['author']?.select,
+          <String>['email'],
+        );
+        expect(base.includeValues, isEmpty);
 
         final includeRow = await withInclude.findUnique();
         final includePosts = _readRowsValue(includeRow?['posts']);
         expect(includePosts, hasLength(1));
         expect(includePosts.single['id'], 'p1');
+
+        final deepMergedRow = await deepMergedInclude.findUnique();
+        final deepMergedPosts = _readRowsValue(deepMergedRow?['posts']);
+        expect(deepMergedPosts, hasLength(1));
+        final deepMergedAuthor = _readRowValue(deepMergedPosts.single['author']);
+        expect(deepMergedAuthor?['email'], 'u1@example.com');
 
         final includeRelationRow = await users
             .where(<String, Object?>{'id': 'u1'})
@@ -1732,6 +1770,57 @@ void main() {
         final relationAuthor = _readRowValue(relationPosts.first['author']);
         expect(relationAuthor?['email'], 'u1@example.com');
         await client.disconnect();
+      },
+    );
+
+    test(
+      'supports IncludeSpec.includeWith deep-merge and replace behaviors',
+      () {
+        final base = IncludeSpec(
+          include: <String, IncludeSpec>{
+            'author': IncludeSpec(
+              include: <String, IncludeSpec>{
+                'posts': IncludeSpec(select: const <String>['id']),
+              },
+            ),
+          },
+        );
+
+        final merged = base.includeWith(
+          (include) => <String, IncludeSpec>{
+            ...include,
+            'author': IncludeSpec(
+              include: <String, IncludeSpec>{
+                'profile': IncludeSpec(select: const <String>['email']),
+              },
+            ),
+          },
+        );
+
+        expect(base.include['author']?.include.keys, <String>['posts']);
+        final mergedAuthor = merged.include['author'];
+        expect(mergedAuthor, isNotNull);
+        expect(
+          mergedAuthor?.include.keys.toSet(),
+          <String>{'posts', 'profile'},
+        );
+        expect(mergedAuthor?.include['profile']?.select, <String>['email']);
+
+        final replaced = base.includeWith(
+          (_) => <String, IncludeSpec>{
+            'author': IncludeSpec(
+              include: <String, IncludeSpec>{
+                'profile': IncludeSpec(select: const <String>['email']),
+              },
+            ),
+          },
+          merge: false,
+        );
+
+        final replacedAuthor = replaced.include['author'];
+        expect(replacedAuthor, isNotNull);
+        expect(replacedAuthor?.include.keys, <String>['profile']);
+        expect(base.include['author']?.include.keys, <String>['posts']);
       },
     );
 

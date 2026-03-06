@@ -108,6 +108,60 @@ final class IncludeSpec {
        orderBy = orderBy,
        select = select,
        include = include;
+
+  IncludeSpec merge(IncludeSpec other) {
+    return IncludeSpec(
+      where: <String, Object?>{...where, ...other.where},
+      skip: other.skip ?? skip,
+      take: other.take ?? take,
+      orderBy: <OrmOrderBy>[...orderBy, ...other.orderBy],
+      select: <String>[...select, ...other.select],
+      include: _mergeIncludeSpecMap(include, other.include),
+    );
+  }
+
+  IncludeSpec includeWith(
+    Map<String, IncludeSpec> Function(Map<String, IncludeSpec> include) build, {
+    bool merge = true,
+  }) {
+    final current = <String, IncludeSpec>{...include};
+    final next = build(current);
+    return IncludeSpec(
+      where: <String, Object?>{...where},
+      skip: skip,
+      take: take,
+      orderBy: <OrmOrderBy>[...orderBy],
+      select: <String>[...select],
+      include: merge
+          ? _mergeIncludeSpecMap(include, next)
+          : <String, IncludeSpec>{...next},
+    );
+  }
+}
+
+Map<String, IncludeSpec> _mergeIncludeSpecMap(
+  Map<String, IncludeSpec> current,
+  Map<String, IncludeSpec> next,
+) {
+  if (current.isEmpty) {
+    if (next.isEmpty) {
+      return const <String, IncludeSpec>{};
+    }
+    return <String, IncludeSpec>{...next};
+  }
+  if (next.isEmpty) {
+    return <String, IncludeSpec>{...current};
+  }
+  final merged = <String, IncludeSpec>{...current};
+  for (final entry in next.entries) {
+    final existing = merged[entry.key];
+    if (existing == null) {
+      merged[entry.key] = entry.value;
+      continue;
+    }
+    merged[entry.key] = existing.merge(entry.value);
+  }
+  return merged;
 }
 
 abstract interface class OrmModelContext {
@@ -796,6 +850,11 @@ class ModelDelegate {
 
   ModelQuery include(Map<String, IncludeSpec> include) =>
       query().include(include);
+
+  ModelQuery includeWith(
+    Map<String, IncludeSpec> Function(Map<String, IncludeSpec> include) build, {
+    bool merge = true,
+  }) => query().includeWith(build, merge: merge);
 
   ModelQuery includeRelation(
     String relation, {
@@ -3368,7 +3427,7 @@ final class ModelQuery {
 
   ModelQuery include(Map<String, IncludeSpec> include, {bool merge = true}) {
     final nextInclude = merge
-        ? <String, IncludeSpec>{..._state.include, ...include}
+        ? _mergeIncludeSpecMap(_state.include, include)
         : <String, IncludeSpec>{...include};
 
     return _next(
@@ -3382,6 +3441,15 @@ final class ModelQuery {
         include: nextInclude,
       ),
     );
+  }
+
+  ModelQuery includeWith(
+    Map<String, IncludeSpec> Function(Map<String, IncludeSpec> include) build, {
+    bool merge = true,
+  }) {
+    final current = <String, IncludeSpec>{..._state.include};
+    final next = build(current);
+    return include(next, merge: merge);
   }
 
   ModelQuery includeRelation(
