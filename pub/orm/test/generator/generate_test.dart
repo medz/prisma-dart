@@ -748,6 +748,14 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPageResult<UserData>>\s+pageResult\(\s*\)\s+async[\s\S]*?_runtimeQuery\(\)\.pageResult\(\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.pageResult() to expose structured page envelope mapping.',
+        );
+        expect(
+          RegExp(
             r'\bFuture<UserData\?>\s+firstOrNull\s*\(\s*\)',
           ).hasMatch(generatedSource),
           isTrue,

@@ -139,6 +139,47 @@ final class IncludeSpec {
   }
 }
 
+@immutable
+final class OrmPageInfo {
+  final JsonMap? startCursor;
+  final JsonMap? endCursor;
+  final bool hasPreviousPage;
+  final bool hasNextPage;
+
+  OrmPageInfo({
+    JsonMap? startCursor,
+    JsonMap? endCursor,
+    this.hasPreviousPage = false,
+    this.hasNextPage = false,
+  }) : startCursor = startCursor == null ? null : Map.unmodifiable(startCursor),
+       endCursor = endCursor == null ? null : Map.unmodifiable(endCursor);
+
+  JsonMap toJson() => <String, Object?>{
+    if (startCursor != null) 'startCursor': startCursor,
+    if (endCursor != null) 'endCursor': endCursor,
+    'hasPreviousPage': hasPreviousPage,
+    'hasNextPage': hasNextPage,
+  };
+}
+
+@immutable
+final class OrmPageResult<T> {
+  final List<T> items;
+  final OrmPageInfo pageInfo;
+
+  OrmPageResult({
+    required List<T> items,
+    required this.pageInfo,
+  }) : items = List<T>.unmodifiable(items);
+
+  OrmPageResult<R> mapItems<R>(R Function(T item) transform) {
+    return OrmPageResult<R>(
+      items: items.map(transform).toList(growable: false),
+      pageInfo: pageInfo,
+    );
+  }
+}
+
 Map<String, IncludeSpec> _mergeIncludeSpecMap(
   Map<String, IncludeSpec> current,
   Map<String, IncludeSpec> next,
@@ -1089,6 +1130,24 @@ class ModelDelegate {
     );
   }
 
+  Future<OrmPageResult<JsonMap>> pageResult({
+    JsonMap where = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required OrmReadPagePlan page,
+  }) {
+    return _readPageResultInternal(
+      action: OrmAction.read,
+      where: where,
+      orderBy: orderBy,
+      select: select,
+      include: include,
+      page: page,
+      includeDepth: 0,
+    );
+  }
+
   Stream<JsonMap> stream({
     JsonMap where = const <String, Object?>{},
     int? skip,
@@ -1677,6 +1736,66 @@ class ModelDelegate {
     return _shapeRows(hydratedRows, select: select, include: normalizedInclude);
   }
 
+  Future<OrmPageResult<JsonMap>> _readPageResultInternal({
+    required OrmAction action,
+    JsonMap where = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required OrmReadPagePlan page,
+    required int includeDepth,
+  }) async {
+    final operation = _RepositoryOperation.start(kind: '$modelName.pageResult');
+    final pageSelect = _expandSelectForPageExecution(
+      select: select,
+      orderBy: orderBy,
+    );
+    final prepared = await _buildReadPlan(
+      resultMode: OrmReadResultMode.all,
+      where: where,
+      orderBy: orderBy,
+      select: pageSelect,
+      include: include,
+      page: OrmReadPagePlan(
+        size: page.size + 1,
+        after: page.after,
+        before: page.before,
+      ),
+      repositoryTrace: operation.nextTrace(
+        phase: 'page.items',
+        strategy: 'windowPlusOne',
+      ),
+    );
+    final response = await _client.execute(prepared.plan);
+    final rawRows = _readRows(response.data, action: 'pageResult');
+    final overflowed = rawRows.length > page.size;
+    final windowRows = _trimPageResultRows(rows: rawRows, page: page);
+    final hydratedRows = await _resolveIncludeRows(
+      action: action,
+      rows: windowRows,
+      include: prepared.include,
+      depth: includeDepth,
+      operation: operation,
+    );
+    final pageInfo = await _buildPageInfo(
+      where: where,
+      orderBy: orderBy,
+      page: page,
+      rows: windowRows,
+      overflowed: overflowed,
+      operation: operation,
+    );
+
+    return OrmPageResult<JsonMap>(
+      items: _shapeRows(
+        hydratedRows,
+        select: select,
+        include: prepared.include,
+      ),
+      pageInfo: pageInfo,
+    );
+  }
+
   Future<JsonMap?> _readFirstInternal({
     required OrmAction action,
     JsonMap where = const <String, Object?>{},
@@ -1939,6 +2058,179 @@ class ModelDelegate {
     }
 
     return List<JsonMap>.from(window, growable: false);
+  }
+
+  List<String> _expandSelectForPageExecution({
+    required List<String> select,
+    required List<OrmOrderBy> orderBy,
+  }) {
+    if (select.isEmpty || orderBy.isEmpty) {
+      return select;
+    }
+    final expanded = <String>{...select};
+    for (final entry in orderBy) {
+      expanded.add(entry.field);
+    }
+    return expanded.toList(growable: false);
+  }
+
+  List<JsonMap> _trimPageResultRows({
+    required List<JsonMap> rows,
+    required OrmReadPagePlan page,
+  }) {
+    if (rows.length <= page.size) {
+      return List<JsonMap>.from(rows, growable: false);
+    }
+    if (page.before != null) {
+      return rows.sublist(rows.length - page.size);
+    }
+    return rows.sublist(0, page.size);
+  }
+
+  Future<OrmPageInfo> _buildPageInfo({
+    required JsonMap where,
+    required List<OrmOrderBy> orderBy,
+    required OrmReadPagePlan page,
+    required List<JsonMap> rows,
+    required bool overflowed,
+    required _RepositoryOperation operation,
+  }) async {
+    final startCursor = rows.isEmpty
+        ? null
+        : _extractPageCursor(row: rows.first, orderBy: orderBy);
+    final endCursor = rows.isEmpty
+        ? null
+        : _extractPageCursor(row: rows.last, orderBy: orderBy);
+
+    if (page.before != null) {
+      final hasPreviousPage = overflowed;
+      final hasNextPage = endCursor == null
+          ? false
+          : await _hasPageRowAfterCursorBeforeBoundary(
+              where: where,
+              orderBy: orderBy,
+              cursor: endCursor,
+              boundary: page.before!,
+              operation: operation,
+            );
+      return OrmPageInfo(
+        startCursor: startCursor,
+        endCursor: endCursor,
+        hasPreviousPage: hasPreviousPage,
+        hasNextPage: hasNextPage,
+      );
+    }
+
+    final hasNextPage = overflowed;
+    final hasPreviousPage = switch ((page.after, startCursor)) {
+      (final JsonMap after?, _) => await _hasPageRowBeforeBoundary(
+        where: where,
+        orderBy: orderBy,
+        boundary: rows.isEmpty ? after : startCursor!,
+        operation: operation,
+      ),
+      _ => false,
+    };
+
+    return OrmPageInfo(
+      startCursor: startCursor,
+      endCursor: endCursor,
+      hasPreviousPage: hasPreviousPage,
+      hasNextPage: hasNextPage,
+    );
+  }
+
+  JsonMap _extractPageCursor({
+    required JsonMap row,
+    required List<OrmOrderBy> orderBy,
+  }) {
+    final cursor = <String, Object?>{};
+    for (final entry in orderBy) {
+      if (!row.containsKey(entry.field)) {
+        throw runtimeError(
+          'PLAN.PAGE_CURSOR_FIELD_MISSING',
+          'Page result is missing an orderBy field required for cursor metadata.',
+          details: <String, Object?>{
+            'model': modelName,
+            'field': entry.field,
+            'orderBy': orderBy.map((item) => item.toJson()).toList(growable: false),
+          },
+        );
+      }
+      cursor[entry.field] = row[entry.field];
+    }
+    return Map<String, Object?>.unmodifiable(cursor);
+  }
+
+  Future<bool> _hasPageRowBeforeBoundary({
+    required JsonMap where,
+    required List<OrmOrderBy> orderBy,
+    required JsonMap boundary,
+    required _RepositoryOperation operation,
+  }) async {
+    final rows = await _readAllInternal(
+      action: OrmAction.read,
+      where: where,
+      orderBy: orderBy,
+      select: orderBy.map((entry) => entry.field).toList(growable: false),
+      page: OrmReadPagePlan(size: 1, before: boundary),
+      repositoryTrace: operation.nextTrace(
+        phase: 'page.probe',
+        strategy: 'beforeBoundary',
+      ),
+      includeDepth: 0,
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<bool> _hasPageRowAfterCursorBeforeBoundary({
+    required JsonMap where,
+    required List<OrmOrderBy> orderBy,
+    required JsonMap cursor,
+    required JsonMap boundary,
+    required _RepositoryOperation operation,
+  }) async {
+    final rows = await _readAllInternal(
+      action: OrmAction.read,
+      where: where,
+      skip: 1,
+      take: 1,
+      orderBy: orderBy,
+      select: orderBy.map((entry) => entry.field).toList(growable: false),
+      cursor: cursor,
+      repositoryTrace: operation.nextTrace(
+        phase: 'page.probe',
+        strategy: 'afterCursor',
+      ),
+      includeDepth: 0,
+    );
+    if (rows.isEmpty) {
+      return false;
+    }
+    return _compareRowToBoundary(
+          row: rows.first,
+          boundary: boundary,
+          orderBy: orderBy,
+        ) <
+        0;
+  }
+
+  int _compareRowToBoundary({
+    required JsonMap row,
+    required JsonMap boundary,
+    required List<OrmOrderBy> orderBy,
+  }) {
+    for (final order in orderBy) {
+      final comparison = _compareOrderByValues(
+        row[order.field],
+        boundary[order.field],
+      );
+      if (comparison == 0) {
+        continue;
+      }
+      return order.order == SortOrder.asc ? comparison : -comparison;
+    }
+    return 0;
   }
 
   List<String> _expandSelectForExecution({
@@ -3637,6 +3929,25 @@ final class ModelQuery {
       include: _state.include,
       cursor: _state.cursor,
       page: _state.page,
+    );
+  }
+
+  Future<OrmPageResult<JsonMap>> pageResult() {
+    _assertReadExecutionSupported('pageResult');
+    final page = _state.page;
+    if (page == null) {
+      throw runtimeError(
+        'PLAN.PAGE_RESULT_REQUIRES_PAGE_WINDOW',
+        'pageResult() requires page() first.',
+        details: <String, Object?>{'model': _delegate.modelName},
+      );
+    }
+    return _delegate.pageResult(
+      where: _state.where,
+      orderBy: _state.orderBy,
+      select: _state.select,
+      include: _state.include,
+      page: page,
     );
   }
 

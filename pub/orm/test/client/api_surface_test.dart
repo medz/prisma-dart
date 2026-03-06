@@ -169,6 +169,52 @@ void main() {
       }
     });
 
+    test('pageResult returns structured items and pageInfo', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      try {
+        final users = client.db.orm.model('User');
+        await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+        await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
+        await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
+        await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
+
+        final firstPage = await users
+            .query()
+            .orderByField('id')
+            .select(const <String>['email'])
+            .page(size: 2)
+            .pageResult();
+        final beforePage = await users
+            .query()
+            .orderByField('id')
+            .select(const <String>['email'])
+            .page(size: 2, before: <String, Object?>{'id': 4})
+            .pageResult();
+
+        expect(
+          firstPage.items.map((row) => row['email']).toList(growable: false),
+          <Object?>['a@x.com', 'b@x.com'],
+        );
+        expect(firstPage.items.first.containsKey('id'), isFalse);
+        expect(firstPage.pageInfo.startCursor, <String, Object?>{'id': 1});
+        expect(firstPage.pageInfo.endCursor, <String, Object?>{'id': 2});
+        expect(firstPage.pageInfo.hasPreviousPage, isFalse);
+        expect(firstPage.pageInfo.hasNextPage, isTrue);
+
+        expect(
+          beforePage.items.map((row) => row['email']).toList(growable: false),
+          <Object?>['b@x.com', 'c@x.com'],
+        );
+        expect(beforePage.pageInfo.startCursor, <String, Object?>{'id': 2});
+        expect(beforePage.pageInfo.endCursor, <String, Object?>{'id': 3});
+        expect(beforePage.pageInfo.hasPreviousPage, isTrue);
+        expect(beforePage.pageInfo.hasNextPage, isFalse);
+      } finally {
+        await client.disconnect();
+      }
+    });
+
     test('direct plan execution supports cursor and page plans', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -258,6 +304,22 @@ void main() {
             (error) => error.code,
             'code',
             'PLAN.CURSOR_ORDER_BY_REQUIRED',
+          ),
+        ),
+      );
+    });
+
+    test('pageResult requires page() first', () {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final users = client.db.orm.model('User');
+
+      expect(
+        () => users.query().orderByField('id').pageResult(),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.PAGE_RESULT_REQUIRES_PAGE_WINDOW',
           ),
         ),
       );

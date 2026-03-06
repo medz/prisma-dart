@@ -2826,6 +2826,16 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln(
+      '  Future<OrmPageResult<${model.dataClassName}>> pageResult() async {',
+    );
+    buffer.writeln('    final result = await _runtimeQuery().pageResult();');
+    buffer.writeln(
+      '    return result.mapItems(${model.dataClassName}.fromJson);',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<${model.dataClassName}?> oneOrNull() async {');
     buffer.writeln('    final row = await _runtimeQuery().oneOrNull();');
     buffer.writeln('    if (row == null) {');
