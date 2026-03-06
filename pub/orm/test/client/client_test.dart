@@ -276,6 +276,57 @@ void main() {
       },
     );
 
+    test('rejects invalid plan result mode and action combinations', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+
+      await expectLater(
+        client.execute(
+          OrmPlan(
+            contractHash: contract.hash,
+            model: 'User',
+            action: OrmAction.read,
+            resultMode: OrmReadResultMode.all,
+            mutationResultMode: OrmMutationResultMode.rowOrNull,
+          ),
+        ),
+        throwsA(
+          isA<PlanResultModeActionInvalidException>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.RESULT_MODE_ACTION_INVALID',
+          ),
+        ),
+      );
+
+      for (final action in <OrmAction>[
+        OrmAction.create,
+        OrmAction.update,
+        OrmAction.delete,
+      ]) {
+        await expectLater(
+          client.execute(
+            OrmPlan(
+              contractHash: contract.hash,
+              model: 'User',
+              action: action,
+              resultMode: OrmReadResultMode.oneOrNull,
+              mutationResultMode: OrmMutationResultMode.rowOrNull,
+            ),
+          ),
+          throwsA(
+            isA<PlanResultModeActionInvalidException>().having(
+              (error) => error.code,
+              'code',
+              'PLAN.RESULT_MODE_ACTION_INVALID',
+            ),
+          ),
+        );
+      }
+
+      await client.disconnect();
+    });
+
     test('supports ordering and pagination in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();

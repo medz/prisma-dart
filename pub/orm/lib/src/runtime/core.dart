@@ -362,6 +362,29 @@ final class OrmRuntimeCore implements RuntimeCore {
     if (plan.take case final take? when take < 0) {
       throw PlanInvalidPaginationException(key: 'take', value: take);
     }
+
+    _assertPlanModes(plan);
+  }
+
+  void _assertPlanModes(OrmPlan plan) {
+    switch (plan.action) {
+      case OrmAction.read:
+        if (plan.mutationResultMode != null) {
+          throw PlanResultModeActionInvalidException(
+            action: plan.action,
+            resultMode: plan.resultMode,
+            mutationResultMode: plan.mutationResultMode,
+          );
+        }
+      case OrmAction.create || OrmAction.update || OrmAction.delete:
+        if (plan.resultMode != null) {
+          throw PlanResultModeActionInvalidException(
+            action: plan.action,
+            resultMode: plan.resultMode,
+            mutationResultMode: plan.mutationResultMode,
+          );
+        }
+    }
   }
 
   void _assertKnownFields({

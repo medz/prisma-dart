@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+import 'plan.dart';
+
 enum RuntimeErrorCategory { runtime, contract, plan, plugin }
 
 enum RuntimeErrorSeverity { error, warn }
@@ -241,6 +243,28 @@ final class PlanInvalidPaginationException extends OrmRuntimeError {
         message: 'Pagination value "$key" must be greater than or equal to 0.',
         details: <String, Object?>{'key': key, 'value': value},
       );
+}
+
+final class PlanResultModeActionInvalidException extends OrmRuntimeError {
+  final OrmAction action;
+  final OrmReadResultMode? resultMode;
+  final OrmMutationResultMode? mutationResultMode;
+
+  PlanResultModeActionInvalidException({
+    required this.action,
+    required this.resultMode,
+    required this.mutationResultMode,
+  }) : super(
+         code: 'PLAN.RESULT_MODE_ACTION_INVALID',
+         category: RuntimeErrorCategory.plan,
+         message:
+             'Plan result modes do not match the requested action semantics.',
+         details: <String, Object?>{
+           'action': action.name,
+           'resultMode': resultMode?.name,
+           'mutationResultMode': mutationResultMode?.name,
+         },
+       );
 }
 
 final class RuntimeCreateResultMissingException extends OrmRuntimeError {
