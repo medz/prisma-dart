@@ -167,11 +167,11 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+having\(OrmGroupByHaving\s+having,\s*\{\s*bool\s+merge\s*=\s*true\s*\}\)',
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+having\(OrmGroupByHaving\s+having,',
           ).hasMatch(source),
-          isTrue,
+          isFalse,
           reason:
-              'Expected ModelGroupedQuery.having(...) to accept structured grouped having clauses instead of raw maps.',
+              'Expected ModelGroupedQuery to keep structured having(...) out of the public grouped surface.',
         );
         expect(
           RegExp(

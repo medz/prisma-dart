@@ -3218,25 +3218,18 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.groupedQueryClassName} having(${model.groupByHavingClassName} having, {bool merge = true}) {',
-    );
-    buffer.writeln('    return _next(');
-    buffer.writeln('      _groupBy.copyWith(');
-    buffer.writeln(
-      '        having: merge ? _groupBy.having.merge(having) : having,',
-    );
-    buffer.writeln('      ),');
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln(
       '  ${model.groupedQueryClassName} havingExpr(${model.groupByHavingClassName} Function(${model.groupByHavingClassName}Builder having) build, {bool merge = true}) {',
     );
     buffer.writeln(
       '    final next = build(const ${model.groupByHavingClassName}Builder());',
     );
-    buffer.writeln('    return having(next, merge: merge);');
+    buffer.writeln('    return _next(');
+    buffer.writeln('      _groupBy.copyWith(');
+    buffer.writeln(
+      '        having: merge ? _groupBy.having.merge(next) : next,',
+    );
+    buffer.writeln('      ),');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -3311,7 +3304,7 @@ final class TypedClientWriter {
     buffer.writeln('          where: _where.toJson(),');
     buffer.writeln('        )');
     buffer.writeln(
-      '        .having(groupBy.having.toRuntimeHaving(), merge: false);',
+      '        .havingExpr((_) => groupBy.having.toRuntimeHaving(), merge: false);',
     );
     buffer.writeln('  }');
     buffer.writeln();

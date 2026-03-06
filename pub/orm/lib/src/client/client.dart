@@ -3352,19 +3352,12 @@ final class ModelGroupedQuery {
 
   List<String> get byFields => _groupBy.by;
 
-  ModelGroupedQuery having(OrmGroupByHaving having, {bool merge = true}) {
-    final nextHaving = merge ? _groupBy.having.merge(having) : having;
-    return _next(_groupBy.copyWith(having: nextHaving));
-  }
-
   ModelGroupedQuery havingExpr(
     OrmGroupByHaving Function(OrmGroupByHavingBuilder having) build, {
     bool merge = true,
   }) {
     final next = build(const OrmGroupByHavingBuilder());
-    return _next(
-      _groupBy.copyWith(having: merge ? _groupBy.having.merge(next) : next),
-    );
+    return _next(_groupBy.copyWith(having: merge ? _groupBy.having.merge(next) : next));
   }
 
   Future<List<JsonMap>> aggregate(

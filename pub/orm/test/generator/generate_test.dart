@@ -1698,11 +1698,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+_runtimeGrouped\(UserGroupBySpec\s+groupBy\)\s*\{[\s\S]*?\.groupedBy\([\s\S]*?where:\s*_where\.toJson\(\),[\s\S]*?\.having\(groupBy\.having\.toRuntimeHaving\(\),\s*merge:\s*false\);',
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+_runtimeGrouped\(UserGroupBySpec\s+groupBy\)\s*\{[\s\S]*?\.groupedBy\([\s\S]*?where:\s*_where\.toJson\(\),[\s\S]*?\.havingExpr\(\(_\)\s*=>\s*groupBy\.having\.toRuntimeHaving\(\),\s*merge:\s*false\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserGroupedQuery to keep a single runtime grouped builder bridge through groupedBy(...).having(...).',
+              'Expected UserGroupedQuery to keep a single runtime grouped builder bridge through groupedBy(...).havingExpr(...).',
         );
         expect(
           RegExp(

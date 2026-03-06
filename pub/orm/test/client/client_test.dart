@@ -752,8 +752,8 @@ void main() {
       await expectLater(
         users
             .groupedBy(const <String>['email'])
-            .having(
-              OrmGroupByHaving.parse(const <String, Object?>{
+            .havingExpr(
+              (_) => OrmGroupByHaving.parse(const <String, Object?>{
                 '_count': <String, Object?>{
                   'all': <String, Object?>{'in': <int>[1, 2]},
                 },

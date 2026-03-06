@@ -112,12 +112,11 @@ Rules:
      deduplication directly.
 8. Grouped aggregation is a dedicated surface:
    - `groupedBy(...)` only accepts a where-only base query.
-   - `having(...)` accepts structured grouped predicates.
-   - `havingExpr(...)` is the primary builder-style entrypoint before
+   - `havingExpr(...)` is the grouped predicate entrypoint before
      `aggregate(...)`.
    - grouped `having` supports comparison operators only:
      `equals`, `notEquals`, `gt`, `gte`, `lt`, `lte`.
-   - repeated `having(...)` / `havingExpr(...)` calls compose with `AND`.
+   - repeated `havingExpr(...)` calls compose with `AND`.
 9. `include(...)` is unsupported on `aggregate(...)` and
    `groupedBy(...).aggregate(...)`, including direct plan execution.
 
