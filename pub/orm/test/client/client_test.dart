@@ -82,7 +82,7 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
 
-      final users = client.collection('users');
+      final users = client.model('users');
       final created = await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
       );
@@ -175,7 +175,7 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
 
-      final users = client.db.orm.collection('users');
+      final users = client.db.orm.model('users');
       await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
       );
@@ -185,7 +185,7 @@ void main() {
       }).firstOrNull();
       expect(sqlRow?['email'], 'a@example.com');
 
-      final ormRow = await client.db.orm['User'].oneOrNull(
+      final ormRow = await client.db.orm.model('User').oneOrNull(
         where: <String, Object?>{'id': 'u1'},
       );
       expect(ormRow?['id'], 'u1');
@@ -2209,7 +2209,7 @@ void main() {
       );
       await client.connect();
 
-      final first = client.collection('users');
+      final first = client.model('users');
       final second = client.model('User');
 
       expect(first, same(second));

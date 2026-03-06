@@ -199,8 +199,6 @@ abstract interface class OrmModelContext {
 
   ModelDelegate model(String modelKey);
 
-  ModelDelegate collection(String modelKey);
-
   Future<T> transaction<T>(Future<T> Function(OrmModelContext tx) run);
 }
 
@@ -323,9 +321,6 @@ final class OrmClient implements OrmModelContext {
   }
 
   @override
-  ModelDelegate collection(String modelKey) => model(modelKey);
-
-  @override
   Future<EngineResponse> execute(OrmPlan plan) => _runtime.execute(plan);
 
   @override
@@ -395,9 +390,6 @@ final class OrmScopedClient implements OrmModelContext {
   }
 
   @override
-  ModelDelegate collection(String modelKey) => model(modelKey);
-
-  @override
   OrmSqlApi get sql => _sql;
 
   OrmDbNamespace get db => _db;
@@ -457,10 +449,6 @@ final class OrmModelNamespace {
   OrmModelNamespace(this._context);
 
   ModelDelegate model(String modelKey) => _context.model(modelKey);
-
-  ModelDelegate collection(String modelKey) => _context.collection(modelKey);
-
-  ModelDelegate operator [](String modelKey) => model(modelKey);
 }
 
 final class OrmSqlApi {
