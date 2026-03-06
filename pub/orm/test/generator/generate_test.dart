@@ -1035,6 +1035,78 @@ typedef Post = ({
               'Expected generated delegate oneOrNull(...) to route through typed query using unique-to-where conversion.',
         );
         expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Stream<UserData>\s+stream\(\{[\s\S]*?return\s+query\([\s\S]*?distinct:\s*distinct,[\s\S]*?\)\.stream\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate stream(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserData>>\s+createMany\(\{[\s\S]*?return\s+query\([\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.createMany\(data:\s*data\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate createMany(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+updateNested\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.updateNested\(data:\s*data,\s*create:\s*create\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate updateNested(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateMany\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.updateMany\(data:\s*data\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate updateMany(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+deleteMany\(\{[\s\S]*?return\s+query\(where:\s*where\)\.deleteMany\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate deleteMany(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+count\(\{[\s\S]*?return\s+query\(where:\s*where\)\.count\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate count(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<bool>\s+exists\(\{[\s\S]*?return\s+query\(where:\s*where\)\.exists\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate exists(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(\{[\s\S]*?return\s+query\(where:\s*where\)\.aggregate\([\s\S]*?count:\s*count,[\s\S]*?avg:\s*avg,[\s\S]*?\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate aggregate(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?skip:\s*skip,[\s\S]*?take:\s*take,[\s\S]*?\)\.groupBy\([\s\S]*?groupByOrderBy:\s*groupByOrderBy,[\s\S]*?typedHaving:\s*typedHaving,[\s\S]*?\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate groupBy(...) to route through typed query.',
+        );
+        expect(
           generatedSource.contains('Future<List<UserData>> findMany('),
           isFalse,
           reason:
@@ -1265,11 +1337,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?final\s+runtimeHaving\s*=\s*typedHaving\.toJson\(\);',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?skip:\s*skip,[\s\S]*?take:\s*take,[\s\S]*?\)\.groupBy\([\s\S]*?groupByOrderBy:\s*groupByOrderBy,[\s\S]*?typedHaving:\s*typedHaving,[\s\S]*?\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.groupBy(...) to resolve runtime having from typedHaving only.',
+              'Expected UserDelegate.groupBy(...) to route typed groupBy execution through query.',
         );
         expect(
           RegExp(

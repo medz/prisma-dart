@@ -1818,23 +1818,11 @@ final class TypedClientWriter {
     buffer.writeln('    required List<${model.createInputClassName}> data,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final rows = await _delegate.createMany(');
-    buffer.writeln(
-      '      data: data.map((entry) => entry.toJson()).toList(growable: false),',
-    );
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln(
-      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
-    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).createMany(data: data);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1873,24 +1861,12 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.updateNested(');
-    buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      create: create.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).updateNested(data: data, create: create);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1949,18 +1925,11 @@ final class TypedClientWriter {
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    return _delegate.updateMany(');
-    buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).updateMany(data: data);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1969,7 +1938,7 @@ final class TypedClientWriter {
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    return _delegate.deleteMany(where: where.toJson());');
+    buffer.writeln('    return query(where: where).deleteMany();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1978,7 +1947,7 @@ final class TypedClientWriter {
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    return _delegate.count(where: where.toJson());');
+    buffer.writeln('    return query(where: where).count();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1987,7 +1956,7 @@ final class TypedClientWriter {
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    return _delegate.exists(where: where.toJson());');
+    buffer.writeln('    return query(where: where).exists();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2011,29 +1980,15 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
-    buffer.writeln('  }) async {');
-    buffer.writeln('    final value = await _delegate.aggregate(');
-    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(where: where).aggregate(');
     buffer.writeln('      countAll: countAll,');
-    buffer.writeln(
-      '      count: count.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      min: min.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      max: max.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
-    );
+    buffer.writeln('      count: count,');
+    buffer.writeln('      min: min,');
+    buffer.writeln('      max: max,');
+    buffer.writeln('      sum: sum,');
+    buffer.writeln('      avg: avg,');
     buffer.writeln('    );');
-    buffer.writeln(
-      '    return ${model.aggregateResultClassName}.fromJson(value);',
-    );
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2066,40 +2021,22 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeOrderBy = groupByOrderBy.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln('    final runtimeHaving = typedHaving.toJson();');
-    buffer.writeln('    final rows = await _delegate.groupBy(');
-    buffer.writeln(
-      '      by: by.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      having: runtimeHaving,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
-    buffer.writeln('      orderBy: runtimeOrderBy,');
+    buffer.writeln('    ).groupBy(');
+    buffer.writeln('      by: by,');
+    buffer.writeln('      groupByOrderBy: groupByOrderBy,');
+    buffer.writeln('      typedHaving: typedHaving,');
     buffer.writeln('      countAll: countAll,');
-    buffer.writeln(
-      '      count: count.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      min: min.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      max: max.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
-    );
+    buffer.writeln('      count: count,');
+    buffer.writeln('      min: min,');
+    buffer.writeln('      max: max,');
+    buffer.writeln('      sum: sum,');
+    buffer.writeln('      avg: avg,');
     buffer.writeln('    );');
-    buffer.writeln(
-      '    return rows.map(${model.groupByResultClassName}.fromJson).toList(growable: false);',
-    );
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2117,30 +2054,16 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async* {');
-    buffer.writeln(
-      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    await for (final row in _delegate.stream(');
-    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
-    buffer.writeln('      orderBy: runtimeOrderBy,');
-    buffer.writeln('      distinct: runtimeDistinct,');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    )) {');
-    buffer.writeln('      yield ${model.dataClassName}.fromJson(row);');
-    buffer.writeln('    }');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).stream();');
     buffer.writeln('  }');
 
     buffer.writeln('}');
