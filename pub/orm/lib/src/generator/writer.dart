@@ -2820,8 +2820,8 @@ final class TypedClientWriter {
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Future<OrmPreparedReadQuery> _prepareRead() {');
-    buffer.writeln('    return _delegate._delegate.prepareRead(');
+    buffer.writeln('  OrmReadQuerySpec _readSpec() {');
+    buffer.writeln('    return OrmReadQuerySpec(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
@@ -2832,6 +2832,12 @@ final class TypedClientWriter {
     buffer.writeln('      cursor: _runtimeCursor,');
     buffer.writeln('      page: _runtimePage,');
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Future<OrmPreparedReadQuery> _prepareRead() {');
+    buffer.writeln(
+      '    return _delegate._delegate.prepareRead(spec: _readSpec());',
+    );
     buffer.writeln('  }');
     buffer.writeln();
 

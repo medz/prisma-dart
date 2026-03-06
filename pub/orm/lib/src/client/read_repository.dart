@@ -3,52 +3,54 @@ part of 'client.dart';
 @immutable
 final class _OrmPreparedReadState {
   final OrmReadResultMode resultMode;
-  final JsonMap _where;
-  final int? _skip;
-  final int? _take;
-  final List<OrmOrderBy> _orderBy;
-  final List<String> _distinct;
-  final List<String> _select;
-  final Map<String, IncludeSpec> _include;
-  final JsonMap? _cursor;
-  final OrmReadPagePlan? _page;
+  final OrmReadQuerySpec _spec;
   final JsonMap _annotations;
   final OrmRepositoryTrace? _repositoryTrace;
 
   _OrmPreparedReadState({
     required this.resultMode,
-    JsonMap where = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> distinct = const <String>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
+    required OrmReadQuerySpec spec,
     JsonMap annotations = const <String, Object?>{},
     OrmRepositoryTrace? repositoryTrace,
-  }) : _where = Map<String, Object?>.unmodifiable(
-         Map<String, Object?>.from(where),
-       ),
-       _skip = skip,
-       _take = take,
-       _orderBy = List<OrmOrderBy>.unmodifiable(orderBy),
-       _distinct = List<String>.unmodifiable(distinct),
-       _select = List<String>.unmodifiable(select),
-       _include = Map<String, IncludeSpec>.unmodifiable(
-         Map<String, IncludeSpec>.from(include),
-       ),
-       _cursor = cursor == null
-           ? null
-           : Map<String, Object?>.unmodifiable(
-               Map<String, Object?>.from(cursor),
-             ),
-       _page = page,
+  }) : _spec = spec.copyWith(),
        _annotations = Map<String, Object?>.unmodifiable(
          Map<String, Object?>.from(annotations),
        ),
        _repositoryTrace = repositoryTrace;
+
+  JsonMap get _where => _spec.where;
+
+  int? get _skip => _spec.skip;
+
+  int? get _take => _spec.take;
+
+  List<OrmOrderBy> get _orderBy => _spec.orderBy;
+
+  List<String> get _distinct => _spec.distinct;
+
+  List<String> get _select => _spec.select;
+
+  Map<String, IncludeSpec> get _include => _spec.include;
+
+  JsonMap? get _cursor => _spec.cursor;
+
+  OrmReadPagePlan? get _page => _spec.page;
+
+  _OrmPreparedReadState copyWith({
+    OrmReadResultMode? resultMode,
+    OrmReadQuerySpec? spec,
+    JsonMap? annotations,
+    Object? repositoryTrace = _stateKeepToken,
+  }) {
+    return _OrmPreparedReadState(
+      resultMode: resultMode ?? this.resultMode,
+      spec: spec ?? _spec,
+      annotations: annotations ?? _annotations,
+      repositoryTrace: identical(repositoryTrace, _stateKeepToken)
+          ? _repositoryTrace
+          : repositoryTrace as OrmRepositoryTrace?,
+    );
+  }
 }
 
 @immutable
@@ -219,20 +221,28 @@ final class _RepositoryReadExecutor {
       orderBy: prepared._orderBy,
     );
     final itemsPrepared = await _delegate._prepareReadQuery(
-      resultMode: OrmReadResultMode.all,
-      where: prepared._where,
-      orderBy: prepared._orderBy,
-      select: pageSelect,
-      include: prepared._include,
-      page: OrmReadPagePlan(
-        size: page.size + 1,
-        after: page.after,
-        before: page.before,
-      ),
-      annotations: prepared._annotations,
-      repositoryTrace: operation.nextTrace(
-        phase: 'page.items',
-        strategy: 'windowPlusOne',
+      state: prepared._state.copyWith(
+        resultMode: OrmReadResultMode.all,
+        spec: prepared._state._spec.copyWith(
+          where: prepared._where,
+          skip: null,
+          take: null,
+          orderBy: prepared._orderBy,
+          distinct: const <String>[],
+          select: pageSelect,
+          include: prepared._include,
+          cursor: null,
+          page: OrmReadPagePlan(
+            size: page.size + 1,
+            after: page.after,
+            before: page.before,
+          ),
+        ),
+        annotations: prepared._annotations,
+        repositoryTrace: operation.nextTrace(
+          phase: 'page.items',
+          strategy: 'windowPlusOne',
+        ),
       ),
     );
     final response = await _delegate._client.execute(itemsPrepared.plan);
@@ -281,15 +291,21 @@ final class _RepositoryReadExecutor {
 
     final effectivePrepared = prepared._distinct.isEmpty
         ? await _delegate._prepareReadQuery(
-            resultMode: OrmReadResultMode.firstOrNull,
-            where: prepared._where,
-            skip: prepared._skip,
-            orderBy: prepared._orderBy,
-            distinct: prepared._distinct,
-            select: prepared._select,
-            include: prepared._include,
-            annotations: prepared._annotations,
-            repositoryTrace: prepared._repositoryTrace,
+            state: prepared._state.copyWith(
+              resultMode: OrmReadResultMode.firstOrNull,
+              spec: prepared._state._spec.copyWith(
+                where: prepared._where,
+                skip: prepared._skip,
+                orderBy: prepared._orderBy,
+                distinct: prepared._distinct,
+                select: prepared._select,
+                include: prepared._include,
+                cursor: null,
+                page: null,
+              ),
+              annotations: prepared._annotations,
+              repositoryTrace: prepared._repositoryTrace,
+            ),
           )
         : prepared;
 
@@ -343,12 +359,22 @@ final class _RepositoryReadExecutor {
         prepared._resultMode == OrmReadResultMode.oneOrNull
         ? prepared
         : await _delegate._prepareReadQuery(
-            resultMode: OrmReadResultMode.oneOrNull,
-            where: prepared._where,
-            select: prepared._select,
-            include: prepared._include,
-            annotations: prepared._annotations,
-            repositoryTrace: prepared._repositoryTrace,
+            state: prepared._state.copyWith(
+              resultMode: OrmReadResultMode.oneOrNull,
+              spec: prepared._state._spec.copyWith(
+                where: prepared._where,
+                select: prepared._select,
+                include: prepared._include,
+                skip: null,
+                take: null,
+                orderBy: const <OrmOrderBy>[],
+                distinct: const <String>[],
+                cursor: null,
+                page: null,
+              ),
+              annotations: prepared._annotations,
+              repositoryTrace: prepared._repositoryTrace,
+            ),
           );
     final response = await _delegate._client.execute(effectivePrepared.plan);
 

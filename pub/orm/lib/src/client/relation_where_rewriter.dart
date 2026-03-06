@@ -1,24 +1,68 @@
 part of 'client.dart';
 
+@immutable
+final class _RelationWhereRewriteResult {
+  final JsonMap where;
+  final bool usedLookups;
+
+  const _RelationWhereRewriteResult({
+    required this.where,
+    required this.usedLookups,
+  });
+}
+
+final class _RelationWhereRewriteSession {
+  final _RepositoryOperation? operation;
+  final String lookupPhase;
+  final String lookupStrategy;
+  var usedLookups = false;
+
+  _RelationWhereRewriteSession({
+    required this.operation,
+    required this.lookupPhase,
+    required this.lookupStrategy,
+  });
+}
+
 final class _RepositoryRelationWhereRewriter {
   final ModelDelegate _delegate;
 
   const _RepositoryRelationWhereRewriter(this._delegate);
 
-  Future<JsonMap> rewrite({
+  Future<_RelationWhereRewriteResult> rewrite({
     required String model,
     required JsonMap where,
+    _RepositoryOperation? operation,
+    String lookupPhase = 'where.relationLookup',
+    String lookupStrategy = 'relationWhereLookup',
   }) async {
     if (where.isEmpty) {
-      return const <String, Object?>{};
+      return const _RelationWhereRewriteResult(
+        where: <String, Object?>{},
+        usedLookups: false,
+      );
     }
     if (_delegate._client.contract.target == 'sql-family') {
-      return where;
+      return _RelationWhereRewriteResult(where: where, usedLookups: false);
     }
-    return _rewriteRelationWhere(model: model, where: where);
+    final session = _RelationWhereRewriteSession(
+      operation: operation,
+      lookupPhase: lookupPhase,
+      lookupStrategy: lookupStrategy,
+    );
+    final normalizedWhere = await _rewriteRelationWhere(
+      session: session,
+      model: model,
+      where: where,
+    );
+    return _RelationWhereRewriteResult(
+      where: normalizedWhere,
+      usedLookups: session.usedLookups,
+    );
   }
 
   Future<JsonMap> _rewriteRelationWhere({
+    required _RelationWhereRewriteSession session,
     required String model,
     required JsonMap where,
   }) async {
@@ -40,6 +84,7 @@ final class _RepositoryRelationWhereRewriter {
       final key = entry.key;
       if (_whereLogicalKeys.contains(key)) {
         normalizedWhere[key] = await _normalizeWhereLogicalOperand(
+          session: session,
           model: model,
           operand: entry.value,
         );
@@ -69,6 +114,7 @@ final class _RepositoryRelationWhereRewriter {
       }
 
       final clause = await _compileRelationWhereClause(
+        session: session,
         relationName: key,
         relation: relation,
         where: relationWhere,
@@ -86,12 +132,17 @@ final class _RepositoryRelationWhereRewriter {
   }
 
   Future<Object?> _normalizeWhereLogicalOperand({
+    required _RelationWhereRewriteSession session,
     required String model,
     required Object? operand,
   }) async {
     final nestedWhere = _coerceWhereMap(operand);
     if (nestedWhere != null) {
-      return _rewriteRelationWhere(model: model, where: nestedWhere);
+      return _rewriteRelationWhere(
+        session: session,
+        model: model,
+        where: nestedWhere,
+      );
     }
 
     final nestedWhereList = _coerceWhereList(operand);
@@ -101,12 +152,19 @@ final class _RepositoryRelationWhereRewriter {
 
     final normalized = <JsonMap>[];
     for (final entry in nestedWhereList) {
-      normalized.add(await _rewriteRelationWhere(model: model, where: entry));
+      normalized.add(
+        await _rewriteRelationWhere(
+          session: session,
+          model: model,
+          where: entry,
+        ),
+      );
     }
     return normalized;
   }
 
   Future<JsonMap?> _compileRelationWhereClause({
+    required _RelationWhereRewriteSession session,
     required String relationName,
     required ModelRelationContract relation,
     required JsonMap where,
@@ -138,6 +196,7 @@ final class _RepositoryRelationWhereRewriter {
     if (relation.cardinality == RelationCardinality.many) {
       if (where.containsKey('some')) {
         final relationWhere = await _normalizeRelationOperatorWhere(
+          session: session,
           relationName: relationName,
           relation: relation,
           operator: 'some',
@@ -145,6 +204,8 @@ final class _RepositoryRelationWhereRewriter {
         );
         clauses.add(
           await _buildRelationMembershipClause(
+            session: session,
+            relationName: relationName,
             relation: relation,
             relatedWhere: relationWhere,
             include: true,
@@ -154,6 +215,7 @@ final class _RepositoryRelationWhereRewriter {
 
       if (where.containsKey('none')) {
         final relationWhere = await _normalizeRelationOperatorWhere(
+          session: session,
           relationName: relationName,
           relation: relation,
           operator: 'none',
@@ -161,6 +223,8 @@ final class _RepositoryRelationWhereRewriter {
         );
         clauses.add(
           await _buildRelationMembershipClause(
+            session: session,
+            relationName: relationName,
             relation: relation,
             relatedWhere: relationWhere,
             include: false,
@@ -170,6 +234,7 @@ final class _RepositoryRelationWhereRewriter {
 
       if (where.containsKey('every')) {
         final relationWhere = await _normalizeRelationOperatorWhere(
+          session: session,
           relationName: relationName,
           relation: relation,
           operator: 'every',
@@ -177,6 +242,8 @@ final class _RepositoryRelationWhereRewriter {
         );
         clauses.add(
           await _buildRelationMembershipClause(
+            session: session,
+            relationName: relationName,
             relation: relation,
             relatedWhere: <String, Object?>{'NOT': relationWhere},
             include: false,
@@ -189,6 +256,8 @@ final class _RepositoryRelationWhereRewriter {
         if (isOperand == null) {
           clauses.add(
             await _buildRelationMembershipClause(
+              session: session,
+              relationName: relationName,
               relation: relation,
               relatedWhere: const <String, Object?>{},
               include: false,
@@ -196,6 +265,7 @@ final class _RepositoryRelationWhereRewriter {
           );
         } else {
           final relationWhere = await _normalizeRelationOperatorWhere(
+            session: session,
             relationName: relationName,
             relation: relation,
             operator: 'is',
@@ -203,6 +273,8 @@ final class _RepositoryRelationWhereRewriter {
           );
           clauses.add(
             await _buildRelationMembershipClause(
+              session: session,
+              relationName: relationName,
               relation: relation,
               relatedWhere: relationWhere,
               include: true,
@@ -216,6 +288,8 @@ final class _RepositoryRelationWhereRewriter {
         if (isNotOperand == null) {
           clauses.add(
             await _buildRelationMembershipClause(
+              session: session,
+              relationName: relationName,
               relation: relation,
               relatedWhere: const <String, Object?>{},
               include: true,
@@ -223,6 +297,7 @@ final class _RepositoryRelationWhereRewriter {
           );
         } else {
           final relationWhere = await _normalizeRelationOperatorWhere(
+            session: session,
             relationName: relationName,
             relation: relation,
             operator: 'isNot',
@@ -230,6 +305,8 @@ final class _RepositoryRelationWhereRewriter {
           );
           clauses.add(
             await _buildRelationMembershipClause(
+              session: session,
+              relationName: relationName,
               relation: relation,
               relatedWhere: relationWhere,
               include: false,
@@ -249,6 +326,7 @@ final class _RepositoryRelationWhereRewriter {
   }
 
   Future<JsonMap> _normalizeRelationOperatorWhere({
+    required _RelationWhereRewriteSession session,
     required String relationName,
     required ModelRelationContract relation,
     required String operator,
@@ -272,22 +350,31 @@ final class _RepositoryRelationWhereRewriter {
     }
 
     return _rewriteRelationWhere(
+      session: session,
       model: relation.relatedModel,
       where: nestedWhere,
     );
   }
 
   Future<JsonMap> _buildRelationMembershipClause({
+    required _RelationWhereRewriteSession session,
+    required String relationName,
     required ModelRelationContract relation,
     required JsonMap relatedWhere,
     required bool include,
   }) async {
+    session.usedLookups = true;
     final relatedRows = await _delegate._runtime
         ._resolveDelegate(relation.relatedModel)
         ._readAllInternal(
           action: OrmAction.read,
           where: relatedWhere,
           select: relation.targetFields,
+          repositoryTrace: session.operation?.nextTrace(
+            phase: session.lookupPhase,
+            strategy: session.lookupStrategy,
+            relation: relationName,
+          ),
           includeDepth: 0,
         );
 

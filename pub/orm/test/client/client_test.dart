@@ -1568,6 +1568,69 @@ void main() {
       },
     );
 
+    test('records relation where lookup traces for read operations', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(contract: relationalContract, engine: engine);
+      await client.connect();
+      await _seedRelationalData(client);
+      engine.reset();
+
+      final rows = await client.db.orm.model('User').all(
+        where: <String, Object?>{
+          'posts': <String, Object?>{
+            'some': <String, Object?>{'title': 'Post A'},
+          },
+        },
+        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      );
+
+      expect(rows.map((row) => row['id']).toList(growable: false), <Object?>[
+        'u1',
+      ]);
+      expect(
+        engine.executedPlans.map((plan) => plan.model).toList(growable: false),
+        <String>['Post', 'User'],
+      );
+      expect(
+        engine.executedPlans
+            .map((plan) => plan.action)
+            .toList(growable: false),
+        <OrmAction>[OrmAction.read, OrmAction.read],
+      );
+
+      final traces = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final operationId = traces.first.operationId;
+      expect(traces.map((trace) => trace.operationId).toSet(), <String>{
+        operationId,
+      });
+      expect(
+        traces.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.read', 'User.read'],
+      );
+      expect(
+        traces.map((trace) => trace.phase).toList(growable: false),
+        <String>['where.relationLookup', 'read.execute'],
+      );
+      expect(
+        traces.map((trace) => trace.strategy).toList(growable: false),
+        <String>['relationWhereLookup', 'relationWhereRewrite'],
+      );
+      expect(
+        traces.map((trace) => trace.relation).toList(growable: false),
+        <String?>['posts', null],
+      );
+      expect(
+        traces.map((trace) => trace.step).toList(growable: false),
+        <int>[1, 2],
+      );
+      expect(client.telemetry()?.operationId, operationId);
+      expect(client.telemetry()?.operationKind, 'User.read');
+      expect(client.operationTelemetry(operationId)?.statementCount, 2);
+      await client.disconnect();
+    });
+
     test('supports relation where is/isNot for to-one relation', () async {
       final client = OrmClient(
         contract: relationalContract,
@@ -1800,6 +1863,67 @@ void main() {
         where: <String, Object?>{'id': 'u2'},
       );
       expect(persisted?['email'], 'u2+updated@example.com');
+      await client.disconnect();
+    });
+
+    test('records relation where lookup traces on mutation paths', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(contract: relationalContract, engine: engine);
+      await client.connect();
+      await _seedRelationalData(client);
+      engine.reset();
+
+      final updated = await client.db.orm.model('User').update(
+        where: <String, Object?>{
+          'posts': <String, Object?>{
+            'some': <String, Object?>{'title': 'Post C'},
+          },
+        },
+        data: <String, Object?>{'email': 'u2+updated@example.com'},
+      );
+
+      expect(updated?['id'], 'u2');
+      expect(
+        engine.executedPlans.map((plan) => plan.model).toList(growable: false),
+        <String>['Post', 'User'],
+      );
+      expect(
+        engine.executedPlans
+            .map((plan) => plan.action)
+            .toList(growable: false),
+        <OrmAction>[OrmAction.read, OrmAction.update],
+      );
+
+      final traces = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final operationId = traces.first.operationId;
+      expect(traces.map((trace) => trace.operationId).toSet(), <String>{
+        operationId,
+      });
+      expect(
+        traces.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.update', 'User.update'],
+      );
+      expect(
+        traces.map((trace) => trace.phase).toList(growable: false),
+        <String>['where.relationLookup', 'write'],
+      );
+      expect(
+        traces.map((trace) => trace.strategy).toList(growable: false),
+        <String>['relationWhereLookup', 'singlePlan'],
+      );
+      expect(
+        traces.map((trace) => trace.relation).toList(growable: false),
+        <String?>['posts', null],
+      );
+      expect(
+        traces.map((trace) => trace.step).toList(growable: false),
+        <int>[1, 2],
+      );
+      expect(client.telemetry()?.operationId, operationId);
+      expect(client.telemetry()?.operationKind, 'User.update');
+      expect(client.operationTelemetry(operationId)?.statementCount, 2);
       await client.disconnect();
     });
 

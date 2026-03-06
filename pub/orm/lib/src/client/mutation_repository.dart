@@ -45,6 +45,7 @@ final class _RepositoryMutationExecutor {
       where: const <String, Object?>{},
       select: select,
       include: include,
+      operation: trace,
     );
     final prepared = _composeMutationPlan(
       action: OrmAction.create,
@@ -303,6 +304,7 @@ final class _RepositoryMutationExecutor {
       where: where,
       select: select,
       include: include,
+      operation: operation,
     );
     final normalizedInclude = normalized.include;
     final normalizedWhere = normalized.where;
@@ -353,14 +355,16 @@ final class _RepositoryMutationExecutor {
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    _RepositoryOperation? operation,
   }) async {
     final normalizedInclude = _delegate._normalizeInclude(include);
     final normalizedWhere = where.isEmpty
         ? const <String, Object?>{}
-        : await _delegate._normalizeWhereForExecution(
+        : (await _delegate._normalizeWhereForExecution(
             model: _delegate.modelName,
             where: where,
-          );
+            operation: operation,
+          )).where;
 
     return _NormalizedMutationInput(
       where: normalizedWhere,

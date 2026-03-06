@@ -661,11 +661,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPreparedReadQuery>\s+_prepareRead\(\)[\s\S]*?Future<List<UserData>>\s+all\(\)\s+async\s*\{[\s\S]*?\(await\s+_prepareRead\(\)\)\.all\(\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?OrmReadQuerySpec\s+_readSpec\(\)[\s\S]*?Future<OrmPreparedReadQuery>\s+_prepareRead\(\)[\s\S]*?Future<List<UserData>>\s+all\(\)\s+async\s*\{[\s\S]*?\(await\s+_prepareRead\(\)\)\.all\(\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery read execution to compile typed state through prepared read objects.',
+              'Expected UserQuery read execution to compile typed state through read specs and prepared read objects.',
         );
         expect(
           generatedSource.contains('ModelQuery _runtimeQuery('),

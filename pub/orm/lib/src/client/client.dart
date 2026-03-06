@@ -33,6 +33,7 @@ typedef IncludeExecutionStrategySelector =
     });
 
 const int _defaultMaxIncludeDepth = 4;
+const Object _stateKeepToken = Object();
 const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
 const List<String> _filterOperatorOrder = <String>[
   'equals',
@@ -303,6 +304,11 @@ final class _RepositoryOperation {
       id: 'repo_${kind}_$_repositoryOperationSeed',
       kind: kind,
     );
+  }
+
+  factory _RepositoryOperation.resume({required OrmRepositoryTrace trace}) {
+    return _RepositoryOperation._(id: trace.operationId, kind: trace.kind)
+      .._step = trace.step;
   }
 
   OrmRepositoryTrace nextTrace({
@@ -1079,7 +1085,7 @@ class ModelDelegate {
     this,
   );
 
-  ModelQuery query() => ModelQuery._(this, const ModelQueryState());
+  ModelQuery query() => ModelQuery._(this, OrmReadQuerySpec());
 
   ModelQuery where(JsonMap where) => query().where(where);
 
@@ -1129,62 +1135,46 @@ class ModelDelegate {
     IncludeSpec spec = const IncludeSpec(),
   }) => query().includeRelation(relation, spec: spec);
 
-  Future<OrmPreparedReadQuery> prepareRead({
-    JsonMap where = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> distinct = const <String>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
-  }) {
+  Future<OrmPreparedReadQuery> prepareRead({required OrmReadQuerySpec spec}) {
     return _prepareReadQuery(
-      resultMode: OrmReadResultMode.all,
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
+      state: _OrmPreparedReadState(
+        resultMode: OrmReadResultMode.all,
+        spec: spec,
+      ),
     );
   }
 
   Future<OrmPreparedReadQuery> _prepareReadQuery({
-    required OrmReadResultMode resultMode,
-    JsonMap where = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> distinct = const <String>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
-    JsonMap annotations = const <String, Object?>{},
-    OrmRepositoryTrace? repositoryTrace,
+    required _OrmPreparedReadState state,
   }) async {
-    final normalizedWhere = where.isEmpty
-        ? const <String, Object?>{}
-        : await _normalizeWhereForExecution(model: modelName, where: where);
+    final preparedOperation = state._repositoryTrace != null
+        ? _RepositoryOperation.resume(trace: state._repositoryTrace!)
+        : state._where.isEmpty
+        ? null
+        : _RepositoryOperation.start(kind: '$modelName.read');
+    final rewriteResult = state._where.isEmpty
+        ? const _RelationWhereRewriteResult(
+            where: <String, Object?>{},
+            usedLookups: false,
+          )
+        : await _normalizeWhereForExecution(
+            model: modelName,
+            where: state._where,
+            operation: preparedOperation,
+          );
+    final effectiveTrace = rewriteResult.usedLookups
+        ? preparedOperation!.nextTrace(
+            phase: state._repositoryTrace?.phase ?? 'read.execute',
+            strategy:
+                state._repositoryTrace?.strategy ?? 'relationWhereRewrite',
+            relation: state._repositoryTrace?.relation,
+            itemIndex: state._repositoryTrace?.itemIndex,
+          )
+        : state._repositoryTrace;
     return _readPlanCompiler.compile(
-      state: _OrmPreparedReadState(
-        resultMode: resultMode,
-        where: normalizedWhere,
-        skip: skip,
-        take: take,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: select,
-        include: include,
-        cursor: cursor,
-        page: page,
-        annotations: annotations,
-        repositoryTrace: repositoryTrace,
+      state: state.copyWith(
+        spec: state._spec.copyWith(where: rewriteResult.where),
+        repositoryTrace: effectiveTrace,
       ),
     );
   }
@@ -1201,15 +1191,17 @@ class ModelDelegate {
     OrmReadPagePlan? page,
   }) async {
     final prepared = await prepareRead(
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
+      spec: OrmReadQuerySpec(
+        where: where,
+        skip: skip,
+        take: take,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        include: include,
+        cursor: cursor,
+        page: page,
+      ),
     );
     return prepared.plan;
   }
@@ -1226,15 +1218,17 @@ class ModelDelegate {
     OrmReadPagePlan? page,
   }) async {
     final prepared = await prepareRead(
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
+      spec: OrmReadQuerySpec(
+        where: where,
+        skip: skip,
+        take: take,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        include: include,
+        cursor: cursor,
+        page: page,
+      ),
     );
     return prepared.all();
   }
@@ -1247,11 +1241,13 @@ class ModelDelegate {
     required OrmReadPagePlan page,
   }) async {
     final prepared = await prepareRead(
-      where: where,
-      orderBy: orderBy,
-      select: select,
-      include: include,
-      page: page,
+      spec: OrmReadQuerySpec(
+        where: where,
+        orderBy: orderBy,
+        select: select,
+        include: include,
+        page: page,
+      ),
     );
     return prepared.pageResult();
   }
@@ -1268,15 +1264,17 @@ class ModelDelegate {
     OrmReadPagePlan? page,
   }) async* {
     final prepared = await prepareRead(
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
+      spec: OrmReadQuerySpec(
+        where: where,
+        skip: skip,
+        take: take,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        include: include,
+        cursor: cursor,
+        page: page,
+      ),
     );
     yield* prepared.stream();
   }
@@ -1287,9 +1285,7 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
     final prepared = await prepareRead(
-      where: where,
-      select: select,
-      include: include,
+      spec: OrmReadQuerySpec(where: where, select: select, include: include),
     );
     return prepared.oneOrNull();
   }
@@ -1303,12 +1299,14 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
     final prepared = await prepareRead(
-      where: where,
-      skip: skip,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
+      spec: OrmReadQuerySpec(
+        where: where,
+        skip: skip,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        include: include,
+      ),
     );
     return prepared.firstOrNull();
   }
@@ -1357,15 +1355,17 @@ class ModelDelegate {
     OrmReadPagePlan? page,
   }) async {
     final prepared = await prepareRead(
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
+      spec: OrmReadQuerySpec(
+        where: where,
+        skip: skip,
+        take: take,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        include: include,
+        cursor: cursor,
+        page: page,
+      ),
     );
     return prepared.inspectPlan();
   }
@@ -1382,15 +1382,17 @@ class ModelDelegate {
     OrmReadPagePlan? page,
   }) async {
     final prepared = await prepareRead(
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
+      spec: OrmReadQuerySpec(
+        where: where,
+        skip: skip,
+        take: take,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        include: include,
+        cursor: cursor,
+        page: page,
+      ),
     );
     return prepared.explain();
   }
@@ -1686,18 +1688,22 @@ class ModelDelegate {
     required int includeDepth,
   }) async {
     final prepared = await _prepareReadQuery(
-      resultMode: OrmReadResultMode.all,
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
-      annotations: annotations,
-      repositoryTrace: repositoryTrace,
+      state: _OrmPreparedReadState(
+        resultMode: OrmReadResultMode.all,
+        spec: OrmReadQuerySpec(
+          where: where,
+          skip: skip,
+          take: take,
+          orderBy: orderBy,
+          distinct: distinct,
+          select: select,
+          include: include,
+          cursor: cursor,
+          page: page,
+        ),
+        annotations: annotations,
+        repositoryTrace: repositoryTrace,
+      ),
     );
     return _readRepository.all(
       prepared: prepared,
@@ -1731,12 +1737,12 @@ class ModelDelegate {
     required int includeDepth,
   }) async {
     final prepared = await _prepareReadQuery(
-      resultMode: OrmReadResultMode.all,
-      where: where,
-      select: select,
-      include: include,
-      annotations: annotations,
-      repositoryTrace: repositoryTrace,
+      state: _OrmPreparedReadState(
+        resultMode: OrmReadResultMode.all,
+        spec: OrmReadQuerySpec(where: where, select: select, include: include),
+        annotations: annotations,
+        repositoryTrace: repositoryTrace,
+      ),
     );
     return _readRepository.oneOrNull(
       prepared: prepared,
@@ -2969,11 +2975,16 @@ class ModelDelegate {
     return Map<String, Object?>.from(data);
   }
 
-  Future<JsonMap> _normalizeWhereForExecution({
+  Future<_RelationWhereRewriteResult> _normalizeWhereForExecution({
     required String model,
     required JsonMap where,
+    _RepositoryOperation? operation,
   }) {
-    return _relationWhereRewriter.rewrite(model: model, where: where);
+    return _relationWhereRewriter.rewrite(
+      model: model,
+      where: where,
+      operation: operation,
+    );
   }
 
   Map<String, IncludeSpec> _normalizeInclude(Map<String, IncludeSpec> include) {
@@ -3026,7 +3037,7 @@ class ModelDelegate {
 }
 
 @immutable
-final class ModelQueryState {
+final class OrmReadQuerySpec {
   final JsonMap where;
   final int? skip;
   final int? take;
@@ -3037,23 +3048,64 @@ final class ModelQueryState {
   final JsonMap? cursor;
   final OrmReadPagePlan? page;
 
-  const ModelQueryState({
-    this.where = const <String, Object?>{},
+  OrmReadQuerySpec({
+    JsonMap where = const <String, Object?>{},
     this.skip,
     this.take,
-    this.orderBy = const <OrmOrderBy>[],
-    this.distinct = const <String>[],
-    this.select = const <String>[],
-    this.include = const <String, IncludeSpec>{},
-    this.cursor,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
     this.page,
-  });
+  }) : where = Map<String, Object?>.unmodifiable(
+         Map<String, Object?>.from(where),
+       ),
+       orderBy = List<OrmOrderBy>.unmodifiable(orderBy),
+       distinct = List<String>.unmodifiable(distinct),
+       select = List<String>.unmodifiable(select),
+       include = Map<String, IncludeSpec>.unmodifiable(
+         Map<String, IncludeSpec>.from(include),
+       ),
+       cursor = cursor == null
+           ? null
+           : Map<String, Object?>.unmodifiable(
+               Map<String, Object?>.from(cursor),
+             );
+
+  OrmReadQuerySpec copyWith({
+    JsonMap? where,
+    Object? skip = _stateKeepToken,
+    Object? take = _stateKeepToken,
+    List<OrmOrderBy>? orderBy,
+    List<String>? distinct,
+    List<String>? select,
+    Map<String, IncludeSpec>? include,
+    Object? cursor = _stateKeepToken,
+    Object? page = _stateKeepToken,
+  }) {
+    return OrmReadQuerySpec(
+      where: where ?? this.where,
+      skip: identical(skip, _stateKeepToken) ? this.skip : skip as int?,
+      take: identical(take, _stateKeepToken) ? this.take : take as int?,
+      orderBy: orderBy ?? this.orderBy,
+      distinct: distinct ?? this.distinct,
+      select: select ?? this.select,
+      include: include ?? this.include,
+      cursor: identical(cursor, _stateKeepToken)
+          ? this.cursor
+          : cursor as JsonMap?,
+      page: identical(page, _stateKeepToken)
+          ? this.page
+          : page as OrmReadPagePlan?,
+    );
+  }
 }
 
 @immutable
 final class ModelQuery {
   final ModelDelegate _delegate;
-  final ModelQueryState _state;
+  final OrmReadQuerySpec _state;
 
   const ModelQuery._(this._delegate, this._state);
 
@@ -3079,19 +3131,7 @@ final class ModelQuery {
     final nextWhere = merge
         ? <String, Object?>{..._state.where, ...where}
         : <String, Object?>{...where};
-    return _next(
-      ModelQueryState(
-        where: nextWhere,
-        skip: _state.skip,
-        take: _state.take,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: _state.include,
-        cursor: _state.cursor,
-        page: _state.page,
-      ),
-    );
+    return _next(_state.copyWith(where: nextWhere));
   }
 
   ModelQuery whereWith(
@@ -3107,19 +3147,7 @@ final class ModelQuery {
     final nextOrderBy = append
         ? <OrmOrderBy>[..._state.orderBy, ...orderBy]
         : <OrmOrderBy>[...orderBy];
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: _state.skip,
-        take: _state.take,
-        orderBy: nextOrderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: _state.include,
-        cursor: _state.cursor,
-        page: _state.page,
-      ),
-    );
+    return _next(_state.copyWith(orderBy: nextOrderBy));
   }
 
   ModelQuery orderByField(String field, {SortOrder order = SortOrder.asc}) {
@@ -3130,19 +3158,7 @@ final class ModelQuery {
     final nextDistinct = append
         ? <String>[..._state.distinct, ...fields]
         : <String>[...fields];
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: _state.skip,
-        take: _state.take,
-        orderBy: _state.orderBy,
-        distinct: nextDistinct,
-        select: _state.select,
-        include: _state.include,
-        cursor: _state.cursor,
-        page: _state.page,
-      ),
-    );
+    return _next(_state.copyWith(distinct: nextDistinct));
   }
 
   ModelQuery distinctField(String field) {
@@ -3153,19 +3169,7 @@ final class ModelQuery {
     final nextSelect = append
         ? <String>[..._state.select, ...fields]
         : <String>[...fields];
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: _state.skip,
-        take: _state.take,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: nextSelect,
-        include: _state.include,
-        cursor: _state.cursor,
-        page: _state.page,
-      ),
-    );
+    return _next(_state.copyWith(select: nextSelect));
   }
 
   ModelQuery selectWith(
@@ -3186,19 +3190,7 @@ final class ModelQuery {
         ? _mergeIncludeSpecMap(_state.include, include)
         : <String, IncludeSpec>{...include};
 
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: _state.skip,
-        take: _state.take,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: nextInclude,
-        cursor: _state.cursor,
-        page: _state.page,
-      ),
-    );
+    return _next(_state.copyWith(include: nextInclude));
   }
 
   ModelQuery includeWith(
@@ -3218,35 +3210,11 @@ final class ModelQuery {
   }
 
   ModelQuery skip(int value) {
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: value,
-        take: _state.take,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: _state.include,
-        cursor: _state.cursor,
-        page: null,
-      ),
-    );
+    return _next(_state.copyWith(skip: value, page: null));
   }
 
   ModelQuery take(int value) {
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: _state.skip,
-        take: value,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: _state.include,
-        cursor: _state.cursor,
-        page: null,
-      ),
-    );
+    return _next(_state.copyWith(take: value, page: null));
   }
 
   ModelQuery cursor(JsonMap cursor) {
@@ -3264,21 +3232,7 @@ final class ModelQuery {
         details: <String, Object?>{'model': _delegate.modelName},
       );
     }
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: _state.skip,
-        take: _state.take,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: _state.include,
-        cursor: Map<String, Object?>.unmodifiable(
-          Map<String, Object?>.from(cursor),
-        ),
-        page: null,
-      ),
-    );
+    return _next(_state.copyWith(cursor: cursor, page: null));
   }
 
   ModelQuery page({required int size, JsonMap? after, JsonMap? before}) {
@@ -3315,52 +3269,21 @@ final class ModelQuery {
       );
     }
     return _next(
-      ModelQueryState(
-        where: _state.where,
+      _state.copyWith(
         skip: null,
         take: null,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: _state.include,
         cursor: null,
-        page: OrmReadPagePlan(
-          size: size,
-          after: after == null ? null : Map<String, Object?>.from(after),
-          before: before == null ? null : Map<String, Object?>.from(before),
-        ),
+        page: OrmReadPagePlan(size: size, after: after, before: before),
       ),
     );
   }
 
   ModelQuery unbounded() {
-    return _next(
-      ModelQueryState(
-        where: _state.where,
-        skip: _state.skip,
-        take: null,
-        orderBy: _state.orderBy,
-        distinct: _state.distinct,
-        select: _state.select,
-        include: _state.include,
-        cursor: _state.cursor,
-        page: null,
-      ),
-    );
+    return _next(_state.copyWith(take: null, page: null));
   }
 
   Future<OrmPreparedReadQuery> _prepareRead() {
-    return _delegate.prepareRead(
-      where: _state.where,
-      skip: _state.skip,
-      take: _state.take,
-      orderBy: _state.orderBy,
-      distinct: _state.distinct,
-      select: _state.select,
-      include: _state.include,
-      cursor: _state.cursor,
-      page: _state.page,
-    );
+    return _delegate.prepareRead(spec: _state);
   }
 
   Future<OrmPlan> toPlan() async {
@@ -3600,7 +3523,7 @@ final class ModelQuery {
     );
   }
 
-  ModelQuery _next(ModelQueryState nextState) =>
+  ModelQuery _next(OrmReadQuerySpec nextState) =>
       ModelQuery._(_delegate, nextState);
 }
 
