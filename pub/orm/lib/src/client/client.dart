@@ -3551,7 +3551,33 @@ final class ModelQuery {
     );
   }
 
+  void _assertMutationQueryState({
+    required String action,
+    bool allowWhere = true,
+  }) {
+    final invalidKeys = <String>[
+      if (!allowWhere && _state.where.isNotEmpty) 'where',
+      if (_state.skip != null) 'skip',
+      if (_state.take != null) 'take',
+      if (_state.orderBy.isNotEmpty) 'orderBy',
+      if (_state.distinct.isNotEmpty) 'distinct',
+    ];
+    if (invalidKeys.isEmpty) {
+      return;
+    }
+
+    throw runtimeError(
+      'PLAN.MUTATION_QUERY_STATE_INVALID',
+      '$action does not allow query state keys: ${invalidKeys.join(', ')}.',
+      details: <String, Object?>{
+        'action': action,
+        'invalidKeys': invalidKeys,
+      },
+    );
+  }
+
   Future<JsonMap> create({required JsonMap data}) {
+    _assertMutationQueryState(action: 'create', allowWhere: false);
     return _delegate.create(
       data: data,
       select: _state.select,
@@ -3560,6 +3586,7 @@ final class ModelQuery {
   }
 
   Future<List<JsonMap>> createMany({required List<JsonMap> data}) {
+    _assertMutationQueryState(action: 'createMany', allowWhere: false);
     return _delegate.createMany(
       data: data,
       select: _state.select,
@@ -3567,9 +3594,13 @@ final class ModelQuery {
     );
   }
 
-  Future<int> deleteMany() => _delegate.deleteMany(where: _state.where);
+  Future<int> deleteMany() {
+    _assertMutationQueryState(action: 'deleteMany');
+    return _delegate.deleteMany(where: _state.where);
+  }
 
   Future<JsonMap> upsert({required JsonMap create, required JsonMap update}) {
+    _assertMutationQueryState(action: 'upsert');
     return _delegate.upsert(
       where: _state.where,
       create: create,
@@ -3580,6 +3611,7 @@ final class ModelQuery {
   }
 
   Future<JsonMap?> update({required JsonMap data}) {
+    _assertMutationQueryState(action: 'update');
     return _delegate.update(
       where: _state.where,
       data: data,
@@ -3592,6 +3624,7 @@ final class ModelQuery {
     required JsonMap data,
     Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
   }) {
+    _assertMutationQueryState(action: 'updateNested');
     return _delegate.updateNested(
       where: _state.where,
       data: data,
@@ -3601,11 +3634,14 @@ final class ModelQuery {
     );
   }
 
-  Future<JsonMap?> delete() => _delegate.delete(
-    where: _state.where,
-    select: _state.select,
-    include: _state.include,
-  );
+  Future<JsonMap?> delete() {
+    _assertMutationQueryState(action: 'delete');
+    return _delegate.delete(
+      where: _state.where,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
 
   ModelQuery _next(ModelQueryState nextState) =>
       ModelQuery._(_delegate, nextState);

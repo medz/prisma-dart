@@ -907,6 +907,61 @@ void main() {
       await client.disconnect();
     });
 
+    test('rejects unsupported query state on mutation terminals', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.model('User');
+
+      expect(
+        () => users
+            .where(<String, Object?>{'id': 'u1'})
+            .create(data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'}),
+        throwsA(
+          isA<OrmRuntimeError>()
+              .having((error) => error.code, 'code',
+                  'PLAN.MUTATION_QUERY_STATE_INVALID')
+              .having(
+                (error) => error.details['invalidKeys'],
+                'invalidKeys',
+                <String>['where'],
+              ),
+        ),
+      );
+
+      expect(
+        () => users
+            .where(<String, Object?>{'id': 'u1'})
+            .orderByField('email')
+            .update(data: <String, Object?>{'email': 'b@x.com'}),
+        throwsA(
+          isA<OrmRuntimeError>()
+              .having((error) => error.code, 'code',
+                  'PLAN.MUTATION_QUERY_STATE_INVALID')
+              .having(
+                (error) => error.details['invalidKeys'],
+                'invalidKeys',
+                <String>['orderBy'],
+              ),
+        ),
+      );
+
+      expect(
+        () => users.take(1).deleteMany(),
+        throwsA(
+          isA<OrmRuntimeError>()
+              .having((error) => error.code, 'code',
+                  'PLAN.MUTATION_QUERY_STATE_INVALID')
+              .having(
+                (error) => error.details['invalidKeys'],
+                'invalidKeys',
+                <String>['take'],
+              ),
+        ),
+      );
+
+      await client.disconnect();
+    });
+
     test('supports upsert create and update branches', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
