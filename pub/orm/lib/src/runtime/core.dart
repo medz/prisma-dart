@@ -1123,6 +1123,17 @@ final class OrmRuntimeCore implements RuntimeCore {
             },
           );
         }
+        if (plan.include.isNotEmpty) {
+          throw runtimeError(
+            'PLAN.READ_INCLUDE_UNSUPPORTED',
+            'Aggregate read plans do not support include.',
+            details: <String, Object?>{
+              'model': model.name,
+              'shape': plan.shape.name,
+              'include': plan.include.keys.toList(growable: false),
+            },
+          );
+        }
         _assertKnownFields(
           model: model,
           fields: <String>[
@@ -1144,6 +1155,17 @@ final class OrmRuntimeCore implements RuntimeCore {
             details: <String, Object?>{
               'model': model.name,
               'shape': plan.shape.name,
+            },
+          );
+        }
+        if (plan.include.isNotEmpty) {
+          throw runtimeError(
+            'PLAN.READ_INCLUDE_UNSUPPORTED',
+            'Grouped aggregate plans do not support include.',
+            details: <String, Object?>{
+              'model': model.name,
+              'shape': plan.shape.name,
+              'include': plan.include.keys.toList(growable: false),
             },
           );
         }

@@ -86,7 +86,7 @@ Read terminals:
 | `count()` | implemented |
 | `exists()` | implemented |
 | `aggregate(...)` | implemented |
-| `groupBy(...)` | implemented |
+| `groupedBy(...).aggregate(...)` | implemented |
 | `explain()` | implemented |
 
 Rules:
@@ -109,6 +109,12 @@ Rules:
    - `include(...)` or `distinct(...)` force `stream()` to
      `bufferedYield`, with reasons and include strategy surfaced in
      `terminalExecution.stream`.
+8. Grouped aggregation is a dedicated surface:
+   - `groupedBy(...)` only accepts a where-only base query.
+   - `having(...)`, `havingWith(...)`, and `havingExpr(...)` refine the grouped
+     builder before `aggregate(...)`.
+9. `include(...)` is unsupported on `aggregate(...)` and
+   `groupedBy(...).aggregate(...)`, including direct plan execution.
 
 ## ORM Mutation Surface
 

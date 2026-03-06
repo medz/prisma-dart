@@ -1653,6 +1653,22 @@ typedef Post = ({
               'Expected generated source to include typed groupBy having helper.',
         );
         expect(
+          RegExp(
+            r'\bclass UserGroupByHavingBuilder\b',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed groupBy having builder helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?UserGroupedQuery\s+havingExpr\(UserGroupByHaving\s+Function\(UserGroupByHavingBuilder\s+having\)\s+build,\s*\{bool\s+merge\s*=\s*true\}\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupedQuery to expose builder-style havingExpr(...).',
+        );
+        expect(
           RegExp(r'\bclass UserGroupByOrderBy\b').hasMatch(generatedSource),
           isFalse,
           reason:

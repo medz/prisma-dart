@@ -224,6 +224,58 @@ void main() {
       },
     );
 
+    test(
+      'runtime rejects include on aggregate and grouped aggregate plans',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        try {
+          await expectLater(
+            () => client.execute(
+              OrmPlan.read(
+                contractHash: contract.hash,
+                model: 'User',
+                resultMode: OrmReadResultMode.all,
+                shape: OrmReadShape.aggregate,
+                include: <String, OrmIncludePlan>{'posts': OrmIncludePlan()},
+                aggregate: OrmReadAggregatePlan(countAll: true),
+              ),
+            ),
+            throwsA(
+              isA<OrmRuntimeError>().having(
+                (error) => error.code,
+                'code',
+                'PLAN.READ_INCLUDE_UNSUPPORTED',
+              ),
+            ),
+          );
+
+          await expectLater(
+            () => client.execute(
+              OrmPlan.read(
+                contractHash: contract.hash,
+                model: 'User',
+                resultMode: OrmReadResultMode.all,
+                shape: OrmReadShape.groupedAggregate,
+                include: <String, OrmIncludePlan>{'posts': OrmIncludePlan()},
+                aggregate: OrmReadAggregatePlan(countAll: true),
+                groupBy: OrmReadGroupByPlan(by: const <String>['email']),
+              ),
+            ),
+            throwsA(
+              isA<OrmRuntimeError>().having(
+                (error) => error.code,
+                'code',
+                'PLAN.READ_INCLUDE_UNSUPPORTED',
+              ),
+            ),
+          );
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
+
     test('explain requires an active runtime connection', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');

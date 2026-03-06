@@ -127,6 +127,20 @@ void main() {
         );
         expect(
           RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+havingExpr\(\s*OrmGroupByHaving\s+Function\(OrmGroupByHavingBuilder\s+having\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,\s*\}\s*\)',
+          ).hasMatch(source),
+          isTrue,
+          reason:
+              'Expected ModelGroupedQuery to expose a builder-style havingExpr(...) surface.',
+        );
+        expect(
+          RegExp(r'\bclass\s+OrmGroupByHavingBuilder\b').hasMatch(source),
+          isTrue,
+          reason:
+              'Expected dynamic client source to include OrmGroupByHavingBuilder.',
+        );
+        expect(
+          RegExp(
             r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+orderBy\(',
           ).hasMatch(source),
           isFalse,

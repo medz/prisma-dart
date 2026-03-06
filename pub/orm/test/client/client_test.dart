@@ -622,11 +622,7 @@ void main() {
       final grouped = await users
           .query()
           .groupedBy(const <String>['email'])
-          .having(<String, Object?>{
-            '_count': <String, Object?>{
-              'all': <String, Object?>{'gte': 2},
-            },
-          }, merge: false)
+          .havingExpr((having) => having.countAll().gte(2), merge: false)
           .aggregate(countAll: true, sum: const <String>['id']);
 
       expect(grouped, hasLength(2));
@@ -637,6 +633,31 @@ void main() {
       expect(groupedByEmail['a@x.com']?['sum'], <String, Object?>{'id': 3});
       expect(groupedByEmail['b@x.com']?['count'], <String, Object?>{'all': 2});
       expect(groupedByEmail['b@x.com']?['sum'], <String, Object?>{'id': 30});
+      await client.disconnect();
+    });
+
+    test('supports builder-style groupBy having expressions', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 2, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 3, 'email': 'b@x.com'});
+
+      final grouped = await users
+          .query()
+          .groupedBy(const <String>['email'])
+          .havingExpr(
+            (having) => having.or(<OrmGroupByHaving>[
+              having.countAll().gte(2),
+              having.sum('id').gte(3),
+            ]),
+            merge: false,
+          )
+          .aggregate(countAll: true, sum: const <String>['id']);
+
+      expect(grouped, hasLength(2));
       await client.disconnect();
     });
 

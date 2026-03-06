@@ -924,6 +924,111 @@ final class TypedClientWriter {
     buffer.writeln('}');
     buffer.writeln();
 
+    final havingBuilderClassName = '${model.groupByHavingClassName}Builder';
+    final havingPredicateBuilderClassName =
+        '${model.groupByHavingClassName}PredicateBuilder';
+
+    buffer.writeln('class $havingBuilderClassName {');
+    buffer.writeln('  const $havingBuilderClassName();');
+    buffer.writeln();
+    buffer.writeln(
+      '  $havingPredicateBuilderClassName by(${model.distinctClassName} field) =>',
+    );
+    buffer.writeln(
+      '      $havingPredicateBuilderClassName._((condition) => ${model.groupByHavingClassName}.by(field, condition));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  $havingPredicateBuilderClassName count(${model.distinctClassName} field) =>',
+    );
+    buffer.writeln(
+      '      $havingPredicateBuilderClassName._((condition) => ${model.groupByHavingClassName}.count(field, condition));',
+    );
+    buffer.writeln();
+    buffer.writeln('  $havingPredicateBuilderClassName countAll() =>');
+    buffer.writeln(
+      '      $havingPredicateBuilderClassName._((condition) => ${model.groupByHavingClassName}.countAll(condition));',
+    );
+    buffer.writeln();
+    for (final bucket in const <String>['min', 'max', 'sum', 'avg']) {
+      buffer.writeln(
+        '  $havingPredicateBuilderClassName $bucket(${model.distinctClassName} field) =>',
+      );
+      buffer.writeln(
+        '      $havingPredicateBuilderClassName._((condition) => ${model.groupByHavingClassName}.$bucket(field, condition));',
+      );
+      buffer.writeln();
+    }
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} and(List<${model.groupByHavingClassName}> clauses) =>',
+    );
+    buffer.writeln('      ${model.groupByHavingClassName}.and(clauses);');
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} or(List<${model.groupByHavingClassName}> clauses) =>',
+    );
+    buffer.writeln('      ${model.groupByHavingClassName}.or(clauses);');
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} not(List<${model.groupByHavingClassName}> clauses) =>',
+    );
+    buffer.writeln('      ${model.groupByHavingClassName}.not(clauses);');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class $havingPredicateBuilderClassName {');
+    buffer.writeln(
+      '  final ${model.groupByHavingClassName} Function(${model.groupByHavingConditionClassName} condition) _build;',
+    );
+    buffer.writeln();
+    buffer.writeln('  $havingPredicateBuilderClassName._(this._build);');
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} equals(Object? value) => _build(${model.groupByHavingConditionClassName}.equals(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} notEquals(Object? value) => _build(${model.groupByHavingConditionClassName}.notEquals(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} inList(List<Object?> values) => _build(${model.groupByHavingConditionClassName}.inList(values));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} notInList(List<Object?> values) => _build(${model.groupByHavingConditionClassName}.notInList(values));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} contains(String value) => _build(${model.groupByHavingConditionClassName}.contains(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} startsWith(String value) => _build(${model.groupByHavingConditionClassName}.startsWith(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} endsWith(String value) => _build(${model.groupByHavingConditionClassName}.endsWith(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} gt(Object? value) => _build(${model.groupByHavingConditionClassName}.gt(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} gte(Object? value) => _build(${model.groupByHavingConditionClassName}.gte(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} lt(Object? value) => _build(${model.groupByHavingConditionClassName}.lt(value));',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.groupByHavingClassName} lte(Object? value) => _build(${model.groupByHavingConditionClassName}.lte(value));',
+    );
+    buffer.writeln('}');
+    buffer.writeln();
+
     for (final entry in aggregateBucketClassNames.entries) {
       _writeAggregateBucketClass(
         buffer: buffer,
@@ -3127,6 +3232,16 @@ final class TypedClientWriter {
       '  ${model.groupedQueryClassName} havingWith(${model.groupByHavingClassName} Function(${model.groupByHavingClassName} having) build, {bool merge = true}) {',
     );
     buffer.writeln('    final next = build(_groupBy.having);');
+    buffer.writeln('    return having(next, merge: merge);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} havingExpr(${model.groupByHavingClassName} Function(${model.groupByHavingClassName}Builder having) build, {bool merge = true}) {',
+    );
+    buffer.writeln(
+      '    final next = build(const ${model.groupByHavingClassName}Builder());',
+    );
     buffer.writeln('    return having(next, merge: merge);');
     buffer.writeln('  }');
     buffer.writeln();

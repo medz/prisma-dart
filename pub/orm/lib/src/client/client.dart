@@ -2773,6 +2773,121 @@ final class OrmGroupBySpec {
 }
 
 @immutable
+final class OrmGroupByHavingBuilder {
+  const OrmGroupByHavingBuilder();
+
+  OrmGroupByHavingPredicateBuilder by(String field) =>
+      OrmGroupByHavingPredicateBuilder._(field: field);
+
+  OrmGroupByHavingPredicateBuilder count(String field) =>
+      OrmGroupByHavingPredicateBuilder._(
+        field: field,
+        bucket: OrmGroupByHavingMetricBucket.count,
+      );
+
+  OrmGroupByHavingPredicateBuilder countAll() =>
+      OrmGroupByHavingPredicateBuilder._(
+        field: 'all',
+        bucket: OrmGroupByHavingMetricBucket.count,
+      );
+
+  OrmGroupByHavingPredicateBuilder min(String field) =>
+      OrmGroupByHavingPredicateBuilder._(
+        field: field,
+        bucket: OrmGroupByHavingMetricBucket.min,
+      );
+
+  OrmGroupByHavingPredicateBuilder max(String field) =>
+      OrmGroupByHavingPredicateBuilder._(
+        field: field,
+        bucket: OrmGroupByHavingMetricBucket.max,
+      );
+
+  OrmGroupByHavingPredicateBuilder sum(String field) =>
+      OrmGroupByHavingPredicateBuilder._(
+        field: field,
+        bucket: OrmGroupByHavingMetricBucket.sum,
+      );
+
+  OrmGroupByHavingPredicateBuilder avg(String field) =>
+      OrmGroupByHavingPredicateBuilder._(
+        field: field,
+        bucket: OrmGroupByHavingMetricBucket.avg,
+      );
+
+  OrmGroupByHaving and(List<OrmGroupByHaving> clauses) => OrmGroupByHaving([
+    OrmGroupByHavingLogicalNode(
+      operator: OrmGroupByHavingLogicalOperator.and,
+      clauses: clauses,
+    ),
+  ]);
+
+  OrmGroupByHaving or(List<OrmGroupByHaving> clauses) => OrmGroupByHaving([
+    OrmGroupByHavingLogicalNode(
+      operator: OrmGroupByHavingLogicalOperator.or,
+      clauses: clauses,
+    ),
+  ]);
+
+  OrmGroupByHaving not(List<OrmGroupByHaving> clauses) => OrmGroupByHaving([
+    OrmGroupByHavingLogicalNode(
+      operator: OrmGroupByHavingLogicalOperator.not,
+      clauses: clauses,
+    ),
+  ]);
+}
+
+@immutable
+final class OrmGroupByHavingPredicateBuilder {
+  final String field;
+  final OrmGroupByHavingMetricBucket? bucket;
+
+  const OrmGroupByHavingPredicateBuilder._({required this.field, this.bucket});
+
+  OrmGroupByHaving equals(Object? value) =>
+      _condition(OrmGroupByHavingCondition(equals: value));
+
+  OrmGroupByHaving notEquals(Object? value) =>
+      _condition(OrmGroupByHavingCondition(not: value));
+
+  OrmGroupByHaving inList(List<Object?> values) =>
+      _condition(OrmGroupByHavingCondition(inValues: values));
+
+  OrmGroupByHaving notInList(List<Object?> values) =>
+      _condition(OrmGroupByHavingCondition(notInValues: values));
+
+  OrmGroupByHaving contains(String value) =>
+      _condition(OrmGroupByHavingCondition(contains: value));
+
+  OrmGroupByHaving startsWith(String value) =>
+      _condition(OrmGroupByHavingCondition(startsWith: value));
+
+  OrmGroupByHaving endsWith(String value) =>
+      _condition(OrmGroupByHavingCondition(endsWith: value));
+
+  OrmGroupByHaving gt(Object? value) =>
+      _condition(OrmGroupByHavingCondition(gt: value));
+
+  OrmGroupByHaving gte(Object? value) =>
+      _condition(OrmGroupByHavingCondition(gte: value));
+
+  OrmGroupByHaving lt(Object? value) =>
+      _condition(OrmGroupByHavingCondition(lt: value));
+
+  OrmGroupByHaving lte(Object? value) =>
+      _condition(OrmGroupByHavingCondition(lte: value));
+
+  OrmGroupByHaving _condition(OrmGroupByHavingCondition condition) =>
+      OrmGroupByHaving([
+        OrmGroupByHavingPredicateNode(
+          field: field,
+          condition: condition,
+          bucket: bucket,
+        ),
+      ]);
+}
+
+@immutable
 final class ModelQuery {
   final ModelDelegate _delegate;
   final OrmReadQuerySpec _state;
@@ -3219,6 +3334,16 @@ final class ModelGroupedQuery {
     final current = Map<String, Object?>.from(_groupBy.having.toJson());
     final next = build(Map<String, Object?>.unmodifiable(current));
     return having(next, merge: merge);
+  }
+
+  ModelGroupedQuery havingExpr(
+    OrmGroupByHaving Function(OrmGroupByHavingBuilder having) build, {
+    bool merge = true,
+  }) {
+    final next = build(const OrmGroupByHavingBuilder());
+    return _next(
+      _groupBy.copyWith(having: merge ? _groupBy.having.merge(next) : next),
+    );
   }
 
   Future<List<JsonMap>> aggregate({
