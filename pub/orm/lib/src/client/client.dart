@@ -1376,6 +1376,21 @@ class ModelDelegate {
         avg: avg,
       );
 
+  Future<JsonMap> aggregateWith({
+    JsonMap where = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+    required OrmAggregateSpec aggregate,
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      orderBy: orderBy,
+      cursor: cursor,
+      page: page,
+    ),
+  ).aggregateWith(aggregate);
+
   Future<List<JsonMap>> groupBy({
     required List<String> by,
     JsonMap where = const <String, Object?>{},
@@ -1397,13 +1412,13 @@ class ModelDelegate {
           where: where,
           skip: skip,
           take: take,
-          orderBy: orderBy,
           cursor: cursor,
           page: page,
         ),
       ).groupBy(
         by: by,
         having: having,
+        orderBy: orderBy,
         countAll: countAll,
         count: count,
         min: min,
@@ -1411,6 +1426,23 @@ class ModelDelegate {
         sum: sum,
         avg: avg,
       );
+
+  Future<List<JsonMap>> groupByWith({
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+    required OrmGroupBySpec groupBy,
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      skip: skip,
+      take: take,
+      cursor: cursor,
+      page: page,
+    ),
+  ).groupByWith(groupBy);
 
   Future<JsonMap> create({
     required JsonMap data,
@@ -1505,18 +1537,16 @@ class ModelDelegate {
 
   Future<JsonMap> _aggregate({
     required OrmReadQuerySpec spec,
-    required bool countAll,
-    required List<String> count,
-    required List<String> min,
-    required List<String> max,
-    required List<String> sum,
-    required List<String> avg,
+    required OrmAggregateSpec aggregate,
   }) async {
-    _assertKnownAggregateFields(fields: count, source: 'aggregate.count');
-    _assertKnownAggregateFields(fields: min, source: 'aggregate.min');
-    _assertKnownAggregateFields(fields: max, source: 'aggregate.max');
-    _assertKnownAggregateFields(fields: sum, source: 'aggregate.sum');
-    _assertKnownAggregateFields(fields: avg, source: 'aggregate.avg');
+    _assertKnownAggregateFields(
+      fields: aggregate.count,
+      source: 'aggregate.count',
+    );
+    _assertKnownAggregateFields(fields: aggregate.min, source: 'aggregate.min');
+    _assertKnownAggregateFields(fields: aggregate.max, source: 'aggregate.max');
+    _assertKnownAggregateFields(fields: aggregate.sum, source: 'aggregate.sum');
+    _assertKnownAggregateFields(fields: aggregate.avg, source: 'aggregate.avg');
 
     final rows = await _readAllInternal(
       action: OrmAction.read,
@@ -1525,38 +1555,31 @@ class ModelDelegate {
       cursor: spec.cursor,
       page: spec.page,
       select: _buildAggregateSelect(
-        count: count,
-        min: min,
-        max: max,
-        sum: sum,
-        avg: avg,
+        count: aggregate.count,
+        min: aggregate.min,
+        max: aggregate.max,
+        sum: aggregate.sum,
+        avg: aggregate.avg,
       ),
       includeDepth: 0,
     );
 
     return _buildAggregateResult(
       rows: rows,
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
+      countAll: aggregate.countAll,
+      count: aggregate.count,
+      min: aggregate.min,
+      max: aggregate.max,
+      sum: aggregate.sum,
+      avg: aggregate.avg,
     );
   }
 
   Future<List<JsonMap>> _groupBy({
     required OrmReadQuerySpec spec,
-    required List<String> by,
-    required JsonMap having,
-    required bool countAll,
-    required List<String> count,
-    required List<String> min,
-    required List<String> max,
-    required List<String> sum,
-    required List<String> avg,
+    required OrmGroupBySpec groupBy,
   }) async {
-    if (by.isEmpty) {
+    if (groupBy.by.isEmpty) {
       throw runtimeError(
         'PLAN.GROUP_BY_FIELDS_EMPTY',
         'GroupBy requires at least one field in by.',
@@ -1581,42 +1604,42 @@ class ModelDelegate {
       );
     }
 
-    _assertKnownAggregateFields(fields: by, source: 'groupBy.by');
-    _assertKnownAggregateFields(fields: count, source: 'groupBy.count');
-    _assertKnownAggregateFields(fields: min, source: 'groupBy.min');
-    _assertKnownAggregateFields(fields: max, source: 'groupBy.max');
-    _assertKnownAggregateFields(fields: sum, source: 'groupBy.sum');
-    _assertKnownAggregateFields(fields: avg, source: 'groupBy.avg');
+    _assertKnownAggregateFields(fields: groupBy.by, source: 'groupBy.by');
+    _assertKnownAggregateFields(fields: groupBy.count, source: 'groupBy.count');
+    _assertKnownAggregateFields(fields: groupBy.min, source: 'groupBy.min');
+    _assertKnownAggregateFields(fields: groupBy.max, source: 'groupBy.max');
+    _assertKnownAggregateFields(fields: groupBy.sum, source: 'groupBy.sum');
+    _assertKnownAggregateFields(fields: groupBy.avg, source: 'groupBy.avg');
     _assertGroupByOrderByFields(
-      orderBy: spec.orderBy,
-      by: by,
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
+      orderBy: groupBy.orderBy,
+      by: groupBy.by,
+      countAll: groupBy.countAll,
+      count: groupBy.count,
+      min: groupBy.min,
+      max: groupBy.max,
+      sum: groupBy.sum,
+      avg: groupBy.avg,
     );
     _assertGroupByHavingFields(
-      having: having,
-      by: by,
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
+      having: groupBy.having,
+      by: groupBy.by,
+      countAll: groupBy.countAll,
+      count: groupBy.count,
+      min: groupBy.min,
+      max: groupBy.max,
+      sum: groupBy.sum,
+      avg: groupBy.avg,
     );
 
     final rows = await _readAllInternal(
       action: OrmAction.read,
       where: spec.where,
       select: _buildAggregateSelect(
-        count: by.followedBy(count).toList(growable: false),
-        min: min,
-        max: max,
-        sum: sum,
-        avg: avg,
+        count: groupBy.by.followedBy(groupBy.count).toList(growable: false),
+        min: groupBy.min,
+        max: groupBy.max,
+        sum: groupBy.sum,
+        avg: groupBy.avg,
       ),
       includeDepth: 0,
     );
@@ -1624,7 +1647,7 @@ class ModelDelegate {
     final groupedRows = <_RelationMergeKey, List<JsonMap>>{};
     for (final row in rows) {
       final key = _RelationMergeKey(
-        by
+        groupBy.by
             .map((field) => row.containsKey(field) ? row[field] : null)
             .toList(growable: false),
       );
@@ -1640,35 +1663,37 @@ class ModelDelegate {
 
       final groupResult = <String, Object?>{};
       final first = groupRows.first;
-      for (final field in by) {
+      for (final field in groupBy.by) {
         groupResult[field] = first[field];
       }
       groupResult.addAll(
         _buildAggregateResult(
           rows: groupRows,
-          countAll: countAll,
-          count: count,
-          min: min,
-          max: max,
-          sum: sum,
-          avg: avg,
+          countAll: groupBy.countAll,
+          count: groupBy.count,
+          min: groupBy.min,
+          max: groupBy.max,
+          sum: groupBy.sum,
+          avg: groupBy.avg,
         ),
       );
       results.add(groupResult);
     }
 
-    if (having.isNotEmpty) {
+    if (groupBy.having.isNotEmpty) {
       results = results
-          .where((row) => _matchesGroupByHaving(row: row, having: having))
+          .where(
+            (row) => _matchesGroupByHaving(row: row, having: groupBy.having),
+          )
           .toList(growable: false);
     }
 
-    if (spec.orderBy.isNotEmpty) {
+    if (groupBy.orderBy.isNotEmpty) {
       results.sort(
         (left, right) => _compareRowsForGroupByOrderBy(
           left: left,
           right: right,
-          orderBy: spec.orderBy,
+          orderBy: groupBy.orderBy,
         ),
       );
     }
@@ -3190,6 +3215,87 @@ final class OrmReadQuerySpec {
 }
 
 @immutable
+final class OrmAggregateSpec {
+  final bool countAll;
+  final List<String> count;
+  final List<String> min;
+  final List<String> max;
+  final List<String> sum;
+  final List<String> avg;
+
+  OrmAggregateSpec({
+    this.countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) : count = List<String>.unmodifiable(count),
+       min = List<String>.unmodifiable(min),
+       max = List<String>.unmodifiable(max),
+       sum = List<String>.unmodifiable(sum),
+       avg = List<String>.unmodifiable(avg);
+}
+
+@immutable
+final class OrmGroupBySpec {
+  final List<String> by;
+  final JsonMap having;
+  final List<OrmOrderBy> orderBy;
+  final bool countAll;
+  final List<String> count;
+  final List<String> min;
+  final List<String> max;
+  final List<String> sum;
+  final List<String> avg;
+
+  OrmGroupBySpec({
+    required List<String> by,
+    JsonMap having = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    this.countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) : by = List<String>.unmodifiable(by),
+       having = Map<String, Object?>.unmodifiable(
+         Map<String, Object?>.from(having),
+       ),
+       orderBy = List<OrmOrderBy>.unmodifiable(orderBy),
+       count = List<String>.unmodifiable(count),
+       min = List<String>.unmodifiable(min),
+       max = List<String>.unmodifiable(max),
+       sum = List<String>.unmodifiable(sum),
+       avg = List<String>.unmodifiable(avg);
+
+  OrmGroupBySpec copyWith({
+    List<String>? by,
+    JsonMap? having,
+    List<OrmOrderBy>? orderBy,
+    bool? countAll,
+    List<String>? count,
+    List<String>? min,
+    List<String>? max,
+    List<String>? sum,
+    List<String>? avg,
+  }) {
+    return OrmGroupBySpec(
+      by: by ?? this.by,
+      having: having ?? this.having,
+      orderBy: orderBy ?? this.orderBy,
+      countAll: countAll ?? this.countAll,
+      count: count ?? this.count,
+      min: min ?? this.min,
+      max: max ?? this.max,
+      sum: sum ?? this.sum,
+      avg: avg ?? this.avg,
+    );
+  }
+}
+
+@immutable
 final class ModelQuery {
   final ModelDelegate _delegate;
   final OrmReadQuerySpec _state;
@@ -3428,29 +3534,47 @@ final class ModelQuery {
     List<String> max = const <String>[],
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
-  }) {
-    _assertReadExecutionSupported('aggregate');
-    return _delegate._aggregate(
-      spec: _state,
+  }) => aggregateWith(
+    OrmAggregateSpec(
       countAll: countAll,
       count: count,
       min: min,
       max: max,
       sum: sum,
       avg: avg,
-    );
+    ),
+  );
+
+  Future<JsonMap> aggregateWith(OrmAggregateSpec aggregate) {
+    _assertReadExecutionSupported('aggregate');
+    return _delegate._aggregate(spec: _state, aggregate: aggregate);
   }
 
   Future<List<JsonMap>> groupBy({
     required List<String> by,
     JsonMap having = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     bool countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
     List<String> max = const <String>[],
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
-  }) {
+  }) => groupByWith(
+    OrmGroupBySpec(
+      by: by,
+      having: having,
+      orderBy: orderBy,
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    ),
+  );
+
+  Future<List<JsonMap>> groupByWith(OrmGroupBySpec groupBy) {
     _assertReadExecutionSupported('groupBy');
     if (_state.cursor != null || _state.page != null) {
       throw runtimeError(
@@ -3463,17 +3587,11 @@ final class ModelQuery {
         },
       );
     }
-    return _delegate._groupBy(
-      spec: _state,
-      by: by,
-      having: having,
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
-    );
+    final effectiveGroupBy =
+        groupBy.orderBy.isEmpty && _state.orderBy.isNotEmpty
+        ? groupBy.copyWith(orderBy: _state.orderBy)
+        : groupBy;
+    return _delegate._groupBy(spec: _state, groupBy: effectiveGroupBy);
   }
 
   void _assertReadExecutionSupported(String terminal) {
