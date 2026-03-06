@@ -2006,6 +2006,57 @@ void main() {
     });
 
     test(
+      'inspectPlan and explain expose stream degradation metadata for include strategies',
+      () async {
+        Future<void> expectStrategy(IncludeExecutionStrategy strategy) async {
+          final client = OrmClient(
+            contract: relationalContract,
+            engine: MemoryEngine(),
+            includeStrategySelector:
+                ({
+                  required OrmContract contract,
+                  required String modelName,
+                  required OrmAction action,
+                  required Map<String, IncludeSpec> include,
+                  required int depth,
+                }) => strategy,
+          );
+          await client.connect();
+          try {
+            final query = client.db.orm
+                .model('User')
+                .query()
+                .orderByField('id')
+                .include(<String, IncludeSpec>{
+                  'posts': IncludeSpec(
+                    orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                  ),
+                });
+
+            final inspected = await query.inspectPlan();
+            final explained = await query.explain();
+
+            for (final payload in <JsonMap>[inspected, explained]) {
+              final execution =
+                  payload['terminalExecution'] as Map<String, Object?>;
+              final stream = execution['stream'] as Map<String, Object?>;
+              expect(stream['delivery'], 'bufferedYield');
+              expect(stream['degraded'], isTrue);
+              expect(stream['reasons'], <String>['include']);
+              expect(stream['includeAppliedAt'], 'repository');
+              expect(stream['includeStrategy'], strategy.name);
+            }
+          } finally {
+            await client.disconnect();
+          }
+        }
+
+        await expectStrategy(IncludeExecutionStrategy.singleQuery);
+        await expectStrategy(IncludeExecutionStrategy.multiQuery);
+      },
+    );
+
+    test(
       'include stream respects distinct skip and take for both strategies',
       () async {
         Future<(List<JsonMap>, List<JsonMap>)> readWithStrategy(

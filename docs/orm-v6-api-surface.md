@@ -102,6 +102,13 @@ Rules:
    `orderBy(...)` to end with those fields.
 6. `pageResult()` is the structured pagination terminal and returns
    `items + pageInfo`.
+7. `inspectPlan()` and `explain()` expose `terminalExecution` metadata.
+   This makes stream delivery explicit:
+   - `stream()` stays `nativeStream` only when the repository can yield rows
+     directly from the runtime response.
+   - `include(...)` or `distinct(...)` force `stream()` to
+     `bufferedYield`, with reasons and include strategy surfaced in
+     `terminalExecution.stream`.
 
 ## ORM Mutation Surface
 

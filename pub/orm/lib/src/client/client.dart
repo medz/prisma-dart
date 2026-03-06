@@ -178,6 +178,63 @@ final class OrmPageResult<T> {
   }
 }
 
+JsonMap _terminalExecutionSummary({
+  required OrmContract contract,
+  required IncludeExecutionStrategySelector includeStrategySelector,
+  required String modelName,
+  required List<String> distinct,
+  required Map<String, IncludeSpec> include,
+  JsonMap? cursor,
+  OrmReadPagePlan? page,
+}) {
+  final hasWindow = cursor != null || page != null;
+  final includeStrategy = include.isEmpty
+      ? null
+      : includeStrategySelector(
+          contract: contract,
+          modelName: modelName,
+          action: OrmAction.read,
+          include: include,
+          depth: 0,
+        ).name;
+  final streamReasons = <String>[
+    if (include.isNotEmpty) 'include',
+    if (distinct.isNotEmpty) 'distinct',
+  ];
+
+  JsonMap terminal({
+    required String delivery,
+    required bool degraded,
+    List<String> reasons = const <String>[],
+    bool? available,
+  }) {
+    return Map<String, Object?>.unmodifiable(<String, Object?>{
+      if (available != null) 'available': available,
+      'delivery': delivery,
+      'degraded': degraded,
+      'reasons': List<String>.unmodifiable(reasons),
+      'windowAppliedAt': hasWindow ? 'engine' : 'none',
+      'distinctAppliedAt': distinct.isEmpty ? 'none' : 'client',
+      'includeAppliedAt': include.isEmpty ? 'none' : 'repository',
+      if (includeStrategy != null) 'includeStrategy': includeStrategy,
+    });
+  }
+
+  return Map<String, Object?>.unmodifiable(<String, Object?>{
+    'all': terminal(delivery: 'bufferedCollection', degraded: false),
+    'stream': terminal(
+      delivery: streamReasons.isEmpty ? 'nativeStream' : 'bufferedYield',
+      degraded: streamReasons.isNotEmpty,
+      reasons: streamReasons,
+    ),
+    'pageResult': terminal(
+      delivery: page == null ? 'unavailable' : 'pageEnvelope',
+      degraded: false,
+      available: page != null,
+    ),
+  });
+}
+
 Map<String, IncludeSpec> _mergeIncludeSpecMap(
   Map<String, IncludeSpec> current,
   Map<String, IncludeSpec> next,
@@ -1276,7 +1333,8 @@ class ModelDelegate {
     JsonMap? cursor,
     OrmReadPagePlan? page,
   }) async {
-    final plan = await toPlan(
+    final prepared = await _buildReadPlan(
+      resultMode: OrmReadResultMode.all,
       where: where,
       skip: skip,
       take: take,
@@ -1287,7 +1345,18 @@ class ModelDelegate {
       cursor: cursor,
       page: page,
     );
-    return plan.toJson();
+    return Map<String, Object?>.unmodifiable(<String, Object?>{
+      ...prepared.plan.toJson(),
+      'terminalExecution': _terminalExecutionSummary(
+        contract: _client.contract,
+        includeStrategySelector: _client.includeStrategySelector,
+        modelName: modelName,
+        distinct: distinct,
+        include: prepared.include,
+        cursor: cursor,
+        page: page,
+      ),
+    });
   }
 
   Future<JsonMap> explain({
@@ -1301,7 +1370,8 @@ class ModelDelegate {
     JsonMap? cursor,
     OrmReadPagePlan? page,
   }) async {
-    final plan = await toPlan(
+    final prepared = await _buildReadPlan(
+      resultMode: OrmReadResultMode.all,
       where: where,
       skip: skip,
       take: take,
@@ -1312,7 +1382,19 @@ class ModelDelegate {
       cursor: cursor,
       page: page,
     );
-    return _runtime.explainPlan(plan);
+    final explained = await _runtime.explainPlan(prepared.plan);
+    return Map<String, Object?>.unmodifiable(<String, Object?>{
+      ...explained,
+      'terminalExecution': _terminalExecutionSummary(
+        contract: _client.contract,
+        includeStrategySelector: _client.includeStrategySelector,
+        modelName: modelName,
+        distinct: distinct,
+        include: prepared.include,
+        cursor: cursor,
+        page: page,
+      ),
+    });
   }
 
   Future<JsonMap> aggregate({

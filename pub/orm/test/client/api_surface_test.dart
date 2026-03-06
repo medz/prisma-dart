@@ -97,6 +97,53 @@ void main() {
       },
     );
 
+    test(
+      'inspectPlan exposes terminal execution metadata for native stream and page envelopes',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        final users = client.db.orm.model('User');
+        final inspected = await users
+            .query()
+            .orderByField('id')
+            .page(size: 2, after: <String, Object?>{'id': 'u1'})
+            .inspectPlan();
+
+        final execution =
+            inspected['terminalExecution'] as Map<String, Object?>;
+        final stream = execution['stream'] as Map<String, Object?>;
+        final pageResult = execution['pageResult'] as Map<String, Object?>;
+
+        expect(stream['delivery'], 'nativeStream');
+        expect(stream['degraded'], isFalse);
+        expect(stream['windowAppliedAt'], 'engine');
+        expect(stream['includeAppliedAt'], 'none');
+        expect(pageResult['available'], isTrue);
+        expect(pageResult['delivery'], 'pageEnvelope');
+      },
+    );
+
+    test(
+      'inspectPlan marks stream as bufferedYield when distinct requires client-side collection',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        final users = client.db.orm.model('User');
+        final inspected = await users
+            .query()
+            .orderByField('id')
+            .distinctField('email')
+            .inspectPlan();
+
+        final execution =
+            inspected['terminalExecution'] as Map<String, Object?>;
+        final stream = execution['stream'] as Map<String, Object?>;
+
+        expect(stream['delivery'], 'bufferedYield');
+        expect(stream['degraded'], isTrue);
+        expect(stream['reasons'], <String>['distinct']);
+        expect(stream['distinctAppliedAt'], 'client');
+      },
+    );
+
     test('explain requires an active runtime connection', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');
@@ -125,6 +172,16 @@ void main() {
         expect(summary['executionSource'], 'notExecuted');
         final pagination = summary['pagination'] as Map<String, Object?>;
         expect(pagination['mode'], 'page');
+        final execution =
+            explained['terminalExecution'] as Map<String, Object?>;
+        expect(
+          (execution['stream'] as Map<String, Object?>)['delivery'],
+          'nativeStream',
+        );
+        expect(
+          (execution['pageResult'] as Map<String, Object?>)['available'],
+          isTrue,
+        );
         expect(explained['plan'], isA<Map<String, Object?>>());
       } finally {
         await client.disconnect();
