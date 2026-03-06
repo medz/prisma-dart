@@ -2118,18 +2118,6 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln(
-      '  Future<${model.aggregateResultClassName}> aggregateWith({',
-    );
-    buffer.writeln(
-      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
-    );
-    buffer.writeln('    required ${model.aggregateSpecClassName} aggregate,');
-    buffer.writeln('  }) {');
-    buffer.writeln('    return query(where: where).aggregateWith(aggregate);');
-    buffer.writeln('  }');
-    buffer.writeln();
-
     buffer.writeln('  ${model.groupedQueryClassName} groupedBy(');
     buffer.writeln('    List<${model.distinctClassName}> by, {');
     buffer.writeln(
@@ -2975,13 +2963,13 @@ final class TypedClientWriter {
     );
     buffer.writeln("    _assertReadExecutionSupported('aggregate');");
     buffer.writeln(
-      '    return aggregateWith(build($aggregateBuilderClassName()).toSpec());',
+      '    return _executeAggregate(build($aggregateBuilderClassName()).toSpec());',
     );
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln(
-      '  Future<${model.aggregateResultClassName}> aggregateWith(${model.aggregateSpecClassName} aggregate) {',
+      '  Future<${model.aggregateResultClassName}> _executeAggregate(${model.aggregateSpecClassName} aggregate) {',
     );
     buffer.writeln("    _assertReadExecutionSupported('aggregate');");
     buffer.writeln('    _assertAggregateQueryState();');

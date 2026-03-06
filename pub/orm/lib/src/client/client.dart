@@ -1475,7 +1475,7 @@ class ModelDelegate {
       cursor: cursor,
       page: page,
     ),
-  ).aggregateWith(aggregate);
+  )._executeAggregate(aggregate);
 
   ModelGroupedQuery groupedBy(
     List<String> by, {
@@ -3175,10 +3175,10 @@ final class ModelQuery {
     OrmAggregateBuilder Function(OrmAggregateBuilder aggregate) build,
   ) {
     _assertReadExecutionSupported('aggregate');
-    return aggregateWith(build(OrmAggregateBuilder()).toSpec());
+    return _executeAggregate(build(OrmAggregateBuilder()).toSpec());
   }
 
-  Future<JsonMap> aggregateWith(OrmAggregateSpec aggregate) {
+  Future<JsonMap> _executeAggregate(OrmAggregateSpec aggregate) {
     _assertAggregateQueryState();
     _delegate._assertAggregateSpecRequested(aggregate, terminal: 'aggregate');
     return _delegate

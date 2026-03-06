@@ -1333,11 +1333,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(\{[\s\S]*?required\s+UserAggregateSpec\s+aggregate,[\s\S]*?return\s+query\(where:\s*where\)\.aggregateWith\(aggregate\);',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected generated delegate aggregateWith(...) to route structured aggregate specs through typed query.',
+              'Expected generated delegate to keep aggregateWith(...) out of the public typed surface.',
         );
         expect(
           RegExp(
@@ -1588,7 +1588,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(UserAggregateBuilder\s+Function\(UserAggregateBuilder\s+aggregate\)\s+build\)\s*\{[\s\S]*?return\s+aggregateWith\(build\(UserAggregateBuilder\(\)\)\.toSpec\(\)\);',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(UserAggregateBuilder\s+Function\(UserAggregateBuilder\s+aggregate\)\s+build\)\s*\{[\s\S]*?return\s+_executeAggregate\(build\(UserAggregateBuilder\(\)\)\.toSpec\(\)\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -1596,11 +1596,19 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_assertAggregateQueryState\(\);[\s\S]*?aggregate:\s*aggregate\.toRuntimeSpec\(\),[\s\S]*?then\(UserAggregateResult\.fromJson\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+_executeAggregate\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_assertAggregateQueryState\(\);[\s\S]*?aggregate:\s*aggregate\.toRuntimeSpec\(\),[\s\S]*?then\(UserAggregateResult\.fromJson\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.aggregateWith(...) to route through runtime structured aggregate specs.',
+              'Expected UserQuery aggregate execution to route through a private typed aggregate bridge.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserQuery to keep aggregateWith(...) out of the public typed query surface.',
         );
         expect(
           RegExp(
