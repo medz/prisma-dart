@@ -32,9 +32,11 @@ final class _BudgetsPlugin extends OrmPlugin {
 
   @override
   void beforeExecute(OrmPlan plan, PluginContext ctx) {
+    final read = plan.read;
     if (plan.action == OrmAction.read &&
-        plan.take != null &&
-        plan.take! > options.maxRows) {
+        read != null &&
+        read.take != null &&
+        read.take! > options.maxRows) {
       _handle(
         ctx: ctx,
         severity: options.rowSeverity,
@@ -42,7 +44,7 @@ final class _BudgetsPlugin extends OrmPlugin {
         message: 'Requested row budget exceeds configured maxRows limit.',
         details: <String, Object?>{
           'maxRows': options.maxRows,
-          'requestedRows': plan.take,
+          'requestedRows': read.take,
           'model': plan.model,
         },
       );

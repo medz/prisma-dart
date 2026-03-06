@@ -57,12 +57,60 @@ void main() {
 
   final contract = buildContract();
 
+  OrmPlan readPlan({
+    required OrmContract contract,
+    required String model,
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    OrmReadResultMode resultMode = OrmReadResultMode.all,
+  }) {
+    return OrmPlan(
+      contractHash: contract.hash,
+      model: model,
+      action: OrmAction.read,
+      read: OrmReadPlan(
+        where: where,
+        skip: skip,
+        take: take,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        resultMode: resultMode,
+      ),
+    );
+  }
+
+  OrmPlan mutationPlan({
+    required OrmContract contract,
+    required String model,
+    required OrmAction action,
+    JsonMap where = const <String, Object?>{},
+    JsonMap data = const <String, Object?>{},
+    List<String> select = const <String>[],
+    OrmMutationResultMode resultMode = OrmMutationResultMode.rowOrNull,
+  }) {
+    return OrmPlan(
+      contractHash: contract.hash,
+      model: model,
+      action: action,
+      mutation: OrmMutationPlan(
+        where: where,
+        data: data,
+        select: select,
+        resultMode: resultMode,
+      ),
+    );
+  }
+
   test('lowers findMany with where/order/pagination/select', () {
     final adapter = SqlAdapter(contract: contract);
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = readPlan(
+      contract: contract,
       model: 'User',
-      action: OrmAction.read,
       where: <String, Object?>{'email': 'a@example.com'},
       orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
       take: 10,
@@ -81,10 +129,9 @@ void main() {
 
   test('lowers where operators with deterministic SQL and parameters', () {
     final adapter = SqlAdapter(contract: contract);
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = readPlan(
+      contract: contract,
       model: 'User',
-      action: OrmAction.read,
       where: <String, Object?>{
         'email': <String, Object?>{
           'lt': 'z@example.com',
@@ -125,10 +172,9 @@ void main() {
 
   test('lowers string operators with LIKE and escaped patterns', () {
     final adapter = SqlAdapter(contract: contract);
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = readPlan(
+      contract: contract,
       model: 'User',
-      action: OrmAction.read,
       where: <String, Object?>{
         'email': <String, Object?>{
           'contains': 'a%b',
@@ -151,10 +197,9 @@ void main() {
 
   test('lowers logical where AND/OR/NOT with field filters', () {
     final adapter = SqlAdapter(contract: contract);
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = readPlan(
+      contract: contract,
       model: 'User',
-      action: OrmAction.read,
       where: <String, Object?>{
         'id': 'u1',
         'AND': <Object?>[
@@ -195,10 +240,9 @@ void main() {
     final adapter = SqlAdapter(contract: contract);
 
     final emptyOperandStatement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         where: <String, Object?>{
           'AND': const <Object?>[],
           'OR': const <Object?>[],
@@ -213,10 +257,9 @@ void main() {
     expect(emptyOperandStatement.parameters, isEmpty);
 
     final invalidOperandStatement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         where: <String, Object?>{'AND': 'bad', 'OR': 1, 'NOT': true},
       ),
     );
@@ -230,10 +273,9 @@ void main() {
   test('lowers to-many relation where using EXISTS predicates', () {
     final contract = buildRelationalContract();
     final adapter = SqlAdapter(contract: contract);
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = readPlan(
+      contract: contract,
       model: 'User',
-      action: OrmAction.read,
       where: <String, Object?>{
         'posts': <String, Object?>{
           'some': <String, Object?>{
@@ -261,10 +303,9 @@ void main() {
   test('lowers to-one relation where including null semantics', () {
     final contract = buildRelationalContract();
     final adapter = SqlAdapter(contract: contract);
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = readPlan(
+      contract: contract,
       model: 'Post',
-      action: OrmAction.read,
       where: <String, Object?>{
         'author': <String, Object?>{
           'is': <String, Object?>{'email': 'u1@example.com'},
@@ -291,10 +332,9 @@ void main() {
         'contains': 'literal',
         'profile': 'standard',
       };
-      final plan = OrmPlan(
-        contractHash: contract.hash,
+      final plan = readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         where: <String, Object?>{'id': 'u1', 'email': jsonPayload},
       );
 
@@ -309,10 +349,9 @@ void main() {
 
   test('uses deterministic empty semantics for in/notIn', () {
     final adapter = SqlAdapter(contract: contract);
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = readPlan(
+      contract: contract,
       model: 'User',
-      action: OrmAction.read,
       where: <String, Object?>{
         'id': <String, Object?>{'in': const <Object?>[]},
         'email': <String, Object?>{'notIn': const <Object?>[]},
@@ -329,8 +368,8 @@ void main() {
     final adapter = SqlAdapter(contract: contract);
 
     final createStatement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.create,
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
@@ -343,8 +382,8 @@ void main() {
     expect(createStatement.parameters, <Object?>['u1', 'a@example.com']);
 
     final updateStatement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.update,
         where: <String, Object?>{'id': 'u1'},
@@ -358,8 +397,8 @@ void main() {
     expect(updateStatement.parameters, <Object?>['b@example.com', 'u1']);
 
     final deleteStatement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.delete,
         where: <String, Object?>{'id': 'u1'},
@@ -373,8 +412,8 @@ void main() {
     final adapter = SqlAdapter(contract: buildContract());
 
     final createDefaultSelect = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.create,
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
@@ -387,8 +426,8 @@ void main() {
     expect(createDefaultSelect.parameters, <Object?>['u1', 'a@example.com']);
 
     final updateSelectedColumns = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.update,
         where: <String, Object?>{'id': 'u1'},
@@ -403,8 +442,8 @@ void main() {
     expect(updateSelectedColumns.parameters, <Object?>['b@example.com', 'u1']);
 
     final deleteSelectedColumns = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.delete,
         where: <String, Object?>{'id': 'u1'},
@@ -428,11 +467,7 @@ void main() {
           <String, Object?>{'id': 'u2'},
         ],
       ),
-      OrmPlan(
-        contractHash: contract.hash,
-        model: 'User',
-        action: OrmAction.read,
-      ),
+      readPlan(contract: contract, model: 'User'),
     );
     expect(findMany.data, isA<List<Object?>>());
 
@@ -442,10 +477,9 @@ void main() {
           <String, Object?>{'id': 'u1'},
         ],
       ),
-      OrmPlan(
-        contractHash: contract.hash,
+      readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
@@ -462,11 +496,7 @@ void main() {
         ],
         affectedRows: 1,
       ),
-      OrmPlan(
-        contractHash: contract.hash,
-        model: 'User',
-        action: OrmAction.update,
-      ),
+      mutationPlan(contract: contract, model: 'User', action: OrmAction.update),
     );
     expect(mutation.affectedRows, 1);
     if (mutation.data case final Map<String, Object?> row) {
@@ -491,8 +521,8 @@ void main() {
     );
 
     final update = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.update,
         where: <String, Object?>{'email': 'find@example.com', 'id': 'u1'},
@@ -512,10 +542,9 @@ void main() {
           <String, Object?>{'email': 'wire:db@example.com', 'id': 'u1'},
         ],
       ),
-      OrmPlan(
-        contractHash: contract.hash,
+      readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
@@ -544,10 +573,9 @@ void main() {
     );
 
     final statement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         where: <String, Object?>{
           'email': <String, Object?>{
             'in': <Object?>['a@example.com', 'b@example.com'],
@@ -585,10 +613,9 @@ void main() {
     );
 
     final statement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         where: <String, Object?>{
           'email': <String, Object?>{
             'contains': 'example',
@@ -620,8 +647,8 @@ void main() {
       codecResolver: SqlCodecRegistry(),
     );
 
-    final plan = OrmPlan(
-      contractHash: contract.hash,
+    final plan = mutationPlan(
+      contract: contract,
       model: 'User',
       action: OrmAction.update,
       where: <String, Object?>{'email': 'find@example.com', 'id': 'u1'},
@@ -646,10 +673,9 @@ void main() {
         <String, Object?>{'id': 'u1', 'email': 'db@example.com'},
       ],
     );
-    final decodePlan = OrmPlan(
-      contractHash: contract.hash,
+    final decodePlan = readPlan(
+      contract: contract,
       model: 'User',
-      action: OrmAction.read,
       resultMode: OrmReadResultMode.oneOrNull,
     );
 
@@ -700,8 +726,8 @@ void main() {
       codecResolver: codecRegistry,
     );
     final statement = adapter.lower(
-      OrmPlan(
-        contractHash: contract.hash,
+      mutationPlan(
+        contract: contract,
         model: 'User',
         action: OrmAction.update,
         data: <String, Object?>{'id': 'u2', 'email': 'next@example.com'},
@@ -725,10 +751,9 @@ void main() {
           },
         ],
       ),
-      OrmPlan(
-        contractHash: contract.hash,
+      readPlan(
+        contract: contract,
         model: 'User',
-        action: OrmAction.read,
         resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
@@ -748,11 +773,7 @@ void main() {
 
     expect(
       () => adapter.lower(
-        OrmPlan(
-          contractHash: contract.hash,
-          model: 'Missing',
-          action: OrmAction.read,
-        ),
+        readPlan(contract: contract, model: 'Missing'),
       ),
       throwsA(isA<ModelNotFoundException>()),
     );

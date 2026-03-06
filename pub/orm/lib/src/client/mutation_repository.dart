@@ -210,7 +210,7 @@ final class _RepositoryMutationExecutor {
       include: include,
     );
     final normalizedInclude = prepared.include;
-    final normalizedWhere = prepared.plan.where;
+    final normalizedWhere = prepared.plan.mutation!.where;
     final preDeleteRow = await _preloadDeleteRow(
       action: action,
       where: normalizedWhere,
@@ -258,13 +258,12 @@ final class _RepositoryMutationExecutor {
 
     return _PreparedMutationPlan(
       include: normalizedInclude,
-      plan: OrmPlan(
+      plan: OrmPlan.mutation(
         contractHash: _delegate._client.contract.hash,
         target: _delegate._client.contract.target,
         storageHash: _delegate._client.contract.markerStorageHash,
         profileHash: _delegate._client.contract.profileHash,
         lane: 'orm',
-        mutationResultMode: mutationResultMode,
         model: _delegate.modelName,
         action: action,
         where: normalizedWhere,
@@ -274,6 +273,7 @@ final class _RepositoryMutationExecutor {
           select: select,
           include: normalizedInclude,
         ),
+        resultMode: mutationResultMode,
       ),
     );
   }

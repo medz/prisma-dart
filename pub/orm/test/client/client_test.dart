@@ -202,6 +202,7 @@ void main() {
             contractHash: 'mismatch',
             model: 'User',
             action: OrmAction.read,
+            read: OrmReadPlan(resultMode: OrmReadResultMode.all),
           ),
         ),
         throwsA(isA<ContractHashMismatchException>()),
@@ -240,6 +241,7 @@ void main() {
               profileHash: profileContract.profileHash,
               model: 'User',
               action: OrmAction.read,
+              read: OrmReadPlan(resultMode: OrmReadResultMode.all),
             ),
           ),
           throwsA(isA<PlanTargetMismatchException>()),
@@ -254,6 +256,7 @@ void main() {
               profileHash: profileContract.profileHash,
               model: 'User',
               action: OrmAction.read,
+              read: OrmReadPlan(resultMode: OrmReadResultMode.all),
             ),
           ),
           throwsA(isA<PlanStorageHashMismatchException>()),
@@ -268,6 +271,7 @@ void main() {
               profileHash: 'other-profile',
               model: 'User',
               action: OrmAction.read,
+              read: OrmReadPlan(resultMode: OrmReadResultMode.all),
             ),
           ),
           throwsA(isA<PlanProfileHashMismatchException>()),
@@ -286,8 +290,10 @@ void main() {
             contractHash: contract.hash,
             model: 'User',
             action: OrmAction.read,
-            resultMode: OrmReadResultMode.all,
-            mutationResultMode: OrmMutationResultMode.rowOrNull,
+            read: OrmReadPlan(resultMode: OrmReadResultMode.all),
+            mutation: OrmMutationPlan(
+              resultMode: OrmMutationResultMode.rowOrNull,
+            ),
           ),
         ),
         throwsA(
@@ -310,8 +316,10 @@ void main() {
               contractHash: contract.hash,
               model: 'User',
               action: action,
-              resultMode: OrmReadResultMode.oneOrNull,
-              mutationResultMode: OrmMutationResultMode.rowOrNull,
+              read: OrmReadPlan(resultMode: OrmReadResultMode.oneOrNull),
+              mutation: OrmMutationPlan(
+                resultMode: OrmMutationResultMode.rowOrNull,
+              ),
             ),
           ),
           throwsA(
@@ -323,6 +331,28 @@ void main() {
           ),
         );
       }
+
+      await expectLater(
+        client.execute(
+          OrmPlan(
+            contractHash: contract.hash,
+            model: 'User',
+            action: OrmAction.read,
+          ),
+        ),
+        throwsA(isA<PlanResultModeActionInvalidException>()),
+      );
+
+      await expectLater(
+        client.execute(
+          OrmPlan(
+            contractHash: contract.hash,
+            model: 'User',
+            action: OrmAction.update,
+          ),
+        ),
+        throwsA(isA<PlanResultModeActionInvalidException>()),
+      );
 
       await client.disconnect();
     });
@@ -830,10 +860,10 @@ void main() {
 
         expect(plan.lane, 'orm');
         expect(plan.action, OrmAction.read);
-        expect(plan.take, 5);
-        expect(plan.resultMode, OrmReadResultMode.all);
-        expect(plan.include.keys, <String>['posts']);
-        final posts = plan.include['posts'];
+        expect(plan.read?.take, 5);
+        expect(plan.read?.resultMode, OrmReadResultMode.all);
+        expect(plan.read?.include.keys, <String>['posts']);
+        final posts = plan.read?.include['posts'];
         expect(posts, isNotNull);
         expect(posts?.take, 3);
         expect(posts?.include.keys, <String>['author']);
@@ -852,7 +882,7 @@ void main() {
       final createPlan = engine.executedPlans.single;
       expect(createPlan.lane, 'orm');
       expect(createPlan.action, OrmAction.create);
-      expect(createPlan.mutationResultMode, OrmMutationResultMode.row);
+      expect(createPlan.mutation?.resultMode, OrmMutationResultMode.row);
 
       engine.reset();
       await client.db.orm.model('User').update(
@@ -863,7 +893,7 @@ void main() {
       expect(updatePlan.lane, 'orm');
       expect(updatePlan.action, OrmAction.update);
       expect(
-        updatePlan.mutationResultMode,
+        updatePlan.mutation?.resultMode,
         OrmMutationResultMode.rowOrNull,
       );
 
@@ -874,7 +904,7 @@ void main() {
           .toPlan();
       expect(sqlPlan.lane, 'sql');
       expect(sqlPlan.action, OrmAction.update);
-      expect(sqlPlan.mutationResultMode, OrmMutationResultMode.rowOrNull);
+      expect(sqlPlan.mutation?.resultMode, OrmMutationResultMode.rowOrNull);
 
       await client.disconnect();
     });
@@ -1571,7 +1601,7 @@ void main() {
 
       expect(countingEngine.executeCount, 1);
       expect(countingEngine.executedPlans.single.model, 'User');
-      expect(countingEngine.executedPlans.single.where, <String, Object?>{
+      expect(countingEngine.executedPlans.single.read?.where, <String, Object?>{
         'posts': <String, Object?>{
           'some': <String, Object?>{'title': 'Post A'},
         },
@@ -2256,7 +2286,10 @@ void main() {
           contractHash: contract.hash,
           model: 'User',
           action: OrmAction.create,
-          data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
+          mutation: OrmMutationPlan(
+            data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
+            resultMode: OrmMutationResultMode.row,
+          ),
         ),
       );
 
@@ -2266,8 +2299,11 @@ void main() {
           contractHash: contract.hash,
           model: 'User',
           action: OrmAction.update,
-          where: <String, Object?>{'id': 'u1'},
-          data: <String, Object?>{'email': 'b@example.com'},
+          mutation: OrmMutationPlan(
+            where: <String, Object?>{'id': 'u1'},
+            data: <String, Object?>{'email': 'b@example.com'},
+            resultMode: OrmMutationResultMode.rowOrNull,
+          ),
         ),
       );
       await transaction.commit();
@@ -2309,7 +2345,7 @@ void main() {
       expect(engine.connectionCount, 1);
       expect(engine.connectionExecutePlans, hasLength(1));
       expect(engine.connectionExecutePlans.single.action, OrmAction.read);
-      expect(engine.connectionExecutePlans.single.take, 1);
+      expect(engine.connectionExecutePlans.single.read?.take, 1);
       await client.disconnect();
     });
 
@@ -2554,8 +2590,11 @@ void main() {
           contractHash: contract.hash,
           model: 'User',
           action: OrmAction.update,
-          where: <String, Object?>{'id': 'u1'},
-          data: <String, Object?>{'email': 'b@example.com'},
+          mutation: OrmMutationPlan(
+            where: <String, Object?>{'id': 'u1'},
+            data: <String, Object?>{'email': 'b@example.com'},
+            resultMode: OrmMutationResultMode.rowOrNull,
+          ),
         ),
       );
       await transaction.rollback();
@@ -2578,6 +2617,7 @@ void main() {
             contractHash: contract.hash,
             model: 'User',
             action: OrmAction.read,
+            read: OrmReadPlan(resultMode: OrmReadResultMode.all),
           ),
         ),
         throwsA(isA<RuntimeConnectionReleasedException>()),
@@ -2592,6 +2632,7 @@ void main() {
             contractHash: contract.hash,
             model: 'User',
             action: OrmAction.read,
+            read: OrmReadPlan(resultMode: OrmReadResultMode.all),
           ),
         ),
         throwsA(isA<RuntimeTransactionCompletedException>()),

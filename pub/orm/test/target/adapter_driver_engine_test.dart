@@ -188,7 +188,7 @@ OrmPlan _plan({JsonMap where = const <String, Object?>{}}) {
     contractHash: 'hash',
     model: 'User',
     action: OrmAction.read,
-    where: where,
+    read: OrmReadPlan(where: where, resultMode: OrmReadResultMode.all),
   );
 }
 
@@ -209,7 +209,7 @@ final class _TrackingAdapter implements TargetAdapter<String, String> {
       data: <String, Object?>{
         'request': '${plan.model}:${plan.action.name}',
         'action': plan.action.name,
-        'whereId': plan.where['id'],
+        'whereId': plan.read?.where['id'],
       },
       affectedRows: 1,
     );

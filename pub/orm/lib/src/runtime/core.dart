@@ -345,8 +345,42 @@ final class OrmRuntimeCore implements RuntimeCore {
     }
 
     final model = contract.models[plan.model]!;
+    _assertPlanModes(plan);
+    switch (plan.action) {
+      case OrmAction.read:
+        _assertReadPlan(model: model, plan: plan.read!);
+      case OrmAction.create || OrmAction.update || OrmAction.delete:
+        _assertMutationPlan(model: model, plan: plan.mutation!);
+    }
+  }
+
+  void _assertPlanModes(OrmPlan plan) {
+    switch (plan.action) {
+      case OrmAction.read:
+        if (plan.read == null || plan.mutation != null) {
+          throw PlanResultModeActionInvalidException(
+            action: plan.action,
+            readResultMode: plan.read?.resultMode,
+            mutationResultMode: plan.mutation?.resultMode,
+            hasRead: plan.read != null,
+            hasMutation: plan.mutation != null,
+          );
+        }
+      case OrmAction.create || OrmAction.update || OrmAction.delete:
+        if (plan.mutation == null || plan.read != null) {
+          throw PlanResultModeActionInvalidException(
+            action: plan.action,
+            readResultMode: plan.read?.resultMode,
+            mutationResultMode: plan.mutation?.resultMode,
+            hasRead: plan.read != null,
+            hasMutation: plan.mutation != null,
+          );
+        }
+    }
+  }
+
+  void _assertReadPlan({required ModelContract model, required OrmReadPlan plan}) {
     _assertWhereFields(model: model, where: plan.where, source: 'where');
-    _assertKnownFields(model: model, fields: plan.data.keys, source: 'data');
     _assertKnownFields(
       model: model,
       fields: plan.orderBy.map((entry) => entry.field),
@@ -362,29 +396,15 @@ final class OrmRuntimeCore implements RuntimeCore {
     if (plan.take case final take? when take < 0) {
       throw PlanInvalidPaginationException(key: 'take', value: take);
     }
-
-    _assertPlanModes(plan);
   }
 
-  void _assertPlanModes(OrmPlan plan) {
-    switch (plan.action) {
-      case OrmAction.read:
-        if (plan.mutationResultMode != null) {
-          throw PlanResultModeActionInvalidException(
-            action: plan.action,
-            resultMode: plan.resultMode,
-            mutationResultMode: plan.mutationResultMode,
-          );
-        }
-      case OrmAction.create || OrmAction.update || OrmAction.delete:
-        if (plan.resultMode != null) {
-          throw PlanResultModeActionInvalidException(
-            action: plan.action,
-            resultMode: plan.resultMode,
-            mutationResultMode: plan.mutationResultMode,
-          );
-        }
-    }
+  void _assertMutationPlan({
+    required ModelContract model,
+    required OrmMutationPlan plan,
+  }) {
+    _assertWhereFields(model: model, where: plan.where, source: 'where');
+    _assertKnownFields(model: model, fields: plan.data.keys, source: 'data');
+    _assertKnownFields(model: model, fields: plan.select, source: 'select');
   }
 
   void _assertKnownFields({

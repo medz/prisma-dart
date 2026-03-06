@@ -68,22 +68,8 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       throw ModelNotFoundException(plan.model, contract.models.keys);
     }
 
-    final params = <Object?>[];
-    final whereClause = _buildWhereClause(
-      model: plan.model,
-      where: plan.where,
-      params: params,
-    );
-    final orderByClause = _buildOrderByClause(plan.orderBy);
-
     return switch (plan.action) {
-      OrmAction.read => SqlStatement(
-        action: plan.action,
-        text:
-            'SELECT ${_buildSelectColumns(plan.select)} FROM ${_id(model.table)}'
-            '$whereClause$orderByClause${_buildReadLimitOffsetClause(plan, params)}',
-        parameters: params,
-      ),
+      OrmAction.read => _lowerRead(plan: plan, table: model.table, model: plan.model),
       OrmAction.create => _lowerCreate(
         plan: plan,
         table: model.table,
@@ -100,6 +86,29 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
         model: plan.model,
       ),
     };
+  }
+
+  SqlStatement _lowerRead({
+    required OrmPlan plan,
+    required String table,
+    required String model,
+  }) {
+    final read = plan.read!;
+    final params = <Object?>[];
+    final whereClause = _buildWhereClause(
+      model: model,
+      where: read.where,
+      params: params,
+    );
+    final orderByClause = _buildOrderByClause(read.orderBy);
+
+    return SqlStatement(
+      action: plan.action,
+      text:
+          'SELECT ${_buildSelectColumns(read.select)} FROM ${_id(table)}'
+          '$whereClause$orderByClause${_buildReadLimitOffsetClause(read, params)}',
+      parameters: params,
+    );
   }
 
   @override
@@ -142,13 +151,14 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String table,
     required String model,
   }) {
-    final columns = plan.data.keys.toList(growable: false);
+    final mutation = plan.mutation!;
+    final columns = mutation.data.keys.toList(growable: false);
     final values = columns
         .map(
           (column) => _encodeValue(
             model: model,
             field: column,
-            value: plan.data[column],
+            value: mutation.data[column],
           ),
         )
         .toList(growable: false);
@@ -158,7 +168,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       action: plan.action,
       text:
           'INSERT INTO ${_id(table)} (${columns.map(_id).join(', ')}) '
-          'VALUES ($placeholders)${_buildMutationReturningClause(plan.select)}',
+          'VALUES ($placeholders)${_buildMutationReturningClause(mutation.select)}',
       parameters: values,
     );
   }
@@ -168,13 +178,14 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String table,
     required String model,
   }) {
-    final setColumns = plan.data.keys.toList(growable: false);
+    final mutation = plan.mutation!;
+    final setColumns = mutation.data.keys.toList(growable: false);
     final setValues = setColumns
         .map(
           (column) => _encodeValue(
             model: model,
             field: column,
-            value: plan.data[column],
+            value: mutation.data[column],
           ),
         )
         .toList(growable: false);
@@ -182,7 +193,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     final params = <Object?>[...setValues];
     final wherePart = _buildWhereClause(
       model: model,
-      where: plan.where,
+      where: mutation.where,
       params: params,
     );
 
@@ -191,7 +202,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       text:
           'UPDATE ${_id(table)} SET '
           '${setColumns.map((column) => '${_id(column)} = ?').join(', ')}'
-          '$wherePart${_buildMutationReturningClause(plan.select)}',
+          '$wherePart${_buildMutationReturningClause(mutation.select)}',
       parameters: params,
     );
   }
@@ -201,7 +212,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required int affectedRows,
     required OrmPlan plan,
   }) {
-    return switch (plan.resultMode) {
+    return switch (plan.read!.resultMode) {
       OrmReadResultMode.firstOrNull || OrmReadResultMode.oneOrNull =>
         EngineResponse(data: _firstOrNull(rows), affectedRows: affectedRows),
       _ => EngineResponse(data: rows, affectedRows: affectedRows),
@@ -213,10 +224,11 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String table,
     required String model,
   }) {
+    final mutation = plan.mutation!;
     final params = <Object?>[];
     final wherePart = _buildWhereClause(
       model: model,
-      where: plan.where,
+      where: mutation.where,
       params: params,
     );
 
@@ -224,7 +236,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
       action: plan.action,
       text:
           'DELETE FROM ${_id(table)}'
-          '$wherePart${_buildMutationReturningClause(plan.select)}',
+          '$wherePart${_buildMutationReturningClause(mutation.select)}',
       parameters: params,
     );
   }
@@ -904,7 +916,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     return ' ORDER BY ${clauses.join(', ')}';
   }
 
-  String _buildReadLimitOffsetClause(OrmPlan plan, List<Object?> params) {
+  String _buildReadLimitOffsetClause(OrmReadPlan plan, List<Object?> params) {
     final clauses = <String>[];
     final effectiveTake = switch (plan.resultMode) {
       OrmReadResultMode.oneOrNull => 1,

@@ -30,7 +30,10 @@ final class _LintsPlugin extends OrmPlugin {
 
   @override
   void beforeExecute(OrmPlan plan, PluginContext ctx) {
-    if (_isMutation(plan) && plan.where.isEmpty) {
+    final read = plan.read;
+    final mutation = plan.mutation;
+
+    if (_isMutation(plan) && (mutation == null || mutation.where.isEmpty)) {
       _handle(
         ctx: ctx,
         severity: options.mutationWithoutWhere,
@@ -45,8 +48,9 @@ final class _LintsPlugin extends OrmPlugin {
     }
 
     if (plan.action == OrmAction.read &&
-        plan.resultMode == OrmReadResultMode.oneOrNull &&
-        plan.where.isEmpty) {
+        read != null &&
+        read.resultMode == OrmReadResultMode.oneOrNull &&
+        read.where.isEmpty) {
       _handle(
         ctx: ctx,
         severity: options.uniqueWithoutWhere,
@@ -57,8 +61,9 @@ final class _LintsPlugin extends OrmPlugin {
     }
 
     if (plan.action == OrmAction.read &&
-        plan.resultMode == OrmReadResultMode.all &&
-        plan.take == null) {
+        read != null &&
+        read.resultMode == OrmReadResultMode.all &&
+        read.take == null) {
       _handle(
         ctx: ctx,
         severity: options.unboundedRead,

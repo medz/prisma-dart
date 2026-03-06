@@ -848,23 +848,35 @@ OrmPlan _buildSqlPlan({
   List<String> select = const <String>[],
 }) {
   final contract = client.contract;
-  return OrmPlan(
-    contractHash: contract.hash,
-    target: contract.target,
-    storageHash: contract.markerStorageHash,
-    profileHash: contract.profileHash,
-    lane: 'sql',
-    mutationResultMode: mutationResultMode,
-    model: modelName,
-    action: action,
-    where: where,
-    data: data,
-    skip: skip,
-    take: take,
-    orderBy: orderBy,
-    distinct: distinct,
-    select: select,
-  );
+  return action == OrmAction.read
+      ? OrmPlan.read(
+          contractHash: contract.hash,
+          target: contract.target,
+          storageHash: contract.markerStorageHash,
+          profileHash: contract.profileHash,
+          lane: 'sql',
+          model: modelName,
+          where: where,
+          skip: skip,
+          take: take,
+          orderBy: orderBy,
+          distinct: distinct,
+          select: select,
+          resultMode: OrmReadResultMode.all,
+        )
+      : OrmPlan.mutation(
+          contractHash: contract.hash,
+          target: contract.target,
+          storageHash: contract.markerStorageHash,
+          profileHash: contract.profileHash,
+          lane: 'sql',
+          model: modelName,
+          action: action,
+          where: where,
+          data: data,
+          select: select,
+          resultMode: mutationResultMode ?? OrmMutationResultMode.rowOrNull,
+        );
 }
 
 @immutable
@@ -1326,27 +1338,26 @@ class ModelDelegate {
 
     return _PreparedReadPlan(
       include: normalizedInclude,
-      plan: OrmPlan(
+      plan: OrmPlan.read(
         contractHash: _client.contract.hash,
         target: _client.contract.target,
         storageHash: _client.contract.markerStorageHash,
         profileHash: _client.contract.profileHash,
         lane: 'orm',
-        resultMode: resultMode,
-        include: _buildOrmIncludePlanMap(normalizedInclude),
         annotations: distinct.isEmpty
             ? const <String, Object?>{}
             : <String, Object?>{
                 'distinct': List<String>.from(distinct, growable: false),
               },
         model: modelName,
-        action: OrmAction.read,
         where: normalizedWhere,
         skip: isCollectionRead && distinct.isEmpty ? skip : null,
         take: isCollectionRead && distinct.isEmpty ? resolvedTake : null,
         orderBy: isCollectionRead ? orderBy : const <OrmOrderBy>[],
         distinct: isCollectionRead ? distinct : const <String>[],
         select: readSelect,
+        include: _buildOrmIncludePlanMap(normalizedInclude),
+        resultMode: resultMode,
       ),
     );
   }

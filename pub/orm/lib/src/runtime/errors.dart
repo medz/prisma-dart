@@ -247,21 +247,26 @@ final class PlanInvalidPaginationException extends OrmRuntimeError {
 
 final class PlanResultModeActionInvalidException extends OrmRuntimeError {
   final OrmAction action;
-  final OrmReadResultMode? resultMode;
+  final OrmReadResultMode? readResultMode;
   final OrmMutationResultMode? mutationResultMode;
+  final bool hasRead;
+  final bool hasMutation;
 
   PlanResultModeActionInvalidException({
     required this.action,
-    required this.resultMode,
+    required this.readResultMode,
     required this.mutationResultMode,
+    required this.hasRead,
+    required this.hasMutation,
   }) : super(
          code: 'PLAN.RESULT_MODE_ACTION_INVALID',
          category: RuntimeErrorCategory.plan,
-         message:
-             'Plan result modes do not match the requested action semantics.',
+         message: 'Plan branch shape does not match the requested action.',
          details: <String, Object?>{
            'action': action.name,
-           'resultMode': resultMode?.name,
+           'hasRead': hasRead,
+           'readResultMode': readResultMode?.name,
+           'hasMutation': hasMutation,
            'mutationResultMode': mutationResultMode?.name,
          },
        );

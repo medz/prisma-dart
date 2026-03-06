@@ -91,25 +91,26 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
   }
 
   EngineResponse _read(List<JsonMap> bucket, OrmPlan plan) {
-    var rows = bucket.where((row) => _matches(row, plan.where)).toList();
+    final read = plan.read!;
+    var rows = bucket.where((row) => _matches(row, read.where)).toList();
 
-    if (plan.orderBy.isNotEmpty) {
-      rows.sort((left, right) => _compareRows(left, right, plan.orderBy));
+    if (read.orderBy.isNotEmpty) {
+      rows.sort((left, right) => _compareRows(left, right, read.orderBy));
     }
 
-    if (plan.skip case final skip?) {
+    if (read.skip case final skip?) {
       rows = skip >= rows.length ? <JsonMap>[] : rows.sublist(skip);
     }
 
-    if (plan.take case final take?) {
+    if (read.take case final take?) {
       rows = take >= rows.length ? rows : rows.sublist(0, take);
     }
 
     final projected = rows
-        .map((row) => _projectRow(row, plan.select))
+        .map((row) => _projectRow(row, read.select))
         .toList(growable: false);
 
-    return switch (plan.resultMode) {
+    return switch (read.resultMode) {
       OrmReadResultMode.firstOrNull || OrmReadResultMode.oneOrNull =>
         EngineResponse(data: _firstOrNull(projected)),
       _ => EngineResponse(data: projected),
@@ -117,22 +118,27 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
   }
 
   EngineResponse _create(List<JsonMap> bucket, OrmPlan plan) {
-    final row = _cloneRow(plan.data);
+    final mutation = plan.mutation!;
+    final row = _cloneRow(mutation.data);
     bucket.add(row);
-    return EngineResponse(data: _projectRow(row, plan.select), affectedRows: 1);
+    return EngineResponse(
+      data: _projectRow(row, mutation.select),
+      affectedRows: 1,
+    );
   }
 
   EngineResponse _update(List<JsonMap> bucket, OrmPlan plan) {
+    final mutation = plan.mutation!;
     for (var index = 0; index < bucket.length; index++) {
       final row = bucket[index];
-      if (!_matches(row, plan.where)) {
+      if (!_matches(row, mutation.where)) {
         continue;
       }
 
-      final updated = <String, Object?>{...row, ...plan.data};
+      final updated = <String, Object?>{...row, ...mutation.data};
       bucket[index] = updated;
       return EngineResponse(
-        data: _projectRow(updated, plan.select),
+        data: _projectRow(updated, mutation.select),
         affectedRows: 1,
       );
     }
@@ -140,15 +146,16 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
   }
 
   EngineResponse _delete(List<JsonMap> bucket, OrmPlan plan) {
+    final mutation = plan.mutation!;
     for (var index = 0; index < bucket.length; index++) {
       final row = bucket[index];
-      if (!_matches(row, plan.where)) {
+      if (!_matches(row, mutation.where)) {
         continue;
       }
 
       bucket.removeAt(index);
       return EngineResponse(
-        data: _projectRow(row, plan.select),
+        data: _projectRow(row, mutation.select),
         affectedRows: 1,
       );
     }
