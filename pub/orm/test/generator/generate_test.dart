@@ -827,22 +827,25 @@ typedef Post = ({
           RegExp(
             r'class\s+UserSql\s*\{[\s\S]*?Future<OrmSqlMutationResult>\s+insertResult\(',
           ).hasMatch(generatedSource),
-          isTrue,
-          reason: 'Expected UserSql to expose insertResult helper.',
+          isFalse,
+          reason:
+              'Expected UserSql to stop exposing insertResult helper and use insertPlan().execute() for raw mutation results.',
         );
         expect(
           RegExp(
             r'class\s+UserSql\s*\{[\s\S]*?Future<OrmSqlMutationResult>\s+updateResult\(',
           ).hasMatch(generatedSource),
-          isTrue,
-          reason: 'Expected UserSql to expose updateResult helper.',
+          isFalse,
+          reason:
+              'Expected UserSql to stop exposing updateResult helper and use updatePlan().execute() for raw mutation results.',
         );
         expect(
           RegExp(
             r'class\s+UserSql\s*\{[\s\S]*?Future<OrmSqlMutationResult>\s+deleteResult\(',
           ).hasMatch(generatedSource),
-          isTrue,
-          reason: 'Expected UserSql to expose deleteResult helper.',
+          isFalse,
+          reason:
+              'Expected UserSql to stop exposing deleteResult helper and use deletePlan().execute() for raw mutation results.',
         );
         expect(
           RegExp(
@@ -915,6 +918,33 @@ typedef Post = ({
           isFalse,
           reason:
               'Expected UserSql.firstOrNull(...) to rely on builder.firstOrNull() without duplicating take: 1.',
+        );
+        expect(
+          RegExp(r'\bclass UserAggregateSpec\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed UserAggregateSpec.',
+        );
+        expect(
+          RegExp(r'\bclass UserGroupBySpec\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected generated source to include typed UserGroupBySpec.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserAggregateSpec\s*\{[\s\S]*?OrmAggregateSpec\s+toRuntimeSpec\(\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserAggregateSpec to compile to the runtime aggregate spec.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupBySpec\s*\{[\s\S]*?OrmGroupBySpec\s+toRuntimeSpec\(\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupBySpec to compile to the runtime groupBy spec.',
         );
         expect(
           RegExp(r'\bclass UserWhereUniqueInput\b').hasMatch(generatedSource),
@@ -1247,11 +1277,27 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(\{[\s\S]*?required\s+UserAggregateSpec\s+aggregate,[\s\S]*?return\s+query\(where:\s*where\)\.aggregateWith\(aggregate\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate aggregateWith(...) to route structured aggregate specs through typed query.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?skip:\s*skip,[\s\S]*?take:\s*take,[\s\S]*?\)\.groupBy\([\s\S]*?groupByOrderBy:\s*groupByOrderBy,[\s\S]*?typedHaving:\s*typedHaving,[\s\S]*?\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
               'Expected generated delegate groupBy(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupByWith\(\{[\s\S]*?required\s+UserGroupBySpec\s+groupBy,[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?skip:\s*skip,[\s\S]*?take:\s*take,[\s\S]*?\)\.groupByWith\(groupBy\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate groupByWith(...) to route structured groupBy specs through typed query.',
         );
         expect(
           generatedSource.contains('Future<List<UserData>> findMany('),
@@ -1492,11 +1538,35 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?List<UserGroupByOrderBy>\s+groupByOrderBy\s*=\s*const\s+<UserGroupByOrderBy>\[\],[\s\S]*?typedHaving:\s*typedHaving,[\s\S]*?groupByOrderBy:\s*groupByOrderBy,',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(\{[\s\S]*?return\s+aggregateWith\(\s*UserAggregateSpec\(',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.groupBy(...) to expose and forward typed groupBy helpers.',
+              'Expected UserQuery.aggregate(...) to compile convenience arguments into a structured typed aggregate spec.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?aggregate:\s*aggregate\.toRuntimeSpec\(\),[\s\S]*?then\(UserAggregateResult\.fromJson\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.aggregateWith(...) to route through runtime structured aggregate specs.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?List<UserGroupByOrderBy>\s+groupByOrderBy\s*=\s*const\s+<UserGroupByOrderBy>\[\],[\s\S]*?return\s+groupByWith\(\s*UserGroupBySpec\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.groupBy(...) to compile convenience arguments into a structured typed groupBy spec.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupByWith\(UserGroupBySpec\s+groupBy\)\s*\{[\s\S]*?groupBy:\s*groupBy\.toRuntimeSpec\(\),[\s\S]*?UserGroupByResult\.fromJson',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.groupByWith(...) to route through runtime structured groupBy specs.',
         );
         expect(
           RegExp(

@@ -978,6 +978,103 @@ final class TypedClientWriter {
       );
     }
 
+    buffer.writeln('class ${model.aggregateSpecClassName} {');
+    buffer.writeln('  final bool countAll;');
+    buffer.writeln('  final List<${model.distinctClassName}> count;');
+    buffer.writeln('  final List<${model.distinctClassName}> min;');
+    buffer.writeln('  final List<${model.distinctClassName}> max;');
+    buffer.writeln('  final List<${model.distinctClassName}> sum;');
+    buffer.writeln('  final List<${model.distinctClassName}> avg;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.aggregateSpecClassName}({');
+    buffer.writeln('    this.countAll = false,');
+    buffer.writeln('    this.count = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.min = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.max = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.sum = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.avg = const <${model.distinctClassName}>[],');
+    buffer.writeln('  });');
+    buffer.writeln();
+    buffer.writeln('  OrmAggregateSpec toRuntimeSpec() {');
+    buffer.writeln('    return OrmAggregateSpec(');
+    buffer.writeln('      countAll: countAll,');
+    buffer.writeln(
+      '      count: count.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      min: min.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      max: max.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    buffer.writeln('class ${model.groupBySpecClassName} {');
+    buffer.writeln('  final List<${model.distinctClassName}> by;');
+    buffer.writeln('  final ${model.groupByHavingClassName} having;');
+    buffer.writeln('  final List<${model.groupByOrderByClassName}> orderBy;');
+    buffer.writeln('  final bool countAll;');
+    buffer.writeln('  final List<${model.distinctClassName}> count;');
+    buffer.writeln('  final List<${model.distinctClassName}> min;');
+    buffer.writeln('  final List<${model.distinctClassName}> max;');
+    buffer.writeln('  final List<${model.distinctClassName}> sum;');
+    buffer.writeln('  final List<${model.distinctClassName}> avg;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.groupBySpecClassName}({');
+    buffer.writeln('    required this.by,');
+    buffer.writeln(
+      '    this.having = const ${model.groupByHavingClassName}(),',
+    );
+    buffer.writeln(
+      '    this.orderBy = const <${model.groupByOrderByClassName}>[],',
+    );
+    buffer.writeln('    this.countAll = false,');
+    buffer.writeln('    this.count = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.min = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.max = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.sum = const <${model.distinctClassName}>[],');
+    buffer.writeln('    this.avg = const <${model.distinctClassName}>[],');
+    buffer.writeln('  });');
+    buffer.writeln();
+    buffer.writeln('  OrmGroupBySpec toRuntimeSpec() {');
+    buffer.writeln('    return OrmGroupBySpec(');
+    buffer.writeln(
+      '      by: by.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('      having: having.toJson(),');
+    buffer.writeln(
+      '      orderBy: orderBy.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('      countAll: countAll,');
+    buffer.writeln(
+      '      count: count.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      min: min.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      max: max.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+
     buffer.writeln('class ${model.aggregateResultClassName} {');
     buffer.writeln('  final Map<String, Object?> _value;');
     buffer.writeln();
@@ -1945,6 +2042,18 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln(
+      '  Future<${model.aggregateResultClassName}> aggregateWith({',
+    );
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    required ${model.aggregateSpecClassName} aggregate,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(where: where).aggregateWith(aggregate);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.groupByResultClassName}>> groupBy({');
     buffer.writeln('    required List<${model.distinctClassName}> by,');
     buffer.writeln(
@@ -1990,6 +2099,24 @@ final class TypedClientWriter {
     buffer.writeln('      sum: sum,');
     buffer.writeln('      avg: avg,');
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<List<${model.groupByResultClassName}>> groupByWith({',
+    );
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln('    required ${model.groupBySpecClassName} groupBy,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('    ).groupByWith(groupBy);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2208,16 +2335,6 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<OrmSqlMutationResult> insertResult({');
-    buffer.writeln('    required ${model.createInputClassName} data,');
-    buffer.writeln('    ${model.selectClassName}? returning,');
-    buffer.writeln('  }) {');
-    buffer.writeln(
-      '    return insertPlan(data: data, returning: returning).execute();',
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-
     buffer.writeln('  Future<${model.dataClassName}?> insert({');
     buffer.writeln('    required ${model.createInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? returning,');
@@ -2240,17 +2357,6 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<OrmSqlMutationResult> updateResult({');
-    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
-    buffer.writeln('    required ${model.updateInputClassName} data,');
-    buffer.writeln('    ${model.selectClassName}? returning,');
-    buffer.writeln('  }) {');
-    buffer.writeln(
-      '    return updatePlan(where: where, data: data, returning: returning).execute();',
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-
     buffer.writeln('  Future<${model.dataClassName}?> update({');
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    required ${model.updateInputClassName} data,');
@@ -2269,16 +2375,6 @@ final class TypedClientWriter {
     buffer.writeln('    final runtimeReturning = _fields(returning);');
     buffer.writeln(
       "    return _sql.deleteFrom('$runtimeName').where(where.toJson()).returning(runtimeReturning);",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln('  Future<OrmSqlMutationResult> deleteResult({');
-    buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
-    buffer.writeln('    ${model.selectClassName}? returning,');
-    buffer.writeln('  }) {');
-    buffer.writeln(
-      '    return deletePlan(where: where, returning: returning).execute();',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -2818,27 +2914,29 @@ final class TypedClientWriter {
     );
     buffer.writeln('  }) {');
     buffer.writeln("    _assertReadExecutionSupported('aggregate');");
-    buffer.writeln('    return _delegate._delegate.aggregate(');
+    buffer.writeln('    return aggregateWith(');
+    buffer.writeln('      ${model.aggregateSpecClassName}(');
+    buffer.writeln('        countAll: countAll,');
+    buffer.writeln('        count: count,');
+    buffer.writeln('        min: min,');
+    buffer.writeln('        max: max,');
+    buffer.writeln('        sum: sum,');
+    buffer.writeln('        avg: avg,');
+    buffer.writeln('      ),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<${model.aggregateResultClassName}> aggregateWith(${model.aggregateSpecClassName} aggregate) {',
+    );
+    buffer.writeln("    _assertReadExecutionSupported('aggregate');");
+    buffer.writeln('    return _delegate._delegate.aggregateWith(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      orderBy: _runtimeOrderBy,');
     buffer.writeln('      cursor: _runtimeCursor,');
     buffer.writeln('      page: _runtimePage,');
-    buffer.writeln('      countAll: countAll,');
-    buffer.writeln(
-      '      count: count.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      min: min.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      max: max.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln(
-      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
-    );
+    buffer.writeln('      aggregate: aggregate.toRuntimeSpec(),');
     buffer.writeln('    ).then(${model.aggregateResultClassName}.fromJson);');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2886,22 +2984,51 @@ final class TypedClientWriter {
     buffer.writeln('        },');
     buffer.writeln('      );');
     buffer.writeln('    }');
-    buffer.writeln('    return _delegate.groupBy(');
+    buffer.writeln('    return groupByWith(');
+    buffer.writeln('      ${model.groupBySpecClassName}(');
+    buffer.writeln('        by: by,');
+    buffer.writeln('        having: typedHaving,');
+    buffer.writeln('        orderBy: groupByOrderBy,');
+    buffer.writeln('        countAll: countAll,');
+    buffer.writeln('        count: count,');
+    buffer.writeln('        min: min,');
+    buffer.writeln('        max: max,');
+    buffer.writeln('        sum: sum,');
+    buffer.writeln('        avg: avg,');
+    buffer.writeln('      ),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln(
-      '      by: by.map((entry) => entry.value).toList(growable: false),',
+      '  Future<List<${model.groupByResultClassName}>> groupByWith(${model.groupBySpecClassName} groupBy) {',
     );
-    buffer.writeln('      where: _where,');
+    buffer.writeln("    _assertReadExecutionSupported('groupBy');");
+    buffer.writeln('    if (_cursor != null || _pageSize != null) {');
+    buffer.writeln('      throw runtimeError(');
+    buffer.writeln("        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',");
+    buffer.writeln(
+      "        'GroupBy does not support cursor or page windows yet.',",
+    );
+    buffer.writeln('        details: <String, Object?>{');
+    buffer.writeln("          'model': '$runtimeName',");
+    buffer.writeln(
+      "          if (_runtimeCursor != null) 'cursor': _runtimeCursor,",
+    );
+    buffer.writeln(
+      "          if (_runtimePage != null) 'page': _runtimePage!.toJson(),",
+    );
+    buffer.writeln('        },');
+    buffer.writeln('      );');
+    buffer.writeln('    }');
+    buffer.writeln('    return _delegate._delegate.groupByWith(');
+    buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
-    buffer.writeln('      typedHaving: typedHaving,');
-    buffer.writeln('      groupByOrderBy: groupByOrderBy,');
-    buffer.writeln('      countAll: countAll,');
-    buffer.writeln('      count: count,');
-    buffer.writeln('      min: min,');
-    buffer.writeln('      max: max,');
-    buffer.writeln('      sum: sum,');
-    buffer.writeln('      avg: avg,');
-    buffer.writeln('    );');
+    buffer.writeln('      groupBy: groupBy.toRuntimeSpec(),');
+    buffer.writeln(
+      '    ).then((rows) => rows.map(${model.groupByResultClassName}.fromJson).toList(growable: false));',
+    );
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -4084,7 +4211,11 @@ final class _ResolvedModel {
   String get groupByHavingConditionClassName =>
       '${classBaseName}GroupByHavingCondition';
 
+  String get aggregateSpecClassName => '${classBaseName}AggregateSpec';
+
   String get aggregateResultClassName => '${classBaseName}AggregateResult';
+
+  String get groupBySpecClassName => '${classBaseName}GroupBySpec';
 
   String get groupByResultClassName => '${classBaseName}GroupByResult';
 
