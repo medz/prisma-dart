@@ -177,7 +177,6 @@ JsonMap _terminalExecutionSummary({
   required Map<String, IncludeSpec> include,
   JsonMap? cursor,
   OrmReadPagePlan? page,
-  bool applyWindowAtClient = false,
 }) {
   final hasWindow = cursor != null || page != null;
   final includeStrategy = include.isEmpty
@@ -191,7 +190,6 @@ JsonMap _terminalExecutionSummary({
         ).name;
   final streamReasons = <String>[
     if (include.isNotEmpty) 'include',
-    if (distinct.isNotEmpty) 'distinct',
   ];
 
   JsonMap terminal({
@@ -205,10 +203,8 @@ JsonMap _terminalExecutionSummary({
       'delivery': delivery,
       'degraded': degraded,
       'reasons': List<String>.unmodifiable(reasons),
-      'windowAppliedAt': hasWindow
-          ? (applyWindowAtClient ? 'client' : 'engine')
-          : 'none',
-      'distinctAppliedAt': distinct.isEmpty ? 'none' : 'client',
+      'windowAppliedAt': hasWindow ? 'engine' : 'none',
+      'distinctAppliedAt': distinct.isEmpty ? 'none' : 'engine',
       'includeAppliedAt': include.isEmpty ? 'none' : 'repository',
       if (includeStrategy != null) 'includeStrategy': includeStrategy,
     });
@@ -223,8 +219,8 @@ JsonMap _terminalExecutionSummary({
     ),
     'pageResult': terminal(
       delivery: page == null ? 'unavailable' : 'pageEnvelope',
-      degraded: applyWindowAtClient,
-      reasons: applyWindowAtClient ? const <String>['distinct'] : const <String>[],
+      degraded: false,
+      reasons: const <String>[],
       available: page != null,
     ),
   });
@@ -1526,6 +1522,15 @@ class ModelDelegate {
     OrmReadQuerySpec(select: select, include: include),
   ).createMany(data: data);
 
+  Future<List<JsonMap>> updateAll({
+    required JsonMap where,
+    required JsonMap data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).updateAll(data: data);
+
   Future<int> updateCount({
     required JsonMap where,
     required JsonMap data,
@@ -1535,6 +1540,14 @@ class ModelDelegate {
 
   Future<int> deleteCount({required JsonMap where}) =>
       _queryFromSpec(OrmReadQuerySpec(where: where)).deleteCount();
+
+  Future<List<JsonMap>> deleteAll({
+    required JsonMap where,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).deleteAll();
 
   Future<JsonMap> upsert({
     required JsonMap where,
@@ -1605,6 +1618,16 @@ class ModelDelegate {
     this,
   ).createMany(data: data, select: spec.select, include: spec.include);
 
+  Future<List<JsonMap>> _updateAll({
+    required JsonMap data,
+    required OrmReadQuerySpec spec,
+  }) => _RepositoryMutationExecutor(this).updateAll(
+    where: spec.where,
+    data: data,
+    select: spec.select,
+    include: spec.include,
+  );
+
   Future<int> _updateCount({
     required JsonMap data,
     required OrmReadQuerySpec spec,
@@ -1614,6 +1637,11 @@ class ModelDelegate {
 
   Future<int> _deleteCount({required OrmReadQuerySpec spec}) =>
       _RepositoryMutationExecutor(this).deleteCount(where: spec.where);
+
+  Future<List<JsonMap>> _deleteAll({required OrmReadQuerySpec spec}) =>
+      _RepositoryMutationExecutor(
+        this,
+      ).deleteAll(where: spec.where, select: spec.select, include: spec.include);
 
   Future<JsonMap> _upsert({
     required JsonMap create,
@@ -1692,44 +1720,6 @@ class ModelDelegate {
       action: action,
       includeDepth: includeDepth,
     );
-  }
-
-  Future<List<JsonMap>> _collectCollectionRows(
-    EngineResponse response, {
-    required String action,
-    required List<OrmOrderBy> orderBy,
-    required List<String> distinct,
-    int? skip,
-    int? take,
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
-  }) async {
-    var rows = await _collectRows(response, action: action);
-    final applyClientDistinct = distinct.isNotEmpty;
-    final applyClientWindow = cursor != null || page != null;
-    if (!applyClientDistinct && !applyClientWindow) {
-      return rows;
-    }
-    if (applyClientDistinct) {
-      rows = _applyDistinctRows(rows: rows, distinct: distinct);
-    }
-    if (page != null) {
-      return _applyPageWindowRows(rows: rows, orderBy: orderBy, page: page);
-    }
-    if (cursor != null) {
-      rows = rows
-          .where(
-            (row) =>
-                _compareRowToBoundary(
-                  row: row,
-                  boundary: cursor,
-                  orderBy: orderBy,
-                ) >=
-                0,
-          )
-          .toList(growable: false);
-    }
-    return _sliceRows(rows: rows, skip: skip, take: take);
   }
 
   Future<JsonMap?> _readOneInternal({
@@ -1959,49 +1949,6 @@ class ModelDelegate {
       return rows.sublist(rows.length - page.size);
     }
     return rows.sublist(0, page.size);
-  }
-
-  List<JsonMap> _applyPageWindowRows({
-    required List<JsonMap> rows,
-    required List<OrmOrderBy> orderBy,
-    required OrmReadPagePlan page,
-  }) {
-    if (page.after case final after?) {
-      final filtered = rows
-          .where(
-            (row) =>
-                _compareRowToBoundary(
-                  row: row,
-                  boundary: after,
-                  orderBy: orderBy,
-                ) >
-                0,
-          )
-          .toList(growable: false);
-      return page.size >= filtered.length
-          ? filtered
-          : filtered.sublist(0, page.size);
-    }
-
-    if (page.before case final before?) {
-      final filtered = rows
-          .where(
-            (row) =>
-                _compareRowToBoundary(
-                  row: row,
-                  boundary: before,
-                  orderBy: orderBy,
-                ) <
-                0,
-          )
-          .toList(growable: false);
-      if (page.size >= filtered.length) {
-        return filtered;
-      }
-      return filtered.sublist(filtered.length - page.size);
-    }
-
-    return page.size >= rows.length ? rows : rows.sublist(0, page.size);
   }
 
   Future<OrmPageInfo> _buildPageInfo({
@@ -2586,29 +2533,6 @@ class ModelDelegate {
   JsonMap _attachInclude(JsonMap row, String relation, Object? value) {
     final next = <String, Object?>{...row, relation: value};
     return next;
-  }
-
-  List<JsonMap> _applyDistinctRows({
-    required List<JsonMap> rows,
-    required List<String> distinct,
-  }) {
-    if (rows.isEmpty || distinct.isEmpty) {
-      return rows;
-    }
-
-    final seen = <_RelationMergeKey>{};
-    final deduplicated = <JsonMap>[];
-    for (final row in rows) {
-      final key = _RelationMergeKey(
-        distinct
-            .map((field) => row.containsKey(field) ? row[field] : null)
-            .toList(growable: false),
-      );
-      if (seen.add(key)) {
-        deduplicated.add(row);
-      }
-    }
-    return deduplicated;
   }
 
   int _compareOrderByValues(Object? left, Object? right) {
@@ -3407,6 +3331,11 @@ final class ModelQuery {
     return _delegate._createMany(data: data, spec: _state);
   }
 
+  Future<List<JsonMap>> updateAll({required JsonMap data}) {
+    _assertMutationQueryState(action: 'updateAll', requireWhere: true);
+    return _delegate._updateAll(data: data, spec: _state);
+  }
+
   Future<int> updateCount({required JsonMap data}) {
     _assertMutationQueryState(
       action: 'updateCount',
@@ -3425,6 +3354,11 @@ final class ModelQuery {
       allowInclude: false,
     );
     return _delegate._deleteCount(spec: _state);
+  }
+
+  Future<List<JsonMap>> deleteAll() {
+    _assertMutationQueryState(action: 'deleteAll', requireWhere: true);
+    return _delegate._deleteAll(spec: _state);
   }
 
   Future<JsonMap> upsert({required JsonMap create, required JsonMap update}) {

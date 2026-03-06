@@ -59,17 +59,14 @@ final class OrmPreparedReadQuery {
   final OrmPlan plan;
   final _OrmPreparedReadState _state;
   final Map<String, IncludeSpec> _normalizedInclude;
-  final bool _applyWindowAtClient;
 
   OrmPreparedReadQuery._({
     required ModelDelegate delegate,
     required this.plan,
     required _OrmPreparedReadState state,
     Map<String, IncludeSpec> normalizedInclude = const <String, IncludeSpec>{},
-    bool applyWindowAtClient = false,
   }) : _delegate = delegate,
        _state = state,
-       _applyWindowAtClient = applyWindowAtClient,
        _normalizedInclude = Map<String, IncludeSpec>.unmodifiable(
          Map<String, IncludeSpec>.from(normalizedInclude),
        );
@@ -77,8 +74,6 @@ final class OrmPreparedReadQuery {
   JsonMap get _where => _state._where;
 
   int? get _skip => _state._skip;
-
-  int? get _take => _state._take;
 
   List<OrmOrderBy> get _orderBy => _state._orderBy;
 
@@ -109,7 +104,6 @@ final class OrmPreparedReadQuery {
         include: _normalizedInclude,
         cursor: _cursor,
         page: _page,
-        applyWindowAtClient: _applyWindowAtClient,
       ),
     });
   }
@@ -126,7 +120,6 @@ final class OrmPreparedReadQuery {
         include: _normalizedInclude,
         cursor: _cursor,
         page: _page,
-        applyWindowAtClient: _applyWindowAtClient,
       ),
     });
   }
@@ -236,16 +229,7 @@ final class _RepositoryReadExecutor {
     required int includeDepth,
   }) async {
     final response = await _delegate._client.execute(prepared.plan);
-    final rows = await _delegate._collectCollectionRows(
-      response,
-      action: 'all',
-      orderBy: prepared._orderBy,
-      distinct: prepared._distinct,
-      skip: prepared._skip,
-      take: prepared._take,
-      cursor: prepared._applyWindowAtClient ? prepared._cursor : null,
-      page: prepared._applyWindowAtClient ? prepared._page : null,
-    );
+    final rows = await _collectRows(response, action: 'all');
     final hydratedRows = await _delegate._resolveIncludeRows(
       action: action,
       rows: rows,
@@ -307,16 +291,7 @@ final class _RepositoryReadExecutor {
       ),
     );
     final response = await _delegate._client.execute(itemsPrepared.plan);
-    final rawRows = await _delegate._collectCollectionRows(
-      response,
-      action: 'pageResult',
-      orderBy: itemsPrepared._orderBy,
-      distinct: itemsPrepared._distinct,
-      skip: itemsPrepared._skip,
-      take: itemsPrepared._take,
-      cursor: itemsPrepared._applyWindowAtClient ? itemsPrepared._cursor : null,
-      page: itemsPrepared._applyWindowAtClient ? itemsPrepared._page : null,
-    );
+    final rawRows = await _collectRows(response, action: 'pageResult');
     final overflowed = rawRows.length > page.size;
     final windowRows = _delegate._trimPageResultRows(rows: rawRows, page: page);
     final hydratedRows = await _delegate._resolveIncludeRows(
@@ -360,41 +335,26 @@ final class _RepositoryReadExecutor {
       return rows.isEmpty ? null : rows.first;
     }
 
-    final effectivePrepared = prepared._distinct.isEmpty
-        ? await _delegate._prepareReadQuery(
-            state: prepared._state.copyWith(
-              resultMode: OrmReadResultMode.firstOrNull,
-              spec: prepared._state._spec.copyWith(
-                where: prepared._where,
-                skip: prepared._skip,
-                orderBy: prepared._orderBy,
-                distinct: prepared._distinct,
-                select: prepared._select,
-                include: prepared._include,
-                cursor: null,
-                page: null,
-              ),
-              annotations: prepared._annotations,
-              repositoryTrace: prepared._repositoryTrace,
-            ),
-          )
-        : prepared;
+    final effectivePrepared = await _delegate._prepareReadQuery(
+      state: prepared._state.copyWith(
+        resultMode: OrmReadResultMode.firstOrNull,
+        spec: prepared._state._spec.copyWith(
+          where: prepared._where,
+          skip: prepared._skip,
+          orderBy: prepared._orderBy,
+          distinct: prepared._distinct,
+          select: prepared._select,
+          include: prepared._include,
+          cursor: null,
+          page: null,
+        ),
+        annotations: prepared._annotations,
+        repositoryTrace: prepared._repositoryTrace,
+      ),
+    );
 
     final response = await _delegate._client.execute(effectivePrepared.plan);
-    final row = prepared._distinct.isEmpty
-        ? await _collectSingleRow(response, action: 'firstOrNull')
-        : _firstOrNull(
-            await _delegate._collectCollectionRows(
-              response,
-              action: 'firstOrNull',
-              orderBy: prepared._orderBy,
-              distinct: prepared._distinct,
-              skip: prepared._skip,
-              take: 1,
-              cursor: prepared._applyWindowAtClient ? prepared._cursor : null,
-              page: prepared._applyWindowAtClient ? prepared._page : null,
-            ),
-          );
+    final row = await _collectSingleRow(response, action: 'firstOrNull');
     if (row == null) {
       return null;
     }
@@ -480,7 +440,7 @@ final class _RepositoryReadExecutor {
   }) async* {
     final response = await _delegate._client.execute(prepared.plan);
 
-    if (prepared._normalizedInclude.isEmpty && prepared._distinct.isEmpty) {
+    if (prepared._normalizedInclude.isEmpty) {
       await for (final row in _streamRows(response, action: 'stream')) {
         yield _delegate._shapeRow(
           row,
@@ -491,16 +451,7 @@ final class _RepositoryReadExecutor {
       return;
     }
 
-    final rows = await _delegate._collectCollectionRows(
-      response,
-      action: 'stream',
-      orderBy: prepared._orderBy,
-      distinct: prepared._distinct,
-      skip: prepared._skip,
-      take: prepared._take,
-      cursor: prepared._applyWindowAtClient ? prepared._cursor : null,
-      page: prepared._applyWindowAtClient ? prepared._page : null,
-    );
+    final rows = await _collectRows(response, action: 'stream');
     if (rows.isEmpty) {
       return;
     }

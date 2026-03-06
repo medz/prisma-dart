@@ -204,6 +204,52 @@ final class _RepositoryMutationExecutor {
     });
   }
 
+  Future<List<JsonMap>> deleteAll({
+    required JsonMap where,
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+  }) {
+    final trace = _startOperation('deleteAll');
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
+      final executor = _RepositoryMutationExecutor(scoped);
+      final normalizedWhere = (await scoped._normalizeWhereForExecution(
+        model: scoped.modelName,
+        where: where,
+        operation: trace,
+      )).where;
+      final identityRows = await scoped._readAllInternal(
+        action: OrmAction.read,
+        where: normalizedWhere,
+        select: scoped._modelContract.idFields,
+        repositoryTrace: trace.nextTrace(
+          phase: 'batch.lookup',
+          strategy: 'transaction',
+        ),
+        include: const <String, IncludeSpec>{},
+        includeDepth: 0,
+      );
+
+      final deleted = <JsonMap>[];
+      for (var index = 0; index < identityRows.length; index++) {
+        final itemWhere = _identityWhereFromRow(identityRows[index]);
+        final row = await executor.delete(
+          where: itemWhere,
+          select: select,
+          include: include,
+          operation: trace,
+          phase: 'item.delete',
+          strategy: 'transaction',
+          itemIndex: index,
+        );
+        if (row != null) {
+          deleted.add(row);
+        }
+      }
+      return deleted;
+    });
+  }
+
   Future<int> deleteCount({required JsonMap where}) {
     final trace = _startOperation('deleteCount');
     return _delegate._client.transaction((txDb) async {
@@ -274,6 +320,54 @@ final class _RepositoryMutationExecutor {
         }
       }
 
+      return updated;
+    });
+  }
+
+  Future<List<JsonMap>> updateAll({
+    required JsonMap where,
+    required JsonMap data,
+    required List<String> select,
+    required Map<String, IncludeSpec> include,
+  }) {
+    final trace = _startOperation('updateAll');
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
+      final executor = _RepositoryMutationExecutor(scoped);
+      final normalizedWhere = (await scoped._normalizeWhereForExecution(
+        model: scoped.modelName,
+        where: where,
+        operation: trace,
+      )).where;
+      final identityRows = await scoped._readAllInternal(
+        action: OrmAction.read,
+        where: normalizedWhere,
+        select: scoped._modelContract.idFields,
+        repositoryTrace: trace.nextTrace(
+          phase: 'batch.lookup',
+          strategy: 'transaction',
+        ),
+        include: const <String, IncludeSpec>{},
+        includeDepth: 0,
+      );
+
+      final updated = <JsonMap>[];
+      for (var index = 0; index < identityRows.length; index++) {
+        final itemWhere = _identityWhereFromRow(identityRows[index]);
+        final row = await executor.update(
+          where: itemWhere,
+          data: data,
+          select: select,
+          include: include,
+          operation: trace,
+          phase: 'item.update',
+          strategy: 'transaction',
+          itemIndex: index,
+        );
+        if (row != null) {
+          updated.add(row);
+        }
+      }
       return updated;
     });
   }

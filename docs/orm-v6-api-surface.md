@@ -127,8 +127,10 @@ Direct mutations:
 | `createMany(...)` | implemented |
 | `createNested(...)` | implemented |
 | `update(...)` | implemented |
+| `updateAll(...)` | implemented |
 | `updateNested(...)` | implemented |
 | `delete(...)` | implemented |
+| `deleteAll(...)` | implemented |
 | `deleteCount(...)` | implemented |
 | `upsert(...)` | implemented |
 | `updateCount(...)` | implemented |
@@ -138,14 +140,17 @@ Chained mutations:
 ```dart
 users.where({...}).update(data: {...});
 users.where({...}).delete();
+users.where({...}).updateAll(data: {...});
+users.where({...}).deleteAll();
 users.where({...}).upsert(create: {...}, update: {...});
 users.where({...}).updateCount(data: {...});
 ```
 
 Rules:
-1. `updateCount(...)` and `deleteCount(...)` are count terminals.
-2. They require `where(...)` first.
-3. They do not accept row-shaping state such as `select(...)` or `include(...)`.
+1. `updateAll(...)` and `deleteAll(...)` are row-returning batch terminals.
+2. `updateCount(...)` and `deleteCount(...)` are count terminals.
+3. All four batch terminals require `where(...)` first.
+4. Count terminals do not accept row-shaping state such as `select(...)` or `include(...)`.
 
 ## SQL Surface
 

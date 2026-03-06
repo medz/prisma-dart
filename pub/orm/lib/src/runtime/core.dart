@@ -975,16 +975,6 @@ final class OrmRuntimeCore implements RuntimeCore {
     }
 
     final page = plan.page;
-    if ((cursor != null || page != null) && plan.distinct.isNotEmpty) {
-      throw runtimeError(
-        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
-        'Cursor and page windows do not support distinct yet.',
-        details: <String, Object?>{
-          'model': model.name,
-          'distinct': plan.distinct,
-        },
-      );
-    }
     if ((cursor != null || page != null) && plan.orderBy.isEmpty) {
       throw runtimeError(
         'PLAN.CURSOR_ORDER_BY_REQUIRED',

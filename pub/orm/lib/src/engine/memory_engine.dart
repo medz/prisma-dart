@@ -106,6 +106,10 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
       rows.sort((left, right) => _compareRows(left, right, read.orderBy));
     }
 
+    if (read.distinct.isNotEmpty) {
+      rows = _applyDistinctRows(rows, read.distinct);
+    }
+
     rows = _applyReadWindow(rows, read);
 
     final projected = rows
@@ -127,6 +131,10 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
       rows.sort((left, right) => _compareRows(left, right, read.orderBy));
     }
 
+    if (read.distinct.isNotEmpty) {
+      rows = _applyDistinctRows(rows, read.distinct);
+    }
+
     rows = _applyReadWindow(rows, read);
     final projected = rows
         .map((row) => _projectRow(row, read.select))
@@ -143,6 +151,26 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
         avg: aggregate.avg,
       ),
     );
+  }
+
+  List<JsonMap> _applyDistinctRows(List<JsonMap> rows, List<String> distinct) {
+    if (rows.isEmpty || distinct.isEmpty) {
+      return rows;
+    }
+
+    final seen = <_MemoryGroupKey>{};
+    final deduplicated = <JsonMap>[];
+    for (final row in rows) {
+      final key = _MemoryGroupKey(
+        distinct
+            .map((field) => row.containsKey(field) ? row[field] : null)
+            .toList(growable: false),
+      );
+      if (seen.add(key)) {
+        deduplicated.add(row);
+      }
+    }
+    return deduplicated;
   }
 
   EngineResponse _readGroupedAggregate(List<JsonMap> bucket, OrmReadPlan read) {

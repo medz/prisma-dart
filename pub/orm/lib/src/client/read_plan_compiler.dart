@@ -42,9 +42,6 @@ final class _OrmReadPlanCompiler {
     }
 
     final isCollectionRead = state.resultMode != OrmReadResultMode.oneOrNull;
-    final applyWindowAtClient =
-        state._distinct.isNotEmpty &&
-        (state._cursor != null || state._page != null);
     final resolvedTake = state._page != null
         ? null
         : state.resultMode == OrmReadResultMode.firstOrNull
@@ -69,7 +66,6 @@ final class _OrmReadPlanCompiler {
       delegate: _delegate,
       state: state,
       normalizedInclude: normalizedInclude,
-      applyWindowAtClient: applyWindowAtClient,
       plan: OrmPlan.read(
         contractHash: _delegate._client.contract.hash,
         target: _delegate._client.contract.target,
@@ -90,16 +86,16 @@ final class _OrmReadPlanCompiler {
         repositoryTrace: state._repositoryTrace,
         model: _delegate.modelName,
         where: state._where,
-        skip: isCollectionRead && state._distinct.isEmpty ? state._skip : null,
-        take: isCollectionRead && state._distinct.isEmpty ? resolvedTake : null,
+        skip: isCollectionRead ? state._skip : null,
+        take: isCollectionRead ? resolvedTake : null,
         orderBy: isCollectionRead ? state._orderBy : const <OrmOrderBy>[],
         distinct: isCollectionRead ? state._distinct : const <String>[],
         select: readSelect,
         include: _buildOrmIncludePlanMap(normalizedInclude),
-        cursor: applyWindowAtClient || state._cursor == null
+        cursor: state._cursor == null
             ? null
             : OrmReadCursorPlan(values: state._cursor!),
-        page: applyWindowAtClient ? null : state._page,
+        page: state._page,
         resultMode: state.resultMode,
       ),
     );

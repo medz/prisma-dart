@@ -152,6 +152,14 @@ final class SqlAdapter
     required String model,
   }) {
     final read = plan.read!;
+    if (read.distinct.isNotEmpty) {
+      return _buildReadSourceQuery(
+        table: table,
+        model: model,
+        read: read,
+        selectColumns: _buildSelectColumns(read.select),
+      );
+    }
     final whereParams = <Object?>[];
     final whereClause = _buildWhereClause(
       model: model,
@@ -432,6 +440,11 @@ final class SqlAdapter
     return select.map(_id).join(', ');
   }
 
+  String _buildAllModelColumns(ModelContract model) {
+    final fields = model.fields.toList(growable: false)..sort();
+    return fields.map(_id).join(', ');
+  }
+
   List<String> _aggregateBaseFields(OrmReadAggregatePlan aggregate) {
     final fields = <String>{
       ...aggregate.count,
@@ -514,6 +527,14 @@ final class SqlAdapter
     required OrmReadPlan read,
     required String selectColumns,
   }) {
+    if (read.distinct.isNotEmpty) {
+      return _buildDistinctReadSourceQuery(
+        table: table,
+        model: model,
+        read: read,
+        selectColumns: selectColumns,
+      );
+    }
     final whereParams = <Object?>[];
     final whereClause = _buildWhereClause(
       model: model,
@@ -549,6 +570,76 @@ final class SqlAdapter
       action: OrmAction.read,
       text:
           'SELECT $selectColumns FROM ${_id(table)}'
+          '$mergedWhereClause$orderByClause${_buildReadLimitOffsetClause(read, params)}',
+      parameters: params,
+    );
+  }
+
+  SqlStatement _buildDistinctReadSourceQuery({
+    required String table,
+    required String model,
+    required OrmReadPlan read,
+    required String selectColumns,
+  }) {
+    final modelContract = contract.models[model];
+    if (modelContract == null) {
+      throw ModelNotFoundException(model, contract.models.keys);
+    }
+
+    final sourceColumns = _buildAllModelColumns(modelContract);
+    final resolvedSelectColumns = selectColumns == '*'
+        ? sourceColumns
+        : selectColumns;
+    final whereParams = <Object?>[];
+    final whereClause = _buildWhereClause(
+      model: model,
+      where: read.where,
+      params: whereParams,
+    );
+    final partitionOrder = _buildOrderByClause(
+      read.orderBy.isEmpty
+          ? read.distinct
+                .map((field) => OrmOrderBy(field))
+                .toList(growable: false)
+          : read.orderBy,
+    );
+    final distinctPartition = read.distinct.map(_id).join(', ');
+    final baseQuery =
+        'SELECT $sourceColumns, '
+        'ROW_NUMBER() OVER (PARTITION BY $distinctPartition$partitionOrder) '
+        'AS ${_id('_distinct_rank')} '
+        'FROM ${_id(table)}$whereClause';
+    final rankWhere = ' WHERE ${_id('_distinct_rank')} = 1';
+    final windowParams = <Object?>[];
+    final windowPredicate = _buildCursorWindowPredicate(
+      read: read,
+      params: windowParams,
+    );
+    final mergedWhereClause = _mergeWhereClauses(rankWhere, windowPredicate);
+    final orderByClause = _buildOrderByClause(read.orderBy);
+
+    if (read.page?.before != null) {
+      final limitParams = <Object?>[];
+      final innerOrderByClause = _buildOrderByClause(
+        _reverseOrderBy(read.orderBy),
+      );
+      final innerLimitClause = _buildReadLimitOffsetClause(read, limitParams);
+      return SqlStatement(
+        action: OrmAction.read,
+        text:
+            'SELECT $resolvedSelectColumns FROM ('
+            'SELECT * FROM ($baseQuery) AS ${_id('_distinct')}$mergedWhereClause'
+            '$innerOrderByClause$innerLimitClause'
+            ') AS ${_id('_page')}$orderByClause',
+        parameters: <Object?>[...whereParams, ...windowParams, ...limitParams],
+      );
+    }
+
+    final params = <Object?>[...whereParams, ...windowParams];
+    return SqlStatement(
+      action: OrmAction.read,
+      text:
+          'SELECT $resolvedSelectColumns FROM ($baseQuery) AS ${_id('_distinct')}'
           '$mergedWhereClause$orderByClause${_buildReadLimitOffsetClause(read, params)}',
       parameters: params,
     );

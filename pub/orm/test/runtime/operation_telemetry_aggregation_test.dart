@@ -223,6 +223,82 @@ void main() {
       await client.disconnect();
     });
 
+    test('aggregates updateAll into one operation record', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      await users.createMany(
+        data: <JsonMap>[
+          <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+          <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+        ],
+      );
+
+      final updated = await users
+          .query()
+          .where(<String, Object?>{'email': 'a@x.com'})
+          .select(const <String>['id', 'email'])
+          .updateAll(data: <String, Object?>{'email': 'updated@x.com'});
+
+      expect(updated, hasLength(2));
+      final telemetry = client.operationTelemetry();
+      expect(telemetry, isNotNull);
+      expect(telemetry?.kind, 'User.updateAll');
+      expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+      expect(telemetry?.completed, isTrue);
+      expect(telemetry?.statementCount, 3);
+      expect(telemetry?.affectedRows, 2);
+      expect(
+        telemetry?.steps.map((step) => step.trace.phase).toList(),
+        <String>['batch.lookup', 'item.update', 'item.update'],
+      );
+      expect(
+        telemetry?.steps.map((step) => step.trace.itemIndex).toList(),
+        <int?>[null, 0, 1],
+      );
+      await client.disconnect();
+    });
+
+    test('aggregates deleteAll into one operation record', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      await users.createMany(
+        data: <JsonMap>[
+          <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+          <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+        ],
+      );
+
+      final deleted = await users
+          .query()
+          .where(<String, Object?>{'email': 'a@x.com'})
+          .select(const <String>['id', 'email'])
+          .deleteAll();
+
+      expect(deleted, hasLength(2));
+      final telemetry = client.operationTelemetry();
+      expect(telemetry, isNotNull);
+      expect(telemetry?.kind, 'User.deleteAll');
+      expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+      expect(telemetry?.completed, isTrue);
+      expect(telemetry?.statementCount, 3);
+      expect(telemetry?.affectedRows, 2);
+      expect(
+        telemetry?.steps.map((step) => step.trace.phase).toList(),
+        <String>['batch.lookup', 'item.delete', 'item.delete'],
+      );
+      expect(
+        telemetry?.steps.map((step) => step.trace.itemIndex).toList(),
+        <int?>[null, 0, 1],
+      );
+      await client.disconnect();
+    });
+
     test('aggregates pageResult probes into one operation record', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();

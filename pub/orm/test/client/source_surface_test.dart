@@ -197,11 +197,27 @@ void main() {
         );
         expect(
           RegExp(
+            r"class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+updateAll\(\{required\s+JsonMap\s+data\}\)\s*\{[\s\S]*?_assertMutationQueryState\(\s*action:\s*'updateAll',\s*requireWhere:\s*true\);[\s\S]*?return\s+_delegate\._updateAll\(data:\s*data,\s*spec:\s*_state\);",
+          ).hasMatch(source),
+          isTrue,
+          reason:
+              'Expected ModelQuery.updateAll(...) to require where() and terminate through the private mutation helper.',
+        );
+        expect(
+          RegExp(
             r"class\s+ModelQuery\s*\{[\s\S]*?Future<int>\s+updateCount\(\{required\s+JsonMap\s+data\}\)\s*\{[\s\S]*?_assertMutationQueryState\(\s*action:\s*'updateCount',\s*requireWhere:\s*true,\s*allowSelect:\s*false,\s*allowInclude:\s*false,\s*\);[\s\S]*?return\s+_delegate\._updateCount\(data:\s*data,\s*spec:\s*_state\);",
           ).hasMatch(source),
           isTrue,
           reason:
               'Expected ModelQuery.updateCount(...) to reject row-shaping state and terminate through the private mutation helper.',
+        );
+        expect(
+          RegExp(
+            r"class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+deleteAll\(\)\s*\{[\s\S]*?_assertMutationQueryState\(\s*action:\s*'deleteAll',\s*requireWhere:\s*true\);[\s\S]*?return\s+_delegate\._deleteAll\(spec:\s*_state\);",
+          ).hasMatch(source),
+          isTrue,
+          reason:
+              'Expected ModelQuery.deleteAll(...) to require where() and terminate through the private mutation helper.',
         );
         expect(
           RegExp(

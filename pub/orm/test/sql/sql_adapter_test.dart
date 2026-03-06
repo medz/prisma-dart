@@ -191,6 +191,63 @@ void main() {
     expect(statement.parameters, <Object?>[4, 2]);
   });
 
+  test('lowers distinct cursor reads through ranked deduplication', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = readPlan(
+      contract: contract,
+      model: 'User',
+      orderBy: const <OrmOrderBy>[OrmOrderBy('email'), OrmOrderBy('id')],
+      distinct: const <String>['email'],
+      cursor: OrmReadCursorPlan(
+        values: const <String, Object?>{'email': 'a@example.com', 'id': 2},
+      ),
+      take: 2,
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT "email", "id" FROM (SELECT "email", "id", '
+      'ROW_NUMBER() OVER (PARTITION BY "email" ORDER BY "email" ASC, "id" ASC) '
+      'AS "_distinct_rank" FROM "users") AS "_distinct" '
+      'WHERE "_distinct_rank" = 1 AND ((("email" > ?) OR ("email" = ? AND "id" > ?)) OR ("email" = ? AND "id" = ?)) '
+      'ORDER BY "email" ASC, "id" ASC LIMIT ?',
+    );
+    expect(
+      statement.parameters,
+      <Object?>['a@example.com', 'a@example.com', 2, 'a@example.com', 2, 2],
+    );
+  });
+
+  test('lowers distinct page before reads through ranked deduplication', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = readPlan(
+      contract: contract,
+      model: 'User',
+      orderBy: const <OrmOrderBy>[OrmOrderBy('email'), OrmOrderBy('id')],
+      distinct: const <String>['email'],
+      page: OrmReadPagePlan(
+        size: 2,
+        before: const <String, Object?>{'email': 'c@example.com', 'id': 4},
+      ),
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT "email", "id" FROM (SELECT * FROM (SELECT "email", "id", '
+      'ROW_NUMBER() OVER (PARTITION BY "email" ORDER BY "email" ASC, "id" ASC) '
+      'AS "_distinct_rank" FROM "users") AS "_distinct" '
+      'WHERE "_distinct_rank" = 1 AND (("email" < ?) OR ("email" = ? AND "id" < ?)) '
+      'ORDER BY "email" DESC, "id" DESC LIMIT ?) AS "_page" '
+      'ORDER BY "email" ASC, "id" ASC',
+    );
+    expect(
+      statement.parameters,
+      <Object?>['c@example.com', 'c@example.com', 4, 2],
+    );
+  });
+
   test('lowers aggregate read shapes through a windowed subquery', () {
     final adapter = SqlAdapter(contract: contract);
     final plan = readPlan(

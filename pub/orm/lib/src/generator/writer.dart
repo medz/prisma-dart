@@ -2139,10 +2139,37 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<List<${model.dataClassName}>> updateAll({');
+    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).updateAll(data: data);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<int> deleteCount({');
     buffer.writeln('    required ${model.whereInputClassName} where,');
     buffer.writeln('  }) {');
     buffer.writeln('    return query(where: where).deleteCount();');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<${model.dataClassName}>> deleteAll({');
+    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).deleteAll();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -3132,6 +3159,24 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
+      '  Future<List<${model.dataClassName}>> updateAll({required ${model.updateInputClassName} data}) async {',
+    );
+    buffer.writeln(
+      "    _assertMutationQueryState(action: 'updateAll', requireWhere: true);",
+    );
+    buffer.writeln('    final rows = await _delegate._delegate.updateAll(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln(
+      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
       '  Future<int> updateCount({required ${model.updateInputClassName} data}) {',
     );
     buffer.writeln(
@@ -3151,6 +3196,21 @@ final class TypedClientWriter {
     buffer.writeln('    return _delegate._delegate.deleteCount(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<${model.dataClassName}>> deleteAll() async {');
+    buffer.writeln(
+      "    _assertMutationQueryState(action: 'deleteAll', requireWhere: true);",
+    );
+    buffer.writeln('    final rows = await _delegate._delegate.deleteAll(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln(
+      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
+    );
     buffer.writeln('  }');
     buffer.writeln();
 

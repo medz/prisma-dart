@@ -123,7 +123,7 @@ void main() {
     );
 
     test(
-      'inspectPlan marks stream as bufferedYield when distinct requires client-side collection',
+      'inspectPlan keeps distinct streams native when execution handles deduplication',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         final users = client.db.orm.model('User');
@@ -137,15 +137,15 @@ void main() {
             inspected['terminalExecution'] as Map<String, Object?>;
         final stream = execution['stream'] as Map<String, Object?>;
 
-        expect(stream['delivery'], 'bufferedYield');
-        expect(stream['degraded'], isTrue);
-        expect(stream['reasons'], <String>['distinct']);
-        expect(stream['distinctAppliedAt'], 'client');
+        expect(stream['delivery'], 'nativeStream');
+        expect(stream['degraded'], isFalse);
+        expect(stream['reasons'], isEmpty);
+        expect(stream['distinctAppliedAt'], 'engine');
       },
     );
 
     test(
-      'inspectPlan marks pageResult as client-windowed when distinct requires buffered paging',
+      'inspectPlan exposes engine-backed distinct page envelopes',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         final users = client.db.orm.model('User');
@@ -162,9 +162,9 @@ void main() {
         final pageResult = execution['pageResult'] as Map<String, Object?>;
 
         expect(pageResult['delivery'], 'pageEnvelope');
-        expect(pageResult['degraded'], isTrue);
-        expect(pageResult['windowAppliedAt'], 'client');
-        expect(pageResult['reasons'], <String>['distinct']);
+        expect(pageResult['degraded'], isFalse);
+        expect(pageResult['windowAppliedAt'], 'engine');
+        expect(pageResult['reasons'], isEmpty);
       },
     );
 
@@ -899,10 +899,20 @@ void main() {
       );
     });
 
-    test('updateCount and deleteCount require where() first', () {
+    test('batch mutation terminals require where() first', () {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');
 
+      expect(
+        () => users.query().updateAll(data: <String, Object?>{'email': 'x'}),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.MUTATION_WHERE_REQUIRED',
+          ),
+        ),
+      );
       expect(
         () => users.query().updateCount(data: <String, Object?>{'email': 'x'}),
         throwsA(
@@ -923,6 +933,53 @@ void main() {
           ),
         ),
       );
+      expect(
+        () => users.query().deleteAll(),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.MUTATION_WHERE_REQUIRED',
+          ),
+        ),
+      );
+    });
+
+    test('updateAll updates matching rows and returns shaped rows', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      try {
+        final users = client.db.orm.model('User');
+        await users.createMany(
+          data: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+          ],
+        );
+
+        final rows = await users
+            .query()
+            .where(<String, Object?>{'email': 'a@x.com'})
+            .select(const <String>['id', 'email'])
+            .updateAll(data: <String, Object?>{'email': 'updated@x.com'});
+
+        expect(rows, hasLength(2));
+        expect(
+          rows.map((row) => row['email']).toList(growable: false),
+          <Object?>['updated@x.com', 'updated@x.com'],
+        );
+        expect(
+          rows.every(
+            (row) =>
+                row.keys.length == 2 &&
+                row.keys.toSet().containsAll(const <String>{'id', 'email'}),
+          ),
+          isTrue,
+        );
+      } finally {
+        await client.disconnect();
+      }
     });
 
     test('updateCount updates matching rows and returns affected count', () async {
@@ -955,8 +1012,42 @@ void main() {
       }
     });
 
+    test('deleteAll deletes matching rows and returns deleted rows', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      try {
+        final users = client.db.orm.model('User');
+        await users.createMany(
+          data: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+          ],
+        );
+
+        final rows = await users
+            .query()
+            .where(<String, Object?>{'email': 'a@x.com'})
+            .select(const <String>['id', 'email'])
+            .deleteAll();
+
+        expect(rows, hasLength(2));
+        expect(
+          rows.map((row) => row['email']).toList(growable: false),
+          <Object?>['a@x.com', 'a@x.com'],
+        );
+        final remaining = await users.orderByField('id').all();
+        expect(
+          remaining.map((row) => row['id']).toList(growable: false),
+          <Object?>['u3'],
+        );
+      } finally {
+        await client.disconnect();
+      }
+    });
+
     test(
-      'pageResult executes distinct windows with client-side paging semantics',
+      'pageResult executes distinct windows through engine-backed semantics',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();

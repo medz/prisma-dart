@@ -1346,7 +1346,7 @@ void main() {
       await client.disconnect();
     });
 
-    test('supports createMany and deleteCount helpers', () async {
+    test('supports batch mutation helpers', () async {
       final engine = _CountingEngine(inner: MemoryEngine());
       final client = OrmClient(contract: contract, engine: engine);
       await client.connect();
@@ -1394,9 +1394,42 @@ void main() {
       );
 
       engine.reset();
+      final updatedRows = await users
+          .query()
+          .where(<String, Object?>{'email': 'a@x.com'})
+          .select(const <String>['id', 'email'])
+          .updateAll(data: <String, Object?>{'email': 'updated@x.com'});
+      expect(updatedRows, hasLength(2));
+      expect(
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
+        <OrmAction>[OrmAction.read, OrmAction.update, OrmAction.update],
+      );
+      final updateAllTraces = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final updateAllOperationId = updateAllTraces.first.operationId;
+      expect(updateAllOperationId, isNotNull);
+      expect(
+        updateAllTraces.map((trace) => trace.operationId).toSet(),
+        <String>{updateAllOperationId},
+      );
+      expect(
+        updateAllTraces.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.updateAll', 'User.updateAll', 'User.updateAll'],
+      );
+      expect(
+        updateAllTraces.map((trace) => trace.phase).toList(growable: false),
+        <String>['batch.lookup', 'item.update', 'item.update'],
+      );
+      expect(
+        updateAllTraces.map((trace) => trace.itemIndex).toList(growable: false),
+        <int?>[null, 0, 1],
+      );
+
+      engine.reset();
       final updated = await users.updateCount(
-        where: <String, Object?>{'email': 'a@x.com'},
-        data: <String, Object?>{'email': 'updated@x.com'},
+        where: <String, Object?>{'email': 'updated@x.com'},
+        data: <String, Object?>{'email': 'counted@x.com'},
       );
       expect(updated, 2);
       expect(
@@ -1433,13 +1466,46 @@ void main() {
       );
 
       engine.reset();
-      final deleted = await users.deleteCount(
-        where: <String, Object?>{'email': 'updated@x.com'},
-      );
-      expect(deleted, 2);
+      final deletedRows = await users
+          .query()
+          .where(<String, Object?>{'email': 'counted@x.com'})
+          .select(const <String>['id', 'email'])
+          .deleteAll();
+      expect(deletedRows, hasLength(2));
       expect(
         engine.executedPlans.map((plan) => plan.action).toList(growable: false),
-        <OrmAction>[OrmAction.delete, OrmAction.delete, OrmAction.delete],
+        <OrmAction>[OrmAction.read, OrmAction.delete, OrmAction.delete],
+      );
+      final deleteAllTraces = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final deleteAllOperationId = deleteAllTraces.first.operationId;
+      expect(deleteAllOperationId, isNotNull);
+      expect(
+        deleteAllTraces.map((trace) => trace.operationId).toSet(),
+        <String>{deleteAllOperationId},
+      );
+      expect(
+        deleteAllTraces.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.deleteAll', 'User.deleteAll', 'User.deleteAll'],
+      );
+      expect(
+        deleteAllTraces.map((trace) => trace.phase).toList(growable: false),
+        <String>['batch.lookup', 'item.delete', 'item.delete'],
+      );
+      expect(
+        deleteAllTraces.map((trace) => trace.itemIndex).toList(growable: false),
+        <int?>[null, 0, 1],
+      );
+
+      engine.reset();
+      final deleted = await users.deleteCount(
+        where: <String, Object?>{'email': 'b@x.com'},
+      );
+      expect(deleted, 1);
+      expect(
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
+        <OrmAction>[OrmAction.delete, OrmAction.delete],
       );
       final deleteTraces = engine.executedPlans
           .map(_readRepositoryTrace)
@@ -1451,27 +1517,27 @@ void main() {
       });
       expect(
         deleteTraces.map((trace) => trace.kind).toList(growable: false),
-        <String>['User.deleteCount', 'User.deleteCount', 'User.deleteCount'],
+        <String>['User.deleteCount', 'User.deleteCount'],
       );
       expect(
         deleteTraces.map((trace) => trace.phase).toList(growable: false),
-        <String>['item.delete', 'item.delete', 'item.delete'],
+        <String>['item.delete', 'item.delete'],
       );
       expect(
         deleteTraces.map((trace) => trace.strategy).toList(growable: false),
-        <String>['transaction', 'transaction', 'transaction'],
+        <String>['transaction', 'transaction'],
       );
       expect(
         deleteTraces.map((trace) => trace.step).toList(growable: false),
-        <int>[1, 2, 3],
+        <int>[1, 2],
       );
       expect(
         deleteTraces.map((trace) => trace.itemIndex).toList(growable: false),
-        <int?>[0, 1, 2],
+        <int?>[0, 1],
       );
 
       final remaining = await users.count();
-      expect(remaining, 1);
+      expect(remaining, 0);
       await client.disconnect();
     });
 

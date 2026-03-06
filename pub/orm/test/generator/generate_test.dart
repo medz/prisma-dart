@@ -1029,6 +1029,30 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserData>>\s+updateAll\(\{\s*required\s+UserWhereInput\s+where,\s*required\s+UserUpdateInput\s+data,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.updateAll(...) to expose typed where and data input.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserData>>\s+updateAll\(\{\s*required\s+UserUpdateInput\s+data\}\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.updateAll(...) to expose typed update data input.',
+        );
+        expect(
+          generatedSource.contains(
+            "_assertMutationQueryState(action: 'updateAll', requireWhere: true);",
+          ),
+          isTrue,
+          reason:
+              'Expected UserQuery.updateAll(...) to require where() before execution.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateCount\(\{\s*required\s+UserWhereInput\s+where,\s*required\s+UserUpdateInput\s+data,',
           ).hasMatch(generatedSource),
           isTrue,
@@ -1229,6 +1253,14 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserData>>\s+updateAll\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.updateAll\(data:\s*data\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate updateAll(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateCount\(\{[\s\S]*?return\s+query\(where:\s*where\)\.updateCount\(data:\s*data\);',
           ).hasMatch(generatedSource),
           isTrue,
@@ -1242,6 +1274,14 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected generated delegate update(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserData>>\s+deleteAll\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.deleteAll\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate deleteAll(...) to route through typed query.',
         );
         expect(
           RegExp(
@@ -1725,6 +1765,29 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected UserQuery.createMany(...) to exist with typed input list.',
+        );
+        expect(
+          RegExp(
+            r'Future<List<UserData>>\s+deleteAll\(\{\s*required\s+UserWhereInput\s+where,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.deleteAll(...) to accept typed where input.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserData>>\s+deleteAll\s*\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.deleteAll() to exist.',
+        );
+        expect(
+          generatedSource.contains(
+            "_assertMutationQueryState(action: 'deleteAll', requireWhere: true);",
+          ),
+          isTrue,
+          reason:
+              'Expected UserQuery.deleteAll() to require where() before execution.',
         );
         expect(
           RegExp(
