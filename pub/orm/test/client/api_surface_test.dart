@@ -172,6 +172,8 @@ void main() {
 
           final summary = explained['planSummary'] as Map<String, Object?>;
           expect(summary['model'], 'User');
+          expect(client.telemetry(), isNull);
+          expect(client.operationTelemetry(), isNull);
         } finally {
           await client.disconnect();
         }
