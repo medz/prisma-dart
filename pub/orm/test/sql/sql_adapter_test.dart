@@ -156,10 +156,7 @@ void main() {
       contract: contract,
       model: 'User',
       orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-      page: OrmReadPagePlan(
-        size: 2,
-        after: const <String, Object?>{'id': 2},
-      ),
+      page: OrmReadPagePlan(size: 2, after: const <String, Object?>{'id': 2}),
     );
 
     final statement = adapter.lower(plan);
@@ -176,10 +173,7 @@ void main() {
       contract: contract,
       model: 'User',
       orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-      page: OrmReadPagePlan(
-        size: 2,
-        before: const <String, Object?>{'id': 4},
-      ),
+      page: OrmReadPagePlan(size: 2, before: const <String, Object?>{'id': 4}),
     );
 
     final statement = adapter.lower(plan);
@@ -521,7 +515,7 @@ void main() {
     expect(deleteSelectedColumns.parameters, <Object?>['u1']);
   });
 
-  test('decodes SQL result by action response shape', () {
+  test('decodes SQL result by action response shape', () async {
     final adapter = SqlAdapter(contract: contract);
 
     final findMany = adapter.decode(
@@ -533,7 +527,7 @@ void main() {
       ),
       readPlan(contract: contract, model: 'User'),
     );
-    expect(findMany.data, isA<List<Object?>>());
+    expect(_collectResponseRows(findMany), completion(isA<List<JsonMap>>()));
 
     final findUnique = adapter.decode(
       const SqlResult(
@@ -547,11 +541,9 @@ void main() {
         resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
-    if (findUnique.data case final Map<String, Object?> row) {
-      expect(row['id'], 'u1');
-    } else {
-      fail('Expected row map for findUnique decode.');
-    }
+    expect(await _collectSingleResponseRow(findUnique), <String, Object?>{
+      'id': 'u1',
+    });
 
     final mutation = adapter.decode(
       const SqlResult(
@@ -563,14 +555,12 @@ void main() {
       mutationPlan(contract: contract, model: 'User', action: OrmAction.update),
     );
     expect(mutation.affectedRows, 1);
-    if (mutation.data case final Map<String, Object?> row) {
-      expect(row['id'], 'u1');
-    } else {
-      fail('Expected row map for mutation decode.');
-    }
+    expect(await _collectSingleResponseRow(mutation), <String, Object?>{
+      'id': 'u1',
+    });
   });
 
-  test('applies codec encode for where/data and decode for rows', () {
+  test('applies codec encode for where/data and decode for rows', () async {
     final codecRegistry = SqlCodecRegistry().withField(
       model: 'User',
       field: 'email',
@@ -612,14 +602,10 @@ void main() {
         resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
-    if (decoded.data case final Map<String, Object?> row) {
-      expect(row, <String, Object?>{
-        'email': 'app:wire:db@example.com',
-        'id': 'u1',
-      });
-    } else {
-      fail('Expected row map for codec decode.');
-    }
+    expect(await _collectSingleResponseRow(decoded), <String, Object?>{
+      'email': 'app:wire:db@example.com',
+      'id': 'u1',
+    });
   });
 
   test('encodes where operator values via codec resolver', () {
@@ -704,7 +690,7 @@ void main() {
     ]);
   });
 
-  test('keeps default no-codec behavior unchanged', () {
+  test('keeps default no-codec behavior unchanged', () async {
     final adapterWithoutCodec = SqlAdapter(contract: contract);
     final adapterWithEmptyCodec = SqlAdapter(
       contract: contract,
@@ -751,95 +737,120 @@ void main() {
       response,
       decodePlan,
     );
-    expect(decodedWithEmptyCodec.data, decodedWithoutCodec.data);
-    expect(decodedWithEmptyCodec.data, <String, Object?>{
+    final withoutCodecRow = await _collectSingleResponseRow(
+      decodedWithoutCodec,
+    );
+    final emptyCodecRow = await _collectSingleResponseRow(
+      decodedWithEmptyCodec,
+    );
+    expect(emptyCodecRow, withoutCodecRow);
+    expect(emptyCodecRow, <String, Object?>{
       'id': 'u1',
       'email': 'db@example.com',
     });
   });
 
-  test('matches codecs by model and field and only transforms hit fields', () {
-    final codecRegistry = SqlCodecRegistry()
-        .withField(
-          model: 'User',
-          field: 'email',
-          codec: SqlLambdaFieldCodec(
-            encode: (value) => value == null ? null : 'user-email:$value',
-            decode: (value) => value == null ? null : 'user-row:$value',
-          ),
-        )
-        .withField(
-          model: 'OtherModel',
-          field: 'email',
-          codec: SqlLambdaFieldCodec(
-            encode: (value) => value == null ? null : 'other:$value',
-            decode: (value) => value == null ? null : 'other:$value',
-          ),
-        )
-        .withField(
-          model: 'User',
-          field: 'otherField',
-          codec: SqlLambdaFieldCodec(
-            encode: (value) => value == null ? null : 'otherField:$value',
-            decode: (value) => value == null ? null : 'otherField:$value',
-          ),
-        );
+  test(
+    'matches codecs by model and field and only transforms hit fields',
+    () async {
+      final codecRegistry = SqlCodecRegistry()
+          .withField(
+            model: 'User',
+            field: 'email',
+            codec: SqlLambdaFieldCodec(
+              encode: (value) => value == null ? null : 'user-email:$value',
+              decode: (value) => value == null ? null : 'user-row:$value',
+            ),
+          )
+          .withField(
+            model: 'OtherModel',
+            field: 'email',
+            codec: SqlLambdaFieldCodec(
+              encode: (value) => value == null ? null : 'other:$value',
+              decode: (value) => value == null ? null : 'other:$value',
+            ),
+          )
+          .withField(
+            model: 'User',
+            field: 'otherField',
+            codec: SqlLambdaFieldCodec(
+              encode: (value) => value == null ? null : 'otherField:$value',
+              decode: (value) => value == null ? null : 'otherField:$value',
+            ),
+          );
 
-    final adapter = SqlAdapter(
-      contract: contract,
-      codecResolver: codecRegistry,
-    );
-    final statement = adapter.lower(
-      mutationPlan(
+      final adapter = SqlAdapter(
         contract: contract,
-        model: 'User',
-        action: OrmAction.update,
-        data: <String, Object?>{'id': 'u2', 'email': 'next@example.com'},
-        where: <String, Object?>{'id': 'u1', 'email': 'find@example.com'},
-      ),
-    );
-    expect(statement.parameters, <Object?>[
-      'u2',
-      'user-email:next@example.com',
-      'u1',
-      'user-email:find@example.com',
-    ]);
+        codecResolver: codecRegistry,
+      );
+      final statement = adapter.lower(
+        mutationPlan(
+          contract: contract,
+          model: 'User',
+          action: OrmAction.update,
+          data: <String, Object?>{'id': 'u2', 'email': 'next@example.com'},
+          where: <String, Object?>{'id': 'u1', 'email': 'find@example.com'},
+        ),
+      );
+      expect(statement.parameters, <Object?>[
+        'u2',
+        'user-email:next@example.com',
+        'u1',
+        'user-email:find@example.com',
+      ]);
 
-    final decoded = adapter.decode(
-      const SqlResult(
-        rows: <JsonMap>[
-          <String, Object?>{
-            'id': 'u1',
-            'email': 'wire@example.com',
-            'unmapped': 'keep',
-          },
-        ],
-      ),
-      readPlan(
-        contract: contract,
-        model: 'User',
-        resultMode: OrmReadResultMode.oneOrNull,
-      ),
-    );
-    if (decoded.data case final Map<String, Object?> row) {
-      expect(row, <String, Object?>{
+      final decoded = adapter.decode(
+        const SqlResult(
+          rows: <JsonMap>[
+            <String, Object?>{
+              'id': 'u1',
+              'email': 'wire@example.com',
+              'unmapped': 'keep',
+            },
+          ],
+        ),
+        readPlan(
+          contract: contract,
+          model: 'User',
+          resultMode: OrmReadResultMode.oneOrNull,
+        ),
+      );
+      expect(await _collectSingleResponseRow(decoded), <String, Object?>{
         'id': 'u1',
         'email': 'user-row:wire@example.com',
         'unmapped': 'keep',
       });
-    } else {
-      fail('Expected row map for model+field codec matching.');
-    }
-  });
+    },
+  );
 
   test('throws when lowering unknown model', () {
     final adapter = SqlAdapter(contract: contract);
 
     expect(
-      () => adapter.lower(
-        readPlan(contract: contract, model: 'Missing'),
-      ),
+      () => adapter.lower(readPlan(contract: contract, model: 'Missing')),
       throwsA(isA<ModelNotFoundException>()),
     );
   });
+}
+
+Future<List<JsonMap>> _collectResponseRows(EngineResponse response) async {
+  final rows = <JsonMap>[];
+  await for (final row in response.rows) {
+    if (row is! Map<String, Object?>) {
+      fail('Expected row map but got ${row.runtimeType}.');
+    }
+    rows.add(row);
+  }
+  return rows;
+}
+
+Future<JsonMap?> _collectSingleResponseRow(EngineResponse response) async {
+  final rows = await _collectResponseRows(response);
+  if (rows.isEmpty) {
+    return null;
+  }
+  if (rows.length > 1) {
+    fail('Expected a single row but got ${rows.length}.');
+  }
+  return rows.single;
 }

@@ -244,7 +244,7 @@ final class _NoMutationReturnEngine implements OrmEngine {
     if (plan.action == OrmAction.create ||
         plan.action == OrmAction.update ||
         plan.action == OrmAction.delete) {
-      return EngineResponse(affectedRows: response.affectedRows);
+      return EngineResponse.empty(affectedRows: response.affectedRows);
     }
     return response;
   }

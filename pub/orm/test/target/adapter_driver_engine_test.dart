@@ -86,7 +86,8 @@ void main() {
     expect(driver.requests, <String>['User:read']);
     expect(response.affectedRows, 1);
 
-    final row = response.data;
+    final rows = await response.rows.toList();
+    final row = rows.single;
     expect(row, isA<Map<String, Object?>>());
     if (row case final Map<String, Object?> map) {
       expect(map['request'], 'User:read');
@@ -229,14 +230,11 @@ final class _TrackingAdapter implements TargetAdapter<String, String> {
   @override
   EngineResponse decode(String response, OrmPlan plan) {
     decodedRaw.add(response);
-    return EngineResponse(
-      data: <String, Object?>{
-        'request': '${plan.model}:${plan.action.name}',
-        'action': plan.action.name,
-        'whereId': plan.read?.where['id'],
-      },
-      affectedRows: 1,
-    );
+    return EngineResponse.buffered(<String, Object?>{
+      'request': '${plan.model}:${plan.action.name}',
+      'action': plan.action.name,
+      'whereId': plan.read?.where['id'],
+    }, affectedRows: 1);
   }
 }
 

@@ -170,8 +170,8 @@ final class SqlAdapter
         ),
         OrmAction.create ||
         OrmAction.update ||
-        OrmAction.delete => EngineResponse(
-          data: _firstOrNull(response.rows),
+        OrmAction.delete => EngineResponse.buffered(
+          _firstOrNull(response.rows),
           affectedRows: response.affectedRows,
         ),
       };
@@ -186,8 +186,8 @@ final class SqlAdapter
       ),
       OrmAction.create ||
       OrmAction.update ||
-      OrmAction.delete => EngineResponse(
-        data: _firstOrNull(decodedRows),
+      OrmAction.delete => EngineResponse.buffered(
+        _firstOrNull(decodedRows),
         affectedRows: response.affectedRows,
       ),
     };
@@ -261,8 +261,8 @@ final class SqlAdapter
   }) {
     return switch (plan.read!.resultMode) {
       OrmReadResultMode.firstOrNull || OrmReadResultMode.oneOrNull =>
-        EngineResponse(data: _firstOrNull(rows), affectedRows: affectedRows),
-      _ => EngineResponse(data: rows, affectedRows: affectedRows),
+        EngineResponse.buffered(_firstOrNull(rows), affectedRows: affectedRows),
+      _ => EngineResponse.buffered(rows, affectedRows: affectedRows),
     };
   }
 

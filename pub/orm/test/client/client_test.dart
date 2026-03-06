@@ -185,9 +185,9 @@ void main() {
       }).firstOrNull();
       expect(sqlRow?['email'], 'a@example.com');
 
-      final ormRow = await client.db.orm.model('User').oneOrNull(
-        where: <String, Object?>{'id': 'u1'},
-      );
+      final ormRow = await client.db.orm
+          .model('User')
+          .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(ormRow?['id'], 'u1');
       await client.disconnect();
     });
@@ -357,56 +357,59 @@ void main() {
       await client.disconnect();
     });
 
-    test('rejects legacy and invalid typed repository trace metadata', () async {
-      final client = OrmClient(contract: contract, engine: MemoryEngine());
-      await client.connect();
+    test(
+      'rejects legacy and invalid typed repository trace metadata',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
 
-      await expectLater(
-        client.execute(
-          OrmPlan.read(
-            contractHash: contract.hash,
-            model: 'User',
-            resultMode: OrmReadResultMode.all,
-            annotations: const <String, Object?>{
-              'repository': <String, Object?>{'operationId': 'legacy'},
-            },
-          ),
-        ),
-        throwsA(
-          isA<PlanRepositoryTraceInvalidException>().having(
-            (error) => error.details['reason'],
-            'reason',
-            'legacyAnnotation',
-          ),
-        ),
-      );
-
-      await expectLater(
-        client.execute(
-          OrmPlan.read(
-            contractHash: contract.hash,
-            model: 'User',
-            resultMode: OrmReadResultMode.all,
-            repositoryTrace: const OrmRepositoryTrace(
-              operationId: '',
-              kind: 'User.include',
-              step: 1,
-              phase: 'include.load',
-              strategy: 'multiQuery',
+        await expectLater(
+          client.execute(
+            OrmPlan.read(
+              contractHash: contract.hash,
+              model: 'User',
+              resultMode: OrmReadResultMode.all,
+              annotations: const <String, Object?>{
+                'repository': <String, Object?>{'operationId': 'legacy'},
+              },
             ),
           ),
-        ),
-        throwsA(
-          isA<PlanRepositoryTraceInvalidException>().having(
-            (error) => error.details['reason'],
-            'reason',
-            'operationIdEmpty',
+          throwsA(
+            isA<PlanRepositoryTraceInvalidException>().having(
+              (error) => error.details['reason'],
+              'reason',
+              'legacyAnnotation',
+            ),
           ),
-        ),
-      );
+        );
 
-      await client.disconnect();
-    });
+        await expectLater(
+          client.execute(
+            OrmPlan.read(
+              contractHash: contract.hash,
+              model: 'User',
+              resultMode: OrmReadResultMode.all,
+              repositoryTrace: const OrmRepositoryTrace(
+                operationId: '',
+                kind: 'User.include',
+                step: 1,
+                phase: 'include.load',
+                strategy: 'multiQuery',
+              ),
+            ),
+          ),
+          throwsA(
+            isA<PlanRepositoryTraceInvalidException>().having(
+              (error) => error.details['reason'],
+              'reason',
+              'operationIdEmpty',
+            ),
+          ),
+        );
+
+        await client.disconnect();
+      },
+    );
 
     test('supports ordering and pagination in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -927,26 +930,25 @@ void main() {
       final client = OrmClient(contract: contract, engine: engine);
       await client.connect();
 
-      await client.db.orm.model('User').create(
-        data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
-      );
+      await client.db.orm
+          .model('User')
+          .create(data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'});
       final createPlan = engine.executedPlans.single;
       expect(createPlan.lane, 'orm');
       expect(createPlan.action, OrmAction.create);
       expect(createPlan.mutation?.resultMode, OrmMutationResultMode.row);
 
       engine.reset();
-      await client.db.orm.model('User').update(
-        where: <String, Object?>{'id': 'u1'},
-        data: <String, Object?>{'email': 'b@x.com'},
-      );
+      await client.db.orm
+          .model('User')
+          .update(
+            where: <String, Object?>{'id': 'u1'},
+            data: <String, Object?>{'email': 'b@x.com'},
+          );
       final updatePlan = engine.executedPlans.single;
       expect(updatePlan.lane, 'orm');
       expect(updatePlan.action, OrmAction.update);
-      expect(
-        updatePlan.mutation?.resultMode,
-        OrmMutationResultMode.rowOrNull,
-      );
+      expect(updatePlan.mutation?.resultMode, OrmMutationResultMode.rowOrNull);
 
       final sqlPlan = client.db.sql
           .update('User')
@@ -1088,8 +1090,11 @@ void main() {
             .create(data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'}),
         throwsA(
           isA<OrmRuntimeError>()
-              .having((error) => error.code, 'code',
-                  'PLAN.MUTATION_QUERY_STATE_INVALID')
+              .having(
+                (error) => error.code,
+                'code',
+                'PLAN.MUTATION_QUERY_STATE_INVALID',
+              )
               .having(
                 (error) => error.details['invalidKeys'],
                 'invalidKeys',
@@ -1105,8 +1110,11 @@ void main() {
             .update(data: <String, Object?>{'email': 'b@x.com'}),
         throwsA(
           isA<OrmRuntimeError>()
-              .having((error) => error.code, 'code',
-                  'PLAN.MUTATION_QUERY_STATE_INVALID')
+              .having(
+                (error) => error.code,
+                'code',
+                'PLAN.MUTATION_QUERY_STATE_INVALID',
+              )
               .having(
                 (error) => error.details['invalidKeys'],
                 'invalidKeys',
@@ -1119,8 +1127,11 @@ void main() {
         () => users.take(1).deleteMany(),
         throwsA(
           isA<OrmRuntimeError>()
-              .having((error) => error.code, 'code',
-                  'PLAN.MUTATION_QUERY_STATE_INVALID')
+              .having(
+                (error) => error.code,
+                'code',
+                'PLAN.MUTATION_QUERY_STATE_INVALID',
+              )
               .having(
                 (error) => error.details['invalidKeys'],
                 'invalidKeys',
@@ -1176,10 +1187,9 @@ void main() {
           .toList(growable: false);
       final createOperationId = createTraces.first.operationId;
       expect(createOperationId, isNotNull);
-      expect(
-        createTraces.map((trace) => trace.operationId).toSet(),
-        <String>{createOperationId},
-      );
+      expect(createTraces.map((trace) => trace.operationId).toSet(), <String>{
+        createOperationId,
+      });
       expect(
         createTraces.map((trace) => trace.kind).toList(growable: false),
         <String>['User.createMany', 'User.createMany', 'User.createMany'],
@@ -1215,10 +1225,9 @@ void main() {
           .toList(growable: false);
       final deleteOperationId = deleteTraces.first.operationId;
       expect(deleteOperationId, isNotNull);
-      expect(
-        deleteTraces.map((trace) => trace.operationId).toSet(),
-        <String>{deleteOperationId},
-      );
+      expect(deleteTraces.map((trace) => trace.operationId).toSet(), <String>{
+        deleteOperationId,
+      });
       expect(
         deleteTraces.map((trace) => trace.kind).toList(growable: false),
         <String>['User.deleteMany', 'User.deleteMany', 'User.deleteMany'],
@@ -1331,9 +1340,9 @@ void main() {
         await client.connect();
 
         await expectLater(
-          client.db.orm.model('User').create(
-                data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
-              ),
+          client.db.orm
+              .model('User')
+              .create(data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'}),
           throwsA(isA<RuntimeCreateResultMissingException>()),
         );
 
@@ -1615,85 +1624,90 @@ void main() {
       await client.disconnect();
     });
 
-    test('annotates upsert branch plans with operation sequence metadata', () async {
-      final engine = _CountingEngine(inner: MemoryEngine());
-      final client = OrmClient(contract: contract, engine: engine);
-      await client.connect();
-      final users = client.db.orm.model('User');
+    test(
+      'annotates upsert branch plans with operation sequence metadata',
+      () async {
+        final engine = _CountingEngine(inner: MemoryEngine());
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
+        final users = client.db.orm.model('User');
 
-      final created = await users.upsert(
-        where: <String, Object?>{'id': 'u1'},
-        create: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
-        update: <String, Object?>{'email': 'b@example.com'},
-      );
-      expect(created['email'], 'a@example.com');
-      expect(
-        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
-        <OrmAction>[OrmAction.read, OrmAction.create],
-      );
-      final createBranch = engine.executedPlans
-          .map(_readRepositoryTrace)
-          .toList(growable: false);
-      final createOperationId = createBranch.first.operationId;
-      expect(
-        createBranch.map((trace) => trace.operationId).toSet(),
-        <String>{createOperationId},
-      );
-      expect(
-        createBranch.map((trace) => trace.kind).toList(growable: false),
-        <String>['User.upsert', 'User.upsert'],
-      );
-      expect(
-        createBranch.map((trace) => trace.phase).toList(growable: false),
-        <String>['branch.lookup', 'branch.create'],
-      );
-      expect(
-        createBranch.map((trace) => trace.strategy).toList(growable: false),
-        <String>['branch', 'branch'],
-      );
-      expect(
-        createBranch.map((trace) => trace.step).toList(growable: false),
-        <int>[1, 2],
-      );
+        final created = await users.upsert(
+          where: <String, Object?>{'id': 'u1'},
+          create: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
+          update: <String, Object?>{'email': 'b@example.com'},
+        );
+        expect(created['email'], 'a@example.com');
+        expect(
+          engine.executedPlans
+              .map((plan) => plan.action)
+              .toList(growable: false),
+          <OrmAction>[OrmAction.read, OrmAction.create],
+        );
+        final createBranch = engine.executedPlans
+            .map(_readRepositoryTrace)
+            .toList(growable: false);
+        final createOperationId = createBranch.first.operationId;
+        expect(createBranch.map((trace) => trace.operationId).toSet(), <String>{
+          createOperationId,
+        });
+        expect(
+          createBranch.map((trace) => trace.kind).toList(growable: false),
+          <String>['User.upsert', 'User.upsert'],
+        );
+        expect(
+          createBranch.map((trace) => trace.phase).toList(growable: false),
+          <String>['branch.lookup', 'branch.create'],
+        );
+        expect(
+          createBranch.map((trace) => trace.strategy).toList(growable: false),
+          <String>['branch', 'branch'],
+        );
+        expect(
+          createBranch.map((trace) => trace.step).toList(growable: false),
+          <int>[1, 2],
+        );
 
-      engine.reset();
-      final updated = await users.upsert(
-        where: <String, Object?>{'id': 'u1'},
-        create: <String, Object?>{'id': 'u1', 'email': 'x@example.com'},
-        update: <String, Object?>{'email': 'b@example.com'},
-      );
-      expect(updated['email'], 'b@example.com');
-      expect(
-        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
-        <OrmAction>[OrmAction.read, OrmAction.update],
-      );
-      final updateBranch = engine.executedPlans
-          .map(_readRepositoryTrace)
-          .toList(growable: false);
-      final updateOperationId = updateBranch.first.operationId;
-      expect(
-        updateBranch.map((trace) => trace.operationId).toSet(),
-        <String>{updateOperationId},
-      );
-      expect(
-        updateBranch.map((trace) => trace.kind).toList(growable: false),
-        <String>['User.upsert', 'User.upsert'],
-      );
-      expect(
-        updateBranch.map((trace) => trace.phase).toList(growable: false),
-        <String>['branch.lookup', 'branch.update'],
-      );
-      expect(
-        updateBranch.map((trace) => trace.strategy).toList(growable: false),
-        <String>['branch', 'branch'],
-      );
-      expect(
-        updateBranch.map((trace) => trace.step).toList(growable: false),
-        <int>[1, 2],
-      );
+        engine.reset();
+        final updated = await users.upsert(
+          where: <String, Object?>{'id': 'u1'},
+          create: <String, Object?>{'id': 'u1', 'email': 'x@example.com'},
+          update: <String, Object?>{'email': 'b@example.com'},
+        );
+        expect(updated['email'], 'b@example.com');
+        expect(
+          engine.executedPlans
+              .map((plan) => plan.action)
+              .toList(growable: false),
+          <OrmAction>[OrmAction.read, OrmAction.update],
+        );
+        final updateBranch = engine.executedPlans
+            .map(_readRepositoryTrace)
+            .toList(growable: false);
+        final updateOperationId = updateBranch.first.operationId;
+        expect(updateBranch.map((trace) => trace.operationId).toSet(), <String>{
+          updateOperationId,
+        });
+        expect(
+          updateBranch.map((trace) => trace.kind).toList(growable: false),
+          <String>['User.upsert', 'User.upsert'],
+        );
+        expect(
+          updateBranch.map((trace) => trace.phase).toList(growable: false),
+          <String>['branch.lookup', 'branch.update'],
+        );
+        expect(
+          updateBranch.map((trace) => trace.strategy).toList(growable: false),
+          <String>['branch', 'branch'],
+        );
+        expect(
+          updateBranch.map((trace) => trace.step).toList(growable: false),
+          <int>[1, 2],
+        );
 
-      await client.disconnect();
-    });
+        await client.disconnect();
+      },
+    );
 
     test('supports relation where with nested logical operators', () async {
       final client = OrmClient(
@@ -1811,7 +1825,8 @@ void main() {
       );
       await client.connect();
 
-      await client.db.orm.model('User')
+      await client.db.orm
+          .model('User')
           .all(
             where: <String, Object?>{
               'posts': <String, Object?>{
@@ -1838,7 +1853,8 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final rows = await client.db.orm.model('User')
+      final rows = await client.db.orm
+          .model('User')
           .all(
             orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
             include: <String, IncludeSpec>{
@@ -1882,7 +1898,8 @@ void main() {
           await client.connect();
           try {
             await _seedRelationalData(client);
-            final rows = await client.db.orm.model('User')
+            final rows = await client.db.orm
+                .model('User')
                 .all(
                   orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
                   include: <String, IncludeSpec>{
@@ -1931,7 +1948,8 @@ void main() {
         await _seedRelationalData(client);
         engine.reset();
 
-        final rows = await client.db.orm.model('User')
+        final rows = await client.db.orm
+            .model('User')
             .all(
               orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
               include: <String, IncludeSpec>{
@@ -1957,117 +1975,124 @@ void main() {
       }
     });
 
-    test('singleQuery include annotates repository relation load plans', () async {
-      final engine = _CountingEngine(inner: MemoryEngine());
-      final client = OrmClient(
-        contract: relationalContract,
-        engine: engine,
-        includeStrategySelector:
-            ({
-              required OrmContract contract,
-              required String modelName,
-              required OrmAction action,
-              required Map<String, IncludeSpec> include,
-              required int depth,
-            }) => IncludeExecutionStrategy.singleQuery,
-      );
-      await client.connect();
-      try {
-        await _seedRelationalData(client);
-        engine.reset();
+    test(
+      'singleQuery include annotates repository relation load plans',
+      () async {
+        final engine = _CountingEngine(inner: MemoryEngine());
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: engine,
+          includeStrategySelector:
+              ({
+                required OrmContract contract,
+                required String modelName,
+                required OrmAction action,
+                required Map<String, IncludeSpec> include,
+                required int depth,
+              }) => IncludeExecutionStrategy.singleQuery,
+        );
+        await client.connect();
+        try {
+          await _seedRelationalData(client);
+          engine.reset();
 
-        final rows = await client.db.orm.model('User')
-            .all(
-              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-              include: <String, IncludeSpec>{
-                'posts': IncludeSpec(
-                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-                ),
-              },
-            );
+          final rows = await client.db.orm
+              .model('User')
+              .all(
+                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                include: <String, IncludeSpec>{
+                  'posts': IncludeSpec(
+                    orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                  ),
+                },
+              );
 
-        expect(rows, hasLength(2));
-        final includePlans = engine.executedPlans
-            .where((plan) => plan.repositoryTrace != null)
-            .toList(growable: false);
-        expect(includePlans, hasLength(1));
-        final trace = _readRepositoryTrace(includePlans.single);
-        expect(trace.kind, 'User.include');
-        expect(trace.phase, 'include.load');
-        expect(trace.strategy, 'singleQuery');
-        expect(trace.relation, 'posts');
-        expect(trace.step, 1);
-      } finally {
-        await client.disconnect();
-      }
-    });
+          expect(rows, hasLength(2));
+          final includePlans = engine.executedPlans
+              .where((plan) => plan.repositoryTrace != null)
+              .toList(growable: false);
+          expect(includePlans, hasLength(1));
+          final trace = _readRepositoryTrace(includePlans.single);
+          expect(trace.kind, 'User.include');
+          expect(trace.phase, 'include.load');
+          expect(trace.strategy, 'singleQuery');
+          expect(trace.relation, 'posts');
+          expect(trace.step, 1);
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
 
-    test('multiQuery include annotates repository relation load sequence', () async {
-      final engine = _CountingEngine(inner: MemoryEngine());
-      final client = OrmClient(
-        contract: relationalContract,
-        engine: engine,
-        includeStrategySelector:
-            ({
-              required OrmContract contract,
-              required String modelName,
-              required OrmAction action,
-              required Map<String, IncludeSpec> include,
-              required int depth,
-            }) => IncludeExecutionStrategy.multiQuery,
-      );
-      await client.connect();
-      try {
-        await _seedRelationalData(client);
-        engine.reset();
+    test(
+      'multiQuery include annotates repository relation load sequence',
+      () async {
+        final engine = _CountingEngine(inner: MemoryEngine());
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: engine,
+          includeStrategySelector:
+              ({
+                required OrmContract contract,
+                required String modelName,
+                required OrmAction action,
+                required Map<String, IncludeSpec> include,
+                required int depth,
+              }) => IncludeExecutionStrategy.multiQuery,
+        );
+        await client.connect();
+        try {
+          await _seedRelationalData(client);
+          engine.reset();
 
-        final rows = await client.db.orm.model('User')
-            .all(
-              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-              include: <String, IncludeSpec>{
-                'posts': IncludeSpec(
-                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-                ),
-              },
-            );
+          final rows = await client.db.orm
+              .model('User')
+              .all(
+                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                include: <String, IncludeSpec>{
+                  'posts': IncludeSpec(
+                    orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                  ),
+                },
+              );
 
-        expect(rows, hasLength(2));
-        final includePlans = engine.executedPlans
-            .where((plan) => plan.repositoryTrace != null)
-            .toList(growable: false);
-        expect(includePlans, hasLength(2));
-        final traces = includePlans
-            .map(_readRepositoryTrace)
-            .toList(growable: false);
-        final operationId = traces.first.operationId;
-        expect(
-          traces.map((trace) => trace.operationId).toSet(),
-          <String>{operationId},
-        );
-        expect(
-          traces.map((trace) => trace.kind).toList(growable: false),
-          <String>['User.include', 'User.include'],
-        );
-        expect(
-          traces.map((trace) => trace.phase).toList(growable: false),
-          <String>['include.load', 'include.load'],
-        );
-        expect(
-          traces.map((trace) => trace.strategy).toList(growable: false),
-          <String>['multiQuery', 'multiQuery'],
-        );
-        expect(
-          traces.map((trace) => trace.relation).toList(growable: false),
-          <String?>['posts', 'posts'],
-        );
-        expect(
-          traces.map((trace) => trace.step).toList(growable: false),
-          <int>[1, 2],
-        );
-      } finally {
-        await client.disconnect();
-      }
-    });
+          expect(rows, hasLength(2));
+          final includePlans = engine.executedPlans
+              .where((plan) => plan.repositoryTrace != null)
+              .toList(growable: false);
+          expect(includePlans, hasLength(2));
+          final traces = includePlans
+              .map(_readRepositoryTrace)
+              .toList(growable: false);
+          final operationId = traces.first.operationId;
+          expect(traces.map((trace) => trace.operationId).toSet(), <String>{
+            operationId,
+          });
+          expect(
+            traces.map((trace) => trace.kind).toList(growable: false),
+            <String>['User.include', 'User.include'],
+          );
+          expect(
+            traces.map((trace) => trace.phase).toList(growable: false),
+            <String>['include.load', 'include.load'],
+          );
+          expect(
+            traces.map((trace) => trace.strategy).toList(growable: false),
+            <String>['multiQuery', 'multiQuery'],
+          );
+          expect(
+            traces.map((trace) => trace.relation).toList(growable: false),
+            <String?>['posts', 'posts'],
+          );
+          expect(
+            traces.map((trace) => trace.step).toList(growable: false),
+            <int>[1, 2],
+          );
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
 
     test(
       'singleQuery include throws structured error for unsupported response shape',
@@ -2088,7 +2113,8 @@ void main() {
         try {
           await _seedRelationalData(client);
           await expectLater(
-            client.db.orm.model('User')
+            client.db.orm
+                .model('User')
                 .all(
                   include: <String, IncludeSpec>{'posts': const IncludeSpec()},
                 ),
@@ -2148,7 +2174,8 @@ void main() {
         );
         await client.connect();
 
-        final created = await client.db.orm.model('User')
+        final created = await client.db.orm
+            .model('User')
             .createNested(
               data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
               create: <String, List<JsonMap>>{
@@ -2164,7 +2191,8 @@ void main() {
         expect(createdPosts, hasLength(2));
         expect(createdPosts.first['userId'], 'u3');
 
-        final persistedPosts = await client.db.orm.model('Post')
+        final persistedPosts = await client.db.orm
+            .model('Post')
             .all(where: <String, Object?>{'userId': 'u3'});
         expect(persistedPosts, hasLength(2));
         await client.disconnect();
@@ -2179,7 +2207,8 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.db.orm.model('User')
+        client.db.orm
+            .model('User')
             .createNested(
               data: <String, Object?>{'id': 'u4', 'email': 'u4@example.com'},
               create: <String, List<JsonMap>>{
@@ -2191,7 +2220,8 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
 
-      final rolledBackUser = await client.db.orm.model('User')
+      final rolledBackUser = await client.db.orm
+          .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u4'});
       expect(rolledBackUser, isNull);
       await client.disconnect();
@@ -2207,7 +2237,8 @@ void main() {
         await client.connect();
         await _seedRelationalData(client);
 
-        final updated = await client.db.orm.model('User')
+        final updated = await client.db.orm
+            .model('User')
             .updateNested(
               where: <String, Object?>{'id': 'u1'},
               data: <String, Object?>{'email': 'u1+updated@example.com'},
@@ -2230,11 +2261,13 @@ void main() {
         expect(includedPosts.last['id'], 'p4');
         expect(includedPosts.last['userId'], 'u1');
 
-        final persistedUser = await client.db.orm.model('User')
+        final persistedUser = await client.db.orm
+            .model('User')
             .oneOrNull(where: <String, Object?>{'id': 'u1'});
         expect(persistedUser?['email'], 'u1+updated@example.com');
 
-        final persistedChild = await client.db.orm.model('Post')
+        final persistedChild = await client.db.orm
+            .model('Post')
             .oneOrNull(where: <String, Object?>{'id': 'p4'});
         expect(persistedChild?['userId'], 'u1');
         await client.disconnect();
@@ -2249,7 +2282,8 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final updated = await client.db.orm.model('User')
+      final updated = await client.db.orm
+          .model('User')
           .updateNested(
             where: <String, Object?>{'id': 'ux'},
             data: <String, Object?>{'email': 'missing@example.com'},
@@ -2261,7 +2295,8 @@ void main() {
           );
 
       expect(updated, isNull);
-      final createdChild = await client.db.orm.model('Post')
+      final createdChild = await client.db.orm
+          .model('Post')
           .oneOrNull(where: <String, Object?>{'id': 'p9'});
       expect(createdChild, isNull);
       await client.disconnect();
@@ -2276,7 +2311,8 @@ void main() {
       await _seedRelationalData(client);
 
       await expectLater(
-        client.db.orm.model('User')
+        client.db.orm
+            .model('User')
             .updateNested(
               where: <String, Object?>{'id': 'u1'},
               data: <String, Object?>{'email': 'u1+rollback@example.com'},
@@ -2293,11 +2329,13 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
 
-      final rolledBackUser = await client.db.orm.model('User')
+      final rolledBackUser = await client.db.orm
+          .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(rolledBackUser?['email'], 'u1@example.com');
 
-      final rolledBackChild = await client.db.orm.model('Post')
+      final rolledBackChild = await client.db.orm
+          .model('Post')
           .oneOrNull(where: <String, Object?>{'id': 'p10'});
       expect(rolledBackChild, isNull);
       await client.disconnect();
@@ -2458,7 +2496,8 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final row = await client.db.orm.model('Post')
+      final row = await client.db.orm
+          .model('Post')
           .oneOrNull(
             where: <String, Object?>{'id': 'p1'},
             include: <String, IncludeSpec>{
@@ -2494,7 +2533,8 @@ void main() {
       await _seedRelationalData(client);
 
       await expectLater(
-        client.db.orm.model('User')
+        client.db.orm
+            .model('User')
             .all(
               include: <String, IncludeSpec>{'unknown': const IncludeSpec()},
             ),
@@ -2513,7 +2553,8 @@ void main() {
       await _seedRelationalData(client);
 
       await expectLater(
-        client.db.orm.model('User')
+        client.db.orm
+            .model('User')
             .all(
               include: <String, IncludeSpec>{
                 'posts': IncludeSpec(
@@ -2534,7 +2575,8 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final row = await client.db.orm.model('User')
+      final row = await client.db.orm
+          .model('User')
           .oneOrNull(
             where: <String, Object?>{'id': 'u1'},
             select: const <String>['email'],
@@ -2579,7 +2621,8 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      await client.db.orm.model('User')
+      await client.db.orm
+          .model('User')
           .all(include: <String, IncludeSpec>{'posts': const IncludeSpec()});
 
       expect(callCount, greaterThan(0));
@@ -2594,7 +2637,10 @@ void main() {
         engine: MemoryEngine(),
         collections: <String, CollectionFactory>{
           'users':
-              ({required OrmCollectionContext client, required String modelName}) {
+              ({
+                required OrmCollectionContext client,
+                required String modelName,
+              }) {
                 return _UsersCollection(client: client, modelName: modelName);
               },
         },
@@ -2642,7 +2688,8 @@ void main() {
       await transaction.commit();
       await connection.release();
 
-      final row = await client.db.orm.model('User')
+      final row = await client.db.orm
+          .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'b@example.com');
       await client.disconnect();
@@ -2653,13 +2700,15 @@ void main() {
       await client.connect();
 
       await client.withConnection((connection) async {
-        await connection.db.orm.model('User')
+        await connection.db.orm
+            .model('User')
             .create(
               data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
             );
       });
 
-      final row = await client.db.orm.model('User')
+      final row = await client.db.orm
+          .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
@@ -2707,13 +2756,15 @@ void main() {
       await client.connect();
 
       await client.withTransaction((transaction) async {
-        await transaction.db.orm.model('User')
+        await transaction.db.orm
+            .model('User')
             .create(
               data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
             );
       });
 
-      final row = await client.db.orm.model('User')
+      final row = await client.db.orm
+          .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
@@ -2730,7 +2781,8 @@ void main() {
         }).execute();
       });
 
-      final row = await client.db.orm.model('User')
+      final row = await client.db.orm
+          .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
@@ -2751,10 +2803,7 @@ void main() {
         expect(engine.connectionCount, 1);
         expect(engine.transactionCount, 1);
         expect(engine.transactionExecutePlans, hasLength(1));
-        expect(
-          engine.transactionExecutePlans.single.action,
-          OrmAction.read,
-        );
+        expect(engine.transactionExecutePlans.single.action, OrmAction.read);
         expect(engine.commitCount, 1);
         expect(engine.rollbackCount, 0);
         expect(engine.releaseCount, 1);
@@ -2789,7 +2838,8 @@ void main() {
 
       await expectLater(
         () => client.withTransaction((transaction) async {
-          await transaction.db.orm.model('User')
+          await transaction.db.orm
+              .model('User')
               .create(
                 data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
               );
@@ -2798,7 +2848,8 @@ void main() {
         throwsA(isA<StateError>()),
       );
 
-      final row = await client.db.orm.model('User')
+      final row = await client.db.orm
+          .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row, isNull);
       await client.disconnect();
@@ -2822,10 +2873,7 @@ void main() {
         expect(engine.connectionCount, 1);
         expect(engine.transactionCount, 1);
         expect(engine.transactionExecutePlans, hasLength(1));
-        expect(
-          engine.transactionExecutePlans.single.action,
-          OrmAction.read,
-        );
+        expect(engine.transactionExecutePlans.single.action, OrmAction.read);
         expect(engine.commitCount, 0);
         expect(engine.rollbackCount, 1);
         expect(engine.releaseCount, 1);
@@ -3131,7 +3179,8 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.db.orm.model('User')
+        client.db.orm
+            .model('User')
             .all(
               where: <String, Object?>{
                 'OR': <Object?>[
@@ -3147,7 +3196,8 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client.db.orm.model('User')
+        client.db.orm
+            .model('User')
             .all(
               where: <String, Object?>{
                 'AND': <Object?>[
@@ -3163,7 +3213,8 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client.db.orm.model('User')
+        client.db.orm
+            .model('User')
             .all(orderBy: const <OrmOrderBy>[OrmOrderBy('age')]),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
@@ -3231,12 +3282,11 @@ void main() {
     );
     await client.connect();
 
-    await expectLater(client.db.orm.model('User').all(), throwsA(isA<StateError>()));
-    expect(plugin.events, <String>[
-      'before:read',
-      'error:read',
-      'after:read',
-    ]);
+    await expectLater(
+      client.db.orm.model('User').all(),
+      throwsA(isA<StateError>()),
+    );
+    expect(plugin.events, <String>['before:read', 'error:read', 'after:read']);
     expect(client.telemetry()?.outcome, RuntimeTelemetryOutcome.runtimeError);
     await client.disconnect();
   });
@@ -3455,7 +3505,7 @@ final class _BadShapeEngine implements OrmEngine {
 
   @override
   Future<EngineResponse> execute(OrmPlan plan) async {
-    return const EngineResponse(data: 'bad-shape');
+    return EngineResponse.buffered('bad-shape');
   }
 
   @override
@@ -3476,7 +3526,7 @@ final class _NoMutationReturnEngine implements OrmEngine {
     if (plan.action == OrmAction.create ||
         plan.action == OrmAction.update ||
         plan.action == OrmAction.delete) {
-      return EngineResponse(affectedRows: response.affectedRows);
+      return EngineResponse.empty(affectedRows: response.affectedRows);
     }
     return response;
   }
@@ -3576,7 +3626,7 @@ final class _BadRelatedFindManyShapeEngine implements OrmEngine {
   @override
   Future<EngineResponse> execute(OrmPlan plan) async {
     if (plan.model == 'Post' && plan.action == OrmAction.read) {
-      return const EngineResponse(data: 'bad-shape');
+      return EngineResponse.buffered('bad-shape');
     }
     return inner.execute(plan);
   }
@@ -3615,7 +3665,7 @@ final class _TrackingConnectionEngine
 
   @override
   Future<EngineResponse> execute(OrmPlan plan) async {
-    return const EngineResponse(data: <JsonMap>[]);
+    return EngineResponse.buffered(const <JsonMap>[]);
   }
 
   @override
@@ -3630,7 +3680,7 @@ final class _TrackingEngineConnection implements EngineConnection {
   @override
   Future<EngineResponse> execute(OrmPlan plan) async {
     _engine.connectionExecutePlans.add(plan);
-    return const EngineResponse(data: <JsonMap>[]);
+    return EngineResponse.buffered(const <JsonMap>[]);
   }
 
   @override
@@ -3664,7 +3714,7 @@ final class _TrackingEngineTransaction implements EngineTransaction {
   @override
   Future<EngineResponse> execute(OrmPlan plan) async {
     _engine.transactionExecutePlans.add(plan);
-    return const EngineResponse(data: <JsonMap>[]);
+    return EngineResponse.buffered(const <JsonMap>[]);
   }
 
   @override

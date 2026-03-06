@@ -61,7 +61,7 @@ final class _RepositoryMutationExecutor {
     final normalizedInclude = prepared.include;
     final response = await _delegate._client.execute(prepared.plan);
 
-    var row = _readRow(response.data, action: 'create');
+    var row = await _collectSingleRow(response, action: 'create');
     if (row == null) {
       if (_delegate._client.contract.capabilities.mutationReturning &&
           response.affectedRows > 0) {
@@ -438,7 +438,7 @@ final class _RepositoryMutationExecutor {
     required JsonMap? preDeleteRow,
     required _RepositoryOperation operation,
   }) async {
-    var row = _readRow(response.data, action: responseAction);
+    var row = await _collectSingleRow(response, action: responseAction);
     if (row == null &&
         response.affectedRows > 0 &&
         !(_delegate._client.contract.capabilities.mutationReturning)) {
@@ -606,11 +606,9 @@ final class _RepositoryMutationExecutor {
       include: include,
       depth: 0,
     );
-    return _delegate._shapeRows(
-      hydratedRows,
-      select: select,
-      include: include,
-    ).single;
+    return _delegate
+        ._shapeRows(hydratedRows, select: select, include: include)
+        .single;
   }
 
   Future<JsonMap> _shapeNestedMutationRow({
@@ -627,11 +625,13 @@ final class _RepositoryMutationExecutor {
     };
 
     if (includeForReturn.isEmpty) {
-      return _delegate._shapeRows(
-        <JsonMap>[row],
-        select: select,
-        include: const <String, IncludeSpec>{},
-      ).single;
+      return _delegate
+          ._shapeRows(
+            <JsonMap>[row],
+            select: select,
+            include: const <String, IncludeSpec>{},
+          )
+          .single;
     }
 
     return _shapeMutationRow(

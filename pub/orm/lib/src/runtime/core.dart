@@ -401,7 +401,6 @@ final class OrmRuntimeCore implements RuntimeCore {
     await _verifyForRequest();
 
     final startedAt = DateTime.now();
-    var rowCount = 0;
 
     try {
       for (final plugin in _plugins) {
@@ -409,89 +408,184 @@ final class OrmRuntimeCore implements RuntimeCore {
       }
 
       final response = await queryable.execute(plan);
-      final rows = _extractRows(response.data, action: plan.action.name);
-      rowCount = rows.length;
-      for (final row in rows) {
+      return EngineResponse(
+        rows: _observeExecutionRows(
+          plan: plan,
+          rows: response.rows,
+          affectedRows: response.affectedRows,
+          startedAt: startedAt,
+        ),
+        affectedRows: response.affectedRows,
+      );
+    } catch (error, stackTrace) {
+      final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
+      await _recordExecutionFailure(
+        plan: plan,
+        error: error,
+        stackTrace: stackTrace,
+        rowCount: 0,
+        latencyMs: latencyMs,
+        startedAt: startedAt,
+      );
+      rethrow;
+    }
+  }
+
+  Stream<Object?> _observeExecutionRows({
+    required OrmPlan plan,
+    required Stream<Object?> rows,
+    required int affectedRows,
+    required DateTime startedAt,
+  }) async* {
+    var rowCount = 0;
+    var completed = false;
+    var failed = false;
+
+    try {
+      await for (final rawRow in rows) {
+        final row = _coerceToRow(rawRow, action: plan.action.name);
+        rowCount += 1;
         for (final plugin in _plugins) {
           await plugin.onRow(row, plan, _pluginContext);
         }
+        yield row;
       }
 
-      final result = AfterExecuteResult(
+      completed = true;
+      await _recordExecutionSuccess(
+        plan: plan,
         rowCount: rowCount,
-        affectedRows: response.affectedRows,
-        latencyMs: DateTime.now().difference(startedAt).inMilliseconds,
-        completed: true,
+        affectedRows: affectedRows,
+        startedAt: startedAt,
       );
-
-      for (final plugin in _plugins) {
-        await plugin.afterExecute(plan, result, _pluginContext);
+    } catch (error, stackTrace) {
+      failed = true;
+      final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
+      await _recordExecutionFailure(
+        plan: plan,
+        error: error,
+        stackTrace: stackTrace,
+        rowCount: rowCount,
+        latencyMs: latencyMs,
+        startedAt: startedAt,
+      );
+      rethrow;
+    } finally {
+      if (!completed && !failed) {
+        await _recordExecutionInterrupted(
+          plan: plan,
+          rowCount: rowCount,
+          affectedRows: affectedRows,
+          startedAt: startedAt,
+        );
       }
+    }
+  }
 
-      _telemetry = RuntimeTelemetryEvent(
-        model: plan.model,
-        action: plan.action,
-        outcome: RuntimeTelemetryOutcome.success,
-        durationMs: result.latencyMs,
-        recordedAt: DateTime.now(),
-        repositoryTrace: plan.repositoryTrace,
-      );
+  Future<void> _recordExecutionSuccess({
+    required OrmPlan plan,
+    required int rowCount,
+    required int affectedRows,
+    required DateTime startedAt,
+  }) async {
+    final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
+    final result = AfterExecuteResult(
+      rowCount: rowCount,
+      affectedRows: affectedRows,
+      latencyMs: latencyMs,
+      completed: true,
+    );
+
+    for (final plugin in _plugins) {
+      await plugin.afterExecute(plan, result, _pluginContext);
+    }
+
+    _telemetry = RuntimeTelemetryEvent(
+      model: plan.model,
+      action: plan.action,
+      outcome: RuntimeTelemetryOutcome.success,
+      durationMs: latencyMs,
+      recordedAt: DateTime.now(),
+      repositoryTrace: plan.repositoryTrace,
+    );
+    _recordOperationTelemetry(
+      plan: plan,
+      outcome: RuntimeTelemetryOutcome.success,
+      rowCount: rowCount,
+      affectedRows: affectedRows,
+      durationMs: latencyMs,
+      startedAt: startedAt,
+      recordedAt: _telemetry!.recordedAt,
+    );
+  }
+
+  Future<void> _recordExecutionFailure({
+    required OrmPlan plan,
+    required Object error,
+    required StackTrace stackTrace,
+    required int rowCount,
+    required int latencyMs,
+    required DateTime startedAt,
+  }) async {
+    _telemetry = RuntimeTelemetryEvent(
+      model: plan.model,
+      action: plan.action,
+      outcome: RuntimeTelemetryOutcome.runtimeError,
+      durationMs: latencyMs,
+      recordedAt: DateTime.now(),
+      repositoryTrace: plan.repositoryTrace,
+    );
+    if (error is! PlanRepositoryTraceInvalidException) {
       _recordOperationTelemetry(
         plan: plan,
-        outcome: RuntimeTelemetryOutcome.success,
+        outcome: RuntimeTelemetryOutcome.runtimeError,
         rowCount: rowCount,
-        affectedRows: response.affectedRows,
-        durationMs: result.latencyMs,
+        affectedRows: 0,
+        durationMs: latencyMs,
         startedAt: startedAt,
         recordedAt: _telemetry!.recordedAt,
       );
+    }
 
-      return response;
-    } catch (error, stackTrace) {
-      final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
-      _telemetry = RuntimeTelemetryEvent(
-        model: plan.model,
-        action: plan.action,
-        outcome: RuntimeTelemetryOutcome.runtimeError,
-        durationMs: latencyMs,
-        recordedAt: DateTime.now(),
-        repositoryTrace: plan.repositoryTrace,
-      );
-      if (error is! PlanRepositoryTraceInvalidException) {
-        _recordOperationTelemetry(
-          plan: plan,
-          outcome: RuntimeTelemetryOutcome.runtimeError,
-          rowCount: rowCount,
-          affectedRows: 0,
-          durationMs: latencyMs,
-          startedAt: startedAt,
-          recordedAt: _telemetry!.recordedAt,
-        );
+    for (final plugin in _plugins) {
+      try {
+        await plugin.onError(plan, error, stackTrace, _pluginContext);
+      } catch (_) {
+        // Keep original error when error observers fail.
       }
+    }
 
-      for (final plugin in _plugins) {
-        try {
-          await plugin.onError(plan, error, stackTrace, _pluginContext);
-        } catch (_) {
-          // Keep original error when error observers fail.
-        }
+    final result = AfterExecuteResult(
+      rowCount: rowCount,
+      affectedRows: 0,
+      latencyMs: latencyMs,
+      completed: false,
+    );
+    for (final plugin in _plugins) {
+      try {
+        await plugin.afterExecute(plan, result, _pluginContext);
+      } catch (_) {
+        // Ignore afterExecute errors on failure path.
       }
+    }
+  }
 
-      final result = AfterExecuteResult(
-        rowCount: rowCount,
-        affectedRows: 0,
-        latencyMs: latencyMs,
-        completed: false,
-      );
-      for (final plugin in _plugins) {
-        try {
-          await plugin.afterExecute(plan, result, _pluginContext);
-        } catch (_) {
-          // Ignore afterExecute errors on failure path.
-        }
-      }
+  Future<void> _recordExecutionInterrupted({
+    required OrmPlan plan,
+    required int rowCount,
+    required int affectedRows,
+    required DateTime startedAt,
+  }) async {
+    final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
+    final result = AfterExecuteResult(
+      rowCount: rowCount,
+      affectedRows: affectedRows,
+      latencyMs: latencyMs,
+      completed: false,
+    );
 
-      rethrow;
+    for (final plugin in _plugins) {
+      await plugin.afterExecute(plan, result, _pluginContext);
     }
   }
 
@@ -1102,18 +1196,6 @@ List<JsonMap>? _coerceWhereList(Object? value) {
     whereList.add(where);
   }
   return whereList;
-}
-
-List<JsonMap> _extractRows(Object? data, {required String action}) {
-  if (data == null) {
-    return const <JsonMap>[];
-  }
-  if (data is List<Object?>) {
-    return data
-        .map((value) => _coerceToRow(value, action: action))
-        .toList(growable: false);
-  }
-  return <JsonMap>[_coerceToRow(data, action: action)];
 }
 
 JsonMap _coerceToRow(Object? value, {required String action}) {

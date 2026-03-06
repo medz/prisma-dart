@@ -378,17 +378,15 @@ void main() {
           ),
         );
         final pageResponse = await client.execute(pagePlan);
+        final cursorRows = await _readEngineRows(cursorResponse);
+        final pageRows = await _readEngineRows(pageResponse);
 
         expect(
-          (cursorResponse.data as List<JsonMap>)
-              .map((row) => row['id'])
-              .toList(growable: false),
+          cursorRows.map((row) => row['id']).toList(growable: false),
           <Object?>[2, 3, 4],
         );
         expect(
-          (pageResponse.data as List<JsonMap>)
-              .map((row) => row['id'])
-              .toList(growable: false),
+          pageRows.map((row) => row['id']).toList(growable: false),
           <Object?>[3, 4],
         );
       } finally {
@@ -554,4 +552,15 @@ final class _CountingSqlDriver
     executeCount += 1;
     return SqlResult(rows: rows);
   }
+}
+
+Future<List<JsonMap>> _readEngineRows(EngineResponse response) async {
+  final rows = <JsonMap>[];
+  await for (final row in response.rows) {
+    if (row is! Map<String, Object?>) {
+      throw StateError('Expected engine row map but got ${row.runtimeType}.');
+    }
+    rows.add(row);
+  }
+  return rows;
 }

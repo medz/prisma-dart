@@ -167,10 +167,8 @@ final class OrmPageResult<T> {
   final List<T> items;
   final OrmPageInfo pageInfo;
 
-  OrmPageResult({
-    required List<T> items,
-    required this.pageInfo,
-  }) : items = List<T>.unmodifiable(items);
+  OrmPageResult({required List<T> items, required this.pageInfo})
+    : items = List<T>.unmodifiable(items);
 
   OrmPageResult<R> mapItems<R>(R Function(T item) transform) {
     return OrmPageResult<R>(
@@ -205,10 +203,7 @@ Map<String, IncludeSpec> _mergeIncludeSpecMap(
   return merged;
 }
 
-JsonMap _mergePlanAnnotations(
-  JsonMap current,
-  JsonMap next,
-) {
+JsonMap _mergePlanAnnotations(JsonMap current, JsonMap next) {
   if (current.isEmpty) {
     if (next.isEmpty) {
       return const <String, Object?>{};
@@ -216,7 +211,9 @@ JsonMap _mergePlanAnnotations(
     return Map<String, Object?>.unmodifiable(Map<String, Object?>.from(next));
   }
   if (next.isEmpty) {
-    return Map<String, Object?>.unmodifiable(Map<String, Object?>.from(current));
+    return Map<String, Object?>.unmodifiable(
+      Map<String, Object?>.from(current),
+    );
   }
   return Map<String, Object?>.unmodifiable(<String, Object?>{
     ...current,
@@ -367,15 +364,15 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
     Future<T> Function(OrmScopedClient connection) run,
   ) async {
     final connection = await _runtime.connection();
-      final scoped = OrmScopedClient._(
-        contract: contract,
-        executePlan: connection.execute,
-        explainPlan: _runtime.explain,
-        modelAliases: _modelAliases,
-        collectionRegistry: _collectionRegistry,
-        includeStrategySelector: includeStrategySelector,
-        maxIncludeDepth: maxIncludeDepth,
-      );
+    final scoped = OrmScopedClient._(
+      contract: contract,
+      executePlan: connection.execute,
+      explainPlan: _runtime.explain,
+      modelAliases: _modelAliases,
+      collectionRegistry: _collectionRegistry,
+      includeStrategySelector: includeStrategySelector,
+      maxIncludeDepth: maxIncludeDepth,
+    );
 
     try {
       return await run(scoped);
@@ -723,20 +720,17 @@ final class OrmSqlSelectBuilder {
 
   Future<List<JsonMap>> all() async {
     final response = await _client.execute(toPlan());
-    return _readRows(response.data, action: 'sql.all');
+    return _collectRows(response, action: 'sql.all');
   }
 
   Future<JsonMap?> firstOrNull() async {
     final response = await _client.execute(take(1).toPlan());
-    final rows = _readRows(response.data, action: 'sql.firstOrNull');
-    return _firstOrNull(rows);
+    return _collectSingleRow(response, action: 'sql.firstOrNull');
   }
 
   Stream<JsonMap> stream() async* {
-    final rows = await all();
-    for (final row in rows) {
-      yield row;
-    }
+    final response = await _client.execute(toPlan());
+    yield* _streamRows(response, action: 'sql.stream');
   }
 
   OrmSqlSelectBuilder _copy({
@@ -802,7 +796,7 @@ final class OrmSqlInsertBuilder {
   Future<OrmSqlMutationResult> execute() async {
     final response = await _client.execute(toPlan());
     return OrmSqlMutationResult(
-      row: _readRow(response.data, action: 'sql.insert'),
+      row: await _collectSingleRow(response, action: 'sql.insert'),
       affectedRows: response.affectedRows,
     );
   }
@@ -869,7 +863,7 @@ final class OrmSqlUpdateBuilder {
   Future<OrmSqlMutationResult> execute() async {
     final response = await _client.execute(toPlan());
     return OrmSqlMutationResult(
-      row: _readRow(response.data, action: 'sql.update'),
+      row: await _collectSingleRow(response, action: 'sql.update'),
       affectedRows: response.affectedRows,
     );
   }
@@ -933,7 +927,7 @@ final class OrmSqlDeleteBuilder {
   Future<OrmSqlMutationResult> execute() async {
     final response = await _client.execute(toPlan());
     return OrmSqlMutationResult(
-      row: _readRow(response.data, action: 'sql.delete'),
+      row: await _collectSingleRow(response, action: 'sql.delete'),
       affectedRows: response.affectedRows,
     );
   }
@@ -1045,11 +1039,8 @@ class ModelDelegate {
 
   ModelQuery cursor(JsonMap cursor) => query().cursor(cursor);
 
-  ModelQuery page({
-    required int size,
-    JsonMap? after,
-    JsonMap? before,
-  }) => query().page(size: size, after: after, before: before);
+  ModelQuery page({required int size, JsonMap? after, JsonMap? before}) =>
+      query().page(size: size, after: after, before: before);
 
   ModelQuery select(List<String> fields) => query().select(fields);
 
@@ -1159,7 +1150,8 @@ class ModelDelegate {
     JsonMap? cursor,
     OrmReadPagePlan? page,
   }) async* {
-    final rows = await all(
+    final prepared = await _buildReadPlan(
+      resultMode: OrmReadResultMode.all,
       where: where,
       skip: skip,
       take: take,
@@ -1170,8 +1162,33 @@ class ModelDelegate {
       cursor: cursor,
       page: page,
     );
+    final normalizedInclude = prepared.include;
+    final response = await _client.execute(prepared.plan);
 
-    for (final row in rows) {
+    if (normalizedInclude.isEmpty) {
+      await for (final row in _streamRows(response, action: 'stream')) {
+        yield _shapeRow(row, select: select, include: normalizedInclude);
+      }
+      return;
+    }
+
+    final rows = await _collectRows(response, action: 'stream');
+    if (rows.isEmpty) {
+      return;
+    }
+
+    final hydratedRows = await _resolveIncludeRows(
+      action: OrmAction.read,
+      rows: rows,
+      include: normalizedInclude,
+      depth: 0,
+    );
+
+    for (final row in _shapeRows(
+      hydratedRows,
+      select: select,
+      include: normalizedInclude,
+    )) {
       yield row;
     }
   }
@@ -1477,11 +1494,9 @@ class ModelDelegate {
     required JsonMap data,
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) => _RepositoryMutationExecutor(this).create(
-    data: data,
-    select: select,
-    include: include,
-  );
+  }) => _RepositoryMutationExecutor(
+    this,
+  ).create(data: data, select: select, include: include);
 
   Future<JsonMap> createNested({
     required JsonMap data,
@@ -1513,11 +1528,9 @@ class ModelDelegate {
     required List<JsonMap> data,
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) => _RepositoryMutationExecutor(this).createMany(
-    data: data,
-    select: select,
-    include: include,
-  );
+  }) => _RepositoryMutationExecutor(
+    this,
+  ).createMany(data: data, select: select, include: include);
 
   Future<int> updateMany({
     JsonMap where = const <String, Object?>{},
@@ -1559,22 +1572,17 @@ class ModelDelegate {
     required JsonMap data,
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) => _RepositoryMutationExecutor(this).update(
-    where: where,
-    data: data,
-    select: select,
-    include: include,
-  );
+  }) => _RepositoryMutationExecutor(
+    this,
+  ).update(where: where, data: data, select: select, include: include);
 
   Future<JsonMap?> delete({
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) => _RepositoryMutationExecutor(this).delete(
-    where: where,
-    select: select,
-    include: include,
-  );
+  }) => _RepositoryMutationExecutor(
+    this,
+  ).delete(where: where, select: select, include: include);
 
   Future<_PreparedReadPlan> _buildReadPlan({
     required OrmReadResultMode resultMode,
@@ -1651,13 +1659,13 @@ class ModelDelegate {
         select: select,
         include: normalizedInclude,
       ),
-      OrmReadResultMode.all || OrmReadResultMode.firstOrNull =>
-        _expandSelectForExecution(
-          model: modelName,
-          select: select,
-          include: normalizedInclude,
-          distinct: distinct,
-        ),
+      OrmReadResultMode.all ||
+      OrmReadResultMode.firstOrNull => _expandSelectForExecution(
+        model: modelName,
+        select: select,
+        include: normalizedInclude,
+        distinct: distinct,
+      ),
     };
 
     return _PreparedReadPlan(
@@ -1724,7 +1732,7 @@ class ModelDelegate {
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
 
-    var rows = _readRows(response.data);
+    var rows = await _collectRows(response, action: 'all');
     if (distinct.isNotEmpty) {
       rows = _applyDistinctRows(rows: rows, distinct: distinct);
       rows = _sliceRows(rows: rows, skip: skip, take: take);
@@ -1770,7 +1778,7 @@ class ModelDelegate {
       ),
     );
     final response = await _client.execute(prepared.plan);
-    final rawRows = _readRows(response.data, action: 'pageResult');
+    final rawRows = await _collectRows(response, action: 'pageResult');
     final overflowed = rawRows.length > page.size;
     final windowRows = _trimPageResultRows(rows: rawRows, page: page);
     final hydratedRows = await _resolveIncludeRows(
@@ -1825,7 +1833,7 @@ class ModelDelegate {
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
 
-    final row = _readRow(response.data, action: 'firstOrNull');
+    final row = await _collectSingleRow(response, action: 'firstOrNull');
     if (row == null) {
       return null;
     }
@@ -1864,7 +1872,7 @@ class ModelDelegate {
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
 
-    final row = _readRow(response.data, action: 'oneOrNull');
+    final row = await _collectSingleRow(response, action: 'oneOrNull');
     if (row == null) {
       return null;
     }
@@ -1890,9 +1898,7 @@ class ModelDelegate {
     required int depth,
     _RepositoryOperation? operation,
   }) {
-    return _RepositoryIncludePlanner(
-      this,
-    ).resolve(
+    return _RepositoryIncludePlanner(this).resolve(
       action: action,
       rows: rows,
       include: include,
@@ -2156,7 +2162,9 @@ class ModelDelegate {
           details: <String, Object?>{
             'model': modelName,
             'field': entry.field,
-            'orderBy': orderBy.map((item) => item.toJson()).toList(growable: false),
+            'orderBy': orderBy
+                .map((item) => item.toJson())
+                .toList(growable: false),
           },
         );
       }
@@ -2271,7 +2279,9 @@ class ModelDelegate {
       details: <String, Object?>{
         'model': modelName,
         'idFields': idFields,
-        'orderBy': orderBy.map((entry) => entry.toJson()).toList(growable: false),
+        'orderBy': orderBy
+            .map((entry) => entry.toJson())
+            .toList(growable: false),
       },
     );
   }
@@ -3859,11 +3869,7 @@ final class ModelQuery {
     );
   }
 
-  ModelQuery page({
-    required int size,
-    JsonMap? after,
-    JsonMap? before,
-  }) {
+  ModelQuery page({required int size, JsonMap? after, JsonMap? before}) {
     if (_state.orderBy.isEmpty) {
       throw runtimeError(
         'PLAN.CURSOR_ORDER_BY_REQUIRED',
@@ -3875,10 +3881,7 @@ final class ModelQuery {
     if (size <= 0) {
       throw PlanCursorWindowInvalidException(
         reason: 'pageSizeInvalid',
-        details: <String, Object?>{
-          'model': _delegate.modelName,
-          'size': size,
-        },
+        details: <String, Object?>{'model': _delegate.modelName, 'size': size},
       );
     }
     if (after != null && before != null) {
@@ -4178,10 +4181,7 @@ final class ModelQuery {
     throw runtimeError(
       'PLAN.MUTATION_QUERY_STATE_INVALID',
       '$action does not allow query state keys: ${invalidKeys.join(', ')}.',
-      details: <String, Object?>{
-        'action': action,
-        'invalidKeys': invalidKeys,
-      },
+      details: <String, Object?>{'action': action, 'invalidKeys': invalidKeys},
     );
   }
 
@@ -4334,27 +4334,38 @@ Map<String, CollectionFactory> _createCollectionRegistry(
   return registry;
 }
 
-List<JsonMap> _readRows(Object? data, {String action = 'findMany'}) {
-  if (data == null) {
-    return const <JsonMap>[];
+Stream<JsonMap> _streamRows(
+  EngineResponse response, {
+  required String action,
+}) async* {
+  await for (final value in response.rows) {
+    yield _coerceRow(value, action: action);
   }
-  if (data is! List<Object?>) {
-    throw RuntimeResponseShapeException(
-      action: action,
-      expected: 'List<Map<String, Object?>>',
-      actual: data,
-    );
-  }
-  return data
-      .map((value) => _coerceRow(value, action: action))
-      .toList(growable: false);
 }
 
-JsonMap? _readRow(Object? data, {required String action}) {
-  if (data == null) {
-    return null;
+Future<List<JsonMap>> _collectRows(
+  EngineResponse response, {
+  String action = 'all',
+}) {
+  return _streamRows(response, action: action).toList();
+}
+
+Future<JsonMap?> _collectSingleRow(
+  EngineResponse response, {
+  required String action,
+}) async {
+  JsonMap? row;
+  await for (final value in response.rows) {
+    if (row != null) {
+      throw RuntimeResponseShapeException(
+        action: action,
+        expected: '0 or 1 row',
+        actual: const <Object?>[null, null],
+      );
+    }
+    row = _coerceRow(value, action: action);
   }
-  return _coerceRow(data, action: action);
+  return row;
 }
 
 JsonMap _coerceRow(Object? value, {required String action}) {

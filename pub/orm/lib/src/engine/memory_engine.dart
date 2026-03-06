@@ -106,8 +106,8 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
 
     return switch (read.resultMode) {
       OrmReadResultMode.firstOrNull || OrmReadResultMode.oneOrNull =>
-        EngineResponse(data: _firstOrNull(projected)),
-      _ => EngineResponse(data: projected),
+        EngineResponse.buffered(_firstOrNull(projected)),
+      _ => EngineResponse.buffered(projected),
     };
   }
 
@@ -190,8 +190,8 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
     final mutation = plan.mutation!;
     final row = _cloneRow(mutation.data);
     bucket.add(row);
-    return EngineResponse(
-      data: _projectRow(row, mutation.select),
+    return EngineResponse.buffered(
+      _projectRow(row, mutation.select),
       affectedRows: 1,
     );
   }
@@ -206,12 +206,12 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
 
       final updated = <String, Object?>{...row, ...mutation.data};
       bucket[index] = updated;
-      return EngineResponse(
-        data: _projectRow(updated, mutation.select),
+      return EngineResponse.buffered(
+        _projectRow(updated, mutation.select),
         affectedRows: 1,
       );
     }
-    return const EngineResponse(data: null, affectedRows: 0);
+    return EngineResponse.empty(affectedRows: 0);
   }
 
   EngineResponse _delete(List<JsonMap> bucket, OrmPlan plan) {
@@ -223,12 +223,12 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
       }
 
       bucket.removeAt(index);
-      return EngineResponse(
-        data: _projectRow(row, mutation.select),
+      return EngineResponse.buffered(
+        _projectRow(row, mutation.select),
         affectedRows: 1,
       );
     }
-    return const EngineResponse(data: null, affectedRows: 0);
+    return EngineResponse.empty(affectedRows: 0);
   }
 
   bool _matches(JsonMap row, JsonMap where) {
@@ -512,7 +512,10 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
     required List<OrmOrderBy> orderBy,
   }) {
     for (final order in orderBy) {
-      final comparison = _compareValues(row[order.field], boundary[order.field]);
+      final comparison = _compareValues(
+        row[order.field],
+        boundary[order.field],
+      );
       if (comparison == 0) {
         continue;
       }
