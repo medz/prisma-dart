@@ -1409,7 +1409,7 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<List<${model.dataClassName}>> findMany({');
+    buffer.writeln('  Future<List<${model.dataClassName}>> all({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
@@ -1474,7 +1474,7 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<${model.dataClassName}?> findFirst({');
+    buffer.writeln('  Future<${model.dataClassName}?> first({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
@@ -2209,7 +2209,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<List<${model.dataClassName}>> all() {');
-    buffer.writeln('    return _delegate.findMany(');
+    buffer.writeln('    return _delegate.all(');
     buffer.writeln('      where: _where,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
@@ -2222,7 +2222,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<${model.dataClassName}?> first() {');
-    buffer.writeln('    return _delegate.findFirst(');
+    buffer.writeln('    return _delegate.first(');
     buffer.writeln('      where: _where,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      orderBy: _orderBy,');

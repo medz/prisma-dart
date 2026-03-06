@@ -707,26 +707,38 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'Future<List<UserData>>\s+findMany\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),',
+            r'Future<List<UserData>>\s+all\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected non-unique findMany to keep UserWhereInput.',
+          reason: 'Expected non-unique all to keep UserWhereInput.',
         );
         expect(
           RegExp(
-            r'Future<List<UserData>>\s+findMany\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
+            r'Future<List<UserData>>\s+all\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected findMany to expose typed distinct parameter in generated delegate.',
+              'Expected all to expose typed distinct parameter in generated delegate.',
         );
         expect(
           RegExp(
-            r'Future<UserData\?>\s+findFirst\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
+            r'Future<UserData\?>\s+first\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected findFirst to expose typed distinct parameter in generated delegate.',
+              'Expected first to expose typed distinct parameter in generated delegate.',
+        );
+        expect(
+          generatedSource.contains('Future<List<UserData>> findMany('),
+          isFalse,
+          reason:
+              'Expected generated typed delegate source to not expose findMany signature.',
+        );
+        expect(
+          generatedSource.contains('Future<UserData?> findFirst('),
+          isFalse,
+          reason:
+              'Expected generated typed delegate source to not expose findFirst signature.',
         );
         expect(
           RegExp(
