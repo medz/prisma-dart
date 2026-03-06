@@ -236,6 +236,170 @@ const config = Config(provider: 'sqlite');
         },
       );
 
+      test(
+        'contract emit keeps hash stable when scalar field declaration order changes',
+        () async {
+          final fixtureDir = _copyFixture(fixturesRoot, 'default_output');
+          addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+          final firstRun = await _runContractEmit(
+            entryPath: generatorEntry.path,
+            workingDirectory: fixtureDir.path,
+          );
+          expect(firstRun.exitCode, 0, reason: firstRun.debugOutput);
+
+          final contractFile = File(
+            _path(<String>[fixtureDir.path, 'orm.contract.json']),
+          );
+          final firstContract =
+              jsonDecode(contractFile.readAsStringSync())
+                  as Map<Object?, Object?>;
+          final firstHash = firstContract['hash'];
+
+          final schemaFile = File(
+            _path(<String>[fixtureDir.path, 'orm.schema.dart']),
+          );
+          schemaFile.writeAsStringSync('''
+class _ModelMarker {
+  const _ModelMarker();
+}
+
+const model = _ModelMarker();
+
+@model
+typedef User = ({DateTime createdAt, String email, int id});
+''');
+
+          final secondRun = await _runContractEmit(
+            entryPath: generatorEntry.path,
+            workingDirectory: fixtureDir.path,
+          );
+          expect(secondRun.exitCode, 0, reason: secondRun.debugOutput);
+
+          final secondContract =
+              jsonDecode(contractFile.readAsStringSync())
+                  as Map<Object?, Object?>;
+          expect(secondContract['hash'], firstHash);
+          expect(secondContract['markerStorageHash'], firstHash);
+        },
+      );
+
+      test(
+        'contract emit applies relation annotation overrides when valid',
+        () async {
+          final fixtureDir = _copyFixture(fixturesRoot, 'relation_output');
+          addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+          final schemaFile = File(
+            _path(<String>[fixtureDir.path, 'orm.schema.dart']),
+          );
+          schemaFile.writeAsStringSync('''
+class _ModelMarker {
+  const _ModelMarker();
+}
+
+const model = _ModelMarker();
+
+class Relation {
+  final Set<String>? fields;
+  final Set<String>? references;
+  final String? name;
+
+  const Relation({this.fields, this.references, this.name});
+}
+
+@model
+typedef User = ({String id, String email, List<Post> posts});
+
+@model
+typedef Post = ({
+  String id,
+  String userId,
+  String title,
+  @Relation(fields: {'userId'}, references: {'id'}, name: 'postAuthor')
+  User? author
+});
+''');
+
+          final run = await _runContractEmit(
+            entryPath: generatorEntry.path,
+            workingDirectory: fixtureDir.path,
+          );
+          expect(run.exitCode, 0, reason: run.debugOutput);
+
+          final output = File(
+            _path(<String>[fixtureDir.path, 'orm.contract.json']),
+          );
+          final contract =
+              jsonDecode(output.readAsStringSync()) as Map<Object?, Object?>;
+          final models = contract['models'] as Map<Object?, Object?>;
+          final postModel = models['Post'] as Map<Object?, Object?>;
+          final postRelations = postModel['relations'] as Map<Object?, Object?>;
+          final author = postRelations['author'] as Map<Object?, Object?>;
+          expect(author['name'], 'postAuthor');
+          expect(author['sourceFields'], <Object?>['userId']);
+          expect(author['targetFields'], <Object?>['id']);
+        },
+      );
+
+      test(
+        'contract emit ignores invalid relation annotation and falls back to inference',
+        () async {
+          final fixtureDir = _copyFixture(fixturesRoot, 'relation_output');
+          addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+          final schemaFile = File(
+            _path(<String>[fixtureDir.path, 'orm.schema.dart']),
+          );
+          schemaFile.writeAsStringSync('''
+class _ModelMarker {
+  const _ModelMarker();
+}
+
+const model = _ModelMarker();
+
+class Relation {
+  final Set<String>? fields;
+  final Set<String>? references;
+  final String? name;
+
+  const Relation({this.fields, this.references, this.name});
+}
+
+@model
+typedef User = ({String id, String email, List<Post> posts});
+
+@model
+typedef Post = ({
+  String id,
+  String userId,
+  String title,
+  @Relation(fields: {'missingField'}, references: {'id'})
+  User? author
+});
+''');
+
+          final run = await _runContractEmit(
+            entryPath: generatorEntry.path,
+            workingDirectory: fixtureDir.path,
+          );
+          expect(run.exitCode, 0, reason: run.debugOutput);
+
+          final output = File(
+            _path(<String>[fixtureDir.path, 'orm.contract.json']),
+          );
+          final contract =
+              jsonDecode(output.readAsStringSync()) as Map<Object?, Object?>;
+          final models = contract['models'] as Map<Object?, Object?>;
+          final postModel = models['Post'] as Map<Object?, Object?>;
+          final postRelations = postModel['relations'] as Map<Object?, Object?>;
+          final author = postRelations['author'] as Map<Object?, Object?>;
+          expect(author['name'], 'author');
+          expect(author['sourceFields'], <Object?>['userId']);
+          expect(author['targetFields'], <Object?>['id']);
+        },
+      );
+
       test('contract emit supports --output override path', () async {
         final fixtureDir = _copyFixture(fixturesRoot, 'default_output');
         addTearDown(() => fixtureDir.deleteSync(recursive: true));
