@@ -1,105 +1,90 @@
 part of 'client.dart';
 
-@immutable
-final class _PreparedReadPlan {
-  final OrmPlan plan;
-  final Map<String, IncludeSpec> include;
-
-  const _PreparedReadPlan({required this.plan, required this.include});
-}
-
 final class _OrmReadPlanCompiler {
   final ModelDelegate _delegate;
 
   _OrmReadPlanCompiler(this._delegate);
 
-  Future<_PreparedReadPlan> compile({
-    required OrmReadResultMode resultMode,
-    JsonMap where = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> distinct = const <String>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
-    JsonMap annotations = const <String, Object?>{},
-    OrmRepositoryTrace? repositoryTrace,
+  Future<OrmPreparedReadQuery> compile({
+    required _OrmPreparedReadState state,
   }) async {
-    if (skip case final offset? when offset < 0) {
+    if (state._skip case final offset? when offset < 0) {
       throw PlanInvalidPaginationException(key: 'skip', value: offset);
     }
-    if (take case final limit? when limit < 0) {
+    if (state._take case final limit? when limit < 0) {
       throw PlanInvalidPaginationException(key: 'take', value: limit);
     }
 
-    final normalizedInclude = normalizeInclude(include);
+    final normalizedInclude = normalizeInclude(state._include);
     final normalizedWhere = await normalizeWhereForExecution(
       model: _delegate.modelName,
-      where: where,
+      where: state._where,
     );
-    if ((cursor != null || page != null) && orderBy.isEmpty) {
+    if ((state._cursor != null || state._page != null) &&
+        state._orderBy.isEmpty) {
       throw runtimeError(
         'PLAN.CURSOR_ORDER_BY_REQUIRED',
         'Cursor and page windows require orderBy() first.',
         details: <String, Object?>{
           'model': _delegate.modelName,
-          if (cursor != null) 'cursor': cursor,
-          if (page != null) 'page': page.toJson(),
+          if (state._cursor != null) 'cursor': state._cursor,
+          if (state._page != null) 'page': state._page!.toJson(),
         },
       );
     }
-    if (cursor != null || page != null) {
-      validateStableCursorOrderBy(orderBy: orderBy);
+    if (state._cursor != null || state._page != null) {
+      validateStableCursorOrderBy(orderBy: state._orderBy);
     }
-    if ((cursor != null || page != null) && distinct.isNotEmpty) {
+    if ((state._cursor != null || state._page != null) &&
+        state._distinct.isNotEmpty) {
       throw runtimeError(
         'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
         'Cursor and page windows do not support distinct yet.',
         details: <String, Object?>{
           'model': _delegate.modelName,
-          'distinct': distinct,
-          if (cursor != null) 'cursor': cursor,
-          if (page != null) 'page': page.toJson(),
+          'distinct': state._distinct,
+          if (state._cursor != null) 'cursor': state._cursor,
+          if (state._page != null) 'page': state._page!.toJson(),
         },
       );
     }
-    if (page != null && resultMode != OrmReadResultMode.all) {
+    if (state._page != null && state.resultMode != OrmReadResultMode.all) {
       throw runtimeError(
         'PLAN.PAGE_RESULT_MODE_INVALID',
         'Page windows currently compile only to collection read plans.',
         details: <String, Object?>{
           'model': _delegate.modelName,
-          'resultMode': resultMode.name,
-          'page': page.toJson(),
+          'resultMode': state.resultMode.name,
+          'page': state._page!.toJson(),
         },
       );
     }
 
-    final isCollectionRead = resultMode != OrmReadResultMode.oneOrNull;
-    final resolvedTake = page != null
+    final isCollectionRead = state.resultMode != OrmReadResultMode.oneOrNull;
+    final resolvedTake = state._page != null
         ? null
-        : resultMode == OrmReadResultMode.firstOrNull
+        : state.resultMode == OrmReadResultMode.firstOrNull
         ? 1
-        : take;
-    final readSelect = switch (resultMode) {
+        : state._take;
+    final readSelect = switch (state.resultMode) {
       OrmReadResultMode.oneOrNull => expandSelectForInclude(
         model: _delegate.modelName,
-        select: select,
+        select: state._select,
         include: normalizedInclude,
       ),
       OrmReadResultMode.all ||
       OrmReadResultMode.firstOrNull => expandSelectForExecution(
         model: _delegate.modelName,
-        select: select,
+        select: state._select,
         include: normalizedInclude,
-        distinct: distinct,
+        distinct: state._distinct,
       ),
     };
 
-    return _PreparedReadPlan(
-      include: normalizedInclude,
+    return OrmPreparedReadQuery._(
+      delegate: _delegate,
+      state: state,
+      normalizedInclude: normalizedInclude,
       plan: OrmPlan.read(
         contractHash: _delegate._client.contract.hash,
         target: _delegate._client.contract.target,
@@ -107,25 +92,30 @@ final class _OrmReadPlanCompiler {
         profileHash: _delegate._client.contract.profileHash,
         lane: 'orm',
         annotations: _mergePlanAnnotations(
-          annotations,
-          distinct.isEmpty
+          state._annotations,
+          state._distinct.isEmpty
               ? const <String, Object?>{}
               : <String, Object?>{
-                  'distinct': List<String>.from(distinct, growable: false),
+                  'distinct': List<String>.from(
+                    state._distinct,
+                    growable: false,
+                  ),
                 },
         ),
-        repositoryTrace: repositoryTrace,
+        repositoryTrace: state._repositoryTrace,
         model: _delegate.modelName,
         where: normalizedWhere,
-        skip: isCollectionRead && distinct.isEmpty ? skip : null,
-        take: isCollectionRead && distinct.isEmpty ? resolvedTake : null,
-        orderBy: isCollectionRead ? orderBy : const <OrmOrderBy>[],
-        distinct: isCollectionRead ? distinct : const <String>[],
+        skip: isCollectionRead && state._distinct.isEmpty ? state._skip : null,
+        take: isCollectionRead && state._distinct.isEmpty ? resolvedTake : null,
+        orderBy: isCollectionRead ? state._orderBy : const <OrmOrderBy>[],
+        distinct: isCollectionRead ? state._distinct : const <String>[],
         select: readSelect,
         include: _buildOrmIncludePlanMap(normalizedInclude),
-        cursor: cursor == null ? null : OrmReadCursorPlan(values: cursor),
-        page: page,
-        resultMode: resultMode,
+        cursor: state._cursor == null
+            ? null
+            : OrmReadCursorPlan(values: state._cursor!),
+        page: state._page,
+        resultMode: state.resultMode,
       ),
     );
   }

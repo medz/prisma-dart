@@ -1,9 +1,8 @@
 part of 'client.dart';
 
 @immutable
-final class OrmPreparedReadQuery {
-  final ModelDelegate _delegate;
-  final OrmPlan plan;
+final class _OrmPreparedReadState {
+  final OrmReadResultMode resultMode;
   final JsonMap _where;
   final int? _skip;
   final int? _take;
@@ -11,16 +10,13 @@ final class OrmPreparedReadQuery {
   final List<String> _distinct;
   final List<String> _select;
   final Map<String, IncludeSpec> _include;
-  final Map<String, IncludeSpec> _normalizedInclude;
   final JsonMap? _cursor;
   final OrmReadPagePlan? _page;
   final JsonMap _annotations;
   final OrmRepositoryTrace? _repositoryTrace;
-  final OrmReadResultMode _resultMode;
 
-  OrmPreparedReadQuery._({
-    required ModelDelegate delegate,
-    required this.plan,
+  _OrmPreparedReadState({
+    required this.resultMode,
     JsonMap where = const <String, Object?>{},
     int? skip,
     int? take,
@@ -28,14 +24,11 @@ final class OrmPreparedReadQuery {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    Map<String, IncludeSpec> normalizedInclude = const <String, IncludeSpec>{},
     JsonMap? cursor,
     OrmReadPagePlan? page,
     JsonMap annotations = const <String, Object?>{},
     OrmRepositoryTrace? repositoryTrace,
-    required OrmReadResultMode resultMode,
-  }) : _delegate = delegate,
-       _where = Map<String, Object?>.unmodifiable(
+  }) : _where = Map<String, Object?>.unmodifiable(
          Map<String, Object?>.from(where),
        ),
        _skip = skip,
@@ -46,9 +39,6 @@ final class OrmPreparedReadQuery {
        _include = Map<String, IncludeSpec>.unmodifiable(
          Map<String, IncludeSpec>.from(include),
        ),
-       _normalizedInclude = Map<String, IncludeSpec>.unmodifiable(
-         Map<String, IncludeSpec>.from(normalizedInclude),
-       ),
        _cursor = cursor == null
            ? null
            : Map<String, Object?>.unmodifiable(
@@ -58,8 +48,50 @@ final class OrmPreparedReadQuery {
        _annotations = Map<String, Object?>.unmodifiable(
          Map<String, Object?>.from(annotations),
        ),
-       _repositoryTrace = repositoryTrace,
-       _resultMode = resultMode;
+       _repositoryTrace = repositoryTrace;
+}
+
+@immutable
+final class OrmPreparedReadQuery {
+  final ModelDelegate _delegate;
+  final OrmPlan plan;
+  final _OrmPreparedReadState _state;
+  final Map<String, IncludeSpec> _normalizedInclude;
+
+  OrmPreparedReadQuery._({
+    required ModelDelegate delegate,
+    required this.plan,
+    required _OrmPreparedReadState state,
+    Map<String, IncludeSpec> normalizedInclude = const <String, IncludeSpec>{},
+  }) : _delegate = delegate,
+       _state = state,
+       _normalizedInclude = Map<String, IncludeSpec>.unmodifiable(
+         Map<String, IncludeSpec>.from(normalizedInclude),
+       );
+
+  JsonMap get _where => _state._where;
+
+  int? get _skip => _state._skip;
+
+  int? get _take => _state._take;
+
+  List<OrmOrderBy> get _orderBy => _state._orderBy;
+
+  List<String> get _distinct => _state._distinct;
+
+  List<String> get _select => _state._select;
+
+  Map<String, IncludeSpec> get _include => _state._include;
+
+  JsonMap? get _cursor => _state._cursor;
+
+  OrmReadPagePlan? get _page => _state._page;
+
+  JsonMap get _annotations => _state._annotations;
+
+  OrmRepositoryTrace? get _repositoryTrace => _state._repositoryTrace;
+
+  OrmReadResultMode get _resultMode => _state.resultMode;
 
   Future<JsonMap> inspectPlan() async {
     return Map<String, Object?>.unmodifiable(<String, Object?>{

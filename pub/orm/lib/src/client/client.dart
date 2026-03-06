@@ -1165,36 +1165,21 @@ class ModelDelegate {
     JsonMap annotations = const <String, Object?>{},
     OrmRepositoryTrace? repositoryTrace,
   }) async {
-    final prepared = await _buildReadPlan(
-      resultMode: resultMode,
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
-      annotations: annotations,
-      repositoryTrace: repositoryTrace,
-    );
-    return OrmPreparedReadQuery._(
-      delegate: this,
-      plan: prepared.plan,
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      normalizedInclude: prepared.include,
-      cursor: cursor,
-      page: page,
-      annotations: annotations,
-      repositoryTrace: repositoryTrace,
-      resultMode: resultMode,
+    return _readPlanCompiler.compile(
+      state: _OrmPreparedReadState(
+        resultMode: resultMode,
+        where: where,
+        skip: skip,
+        take: take,
+        orderBy: orderBy,
+        distinct: distinct,
+        select: select,
+        include: include,
+        cursor: cursor,
+        page: page,
+        annotations: annotations,
+        repositoryTrace: repositoryTrace,
+      ),
     );
   }
 
@@ -1678,36 +1663,6 @@ class ModelDelegate {
   }) => _RepositoryMutationExecutor(
     this,
   ).delete(where: where, select: select, include: include);
-
-  Future<_PreparedReadPlan> _buildReadPlan({
-    required OrmReadResultMode resultMode,
-    JsonMap where = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> distinct = const <String>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
-    JsonMap annotations = const <String, Object?>{},
-    OrmRepositoryTrace? repositoryTrace,
-  }) {
-    return _readPlanCompiler.compile(
-      resultMode: resultMode,
-      where: where,
-      skip: skip,
-      take: take,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      cursor: cursor,
-      page: page,
-      annotations: annotations,
-      repositoryTrace: repositoryTrace,
-    );
-  }
 
   Future<List<JsonMap>> _readAllInternal({
     required OrmAction action,
