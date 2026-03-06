@@ -11,6 +11,10 @@ enum OrmMutationResultMode { row, rowOrNull }
 
 enum OrmReadShape { rows, aggregate, groupedAggregate }
 
+enum OrmGroupByHavingLogicalOperator { and, or, not }
+
+enum OrmGroupByHavingMetricBucket { count, min, max, sum, avg }
+
 @immutable
 final class OrmReadCursorPlan {
   final JsonMap values;
@@ -200,30 +204,315 @@ final class OrmReadAggregatePlan {
 }
 
 @immutable
+final class OrmGroupByHavingCondition {
+  final Object? shorthand;
+  final Object? equals;
+  final Object? not;
+  final List<Object?>? inValues;
+  final List<Object?>? notInValues;
+  final String? contains;
+  final String? startsWith;
+  final String? endsWith;
+  final Object? gt;
+  final Object? gte;
+  final Object? lt;
+  final Object? lte;
+
+  const OrmGroupByHavingCondition({
+    this.shorthand,
+    this.equals,
+    this.not,
+    this.inValues,
+    this.notInValues,
+    this.contains,
+    this.startsWith,
+    this.endsWith,
+    this.gt,
+    this.gte,
+    this.lt,
+    this.lte,
+  });
+
+  factory OrmGroupByHavingCondition.parse(Object? value) {
+    if (value is! Map) {
+      return OrmGroupByHavingCondition(shorthand: value);
+    }
+
+    return OrmGroupByHavingCondition(
+      equals: value['equals'],
+      not: value['not'],
+      inValues: _coerceObjectList(value['in']),
+      notInValues: _coerceObjectList(value['notIn']),
+      contains: value['contains'] as String?,
+      startsWith: value['startsWith'] as String?,
+      endsWith: value['endsWith'] as String?,
+      gt: value['gt'],
+      gte: value['gte'],
+      lt: value['lt'],
+      lte: value['lte'],
+    );
+  }
+
+  bool get isEmpty =>
+      shorthand == null &&
+      equals == null &&
+      not == null &&
+      inValues == null &&
+      notInValues == null &&
+      contains == null &&
+      startsWith == null &&
+      endsWith == null &&
+      gt == null &&
+      gte == null &&
+      lt == null &&
+      lte == null;
+
+  Object? toJsonValue() {
+    if (shorthand != null) {
+      return shorthand;
+    }
+
+    final map = <String, Object?>{};
+    if (equals != null) {
+      map['equals'] = equals;
+    }
+    if (not != null) {
+      map['not'] = not;
+    }
+    if (inValues != null) {
+      map['in'] = inValues;
+    }
+    if (notInValues != null) {
+      map['notIn'] = notInValues;
+    }
+    if (contains != null) {
+      map['contains'] = contains;
+    }
+    if (startsWith != null) {
+      map['startsWith'] = startsWith;
+    }
+    if (endsWith != null) {
+      map['endsWith'] = endsWith;
+    }
+    if (gt != null) {
+      map['gt'] = gt;
+    }
+    if (gte != null) {
+      map['gte'] = gte;
+    }
+    if (lt != null) {
+      map['lt'] = lt;
+    }
+    if (lte != null) {
+      map['lte'] = lte;
+    }
+    return map;
+  }
+}
+
+sealed class OrmGroupByHavingNode {
+  const OrmGroupByHavingNode();
+
+  JsonMap toJson();
+}
+
+@immutable
+final class OrmGroupByHavingLogicalNode extends OrmGroupByHavingNode {
+  final OrmGroupByHavingLogicalOperator operator;
+  final List<OrmGroupByHaving> clauses;
+
+  OrmGroupByHavingLogicalNode({
+    required this.operator,
+    List<OrmGroupByHaving> clauses = const <OrmGroupByHaving>[],
+  }) : clauses = List.unmodifiable(clauses);
+
+  @override
+  JsonMap toJson() => <String, Object?>{
+    _logicalOperatorName(operator): clauses
+        .map((clause) => clause.toJson())
+        .toList(growable: false),
+  };
+}
+
+@immutable
+final class OrmGroupByHavingPredicateNode extends OrmGroupByHavingNode {
+  final String field;
+  final OrmGroupByHavingCondition condition;
+  final OrmGroupByHavingMetricBucket? bucket;
+
+  const OrmGroupByHavingPredicateNode({
+    required this.field,
+    required this.condition,
+    this.bucket,
+  });
+
+  @override
+  JsonMap toJson() {
+    final value = condition.toJsonValue();
+    if (bucket == null) {
+      return <String, Object?>{field: value};
+    }
+    return <String, Object?>{
+      _metricBucketName(bucket!): <String, Object?>{field: value},
+    };
+  }
+}
+
+@immutable
+final class OrmGroupByHaving {
+  final List<OrmGroupByHavingNode> nodes;
+
+  const OrmGroupByHaving.empty() : nodes = const <OrmGroupByHavingNode>[];
+
+  OrmGroupByHaving([List<OrmGroupByHavingNode> nodes = const []])
+    : nodes = List.unmodifiable(nodes);
+
+  factory OrmGroupByHaving.parse(JsonMap having) {
+    final nodes = <OrmGroupByHavingNode>[];
+    for (final entry in having.entries) {
+      final key = entry.key;
+      final value = entry.value;
+      final logicalOperator = _parseLogicalOperator(key);
+      if (logicalOperator != null) {
+        final clauses = _parseLogicalClauses(value);
+        nodes.add(
+          OrmGroupByHavingLogicalNode(
+            operator: logicalOperator,
+            clauses: clauses,
+          ),
+        );
+        continue;
+      }
+
+      final bucket = _parseMetricBucket(key);
+      if (bucket != null) {
+        if (value is! Map) {
+          continue;
+        }
+        final bucketMap = Map<String, Object?>.from(value);
+        for (final bucketEntry in bucketMap.entries) {
+          nodes.add(
+            OrmGroupByHavingPredicateNode(
+              field: bucketEntry.key,
+              condition: OrmGroupByHavingCondition.parse(bucketEntry.value),
+              bucket: bucket,
+            ),
+          );
+        }
+        continue;
+      }
+
+      nodes.add(
+        OrmGroupByHavingPredicateNode(
+          field: key,
+          condition: OrmGroupByHavingCondition.parse(value),
+        ),
+      );
+    }
+    return OrmGroupByHaving(nodes);
+  }
+
+  bool get isEmpty => nodes.isEmpty;
+  bool get isNotEmpty => nodes.isNotEmpty;
+
+  OrmGroupByHaving merge(OrmGroupByHaving other) =>
+      OrmGroupByHaving.parse(<String, Object?>{...toJson(), ...other.toJson()});
+
+  JsonMap toJson() {
+    final map = <String, Object?>{};
+    for (final node in nodes) {
+      map.addAll(node.toJson());
+    }
+    return map;
+  }
+}
+
+@immutable
 final class OrmReadGroupByPlan {
   final List<String> by;
-  final JsonMap having;
+  final OrmGroupByHaving having;
   final List<OrmOrderBy> orderBy;
   final int? skip;
   final int? take;
 
   OrmReadGroupByPlan({
     required List<String> by,
-    JsonMap having = const <String, Object?>{},
+    this.having = const OrmGroupByHaving.empty(),
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     this.skip,
     this.take,
   }) : by = List.unmodifiable(by),
-       having = Map.unmodifiable(having),
        orderBy = List.unmodifiable(orderBy);
 
   JsonMap toJson() => <String, Object?>{
     'by': by,
-    'having': having,
+    'having': having.toJson(),
     'orderBy': orderBy.map((entry) => entry.toJson()).toList(growable: false),
     if (skip != null) 'skip': skip,
     if (take != null) 'take': take,
   };
+}
+
+List<Object?>? _coerceObjectList(Object? value) {
+  if (value is! List) {
+    return null;
+  }
+  return List<Object?>.unmodifiable(value.cast<Object?>());
+}
+
+OrmGroupByHavingLogicalOperator? _parseLogicalOperator(String key) {
+  return switch (key) {
+    'AND' => OrmGroupByHavingLogicalOperator.and,
+    'OR' => OrmGroupByHavingLogicalOperator.or,
+    'NOT' => OrmGroupByHavingLogicalOperator.not,
+    _ => null,
+  };
+}
+
+String _logicalOperatorName(OrmGroupByHavingLogicalOperator operator) {
+  return switch (operator) {
+    OrmGroupByHavingLogicalOperator.and => 'AND',
+    OrmGroupByHavingLogicalOperator.or => 'OR',
+    OrmGroupByHavingLogicalOperator.not => 'NOT',
+  };
+}
+
+OrmGroupByHavingMetricBucket? _parseMetricBucket(String key) {
+  return switch (key) {
+    '_count' => OrmGroupByHavingMetricBucket.count,
+    '_min' => OrmGroupByHavingMetricBucket.min,
+    '_max' => OrmGroupByHavingMetricBucket.max,
+    '_sum' => OrmGroupByHavingMetricBucket.sum,
+    '_avg' => OrmGroupByHavingMetricBucket.avg,
+    _ => null,
+  };
+}
+
+String _metricBucketName(OrmGroupByHavingMetricBucket bucket) {
+  return switch (bucket) {
+    OrmGroupByHavingMetricBucket.count => '_count',
+    OrmGroupByHavingMetricBucket.min => '_min',
+    OrmGroupByHavingMetricBucket.max => '_max',
+    OrmGroupByHavingMetricBucket.sum => '_sum',
+    OrmGroupByHavingMetricBucket.avg => '_avg',
+  };
+}
+
+List<OrmGroupByHaving> _parseLogicalClauses(Object? operand) {
+  if (operand is Map) {
+    return <OrmGroupByHaving>[
+      OrmGroupByHaving.parse(Map<String, Object?>.from(operand)),
+    ];
+  }
+  if (operand is List) {
+    return operand
+        .whereType<Map>()
+        .map(
+          (entry) => OrmGroupByHaving.parse(Map<String, Object?>.from(entry)),
+        )
+        .toList(growable: false);
+  }
+  return const <OrmGroupByHaving>[];
 }
 
 @immutable

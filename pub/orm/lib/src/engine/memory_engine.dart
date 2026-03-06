@@ -759,45 +759,30 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
     return left.toString().compareTo(right.toString());
   }
 
-  bool _matchesGroupByHaving({required JsonMap row, required JsonMap having}) {
-    for (final entry in having.entries) {
-      final key = entry.key;
-      final value = entry.value;
-      if (key == 'AND' || key == 'OR' || key == 'NOT') {
-        if (!_matchesGroupByHavingLogical(
-          row: row,
-          operator: key,
-          operand: value,
-        )) {
-          return false;
-        }
-        continue;
-      }
-
-      final bucket = _normalizeAggregateBucket(key);
-      if (bucket != null) {
-        final aggregateFilters = _coerceWhereMap(value);
-        if (aggregateFilters == null) {
-          return false;
-        }
-        for (final aggregateEntry in aggregateFilters.entries) {
-          final aggregateValue = _readGroupByAggregateValue(
-            row: row,
-            bucket: bucket,
-            field: aggregateEntry.key,
-          );
+  bool _matchesGroupByHaving({
+    required JsonMap row,
+    required OrmGroupByHaving having,
+  }) {
+    for (final node in having.nodes) {
+      switch (node) {
+        case OrmGroupByHavingLogicalNode():
+          if (!_matchesGroupByHavingLogical(row: row, node: node)) {
+            return false;
+          }
+        case OrmGroupByHavingPredicateNode():
+          final actual = node.bucket == null
+              ? row[node.field]
+              : _readGroupByAggregateValue(
+                  row: row,
+                  bucket: _groupByHavingBucketName(node.bucket!),
+                  field: node.field,
+                );
           if (!_matchesGroupByHavingCondition(
-            actual: aggregateValue,
-            condition: aggregateEntry.value,
+            actual: actual,
+            condition: node.condition,
           )) {
             return false;
           }
-        }
-        continue;
-      }
-
-      if (!_matchesGroupByHavingCondition(actual: row[key], condition: value)) {
-        return false;
       }
     }
     return true;
@@ -805,70 +790,91 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
 
   bool _matchesGroupByHavingLogical({
     required JsonMap row,
-    required String operator,
-    required Object? operand,
+    required OrmGroupByHavingLogicalNode node,
   }) {
-    final nestedMap = _coerceWhereMap(operand);
-    if (nestedMap != null) {
-      final matched = _matchesGroupByHaving(row: row, having: nestedMap);
-      return operator == 'NOT' ? !matched : matched;
-    }
-    final nestedList = _coerceWhereList(operand);
-    if (nestedList == null) {
-      return false;
-    }
-    return switch (operator) {
-      'AND' => nestedList.every(
+    final clauses = node.clauses;
+    return switch (node.operator) {
+      OrmGroupByHavingLogicalOperator.and => clauses.every(
         (clause) => _matchesGroupByHaving(row: row, having: clause),
       ),
-      'OR' => nestedList.any(
+      OrmGroupByHavingLogicalOperator.or => clauses.any(
         (clause) => _matchesGroupByHaving(row: row, having: clause),
       ),
-      'NOT' => nestedList.every(
+      OrmGroupByHavingLogicalOperator.not => clauses.every(
         (clause) => !_matchesGroupByHaving(row: row, having: clause),
       ),
-      _ => false,
     };
   }
 
   bool _matchesGroupByHavingCondition({
     required Object? actual,
-    required Object? condition,
+    required OrmGroupByHavingCondition condition,
   }) {
-    final conditionMap = _coerceOperatorMap(condition);
-    if (conditionMap == null || conditionMap.isEmpty) {
-      return actual == condition;
+    if (condition.shorthand != null) {
+      return actual == condition.shorthand;
     }
-    for (final operator in _whereOperatorOrder) {
-      if (!conditionMap.containsKey(operator)) {
-        continue;
-      }
-      final operand = conditionMap[operator];
-      final matched = switch (operator) {
-        'equals' => actual == operand,
-        'not' =>
-          operand is Map
-              ? !_matchesGroupByHavingCondition(
-                  actual: actual,
-                  condition: operand,
-                )
-              : actual != operand,
-        'in' => _matchIn(actual, operand),
-        'notIn' => _matchNotIn(actual, operand),
-        'contains' => _matchStringOperation(actual, operand, operator),
-        'startsWith' => _matchStringOperation(actual, operand, operator),
-        'endsWith' => _matchStringOperation(actual, operand, operator),
-        'gt' => _matchComparison(actual, operand, operator),
-        'gte' => _matchComparison(actual, operand, operator),
-        'lt' => _matchComparison(actual, operand, operator),
-        'lte' => _matchComparison(actual, operand, operator),
-        _ => false,
-      };
+    if (condition.isEmpty) {
+      return true;
+    }
+    if (condition.equals != null && actual != condition.equals) {
+      return false;
+    }
+    final notOperand = condition.not;
+    if (notOperand != null) {
+      final matched = notOperand is Map
+          ? !_matchesGroupByHavingCondition(
+              actual: actual,
+              condition: OrmGroupByHavingCondition.parse(notOperand),
+            )
+          : actual != notOperand;
       if (!matched) {
         return false;
       }
     }
+    if (condition.inValues != null && !_matchIn(actual, condition.inValues)) {
+      return false;
+    }
+    if (condition.notInValues != null &&
+        !_matchNotIn(actual, condition.notInValues)) {
+      return false;
+    }
+    if (condition.contains != null &&
+        !_matchStringOperation(actual, condition.contains, 'contains')) {
+      return false;
+    }
+    if (condition.startsWith != null &&
+        !_matchStringOperation(actual, condition.startsWith, 'startsWith')) {
+      return false;
+    }
+    if (condition.endsWith != null &&
+        !_matchStringOperation(actual, condition.endsWith, 'endsWith')) {
+      return false;
+    }
+    if (condition.gt != null && !_matchComparison(actual, condition.gt, 'gt')) {
+      return false;
+    }
+    if (condition.gte != null &&
+        !_matchComparison(actual, condition.gte, 'gte')) {
+      return false;
+    }
+    if (condition.lt != null && !_matchComparison(actual, condition.lt, 'lt')) {
+      return false;
+    }
+    if (condition.lte != null &&
+        !_matchComparison(actual, condition.lte, 'lte')) {
+      return false;
+    }
     return true;
+  }
+
+  String _groupByHavingBucketName(OrmGroupByHavingMetricBucket bucket) {
+    return switch (bucket) {
+      OrmGroupByHavingMetricBucket.count => 'count',
+      OrmGroupByHavingMetricBucket.min => 'min',
+      OrmGroupByHavingMetricBucket.max => 'max',
+      OrmGroupByHavingMetricBucket.sum => 'sum',
+      OrmGroupByHavingMetricBucket.avg => 'avg',
+    };
   }
 
   String? _normalizeAggregateBucket(String bucket) {

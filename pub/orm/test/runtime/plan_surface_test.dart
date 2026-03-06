@@ -50,11 +50,11 @@ void main() {
       ),
       groupBy: OrmReadGroupByPlan(
         by: const <String>['email'],
-        having: const <String, Object?>{
+        having: OrmGroupByHaving.parse(const <String, Object?>{
           '_count': <String, Object?>{
             'all': <String, Object?>{'gte': 2},
           },
-        },
+        }),
         orderBy: const <OrmOrderBy>[
           OrmOrderBy('_sum.id', order: SortOrder.desc),
         ],

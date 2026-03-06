@@ -1234,7 +1234,7 @@ final class SqlAdapter
   }
 
   String _buildGroupedHavingClause({
-    required JsonMap having,
+    required OrmGroupByHaving having,
     required List<Object?> params,
   }) {
     if (having.isEmpty) {
@@ -1244,54 +1244,32 @@ final class SqlAdapter
   }
 
   String _buildGroupedHavingExpression({
-    required JsonMap having,
+    required OrmGroupByHaving having,
     required List<Object?> params,
   }) {
     final predicates = <String>[];
-    for (final entry in having.entries) {
-      final key = entry.key;
-      if (_whereLogicalKeys.contains(key)) {
-        predicates.add(
-          _buildGroupedHavingLogicalPredicate(
-            key: key,
-            operand: entry.value,
-            params: params,
-          ),
-        );
-        continue;
-      }
-
-      final metricBucket = _normalizeGroupedMetricBucket(key);
-      if (metricBucket != null) {
-        final metricFilters = _coerceWhereMap(entry.value);
-        if (metricFilters == null || metricFilters.isEmpty) {
-          continue;
-        }
-        for (final metricEntry in metricFilters.entries) {
+    for (final node in having.nodes) {
+      switch (node) {
+        case OrmGroupByHavingLogicalNode():
+          predicates.add(
+            _buildGroupedHavingLogicalPredicate(node: node, params: params),
+          );
+        case OrmGroupByHavingPredicateNode():
           predicates.add(
             _buildGroupedHavingConditionPredicate(
-              leftOperand: _aggregateFunctionExpression(
-                bucket: metricBucket,
-                field: metricEntry.key,
-                rowRef: null,
-              ),
-              field: metricEntry.key,
-              condition: metricEntry.value,
+              leftOperand: node.bucket == null
+                  ? _id(node.field)
+                  : _aggregateFunctionExpression(
+                      bucket: _groupByMetricBucketName(node.bucket!),
+                      field: node.field,
+                      rowRef: null,
+                    ),
+              field: node.field,
+              condition: node.condition,
               params: params,
             ),
           );
-        }
-        continue;
       }
-
-      predicates.add(
-        _buildGroupedHavingConditionPredicate(
-          leftOperand: _id(key),
-          field: key,
-          condition: entry.value,
-          params: params,
-        ),
-      );
     }
     if (predicates.isEmpty) {
       return '1 = 1';
@@ -1300,51 +1278,62 @@ final class SqlAdapter
   }
 
   String _buildGroupedHavingLogicalPredicate({
-    required String key,
-    required Object? operand,
+    required OrmGroupByHavingLogicalNode node,
     required List<Object?> params,
   }) {
-    final nestedMap = _coerceWhereMap(operand);
-    if (nestedMap != null) {
-      final predicate = _buildGroupedHavingExpression(
-        having: nestedMap,
-        params: params,
-      );
-      return key == 'NOT' ? 'NOT ($predicate)' : '($predicate)';
+    if (node.clauses.isEmpty) {
+      return node.operator == OrmGroupByHavingLogicalOperator.or
+          ? '0 = 1'
+          : '1 = 1';
     }
-    final nestedList = _coerceWhereList(operand);
-    if (nestedList == null || nestedList.isEmpty) {
-      return key == 'OR' ? '0 = 1' : '1 = 1';
-    }
-    final joiner = key == 'OR' ? ' OR ' : ' AND ';
-    final clauses = nestedList
+    final joiner = node.operator == OrmGroupByHavingLogicalOperator.or
+        ? ' OR '
+        : ' AND ';
+    final clauses = node.clauses
         .map(
           (clause) =>
               _buildGroupedHavingExpression(having: clause, params: params),
         )
         .map((clause) => '($clause)')
         .join(joiner);
-    return key == 'NOT' ? 'NOT ($clauses)' : clauses;
+    return node.operator == OrmGroupByHavingLogicalOperator.not
+        ? 'NOT ($clauses)'
+        : clauses;
   }
 
   String _buildGroupedHavingConditionPredicate({
     required String leftOperand,
     required String field,
-    required Object? condition,
+    required OrmGroupByHavingCondition condition,
     required List<Object?> params,
   }) {
-    final operatorMap = _coerceOperatorMap(condition);
-    if (operatorMap == null) {
-      params.add(condition);
+    if (condition.shorthand != null) {
+      params.add(condition.shorthand);
       return '$leftOperand = ?';
+    }
+    if (condition.isEmpty) {
+      return '1 = 1';
     }
 
     final predicates = <String>[];
     for (final operator in _whereOperatorOrder) {
-      if (!operatorMap.containsKey(operator)) {
+      final operand = switch (operator) {
+        'equals' => condition.equals,
+        'not' => condition.not,
+        'in' => condition.inValues,
+        'notIn' => condition.notInValues,
+        'contains' => condition.contains,
+        'startsWith' => condition.startsWith,
+        'endsWith' => condition.endsWith,
+        'gt' => condition.gt,
+        'gte' => condition.gte,
+        'lt' => condition.lt,
+        'lte' => condition.lte,
+        _ => null,
+      };
+      if (operand == null) {
         continue;
       }
-      final operand = operatorMap[operator];
       predicates.add(
         _buildGroupedHavingOperatorPredicate(
           leftOperand: leftOperand,
@@ -1373,12 +1362,11 @@ final class SqlAdapter
         params.add(operand);
         return '$leftOperand = ?';
       case 'not':
-        final nested = _coerceOperatorMap(operand);
-        if (nested != null) {
+        if (operand is Map) {
           final predicate = _buildGroupedHavingConditionPredicate(
             leftOperand: leftOperand,
             field: field,
-            condition: operand,
+            condition: OrmGroupByHavingCondition.parse(operand),
             params: params,
           );
           return 'NOT ($predicate)';
@@ -1429,6 +1417,16 @@ final class SqlAdapter
       default:
         return '1 = 1';
     }
+  }
+
+  String _groupByMetricBucketName(OrmGroupByHavingMetricBucket bucket) {
+    return switch (bucket) {
+      OrmGroupByHavingMetricBucket.count => 'count',
+      OrmGroupByHavingMetricBucket.min => 'min',
+      OrmGroupByHavingMetricBucket.max => 'max',
+      OrmGroupByHavingMetricBucket.sum => 'sum',
+      OrmGroupByHavingMetricBucket.avg => 'avg',
+    };
   }
 
   String _buildGroupedLimitOffsetClause({

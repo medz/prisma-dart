@@ -222,11 +222,11 @@ void main() {
       aggregate: OrmReadAggregatePlan(countAll: true, sum: <String>['id']),
       groupBy: OrmReadGroupByPlan(
         by: <String>['email'],
-        having: <String, Object?>{
+        having: OrmGroupByHaving.parse(<String, Object?>{
           '_count': <String, Object?>{
             'all': <String, Object?>{'gte': 2},
           },
-        },
+        }),
         orderBy: <OrmOrderBy>[OrmOrderBy('_sum.id', order: SortOrder.desc)],
         take: 3,
         skip: 1,

@@ -2209,7 +2209,7 @@ class ModelDelegate {
   }
 
   void _assertGroupByHavingFields({
-    required JsonMap having,
+    required OrmGroupByHaving having,
     required List<String> by,
     required bool countAll,
     required List<String> count,
@@ -2222,7 +2222,7 @@ class ModelDelegate {
       return;
     }
     _assertGroupByHavingClause(
-      clause: having,
+      clause: having.toJson(),
       source: 'groupBy.having',
       by: by,
       countAll: countAll,
@@ -2725,7 +2725,7 @@ final class OrmAggregateSpec {
 @immutable
 final class OrmGroupBySpec {
   final List<String> by;
-  final JsonMap having;
+  final OrmGroupByHaving having;
   final bool countAll;
   final List<String> count;
   final List<String> min;
@@ -2735,7 +2735,7 @@ final class OrmGroupBySpec {
 
   OrmGroupBySpec({
     required List<String> by,
-    JsonMap having = const <String, Object?>{},
+    this.having = const OrmGroupByHaving.empty(),
     this.countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
@@ -2743,9 +2743,6 @@ final class OrmGroupBySpec {
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
   }) : by = List<String>.unmodifiable(by),
-       having = Map<String, Object?>.unmodifiable(
-         Map<String, Object?>.from(having),
-       ),
        count = List<String>.unmodifiable(count),
        min = List<String>.unmodifiable(min),
        max = List<String>.unmodifiable(max),
@@ -2754,7 +2751,7 @@ final class OrmGroupBySpec {
 
   OrmGroupBySpec copyWith({
     List<String>? by,
-    JsonMap? having,
+    OrmGroupByHaving? having,
     bool? countAll,
     List<String>? count,
     List<String>? min,
@@ -3192,7 +3189,7 @@ final class ModelGroupedQuery {
 
   List<String> get byFields => _groupBy.by;
 
-  JsonMap get havingClause => _groupBy.having;
+  JsonMap get havingClause => _groupBy.having.toJson();
 
   ModelGroupedQuery configure(OrmGroupBySpec groupBy) {
     if (!_sameStringList(left: _groupBy.by, right: groupBy.by)) {
@@ -3210,9 +3207,8 @@ final class ModelGroupedQuery {
   }
 
   ModelGroupedQuery having(JsonMap having, {bool merge = true}) {
-    final nextHaving = merge
-        ? <String, Object?>{..._groupBy.having, ...having}
-        : <String, Object?>{...having};
+    final parsed = OrmGroupByHaving.parse(<String, Object?>{...having});
+    final nextHaving = merge ? _groupBy.having.merge(parsed) : parsed;
     return _next(_groupBy.copyWith(having: nextHaving));
   }
 
@@ -3220,7 +3216,7 @@ final class ModelGroupedQuery {
     JsonMap Function(JsonMap having) build, {
     bool merge = true,
   }) {
-    final current = Map<String, Object?>.from(_groupBy.having);
+    final current = Map<String, Object?>.from(_groupBy.having.toJson());
     final next = build(Map<String, Object?>.unmodifiable(current));
     return having(next, merge: merge);
   }

@@ -912,6 +912,10 @@ final class TypedClientWriter {
     );
     buffer.writeln('  }');
     buffer.writeln();
+    buffer.writeln('  OrmGroupByHaving toRuntimeHaving() {');
+    buffer.writeln('    return OrmGroupByHaving.parse(toJson());');
+    buffer.writeln('  }');
+    buffer.writeln();
     buffer.writeln('  Map<String, Object?> toJson() {');
     buffer.writeln('    return Map<String, Object?>.from(value);');
     buffer.writeln('  }');
@@ -1019,7 +1023,7 @@ final class TypedClientWriter {
     buffer.writeln(
       '      by: by.map((entry) => entry.value).toList(growable: false),',
     );
-    buffer.writeln('      having: having.toJson(),');
+    buffer.writeln('      having: having.toRuntimeHaving(),');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln(
       '      count: count.map((entry) => entry.value).toList(growable: false),',

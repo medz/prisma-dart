@@ -673,11 +673,11 @@ void main() {
               OrmGroupBySpec(
                 by: const <String>['email'],
                 countAll: true,
-                having: const <String, Object?>{
+                having: OrmGroupByHaving.parse(const <String, Object?>{
                   '_count': <String, Object?>{
                     'all': <String, Object?>{'gte': 2},
                   },
-                },
+                }),
                 sum: const <String>['id'],
               ),
             )
@@ -685,7 +685,7 @@ void main() {
 
         expect(plan.read?.shape, OrmReadShape.groupedAggregate);
         expect(plan.read?.groupBy?.by, <String>['email']);
-        expect(plan.read?.groupBy?.having, <String, Object?>{
+        expect(plan.read?.groupBy?.having.toJson(), <String, Object?>{
           '_count': <String, Object?>{
             'all': <String, Object?>{'gte': 2},
           },
