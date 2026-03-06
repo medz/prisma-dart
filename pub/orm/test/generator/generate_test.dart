@@ -630,17 +630,17 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserSql\s*\{[\s\S]*?OrmSqlSelectBuilder\s+selectPlan\(',
+            r'class\s+UserSql\s*\{[\s\S]*?OrmPlan\s+toPlan\(',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserSql to expose selectPlan builder.',
+          reason: 'Expected UserSql to expose typed toPlan helper.',
         );
         expect(
           RegExp(
-            r'class\s+UserSql\s*\{[\s\S]*?Future<List<UserData>>\s+query\(',
+            r'class\s+UserSql\s*\{[\s\S]*?Future<List<UserData>>\s+all\(',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserSql to expose typed query helper.',
+          reason: 'Expected UserSql to expose typed all helper.',
         );
         expect(
           RegExp(
@@ -648,6 +648,13 @@ typedef Post = ({
           ).hasMatch(generatedSource),
           isTrue,
           reason: 'Expected UserSql to expose typed stream helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<UserData\?>\s+firstOrNull\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserSql to expose typed firstOrNull helper.',
         );
         expect(
           RegExp(
@@ -791,6 +798,18 @@ typedef Post = ({
           isFalse,
           reason:
               'Expected generated typed query source to not expose first() signature.',
+        );
+        expect(
+          generatedSource.contains('OrmSqlSelectBuilder selectPlan('),
+          isFalse,
+          reason:
+              'Expected generated typed sql source to not expose selectPlan signature.',
+        );
+        expect(
+          generatedSource.contains('Future<List<UserData>> query('),
+          isFalse,
+          reason:
+              'Expected generated typed sql source to not expose query() signature.',
         );
         expect(
           RegExp(

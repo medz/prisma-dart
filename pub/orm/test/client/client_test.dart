@@ -755,7 +755,7 @@ void main() {
     });
 
     test(
-      'query toPlan emits orm lane metadata and include annotations',
+      'query toPlan emits orm lane metadata and structured include plan',
       () async {
         final client = OrmClient(
           contract: relationalContract,
@@ -780,17 +780,13 @@ void main() {
         expect(plan.lane, 'orm');
         expect(plan.action, OrmAction.findMany);
         expect(plan.take, 5);
-        expect(plan.annotations['resultMode'], 'all');
-        expect(plan.annotations['include'], <String, Object?>{
-          'posts': <String, Object?>{
-            'take': 3,
-            'include': <String, Object?>{
-              'author': <String, Object?>{
-                'select': <String>['email'],
-              },
-            },
-          },
-        });
+        expect(plan.resultMode, OrmReadResultMode.all);
+        expect(plan.include.keys, <String>['posts']);
+        final posts = plan.include['posts'];
+        expect(posts, isNotNull);
+        expect(posts?.take, 3);
+        expect(posts?.include.keys, <String>['author']);
+        expect(posts?.include['author']?.select, <String>['email']);
       },
     );
 

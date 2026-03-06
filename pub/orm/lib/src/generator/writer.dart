@@ -1962,7 +1962,7 @@ final class TypedClientWriter {
     buffer.writeln('  const ${model.sqlClassName}(this._sql);');
     buffer.writeln();
 
-    buffer.writeln('  OrmSqlSelectBuilder selectPlan({');
+    buffer.writeln('  OrmSqlSelectBuilder _selectBuilder({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
@@ -1995,7 +1995,32 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<List<${model.dataClassName}>> query({');
+    buffer.writeln('  OrmPlan toPlan({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return _selectBuilder(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('    ).build();');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<${model.dataClassName}>> all({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
@@ -2009,7 +2034,7 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('  }) async {');
-    buffer.writeln('    final rows = await selectPlan(');
+    buffer.writeln('    final rows = await _selectBuilder(');
     buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
@@ -2037,7 +2062,7 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('  }) async* {');
-    buffer.writeln('    await for (final row in selectPlan(');
+    buffer.writeln('    await for (final row in _selectBuilder(');
     buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
@@ -2050,7 +2075,7 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<${model.dataClassName}?> first({');
+    buffer.writeln('  Future<${model.dataClassName}?> firstOrNull({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
@@ -2063,7 +2088,7 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('  }) async {');
-    buffer.writeln('    final row = await selectPlan(');
+    buffer.writeln('    final row = await _selectBuilder(');
     buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: 1,');

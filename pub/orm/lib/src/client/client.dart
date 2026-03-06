@@ -9,6 +9,8 @@ import '../runtime/plan.dart';
 import '../runtime/plugin.dart';
 import '../runtime/types.dart';
 
+part 'include_planner.dart';
+
 typedef CollectionFactory =
     ModelDelegate Function({
       required OrmModelContext client,
@@ -161,59 +163,27 @@ Map<String, IncludeSpec> _mergeIncludeSpecMap(
   return merged;
 }
 
-JsonMap _serializeIncludeSpec(IncludeSpec spec) {
-  final encoded = <String, Object?>{};
-  if (spec.where.isNotEmpty) {
-    encoded['where'] = Map<String, Object?>.from(spec.where);
-  }
-  if (spec.skip case final skip?) {
-    encoded['skip'] = skip;
-  }
-  if (spec.take case final take?) {
-    encoded['take'] = take;
-  }
-  if (spec.orderBy.isNotEmpty) {
-    encoded['orderBy'] = spec.orderBy
-        .map(
-          (entry) => <String, Object?>{
-            'field': entry.field,
-            'order': entry.order.name,
-          },
-        )
-        .toList(growable: false);
-  }
-  if (spec.select.isNotEmpty) {
-    encoded['select'] = List<String>.from(spec.select, growable: false);
-  }
-  if (spec.include.isNotEmpty) {
-    encoded['include'] = _serializeIncludeSpecMap(spec.include);
-  }
-  return encoded;
+OrmIncludePlan _buildOrmIncludePlan(IncludeSpec spec) {
+  return OrmIncludePlan(
+    where: spec.where,
+    skip: spec.skip,
+    take: spec.take,
+    orderBy: spec.orderBy,
+    select: spec.select,
+    include: _buildOrmIncludePlanMap(spec.include),
+  );
 }
 
-JsonMap _serializeIncludeSpecMap(Map<String, IncludeSpec> include) {
+Map<String, OrmIncludePlan> _buildOrmIncludePlanMap(
+  Map<String, IncludeSpec> include,
+) {
   if (include.isEmpty) {
-    return const <String, Object?>{};
+    return const <String, OrmIncludePlan>{};
   }
-  return <String, Object?>{
+  return <String, OrmIncludePlan>{
     for (final entry in include.entries)
-      entry.key: _serializeIncludeSpec(entry.value),
+      entry.key: _buildOrmIncludePlan(entry.value),
   };
-}
-
-JsonMap _buildOrmReadAnnotations({
-  required String resultMode,
-  required Map<String, IncludeSpec> include,
-  List<String> distinct = const <String>[],
-}) {
-  final annotations = <String, Object?>{'resultMode': resultMode};
-  if (include.isNotEmpty) {
-    annotations['include'] = _serializeIncludeSpecMap(include);
-  }
-  if (distinct.isNotEmpty) {
-    annotations['distinct'] = List<String>.from(distinct, growable: false);
-  }
-  return annotations;
 }
 
 abstract interface class OrmModelContext {
@@ -1408,10 +1378,11 @@ class ModelDelegate {
       model: modelName,
       where: where,
     );
-    final resultMode = switch (action) {
-      OrmAction.findMany => take == 1 ? 'firstOrNull' : 'all',
-      OrmAction.findUnique => 'oneOrNull',
-      _ => action.name,
+    final OrmReadResultMode? resultMode = switch (action) {
+      OrmAction.findMany =>
+        take == 1 ? OrmReadResultMode.firstOrNull : OrmReadResultMode.all,
+      OrmAction.findUnique => OrmReadResultMode.oneOrNull,
+      _ => null,
     };
 
     return _PreparedReadPlan(
@@ -1422,11 +1393,13 @@ class ModelDelegate {
         storageHash: _client.contract.markerStorageHash,
         profileHash: _client.contract.profileHash,
         lane: 'orm',
-        annotations: _buildOrmReadAnnotations(
-          resultMode: resultMode,
-          include: normalizedInclude,
-          distinct: distinct,
-        ),
+        resultMode: resultMode,
+        include: _buildOrmIncludePlanMap(normalizedInclude),
+        annotations: distinct.isEmpty
+            ? const <String, Object?>{}
+            : <String, Object?>{
+                'distinct': List<String>.from(distinct, growable: false),
+              },
         model: modelName,
         action: action,
         where: normalizedWhere,
@@ -1750,159 +1723,9 @@ class ModelDelegate {
     required Map<String, IncludeSpec> include,
     required int depth,
   }) {
-    if (rows.isEmpty || include.isEmpty) {
-      return Future<List<JsonMap>>.value(rows);
-    }
-
-    if (depth >= _client.maxIncludeDepth) {
-      throw IncludeDepthExceededException(maxDepth: _client.maxIncludeDepth);
-    }
-
-    final strategy = _client.includeStrategySelector(
-      contract: _client.contract,
-      modelName: modelName,
-      action: action,
-      include: include,
-      depth: depth,
-    );
-
-    return switch (strategy) {
-      IncludeExecutionStrategy.singleQuery => _resolveIncludeRowsSingleQuery(
-        rows: rows,
-        include: include,
-        depth: depth,
-      ),
-      IncludeExecutionStrategy.multiQuery => _resolveIncludeRowsMultiQuery(
-        rows: rows,
-        include: include,
-        depth: depth,
-      ),
-    };
-  }
-
-  Future<List<JsonMap>> _resolveIncludeRowsSingleQuery({
-    required List<JsonMap> rows,
-    required Map<String, IncludeSpec> include,
-    required int depth,
-  }) async {
-    var hydrated = rows;
-
-    for (final entry in include.entries) {
-      final relationName = entry.key;
-      final relationInclude = entry.value;
-      final relation = _resolveRelation(
-        model: modelName,
-        relationName: relationName,
-      );
-      final relatedDelegate = _client.model(relation.relatedModel);
-      _validateIncludePagination(include: relationInclude);
-
-      final relatedRows = await _loadRelationRowsSingleQuery(
-        relatedDelegate: relatedDelegate,
-        relation: relation,
-        relationInclude: relationInclude,
-        depth: depth,
-      );
-      final rowsByRelationKey = _groupRowsByRelationFields(
-        rows: relatedRows,
-        fields: relation.targetFields,
-      );
-
-      final nextRows = <JsonMap>[];
-      for (final row in hydrated) {
-        final relationWhere = _buildRelationWhere(row: row, relation: relation);
-        if (relationWhere == null) {
-          final emptyValue = relation.cardinality == RelationCardinality.one
-              ? null
-              : const <JsonMap>[];
-          nextRows.add(_attachInclude(row, relationName, emptyValue));
-          continue;
-        }
-
-        final relationKey = _buildRelationMergeKeyFromRow(
-          row: relationWhere,
-          fields: relation.targetFields,
-        );
-        final matchedRows = relationKey == null
-            ? const <JsonMap>[]
-            : (rowsByRelationKey[relationKey] ?? const <JsonMap>[]);
-        final windowRows = _sliceRows(
-          rows: matchedRows,
-          skip: relationInclude.skip,
-          take: relationInclude.take,
-        );
-        final shapedRows = relatedDelegate._shapeRows(
-          windowRows,
-          select: relationInclude.select,
-          include: relationInclude.include,
-        );
-        final relationValue = relation.cardinality == RelationCardinality.one
-            ? _firstOrNull(shapedRows)
-            : shapedRows;
-
-        nextRows.add(_attachInclude(row, relationName, relationValue));
-      }
-
-      hydrated = nextRows;
-    }
-
-    return hydrated;
-  }
-
-  Future<List<JsonMap>> _resolveIncludeRowsMultiQuery({
-    required List<JsonMap> rows,
-    required Map<String, IncludeSpec> include,
-    required int depth,
-  }) async {
-    var hydrated = rows;
-
-    for (final entry in include.entries) {
-      final relationName = entry.key;
-      final relationInclude = entry.value;
-      final relation = _resolveRelation(
-        model: modelName,
-        relationName: relationName,
-      );
-      final relatedDelegate = _client.model(relation.relatedModel);
-
-      final nextRows = <JsonMap>[];
-      for (final row in hydrated) {
-        final relationWhere = _buildRelationWhere(row: row, relation: relation);
-        if (relationWhere == null) {
-          final emptyValue = relation.cardinality == RelationCardinality.one
-              ? null
-              : const <JsonMap>[];
-          nextRows.add(_attachInclude(row, relationName, emptyValue));
-          continue;
-        }
-
-        final relatedWhere = <String, Object?>{
-          ...relationInclude.where,
-          ...relationWhere,
-        };
-
-        final relatedRows = await relatedDelegate._findManyInternal(
-          action: OrmAction.findMany,
-          where: relatedWhere,
-          skip: relationInclude.skip,
-          take: relationInclude.take,
-          orderBy: relationInclude.orderBy,
-          select: relationInclude.select,
-          include: relationInclude.include,
-          includeDepth: depth + 1,
-        );
-
-        final relationValue = relation.cardinality == RelationCardinality.one
-            ? _firstOrNull(relatedRows)
-            : relatedRows;
-
-        nextRows.add(_attachInclude(row, relationName, relationValue));
-      }
-
-      hydrated = nextRows;
-    }
-
-    return hydrated;
+    return _RepositoryIncludePlanner(
+      this,
+    ).resolve(action: action, rows: rows, include: include, depth: depth);
   }
 
   ModelRelationContract _resolveRelation({
@@ -1948,30 +1771,6 @@ class ModelDelegate {
     }
 
     return where;
-  }
-
-  Future<List<JsonMap>> _loadRelationRowsSingleQuery({
-    required ModelDelegate relatedDelegate,
-    required ModelRelationContract relation,
-    required IncludeSpec relationInclude,
-    required int depth,
-  }) {
-    final baseWhere = _buildSingleQueryRelationBaseWhere(
-      includeWhere: relationInclude.where,
-      relation: relation,
-    );
-
-    return relatedDelegate._findManyInternal(
-      action: OrmAction.findMany,
-      where: baseWhere,
-      orderBy: relationInclude.orderBy,
-      select: _buildSingleQueryRelationSelect(
-        include: relationInclude,
-        relation: relation,
-      ),
-      include: relationInclude.include,
-      includeDepth: depth + 1,
-    );
   }
 
   JsonMap _buildSingleQueryRelationBaseWhere({
