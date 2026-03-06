@@ -4056,12 +4056,25 @@ final class TypedClientWriter {
 
     final normalized = <String>[];
     for (final segment in segments) {
-      final withPrefix = RegExp(r'^[0-9]').hasMatch(segment)
-          ? 'n$segment'
-          : segment;
-      normalized.add(withPrefix);
+      for (final part in _splitIdentifierSegment(segment)) {
+        final withPrefix = RegExp(r'^[0-9]').hasMatch(part) ? 'n$part' : part;
+        normalized.add(withPrefix);
+      }
     }
     return normalized;
+  }
+
+  List<String> _splitIdentifierSegment(String segment) {
+    final matches = RegExp(
+      r'[A-Z]+(?=[A-Z][a-z]|[0-9]|$)|[A-Z]?[a-z]+|[0-9]+',
+    ).allMatches(segment);
+    if (matches.isEmpty) {
+      return <String>[segment];
+    }
+    return matches
+        .map((match) => match.group(0)!)
+        .where((part) => part.isNotEmpty)
+        .toList(growable: false);
   }
 
   String _capitalize(String value) {

@@ -1657,6 +1657,113 @@ typedef Post = ({
         );
       });
 
+      test('generates typed self-relation include and relation filter surfaces', () async {
+        final fixtureDir = _copyFixture(fixturesRoot, 'default_output');
+        addTearDown(() => fixtureDir.deleteSync(recursive: true));
+
+        final schemaFile = File(
+          _path(<String>[fixtureDir.path, 'orm.schema.dart']),
+        );
+        schemaFile.writeAsStringSync('''
+class _ModelMarker {
+  const _ModelMarker();
+}
+
+const model = _ModelMarker();
+
+class Relation {
+  final Set<String>? fields;
+  final Set<String>? references;
+  final String? name;
+
+  const Relation({this.fields, this.references, this.name});
+}
+
+@model
+typedef User = ({
+  String id,
+  String email,
+  String? invitedById,
+  @Relation(fields: {'invitedById'}, references: {'id'})
+  User? invitedBy,
+  @Relation(references: {'invitedById'})
+  List<User> invitedUsers
+});
+''');
+
+        final run = await _runGenerate(
+          entryPath: generatorEntry.path,
+          workingDirectory: fixtureDir.path,
+        );
+
+        expect(run.exitCode, 0, reason: run.debugOutput);
+
+        var generatedDartFiles = _findDartFiles(
+          Directory(_path(<String>[fixtureDir.path, 'generated'])),
+        );
+        if (generatedDartFiles.isEmpty) {
+          generatedDartFiles = _findDartFiles(
+            Directory(_path(<String>[fixtureDir.path, 'lib'])),
+          );
+        }
+        expect(
+          generatedDartFiles,
+          isNotEmpty,
+          reason: 'Expected generated Dart files to assert self-relation DSL.',
+        );
+
+        final generatedSource = generatedDartFiles
+            .map((file) => file.readAsStringSync())
+            .join('\n');
+
+        expect(
+          generatedSource.contains('class UserInvitedUsersInclude'),
+          isTrue,
+          reason:
+              'Expected self to-many include class to generate for invitedUsers.',
+        );
+        expect(
+          generatedSource.contains('class UserInvitedByInclude'),
+          isTrue,
+          reason:
+              'Expected self to-one include class to generate for invitedBy.',
+        );
+        expect(
+          generatedSource.contains('includeInvitedUsers('),
+          isTrue,
+          reason: 'Expected typed helpers for self to-many include relation.',
+        );
+        expect(
+          generatedSource.contains('includeInvitedBy('),
+          isTrue,
+          reason: 'Expected typed helpers for self to-one include relation.',
+        );
+        expect(
+          generatedSource.contains(
+            "static const UserDistinct invitedById = UserDistinct._('invitedById');",
+          ),
+          isTrue,
+          reason:
+              'Expected camelCase scalar identifiers to preserve field casing in generated constants.',
+        );
+        expect(
+          RegExp(
+            r'static\s+UserOrderBy\s+invitedById\(\{SortOrder\s+order\s*=\s*SortOrder\.asc\}\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected camelCase scalar identifiers to preserve field casing in generated orderBy helpers.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserWhereInput\s*\{[\s\S]*?final\s+StringWhereFilter\?\s+invitedById;[\s\S]*?final\s+UserInvitedByRelationWhereFilter\?\s+invitedBy;[\s\S]*?final\s+UserInvitedUsersRelationWhereFilter\?\s+invitedUsers;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected self-relation where fields and camelCase scalar fields to remain typed.',
+        );
+      });
+
       test('prints actionable error message for invalid config', () async {
         final fixtureDir = _copyFixture(fixturesRoot, 'missing_config');
         addTearDown(() => fixtureDir.deleteSync(recursive: true));
