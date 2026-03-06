@@ -77,18 +77,11 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     final orderByClause = _buildOrderByClause(plan.orderBy);
 
     return switch (plan.action) {
-      OrmAction.findMany => SqlStatement(
+      OrmAction.read => SqlStatement(
         action: plan.action,
         text:
             'SELECT ${_buildSelectColumns(plan.select)} FROM ${_id(model.table)}'
-            '$whereClause$orderByClause${_buildLimitOffsetClause(plan, params)}',
-        parameters: params,
-      ),
-      OrmAction.findUnique => SqlStatement(
-        action: plan.action,
-        text:
-            'SELECT ${_buildSelectColumns(plan.select)} FROM ${_id(model.table)}'
-            '$whereClause$orderByClause LIMIT 1',
+            '$whereClause$orderByClause${_buildReadLimitOffsetClause(plan, params)}',
         parameters: params,
       ),
       OrmAction.create => _lowerCreate(
@@ -114,13 +107,10 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     final resolver = codecResolver;
     if (resolver == null) {
       return switch (plan.action) {
-        OrmAction.findMany => EngineResponse(
-          data: response.rows,
+        OrmAction.read => _decodeReadResult(
+          rows: response.rows,
           affectedRows: response.affectedRows,
-        ),
-        OrmAction.findUnique => EngineResponse(
-          data: _firstOrNull(response.rows),
-          affectedRows: response.affectedRows,
+          plan: plan,
         ),
         OrmAction.create ||
         OrmAction.update ||
@@ -133,13 +123,10 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
 
     final decodedRows = _decodeRows(model: plan.model, rows: response.rows);
     return switch (plan.action) {
-      OrmAction.findMany => EngineResponse(
-        data: decodedRows,
+      OrmAction.read => _decodeReadResult(
+        rows: decodedRows,
         affectedRows: response.affectedRows,
-      ),
-      OrmAction.findUnique => EngineResponse(
-        data: _firstOrNull(decodedRows),
-        affectedRows: response.affectedRows,
+        plan: plan,
       ),
       OrmAction.create ||
       OrmAction.update ||
@@ -207,6 +194,18 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
           '$wherePart${_buildMutationReturningClause(plan.select)}',
       parameters: params,
     );
+  }
+
+  EngineResponse _decodeReadResult({
+    required List<JsonMap> rows,
+    required int affectedRows,
+    required OrmPlan plan,
+  }) {
+    return switch (plan.resultMode) {
+      OrmReadResultMode.firstOrNull || OrmReadResultMode.oneOrNull =>
+        EngineResponse(data: _firstOrNull(rows), affectedRows: affectedRows),
+      _ => EngineResponse(data: rows, affectedRows: affectedRows),
+    };
   }
 
   SqlStatement _lowerDelete({
@@ -905,16 +904,20 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     return ' ORDER BY ${clauses.join(', ')}';
   }
 
-  String _buildLimitOffsetClause(OrmPlan plan, List<Object?> params) {
+  String _buildReadLimitOffsetClause(OrmPlan plan, List<Object?> params) {
     final clauses = <String>[];
+    final effectiveTake = switch (plan.resultMode) {
+      OrmReadResultMode.oneOrNull => 1,
+      _ => plan.take,
+    };
 
-    if (plan.take case final take?) {
+    if (effectiveTake case final take?) {
       clauses.add(' LIMIT ?');
       params.add(take);
     }
 
     if (plan.skip case final skip?) {
-      if (plan.take == null) {
+      if (effectiveTake == null) {
         clauses.add(' LIMIT -1');
       }
       clauses.add(' OFFSET ?');

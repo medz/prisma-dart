@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import '../core/sort_order.dart';
 import 'types.dart';
 
-enum OrmAction { findMany, findUnique, create, update, delete }
+enum OrmAction { read, create, update, delete }
 
 enum OrmReadResultMode { all, firstOrNull, oneOrNull }
 

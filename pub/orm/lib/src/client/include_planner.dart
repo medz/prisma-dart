@@ -159,8 +159,8 @@ final class _RepositoryIncludePlanner {
           continue;
         }
 
-        final relatedRows = await relatedDelegate._findManyInternal(
-          action: OrmAction.findMany,
+        final relatedRows = await relatedDelegate._readAllInternal(
+          action: OrmAction.read,
           where: <String, Object?>{...relationInclude.where, ...relationWhere},
           skip: relationInclude.skip,
           take: relationInclude.take,
@@ -198,8 +198,8 @@ final class _RepositoryIncludePlanner {
       relation: relation,
     );
 
-    return relatedDelegate._findManyInternal(
-      action: OrmAction.findMany,
+    return relatedDelegate._readAllInternal(
+      action: OrmAction.read,
       where: baseWhere,
       orderBy: relationInclude.orderBy,
       select: _delegate._buildSingleQueryRelationSelect(

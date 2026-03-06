@@ -82,15 +82,15 @@ void main() {
     );
 
     expect(adapter.loweredPlans, hasLength(1));
-    expect(adapter.decodedRaw, <String>['driver:User:findMany']);
-    expect(driver.requests, <String>['User:findMany']);
+    expect(adapter.decodedRaw, <String>['driver:User:read']);
+    expect(driver.requests, <String>['User:read']);
     expect(response.affectedRows, 1);
 
     final row = response.data;
     expect(row, isA<Map<String, Object?>>());
     if (row case final Map<String, Object?> map) {
-      expect(map['request'], 'User:findMany');
-      expect(map['action'], 'findMany');
+      expect(map['request'], 'User:read');
+      expect(map['action'], 'read');
       expect(map['whereId'], 'u1');
     } else {
       fail('Expected map response data.');
@@ -114,8 +114,8 @@ void main() {
     );
 
     expect(driver.connectionCount, 1);
-    expect(driver.connections.single.requests, <String>['User:findMany']);
-    expect(adapter.decodedRaw, <String>['connection:User:findMany']);
+    expect(driver.connections.single.requests, <String>['User:read']);
+    expect(adapter.decodedRaw, <String>['connection:User:read']);
     expect(response.affectedRows, 1);
 
     await connection.release();
@@ -140,8 +140,8 @@ void main() {
     await transaction.commit();
 
     final inner = driver.connections.single.transactions.single;
-    expect(inner.requests, <String>['User:findMany']);
-    expect(adapter.decodedRaw, <String>['transaction:User:findMany']);
+    expect(inner.requests, <String>['User:read']);
+    expect(adapter.decodedRaw, <String>['transaction:User:read']);
     expect(inner.commitCount, 1);
     expect(inner.rollbackCount, 0);
 
@@ -187,7 +187,7 @@ OrmPlan _plan({JsonMap where = const <String, Object?>{}}) {
   return OrmPlan(
     contractHash: 'hash',
     model: 'User',
-    action: OrmAction.findMany,
+    action: OrmAction.read,
     where: where,
   );
 }

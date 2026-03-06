@@ -558,11 +558,11 @@ final class OrmSqlSelectBuilder {
 
   OrmSqlSelectBuilder take(int? value) => _copy(take: value);
 
-  OrmPlan build() {
+  OrmPlan toPlan() {
     return _buildSqlPlan(
       client: _client,
       modelName: _modelName,
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: _where,
       skip: _skip,
       take: _take,
@@ -572,19 +572,19 @@ final class OrmSqlSelectBuilder {
     );
   }
 
-  Future<List<JsonMap>> query() async {
-    final response = await _client.execute(build());
-    return _readRows(response.data, action: 'sql.query');
+  Future<List<JsonMap>> all() async {
+    final response = await _client.execute(toPlan());
+    return _readRows(response.data, action: 'sql.all');
   }
 
-  Future<JsonMap?> first() async {
-    final response = await _client.execute(take(1).build());
-    final rows = _readRows(response.data, action: 'sql.first');
+  Future<JsonMap?> firstOrNull() async {
+    final response = await _client.execute(take(1).toPlan());
+    final rows = _readRows(response.data, action: 'sql.firstOrNull');
     return _firstOrNull(rows);
   }
 
   Stream<JsonMap> stream() async* {
-    final rows = await query();
+    final rows = await all();
     for (final row in rows) {
       yield row;
     }
@@ -639,7 +639,7 @@ final class OrmSqlInsertBuilder {
     return _copy(select: nextSelect);
   }
 
-  OrmPlan build() {
+  OrmPlan toPlan() {
     return _buildSqlPlan(
       client: _client,
       modelName: _modelName,
@@ -650,7 +650,7 @@ final class OrmSqlInsertBuilder {
   }
 
   Future<OrmSqlMutationResult> execute() async {
-    final response = await _client.execute(build());
+    final response = await _client.execute(toPlan());
     return OrmSqlMutationResult(
       row: _readRow(response.data, action: 'sql.insert'),
       affectedRows: response.affectedRows,
@@ -704,7 +704,7 @@ final class OrmSqlUpdateBuilder {
     return _copy(select: nextSelect);
   }
 
-  OrmPlan build() {
+  OrmPlan toPlan() {
     return _buildSqlPlan(
       client: _client,
       modelName: _modelName,
@@ -716,7 +716,7 @@ final class OrmSqlUpdateBuilder {
   }
 
   Future<OrmSqlMutationResult> execute() async {
-    final response = await _client.execute(build());
+    final response = await _client.execute(toPlan());
     return OrmSqlMutationResult(
       row: _readRow(response.data, action: 'sql.update'),
       affectedRows: response.affectedRows,
@@ -768,7 +768,7 @@ final class OrmSqlDeleteBuilder {
     return _copy(select: nextSelect);
   }
 
-  OrmPlan build() {
+  OrmPlan toPlan() {
     return _buildSqlPlan(
       client: _client,
       modelName: _modelName,
@@ -779,7 +779,7 @@ final class OrmSqlDeleteBuilder {
   }
 
   Future<OrmSqlMutationResult> execute() async {
-    final response = await _client.execute(build());
+    final response = await _client.execute(toPlan());
     return OrmSqlMutationResult(
       row: _readRow(response.data, action: 'sql.delete'),
       affectedRows: response.affectedRows,
@@ -902,7 +902,7 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
     final prepared = await _buildReadPlan(
-      action: OrmAction.findMany,
+      resultMode: OrmReadResultMode.all,
       where: where,
       skip: skip,
       take: take,
@@ -923,8 +923,8 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) {
-    return _findManyInternal(
-      action: OrmAction.findMany,
+    return _readAllInternal(
+      action: OrmAction.read,
       where: where,
       skip: skip,
       take: take,
@@ -965,8 +965,8 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) {
-    return _findUniqueInternal(
-      action: OrmAction.findUnique,
+    return _readOneInternal(
+      action: OrmAction.read,
       where: where,
       select: select,
       include: include,
@@ -982,23 +982,21 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
-    final rows = await _findManyInternal(
-      action: OrmAction.findMany,
+    return _readFirstInternal(
+      action: OrmAction.read,
       where: where,
       skip: skip,
-      take: 1,
       orderBy: orderBy,
       distinct: distinct,
       select: select,
       include: include,
       includeDepth: 0,
     );
-    return _firstOrNull(rows);
   }
 
   Future<int> count({JsonMap where = const <String, Object?>{}}) async {
-    final rows = await _findManyInternal(
-      action: OrmAction.findMany,
+    final rows = await _readAllInternal(
+      action: OrmAction.read,
       where: where,
       includeDepth: 0,
     );
@@ -1025,8 +1023,8 @@ class ModelDelegate {
     _assertKnownAggregateFields(fields: sum, source: 'aggregate.sum');
     _assertKnownAggregateFields(fields: avg, source: 'aggregate.avg');
 
-    final rows = await _findManyInternal(
-      action: OrmAction.findMany,
+    final rows = await _readAllInternal(
+      action: OrmAction.read,
       where: where,
       select: _buildAggregateSelect(
         count: count,
@@ -1104,8 +1102,8 @@ class ModelDelegate {
       avg: avg,
     );
 
-    final rows = await _findManyInternal(
-      action: OrmAction.findMany,
+    final rows = await _readAllInternal(
+      action: OrmAction.read,
       where: where,
       select: _buildAggregateSelect(
         count: by.followedBy(count).toList(growable: false),
@@ -1357,7 +1355,7 @@ class ModelDelegate {
   }
 
   Future<_PreparedReadPlan> _buildReadPlan({
-    required OrmAction action,
+    required OrmReadResultMode resultMode,
     JsonMap where = const <String, Object?>{},
     int? skip,
     int? take,
@@ -1378,11 +1376,21 @@ class ModelDelegate {
       model: modelName,
       where: where,
     );
-    final OrmReadResultMode? resultMode = switch (action) {
-      OrmAction.findMany =>
-        take == 1 ? OrmReadResultMode.firstOrNull : OrmReadResultMode.all,
-      OrmAction.findUnique => OrmReadResultMode.oneOrNull,
-      _ => null,
+    final isCollectionRead = resultMode != OrmReadResultMode.oneOrNull;
+    final resolvedTake = resultMode == OrmReadResultMode.firstOrNull ? 1 : take;
+    final readSelect = switch (resultMode) {
+      OrmReadResultMode.oneOrNull => _expandSelectForInclude(
+        model: modelName,
+        select: select,
+        include: normalizedInclude,
+      ),
+      OrmReadResultMode.all || OrmReadResultMode.firstOrNull =>
+        _expandSelectForExecution(
+          model: modelName,
+          select: select,
+          include: normalizedInclude,
+          distinct: distinct,
+        ),
     };
 
     return _PreparedReadPlan(
@@ -1401,31 +1409,18 @@ class ModelDelegate {
                 'distinct': List<String>.from(distinct, growable: false),
               },
         model: modelName,
-        action: action,
+        action: OrmAction.read,
         where: normalizedWhere,
-        skip: action == OrmAction.findMany && distinct.isEmpty ? skip : null,
-        take: action == OrmAction.findMany && distinct.isEmpty ? take : null,
-        orderBy: action == OrmAction.findMany ? orderBy : const <OrmOrderBy>[],
-        distinct: action == OrmAction.findMany ? distinct : const <String>[],
-        select: switch (action) {
-          OrmAction.findMany => _expandSelectForExecution(
-            model: modelName,
-            select: select,
-            include: normalizedInclude,
-            distinct: distinct,
-          ),
-          OrmAction.findUnique => _expandSelectForInclude(
-            model: modelName,
-            select: select,
-            include: normalizedInclude,
-          ),
-          _ => select,
-        },
+        skip: isCollectionRead && distinct.isEmpty ? skip : null,
+        take: isCollectionRead && distinct.isEmpty ? resolvedTake : null,
+        orderBy: isCollectionRead ? orderBy : const <OrmOrderBy>[],
+        distinct: isCollectionRead ? distinct : const <String>[],
+        select: readSelect,
       ),
     );
   }
 
-  Future<List<JsonMap>> _findManyInternal({
+  Future<List<JsonMap>> _readAllInternal({
     required OrmAction action,
     JsonMap where = const <String, Object?>{},
     int? skip,
@@ -1437,7 +1432,7 @@ class ModelDelegate {
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
-      action: OrmAction.findMany,
+      resultMode: OrmReadResultMode.all,
       where: where,
       skip: skip,
       take: take,
@@ -1464,7 +1459,48 @@ class ModelDelegate {
     return _shapeRows(hydratedRows, select: select, include: normalizedInclude);
   }
 
-  Future<JsonMap?> _findUniqueInternal({
+  Future<JsonMap?> _readFirstInternal({
+    required OrmAction action,
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required int includeDepth,
+  }) async {
+    final prepared = await _buildReadPlan(
+      resultMode: OrmReadResultMode.firstOrNull,
+      where: where,
+      skip: skip,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+    );
+    final normalizedInclude = prepared.include;
+    final response = await _client.execute(prepared.plan);
+
+    final row = _readRow(response.data, action: 'firstOrNull');
+    if (row == null) {
+      return null;
+    }
+
+    final hydratedRows = await _resolveIncludeRows(
+      action: action,
+      rows: <JsonMap>[row],
+      include: normalizedInclude,
+      depth: includeDepth,
+    );
+
+    return _shapeRows(
+      hydratedRows,
+      select: select,
+      include: normalizedInclude,
+    ).single;
+  }
+
+  Future<JsonMap?> _readOneInternal({
     required OrmAction action,
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
@@ -1472,7 +1508,7 @@ class ModelDelegate {
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
-      action: OrmAction.findUnique,
+      resultMode: OrmReadResultMode.oneOrNull,
       where: where,
       select: select,
       include: include,
@@ -1480,7 +1516,7 @@ class ModelDelegate {
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
 
-    final row = _readRow(response.data, action: 'findUnique');
+    final row = _readRow(response.data, action: 'oneOrNull');
     if (row == null) {
       return null;
     }
@@ -1515,8 +1551,8 @@ class ModelDelegate {
     JsonMap? preDeleteRow;
     if (action == OrmAction.delete &&
         !(_client.contract.capabilities.mutationReturning)) {
-      preDeleteRow = await _findUniqueInternal(
-        action: OrmAction.findUnique,
+      preDeleteRow = await _readOneInternal(
+        action: OrmAction.read,
         where: normalizedWhere,
         select: _expandSelectForInclude(
           model: modelName,
@@ -1551,8 +1587,8 @@ class ModelDelegate {
         response.affectedRows > 0 &&
         !(_client.contract.capabilities.mutationReturning)) {
       row = switch (action) {
-        OrmAction.update => await _findUniqueInternal(
-          action: OrmAction.findUnique,
+        OrmAction.update => await _readOneInternal(
+          action: OrmAction.read,
           where: normalizedWhere,
           select: _expandSelectForInclude(
             model: modelName,
@@ -3062,8 +3098,8 @@ class ModelDelegate {
   }) async {
     final relatedRows = await _client
         .model(relation.relatedModel)
-        ._findManyInternal(
-          action: OrmAction.findMany,
+        ._readAllInternal(
+          action: OrmAction.read,
           where: relatedWhere,
           select: relation.targetFields,
           includeDepth: 0,

@@ -2016,7 +2016,7 @@ final class TypedClientWriter {
     buffer.writeln('      orderBy: orderBy,');
     buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: select,');
-    buffer.writeln('    ).build();');
+    buffer.writeln('    ).toPlan();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2041,7 +2041,7 @@ final class TypedClientWriter {
     buffer.writeln('      orderBy: orderBy,');
     buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: select,');
-    buffer.writeln('    ).query();');
+    buffer.writeln('    ).all();');
     buffer.writeln(
       '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
     );
@@ -2095,7 +2095,7 @@ final class TypedClientWriter {
     buffer.writeln('      orderBy: orderBy,');
     buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: select,');
-    buffer.writeln('    ).first();');
+    buffer.writeln('    ).firstOrNull();');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
     buffer.writeln('    }');

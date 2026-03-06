@@ -62,7 +62,7 @@ void main() {
     final plan = OrmPlan(
       contractHash: contract.hash,
       model: 'User',
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: <String, Object?>{'email': 'a@example.com'},
       orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
       take: 10,
@@ -84,7 +84,7 @@ void main() {
     final plan = OrmPlan(
       contractHash: contract.hash,
       model: 'User',
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: <String, Object?>{
         'email': <String, Object?>{
           'lt': 'z@example.com',
@@ -128,7 +128,7 @@ void main() {
     final plan = OrmPlan(
       contractHash: contract.hash,
       model: 'User',
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: <String, Object?>{
         'email': <String, Object?>{
           'contains': 'a%b',
@@ -154,7 +154,7 @@ void main() {
     final plan = OrmPlan(
       contractHash: contract.hash,
       model: 'User',
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: <String, Object?>{
         'id': 'u1',
         'AND': <Object?>[
@@ -198,7 +198,7 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
         where: <String, Object?>{
           'AND': const <Object?>[],
           'OR': const <Object?>[],
@@ -216,7 +216,7 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
         where: <String, Object?>{'AND': 'bad', 'OR': 1, 'NOT': true},
       ),
     );
@@ -233,7 +233,7 @@ void main() {
     final plan = OrmPlan(
       contractHash: contract.hash,
       model: 'User',
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: <String, Object?>{
         'posts': <String, Object?>{
           'some': <String, Object?>{
@@ -264,7 +264,7 @@ void main() {
     final plan = OrmPlan(
       contractHash: contract.hash,
       model: 'Post',
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: <String, Object?>{
         'author': <String, Object?>{
           'is': <String, Object?>{'email': 'u1@example.com'},
@@ -294,7 +294,7 @@ void main() {
       final plan = OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
         where: <String, Object?>{'id': 'u1', 'email': jsonPayload},
       );
 
@@ -312,7 +312,7 @@ void main() {
     final plan = OrmPlan(
       contractHash: contract.hash,
       model: 'User',
-      action: OrmAction.findMany,
+      action: OrmAction.read,
       where: <String, Object?>{
         'id': <String, Object?>{'in': const <Object?>[]},
         'email': <String, Object?>{'notIn': const <Object?>[]},
@@ -431,7 +431,7 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
       ),
     );
     expect(findMany.data, isA<List<Object?>>());
@@ -445,7 +445,8 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findUnique,
+        action: OrmAction.read,
+        resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
     if (findUnique.data case final Map<String, Object?> row) {
@@ -514,7 +515,8 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findUnique,
+        action: OrmAction.read,
+        resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
     if (decoded.data case final Map<String, Object?> row) {
@@ -545,7 +547,7 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
         where: <String, Object?>{
           'email': <String, Object?>{
             'in': <Object?>['a@example.com', 'b@example.com'],
@@ -586,7 +588,7 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
         where: <String, Object?>{
           'email': <String, Object?>{
             'contains': 'example',
@@ -647,7 +649,8 @@ void main() {
     final decodePlan = OrmPlan(
       contractHash: contract.hash,
       model: 'User',
-      action: OrmAction.findUnique,
+      action: OrmAction.read,
+      resultMode: OrmReadResultMode.oneOrNull,
     );
 
     final decodedWithoutCodec = adapterWithoutCodec.decode(
@@ -725,7 +728,8 @@ void main() {
       OrmPlan(
         contractHash: contract.hash,
         model: 'User',
-        action: OrmAction.findUnique,
+        action: OrmAction.read,
+        resultMode: OrmReadResultMode.oneOrNull,
       ),
     );
     if (decoded.data case final Map<String, Object?> row) {
@@ -747,7 +751,7 @@ void main() {
         OrmPlan(
           contractHash: contract.hash,
           model: 'Missing',
-          action: OrmAction.findMany,
+          action: OrmAction.read,
         ),
       ),
       throwsA(isA<ModelNotFoundException>()),

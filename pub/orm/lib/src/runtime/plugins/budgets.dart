@@ -32,7 +32,7 @@ final class _BudgetsPlugin extends OrmPlugin {
 
   @override
   void beforeExecute(OrmPlan plan, PluginContext ctx) {
-    if (plan.action == OrmAction.findMany &&
+    if (plan.action == OrmAction.read &&
         plan.take != null &&
         plan.take! > options.maxRows) {
       _handle(

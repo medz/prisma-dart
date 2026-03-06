@@ -55,7 +55,7 @@ void main() {
       final multi = defaultIncludeExecutionStrategySelector(
         contract: contract,
         modelName: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
         include: const <String, IncludeSpec>{'posts': IncludeSpec()},
         depth: 0,
       );
@@ -71,7 +71,7 @@ void main() {
       final single = defaultIncludeExecutionStrategySelector(
         contract: singleContract,
         modelName: 'User',
-        action: OrmAction.findMany,
+        action: OrmAction.read,
         include: const <String, IncludeSpec>{'posts': IncludeSpec()},
         depth: 0,
       );
@@ -137,7 +137,7 @@ void main() {
           .from('User')
           .where(<String, Object?>{'id': 'u1'})
           .select(const <String>['email'])
-          .query();
+          .all();
       expect(selectedRows, hasLength(1));
       expect(selectedRows.single['email'], 'a@example.com');
 
@@ -158,7 +158,7 @@ void main() {
       expect(deleted.affectedRows, 1);
       expect(deleted.row?['id'], 'u1');
 
-      final remaining = await client.sql.from('User').query();
+      final remaining = await client.sql.from('User').all();
       expect(remaining, isEmpty);
       await client.disconnect();
     });
@@ -166,7 +166,7 @@ void main() {
     test('db.sql requires explicit connect', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await expectLater(
-        client.sql.from('User').query(),
+        client.sql.from('User').all(),
         throwsA(isA<ClientNotConnectedException>()),
       );
     });
@@ -182,7 +182,7 @@ void main() {
 
       final sqlRow = await client.db.sql.from('User').where(<String, Object?>{
         'id': 'u1',
-      }).first();
+      }).firstOrNull();
       expect(sqlRow?['email'], 'a@example.com');
 
       final ormRow = await client.db.orm['User'].oneOrNull(
@@ -201,7 +201,7 @@ void main() {
           OrmPlan(
             contractHash: 'mismatch',
             model: 'User',
-            action: OrmAction.findMany,
+            action: OrmAction.read,
           ),
         ),
         throwsA(isA<ContractHashMismatchException>()),
@@ -239,7 +239,7 @@ void main() {
               storageHash: profileContract.markerStorageHash,
               profileHash: profileContract.profileHash,
               model: 'User',
-              action: OrmAction.findMany,
+              action: OrmAction.read,
             ),
           ),
           throwsA(isA<PlanTargetMismatchException>()),
@@ -253,7 +253,7 @@ void main() {
               storageHash: 'other-storage',
               profileHash: profileContract.profileHash,
               model: 'User',
-              action: OrmAction.findMany,
+              action: OrmAction.read,
             ),
           ),
           throwsA(isA<PlanStorageHashMismatchException>()),
@@ -267,7 +267,7 @@ void main() {
               storageHash: profileContract.markerStorageHash,
               profileHash: 'other-profile',
               model: 'User',
-              action: OrmAction.findMany,
+              action: OrmAction.read,
             ),
           ),
           throwsA(isA<PlanProfileHashMismatchException>()),
@@ -778,7 +778,7 @@ void main() {
             .toPlan();
 
         expect(plan.lane, 'orm');
-        expect(plan.action, OrmAction.findMany);
+        expect(plan.action, OrmAction.read);
         expect(plan.take, 5);
         expect(plan.resultMode, OrmReadResultMode.all);
         expect(plan.include.keys, <String>['posts']);
@@ -1453,7 +1453,7 @@ void main() {
 
         expect(rows, hasLength(2));
         final findManyPlans = engine.executedPlans
-            .where((plan) => plan.action == OrmAction.findMany)
+            .where((plan) => plan.action == OrmAction.read)
             .toList(growable: false);
         expect(
           findManyPlans.length,
@@ -2084,13 +2084,13 @@ void main() {
       await client.connect();
 
       await client.withConnection((connection) async {
-        final rows = await connection.sql.from('User').take(1).query();
+        final rows = await connection.sql.from('User').take(1).all();
         expect(rows, isEmpty);
       });
 
       expect(engine.connectionCount, 1);
       expect(engine.connectionExecutePlans, hasLength(1));
-      expect(engine.connectionExecutePlans.single.action, OrmAction.findMany);
+      expect(engine.connectionExecutePlans.single.action, OrmAction.read);
       expect(engine.connectionExecutePlans.single.take, 1);
       await client.disconnect();
     });
@@ -2109,7 +2109,7 @@ void main() {
 
         expect(engine.connectionCount, 1);
         expect(engine.connectionExecutePlans, hasLength(1));
-        expect(engine.connectionExecutePlans.single.action, OrmAction.findMany);
+        expect(engine.connectionExecutePlans.single.action, OrmAction.read);
         expect(engine.releaseCount, 1);
         await client.disconnect();
       },
@@ -2169,7 +2169,7 @@ void main() {
         expect(engine.transactionExecutePlans, hasLength(1));
         expect(
           engine.transactionExecutePlans.single.action,
-          OrmAction.findMany,
+          OrmAction.read,
         );
         expect(engine.commitCount, 1);
         expect(engine.rollbackCount, 0);
@@ -2221,7 +2221,7 @@ void main() {
         expect(engine.transactionExecutePlans, hasLength(1));
         expect(
           engine.transactionExecutePlans.single.action,
-          OrmAction.findMany,
+          OrmAction.read,
         );
         expect(engine.commitCount, 0);
         expect(engine.rollbackCount, 1);
@@ -2287,7 +2287,7 @@ void main() {
           OrmPlan(
             contractHash: contract.hash,
             model: 'User',
-            action: OrmAction.findMany,
+            action: OrmAction.read,
           ),
         ),
         throwsA(isA<RuntimeConnectionReleasedException>()),
@@ -2301,7 +2301,7 @@ void main() {
           OrmPlan(
             contractHash: contract.hash,
             model: 'User',
-            action: OrmAction.findMany,
+            action: OrmAction.read,
           ),
         ),
         throwsA(isA<RuntimeTransactionCompletedException>()),
@@ -2318,7 +2318,7 @@ void main() {
       final telemetry = client.telemetry();
       expect(telemetry, isNotNull);
       expect(telemetry?.model, 'User');
-      expect(telemetry?.action, OrmAction.findMany);
+      expect(telemetry?.action, OrmAction.read);
       expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
       await client.disconnect();
     });
@@ -2517,7 +2517,7 @@ void main() {
     await client.connect();
     await client.model('User').all();
 
-    expect(plugin.events, <String>['before:findMany', 'after:findMany']);
+    expect(plugin.events, <String>['before:read', 'after:read']);
     await client.disconnect();
   });
 
@@ -2529,9 +2529,9 @@ void main() {
       plugins: <OrmPlugin>[plugin],
     );
     await client.connect();
-    await client.sql.from('User').query();
+    await client.sql.from('User').all();
 
-    expect(plugin.events, <String>['before:findMany', 'after:findMany']);
+    expect(plugin.events, <String>['before:read', 'after:read']);
     await client.disconnect();
   });
 
@@ -2546,9 +2546,9 @@ void main() {
 
     await expectLater(client.model('User').all(), throwsA(isA<StateError>()));
     expect(plugin.events, <String>[
-      'before:findMany',
-      'error:findMany',
-      'after:findMany',
+      'before:read',
+      'error:read',
+      'after:read',
     ]);
     expect(client.telemetry()?.outcome, RuntimeTelemetryOutcome.runtimeError);
     await client.disconnect();
@@ -2647,7 +2647,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.sql.from('User').query(),
+      client.sql.from('User').all(),
       throwsA(isA<RuntimeResponseShapeException>()),
     );
     await client.disconnect();
@@ -2818,19 +2818,15 @@ final class _CountingEngine implements OrmEngine {
 
 final class _BadRelatedFindManyShapeEngine implements OrmEngine {
   final OrmEngine inner;
-  final String relatedModel;
 
-  _BadRelatedFindManyShapeEngine({
-    required this.inner,
-    this.relatedModel = 'Post',
-  });
+  _BadRelatedFindManyShapeEngine({required this.inner});
 
   @override
   Future<void> close() => inner.close();
 
   @override
   Future<EngineResponse> execute(OrmPlan plan) async {
-    if (plan.model == relatedModel && plan.action == OrmAction.findMany) {
+    if (plan.model == 'Post' && plan.action == OrmAction.read) {
       return const EngineResponse(data: 'bad-shape');
     }
     return inner.execute(plan);

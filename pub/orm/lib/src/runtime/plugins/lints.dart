@@ -44,22 +44,26 @@ final class _LintsPlugin extends OrmPlugin {
       );
     }
 
-    if (plan.action == OrmAction.findUnique && plan.where.isEmpty) {
+    if (plan.action == OrmAction.read &&
+        plan.resultMode == OrmReadResultMode.oneOrNull &&
+        plan.where.isEmpty) {
       _handle(
         ctx: ctx,
         severity: options.uniqueWithoutWhere,
         code: 'LINT.UNIQUE_WITHOUT_WHERE',
-        message: 'findUnique requires a non-empty where clause.',
+        message: 'oneOrNull requires a non-empty where clause.',
         details: <String, Object?>{'model': plan.model},
       );
     }
 
-    if (plan.action == OrmAction.findMany && plan.take == null) {
+    if (plan.action == OrmAction.read &&
+        plan.resultMode == OrmReadResultMode.all &&
+        plan.take == null) {
       _handle(
         ctx: ctx,
         severity: options.unboundedRead,
         code: 'LINT.UNBOUNDED_READ',
-        message: 'Unbounded findMany may return very large result sets.',
+        message: 'Unbounded read may return very large result sets.',
         details: <String, Object?>{'model': plan.model},
       );
     }
@@ -69,7 +73,7 @@ final class _LintsPlugin extends OrmPlugin {
 bool _isMutation(OrmPlan plan) {
   return switch (plan.action) {
     OrmAction.create || OrmAction.update || OrmAction.delete => true,
-    OrmAction.findMany || OrmAction.findUnique => false,
+    OrmAction.read => false,
   };
 }
 

@@ -61,8 +61,7 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
     final bucket = store.putIfAbsent(plan.model, () => <JsonMap>[]);
 
     return switch (plan.action) {
-      OrmAction.findMany => _findMany(bucket, plan),
-      OrmAction.findUnique => _findUnique(bucket, plan),
+      OrmAction.read => _read(bucket, plan),
       OrmAction.create => _create(bucket, plan),
       OrmAction.update => _update(bucket, plan),
       OrmAction.delete => _delete(bucket, plan),
@@ -91,7 +90,7 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
     throw StateError('MemoryEngine is closed. Call open() before execute().');
   }
 
-  EngineResponse _findMany(List<JsonMap> bucket, OrmPlan plan) {
+  EngineResponse _read(List<JsonMap> bucket, OrmPlan plan) {
     var rows = bucket.where((row) => _matches(row, plan.where)).toList();
 
     if (plan.orderBy.isNotEmpty) {
@@ -106,21 +105,15 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
       rows = take >= rows.length ? rows : rows.sublist(0, take);
     }
 
-    return EngineResponse(
-      data: rows
-          .map((row) => _projectRow(row, plan.select))
-          .toList(growable: false),
-    );
-  }
+    final projected = rows
+        .map((row) => _projectRow(row, plan.select))
+        .toList(growable: false);
 
-  EngineResponse _findUnique(List<JsonMap> bucket, OrmPlan plan) {
-    final row = bucket.cast<JsonMap?>().firstWhere(
-      (candidate) => candidate != null && _matches(candidate, plan.where),
-      orElse: () => null,
-    );
-    return EngineResponse(
-      data: row == null ? null : _projectRow(row, plan.select),
-    );
+    return switch (plan.resultMode) {
+      OrmReadResultMode.firstOrNull || OrmReadResultMode.oneOrNull =>
+        EngineResponse(data: _firstOrNull(projected)),
+      _ => EngineResponse(data: projected),
+    };
   }
 
   EngineResponse _create(List<JsonMap> bucket, OrmPlan plan) {
@@ -536,4 +529,11 @@ Map<String, List<JsonMap>> _cloneStore(Map<String, List<JsonMap>> source) {
     for (final entry in source.entries)
       entry.key: List<JsonMap>.from(entry.value.map(_cloneRow)),
   };
+}
+
+T? _firstOrNull<T>(List<T> values) {
+  if (values.isEmpty) {
+    return null;
+  }
+  return values.first;
 }
