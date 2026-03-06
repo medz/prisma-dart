@@ -875,30 +875,35 @@ void main() {
       );
     });
 
-    test(
-      'updateMany placeholder throws stable not implemented error',
-      () async {
-        final client = OrmClient(contract: contract, engine: MemoryEngine());
-        await client.connect();
-        try {
-          final users = client.db.orm.model('User');
-          await expectLater(
-            users
-                .where(<String, Object?>{'id': 'u1'})
-                .updateMany(data: <String, Object?>{'email': 'b@x.com'}),
-            throwsA(
-              isA<ApiNotImplementedException>().having(
-                (error) => error.details['surface'],
-                'surface',
-                'orm.updateMany',
-              ),
-            ),
-          );
-        } finally {
-          await client.disconnect();
-        }
-      },
-    );
+    test('updateMany updates matching rows and returns affected count', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      try {
+        final users = client.db.orm.model('User');
+        await users.createMany(
+          data: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+          ],
+        );
+
+        final affected = await users
+            .where(<String, Object?>{'email': 'a@x.com'})
+            .updateMany(data: <String, Object?>{'email': 'updated@x.com'});
+
+        expect(affected, 2);
+        final rows = await users
+            .orderBy(const <OrmOrderBy>[OrmOrderBy('id')])
+            .all();
+        expect(
+          rows.map((row) => row['email']).toList(growable: false),
+          <Object?>['updated@x.com', 'updated@x.com', 'b@x.com'],
+        );
+      } finally {
+        await client.disconnect();
+      }
+    });
   });
 }
 

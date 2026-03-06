@@ -231,6 +231,53 @@ final class _RepositoryMutationExecutor {
     });
   }
 
+  Future<int> updateMany({
+    required JsonMap where,
+    required JsonMap data,
+  }) {
+    final trace = _startOperation('updateMany');
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
+      final executor = _RepositoryMutationExecutor(scoped);
+      final normalizedWhere = (await scoped._normalizeWhereForExecution(
+        model: scoped.modelName,
+        where: where,
+        operation: trace,
+      )).where;
+      final identityRows = await scoped._readAllInternal(
+        action: OrmAction.read,
+        where: normalizedWhere,
+        select: scoped._modelContract.idFields,
+        repositoryTrace: trace.nextTrace(
+          phase: 'batch.lookup',
+          strategy: 'transaction',
+        ),
+        include: const <String, IncludeSpec>{},
+        includeDepth: 0,
+      );
+
+      var updated = 0;
+      for (var index = 0; index < identityRows.length; index++) {
+        final itemWhere = _identityWhereFromRow(identityRows[index]);
+        final row = await executor.update(
+          where: itemWhere,
+          data: data,
+          select: const <String>[],
+          include: const <String, IncludeSpec>{},
+          operation: trace,
+          phase: 'item.update',
+          strategy: 'transaction',
+          itemIndex: index,
+        );
+        if (row != null) {
+          updated += 1;
+        }
+      }
+
+      return updated;
+    });
+  }
+
   Future<JsonMap> upsert({
     required JsonMap where,
     required JsonMap create,
@@ -467,6 +514,25 @@ final class _RepositoryMutationExecutor {
       };
     }
     return row;
+  }
+
+  JsonMap _identityWhereFromRow(JsonMap row) {
+    final where = <String, Object?>{};
+    for (final field in _delegate._modelContract.idFields) {
+      if (!row.containsKey(field) || row[field] == null) {
+        throw runtimeError(
+          'RUNTIME.UPDATE_MANY_IDENTITY_MISSING',
+          'updateMany() identity lookup did not return all required id fields.',
+          details: <String, Object?>{
+            'model': _delegate.modelName,
+            'idField': field,
+            'idFields': _delegate._modelContract.idFields,
+          },
+        );
+      }
+      where[field] = row[field];
+    }
+    return where;
   }
 
   Future<JsonMap> _createNestedInScope({

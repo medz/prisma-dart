@@ -131,7 +131,7 @@ Direct mutations:
 | `delete(...)` | implemented |
 | `deleteMany(...)` | implemented |
 | `upsert(...)` | implemented |
-| `updateMany(...)` | placeholder |
+| `updateMany(...)` | implemented |
 
 Chained mutations:
 
@@ -141,6 +141,10 @@ users.where({...}).delete();
 users.where({...}).upsert(create: {...}, update: {...});
 users.where({...}).updateMany(data: {...});
 ```
+
+Rules:
+1. `updateMany(...)` and `deleteMany(...)` are count terminals.
+2. They do not accept row-shaping state such as `select(...)` or `include(...)`.
 
 ## SQL Surface
 

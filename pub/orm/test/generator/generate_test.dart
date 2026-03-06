@@ -1033,7 +1033,7 @@ typedef Post = ({
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.updateMany(...) placeholder to expose typed where and data input.',
+              'Expected UserDelegate.updateMany(...) to expose typed where and data input.',
         );
         expect(
           RegExp(
@@ -1041,7 +1041,7 @@ typedef Post = ({
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.updateMany(...) placeholder to expose typed update data input.',
+              'Expected UserQuery.updateMany(...) to expose typed update data input.',
         );
         expect(
           RegExp(r'\bclass UserNestedCreateInput\b').hasMatch(generatedSource),
@@ -1221,7 +1221,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateMany\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.updateMany\(data:\s*data\);',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateMany\(\{[\s\S]*?return\s+query\(where:\s*where\)\.updateMany\(data:\s*data\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:

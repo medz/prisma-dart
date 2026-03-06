@@ -2136,14 +2136,8 @@ final class TypedClientWriter {
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
     buffer.writeln('    required ${model.updateInputClassName} data,');
-    buffer.writeln('    ${model.selectClassName}? select,');
-    buffer.writeln('    ${model.includeClassName}? include,');
     buffer.writeln('  }) {');
-    buffer.writeln('    return query(');
-    buffer.writeln('      where: where,');
-    buffer.writeln('      select: select,');
-    buffer.writeln('      include: include,');
-    buffer.writeln('    ).updateMany(data: data);');
+    buffer.writeln('    return query(where: where).updateMany(data: data);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2918,6 +2912,8 @@ final class TypedClientWriter {
     buffer.writeln('  void _assertMutationQueryState({');
     buffer.writeln('    required String action,');
     buffer.writeln('    bool allowWhere = true,');
+    buffer.writeln('    bool allowSelect = true,');
+    buffer.writeln('    bool allowInclude = true,');
     buffer.writeln('  }) {');
     buffer.writeln('    final invalidKeys = <String>[');
     buffer.writeln("      if (!allowWhere && !_where.isEmpty) 'where',");
@@ -2925,6 +2921,8 @@ final class TypedClientWriter {
     buffer.writeln("      if (_take != null) 'take',");
     buffer.writeln("      if (_orderBy.isNotEmpty) 'orderBy',");
     buffer.writeln("      if (_distinct.isNotEmpty) 'distinct',");
+    buffer.writeln("      if (!allowSelect && _select != null) 'select',");
+    buffer.writeln("      if (!allowInclude && _include != null) 'include',");
     buffer.writeln("      if (_cursor != null) 'cursor',");
     buffer.writeln("      if (_pageSize != null) 'page',");
     buffer.writeln('    ];');
@@ -3144,18 +3142,20 @@ final class TypedClientWriter {
     buffer.writeln(
       '  Future<int> updateMany({required ${model.updateInputClassName} data}) {',
     );
-    buffer.writeln("    _assertMutationQueryState(action: 'updateMany');");
+    buffer.writeln(
+      "    _assertMutationQueryState(action: 'updateMany', allowSelect: false, allowInclude: false);",
+    );
     buffer.writeln('    return _delegate._delegate.updateMany(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<int> deleteMany() {');
-    buffer.writeln("    _assertMutationQueryState(action: 'deleteMany');");
+    buffer.writeln(
+      "    _assertMutationQueryState(action: 'deleteMany', allowSelect: false, allowInclude: false);",
+    );
     buffer.writeln('    return _delegate._delegate.deleteMany(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('    );');

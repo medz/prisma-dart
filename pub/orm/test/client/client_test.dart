@@ -1262,6 +1262,44 @@ void main() {
         ),
       );
 
+      expect(
+        () => users
+            .select(const <String>['id'])
+            .updateMany(data: <String, Object?>{'email': 'b@x.com'}),
+        throwsA(
+          isA<OrmRuntimeError>()
+              .having(
+                (error) => error.code,
+                'code',
+                'PLAN.MUTATION_QUERY_STATE_INVALID',
+              )
+              .having(
+                (error) => error.details['invalidKeys'],
+                'invalidKeys',
+                <String>['select'],
+              ),
+        ),
+      );
+
+      expect(
+        () => users
+            .include(<String, IncludeSpec>{'posts': const IncludeSpec()})
+            .deleteMany(),
+        throwsA(
+          isA<OrmRuntimeError>()
+              .having(
+                (error) => error.code,
+                'code',
+                'PLAN.MUTATION_QUERY_STATE_INVALID',
+              )
+              .having(
+                (error) => error.details['invalidKeys'],
+                'invalidKeys',
+                <String>['include'],
+              ),
+        ),
+      );
+
       await client.disconnect();
     });
 
@@ -1334,8 +1372,47 @@ void main() {
       );
 
       engine.reset();
-      final deleted = await users.deleteMany(
+      final updated = await users.updateMany(
         where: <String, Object?>{'email': 'a@x.com'},
+        data: <String, Object?>{'email': 'updated@x.com'},
+      );
+      expect(updated, 2);
+      expect(
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
+        <OrmAction>[OrmAction.read, OrmAction.update, OrmAction.update],
+      );
+      final updateTraces = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final updateOperationId = updateTraces.first.operationId;
+      expect(updateOperationId, isNotNull);
+      expect(updateTraces.map((trace) => trace.operationId).toSet(), <String>{
+        updateOperationId,
+      });
+      expect(
+        updateTraces.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.updateMany', 'User.updateMany', 'User.updateMany'],
+      );
+      expect(
+        updateTraces.map((trace) => trace.phase).toList(growable: false),
+        <String>['batch.lookup', 'item.update', 'item.update'],
+      );
+      expect(
+        updateTraces.map((trace) => trace.strategy).toList(growable: false),
+        <String>['transaction', 'transaction', 'transaction'],
+      );
+      expect(
+        updateTraces.map((trace) => trace.step).toList(growable: false),
+        <int>[1, 2, 3],
+      );
+      expect(
+        updateTraces.map((trace) => trace.itemIndex).toList(growable: false),
+        <int?>[null, 0, 1],
+      );
+
+      engine.reset();
+      final deleted = await users.deleteMany(
+        where: <String, Object?>{'email': 'updated@x.com'},
       );
       expect(deleted, 2);
       expect(

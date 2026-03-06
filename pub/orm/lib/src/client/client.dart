@@ -271,13 +271,6 @@ JsonMap _mergePlanAnnotations(JsonMap current, JsonMap next) {
 
 int _repositoryOperationSeed = 0;
 
-Never _throwApiNotImplemented(
-  String surface, {
-  Map<String, Object?> details = const <String, Object?>{},
-}) {
-  throw ApiNotImplementedException(surface: surface, details: details);
-}
-
 final class _RepositoryOperation {
   final String id;
   final String kind;
@@ -1040,6 +1033,7 @@ class ModelDelegate {
   OrmCollectionContext get client => _client;
 
   _OrmDelegateRuntime get _runtime => _client as _OrmDelegateRuntime;
+  ModelContract get _modelContract => _client.contract.models[modelName]!;
   late final _RepositoryRelationWhereRewriter _relationWhereRewriter =
       _RepositoryRelationWhereRewriter(this);
   late final _OrmReadPlanCompiler _readPlanCompiler = _OrmReadPlanCompiler(
@@ -1531,10 +1525,8 @@ class ModelDelegate {
   Future<int> updateMany({
     JsonMap where = const <String, Object?>{},
     required JsonMap data,
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) => _queryFromSpec(
-    OrmReadQuerySpec(where: where, select: select, include: include),
+    OrmReadQuerySpec(where: where),
   ).updateMany(data: data);
 
   Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) =>
@@ -1612,18 +1604,7 @@ class ModelDelegate {
   Future<int> _updateMany({
     required JsonMap data,
     required OrmReadQuerySpec spec,
-  }) async {
-    _throwApiNotImplemented(
-      'orm.updateMany',
-      details: <String, Object?>{
-        'model': modelName,
-        'where': spec.where,
-        'data': data,
-        'select': spec.select,
-        'include': spec.include.keys.toList(growable: false),
-      },
-    );
-  }
+  }) => _RepositoryMutationExecutor(this).updateMany(where: spec.where, data: data);
 
   Future<int> _deleteMany({required OrmReadQuerySpec spec}) =>
       _RepositoryMutationExecutor(this).deleteMany(where: spec.where);
@@ -3301,6 +3282,8 @@ final class ModelQuery {
   void _assertMutationQueryState({
     required String action,
     bool allowWhere = true,
+    bool allowSelect = true,
+    bool allowInclude = true,
   }) {
     final invalidKeys = <String>[
       if (!allowWhere && _state.where.isNotEmpty) 'where',
@@ -3308,6 +3291,8 @@ final class ModelQuery {
       if (_state.take != null) 'take',
       if (_state.orderBy.isNotEmpty) 'orderBy',
       if (_state.distinct.isNotEmpty) 'distinct',
+      if (!allowSelect && _state.select.isNotEmpty) 'select',
+      if (!allowInclude && _state.include.isNotEmpty) 'include',
       if (_state.cursor != null) 'cursor',
       if (_state.page != null) 'page',
     ];
@@ -3341,12 +3326,20 @@ final class ModelQuery {
   }
 
   Future<int> updateMany({required JsonMap data}) {
-    _assertMutationQueryState(action: 'updateMany');
+    _assertMutationQueryState(
+      action: 'updateMany',
+      allowSelect: false,
+      allowInclude: false,
+    );
     return _delegate._updateMany(data: data, spec: _state);
   }
 
   Future<int> deleteMany() {
-    _assertMutationQueryState(action: 'deleteMany');
+    _assertMutationQueryState(
+      action: 'deleteMany',
+      allowSelect: false,
+      allowInclude: false,
+    );
     return _delegate._deleteMany(spec: _state);
   }
 
