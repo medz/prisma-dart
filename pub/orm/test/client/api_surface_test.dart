@@ -50,7 +50,11 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');
 
-      final plan = await users.query().cursor(<String, Object?>{'id': 'u1'}).toPlan();
+      final plan = await users
+          .query()
+          .orderByField('id')
+          .cursor(<String, Object?>{'id': 'u1'})
+          .toPlan();
 
       expect(plan.read?.cursor?.values, <String, Object?>{'id': 'u1'});
       expect(plan.read?.page, isNull);
@@ -63,6 +67,7 @@ void main() {
 
       final plan = await users
           .query()
+          .orderByField('id')
           .page(size: 20, after: <String, Object?>{'id': 'u1'})
           .toPlan();
 
@@ -215,20 +220,46 @@ void main() {
       final users = client.db.orm.model('User');
 
       expect(
-        () => users.query().cursor(const <String, Object?>{}),
+        () => users.query().orderByField('id').cursor(const <String, Object?>{}),
         throwsA(isA<PlanCursorWindowInvalidException>()),
       );
       expect(
-        () => users.query().page(size: 0),
+        () => users.query().orderByField('id').page(size: 0),
         throwsA(isA<PlanCursorWindowInvalidException>()),
       );
       expect(
-        () => users.query().page(
+        () => users.query().orderByField('id').page(
           size: 10,
           after: <String, Object?>{'id': 'u1'},
           before: <String, Object?>{'id': 'u2'},
         ),
         throwsA(isA<PlanCursorWindowInvalidException>()),
+      );
+    });
+
+    test('cursor and page require orderBy first', () {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final users = client.db.orm.model('User');
+
+      expect(
+        () => users.query().cursor(<String, Object?>{'id': 'u1'}),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.CURSOR_ORDER_BY_REQUIRED',
+          ),
+        ),
+      );
+      expect(
+        () => users.query().page(size: 2, after: <String, Object?>{'id': 'u1'}),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.CURSOR_ORDER_BY_REQUIRED',
+          ),
+        ),
       );
     });
 

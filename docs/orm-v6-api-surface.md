@@ -92,9 +92,8 @@ Rules:
 
 1. `toPlan()` and `inspectPlan()` are pure authoring inspection.
 2. `explain()` is runtime-facing and requires an active runtime connection.
-3. `cursor(...)` and `page(...)` require deterministic ordering.
-4. When no `orderBy(...)` is present, the boundary fields are promoted to
-   ascending `orderBy(...)` fields during plan compilation.
+3. `cursor(...)` and `page(...)` require `orderBy(...)` first.
+4. Boundary fields must match the declared `orderBy(...)` fields.
 
 ## ORM Mutation Surface
 

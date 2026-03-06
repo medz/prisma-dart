@@ -249,53 +249,6 @@ Map<String, OrmIncludePlan> _buildOrmIncludePlanMap(
   };
 }
 
-List<String> _readBoundaryFields({
-  JsonMap? cursor,
-  OrmReadPagePlan? page,
-}) {
-  final boundary = cursor ?? page?.after ?? page?.before;
-  if (boundary == null || boundary.isEmpty) {
-    return const <String>[];
-  }
-  return boundary.keys.toList(growable: false);
-}
-
-List<OrmOrderBy> _resolveCursorWindowOrderBy({
-  required String modelName,
-  required List<OrmOrderBy> orderBy,
-  JsonMap? cursor,
-  OrmReadPagePlan? page,
-}) {
-  final boundaryFields = _readBoundaryFields(cursor: cursor, page: page);
-  if (boundaryFields.isEmpty) {
-    return orderBy;
-  }
-
-  if (orderBy.isEmpty) {
-    return boundaryFields
-        .map((field) => OrmOrderBy(field))
-        .toList(growable: false);
-  }
-
-  final orderByFields = orderBy
-      .map((entry) => entry.field)
-      .toList(growable: false);
-  if (orderByFields.length == boundaryFields.length &&
-      orderByFields.every(boundaryFields.contains)) {
-    return orderBy;
-  }
-
-  throw runtimeError(
-    'PLAN.CURSOR_ORDER_BY_FIELDS_INVALID',
-    'Cursor or page boundary fields must match orderBy fields.',
-    details: <String, Object?>{
-      'model': modelName,
-      'orderBy': orderByFields,
-      'boundaryFields': boundaryFields,
-    },
-  );
-}
-
 abstract interface class OrmDbContext {
   OrmDbNamespace get db;
 }
@@ -1590,12 +1543,17 @@ class ModelDelegate {
       model: modelName,
       where: where,
     );
-    final resolvedOrderBy = _resolveCursorWindowOrderBy(
-      modelName: modelName,
-      orderBy: orderBy,
-      cursor: cursor,
-      page: page,
-    );
+    if ((cursor != null || page != null) && orderBy.isEmpty) {
+      throw runtimeError(
+        'PLAN.CURSOR_ORDER_BY_REQUIRED',
+        'Cursor and page windows require orderBy() first.',
+        details: <String, Object?>{
+          'model': modelName,
+          if (cursor != null) 'cursor': cursor,
+          if (page != null) 'page': page.toJson(),
+        },
+      );
+    }
     if ((cursor != null || page != null) && distinct.isNotEmpty) {
       throw runtimeError(
         'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
@@ -1661,7 +1619,7 @@ class ModelDelegate {
         where: normalizedWhere,
         skip: isCollectionRead && distinct.isEmpty ? skip : null,
         take: isCollectionRead && distinct.isEmpty ? resolvedTake : null,
-        orderBy: isCollectionRead ? resolvedOrderBy : const <OrmOrderBy>[],
+        orderBy: isCollectionRead ? orderBy : const <OrmOrderBy>[],
         distinct: isCollectionRead ? distinct : const <String>[],
         select: readSelect,
         include: _buildOrmIncludePlanMap(normalizedInclude),
@@ -3535,6 +3493,13 @@ final class ModelQuery {
   }
 
   ModelQuery cursor(JsonMap cursor) {
+    if (_state.orderBy.isEmpty) {
+      throw runtimeError(
+        'PLAN.CURSOR_ORDER_BY_REQUIRED',
+        'cursor() requires orderBy() first.',
+        details: <String, Object?>{'model': _delegate.modelName},
+      );
+    }
     if (cursor.isEmpty) {
       throw PlanCursorWindowInvalidException(
         reason: 'cursorEmpty',
@@ -3563,6 +3528,13 @@ final class ModelQuery {
     JsonMap? after,
     JsonMap? before,
   }) {
+    if (_state.orderBy.isEmpty) {
+      throw runtimeError(
+        'PLAN.CURSOR_ORDER_BY_REQUIRED',
+        'page() requires orderBy() first.',
+        details: <String, Object?>{'model': _delegate.modelName},
+      );
+    }
     if (size <= 0) {
       throw PlanCursorWindowInvalidException(
         reason: 'pageSizeInvalid',
