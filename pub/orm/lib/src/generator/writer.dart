@@ -3331,14 +3331,6 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.groupedQueryClassName} havingWith(${model.groupByHavingClassName} Function(${model.groupByHavingClassName} having) build, {bool merge = true}) {',
-    );
-    buffer.writeln('    final next = build(_groupBy.having);');
-    buffer.writeln('    return having(next, merge: merge);');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln(
       '  ${model.groupedQueryClassName} havingExpr(${model.groupByHavingClassName} Function(${model.groupByHavingClassName}Builder having) build, {bool merge = true}) {',
     );
     buffer.writeln(

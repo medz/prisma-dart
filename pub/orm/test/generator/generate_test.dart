@@ -1672,6 +1672,14 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?UserGroupedQuery\s+havingWith\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupedQuery to avoid redundant havingWith(...) wrappers.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+_runtimeGrouped\(UserGroupBySpec\s+groupBy\)\s*\{[\s\S]*?\.groupedBy\([\s\S]*?where:\s*_where\.toJson\(\),[\s\S]*?\.configure\(groupBy\.toRuntimeSpec\(\)\);',
           ).hasMatch(generatedSource),
           isTrue,

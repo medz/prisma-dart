@@ -106,12 +106,13 @@ Rules:
    This makes stream delivery explicit:
    - `stream()` stays `nativeStream` only when the repository can yield rows
      directly from the runtime response.
-   - `include(...)` or `distinct(...)` force `stream()` to
-     `bufferedYield`, with reasons and include strategy surfaced in
-     `terminalExecution.stream`.
+   - `include(...)` forces `stream()` to `bufferedYield`, with reasons and
+     include strategy surfaced in `terminalExecution.stream`.
+   - `distinct(...)` remains `nativeStream` when execution can apply
+     deduplication directly.
 8. Grouped aggregation is a dedicated surface:
    - `groupedBy(...)` only accepts a where-only base query.
-   - `having(...)` and `havingWith(...)` accept structured grouped predicates.
+   - `having(...)` accepts structured grouped predicates.
    - `havingExpr(...)` is the primary builder-style entrypoint before
      `aggregate(...)`.
 9. `include(...)` is unsupported on `aggregate(...)` and

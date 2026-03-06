@@ -127,6 +127,14 @@ void main() {
         );
         expect(
           RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+havingWith\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to avoid redundant havingWith(...) wrappers.',
+        );
+        expect(
+          RegExp(
             r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+havingExpr\(\s*OrmGroupByHaving\s+Function\(OrmGroupByHavingBuilder\s+having\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,\s*\}\s*\)',
           ).hasMatch(source),
           isTrue,

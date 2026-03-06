@@ -3420,14 +3420,6 @@ final class ModelGroupedQuery {
     return _next(_groupBy.copyWith(having: nextHaving));
   }
 
-  ModelGroupedQuery havingWith(
-    OrmGroupByHaving Function(OrmGroupByHaving having) build, {
-    bool merge = true,
-  }) {
-    final next = build(_groupBy.having);
-    return having(next, merge: merge);
-  }
-
   ModelGroupedQuery havingExpr(
     OrmGroupByHaving Function(OrmGroupByHavingBuilder having) build, {
     bool merge = true,
