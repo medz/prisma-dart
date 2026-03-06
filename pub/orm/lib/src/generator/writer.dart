@@ -67,6 +67,12 @@ final class TypedClientWriter {
       _writeDataOrInputClass(
         buffer: buffer,
         model: model,
+        classKind: _TemplateClassKind.cursor,
+        lookup: modelLookup,
+      );
+      _writeDataOrInputClass(
+        buffer: buffer,
+        model: model,
         classKind: _TemplateClassKind.create,
         lookup: modelLookup,
       );
@@ -1633,14 +1639,14 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.queryClassName} cursor(${model.whereUniqueInputClassName} cursor) => query().cursor(cursor);',
+      '  ${model.queryClassName} cursor(${model.cursorInputClassName} cursor) => query().cursor(cursor);',
     );
     buffer.writeln();
 
     buffer.writeln('  ${model.queryClassName} page({');
     buffer.writeln('    required int size,');
-    buffer.writeln('    ${model.whereUniqueInputClassName}? after,');
-    buffer.writeln('    ${model.whereUniqueInputClassName}? before,');
+    buffer.writeln('    ${model.cursorInputClassName}? after,');
+    buffer.writeln('    ${model.cursorInputClassName}? before,');
     buffer.writeln('  }) => query().page(size: size, after: after, before: before);');
     buffer.writeln();
 
@@ -2461,10 +2467,10 @@ final class TypedClientWriter {
     buffer.writeln('  final List<${model.distinctClassName}> _distinct;');
     buffer.writeln('  final ${model.selectClassName}? _select;');
     buffer.writeln('  final ${model.includeClassName}? _include;');
-    buffer.writeln('  final ${model.whereUniqueInputClassName}? _cursor;');
+    buffer.writeln('  final ${model.cursorInputClassName}? _cursor;');
     buffer.writeln('  final int? _pageSize;');
-    buffer.writeln('  final ${model.whereUniqueInputClassName}? _pageAfter;');
-    buffer.writeln('  final ${model.whereUniqueInputClassName}? _pageBefore;');
+    buffer.writeln('  final ${model.cursorInputClassName}? _pageAfter;');
+    buffer.writeln('  final ${model.cursorInputClassName}? _pageBefore;');
     buffer.writeln();
     buffer.writeln('  ${model.queryClassName}._({');
     buffer.writeln('    required ${model.delegateClassName} delegate,');
@@ -2475,10 +2481,10 @@ final class TypedClientWriter {
     buffer.writeln('    required List<${model.distinctClassName}> distinct,');
     buffer.writeln('    required ${model.selectClassName}? select,');
     buffer.writeln('    required ${model.includeClassName}? include,');
-    buffer.writeln('    ${model.whereUniqueInputClassName}? cursor,');
+    buffer.writeln('    ${model.cursorInputClassName}? cursor,');
     buffer.writeln('    int? pageSize,');
-    buffer.writeln('    ${model.whereUniqueInputClassName}? pageAfter,');
-    buffer.writeln('    ${model.whereUniqueInputClassName}? pageBefore,');
+    buffer.writeln('    ${model.cursorInputClassName}? pageAfter,');
+    buffer.writeln('    ${model.cursorInputClassName}? pageBefore,');
     buffer.writeln('  }) : _delegate = delegate,');
     buffer.writeln('       _where = where,');
     buffer.writeln('       _skip = skip,');
@@ -2580,7 +2586,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.queryClassName} cursor(${model.whereUniqueInputClassName} cursor) {',
+      '  ${model.queryClassName} cursor(${model.cursorInputClassName} cursor) {',
     );
     buffer.writeln('    return ${model.queryClassName}._(');
     buffer.writeln('      delegate: _delegate,');
@@ -2601,8 +2607,8 @@ final class TypedClientWriter {
 
     buffer.writeln('  ${model.queryClassName} page({');
     buffer.writeln('    required int size,');
-    buffer.writeln('    ${model.whereUniqueInputClassName}? after,');
-    buffer.writeln('    ${model.whereUniqueInputClassName}? before,');
+    buffer.writeln('    ${model.cursorInputClassName}? after,');
+    buffer.writeln('    ${model.cursorInputClassName}? before,');
     buffer.writeln('  }) {');
     buffer.writeln('    if (size <= 0) {');
     buffer.writeln('      throw PlanCursorWindowInvalidException(');
@@ -3556,6 +3562,7 @@ final class TypedClientWriter {
       _TemplateClassKind.whereUnique => model.fields.where(
         _includeInWhereUnique,
       ),
+      _TemplateClassKind.cursor => model.fields.where(_includeInCursor),
       _TemplateClassKind.create => model.fields.where(
         (field) => field.includeInCreate,
       ),
@@ -3583,6 +3590,7 @@ final class TypedClientWriter {
       _TemplateClassKind.data => model.dataClassName,
       _TemplateClassKind.where => model.whereInputClassName,
       _TemplateClassKind.whereUnique => model.whereUniqueInputClassName,
+      _TemplateClassKind.cursor => model.cursorInputClassName,
       _TemplateClassKind.create => model.createInputClassName,
       _TemplateClassKind.update => model.updateInputClassName,
     };
@@ -3600,6 +3608,7 @@ final class TypedClientWriter {
       _TemplateClassKind.data => true,
       _TemplateClassKind.where => true,
       _TemplateClassKind.whereUnique => true,
+      _TemplateClassKind.cursor => true,
       _TemplateClassKind.create => field.isNullable,
       _TemplateClassKind.update => true,
     };
@@ -3804,6 +3813,7 @@ final class TypedClientWriter {
       _TemplateClassKind.data => 'Data',
       _TemplateClassKind.where => 'WhereInput',
       _TemplateClassKind.whereUnique => 'WhereUniqueInput',
+      _TemplateClassKind.cursor => 'CursorInput',
       _TemplateClassKind.create => 'CreateInput',
       _TemplateClassKind.update => 'UpdateInput',
     };
@@ -3828,6 +3838,10 @@ final class TypedClientWriter {
       return true;
     }
     return _isConventionalIdFieldName(field.name) && field.includeInWhere;
+  }
+
+  bool _includeInCursor(TypedField field) {
+    return field.isScalar && !field.isList;
   }
 
   bool _isConventionalIdFieldName(String name) {
@@ -3951,7 +3965,7 @@ final class TypedClientWriter {
   }
 }
 
-enum _TemplateClassKind { data, where, whereUnique, create, update }
+enum _TemplateClassKind { data, where, whereUnique, cursor, create, update }
 
 final class _ResolvedModel {
   final TypedModel model;
@@ -3977,6 +3991,8 @@ final class _ResolvedModel {
   String get whereInputClassName => '${classBaseName}WhereInput';
 
   String get whereUniqueInputClassName => '${classBaseName}WhereUniqueInput';
+
+  String get cursorInputClassName => '${classBaseName}CursorInput';
 
   String get createInputClassName => '${classBaseName}CreateInput';
 

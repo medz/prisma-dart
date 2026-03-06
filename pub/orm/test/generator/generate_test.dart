@@ -676,35 +676,35 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserWhereUniqueInput\s+cursor\s*\)',
+            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserCursorInput\s+cursor\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.cursor(...) convenience helper in generated source.',
+              'Expected UserDelegate.cursor(...) to use typed cursor input.',
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserWhereUniqueInput\?\s+after,\s*UserWhereUniqueInput\?\s+before,',
+            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserCursorInput\?\s+after,\s*UserCursorInput\?\s+before,',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.page(...) convenience helper in generated source.',
+              'Expected UserDelegate.page(...) to use typed cursor inputs.',
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserWhereUniqueInput\s+cursor\s*\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserCursorInput\s+cursor\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.cursor(...) to use typed unique cursor input.',
+              'Expected UserQuery.cursor(...) to use typed cursor input.',
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserWhereUniqueInput\?\s+after,\s*UserWhereUniqueInput\?\s+before,',
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserCursorInput\?\s+after,\s*UserCursorInput\?\s+before,',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.page(...) to use typed unique cursor inputs.',
+              'Expected UserQuery.page(...) to use typed cursor inputs.',
         );
         expect(
           RegExp(
@@ -830,6 +830,11 @@ typedef Post = ({
           reason: 'Missing typed where unique input class in generated source.',
         );
         expect(
+          RegExp(r'\bclass UserCursorInput\b').hasMatch(generatedSource),
+          isTrue,
+          reason: 'Missing typed cursor input class in generated source.',
+        );
+        expect(
           RegExp(
             r'class\s+UserWhereUniqueInput\s*\{[\s\S]*?final\s+int\?\s+id;',
           ).hasMatch(generatedSource),
@@ -859,6 +864,22 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected generated source to include where unique equals compatibility helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserCursorInput\s*\{[\s\S]*?final\s+int\?\s+id;[\s\S]*?final\s+String\?\s+email;',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserCursorInput to include scalar cursor fields needed for ordered pagination.',
+        );
+        expect(
+          RegExp(
+            r"class\s+UserCursorInput\s*\{[\s\S]*?if\s*\(id\s*!=\s*null\)\s*'id':\s*id![\s\S]*?if\s*\(email\s*!=\s*null\)\s*'email':\s*email!",
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserCursorInput.toJson to emit scalar cursor boundary values.',
         );
         expect(
           RegExp(
