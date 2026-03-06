@@ -1443,76 +1443,46 @@ typedef Post = ({
               'Expected generated source to include aggregate result wrapper.',
         );
         expect(
-          RegExp(
-            r'\bclass UserAggregateCountBucket\b',
-          ).hasMatch(generatedSource),
-          isTrue,
+          generatedSource.contains('UserAggregateCountBucket') ||
+              generatedSource.contains('UserAggregateMinBucket') ||
+              generatedSource.contains('UserAggregateMaxBucket') ||
+              generatedSource.contains('UserAggregateSumBucket') ||
+              generatedSource.contains('UserAggregateAvgBucket'),
+          isFalse,
           reason:
-              'Expected generated source to include typed aggregate count bucket.',
-        );
-        expect(
-          RegExp(r'\bclass UserAggregateMinBucket\b').hasMatch(generatedSource),
-          isTrue,
-          reason:
-              'Expected generated source to include typed aggregate min bucket.',
-        );
-        expect(
-          RegExp(r'\bclass UserAggregateMaxBucket\b').hasMatch(generatedSource),
-          isTrue,
-          reason:
-              'Expected generated source to include typed aggregate max bucket.',
-        );
-        expect(
-          RegExp(r'\bclass UserAggregateSumBucket\b').hasMatch(generatedSource),
-          isTrue,
-          reason:
-              'Expected generated source to include typed aggregate sum bucket.',
-        );
-        expect(
-          RegExp(r'\bclass UserAggregateAvgBucket\b').hasMatch(generatedSource),
-          isTrue,
-          reason:
-              'Expected generated source to include typed aggregate avg bucket.',
+              'Expected typed aggregate results to avoid per-bucket wrapper classes.',
         );
         expect(
           RegExp(
-            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateCountBucket\s+get\s+count',
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?int\?\s+get\s+countAll\s*=>',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserAggregateResult to expose typed count bucket getter.',
+              'Expected UserAggregateResult to expose a direct countAll getter.',
         );
         expect(
           RegExp(
-            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateMinBucket\s+get\s+min',
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?int\?\s+get\s+countEmail\s*=>',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserAggregateResult to expose typed min bucket getter.',
+              'Expected UserAggregateResult to expose direct typed count field getters.',
         );
         expect(
           RegExp(
-            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateMaxBucket\s+get\s+max',
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?(int|double)\?\s+get\s+sumId\s*=>',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserAggregateResult to expose typed max bucket getter.',
+              'Expected UserAggregateResult to expose direct typed sum field getters.',
         );
         expect(
           RegExp(
-            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateSumBucket\s+get\s+sum',
+            r'class\s+UserAggregateResult\s*\{[\s\S]*?double\?\s+get\s+avgId\s*=>',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserAggregateResult to expose typed sum bucket getter.',
-        );
-        expect(
-          RegExp(
-            r'class\s+UserAggregateResult\s*\{[\s\S]*?UserAggregateAvgBucket\s+get\s+avg',
-          ).hasMatch(generatedSource),
-          isTrue,
-          reason:
-              'Expected UserAggregateResult to expose typed avg bucket getter.',
+              'Expected UserAggregateResult to expose direct typed avg field getters.',
         );
         expect(
           RegExp(
@@ -1521,14 +1491,6 @@ typedef Post = ({
           isFalse,
           reason:
               'Expected UserAggregateResult to avoid exposing public map payload.',
-        );
-        expect(
-          RegExp(
-            r'class\s+UserAggregateCountBucket\s*\{[\s\S]*?field\(UserDistinct\s+field\)',
-          ).hasMatch(generatedSource),
-          isFalse,
-          reason:
-              'Expected typed aggregate buckets to avoid dynamic field(...) map-style accessor.',
         );
         expect(
           RegExp(
@@ -1562,6 +1524,22 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserGroupByResult\s*\{[\s\S]*?int\?\s+get\s+countAll\s*=>',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupByResult to expose direct aggregate getters.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupByResult\s*\{[\s\S]*?(int|double)\?\s+get\s+sumId\s*=>',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupByResult to expose direct aggregate field getters.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserGroupByResult\s*\{[\s\S]*?Object\?\s+field\(UserDistinct\s+field\)',
           ).hasMatch(generatedSource),
           isFalse,
@@ -1575,6 +1553,14 @@ typedef Post = ({
           isFalse,
           reason:
               'Expected UserGroupByResult to avoid exposing public map payload.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupByResult\s*\{[\s\S]*?UserAggregateResult\s+get\s+aggregate',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupByResult to avoid nested aggregate wrapper accessors.',
         );
         expect(
           generatedSource.contains(

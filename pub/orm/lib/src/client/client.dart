@@ -3367,8 +3367,6 @@ final class ModelGroupedQuery {
 
   List<String> get byFields => _groupBy.by;
 
-  JsonMap get havingClause => _groupBy.having.toJson();
-
   ModelGroupedQuery configure(OrmGroupBySpec groupBy) {
     if (!_sameStringList(left: _groupBy.by, right: groupBy.by)) {
       throw runtimeError(

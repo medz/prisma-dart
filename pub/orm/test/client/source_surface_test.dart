@@ -165,6 +165,14 @@ void main() {
         );
         expect(
           RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?havingClause',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to keep havingClause out of the public grouped surface.',
+        );
+        expect(
+          RegExp(
             r'class\s+OrmGroupByHavingPredicateBuilder\s*\{[\s\S]*?inList\(',
           ).hasMatch(source),
           isFalse,
