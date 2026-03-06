@@ -547,6 +547,62 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+whereWith\(\s*UserWhereInput\s+Function\(\s*UserWhereInput\s+where\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.whereWith(...) to expose typed callback authoring helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+whereWith\(\s*UserWhereInput\s+Function\(\s*UserWhereInput\s+where\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.whereWith(...) to expose typed callback authoring helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+whereWith\([\s\S]*?return\s+where\(next,\s*merge:\s*merge\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.whereWith(...) to route through where(..., merge: merge).',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+selectWith\(\s*UserSelect\s+Function\(\s*UserSelect\s+select\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*false,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.selectWith(...) to expose typed select callback authoring helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+select\(\s*UserSelect\?\s+select,\s*\{\s*bool\s+merge\s*=\s*false,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.select(...) to expose merge flag for typed select state.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+selectWith\(\s*UserSelect\s+Function\(\s*UserSelect\s+select\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*false,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.selectWith(...) to expose typed select callback authoring helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+selectWith\([\s\S]*?return\s+select\(next,\s*merge:\s*merge\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.selectWith(...) to route through select(..., merge: merge).',
+        );
+        expect(
+          RegExp(
             r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+include\(\s*UserInclude\?\s+include,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
@@ -608,6 +664,57 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected UserQuery execution path to keep include state forwarding from query chain.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+unbounded\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.unbounded() in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserWhereUniqueInput\s+cursor\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.cursor(...) placeholder to use typed unique cursor input.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserWhereUniqueInput\?\s+after,\s*UserWhereUniqueInput\?\s+before,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.page(...) placeholder to use typed unique cursor inputs.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\{',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserDelegate.toPlan(...) in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.toPlan() in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData\?>\s+oneOrNull\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.oneOrNull() in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+explain\(\s*\)\s+async',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.explain() placeholder in generated source.',
         );
         expect(
           RegExp(
@@ -738,6 +845,52 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateMany\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),\s*required\s+UserUpdateInput\s+data,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.updateMany(...) placeholder to expose typed where and data input.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<int>\s+updateMany\(\{\s*required\s+UserUpdateInput\s+data\}\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.updateMany(...) placeholder to expose typed update data input.',
+        );
+        expect(
+          RegExp(r'\bclass UserNestedCreateInput\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed nested create input wrapper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData>\s+createNested\(\{\s*required\s+UserCreateInput\s+data,\s*UserNestedCreateInput\s+create\s*=\s*const\s+UserNestedCreateInput\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.createNested(...) to expose typed nested create input.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+updateNested\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),\s*required\s+UserUpdateInput\s+data,\s*UserNestedCreateInput\s+create\s*=\s*const\s+UserNestedCreateInput\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.updateNested(...) to expose typed nested create input.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData\?>\s+updateNested\(\{\s*required\s+UserUpdateInput\s+data,\s*UserNestedCreateInput\s+create\s*=\s*const\s+UserNestedCreateInput\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.updateNested(...) to expose typed nested create input.',
+        );
+        expect(
+          RegExp(
             r'Future<UserData\?>\s+delete\(\{\s*required\s+UserWhereUniqueInput\s+where,',
           ).hasMatch(generatedSource),
           isTrue,
@@ -834,7 +987,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+distinct\(List<UserDistinct>\s+distinct\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+distinct\(\s*List<UserDistinct>\s+distinct,\s*\{\s*bool\s+append\s*=\s*false,?\s*\}\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:

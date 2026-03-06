@@ -1392,6 +1392,64 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();
+
+    buffer.writeln('class ${model.nestedCreateInputClassName} {');
+    for (final relation in relationFields) {
+      final relationModel = lookup[relation.relationModel];
+      if (relationModel == null) {
+        continue;
+      }
+      final memberName = _toLowerCamelIdentifier(
+        relation.name,
+        fallback: 'relation',
+      );
+      buffer.writeln(
+        '  final List<${relationModel.createInputClassName}>? $memberName;',
+      );
+    }
+    if (relationFields.any((relation) => lookup[relation.relationModel] != null)) {
+      buffer.writeln();
+      buffer.writeln('  const ${model.nestedCreateInputClassName}({');
+      for (final relation in relationFields) {
+        final relationModel = lookup[relation.relationModel];
+        if (relationModel == null) {
+          continue;
+        }
+        final memberName = _toLowerCamelIdentifier(
+          relation.name,
+          fallback: 'relation',
+        );
+        buffer.writeln('    this.$memberName,');
+      }
+      buffer.writeln('  });');
+    } else {
+      buffer.writeln();
+      buffer.writeln('  const ${model.nestedCreateInputClassName}();');
+    }
+    buffer.writeln();
+    buffer.writeln('  Map<String, List<JsonMap>> toJson() {');
+    if (!relationFields.any((relation) => lookup[relation.relationModel] != null)) {
+      buffer.writeln('    return const <String, List<JsonMap>>{};');
+    } else {
+      buffer.writeln('    final create = <String, List<JsonMap>>{};');
+      for (final relation in relationFields) {
+        final relationModel = lookup[relation.relationModel];
+        if (relationModel == null) {
+          continue;
+        }
+        final memberName = _toLowerCamelIdentifier(
+          relation.name,
+          fallback: 'relation',
+        );
+        buffer.writeln(
+          "    if ($memberName != null) create['${_escapeString(relation.name)}'] = $memberName!.map((entry) => entry.toJson()).toList(growable: false);",
+        );
+      }
+      buffer.writeln('    return create;');
+    }
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
   }
 
   void _writeAggregateBucketClass({
@@ -1544,6 +1602,83 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln(
+      '  ${model.queryClassName} where(${model.whereInputClassName} where, {bool merge = true}) => query().where(where, merge: merge);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} whereWith(${model.whereInputClassName} Function(${model.whereInputClassName} where) build, {bool merge = true}) => query().whereWith(build, merge: merge);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} orderBy(List<${model.orderByClassName}> orderBy) => query().orderBy(orderBy);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} distinct(List<${model.distinctClassName}> distinct, {bool append = false}) => query().distinct(distinct, append: append);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} skip(int? skip) => query().skip(skip);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} take(int? take) => query().take(take);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} select(${model.selectClassName}? select, {bool merge = false}) => query().select(select, merge: merge);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} selectWith(${model.selectClassName} Function(${model.selectClassName} select) build, {bool merge = false}) => query().selectWith(build, merge: merge);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} include(${model.includeClassName}? include, {bool merge = true}) => query().include(include, merge: merge);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} includeWith(${model.includeClassName} Function(${model.includeClassName} include) build, {bool merge = true}) => query().includeWith(build, merge: merge);',
+    );
+    buffer.writeln();
+
+    buffer.writeln('  Future<OrmPlan> toPlan({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
+    buffer.writeln(
+      '    List<${model.orderByClassName}> orderBy = const <${model.orderByClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> distinct = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).toPlan();');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.dataClassName}>> all({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
@@ -1670,6 +1805,30 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<${model.dataClassName}> createNested({');
+    buffer.writeln('    required ${model.createInputClassName} data,');
+    buffer.writeln(
+      '    ${model.nestedCreateInputClassName} create = const ${model.nestedCreateInputClassName}(),',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
+    buffer.writeln('    final row = await _delegate.createNested(');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      create: create.toJson(),');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.dataClassName}>> createMany({');
     buffer.writeln('    required List<${model.createInputClassName}> data,');
     buffer.writeln('    ${model.selectClassName}? select,');
@@ -1709,6 +1868,37 @@ final class TypedClientWriter {
     buffer.writeln('    final row = await _delegate.update(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> updateNested({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln(
+      '    ${model.nestedCreateInputClassName} create = const ${model.nestedCreateInputClassName}(),',
+    );
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
+    buffer.writeln('    final row = await _delegate.updateNested(');
+    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      create: create.toJson(),');
     buffer.writeln('      select: runtimeSelect,');
     buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
@@ -1763,6 +1953,29 @@ final class TypedClientWriter {
     buffer.writeln('      include: runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<int> updateMany({');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln('    ${model.selectClassName}? select,');
+    buffer.writeln('    ${model.includeClassName}? include,');
+    buffer.writeln('  }) {');
+    buffer.writeln(
+      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
+    );
+    buffer.writeln(
+      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
+    );
+    buffer.writeln('    return _delegate.updateMany(');
+    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      select: runtimeSelect,');
+    buffer.writeln('      include: runtimeInclude,');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2223,6 +2436,7 @@ final class TypedClientWriter {
     required StringBuffer buffer,
     required _ResolvedModel model,
   }) {
+    final runtimeName = _escapeString(model.model.runtimeName);
     final relationFields = model.model.fields
         .where((field) => field.isRelation)
         .toList(growable: false);
@@ -2275,6 +2489,14 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln(
+      '  ${model.queryClassName} whereWith(${model.whereInputClassName} Function(${model.whereInputClassName} where) build, {bool merge = true}) {',
+    );
+    buffer.writeln('    final next = build(_where);');
+    buffer.writeln('    return where(next, merge: merge);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  ${model.queryClassName} skip(int? skip) {');
     buffer.writeln('    return ${model.queryClassName}._(');
     buffer.writeln('      delegate: _delegate,');
@@ -2303,6 +2525,50 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  ${model.queryClassName} unbounded() {');
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: null,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} cursor(${model.whereUniqueInputClassName} cursor) {',
+    );
+    buffer.writeln('    throw ApiNotImplementedException(');
+    buffer.writeln("      surface: 'orm.query.cursor',");
+    buffer.writeln('      details: <String, Object?>{');
+    buffer.writeln("        'model': '$runtimeName',");
+    buffer.writeln("        'cursor': cursor.toJson(),");
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  ${model.queryClassName} page({');
+    buffer.writeln('    required int size,');
+    buffer.writeln('    ${model.whereUniqueInputClassName}? after,');
+    buffer.writeln('    ${model.whereUniqueInputClassName}? before,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    throw ApiNotImplementedException(');
+    buffer.writeln("      surface: 'orm.query.page',");
+    buffer.writeln('      details: <String, Object?>{');
+    buffer.writeln("        'model': '$runtimeName',");
+    buffer.writeln("        'size': size,");
+    buffer.writeln("        if (after != null) 'after': after.toJson(),");
+    buffer.writeln("        if (before != null) 'before': before.toJson(),");
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln(
       '  ${model.queryClassName} orderBy(List<${model.orderByClassName}> orderBy) {',
     );
@@ -2320,7 +2586,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.queryClassName} distinct(List<${model.distinctClassName}> distinct) {',
+      '  ${model.queryClassName} distinct(List<${model.distinctClassName}> distinct, {bool append = false}) {',
     );
     buffer.writeln('    return ${model.queryClassName}._(');
     buffer.writeln('      delegate: _delegate,');
@@ -2328,7 +2594,11 @@ final class TypedClientWriter {
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
-    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      distinct: append');
+    buffer.writeln(
+      '          ? <${model.distinctClassName}>[..._distinct, ...distinct]',
+    );
+    buffer.writeln('          : distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -2336,7 +2606,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.queryClassName} select(${model.selectClassName}? select) {',
+      '  ${model.queryClassName} select(${model.selectClassName}? select, {bool merge = false}) {',
     );
     buffer.writeln('    return ${model.queryClassName}._(');
     buffer.writeln('      delegate: _delegate,');
@@ -2345,9 +2615,24 @@ final class TypedClientWriter {
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
     buffer.writeln('      distinct: _distinct,');
-    buffer.writeln('      select: select,');
+    buffer.writeln('      select: merge');
+    buffer.writeln(
+      '          ? (select == null ? _select : (_select?.merge(select) ?? select))',
+    );
+    buffer.writeln('          : select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.queryClassName} selectWith(${model.selectClassName} Function(${model.selectClassName} select) build, {bool merge = false}) {',
+    );
+    buffer.writeln(
+      '    final current = _select ?? const ${model.selectClassName}();',
+    );
+    buffer.writeln('    final next = build(current);');
+    buffer.writeln('    return select(next, merge: merge);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2409,6 +2694,19 @@ final class TypedClientWriter {
       buffer.writeln();
     }
 
+    buffer.writeln('  Future<OrmPlan> toPlan() {');
+    buffer.writeln('    return _delegate.toPlan(');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.dataClassName}>> all() {');
     buffer.writeln('    return _delegate.all(');
     buffer.writeln('      where: _where,');
@@ -2416,6 +2714,17 @@ final class TypedClientWriter {
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
     buffer.writeln('      distinct: _distinct,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> oneOrNull() {');
+    buffer.writeln('    return _delegate.oneOrNull(');
+    buffer.writeln(
+      '      where: ${model.whereUniqueInputClassName}.fromJson(_where.toJson()),',
+    );
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
     buffer.writeln('    );');
@@ -2443,6 +2752,19 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<JsonMap> explain() async {');
+    buffer.writeln('    throw ApiNotImplementedException(');
+    buffer.writeln("      surface: 'orm.query.explain',");
+    buffer.writeln('      details: <String, Object?>{');
+    buffer.writeln("        'model': '$runtimeName',");
+    buffer.writeln("        'where': _where.toJson(),");
+    buffer.writeln("        if (_skip != null) 'skip': _skip,");
+    buffer.writeln("        if (_take != null) 'take': _take,");
+    buffer.writeln('      },');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2523,6 +2845,36 @@ final class TypedClientWriter {
       '  Future<List<${model.dataClassName}>> createMany({required List<${model.createInputClassName}> data}) {',
     );
     buffer.writeln('    return _delegate.createMany(');
+    buffer.writeln('      data: data,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<${model.dataClassName}?> updateNested({',
+    );
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln(
+      '    ${model.nestedCreateInputClassName} create = const ${model.nestedCreateInputClassName}(),',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return _delegate.updateNested(');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      data: data,');
+    buffer.writeln('      create: create,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<int> updateMany({required ${model.updateInputClassName} data}) {',
+    );
+    buffer.writeln('    return _delegate.updateMany(');
+    buffer.writeln('      where: _where,');
     buffer.writeln('      data: data,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
@@ -3510,6 +3862,8 @@ final class _ResolvedModel {
   String get whereUniqueInputClassName => '${classBaseName}WhereUniqueInput';
 
   String get createInputClassName => '${classBaseName}CreateInput';
+
+  String get nestedCreateInputClassName => '${classBaseName}NestedCreateInput';
 
   String get updateInputClassName => '${classBaseName}UpdateInput';
 
