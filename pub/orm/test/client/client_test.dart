@@ -50,6 +50,35 @@ void main() {
     },
     aliases: <String, String>{'users': 'User', 'posts': 'Post'},
   );
+
+  final selfRelationalContract = OrmContract(
+    version: '1',
+    hash: 'contract-self-rel-v1',
+    models: <String, ModelContract>{
+      'User': ModelContract(
+        name: 'User',
+        table: 'users',
+        fields: <String>{'id', 'email', 'invitedById'},
+        relations: <String, ModelRelationContract>{
+          'invitedUsers': ModelRelationContract(
+            name: 'invitedUsers',
+            relatedModel: 'User',
+            sourceFields: <String>['id'],
+            targetFields: <String>['invitedById'],
+            cardinality: RelationCardinality.many,
+          ),
+          'invitedBy': ModelRelationContract(
+            name: 'invitedBy',
+            relatedModel: 'User',
+            sourceFields: <String>['invitedById'],
+            targetFields: <String>['id'],
+            cardinality: RelationCardinality.one,
+          ),
+        },
+      ),
+    },
+    aliases: <String, String>{'users': 'User'},
+  );
   group('OrmClient + MemoryEngine', () {
     test('default include strategy selector follows contract capabilities', () {
       final multi = defaultIncludeExecutionStrategySelector(
@@ -2038,6 +2067,115 @@ void main() {
     });
 
     test(
+      'supports self-relation include for to-many across strategies',
+      () async {
+        Future<List<JsonMap>> readWithStrategy(
+          IncludeExecutionStrategy strategy,
+        ) async {
+          final client = OrmClient(
+            contract: selfRelationalContract,
+            engine: MemoryEngine(),
+            includeStrategySelector:
+                ({
+                  required OrmContract contract,
+                  required String modelName,
+                  required OrmAction action,
+                  required Map<String, IncludeSpec> include,
+                  required int depth,
+                }) => strategy,
+          );
+          await client.connect();
+          try {
+            await _seedSelfRelationalData(client);
+            return await client.db.orm
+                .model('User')
+                .all(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                  include: <String, IncludeSpec>{
+                    'invitedUsers': IncludeSpec(
+                      orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                    ),
+                  },
+                );
+          } finally {
+            await client.disconnect();
+          }
+        }
+
+        final singleRows = await readWithStrategy(
+          IncludeExecutionStrategy.singleQuery,
+        );
+        final multiRows = await readWithStrategy(
+          IncludeExecutionStrategy.multiQuery,
+        );
+
+        expect(singleRows, equals(multiRows));
+        expect(singleRows, hasLength(4));
+        expect(
+          _readRowsValue(singleRows[0]['invitedUsers']).map((row) => row['id']),
+          <Object?>['u2', 'u3'],
+        );
+        expect(
+          _readRowsValue(singleRows[1]['invitedUsers']).map((row) => row['id']),
+          <Object?>['u4'],
+        );
+        expect(_readRowsValue(singleRows[2]['invitedUsers']), isEmpty);
+        expect(_readRowsValue(singleRows[3]['invitedUsers']), isEmpty);
+      },
+    );
+
+    test(
+      'supports self-relation include for to-one across strategies',
+      () async {
+        Future<List<JsonMap>> readWithStrategy(
+          IncludeExecutionStrategy strategy,
+        ) async {
+          final client = OrmClient(
+            contract: selfRelationalContract,
+            engine: MemoryEngine(),
+            includeStrategySelector:
+                ({
+                  required OrmContract contract,
+                  required String modelName,
+                  required OrmAction action,
+                  required Map<String, IncludeSpec> include,
+                  required int depth,
+                }) => strategy,
+          );
+          await client.connect();
+          try {
+            await _seedSelfRelationalData(client);
+            return await client.db.orm
+                .model('User')
+                .all(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                  include: <String, IncludeSpec>{
+                    'invitedBy': IncludeSpec(
+                      select: const <String>['id', 'email', 'invitedById'],
+                    ),
+                  },
+                );
+          } finally {
+            await client.disconnect();
+          }
+        }
+
+        final singleRows = await readWithStrategy(
+          IncludeExecutionStrategy.singleQuery,
+        );
+        final multiRows = await readWithStrategy(
+          IncludeExecutionStrategy.multiQuery,
+        );
+
+        expect(singleRows, equals(multiRows));
+        expect(_readRowValue(singleRows[0]['invitedBy']), isNull);
+        expect(_readRowValue(singleRows[1]['invitedBy'])?['id'], 'u1');
+        expect(_readRowValue(singleRows[2]['invitedBy'])?['id'], 'u1');
+        expect(_readRowValue(singleRows[3]['invitedBy'])?['id'], 'u2');
+      },
+    );
+
+    test(
       'singleQuery include matches multiQuery semantics for one-to-many',
       () async {
         Future<List<JsonMap>> readWithStrategy(
@@ -2565,6 +2703,50 @@ void main() {
       },
     );
 
+    test('supports self-relation nested create orchestration', () async {
+      final client = OrmClient(
+        contract: selfRelationalContract,
+        engine: MemoryEngine(),
+      );
+      await client.connect();
+
+      final created = await client.db.orm
+          .model('User')
+          .createNested(
+            data: <String, Object?>{'id': 'u1', 'email': 'u1@example.com'},
+            create: <String, List<JsonMap>>{
+              'invitedUsers': <JsonMap>[
+                <String, Object?>{'id': 'u2', 'email': 'u2@example.com'},
+                <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
+              ],
+            },
+          );
+
+      expect(created['id'], 'u1');
+      final invitedUsers = _readRowsValue(created['invitedUsers']);
+      expect(invitedUsers, hasLength(2));
+      expect(
+        invitedUsers.map((row) => row['invitedById']).toList(growable: false),
+        <Object?>['u1', 'u1'],
+      );
+
+      final persisted = await client.db.orm
+          .model('User')
+          .all(orderBy: const <OrmOrderBy>[OrmOrderBy('id')]);
+      expect(
+        persisted.map((row) => row['id']).toList(growable: false),
+        <Object?>['u1', 'u2', 'u3'],
+      );
+      expect(
+        persisted
+            .skip(1)
+            .map((row) => row['invitedById'])
+            .toList(growable: false),
+        <Object?>['u1', 'u1'],
+      );
+      await client.disconnect();
+    });
+
     test('nested create rolls back when child mutation fails', () async {
       final client = OrmClient(
         contract: relationalContract,
@@ -2636,6 +2818,49 @@ void main() {
             .model('Post')
             .oneOrNull(where: <String, Object?>{'id': 'p4'});
         expect(persistedChild?['userId'], 'u1');
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'updateNested supports self-relation child creation with include payload',
+      () async {
+        final client = OrmClient(
+          contract: selfRelationalContract,
+          engine: MemoryEngine(),
+        );
+        await client.connect();
+        await _seedSelfRelationalData(client);
+
+        final updated = await client.db.orm
+            .model('User')
+            .updateNested(
+              where: <String, Object?>{'id': 'u1'},
+              data: <String, Object?>{'email': 'u1+updated@example.com'},
+              create: <String, List<JsonMap>>{
+                'invitedUsers': <JsonMap>[
+                  <String, Object?>{'id': 'u5', 'email': 'u5@example.com'},
+                ],
+              },
+              include: <String, IncludeSpec>{
+                'invitedUsers': IncludeSpec(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                ),
+              },
+            );
+
+        expect(updated?['email'], 'u1+updated@example.com');
+        final invitedUsers = _readRowsValue(updated?['invitedUsers']);
+        expect(
+          invitedUsers.map((row) => row['id']).toList(growable: false),
+          <Object?>['u2', 'u3', 'u5'],
+        );
+        expect(invitedUsers.last['invitedById'], 'u1');
+
+        final persistedChild = await client.db.orm
+            .model('User')
+            .oneOrNull(where: <String, Object?>{'id': 'u5'});
+        expect(persistedChild?['invitedById'], 'u1');
         await client.disconnect();
       },
     );
@@ -4303,6 +4528,39 @@ Future<void> _seedRelationalData(OrmClient client) async {
   );
   await posts.create(
     data: <String, Object?>{'id': 'p3', 'userId': 'u2', 'title': 'Post C'},
+  );
+}
+
+Future<void> _seedSelfRelationalData(OrmClient client) async {
+  final users = client.db.orm.model('User');
+
+  await users.create(
+    data: <String, Object?>{
+      'id': 'u1',
+      'email': 'u1@example.com',
+      'invitedById': null,
+    },
+  );
+  await users.create(
+    data: <String, Object?>{
+      'id': 'u2',
+      'email': 'u2@example.com',
+      'invitedById': 'u1',
+    },
+  );
+  await users.create(
+    data: <String, Object?>{
+      'id': 'u3',
+      'email': 'u3@example.com',
+      'invitedById': 'u1',
+    },
+  );
+  await users.create(
+    data: <String, Object?>{
+      'id': 'u4',
+      'email': 'u4@example.com',
+      'invitedById': 'u2',
+    },
   );
 }
 
