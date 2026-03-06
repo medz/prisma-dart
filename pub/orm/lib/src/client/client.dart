@@ -10,6 +10,7 @@ import '../runtime/plugin.dart';
 import '../runtime/types.dart';
 
 part 'include_planner.dart';
+part 'mutation_repository.dart';
 
 typedef CollectionFactory =
     ModelDelegate Function({
@@ -273,25 +274,29 @@ final class OrmClient implements OrmModelContext {
     Future<T> Function(OrmScopedClient transaction) run,
   ) async {
     final connection = await _runtime.connection();
-    final transaction = await connection.transaction();
-    final scoped = OrmScopedClient._(
-      contract: contract,
-      executePlan: transaction.execute,
-      modelAliases: _modelAliases,
-      collectionRegistry: _collectionRegistry,
-      includeStrategySelector: includeStrategySelector,
-      maxIncludeDepth: maxIncludeDepth,
-    );
+    OrmRuntimeTransaction? transaction;
 
     try {
+      final openedTransaction = await connection.transaction();
+      transaction = openedTransaction;
+      final scoped = OrmScopedClient._(
+        contract: contract,
+        executePlan: openedTransaction.execute,
+        modelAliases: _modelAliases,
+        collectionRegistry: _collectionRegistry,
+        includeStrategySelector: includeStrategySelector,
+        maxIncludeDepth: maxIncludeDepth,
+      );
       final value = await run(scoped);
-      await transaction.commit();
+      await openedTransaction.commit();
       return value;
     } catch (_) {
-      try {
-        await transaction.rollback();
-      } catch (_) {
-        // Keep the original exception when rollback fails.
+      if (transaction != null) {
+        try {
+          await transaction.rollback();
+        } catch (_) {
+          // Keep the original exception when rollback fails.
+        }
       }
       rethrow;
     } finally {
@@ -840,14 +845,6 @@ final class _PreparedReadPlan {
   const _PreparedReadPlan({required this.plan, required this.include});
 }
 
-@immutable
-final class _PreparedMutationPlan {
-  final OrmPlan plan;
-  final Map<String, IncludeSpec> include;
-
-  const _PreparedMutationPlan({required this.plan, required this.include});
-}
-
 class ModelDelegate {
   final OrmModelContext _client;
   final String modelName;
@@ -1175,60 +1172,23 @@ class ModelDelegate {
     required JsonMap data,
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) async {
-    final prepared = await _buildMutationPlan(
-      action: OrmAction.create,
-      mutationResultMode: OrmMutationResultMode.row,
-      data: data,
-      select: select,
-      include: include,
-    );
-    final normalizedInclude = prepared.include;
-    final response = await _client.execute(prepared.plan);
-
-    var row = _readRow(response.data, action: 'create');
-    if (row == null) {
-      if (_client.contract.capabilities.mutationReturning &&
-          response.affectedRows > 0) {
-        throw RuntimeCreateResultMissingException(model: modelName);
-      }
-      row = _fallbackCreateRow(data: data);
-    }
-
-    if (row == null) {
-      throw RuntimeCreateResultMissingException(model: modelName);
-    }
-
-    final hydratedRows = await _resolveIncludeRows(
-      action: OrmAction.create,
-      rows: <JsonMap>[row],
-      include: normalizedInclude,
-      depth: 0,
-    );
-
-    return _shapeRows(
-      hydratedRows,
-      select: select,
-      include: normalizedInclude,
-    ).single;
-  }
+  }) => _RepositoryMutationExecutor(this).create(
+    data: data,
+    select: select,
+    include: include,
+  );
 
   Future<JsonMap> createNested({
     required JsonMap data,
     Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) {
-    return _client.transaction((tx) async {
-      final scoped = tx.model(modelName);
-      return scoped._createNestedInScope(
-        data: data,
-        create: create,
-        select: select,
-        include: include,
-      );
-    });
-  }
+  }) => _RepositoryMutationExecutor(this).createNested(
+    data: data,
+    nestedCreate: create,
+    select: select,
+    include: include,
+  );
 
   Future<JsonMap?> updateNested({
     JsonMap where = const <String, Object?>{},
@@ -1236,53 +1196,26 @@ class ModelDelegate {
     Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) {
-    return _client.transaction((tx) async {
-      final scoped = tx.model(modelName);
-      return scoped._updateNestedInScope(
-        where: where,
-        data: data,
-        create: create,
-        select: select,
-        include: include,
-      );
-    });
-  }
+  }) => _RepositoryMutationExecutor(this).updateNested(
+    where: where,
+    data: data,
+    nestedCreate: create,
+    select: select,
+    include: include,
+  );
 
   Future<List<JsonMap>> createMany({
     required List<JsonMap> data,
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) {
-    return _client.transaction((tx) async {
-      final scoped = tx.model(modelName);
-      final rows = <JsonMap>[];
-      for (final item in data) {
-        final created = await scoped.create(
-          data: item,
-          select: select,
-          include: include,
-        );
-        rows.add(created);
-      }
-      return rows;
-    });
-  }
+  }) => _RepositoryMutationExecutor(this).createMany(
+    data: data,
+    select: select,
+    include: include,
+  );
 
-  Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) {
-    return _client.transaction((tx) async {
-      final scoped = tx.model(modelName);
-      var deleted = 0;
-      while (true) {
-        final row = await scoped.delete(where: where);
-        if (row == null) {
-          break;
-        }
-        deleted += 1;
-      }
-      return deleted;
-    });
-  }
+  Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) =>
+      _RepositoryMutationExecutor(this).deleteMany(where: where);
 
   Future<JsonMap> upsert({
     required JsonMap where,
@@ -1290,64 +1223,35 @@ class ModelDelegate {
     required JsonMap update,
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) {
-    return _client.transaction((tx) async {
-      final scoped = tx.model(modelName);
-      final existing = await scoped.oneOrNull(where: where);
-      if (existing == null) {
-        return scoped.create(data: create, select: select, include: include);
-      }
-
-      final updated = await scoped.update(
-        where: where,
-        data: update,
-        select: select,
-        include: include,
-      );
-      if (updated != null) {
-        return updated;
-      }
-
-      throw runtimeError(
-        'RUNTIME.UPSERT_UPDATE_MISSING',
-        'Upsert update branch did not return a row.',
-        details: <String, Object?>{'model': modelName, 'where': where},
-      );
-    });
-  }
+  }) => _RepositoryMutationExecutor(this).upsert(
+    where: where,
+    create: create,
+    update: update,
+    select: select,
+    include: include,
+  );
 
   Future<JsonMap?> update({
     JsonMap where = const <String, Object?>{},
     required JsonMap data,
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) {
-    return _runNullableMutation(
-      action: OrmAction.update,
-      mutationResultMode: OrmMutationResultMode.rowOrNull,
-      where: where,
-      data: data,
-      select: select,
-      include: include,
-      responseAction: 'update',
-    );
-  }
+  }) => _RepositoryMutationExecutor(this).update(
+    where: where,
+    data: data,
+    select: select,
+    include: include,
+  );
 
   Future<JsonMap?> delete({
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) {
-    return _runNullableMutation(
-      action: OrmAction.delete,
-      mutationResultMode: OrmMutationResultMode.rowOrNull,
-      where: where,
-      data: const <String, Object?>{},
-      select: select,
-      include: include,
-      responseAction: 'delete',
-    );
-  }
+  }) => _RepositoryMutationExecutor(this).delete(
+    where: where,
+    select: select,
+    include: include,
+  );
 
   Future<_PreparedReadPlan> _buildReadPlan({
     required OrmReadResultMode resultMode,
@@ -1527,249 +1431,6 @@ class ModelDelegate {
       hydratedRows,
       select: select,
       include: normalizedInclude,
-    ).single;
-  }
-
-  Future<JsonMap?> _runNullableMutation({
-    required OrmAction action,
-    required OrmMutationResultMode mutationResultMode,
-    required JsonMap where,
-    required JsonMap data,
-    required List<String> select,
-    required Map<String, IncludeSpec> include,
-    required String responseAction,
-  }) async {
-    final prepared = await _buildMutationPlan(
-      action: action,
-      mutationResultMode: mutationResultMode,
-      where: where,
-      data: data,
-      select: select,
-      include: include,
-    );
-    final normalizedInclude = prepared.include;
-    final normalizedWhere = prepared.plan.where;
-    JsonMap? preDeleteRow;
-    if (action == OrmAction.delete &&
-        !(_client.contract.capabilities.mutationReturning)) {
-      preDeleteRow = await _readOneInternal(
-        action: OrmAction.read,
-        where: normalizedWhere,
-        select: _expandSelectForInclude(
-          model: modelName,
-          select: select,
-          include: normalizedInclude,
-        ),
-        include: const <String, IncludeSpec>{},
-        includeDepth: 0,
-      );
-    }
-
-    final response = await _client.execute(prepared.plan);
-
-    var row = _readRow(response.data, action: responseAction);
-    if (row == null &&
-        response.affectedRows > 0 &&
-        !(_client.contract.capabilities.mutationReturning)) {
-      row = switch (action) {
-        OrmAction.update => await _readOneInternal(
-          action: OrmAction.read,
-          where: normalizedWhere,
-          select: _expandSelectForInclude(
-            model: modelName,
-            select: select,
-            include: normalizedInclude,
-          ),
-          include: const <String, IncludeSpec>{},
-          includeDepth: 0,
-        ),
-        OrmAction.delete => preDeleteRow,
-        _ => row,
-      };
-    }
-
-    if (row == null) {
-      return null;
-    }
-
-    final hydratedRows = await _resolveIncludeRows(
-      action: action,
-      rows: <JsonMap>[row],
-      include: normalizedInclude,
-      depth: 0,
-    );
-
-    return _shapeRows(
-      hydratedRows,
-      select: select,
-      include: normalizedInclude,
-    ).single;
-  }
-
-  Future<_PreparedMutationPlan> _buildMutationPlan({
-    required OrmAction action,
-    required OrmMutationResultMode mutationResultMode,
-    JsonMap where = const <String, Object?>{},
-    JsonMap data = const <String, Object?>{},
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) async {
-    final normalizedInclude = _normalizeInclude(include);
-    final normalizedWhere = where.isEmpty
-        ? const <String, Object?>{}
-        : await _normalizeWhereForExecution(model: modelName, where: where);
-
-    return _PreparedMutationPlan(
-      include: normalizedInclude,
-      plan: OrmPlan(
-        contractHash: _client.contract.hash,
-        target: _client.contract.target,
-        storageHash: _client.contract.markerStorageHash,
-        profileHash: _client.contract.profileHash,
-        lane: 'orm',
-        mutationResultMode: mutationResultMode,
-        model: modelName,
-        action: action,
-        where: normalizedWhere,
-        data: data,
-        select: _expandSelectForInclude(
-          model: modelName,
-          select: select,
-          include: normalizedInclude,
-        ),
-      ),
-    );
-  }
-
-  Future<JsonMap> _createNestedInScope({
-    required JsonMap data,
-    required Map<String, List<JsonMap>> create,
-    required List<String> select,
-    required Map<String, IncludeSpec> include,
-  }) async {
-    final normalizedCreate = _normalizeNestedCreate(create);
-    final normalizedInclude = _normalizeInclude(include);
-
-    final created = await this.create(
-      data: data,
-      select: _expandSelectForNestedCreate(
-        model: modelName,
-        select: select,
-        create: normalizedCreate,
-      ),
-    );
-
-    for (final entry in normalizedCreate.entries) {
-      final relation = _resolveRelation(
-        model: modelName,
-        relationName: entry.key,
-      );
-      final related = _client.model(relation.relatedModel);
-      for (final child in entry.value) {
-        final linkedData = _linkNestedData(
-          parent: created,
-          relationName: entry.key,
-          relation: relation,
-          data: child,
-        );
-        await related.create(data: linkedData);
-      }
-    }
-
-    final includeForReturn = <String, IncludeSpec>{
-      for (final relationName in normalizedCreate.keys)
-        relationName: const IncludeSpec(),
-      ...normalizedInclude,
-    };
-
-    if (includeForReturn.isEmpty) {
-      return _shapeRows(
-        <JsonMap>[created],
-        select: select,
-        include: const <String, IncludeSpec>{},
-      ).single;
-    }
-
-    final hydratedRows = await _resolveIncludeRows(
-      action: OrmAction.create,
-      rows: <JsonMap>[created],
-      include: includeForReturn,
-      depth: 0,
-    );
-
-    return _shapeRows(
-      hydratedRows,
-      select: select,
-      include: includeForReturn,
-    ).single;
-  }
-
-  Future<JsonMap?> _updateNestedInScope({
-    required JsonMap where,
-    required JsonMap data,
-    required Map<String, List<JsonMap>> create,
-    required List<String> select,
-    required Map<String, IncludeSpec> include,
-  }) async {
-    final normalizedCreate = _normalizeNestedCreate(create);
-    final normalizedInclude = _normalizeInclude(include);
-
-    final updated = await update(
-      where: where,
-      data: data,
-      select: _expandSelectForNestedCreate(
-        model: modelName,
-        select: select,
-        create: normalizedCreate,
-      ),
-    );
-
-    if (updated == null) {
-      return null;
-    }
-
-    for (final entry in normalizedCreate.entries) {
-      final relation = _resolveRelation(
-        model: modelName,
-        relationName: entry.key,
-      );
-      final related = _client.model(relation.relatedModel);
-      for (final child in entry.value) {
-        final linkedData = _linkNestedData(
-          parent: updated,
-          relationName: entry.key,
-          relation: relation,
-          data: child,
-        );
-        await related.create(data: linkedData);
-      }
-    }
-
-    final includeForReturn = <String, IncludeSpec>{
-      for (final relationName in normalizedCreate.keys)
-        relationName: const IncludeSpec(),
-      ...normalizedInclude,
-    };
-
-    if (includeForReturn.isEmpty) {
-      return _shapeRows(
-        <JsonMap>[updated],
-        select: select,
-        include: const <String, IncludeSpec>{},
-      ).single;
-    }
-
-    final hydratedRows = await _resolveIncludeRows(
-      action: OrmAction.update,
-      rows: <JsonMap>[updated],
-      include: includeForReturn,
-      depth: 0,
-    );
-
-    return _shapeRows(
-      hydratedRows,
-      select: select,
-      include: includeForReturn,
     ).single;
   }
 

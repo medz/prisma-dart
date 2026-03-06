@@ -2370,6 +2370,27 @@ void main() {
       },
     );
 
+    test(
+      'withTransaction releases connection when opening transaction fails',
+      () async {
+        final engine = _TrackingConnectionEngine(failOnTransactionStart: true);
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
+
+        await expectLater(
+          () => client.withTransaction((_) async => null),
+          throwsA(isA<StateError>()),
+        );
+
+        expect(engine.connectionCount, 1);
+        expect(engine.transactionCount, 1);
+        expect(engine.commitCount, 0);
+        expect(engine.rollbackCount, 0);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
+
     test('withTransaction rolls back on error', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -2415,6 +2436,62 @@ void main() {
           engine.transactionExecutePlans.single.action,
           OrmAction.read,
         );
+        expect(engine.commitCount, 0);
+        expect(engine.rollbackCount, 1);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'withTransaction commit failure rolls back and releases connection',
+      () async {
+        final engine = _TrackingConnectionEngine(failOnCommit: true);
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
+
+        await expectLater(
+          () => client.withTransaction((transaction) async {
+            final rows = await transaction.model('User').all();
+            expect(rows, isEmpty);
+          }),
+          throwsA(isA<StateError>()),
+        );
+
+        expect(engine.connectionCount, 1);
+        expect(engine.transactionCount, 1);
+        expect(engine.transactionExecutePlans, hasLength(1));
+        expect(engine.transactionExecutePlans.single.action, OrmAction.read);
+        expect(engine.commitCount, 1);
+        expect(engine.rollbackCount, 1);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'withTransaction preserves original error when rollback fails',
+      () async {
+        final engine = _TrackingConnectionEngine(failOnRollback: true);
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
+
+        await expectLater(
+          () => client.withTransaction((transaction) async {
+            await transaction.model('User').all();
+            throw StateError('stop');
+          }),
+          throwsA(
+            isA<StateError>().having(
+              (error) => error.message,
+              'message',
+              'stop',
+            ),
+          ),
+        );
+
+        expect(engine.connectionCount, 1);
+        expect(engine.transactionCount, 1);
         expect(engine.commitCount, 0);
         expect(engine.rollbackCount, 1);
         expect(engine.releaseCount, 1);
@@ -3030,6 +3107,9 @@ final class _BadRelatedFindManyShapeEngine implements OrmEngine {
 
 final class _TrackingConnectionEngine
     implements OrmEngine, ConnectionCapableEngine {
+  final bool failOnTransactionStart;
+  final bool failOnCommit;
+  final bool failOnRollback;
   var connectionCount = 0;
   var transactionCount = 0;
   var releaseCount = 0;
@@ -3037,6 +3117,12 @@ final class _TrackingConnectionEngine
   var rollbackCount = 0;
   final List<OrmPlan> connectionExecutePlans = <OrmPlan>[];
   final List<OrmPlan> transactionExecutePlans = <OrmPlan>[];
+
+  _TrackingConnectionEngine({
+    this.failOnTransactionStart = false,
+    this.failOnCommit = false,
+    this.failOnRollback = false,
+  });
 
   @override
   Future<void> close() async {}
@@ -3075,6 +3161,9 @@ final class _TrackingEngineConnection implements EngineConnection {
   @override
   Future<EngineTransaction> transaction() async {
     _engine.transactionCount += 1;
+    if (_engine.failOnTransactionStart) {
+      throw StateError('transaction start failed');
+    }
     return _TrackingEngineTransaction(_engine);
   }
 }
@@ -3087,6 +3176,9 @@ final class _TrackingEngineTransaction implements EngineTransaction {
   @override
   Future<void> commit() async {
     _engine.commitCount += 1;
+    if (_engine.failOnCommit) {
+      throw StateError('commit failed');
+    }
   }
 
   @override
@@ -3098,6 +3190,9 @@ final class _TrackingEngineTransaction implements EngineTransaction {
   @override
   Future<void> rollback() async {
     _engine.rollbackCount += 1;
+    if (_engine.failOnRollback) {
+      throw StateError('rollback failed');
+    }
   }
 }
 

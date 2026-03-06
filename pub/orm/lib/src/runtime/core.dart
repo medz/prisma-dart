@@ -610,15 +610,18 @@ final class _RuntimeTransaction implements OrmRuntimeTransaction {
   @override
   Future<void> commit() async {
     _ensureActive();
-    _completed = true;
     await _inner.commit();
+    _completed = true;
   }
 
   @override
   Future<void> rollback() async {
     _ensureActive();
-    _completed = true;
-    await _inner.rollback();
+    try {
+      await _inner.rollback();
+    } finally {
+      _completed = true;
+    }
   }
 
   @override
