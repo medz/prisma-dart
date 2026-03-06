@@ -36,6 +36,15 @@ final class AdapterDriverEngine<TRequest, TRawResponse>
     _ensureOpen();
 
     final request = adapter.lower(plan);
+    final streamed = _tryExecuteReadStream(
+      plan: plan,
+      request: request,
+      adapter: adapter,
+      streamRows: _driverReadStream(driver),
+    );
+    if (streamed != null) {
+      return streamed;
+    }
     final raw = await driver.execute(request);
     return adapter.decode(raw, plan);
   }
@@ -92,6 +101,15 @@ final class _AdapterDriverConnection<TRequest, TRawResponse>
   Future<EngineResponse> execute(OrmPlan plan) async {
     _ensureActive();
     final request = adapter.lower(plan);
+    final streamed = _tryExecuteReadStream(
+      plan: plan,
+      request: request,
+      adapter: adapter,
+      streamRows: _connectionReadStream(connection),
+    );
+    if (streamed != null) {
+      return streamed;
+    }
     final raw = await connection.execute(request);
     return adapter.decode(raw, plan);
   }
@@ -138,6 +156,15 @@ final class _AdapterDriverTransaction<TRequest, TRawResponse>
   Future<EngineResponse> execute(OrmPlan plan) async {
     _ensureActive();
     final request = adapter.lower(plan);
+    final streamed = _tryExecuteReadStream(
+      plan: plan,
+      request: request,
+      adapter: adapter,
+      streamRows: _transactionReadStream(transaction),
+    );
+    if (streamed != null) {
+      return streamed;
+    }
     final raw = await transaction.execute(request);
     return adapter.decode(raw, plan);
   }
@@ -154,4 +181,59 @@ final class _AdapterDriverTransaction<TRequest, TRawResponse>
       throw StateError('Adapter driver transaction is already completed.');
     }
   }
+}
+
+EngineResponse? _tryExecuteReadStream<TRequest>({
+  required OrmPlan plan,
+  required TRequest request,
+  required Object adapter,
+  required Stream<dynamic> Function(TRequest request)? streamRows,
+}) {
+  if (plan.action != OrmAction.read || streamRows == null) {
+    return null;
+  }
+  if (adapter
+      case final ReadStreamCapableTargetAdapter<TRequest, dynamic>
+          streamAdapter) {
+    return EngineResponse(
+      rows: streamAdapter.decodeReadRows(streamRows(request), plan),
+    );
+  }
+  return null;
+}
+
+Stream<dynamic> Function(TRequest request)? _driverReadStream<
+  TRequest,
+  TRawResponse
+>(TargetDriver<TRequest, TRawResponse> driver) {
+  if (driver
+      case final ReadStreamCapableTargetDriver<TRequest, dynamic>
+          streamDriver) {
+    return streamDriver.stream;
+  }
+  return null;
+}
+
+Stream<dynamic> Function(TRequest request)? _connectionReadStream<
+  TRequest,
+  TRawResponse
+>(TargetDriverConnection<TRequest, TRawResponse> connection) {
+  if (connection
+      case final ReadStreamCapableTargetDriverConnection<TRequest, dynamic>
+          streamConnection) {
+    return streamConnection.stream;
+  }
+  return null;
+}
+
+Stream<dynamic> Function(TRequest request)? _transactionReadStream<
+  TRequest,
+  TRawResponse
+>(TargetDriverTransaction<TRequest, TRawResponse> transaction) {
+  if (transaction
+      case final ReadStreamCapableTargetDriverTransaction<TRequest, dynamic>
+          streamTransaction) {
+    return streamTransaction.stream;
+  }
+  return null;
 }

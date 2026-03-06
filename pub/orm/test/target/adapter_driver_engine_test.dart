@@ -124,6 +124,61 @@ void main() {
     await engine.close();
   });
 
+  test('prefers native read streaming when adapter and driver support it', () async {
+    final adapter = _StreamingTrackingAdapter();
+    final driver = _StreamingTrackingDriver(
+      streamedRows: <String>['stream:u1', 'stream:u2'],
+    );
+    final engine = AdapterDriverEngine<String, String>(
+      adapter: adapter,
+      driver: driver,
+    );
+
+    await engine.open();
+    final response = await engine.execute(_plan());
+    final rows = await response.rows.toList();
+
+    expect(driver.requests, isEmpty);
+    expect(driver.streamRequests, <String>['User:read']);
+    expect(adapter.decodedRaw, isEmpty);
+    expect(adapter.streamDecodedPlans, hasLength(1));
+    expect(rows, <JsonMap>[
+      <String, Object?>{'request': 'User:read', 'streamed': 'stream:u1'},
+      <String, Object?>{'request': 'User:read', 'streamed': 'stream:u2'},
+    ]);
+
+    await engine.close();
+  });
+
+  test('keeps mutations on buffered execute when streaming is available', () async {
+    final adapter = _StreamingTrackingAdapter();
+    final driver = _StreamingTrackingDriver(streamedRows: <String>['ignored']);
+    final engine = AdapterDriverEngine<String, String>(
+      adapter: adapter,
+      driver: driver,
+    );
+
+    await engine.open();
+    final response = await engine.execute(_createPlan());
+
+    expect(driver.streamRequests, isEmpty);
+    expect(driver.requests, <String>['User:create']);
+    expect(adapter.streamDecodedPlans, isEmpty);
+    expect(adapter.decodedRaw, <String>['driver:User:create']);
+    expect(
+      await response.rows.toList(),
+      <JsonMap>[
+        <String, Object?>{
+          'request': 'User:create',
+          'action': 'create',
+          'whereId': null,
+        },
+      ],
+    );
+
+    await engine.close();
+  });
+
   test('supports connection lifecycle when driver is capable', () async {
     final adapter = _TrackingAdapter();
     final driver = _ConnectionCapableTrackingDriver();
@@ -217,6 +272,18 @@ OrmPlan _plan({JsonMap where = const <String, Object?>{}}) {
   );
 }
 
+OrmPlan _createPlan() {
+  return OrmPlan(
+    contractHash: 'hash',
+    model: 'User',
+    action: OrmAction.create,
+    mutation: OrmMutationPlan(
+      data: const <String, Object?>{'id': 'u1'},
+      resultMode: OrmMutationResultMode.row,
+    ),
+  );
+}
+
 final class _TrackingAdapter implements TargetAdapter<String, String> {
   final List<OrmPlan> loweredPlans = <OrmPlan>[];
   final List<String> decodedRaw = <String>[];
@@ -249,6 +316,22 @@ final class _ExplainTrackingAdapter extends _TrackingAdapter
   }
 }
 
+final class _StreamingTrackingAdapter extends _TrackingAdapter
+    implements ReadStreamCapableTargetAdapter<String, String> {
+  final List<OrmPlan> streamDecodedPlans = <OrmPlan>[];
+
+  @override
+  Stream<Object?> decodeReadRows(Stream<String> rows, OrmPlan plan) async* {
+    streamDecodedPlans.add(plan);
+    await for (final row in rows) {
+      yield <String, Object?>{
+        'request': '${plan.model}:${plan.action.name}',
+        'streamed': row,
+      };
+    }
+  }
+}
+
 final class _TrackingDriver implements TargetDriver<String, String> {
   int openCount = 0;
   int closeCount = 0;
@@ -268,6 +351,22 @@ final class _TrackingDriver implements TargetDriver<String, String> {
   Future<String> execute(String request) async {
     requests.add(request);
     return 'driver:$request';
+  }
+}
+
+final class _StreamingTrackingDriver extends _TrackingDriver
+    implements ReadStreamCapableTargetDriver<String, String> {
+  final List<String> streamedRows;
+  final List<String> streamRequests = <String>[];
+
+  _StreamingTrackingDriver({required this.streamedRows});
+
+  @override
+  Stream<String> stream(String request) async* {
+    streamRequests.add(request);
+    for (final row in streamedRows) {
+      yield row;
+    }
   }
 }
 

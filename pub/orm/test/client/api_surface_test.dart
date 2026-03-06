@@ -235,6 +235,67 @@ void main() {
       },
     );
 
+    test(
+      'adapter explain stays non-executing while native stream executes once',
+      () async {
+        final sqlContract = OrmContract(
+          version: '1',
+          hash: 'contract-sql-native-stream-v1',
+          target: 'sql-family',
+          models: <String, ModelContract>{
+            'User': ModelContract(
+              name: 'User',
+              table: 'users',
+              fields: <String>{'id', 'email'},
+            ),
+          },
+          aliases: <String, String>{'users': 'User'},
+        );
+        final driver = _StreamingSqlDriver(
+          rows: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u2', 'email': 'b@x.com'},
+          ],
+        );
+        final client = OrmClient(
+          contract: sqlContract,
+          engine: AdapterDriverEngine<SqlStatement, SqlResult>(
+            adapter: SqlAdapter(contract: sqlContract),
+            driver: driver,
+          ),
+        );
+        await client.connect();
+        try {
+          final users = client.db.orm.model('User');
+
+          await users
+              .query()
+              .where(<String, Object?>{'id': 'u1'})
+              .orderByField('id')
+              .page(size: 1)
+              .explain();
+          expect(driver.executeCount, 0);
+          expect(driver.streamCount, 0);
+
+          final rows = await users
+              .query()
+              .where(<String, Object?>{'id': 'u1'})
+              .stream()
+              .take(1)
+              .toList();
+          expect(driver.executeCount, 0);
+          expect(driver.streamCount, 1);
+          expect(rows, <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          ]);
+          expect(client.telemetry(), isNull);
+          expect(client.operationTelemetry(), isNull);
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
+
     test('cursor and page execution return deterministic windows', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -551,6 +612,21 @@ final class _CountingSqlDriver
   Future<SqlResult> execute(SqlStatement request) async {
     executeCount += 1;
     return SqlResult(rows: rows);
+  }
+}
+
+final class _StreamingSqlDriver extends _CountingSqlDriver
+    implements ReadStreamCapableTargetDriver<SqlStatement, JsonMap> {
+  int streamCount = 0;
+
+  _StreamingSqlDriver({required super.rows});
+
+  @override
+  Stream<JsonMap> stream(SqlStatement request) async* {
+    streamCount += 1;
+    for (final row in rows) {
+      yield row;
+    }
   }
 }
 

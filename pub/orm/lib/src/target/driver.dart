@@ -1,3 +1,5 @@
+import 'dart:async';
+
 abstract interface class TargetDriver<TRequest, TRawResponse> {
   Future<void> open();
 
@@ -24,4 +26,22 @@ abstract interface class TargetDriverTransaction<TRequest, TRawResponse> {
 
 abstract interface class TargetDriverConnectionCapable<TRequest, TRawResponse> {
   Future<TargetDriverConnection<TRequest, TRawResponse>> connection();
+}
+
+abstract interface class ReadStreamCapableTargetDriver<TRequest, TRawRow> {
+  Stream<TRawRow> stream(TRequest request);
+}
+
+abstract interface class ReadStreamCapableTargetDriverConnection<
+  TRequest,
+  TRawRow
+> {
+  Stream<TRawRow> stream(TRequest request);
+}
+
+abstract interface class ReadStreamCapableTargetDriverTransaction<
+  TRequest,
+  TRawRow
+> {
+  Stream<TRawRow> stream(TRequest request);
 }

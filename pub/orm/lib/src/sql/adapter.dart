@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../core/sort_order.dart';
 import '../contract/contract.dart';
 import '../engine/engine.dart';
@@ -54,7 +56,8 @@ const String _relationWhereAlias = '_rel';
 final class SqlAdapter
     implements
         TargetAdapter<SqlStatement, SqlResult>,
-        ExplainCapableTargetAdapter<SqlStatement, SqlResult> {
+        ExplainCapableTargetAdapter<SqlStatement, SqlResult>,
+        ReadStreamCapableTargetAdapter<SqlStatement, JsonMap> {
   final OrmContract contract;
   final String identifierQuote;
   final SqlFieldCodecResolver? codecResolver;
@@ -191,6 +194,17 @@ final class SqlAdapter
         affectedRows: response.affectedRows,
       ),
     };
+  }
+
+  @override
+  Stream<Object?> decodeReadRows(Stream<JsonMap> rows, OrmPlan plan) async* {
+    await for (final rawRow in rows) {
+      if (codecResolver == null) {
+        yield rawRow;
+        continue;
+      }
+      yield _decodeRow(model: plan.model, row: rawRow);
+    }
   }
 
   SqlStatement _lowerCreate({

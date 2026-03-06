@@ -482,6 +482,26 @@ void main() {
           distinctFromQuery.map((row) => row['id']).toList(growable: false),
           <Object?>['u1', 'u3'],
         );
+
+        final distinctStreamRows = await users
+            .query()
+            .orderByField('id')
+            .distinctField('email')
+            .skip(1)
+            .take(1)
+            .stream()
+            .toList();
+        expect(
+          distinctStreamRows.map((row) => row['id']).toList(growable: false),
+          <Object?>['u3'],
+        );
+
+        final firstDistinctRow = await users.firstOrNull(
+          orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+          distinct: const <String>['email'],
+          skip: 1,
+        );
+        expect(firstDistinctRow?['id'], 'u3');
         await client.disconnect();
       },
     );
@@ -1926,6 +1946,150 @@ void main() {
         expect(singleRows, hasLength(2));
         expect(_readRowsValue(singleRows.first['posts']), hasLength(2));
         expect(_readRowsValue(singleRows.last['posts']), hasLength(1));
+      },
+    );
+
+    test(
+      'include stream matches all for singleQuery and multiQuery',
+      () async {
+        Future<(List<JsonMap>, List<JsonMap>)> readWithStrategy(
+          IncludeExecutionStrategy strategy,
+        ) async {
+          final client = OrmClient(
+            contract: relationalContract,
+            engine: MemoryEngine(),
+            includeStrategySelector:
+                ({
+                  required OrmContract contract,
+                  required String modelName,
+                  required OrmAction action,
+                  required Map<String, IncludeSpec> include,
+                  required int depth,
+                }) => strategy,
+          );
+          await client.connect();
+          try {
+            await _seedRelationalData(client);
+            final delegate = client.db.orm.model('User');
+            final allRows = await delegate.all(
+              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+              include: <String, IncludeSpec>{
+                'posts': IncludeSpec(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                  select: const <String>['id', 'title'],
+                ),
+              },
+            );
+            final streamRows = await delegate
+                .query()
+                .orderByField('id')
+                .include(<String, IncludeSpec>{
+                  'posts': IncludeSpec(
+                    orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                    select: const <String>['id', 'title'],
+                  ),
+                })
+                .stream()
+                .toList();
+            return (allRows, streamRows);
+          } finally {
+            await client.disconnect();
+          }
+        }
+
+        final single = await readWithStrategy(
+          IncludeExecutionStrategy.singleQuery,
+        );
+        final multi = await readWithStrategy(IncludeExecutionStrategy.multiQuery);
+
+        expect(single.$2, equals(single.$1));
+        expect(multi.$2, equals(multi.$1));
+        expect(single.$2, equals(multi.$2));
+      },
+    );
+
+    test(
+      'include stream respects distinct skip and take for both strategies',
+      () async {
+        Future<(List<JsonMap>, List<JsonMap>)> readWithStrategy(
+          IncludeExecutionStrategy strategy,
+        ) async {
+          final client = OrmClient(
+            contract: relationalContract,
+            engine: MemoryEngine(),
+            includeStrategySelector:
+                ({
+                  required OrmContract contract,
+                  required String modelName,
+                  required OrmAction action,
+                  required Map<String, IncludeSpec> include,
+                  required int depth,
+                }) => strategy,
+          );
+          await client.connect();
+          try {
+            final users = client.db.orm.model('User');
+            final posts = client.db.orm.model('Post');
+
+            await users.create(
+              data: <String, Object?>{'id': 'u1', 'email': 'same@x.com'},
+            );
+            await users.create(
+              data: <String, Object?>{'id': 'u2', 'email': 'same@x.com'},
+            );
+            await users.create(
+              data: <String, Object?>{'id': 'u3', 'email': 'other@x.com'},
+            );
+
+            await posts.create(
+              data: <String, Object?>{'id': 'p1', 'userId': 'u1', 'title': 'P1'},
+            );
+            await posts.create(
+              data: <String, Object?>{'id': 'p2', 'userId': 'u2', 'title': 'P2'},
+            );
+            await posts.create(
+              data: <String, Object?>{'id': 'p3', 'userId': 'u3', 'title': 'P3'},
+            );
+
+            final include = <String, IncludeSpec>{
+              'posts': IncludeSpec(
+                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                select: const <String>['id', 'title'],
+              ),
+            };
+
+            final allRows = await users.all(
+              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+              distinct: const <String>['email'],
+              skip: 1,
+              take: 1,
+              include: include,
+            );
+            final streamRows = await users
+                .query()
+                .orderByField('id')
+                .distinctField('email')
+                .skip(1)
+                .take(1)
+                .include(include)
+                .stream()
+                .toList();
+            return (allRows, streamRows);
+          } finally {
+            await client.disconnect();
+          }
+        }
+
+        final single = await readWithStrategy(
+          IncludeExecutionStrategy.singleQuery,
+        );
+        final multi = await readWithStrategy(IncludeExecutionStrategy.multiQuery);
+
+        expect(single.$2, equals(single.$1));
+        expect(multi.$2, equals(multi.$1));
+        expect(single.$2, equals(multi.$2));
+        expect(single.$2.single['id'], 'u3');
+        expect(_readRowsValue(single.$2.single['posts']).single['id'], 'p3');
       },
     );
 

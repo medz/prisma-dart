@@ -1165,14 +1165,20 @@ class ModelDelegate {
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
 
-    if (normalizedInclude.isEmpty) {
+    if (normalizedInclude.isEmpty && distinct.isEmpty) {
       await for (final row in _streamRows(response, action: 'stream')) {
         yield _shapeRow(row, select: select, include: normalizedInclude);
       }
       return;
     }
 
-    final rows = await _collectRows(response, action: 'stream');
+    final rows = await _collectCollectionRows(
+      response,
+      action: 'stream',
+      distinct: distinct,
+      skip: skip,
+      take: take,
+    );
     if (rows.isEmpty) {
       return;
     }
@@ -1732,11 +1738,13 @@ class ModelDelegate {
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
 
-    var rows = await _collectRows(response, action: 'all');
-    if (distinct.isNotEmpty) {
-      rows = _applyDistinctRows(rows: rows, distinct: distinct);
-      rows = _sliceRows(rows: rows, skip: skip, take: take);
-    }
+    final rows = await _collectCollectionRows(
+      response,
+      action: 'all',
+      distinct: distinct,
+      skip: skip,
+      take: take,
+    );
     final hydratedRows = await _resolveIncludeRows(
       action: action,
       rows: rows,
@@ -1745,6 +1753,21 @@ class ModelDelegate {
     );
 
     return _shapeRows(hydratedRows, select: select, include: normalizedInclude);
+  }
+
+  Future<List<JsonMap>> _collectCollectionRows(
+    EngineResponse response, {
+    required String action,
+    required List<String> distinct,
+    int? skip,
+    int? take,
+  }) async {
+    var rows = await _collectRows(response, action: action);
+    if (distinct.isEmpty) {
+      return rows;
+    }
+    rows = _applyDistinctRows(rows: rows, distinct: distinct);
+    return _sliceRows(rows: rows, skip: skip, take: take);
   }
 
   Future<OrmPageResult<JsonMap>> _readPageResultInternal({
@@ -1820,7 +1843,9 @@ class ModelDelegate {
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
-      resultMode: OrmReadResultMode.firstOrNull,
+      resultMode: distinct.isEmpty
+          ? OrmReadResultMode.firstOrNull
+          : OrmReadResultMode.all,
       where: where,
       skip: skip,
       orderBy: orderBy,
@@ -1833,7 +1858,17 @@ class ModelDelegate {
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
 
-    final row = await _collectSingleRow(response, action: 'firstOrNull');
+    final row = distinct.isEmpty
+        ? await _collectSingleRow(response, action: 'firstOrNull')
+        : _firstOrNull(
+            await _collectCollectionRows(
+              response,
+              action: 'firstOrNull',
+              distinct: distinct,
+              skip: skip,
+              take: 1,
+            ),
+          );
     if (row == null) {
       return null;
     }
