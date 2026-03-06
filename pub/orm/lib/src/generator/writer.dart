@@ -1076,6 +1076,24 @@ final class TypedClientWriter {
       buffer.writeln('  const ${model.selectClassName}();');
     }
     buffer.writeln();
+    buffer.writeln(
+      '  ${model.selectClassName} merge(${model.selectClassName} other) {',
+    );
+    if (scalarFields.isEmpty) {
+      buffer.writeln('    return this;');
+    } else {
+      buffer.writeln('    return ${model.selectClassName}(');
+      for (final field in scalarFields) {
+        final memberName = _toLowerCamelIdentifier(
+          field.name,
+          fallback: 'field',
+        );
+        buffer.writeln('      $memberName: $memberName || other.$memberName,');
+      }
+      buffer.writeln('    );');
+    }
+    buffer.writeln('  }');
+    buffer.writeln();
     buffer.writeln('  List<String> toFields() {');
     if (scalarFields.isEmpty) {
       buffer.writeln('    return const <String>[];');
@@ -1131,6 +1149,27 @@ final class TypedClientWriter {
       buffer.writeln('    this.include,');
       buffer.writeln('  });');
       buffer.writeln();
+      buffer.writeln('  $includeClassName merge($includeClassName other) {');
+      buffer.writeln('    return $includeClassName(');
+      buffer.writeln('      where: where.andWith(other.where),');
+      buffer.writeln('      skip: other.skip ?? skip,');
+      buffer.writeln('      take: other.take ?? take,');
+      buffer.writeln(
+        '      orderBy: <${relationModel.orderByClassName}>[...orderBy, ...other.orderBy],',
+      );
+      buffer.writeln('      select: select == null');
+      buffer.writeln('          ? other.select');
+      buffer.writeln(
+        '          : (other.select == null ? select : select!.merge(other.select!)),',
+      );
+      buffer.writeln('      include: include == null');
+      buffer.writeln('          ? other.include');
+      buffer.writeln(
+        '          : (other.include == null ? include : include!.merge(other.include!)),',
+      );
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
       buffer.writeln('  IncludeSpec toIncludeSpec() {');
       buffer.writeln('    return IncludeSpec(');
       buffer.writeln('      where: where.toJson(),');
@@ -1176,6 +1215,28 @@ final class TypedClientWriter {
       buffer.writeln();
       buffer.writeln('  const ${model.includeClassName}();');
     }
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.includeClassName} merge(${model.includeClassName} other) {',
+    );
+    if (relationFields.isEmpty) {
+      buffer.writeln('    return this;');
+    } else {
+      buffer.writeln('    return ${model.includeClassName}(');
+      for (final relation in relationFields) {
+        final memberName = _toLowerCamelIdentifier(
+          relation.name,
+          fallback: 'relation',
+        );
+        buffer.writeln('      $memberName: $memberName == null');
+        buffer.writeln('          ? other.$memberName');
+        buffer.writeln(
+          '          : (other.$memberName == null ? $memberName : $memberName!.merge(other.$memberName!)),',
+        );
+      }
+      buffer.writeln('    );');
+    }
+    buffer.writeln('  }');
     buffer.writeln();
     buffer.writeln('  Map<String, IncludeSpec> toIncludeMap() {');
     if (relationFields.isEmpty) {
@@ -2036,11 +2097,11 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.queryClassName} where(${model.whereInputClassName} where) {',
+      '  ${model.queryClassName} where(${model.whereInputClassName} where, {bool merge = true}) {',
     );
     buffer.writeln('    return ${model.queryClassName}._(');
     buffer.writeln('      delegate: _delegate,');
-    buffer.writeln('      where: where,');
+    buffer.writeln('      where: merge ? _where.andWith(where) : where,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
     buffer.writeln('      orderBy: _orderBy,');
@@ -2128,7 +2189,7 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  ${model.queryClassName} include(${model.includeClassName}? include) {',
+      '  ${model.queryClassName} include(${model.includeClassName}? include, {bool merge = true}) {',
     );
     buffer.writeln('    return ${model.queryClassName}._(');
     buffer.writeln('      delegate: _delegate,');
@@ -2138,7 +2199,11 @@ final class TypedClientWriter {
     buffer.writeln('      orderBy: _orderBy,');
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
-    buffer.writeln('      include: include,');
+    buffer.writeln('      include: merge');
+    buffer.writeln(
+      '          ? (include == null ? _include : (_include?.merge(include) ?? include))',
+    );
+    buffer.writeln('          : include,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2448,6 +2513,21 @@ final class TypedClientWriter {
       buffer.writeln('  const $className();');
     }
 
+    if (includeLogicalWhere) {
+      buffer.writeln();
+      buffer.writeln('  $className andWith($className other) {');
+      buffer.writeln('    if (isEmpty) {');
+      buffer.writeln('      return other;');
+      buffer.writeln('    }');
+      buffer.writeln('    if (other.isEmpty) {');
+      buffer.writeln('      return this;');
+      buffer.writeln('    }');
+      buffer.writeln('    return $className(');
+      buffer.writeln('      and: <$className>[this, other],');
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+    }
+
     buffer.writeln();
     buffer.writeln(
       '  factory $className.fromJson(Map<String, Object?> json) {',
@@ -2534,6 +2614,22 @@ final class TypedClientWriter {
     }
     buffer.writeln('    };');
     buffer.writeln('  }');
+    if (includeLogicalWhere) {
+      buffer.writeln();
+      buffer.writeln('  bool get isEmpty =>');
+      for (final field in fields) {
+        buffer.writeln(
+          '      (${field.memberName} == null || ${field.memberName}!.isEmpty) &&',
+        );
+      }
+      buffer.writeln(
+        '      (and == null || and!.every((value) => value.isEmpty)) &&',
+      );
+      buffer.writeln(
+        '      (or == null || or!.every((value) => value.isEmpty)) &&',
+      );
+      buffer.writeln('      (not == null || not!.isEmpty);');
+    }
     buffer.writeln('}');
     buffer.writeln();
   }

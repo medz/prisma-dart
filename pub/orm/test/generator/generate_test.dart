@@ -523,6 +523,54 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+where\(\s*UserWhereInput\s+where,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.where(...) to expose merge flag with default true.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+where\([\s\S]*?_where\.andWith\(where\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.where(...) merge path to combine with _where.andWith(where).',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+where\([\s\S]*?return\s+UserQuery\._\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.where(...) chaining to stay immutable by returning a new query object.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+include\(\s*UserInclude\?\s+include,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.include(...) to expose merge flag with default true.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+include\([\s\S]*?_include\?\.merge\(include\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.include(...) merge path to use _include?.merge(include).',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+include\([\s\S]*?return\s+UserQuery\._\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.include(...) chaining to stay immutable by returning a new query object.',
+        );
+        expect(
+          RegExp(
             r'\bFuture<List<UserData>>\s+all\s*\(\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
@@ -973,6 +1021,13 @@ typedef Post = ({
           reason: 'Missing typed include DSL class in generated source.',
         );
         expect(
+          RegExp(
+            r'class\s+UserInclude\s*\{[\s\S]*?UserInclude\s+merge\(\s*UserInclude\s+other\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected model include class to generate merge helper.',
+        );
+        expect(
           RegExp(r'\bclass StringWhereFilter\b').hasMatch(generatedSource),
           isTrue,
           reason: 'Missing string where filter class in generated source.',
@@ -1059,6 +1114,13 @@ typedef Post = ({
               'Expected UserWhereInput to include NOT logical field marker.',
         );
         expect(
+          RegExp(
+            r'class\s+UserWhereInput\s*\{[\s\S]*?UserWhereInput\s+andWith\(\s*UserWhereInput\s+other\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserWhereInput to generate andWith merge helper.',
+        );
+        expect(
           generatedSource.contains('List<UserOrderBy> orderBy'),
           isTrue,
           reason: 'Expected typed delegate signature to use UserOrderBy.',
@@ -1094,6 +1156,13 @@ typedef Post = ({
             .map((file) => file.readAsStringSync())
             .join('\n');
 
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+merge\(\s*UserPostsInclude\s+other\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected relation include class to generate merge helper.',
+        );
         expect(
           RegExp(
             r'\bclass UserPostsRelationWhereFilter\b',
