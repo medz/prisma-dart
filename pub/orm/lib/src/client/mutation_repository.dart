@@ -204,8 +204,8 @@ final class _RepositoryMutationExecutor {
     });
   }
 
-  Future<int> deleteMany({required JsonMap where}) {
-    final trace = _startOperation('deleteMany');
+  Future<int> deleteCount({required JsonMap where}) {
+    final trace = _startOperation('deleteCount');
     return _delegate._client.transaction((txDb) async {
       final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
@@ -231,11 +231,11 @@ final class _RepositoryMutationExecutor {
     });
   }
 
-  Future<int> updateMany({
+  Future<int> updateCount({
     required JsonMap where,
     required JsonMap data,
   }) {
-    final trace = _startOperation('updateMany');
+    final trace = _startOperation('updateCount');
     return _delegate._client.transaction((txDb) async {
       final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
@@ -522,7 +522,7 @@ final class _RepositoryMutationExecutor {
       if (!row.containsKey(field) || row[field] == null) {
         throw runtimeError(
           'RUNTIME.UPDATE_MANY_IDENTITY_MISSING',
-          'updateMany() identity lookup did not return all required id fields.',
+          'updateCount() identity lookup did not return all required id fields.',
           details: <String, Object?>{
             'model': _delegate.modelName,
             'idField': field,

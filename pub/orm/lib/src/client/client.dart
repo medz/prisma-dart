@@ -177,6 +177,7 @@ JsonMap _terminalExecutionSummary({
   required Map<String, IncludeSpec> include,
   JsonMap? cursor,
   OrmReadPagePlan? page,
+  bool applyWindowAtClient = false,
 }) {
   final hasWindow = cursor != null || page != null;
   final includeStrategy = include.isEmpty
@@ -204,7 +205,9 @@ JsonMap _terminalExecutionSummary({
       'delivery': delivery,
       'degraded': degraded,
       'reasons': List<String>.unmodifiable(reasons),
-      'windowAppliedAt': hasWindow ? 'engine' : 'none',
+      'windowAppliedAt': hasWindow
+          ? (applyWindowAtClient ? 'client' : 'engine')
+          : 'none',
       'distinctAppliedAt': distinct.isEmpty ? 'none' : 'client',
       'includeAppliedAt': include.isEmpty ? 'none' : 'repository',
       if (includeStrategy != null) 'includeStrategy': includeStrategy,
@@ -220,7 +223,8 @@ JsonMap _terminalExecutionSummary({
     ),
     'pageResult': terminal(
       delivery: page == null ? 'unavailable' : 'pageEnvelope',
-      degraded: false,
+      degraded: applyWindowAtClient,
+      reasons: applyWindowAtClient ? const <String>['distinct'] : const <String>[],
       available: page != null,
     ),
   });
@@ -1522,15 +1526,15 @@ class ModelDelegate {
     OrmReadQuerySpec(select: select, include: include),
   ).createMany(data: data);
 
-  Future<int> updateMany({
-    JsonMap where = const <String, Object?>{},
+  Future<int> updateCount({
+    required JsonMap where,
     required JsonMap data,
   }) => _queryFromSpec(
     OrmReadQuerySpec(where: where),
-  ).updateMany(data: data);
+  ).updateCount(data: data);
 
-  Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) =>
-      _queryFromSpec(OrmReadQuerySpec(where: where)).deleteMany();
+  Future<int> deleteCount({required JsonMap where}) =>
+      _queryFromSpec(OrmReadQuerySpec(where: where)).deleteCount();
 
   Future<JsonMap> upsert({
     required JsonMap where,
@@ -1601,13 +1605,15 @@ class ModelDelegate {
     this,
   ).createMany(data: data, select: spec.select, include: spec.include);
 
-  Future<int> _updateMany({
+  Future<int> _updateCount({
     required JsonMap data,
     required OrmReadQuerySpec spec,
-  }) => _RepositoryMutationExecutor(this).updateMany(where: spec.where, data: data);
+  }) => _RepositoryMutationExecutor(
+    this,
+  ).updateCount(where: spec.where, data: data);
 
-  Future<int> _deleteMany({required OrmReadQuerySpec spec}) =>
-      _RepositoryMutationExecutor(this).deleteMany(where: spec.where);
+  Future<int> _deleteCount({required OrmReadQuerySpec spec}) =>
+      _RepositoryMutationExecutor(this).deleteCount(where: spec.where);
 
   Future<JsonMap> _upsert({
     required JsonMap create,
@@ -1691,15 +1697,38 @@ class ModelDelegate {
   Future<List<JsonMap>> _collectCollectionRows(
     EngineResponse response, {
     required String action,
+    required List<OrmOrderBy> orderBy,
     required List<String> distinct,
     int? skip,
     int? take,
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
   }) async {
     var rows = await _collectRows(response, action: action);
-    if (distinct.isEmpty) {
+    final applyClientDistinct = distinct.isNotEmpty;
+    final applyClientWindow = cursor != null || page != null;
+    if (!applyClientDistinct && !applyClientWindow) {
       return rows;
     }
-    rows = _applyDistinctRows(rows: rows, distinct: distinct);
+    if (applyClientDistinct) {
+      rows = _applyDistinctRows(rows: rows, distinct: distinct);
+    }
+    if (page != null) {
+      return _applyPageWindowRows(rows: rows, orderBy: orderBy, page: page);
+    }
+    if (cursor != null) {
+      rows = rows
+          .where(
+            (row) =>
+                _compareRowToBoundary(
+                  row: row,
+                  boundary: cursor,
+                  orderBy: orderBy,
+                ) >=
+                0,
+          )
+          .toList(growable: false);
+    }
     return _sliceRows(rows: rows, skip: skip, take: take);
   }
 
@@ -1932,9 +1961,53 @@ class ModelDelegate {
     return rows.sublist(0, page.size);
   }
 
+  List<JsonMap> _applyPageWindowRows({
+    required List<JsonMap> rows,
+    required List<OrmOrderBy> orderBy,
+    required OrmReadPagePlan page,
+  }) {
+    if (page.after case final after?) {
+      final filtered = rows
+          .where(
+            (row) =>
+                _compareRowToBoundary(
+                  row: row,
+                  boundary: after,
+                  orderBy: orderBy,
+                ) >
+                0,
+          )
+          .toList(growable: false);
+      return page.size >= filtered.length
+          ? filtered
+          : filtered.sublist(0, page.size);
+    }
+
+    if (page.before case final before?) {
+      final filtered = rows
+          .where(
+            (row) =>
+                _compareRowToBoundary(
+                  row: row,
+                  boundary: before,
+                  orderBy: orderBy,
+                ) <
+                0,
+          )
+          .toList(growable: false);
+      if (page.size >= filtered.length) {
+        return filtered;
+      }
+      return filtered.sublist(filtered.length - page.size);
+    }
+
+    return page.size >= rows.length ? rows : rows.sublist(0, page.size);
+  }
+
   Future<OrmPageInfo> _buildPageInfo({
     required JsonMap where,
     required List<OrmOrderBy> orderBy,
+    required List<String> distinct,
     required OrmReadPagePlan page,
     required List<JsonMap> rows,
     required bool overflowed,
@@ -1954,6 +2027,7 @@ class ModelDelegate {
           : await _hasPageRowAfterCursorBeforeBoundary(
               where: where,
               orderBy: orderBy,
+              distinct: distinct,
               cursor: endCursor,
               boundary: page.before!,
               operation: operation,
@@ -1971,6 +2045,7 @@ class ModelDelegate {
       (final JsonMap after?, _) => await _hasPageRowBeforeBoundary(
         where: where,
         orderBy: orderBy,
+        distinct: distinct,
         boundary: rows.isEmpty ? after : startCursor!,
         operation: operation,
       ),
@@ -2012,6 +2087,7 @@ class ModelDelegate {
   Future<bool> _hasPageRowBeforeBoundary({
     required JsonMap where,
     required List<OrmOrderBy> orderBy,
+    required List<String> distinct,
     required JsonMap boundary,
     required _RepositoryOperation operation,
   }) async {
@@ -2019,7 +2095,11 @@ class ModelDelegate {
       action: OrmAction.read,
       where: where,
       orderBy: orderBy,
-      select: orderBy.map((entry) => entry.field).toList(growable: false),
+      distinct: distinct,
+      select: <String>{
+        ...orderBy.map((entry) => entry.field),
+        ...distinct,
+      }.toList(growable: false),
       page: OrmReadPagePlan(size: 1, before: boundary),
       repositoryTrace: operation.nextTrace(
         phase: 'page.probe',
@@ -2033,6 +2113,7 @@ class ModelDelegate {
   Future<bool> _hasPageRowAfterCursorBeforeBoundary({
     required JsonMap where,
     required List<OrmOrderBy> orderBy,
+    required List<String> distinct,
     required JsonMap cursor,
     required JsonMap boundary,
     required _RepositoryOperation operation,
@@ -2043,7 +2124,11 @@ class ModelDelegate {
       skip: 1,
       take: 1,
       orderBy: orderBy,
-      select: orderBy.map((entry) => entry.field).toList(growable: false),
+      distinct: distinct,
+      select: <String>{
+        ...orderBy.map((entry) => entry.field),
+        ...distinct,
+      }.toList(growable: false),
       cursor: cursor,
       repositoryTrace: operation.nextTrace(
         phase: 'page.probe',
@@ -3217,20 +3302,7 @@ final class ModelQuery {
     );
   }
 
-  void _assertReadExecutionSupported(String terminal) {
-    if ((_state.cursor != null || _state.page != null) &&
-        _state.distinct.isNotEmpty) {
-      throw runtimeError(
-        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
-        'Cursor and page windows do not support distinct yet.',
-        details: <String, Object?>{
-          'model': _delegate.modelName,
-          'terminal': terminal,
-          'distinct': _state.distinct,
-        },
-      );
-    }
-  }
+  void _assertReadExecutionSupported(String terminal) {}
 
   void _assertGroupedQueryBaseState() {
     final invalidKeys = <String>[
@@ -3282,6 +3354,7 @@ final class ModelQuery {
   void _assertMutationQueryState({
     required String action,
     bool allowWhere = true,
+    bool requireWhere = false,
     bool allowSelect = true,
     bool allowInclude = true,
   }) {
@@ -3296,14 +3369,23 @@ final class ModelQuery {
       if (_state.cursor != null) 'cursor',
       if (_state.page != null) 'page',
     ];
-    if (invalidKeys.isEmpty) {
+    if (invalidKeys.isNotEmpty) {
+      throw runtimeError(
+        'PLAN.MUTATION_QUERY_STATE_INVALID',
+        '$action does not allow query state keys: ${invalidKeys.join(', ')}.',
+        details: <String, Object?>{'action': action, 'invalidKeys': invalidKeys},
+      );
+    }
+    if (!requireWhere || _state.where.isNotEmpty) {
       return;
     }
-
     throw runtimeError(
-      'PLAN.MUTATION_QUERY_STATE_INVALID',
-      '$action does not allow query state keys: ${invalidKeys.join(', ')}.',
-      details: <String, Object?>{'action': action, 'invalidKeys': invalidKeys},
+      'PLAN.MUTATION_WHERE_REQUIRED',
+      '$action requires where() first.',
+      details: <String, Object?>{
+        'model': _delegate.modelName,
+        'action': action,
+      },
     );
   }
 
@@ -3325,22 +3407,24 @@ final class ModelQuery {
     return _delegate._createMany(data: data, spec: _state);
   }
 
-  Future<int> updateMany({required JsonMap data}) {
+  Future<int> updateCount({required JsonMap data}) {
     _assertMutationQueryState(
-      action: 'updateMany',
+      action: 'updateCount',
+      requireWhere: true,
       allowSelect: false,
       allowInclude: false,
     );
-    return _delegate._updateMany(data: data, spec: _state);
+    return _delegate._updateCount(data: data, spec: _state);
   }
 
-  Future<int> deleteMany() {
+  Future<int> deleteCount() {
     _assertMutationQueryState(
-      action: 'deleteMany',
+      action: 'deleteCount',
+      requireWhere: true,
       allowSelect: false,
       allowInclude: false,
     );
-    return _delegate._deleteMany(spec: _state);
+    return _delegate._deleteCount(spec: _state);
   }
 
   Future<JsonMap> upsert({required JsonMap create, required JsonMap update}) {

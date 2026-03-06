@@ -1029,19 +1029,27 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateMany\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),\s*required\s+UserUpdateInput\s+data,',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateCount\(\{\s*required\s+UserWhereInput\s+where,\s*required\s+UserUpdateInput\s+data,',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.updateMany(...) to expose typed where and data input.',
+              'Expected UserDelegate.updateCount(...) to expose typed where and data input.',
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<int>\s+updateMany\(\{\s*required\s+UserUpdateInput\s+data\}\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<int>\s+updateCount\(\{\s*required\s+UserUpdateInput\s+data\}\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.updateMany(...) to expose typed update data input.',
+              'Expected UserQuery.updateCount(...) to expose typed update data input.',
+        );
+        expect(
+          generatedSource.contains(
+            "_assertMutationQueryState(action: 'updateCount', requireWhere: true, allowSelect: false, allowInclude: false);",
+          ),
+          isTrue,
+          reason:
+              'Expected UserQuery.updateCount(...) to require where() before execution.',
         );
         expect(
           RegExp(r'\bclass UserNestedCreateInput\b').hasMatch(generatedSource),
@@ -1221,11 +1229,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateMany\(\{[\s\S]*?return\s+query\(where:\s*where\)\.updateMany\(data:\s*data\);',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+updateCount\(\{[\s\S]*?return\s+query\(where:\s*where\)\.updateCount\(data:\s*data\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected generated delegate updateMany(...) to route through typed query.',
+              'Expected generated delegate updateCount(...) to route through typed query.',
         );
         expect(
           RegExp(
@@ -1237,11 +1245,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+deleteMany\(\{[\s\S]*?return\s+query\(where:\s*where\)\.deleteMany\(\);',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+deleteCount\(\{[\s\S]*?return\s+query\(where:\s*where\)\.deleteCount\(\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected generated delegate deleteMany(...) to route through typed query.',
+              'Expected generated delegate deleteCount(...) to route through typed query.',
         );
         expect(
           RegExp(
@@ -1720,18 +1728,26 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'Future<int>\s+deleteMany\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),',
+            r'Future<int>\s+deleteCount\(\{\s*required\s+UserWhereInput\s+where,',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserDelegate.deleteMany(...) to accept typed where input.',
+              'Expected UserDelegate.deleteCount(...) to accept typed where input.',
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<int>\s+deleteMany\s*\(\s*\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<int>\s+deleteCount\s*\(\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserQuery.deleteMany() to exist.',
+          reason: 'Expected UserQuery.deleteCount() to exist.',
+        );
+        expect(
+          generatedSource.contains(
+            "_assertMutationQueryState(action: 'deleteCount', requireWhere: true, allowSelect: false, allowInclude: false);",
+          ),
+          isTrue,
+          reason:
+              'Expected UserQuery.deleteCount() to require where() before execution.',
         );
 
         expect(

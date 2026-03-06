@@ -182,7 +182,7 @@ void main() {
       await client.disconnect();
     });
 
-    test('aggregates updateMany into one operation record', () async {
+    test('aggregates updateCount into one operation record', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
       final users = client.db.orm.model('User');
@@ -195,7 +195,7 @@ void main() {
         ],
       );
 
-      final updated = await users.updateMany(
+      final updated = await users.updateCount(
         where: <String, Object?>{'email': 'a@x.com'},
         data: <String, Object?>{'email': 'updated@x.com'},
       );
@@ -203,7 +203,7 @@ void main() {
       expect(updated, 2);
       final telemetry = client.operationTelemetry();
       expect(telemetry, isNotNull);
-      expect(telemetry?.kind, 'User.updateMany');
+      expect(telemetry?.kind, 'User.updateCount');
       expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
       expect(telemetry?.completed, isTrue);
       expect(telemetry?.statementCount, 3);

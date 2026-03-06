@@ -1246,7 +1246,7 @@ void main() {
       );
 
       expect(
-        () => users.take(1).deleteMany(),
+        () => users.take(1).deleteCount(),
         throwsA(
           isA<OrmRuntimeError>()
               .having(
@@ -1265,7 +1265,7 @@ void main() {
       expect(
         () => users
             .select(const <String>['id'])
-            .updateMany(data: <String, Object?>{'email': 'b@x.com'}),
+            .updateCount(data: <String, Object?>{'email': 'b@x.com'}),
         throwsA(
           isA<OrmRuntimeError>()
               .having(
@@ -1284,7 +1284,7 @@ void main() {
       expect(
         () => users
             .include(<String, IncludeSpec>{'posts': const IncludeSpec()})
-            .deleteMany(),
+            .deleteCount(),
         throwsA(
           isA<OrmRuntimeError>()
               .having(
@@ -1297,6 +1297,28 @@ void main() {
                 'invalidKeys',
                 <String>['include'],
               ),
+        ),
+      );
+
+      expect(
+        () => users.query().updateCount(data: <String, Object?>{'email': 'b@x.com'}),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.MUTATION_WHERE_REQUIRED',
+          ),
+        ),
+      );
+
+      expect(
+        () => users.query().deleteCount(),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.MUTATION_WHERE_REQUIRED',
+          ),
         ),
       );
 
@@ -1324,7 +1346,7 @@ void main() {
       await client.disconnect();
     });
 
-    test('supports createMany and deleteMany helpers', () async {
+    test('supports createMany and deleteCount helpers', () async {
       final engine = _CountingEngine(inner: MemoryEngine());
       final client = OrmClient(contract: contract, engine: engine);
       await client.connect();
@@ -1372,7 +1394,7 @@ void main() {
       );
 
       engine.reset();
-      final updated = await users.updateMany(
+      final updated = await users.updateCount(
         where: <String, Object?>{'email': 'a@x.com'},
         data: <String, Object?>{'email': 'updated@x.com'},
       );
@@ -1391,7 +1413,7 @@ void main() {
       });
       expect(
         updateTraces.map((trace) => trace.kind).toList(growable: false),
-        <String>['User.updateMany', 'User.updateMany', 'User.updateMany'],
+        <String>['User.updateCount', 'User.updateCount', 'User.updateCount'],
       );
       expect(
         updateTraces.map((trace) => trace.phase).toList(growable: false),
@@ -1411,7 +1433,7 @@ void main() {
       );
 
       engine.reset();
-      final deleted = await users.deleteMany(
+      final deleted = await users.deleteCount(
         where: <String, Object?>{'email': 'updated@x.com'},
       );
       expect(deleted, 2);
@@ -1429,7 +1451,7 @@ void main() {
       });
       expect(
         deleteTraces.map((trace) => trace.kind).toList(growable: false),
-        <String>['User.deleteMany', 'User.deleteMany', 'User.deleteMany'],
+        <String>['User.deleteCount', 'User.deleteCount', 'User.deleteCount'],
       );
       expect(
         deleteTraces.map((trace) => trace.phase).toList(growable: false),
@@ -1651,7 +1673,7 @@ void main() {
     );
 
     test(
-      'supports query state helpers for first/count/exists/upsert/deleteMany',
+      'supports query state helpers for first/count/exists/upsert/deleteCount',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
@@ -1678,7 +1700,7 @@ void main() {
             );
         expect(upserted['id'], 'u3');
 
-        final removed = await query.deleteMany();
+        final removed = await query.deleteCount();
         expect(removed, 2);
         expect(await users.count(), 1);
         await client.disconnect();

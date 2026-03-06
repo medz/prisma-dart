@@ -197,27 +197,27 @@ void main() {
         );
         expect(
           RegExp(
-            r"class\s+ModelQuery\s*\{[\s\S]*?Future<int>\s+updateMany\(\{required\s+JsonMap\s+data\}\)\s*\{[\s\S]*?_assertMutationQueryState\(\s*action:\s*'updateMany',\s*allowSelect:\s*false,\s*allowInclude:\s*false,\s*\);[\s\S]*?return\s+_delegate\._updateMany\(data:\s*data,\s*spec:\s*_state\);",
+            r"class\s+ModelQuery\s*\{[\s\S]*?Future<int>\s+updateCount\(\{required\s+JsonMap\s+data\}\)\s*\{[\s\S]*?_assertMutationQueryState\(\s*action:\s*'updateCount',\s*requireWhere:\s*true,\s*allowSelect:\s*false,\s*allowInclude:\s*false,\s*\);[\s\S]*?return\s+_delegate\._updateCount\(data:\s*data,\s*spec:\s*_state\);",
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelQuery.updateMany(...) to reject row-shaping state and terminate through the private mutation helper.',
+              'Expected ModelQuery.updateCount(...) to reject row-shaping state and terminate through the private mutation helper.',
         );
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<int>\s+deleteMany\(\)\s*\{[\s\S]*?return\s+_delegate\._deleteMany\(spec:\s*_state\);',
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<int>\s+deleteCount\(\)\s*\{[\s\S]*?return\s+_delegate\._deleteCount\(spec:\s*_state\);',
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelQuery.deleteMany(...) to terminate through the private mutation helper.',
+              'Expected ModelQuery.deleteCount(...) to terminate through the private mutation helper.',
         );
         expect(
           RegExp(
-            r"class\s+ModelQuery\s*\{[\s\S]*?Future<int>\s+deleteMany\(\)\s*\{[\s\S]*?_assertMutationQueryState\(\s*action:\s*'deleteMany',\s*allowSelect:\s*false,\s*allowInclude:\s*false,\s*\);",
+            r"class\s+ModelQuery\s*\{[\s\S]*?Future<int>\s+deleteCount\(\)\s*\{[\s\S]*?_assertMutationQueryState\(\s*action:\s*'deleteCount',\s*requireWhere:\s*true,\s*allowSelect:\s*false,\s*allowInclude:\s*false,\s*\);",
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelQuery.deleteMany(...) to reject row-shaping state.',
+              'Expected ModelQuery.deleteCount(...) to reject row-shaping state.',
         );
       },
     );

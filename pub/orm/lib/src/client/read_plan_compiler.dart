@@ -29,19 +29,6 @@ final class _OrmReadPlanCompiler {
     if (state._cursor != null || state._page != null) {
       validateStableCursorOrderBy(orderBy: state._orderBy);
     }
-    if ((state._cursor != null || state._page != null) &&
-        state._distinct.isNotEmpty) {
-      throw runtimeError(
-        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
-        'Cursor and page windows do not support distinct yet.',
-        details: <String, Object?>{
-          'model': _delegate.modelName,
-          'distinct': state._distinct,
-          if (state._cursor != null) 'cursor': state._cursor,
-          if (state._page != null) 'page': state._page!.toJson(),
-        },
-      );
-    }
     if (state._page != null && state.resultMode != OrmReadResultMode.all) {
       throw runtimeError(
         'PLAN.PAGE_RESULT_MODE_INVALID',
@@ -55,6 +42,9 @@ final class _OrmReadPlanCompiler {
     }
 
     final isCollectionRead = state.resultMode != OrmReadResultMode.oneOrNull;
+    final applyWindowAtClient =
+        state._distinct.isNotEmpty &&
+        (state._cursor != null || state._page != null);
     final resolvedTake = state._page != null
         ? null
         : state.resultMode == OrmReadResultMode.firstOrNull
@@ -79,6 +69,7 @@ final class _OrmReadPlanCompiler {
       delegate: _delegate,
       state: state,
       normalizedInclude: normalizedInclude,
+      applyWindowAtClient: applyWindowAtClient,
       plan: OrmPlan.read(
         contractHash: _delegate._client.contract.hash,
         target: _delegate._client.contract.target,
@@ -105,10 +96,10 @@ final class _OrmReadPlanCompiler {
         distinct: isCollectionRead ? state._distinct : const <String>[],
         select: readSelect,
         include: _buildOrmIncludePlanMap(normalizedInclude),
-        cursor: state._cursor == null
+        cursor: applyWindowAtClient || state._cursor == null
             ? null
             : OrmReadCursorPlan(values: state._cursor!),
-        page: state._page,
+        page: applyWindowAtClient ? null : state._page,
         resultMode: state.resultMode,
       ),
     );

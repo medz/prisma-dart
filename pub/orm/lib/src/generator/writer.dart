@@ -2131,22 +2131,18 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<int> updateMany({');
-    buffer.writeln(
-      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
-    );
+    buffer.writeln('  Future<int> updateCount({');
+    buffer.writeln('    required ${model.whereInputClassName} where,');
     buffer.writeln('    required ${model.updateInputClassName} data,');
     buffer.writeln('  }) {');
-    buffer.writeln('    return query(where: where).updateMany(data: data);');
+    buffer.writeln('    return query(where: where).updateCount(data: data);');
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<int> deleteMany({');
-    buffer.writeln(
-      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
-    );
+    buffer.writeln('  Future<int> deleteCount({');
+    buffer.writeln('    required ${model.whereInputClassName} where,');
     buffer.writeln('  }) {');
-    buffer.writeln('    return query(where: where).deleteMany();');
+    buffer.writeln('    return query(where: where).deleteCount();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2863,21 +2859,6 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  void _assertReadExecutionSupported(String terminal) {');
-    buffer.writeln(
-      '    if ((_cursor != null || _pageSize != null) && _distinct.isNotEmpty) {',
-    );
-    buffer.writeln('      throw runtimeError(');
-    buffer.writeln("        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',");
-    buffer.writeln(
-      "        'Cursor and page windows do not support distinct yet.',",
-    );
-    buffer.writeln('        details: <String, Object?>{');
-    buffer.writeln("          'model': '$runtimeName',");
-    buffer.writeln("          'terminal': terminal,");
-    buffer.writeln("          'distinct': _runtimeDistinct,");
-    buffer.writeln('        },');
-    buffer.writeln('      );');
-    buffer.writeln('    }');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2912,6 +2893,7 @@ final class TypedClientWriter {
     buffer.writeln('  void _assertMutationQueryState({');
     buffer.writeln('    required String action,');
     buffer.writeln('    bool allowWhere = true,');
+    buffer.writeln('    bool requireWhere = false,');
     buffer.writeln('    bool allowSelect = true,');
     buffer.writeln('    bool allowInclude = true,');
     buffer.writeln('  }) {');
@@ -2926,19 +2908,29 @@ final class TypedClientWriter {
     buffer.writeln("      if (_cursor != null) 'cursor',");
     buffer.writeln("      if (_pageSize != null) 'page',");
     buffer.writeln('    ];');
-    buffer.writeln('    if (invalidKeys.isEmpty) {');
+    buffer.writeln('    if (invalidKeys.isNotEmpty) {');
+    buffer.writeln('      throw runtimeError(');
+    buffer.writeln("        'PLAN.MUTATION_QUERY_STATE_INVALID',");
+    buffer.writeln(
+      "        '\$action does not allow query state keys: \${invalidKeys.join(', ')}.',",
+    );
+    buffer.writeln('        details: <String, Object?>{');
+    buffer.writeln("          'model': '$runtimeName',");
+    buffer.writeln("          'action': action,");
+    buffer.writeln("          'invalidKeys': invalidKeys,");
+    buffer.writeln('        },');
+    buffer.writeln('      );');
+    buffer.writeln('    }');
+    buffer.writeln('    if (!requireWhere || !_where.isEmpty) {');
     buffer.writeln('      return;');
     buffer.writeln('    }');
     buffer.writeln();
     buffer.writeln('    throw runtimeError(');
-    buffer.writeln("      'PLAN.MUTATION_QUERY_STATE_INVALID',");
-    buffer.writeln(
-      "      '\$action does not allow query state keys: \${invalidKeys.join(', ')}.',",
-    );
+    buffer.writeln("      'PLAN.MUTATION_WHERE_REQUIRED',");
+    buffer.writeln("      '\$action requires where() first.',");
     buffer.writeln('      details: <String, Object?>{');
     buffer.writeln("        'model': '$runtimeName',");
     buffer.writeln("        'action': action,");
-    buffer.writeln("        'invalidKeys': invalidKeys,");
     buffer.writeln('      },');
     buffer.writeln('    );');
     buffer.writeln('  }');
@@ -3140,23 +3132,23 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  Future<int> updateMany({required ${model.updateInputClassName} data}) {',
+      '  Future<int> updateCount({required ${model.updateInputClassName} data}) {',
     );
     buffer.writeln(
-      "    _assertMutationQueryState(action: 'updateMany', allowSelect: false, allowInclude: false);",
+      "    _assertMutationQueryState(action: 'updateCount', requireWhere: true, allowSelect: false, allowInclude: false);",
     );
-    buffer.writeln('    return _delegate._delegate.updateMany(');
+    buffer.writeln('    return _delegate._delegate.updateCount(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      data: data.toJson(),');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<int> deleteMany() {');
+    buffer.writeln('  Future<int> deleteCount() {');
     buffer.writeln(
-      "    _assertMutationQueryState(action: 'deleteMany', allowSelect: false, allowInclude: false);",
+      "    _assertMutationQueryState(action: 'deleteCount', requireWhere: true, allowSelect: false, allowInclude: false);",
     );
-    buffer.writeln('    return _delegate._delegate.deleteMany(');
+    buffer.writeln('    return _delegate._delegate.deleteCount(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('    );');
     buffer.writeln('  }');

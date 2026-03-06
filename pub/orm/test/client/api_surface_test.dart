@@ -145,6 +145,30 @@ void main() {
     );
 
     test(
+      'inspectPlan marks pageResult as client-windowed when distinct requires buffered paging',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        final users = client.db.orm.model('User');
+        final inspected = await users
+            .query()
+            .orderByField('email')
+            .orderByField('id')
+            .distinctField('email')
+            .page(size: 2)
+            .inspectPlan();
+
+        final execution =
+            inspected['terminalExecution'] as Map<String, Object?>;
+        final pageResult = execution['pageResult'] as Map<String, Object?>;
+
+        expect(pageResult['delivery'], 'pageEnvelope');
+        expect(pageResult['degraded'], isTrue);
+        expect(pageResult['windowAppliedAt'], 'client');
+        expect(pageResult['reasons'], <String>['distinct']);
+      },
+    );
+
+    test(
       'runtime executes direct aggregate and grouped aggregate plans',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -875,7 +899,33 @@ void main() {
       );
     });
 
-    test('updateMany updates matching rows and returns affected count', () async {
+    test('updateCount and deleteCount require where() first', () {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final users = client.db.orm.model('User');
+
+      expect(
+        () => users.query().updateCount(data: <String, Object?>{'email': 'x'}),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.MUTATION_WHERE_REQUIRED',
+          ),
+        ),
+      );
+      expect(
+        () => users.query().deleteCount(),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.MUTATION_WHERE_REQUIRED',
+          ),
+        ),
+      );
+    });
+
+    test('updateCount updates matching rows and returns affected count', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
       try {
@@ -890,7 +940,7 @@ void main() {
 
         final affected = await users
             .where(<String, Object?>{'email': 'a@x.com'})
-            .updateMany(data: <String, Object?>{'email': 'updated@x.com'});
+            .updateCount(data: <String, Object?>{'email': 'updated@x.com'});
 
         expect(affected, 2);
         final rows = await users
@@ -904,6 +954,53 @@ void main() {
         await client.disconnect();
       }
     });
+
+    test(
+      'pageResult executes distinct windows with client-side paging semantics',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        try {
+          final users = client.db.orm.model('User');
+          await users.createMany(
+            data: <JsonMap>[
+              <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+              <String, Object?>{'id': 'u2', 'email': 'a@x.com'},
+              <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
+              <String, Object?>{'id': 'u4', 'email': 'b@x.com'},
+              <String, Object?>{'id': 'u5', 'email': 'c@x.com'},
+            ],
+          );
+
+          final query = users
+              .query()
+              .orderByField('email')
+              .orderByField('id')
+              .distinctField('email');
+          final firstPage = await query.page(size: 2).pageResult();
+
+          expect(
+            firstPage.items.map((row) => row['email']).toList(growable: false),
+            <Object?>['a@x.com', 'b@x.com'],
+          );
+          expect(firstPage.pageInfo.hasPreviousPage, isFalse);
+          expect(firstPage.pageInfo.hasNextPage, isTrue);
+
+          final secondPage = await query
+              .page(size: 2, after: firstPage.pageInfo.endCursor)
+              .pageResult();
+
+          expect(
+            secondPage.items.map((row) => row['email']).toList(growable: false),
+            <Object?>['c@x.com'],
+          );
+          expect(secondPage.pageInfo.hasPreviousPage, isTrue);
+          expect(secondPage.pageInfo.hasNextPage, isFalse);
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
   });
 }
 

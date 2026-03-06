@@ -59,14 +59,17 @@ final class OrmPreparedReadQuery {
   final OrmPlan plan;
   final _OrmPreparedReadState _state;
   final Map<String, IncludeSpec> _normalizedInclude;
+  final bool _applyWindowAtClient;
 
   OrmPreparedReadQuery._({
     required ModelDelegate delegate,
     required this.plan,
     required _OrmPreparedReadState state,
     Map<String, IncludeSpec> normalizedInclude = const <String, IncludeSpec>{},
+    bool applyWindowAtClient = false,
   }) : _delegate = delegate,
        _state = state,
+       _applyWindowAtClient = applyWindowAtClient,
        _normalizedInclude = Map<String, IncludeSpec>.unmodifiable(
          Map<String, IncludeSpec>.from(normalizedInclude),
        );
@@ -106,6 +109,7 @@ final class OrmPreparedReadQuery {
         include: _normalizedInclude,
         cursor: _cursor,
         page: _page,
+        applyWindowAtClient: _applyWindowAtClient,
       ),
     });
   }
@@ -122,6 +126,7 @@ final class OrmPreparedReadQuery {
         include: _normalizedInclude,
         cursor: _cursor,
         page: _page,
+        applyWindowAtClient: _applyWindowAtClient,
       ),
     });
   }
@@ -234,9 +239,12 @@ final class _RepositoryReadExecutor {
     final rows = await _delegate._collectCollectionRows(
       response,
       action: 'all',
+      orderBy: prepared._orderBy,
       distinct: prepared._distinct,
       skip: prepared._skip,
       take: prepared._take,
+      cursor: prepared._applyWindowAtClient ? prepared._cursor : null,
+      page: prepared._applyWindowAtClient ? prepared._page : null,
     );
     final hydratedRows = await _delegate._resolveIncludeRows(
       action: action,
@@ -281,7 +289,7 @@ final class _RepositoryReadExecutor {
           skip: null,
           take: null,
           orderBy: prepared._orderBy,
-          distinct: const <String>[],
+          distinct: prepared._distinct,
           select: pageSelect,
           include: prepared._include,
           cursor: null,
@@ -299,7 +307,16 @@ final class _RepositoryReadExecutor {
       ),
     );
     final response = await _delegate._client.execute(itemsPrepared.plan);
-    final rawRows = await _collectRows(response, action: 'pageResult');
+    final rawRows = await _delegate._collectCollectionRows(
+      response,
+      action: 'pageResult',
+      orderBy: itemsPrepared._orderBy,
+      distinct: itemsPrepared._distinct,
+      skip: itemsPrepared._skip,
+      take: itemsPrepared._take,
+      cursor: itemsPrepared._applyWindowAtClient ? itemsPrepared._cursor : null,
+      page: itemsPrepared._applyWindowAtClient ? itemsPrepared._page : null,
+    );
     final overflowed = rawRows.length > page.size;
     final windowRows = _delegate._trimPageResultRows(rows: rawRows, page: page);
     final hydratedRows = await _delegate._resolveIncludeRows(
@@ -312,6 +329,7 @@ final class _RepositoryReadExecutor {
     final pageInfo = await _delegate._buildPageInfo(
       where: prepared._where,
       orderBy: prepared._orderBy,
+      distinct: prepared._distinct,
       page: page,
       rows: windowRows,
       overflowed: overflowed,
@@ -369,9 +387,12 @@ final class _RepositoryReadExecutor {
             await _delegate._collectCollectionRows(
               response,
               action: 'firstOrNull',
+              orderBy: prepared._orderBy,
               distinct: prepared._distinct,
               skip: prepared._skip,
               take: 1,
+              cursor: prepared._applyWindowAtClient ? prepared._cursor : null,
+              page: prepared._applyWindowAtClient ? prepared._page : null,
             ),
           );
     if (row == null) {
@@ -473,9 +494,12 @@ final class _RepositoryReadExecutor {
     final rows = await _delegate._collectCollectionRows(
       response,
       action: 'stream',
+      orderBy: prepared._orderBy,
       distinct: prepared._distinct,
       skip: prepared._skip,
       take: prepared._take,
+      cursor: prepared._applyWindowAtClient ? prepared._cursor : null,
+      page: prepared._applyWindowAtClient ? prepared._page : null,
     );
     if (rows.isEmpty) {
       return;
