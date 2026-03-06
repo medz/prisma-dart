@@ -1413,7 +1413,9 @@ final class TypedClientWriter {
         '  final List<${relationModel.createInputClassName}>? $memberName;',
       );
     }
-    if (relationFields.any((relation) => lookup[relation.relationModel] != null)) {
+    if (relationFields.any(
+      (relation) => lookup[relation.relationModel] != null,
+    )) {
       buffer.writeln();
       buffer.writeln('  const ${model.nestedCreateInputClassName}({');
       for (final relation in relationFields) {
@@ -1434,7 +1436,9 @@ final class TypedClientWriter {
     }
     buffer.writeln();
     buffer.writeln('  Map<String, List<JsonMap>> toJson() {');
-    if (!relationFields.any((relation) => lookup[relation.relationModel] != null)) {
+    if (!relationFields.any(
+      (relation) => lookup[relation.relationModel] != null,
+    )) {
       buffer.writeln('    return const <String, List<JsonMap>>{};');
     } else {
       buffer.writeln('    final create = <String, List<JsonMap>>{};');
@@ -1647,7 +1651,9 @@ final class TypedClientWriter {
     buffer.writeln('    required int size,');
     buffer.writeln('    ${model.cursorInputClassName}? after,');
     buffer.writeln('    ${model.cursorInputClassName}? before,');
-    buffer.writeln('  }) => query().page(size: size, after: after, before: before);');
+    buffer.writeln(
+      '  }) => query().page(size: size, after: after, before: before);',
+    );
     buffer.writeln();
 
     buffer.writeln(
@@ -2621,7 +2627,9 @@ final class TypedClientWriter {
     buffer.writeln('    if (after != null && before != null) {');
     buffer.writeln('      throw PlanCursorWindowInvalidException(');
     buffer.writeln("        reason: 'pageDirectionAmbiguous',");
-    buffer.writeln("        details: <String, Object?>{'model': '$runtimeName'},");
+    buffer.writeln(
+      "        details: <String, Object?>{'model': '$runtimeName'},",
+    );
     buffer.writeln('      );');
     buffer.writeln('    }');
     buffer.writeln('    return ${model.queryClassName}._(');
@@ -2782,50 +2790,130 @@ final class TypedClientWriter {
       buffer.writeln();
     }
 
-    buffer.writeln('  ModelQuery _runtimeQuery() {');
     buffer.writeln(
-      '    var query = _delegate._delegate.query(',
+      '  List<OrmOrderBy> get _runtimeOrderBy => _orderBy.map((entry) => entry.value).toList(growable: false);',
     );
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
+    buffer.writeln();
     buffer.writeln(
-      '      orderBy: _orderBy.map((entry) => entry.value).toList(growable: false),',
+      '  List<String> get _runtimeDistinct => _distinct.map((entry) => entry.value).toList(growable: false);',
     );
+    buffer.writeln();
     buffer.writeln(
-      '      distinct: _distinct.map((entry) => entry.value).toList(growable: false),',
+      '  List<String> get _runtimeSelect => _select?.toFields() ?? const <String>[];',
     );
-    buffer.writeln('      select: _select?.toFields() ?? const <String>[],');
+    buffer.writeln();
     buffer.writeln(
-      '      include: _include?.toIncludeMap() ?? const <String, IncludeSpec>{},',
+      '  Map<String, IncludeSpec> get _runtimeInclude => _include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
     );
-    buffer.writeln('    );');
-    buffer.writeln('    if (_cursor != null) {');
-    buffer.writeln('      query = query.cursor(_cursor!.toJson());');
+    buffer.writeln();
+    buffer.writeln('  JsonMap? get _runtimeCursor => _cursor?.toJson();');
+    buffer.writeln();
+    buffer.writeln('  OrmReadPagePlan? get _runtimePage {');
+    buffer.writeln('    final size = _pageSize;');
+    buffer.writeln('    if (size == null) {');
+    buffer.writeln('      return null;');
     buffer.writeln('    }');
-    buffer.writeln('    if (_pageSize != null) {');
-    buffer.writeln('      query = query.page(');
-    buffer.writeln('        size: _pageSize!,');
-    buffer.writeln("        after: _pageAfter?.toJson(),");
-    buffer.writeln("        before: _pageBefore?.toJson(),");
+    buffer.writeln('    return OrmReadPagePlan(');
+    buffer.writeln('      size: size,');
+    buffer.writeln('      after: _pageAfter?.toJson(),');
+    buffer.writeln('      before: _pageBefore?.toJson(),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  void _assertReadExecutionSupported(String terminal) {');
+    buffer.writeln(
+      '    if ((_cursor != null || _pageSize != null) && _distinct.isNotEmpty) {',
+    );
+    buffer.writeln('      throw runtimeError(');
+    buffer.writeln("        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',");
+    buffer.writeln(
+      "        'Cursor and page windows do not support distinct yet.',",
+    );
+    buffer.writeln('        details: <String, Object?>{');
+    buffer.writeln("          'model': '$runtimeName',");
+    buffer.writeln("          'terminal': terminal,");
+    buffer.writeln("          'distinct': _runtimeDistinct,");
+    buffer.writeln('        },');
     buffer.writeln('      );');
     buffer.writeln('    }');
-    buffer.writeln('    return query;');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  void _assertMutationQueryState({');
+    buffer.writeln('    required String action,');
+    buffer.writeln('    bool allowWhere = true,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    final invalidKeys = <String>[');
+    buffer.writeln("      if (!allowWhere && !_where.isEmpty) 'where',");
+    buffer.writeln("      if (_skip != null) 'skip',");
+    buffer.writeln("      if (_take != null) 'take',");
+    buffer.writeln("      if (_orderBy.isNotEmpty) 'orderBy',");
+    buffer.writeln("      if (_distinct.isNotEmpty) 'distinct',");
+    buffer.writeln("      if (_cursor != null) 'cursor',");
+    buffer.writeln("      if (_pageSize != null) 'page',");
+    buffer.writeln('    ];');
+    buffer.writeln('    if (invalidKeys.isEmpty) {');
+    buffer.writeln('      return;');
+    buffer.writeln('    }');
+    buffer.writeln();
+    buffer.writeln('    throw runtimeError(');
+    buffer.writeln("      'PLAN.MUTATION_QUERY_STATE_INVALID',");
+    buffer.writeln(
+      "      '\$action does not allow query state keys: \${invalidKeys.join(', ')}.',",
+    );
+    buffer.writeln('      details: <String, Object?>{');
+    buffer.writeln("        'model': '$runtimeName',");
+    buffer.writeln("        'action': action,");
+    buffer.writeln("        'invalidKeys': invalidKeys,");
+    buffer.writeln('      },');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<OrmPlan> toPlan() {');
-    buffer.writeln('    return _runtimeQuery().toPlan();');
+    buffer.writeln('    return _delegate._delegate.toPlan(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      distinct: _runtimeDistinct,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<JsonMap> inspectPlan() {');
-    buffer.writeln('    return _runtimeQuery().inspectPlan();');
+    buffer.writeln('    return _delegate._delegate.inspectPlan(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      distinct: _runtimeDistinct,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<List<${model.dataClassName}>> all() async {');
-    buffer.writeln('    final rows = await _runtimeQuery().all();');
+    buffer.writeln("    _assertReadExecutionSupported('all');");
+    buffer.writeln('    final rows = await _delegate._delegate.all(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      distinct: _runtimeDistinct,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
     buffer.writeln(
       '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
     );
@@ -2835,7 +2923,24 @@ final class TypedClientWriter {
     buffer.writeln(
       '  Future<OrmPageResult<${model.dataClassName}>> pageResult() async {',
     );
-    buffer.writeln('    final result = await _runtimeQuery().pageResult();');
+    buffer.writeln("    _assertReadExecutionSupported('pageResult');");
+    buffer.writeln('    final page = _runtimePage;');
+    buffer.writeln('    if (page == null) {');
+    buffer.writeln('      throw runtimeError(');
+    buffer.writeln("        'PLAN.PAGE_RESULT_REQUIRES_PAGE_WINDOW',");
+    buffer.writeln("        'pageResult() requires page() first.',");
+    buffer.writeln(
+      "        details: <String, Object?>{'model': '$runtimeName'},",
+    );
+    buffer.writeln('      );');
+    buffer.writeln('    }');
+    buffer.writeln('    final result = await _delegate._delegate.pageResult(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('      page: page,');
+    buffer.writeln('    );');
     buffer.writeln(
       '    return result.mapItems(${model.dataClassName}.fromJson);',
     );
@@ -2843,7 +2948,19 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<${model.dataClassName}?> oneOrNull() async {');
-    buffer.writeln('    final row = await _runtimeQuery().oneOrNull();');
+    buffer.writeln("    _assertReadExecutionSupported('oneOrNull');");
+    buffer.writeln('    if (_runtimeCursor != null || _runtimePage != null) {');
+    buffer.writeln('      final rows = await all();');
+    buffer.writeln('      if (rows.isEmpty) {');
+    buffer.writeln('        return null;');
+    buffer.writeln('      }');
+    buffer.writeln('      return rows.first;');
+    buffer.writeln('    }');
+    buffer.writeln('    final row = await _delegate._delegate.oneOrNull(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
     buffer.writeln('    }');
@@ -2852,7 +2969,22 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Future<${model.dataClassName}?> firstOrNull() async {');
-    buffer.writeln('    final row = await _runtimeQuery().firstOrNull();');
+    buffer.writeln("    _assertReadExecutionSupported('firstOrNull');");
+    buffer.writeln('    if (_runtimeCursor != null || _runtimePage != null) {');
+    buffer.writeln('      final rows = await all();');
+    buffer.writeln('      if (rows.isEmpty) {');
+    buffer.writeln('        return null;');
+    buffer.writeln('      }');
+    buffer.writeln('      return rows.first;');
+    buffer.writeln('    }');
+    buffer.writeln('    final row = await _delegate._delegate.firstOrNull(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      distinct: _runtimeDistinct,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
     buffer.writeln('    }');
@@ -2861,14 +2993,35 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('  Stream<${model.dataClassName}> stream() async* {');
-    buffer.writeln('    await for (final row in _runtimeQuery().stream()) {');
+    buffer.writeln("    _assertReadExecutionSupported('stream');");
+    buffer.writeln('    await for (final row in _delegate._delegate.stream(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      distinct: _runtimeDistinct,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    )) {');
     buffer.writeln('      yield ${model.dataClassName}.fromJson(row);');
     buffer.writeln('    }');
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<JsonMap> explain() async {');
-    buffer.writeln('    return _runtimeQuery().explain();');
+    buffer.writeln('  Future<JsonMap> explain() {');
+    buffer.writeln('    return _delegate._delegate.explain(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      distinct: _runtimeDistinct,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2890,7 +3043,12 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    return _runtimeQuery().aggregate(');
+    buffer.writeln("    _assertReadExecutionSupported('aggregate');");
+    buffer.writeln('    return _delegate._delegate.aggregate(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln(
       '      count: count.map((entry) => entry.value).toList(growable: false),',
@@ -2936,6 +3094,24 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
+    buffer.writeln("    _assertReadExecutionSupported('groupBy');");
+    buffer.writeln('    if (_cursor != null || _pageSize != null) {');
+    buffer.writeln('      throw runtimeError(');
+    buffer.writeln("        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',");
+    buffer.writeln(
+      "        'GroupBy does not support cursor or page windows yet.',",
+    );
+    buffer.writeln('        details: <String, Object?>{');
+    buffer.writeln("          'model': '$runtimeName',");
+    buffer.writeln(
+      "          if (_runtimeCursor != null) 'cursor': _runtimeCursor,",
+    );
+    buffer.writeln(
+      "          if (_runtimePage != null) 'page': _runtimePage!.toJson(),",
+    );
+    buffer.writeln('        },');
+    buffer.writeln('      );');
+    buffer.writeln('    }');
     buffer.writeln('    return _delegate.groupBy(');
     buffer.writeln(
       '      by: by.map((entry) => entry.value).toList(growable: false),',
@@ -2946,21 +3122,11 @@ final class TypedClientWriter {
     buffer.writeln('      typedHaving: typedHaving,');
     buffer.writeln('      groupByOrderBy: groupByOrderBy,');
     buffer.writeln('      countAll: countAll,');
-    buffer.writeln(
-      '      count: count,',
-    );
-    buffer.writeln(
-      '      min: min,',
-    );
-    buffer.writeln(
-      '      max: max,',
-    );
-    buffer.writeln(
-      '      sum: sum,',
-    );
-    buffer.writeln(
-      '      avg: avg,',
-    );
+    buffer.writeln('      count: count,');
+    buffer.writeln('      min: min,');
+    buffer.writeln('      max: max,');
+    buffer.writeln('      sum: sum,');
+    buffer.writeln('      avg: avg,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2968,10 +3134,15 @@ final class TypedClientWriter {
     buffer.writeln(
       '  Future<List<${model.dataClassName}>> createMany({required List<${model.createInputClassName}> data}) async {',
     );
-    buffer.writeln('    final rows = await _runtimeQuery().createMany(');
+    buffer.writeln(
+      "    _assertMutationQueryState(action: 'createMany', allowWhere: false);",
+    );
+    buffer.writeln('    final rows = await _delegate._delegate.createMany(');
     buffer.writeln(
       '      data: data.map((entry) => entry.toJson()).toList(growable: false),',
     );
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln(
       '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
@@ -2979,17 +3150,19 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln(
-      '  Future<${model.dataClassName}?> updateNested({',
-    );
+    buffer.writeln('  Future<${model.dataClassName}?> updateNested({');
     buffer.writeln('    required ${model.updateInputClassName} data,');
     buffer.writeln(
       '    ${model.nestedCreateInputClassName} create = const ${model.nestedCreateInputClassName}(),',
     );
     buffer.writeln('  }) async {');
-    buffer.writeln('    final row = await _runtimeQuery().updateNested(');
+    buffer.writeln("    _assertMutationQueryState(action: 'updateNested');");
+    buffer.writeln('    final row = await _delegate._delegate.updateNested(');
+    buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      data: data.toJson(),');
     buffer.writeln('      create: create.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
     buffer.writeln('    );');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
@@ -3001,22 +3174,43 @@ final class TypedClientWriter {
     buffer.writeln(
       '  Future<int> updateMany({required ${model.updateInputClassName} data}) {',
     );
-    buffer.writeln('    return _runtimeQuery().updateMany(data: data.toJson());');
+    buffer.writeln("    _assertMutationQueryState(action: 'updateMany');");
+    buffer.writeln('    return _delegate._delegate.updateMany(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<int> deleteMany() {');
-    buffer.writeln('    return _runtimeQuery().deleteMany();');
+    buffer.writeln("    _assertMutationQueryState(action: 'deleteMany');");
+    buffer.writeln('    return _delegate._delegate.deleteMany(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<int> count() {');
-    buffer.writeln('    return _runtimeQuery().count();');
+    buffer.writeln("    _assertReadExecutionSupported('count');");
+    buffer.writeln('    return _delegate._delegate.count(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<bool> exists() {');
-    buffer.writeln('    return _runtimeQuery().exists();');
+    buffer.writeln("    _assertReadExecutionSupported('exists');");
+    buffer.writeln('    return _delegate._delegate.exists(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();

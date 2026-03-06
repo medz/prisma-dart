@@ -661,11 +661,23 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?ModelQuery\s+_runtimeQuery\(\)[\s\S]*?Future<List<UserData>>\s+all\(\)\s+async\s*\{[\s\S]*?_runtimeQuery\(\)\.all\(\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?List<OrmOrderBy>\s+get\s+_runtimeOrderBy[\s\S]*?Future<List<UserData>>\s+all\(\)\s+async\s*\{[\s\S]*?_delegate\._delegate\.all\(',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery read execution to flow through runtime query builder.',
+              'Expected UserQuery read execution to compile typed state straight to delegate execution.',
+        );
+        expect(
+          generatedSource.contains('ModelQuery _runtimeQuery('),
+          isFalse,
+          reason:
+              'Expected generated query surface to stop materializing runtime ModelQuery bridge methods.',
+        );
+        expect(
+          generatedSource.contains('_delegate._delegate.query('),
+          isFalse,
+          reason:
+              'Expected generated query surface to stop re-entering dynamic query authoring.',
         );
         expect(
           RegExp(
@@ -687,24 +699,21 @@ typedef Post = ({
             r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserCursorInput\?\s+after,\s*UserCursorInput\?\s+before,',
           ).hasMatch(generatedSource),
           isTrue,
-          reason:
-              'Expected UserDelegate.page(...) to use typed cursor inputs.',
+          reason: 'Expected UserDelegate.page(...) to use typed cursor inputs.',
         );
         expect(
           RegExp(
             r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserCursorInput\s+cursor\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
-          reason:
-              'Expected UserQuery.cursor(...) to use typed cursor input.',
+          reason: 'Expected UserQuery.cursor(...) to use typed cursor input.',
         );
         expect(
           RegExp(
             r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserCursorInput\?\s+after,\s*UserCursorInput\?\s+before,',
           ).hasMatch(generatedSource),
           isTrue,
-          reason:
-              'Expected UserQuery.page(...) to use typed cursor inputs.',
+          reason: 'Expected UserQuery.page(...) to use typed cursor inputs.',
         );
         expect(
           RegExp(
@@ -715,17 +724,19 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\s*\)[\s\S]*?_runtimeQuery\(\)\.toPlan\(\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\s*\)[\s\S]*?_delegate\._delegate\.toPlan\(',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserQuery.toPlan() in generated source.',
+          reason:
+              'Expected UserQuery.toPlan() to compile typed state directly through delegate planning.',
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(\s*\)[\s\S]*?_runtimeQuery\(\)\.inspectPlan\(\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(\s*\)[\s\S]*?_delegate\._delegate\.inspectPlan\(',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserQuery.inspectPlan() in generated source.',
+          reason:
+              'Expected UserQuery.inspectPlan() to compile typed state directly through delegate inspection.',
         );
         expect(
           RegExp(
@@ -736,10 +747,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+explain\(\s*\)\s+async[\s\S]*?_runtimeQuery\(\)\.explain\(\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+explain\(\s*\)[\s\S]*?_delegate\._delegate\.explain\(',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserQuery.explain() to route through runtime query explain.',
+          reason:
+              'Expected UserQuery.explain() to compile typed state directly through delegate explain.',
         );
         expect(
           RegExp(
@@ -750,11 +762,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPageResult<UserData>>\s+pageResult\(\s*\)\s+async[\s\S]*?_runtimeQuery\(\)\.pageResult\(\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPageResult<UserData>>\s+pageResult\(\s*\)\s+async[\s\S]*?_delegate\._delegate\.pageResult\(',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.pageResult() to expose structured page envelope mapping.',
+              'Expected UserQuery.pageResult() to expose structured page envelope mapping without runtime query bridge.',
         );
         expect(
           RegExp(
