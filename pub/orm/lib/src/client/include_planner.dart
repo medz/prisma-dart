@@ -57,7 +57,7 @@ final class _RepositoryIncludePlanner {
         model: _delegate.modelName,
         relationName: relationName,
       );
-      final relatedDelegate = _delegate._client.db.orm.model(
+      final relatedDelegate = _delegate._runtime._resolveDelegate(
         relation.relatedModel,
       );
       _delegate._validateIncludePagination(include: relationInclude);
@@ -140,7 +140,7 @@ final class _RepositoryIncludePlanner {
         model: _delegate.modelName,
         relationName: relationName,
       );
-      final relatedDelegate = _delegate._client.db.orm.model(
+      final relatedDelegate = _delegate._runtime._resolveDelegate(
         relation.relatedModel,
       );
 

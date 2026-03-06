@@ -14,7 +14,7 @@ part 'mutation_repository.dart';
 
 typedef CollectionFactory =
     ModelDelegate Function({
-      required OrmDelegateContext client,
+      required OrmCollectionContext client,
       required String modelName,
     });
 
@@ -191,19 +191,25 @@ abstract interface class OrmDbContext {
   OrmDbNamespace get db;
 }
 
-abstract interface class OrmDelegateContext implements OrmDbContext {
+abstract interface class OrmExecutionContext {
   OrmContract get contract;
 
+  Future<EngineResponse> execute(OrmPlan plan);
+}
+
+abstract interface class OrmCollectionContext implements OrmExecutionContext {
   IncludeExecutionStrategySelector get includeStrategySelector;
 
   int get maxIncludeDepth;
 
-  Future<EngineResponse> execute(OrmPlan plan);
-
   Future<T> transaction<T>(Future<T> Function(OrmDbNamespace txDb) run);
 }
 
-final class OrmClient implements OrmDelegateContext {
+abstract interface class _OrmDelegateRuntime implements OrmCollectionContext {
+  ModelDelegate _resolveDelegate(String modelKey);
+}
+
+final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
   @override
   final OrmContract contract;
   final OrmEngine engine;
@@ -212,8 +218,8 @@ final class OrmClient implements OrmDelegateContext {
   final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
   late final OrmDbNamespace _db = OrmDbNamespace(
-    context: this,
-    resolveModel: _model,
+    sqlContext: this,
+    resolveDelegate: _resolveDelegate,
   );
   @override
   final IncludeExecutionStrategySelector includeStrategySelector;
@@ -313,7 +319,8 @@ final class OrmClient implements OrmDelegateContext {
   @override
   OrmDbNamespace get db => _db;
 
-  ModelDelegate _model(String modelKey) {
+  @override
+  ModelDelegate _resolveDelegate(String modelKey) {
     final modelName = _resolveModelOrThrow(modelKey: modelKey);
     return _delegates.putIfAbsent(modelName, () {
       final factory = _collectionRegistry[modelName];
@@ -356,7 +363,7 @@ final class OrmClient implements OrmDelegateContext {
   }
 }
 
-final class OrmScopedClient implements OrmDelegateContext {
+final class OrmScopedClient implements OrmDbContext, _OrmDelegateRuntime {
   @override
   final OrmContract contract;
   final Future<EngineResponse> Function(OrmPlan plan) _executePlan;
@@ -364,8 +371,8 @@ final class OrmScopedClient implements OrmDelegateContext {
   final Map<String, CollectionFactory> _collectionRegistry;
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
   late final OrmDbNamespace _db = OrmDbNamespace(
-    context: this,
-    resolveModel: _model,
+    sqlContext: this,
+    resolveDelegate: _resolveDelegate,
   );
   @override
   final IncludeExecutionStrategySelector includeStrategySelector;
@@ -383,7 +390,8 @@ final class OrmScopedClient implements OrmDelegateContext {
        _modelAliases = modelAliases,
        _collectionRegistry = collectionRegistry;
 
-  ModelDelegate _model(String modelKey) {
+  @override
+  ModelDelegate _resolveDelegate(String modelKey) {
     final modelName = _resolveModelOrThrow(modelKey: modelKey);
     return _delegates.putIfAbsent(modelName, () {
       final factory = _collectionRegistry[modelName];
@@ -438,17 +446,20 @@ final class OrmSqlMutationResult {
 }
 
 final class OrmDbNamespace {
-  final OrmDelegateContext _context;
-  final ModelDelegate Function(String modelKey) _resolveModel;
+  final OrmExecutionContext _sqlContext;
+  final ModelDelegate Function(String modelKey) _resolveDelegate;
 
-  late final OrmModelNamespace orm = OrmModelNamespace(_resolveModel);
-  late final OrmSqlApi sql = OrmSqlApi(_context);
+  late final OrmModelNamespace orm = OrmModelNamespace(_resolveDelegate);
+  late final OrmSqlApi sql = OrmSqlApi(
+    _sqlContext,
+    resolveDelegate: _resolveDelegate,
+  );
 
   OrmDbNamespace({
-    required OrmDelegateContext context,
-    required ModelDelegate Function(String modelKey) resolveModel,
-  }) : _context = context,
-       _resolveModel = resolveModel;
+    required OrmExecutionContext sqlContext,
+    required ModelDelegate Function(String modelKey) resolveDelegate,
+  }) : _sqlContext = sqlContext,
+       _resolveDelegate = resolveDelegate;
 }
 
 final class OrmModelNamespace {
@@ -460,42 +471,58 @@ final class OrmModelNamespace {
 }
 
 final class OrmSqlApi {
-  final OrmDelegateContext _client;
+  final OrmExecutionContext _client;
+  final ModelDelegate Function(String modelKey) _resolveDelegate;
 
-  const OrmSqlApi(this._client);
+  const OrmSqlApi(
+    this._client, {
+    required ModelDelegate Function(String modelKey) resolveDelegate,
+  }) : _resolveDelegate = resolveDelegate;
 
   OrmSqlSelectBuilder from(String modelKey) {
     return OrmSqlSelectBuilder._(
       client: _client,
-      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+      modelName: _resolveSqlModelName(
+        resolveDelegate: _resolveDelegate,
+        modelKey: modelKey,
+      ),
     );
   }
 
   OrmSqlInsertBuilder insertInto(String modelKey) {
     return OrmSqlInsertBuilder._(
       client: _client,
-      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+      modelName: _resolveSqlModelName(
+        resolveDelegate: _resolveDelegate,
+        modelKey: modelKey,
+      ),
     );
   }
 
   OrmSqlUpdateBuilder update(String modelKey) {
     return OrmSqlUpdateBuilder._(
       client: _client,
-      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+      modelName: _resolveSqlModelName(
+        resolveDelegate: _resolveDelegate,
+        modelKey: modelKey,
+      ),
     );
   }
 
   OrmSqlDeleteBuilder deleteFrom(String modelKey) {
     return OrmSqlDeleteBuilder._(
       client: _client,
-      modelName: _resolveSqlModelName(client: _client, modelKey: modelKey),
+      modelName: _resolveSqlModelName(
+        resolveDelegate: _resolveDelegate,
+        modelKey: modelKey,
+      ),
     );
   }
 }
 
 @immutable
 final class OrmSqlSelectBuilder {
-  final OrmDelegateContext _client;
+  final OrmExecutionContext _client;
   final String _modelName;
   final JsonMap _where;
   final int? _skip;
@@ -505,7 +532,7 @@ final class OrmSqlSelectBuilder {
   final List<String> _select;
 
   OrmSqlSelectBuilder._({
-    required OrmDelegateContext client,
+    required OrmExecutionContext client,
     required String modelName,
     JsonMap where = const <String, Object?>{},
     int? skip,
@@ -609,13 +636,13 @@ final class OrmSqlSelectBuilder {
 
 @immutable
 final class OrmSqlInsertBuilder {
-  final OrmDelegateContext _client;
+  final OrmExecutionContext _client;
   final String _modelName;
   final JsonMap _data;
   final List<String> _select;
 
   OrmSqlInsertBuilder._({
-    required OrmDelegateContext client,
+    required OrmExecutionContext client,
     required String modelName,
     JsonMap data = const <String, Object?>{},
     List<String> select = const <String>[],
@@ -668,14 +695,14 @@ final class OrmSqlInsertBuilder {
 
 @immutable
 final class OrmSqlUpdateBuilder {
-  final OrmDelegateContext _client;
+  final OrmExecutionContext _client;
   final String _modelName;
   final JsonMap _where;
   final JsonMap _data;
   final List<String> _select;
 
   OrmSqlUpdateBuilder._({
-    required OrmDelegateContext client,
+    required OrmExecutionContext client,
     required String modelName,
     JsonMap where = const <String, Object?>{},
     JsonMap data = const <String, Object?>{},
@@ -740,13 +767,13 @@ final class OrmSqlUpdateBuilder {
 
 @immutable
 final class OrmSqlDeleteBuilder {
-  final OrmDelegateContext _client;
+  final OrmExecutionContext _client;
   final String _modelName;
   final JsonMap _where;
   final List<String> _select;
 
   OrmSqlDeleteBuilder._({
-    required OrmDelegateContext client,
+    required OrmExecutionContext client,
     required String modelName,
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
@@ -800,15 +827,15 @@ final class OrmSqlDeleteBuilder {
 const Object _sqlKeepToken = Object();
 
 String _resolveSqlModelName({
-  required OrmDelegateContext client,
+  required ModelDelegate Function(String modelKey) resolveDelegate,
   required String modelKey,
 }) {
-  final delegate = client.db.orm.model(modelKey);
+  final delegate = resolveDelegate(modelKey);
   return delegate.modelName;
 }
 
 OrmPlan _buildSqlPlan({
-  required OrmDelegateContext client,
+  required OrmExecutionContext client,
   required String modelName,
   required OrmAction action,
   OrmMutationResultMode? mutationResultMode,
@@ -849,14 +876,16 @@ final class _PreparedReadPlan {
 }
 
 class ModelDelegate {
-  final OrmDelegateContext _client;
+  final OrmCollectionContext _client;
   final String modelName;
 
-  ModelDelegate({required OrmDelegateContext client, required this.modelName})
+  ModelDelegate({required OrmCollectionContext client, required this.modelName})
     : _client = client;
 
   @protected
-  OrmDelegateContext get client => _client;
+  OrmCollectionContext get client => _client;
+
+  _OrmDelegateRuntime get _runtime => _client as _OrmDelegateRuntime;
 
   ModelQuery query() => ModelQuery._(this, const ModelQueryState());
 
@@ -2780,8 +2809,8 @@ class ModelDelegate {
     required JsonMap relatedWhere,
     required bool include,
   }) async {
-    final relatedRows = await _client.db.orm
-        .model(relation.relatedModel)
+    final relatedRows = await _runtime
+        ._resolveDelegate(relation.relatedModel)
         ._readAllInternal(
           action: OrmAction.read,
           where: relatedWhere,

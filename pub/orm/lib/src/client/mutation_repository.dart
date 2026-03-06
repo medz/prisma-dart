@@ -358,7 +358,9 @@ final class _RepositoryMutationExecutor {
         model: _delegate.modelName,
         relationName: entry.key,
       );
-      final related = _delegate._client.db.orm.model(relation.relatedModel);
+      final related = _delegate._runtime._resolveDelegate(
+        relation.relatedModel,
+      );
       final relatedExecutor = _RepositoryMutationExecutor(related);
       for (final child in entry.value) {
         final linkedData = _delegate._linkNestedData(
@@ -413,7 +415,9 @@ final class _RepositoryMutationExecutor {
         model: _delegate.modelName,
         relationName: entry.key,
       );
-      final related = _delegate._client.db.orm.model(relation.relatedModel);
+      final related = _delegate._runtime._resolveDelegate(
+        relation.relatedModel,
+      );
       final relatedExecutor = _RepositoryMutationExecutor(related);
       for (final child in entry.value) {
         final linkedData = _delegate._linkNestedData(

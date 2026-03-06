@@ -2231,7 +2231,7 @@ void main() {
         engine: MemoryEngine(),
         collections: <String, CollectionFactory>{
           'users':
-              ({required OrmDelegateContext client, required String modelName}) {
+              ({required OrmCollectionContext client, required String modelName}) {
                 return _UsersCollection(client: client, modelName: modelName);
               },
         },
