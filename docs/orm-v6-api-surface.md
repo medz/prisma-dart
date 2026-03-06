@@ -9,6 +9,9 @@ completeness. The rule for this phase is simple:
 
 Placeholder methods must throw `RUNTIME.API_NOT_IMPLEMENTED`.
 
+`plan-only` means the API can build or inspect structured plans, but execution
+still throws the stable placeholder error.
+
 ## Runtime Root
 
 Single entrypoint:
@@ -69,8 +72,8 @@ Read authoring:
 | `skip(...)` | implemented |
 | `take(...)` | implemented |
 | `unbounded()` | implemented |
-| `cursor(...)` | placeholder |
-| `page(...)` | placeholder |
+| `cursor(...)` | plan-only |
+| `page(...)` | plan-only |
 
 Read terminals:
 
@@ -85,7 +88,7 @@ Read terminals:
 | `exists()` | implemented |
 | `aggregate(...)` | implemented |
 | `groupBy(...)` | implemented |
-| `explain()` | placeholder |
+| `explain()` | plan-only |
 
 ## ORM Mutation Surface
 

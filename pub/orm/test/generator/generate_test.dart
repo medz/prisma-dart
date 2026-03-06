@@ -659,11 +659,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserData>>\s+all\(\)\s*\{[\s\S]*?include:\s*_include,',
+            r'class\s+UserQuery\s*\{[\s\S]*?ModelQuery\s+_runtimeQuery\(\)[\s\S]*?Future<List<UserData>>\s+all\(\)\s+async\s*\{[\s\S]*?_runtimeQuery\(\)\.all\(\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery execution path to keep include state forwarding from query chain.',
+              'Expected UserQuery read execution to flow through runtime query builder.',
         );
         expect(
           RegExp(
@@ -674,11 +674,27 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserWhereUniqueInput\s+cursor\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.cursor(...) convenience helper in generated source.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?UserQuery\s+page\(\{\s*required\s+int\s+size,\s*UserWhereUniqueInput\?\s+after,\s*UserWhereUniqueInput\?\s+before,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserDelegate.page(...) convenience helper in generated source.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+cursor\(\s*UserWhereUniqueInput\s+cursor\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.cursor(...) placeholder to use typed unique cursor input.',
+              'Expected UserQuery.cursor(...) to use typed unique cursor input.',
         );
         expect(
           RegExp(
@@ -686,7 +702,7 @@ typedef Post = ({
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.page(...) placeholder to use typed unique cursor inputs.',
+              'Expected UserQuery.page(...) to use typed unique cursor inputs.',
         );
         expect(
           RegExp(
@@ -697,7 +713,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\s*\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\s*\)[\s\S]*?_runtimeQuery\(\)\.toPlan\(\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason: 'Expected UserQuery.toPlan() in generated source.',
@@ -711,10 +727,10 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+explain\(\s*\)\s+async',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+explain\(\s*\)\s+async[\s\S]*?_runtimeQuery\(\)\.explain\(\)',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserQuery.explain() placeholder in generated source.',
+          reason: 'Expected UserQuery.explain() to route through runtime query explain.',
         );
         expect(
           RegExp(

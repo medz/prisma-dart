@@ -663,6 +663,98 @@ final class OrmRuntimeCore implements RuntimeCore {
     if (plan.take case final take? when take < 0) {
       throw PlanInvalidPaginationException(key: 'take', value: take);
     }
+
+    final cursor = plan.cursor;
+    if (cursor != null) {
+      if (cursor.values.isEmpty) {
+        throw PlanCursorWindowInvalidException(
+          reason: 'cursorEmpty',
+          details: <String, Object?>{'model': model.name},
+        );
+      }
+      _assertKnownFields(
+        model: model,
+        fields: cursor.values.keys,
+        source: 'cursor',
+      );
+    }
+
+    final page = plan.page;
+    if (page != null) {
+      if (page.size <= 0) {
+        throw PlanCursorWindowInvalidException(
+          reason: 'pageSizeInvalid',
+          details: <String, Object?>{'model': model.name, 'size': page.size},
+        );
+      }
+      if (page.after != null && page.before != null) {
+        throw PlanCursorWindowInvalidException(
+          reason: 'pageDirectionAmbiguous',
+          details: <String, Object?>{'model': model.name},
+        );
+      }
+      if (page.after case final after? when after.isEmpty) {
+        throw PlanCursorWindowInvalidException(
+          reason: 'pageAfterEmpty',
+          details: <String, Object?>{'model': model.name},
+        );
+      }
+      if (page.before case final before? when before.isEmpty) {
+        throw PlanCursorWindowInvalidException(
+          reason: 'pageBeforeEmpty',
+          details: <String, Object?>{'model': model.name},
+        );
+      }
+      if (cursor != null) {
+        throw PlanCursorWindowInvalidException(
+          reason: 'cursorAndPageTogether',
+          details: <String, Object?>{'model': model.name},
+        );
+      }
+      if (plan.skip != null || plan.take != null) {
+        throw PlanCursorWindowInvalidException(
+          reason: 'pageWithOffsetLimit',
+          details: <String, Object?>{
+            'model': model.name,
+            if (plan.skip != null) 'skip': plan.skip,
+            if (plan.take != null) 'take': plan.take,
+          },
+        );
+      }
+      if (page.after != null) {
+        _assertKnownFields(
+          model: model,
+          fields: page.after!.keys,
+          source: 'page.after',
+        );
+      }
+      if (page.before != null) {
+        _assertKnownFields(
+          model: model,
+          fields: page.before!.keys,
+          source: 'page.before',
+        );
+      }
+    }
+
+    if (cursor != null) {
+      throw ApiNotImplementedException(
+        surface: 'orm.plan.cursor.execute',
+        details: <String, Object?>{
+          'model': model.name,
+          'cursor': cursor.toJson(),
+        },
+      );
+    }
+    if (page != null) {
+      throw ApiNotImplementedException(
+        surface: 'orm.plan.page.execute',
+        details: <String, Object?>{
+          'model': model.name,
+          'page': page.toJson(),
+        },
+      );
+    }
   }
 
   void _assertMutationPlan({

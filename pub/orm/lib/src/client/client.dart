@@ -989,6 +989,14 @@ class ModelDelegate {
 
   ModelQuery take(int value) => query().take(value);
 
+  ModelQuery cursor(JsonMap cursor) => query().cursor(cursor);
+
+  ModelQuery page({
+    required int size,
+    JsonMap? after,
+    JsonMap? before,
+  }) => query().page(size: size, after: after, before: before);
+
   ModelQuery select(List<String> fields) => query().select(fields);
 
   ModelQuery selectWith(
@@ -1024,6 +1032,8 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
   }) async {
     final prepared = await _buildReadPlan(
       resultMode: OrmReadResultMode.all,
@@ -1034,6 +1044,8 @@ class ModelDelegate {
       distinct: distinct,
       select: select,
       include: include,
+      cursor: cursor,
+      page: page,
     );
     return prepared.plan;
   }
@@ -1406,6 +1418,8 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
     JsonMap annotations = const <String, Object?>{},
     OrmRepositoryTrace? repositoryTrace,
   }) async {
@@ -1463,6 +1477,8 @@ class ModelDelegate {
         distinct: isCollectionRead ? distinct : const <String>[],
         select: readSelect,
         include: _buildOrmIncludePlanMap(normalizedInclude),
+        cursor: cursor == null ? null : OrmReadCursorPlan(values: cursor),
+        page: page,
         resultMode: resultMode,
       ),
     );
@@ -3111,6 +3127,8 @@ final class ModelQueryState {
   final List<String> distinct;
   final List<String> select;
   final Map<String, IncludeSpec> include;
+  final JsonMap? cursor;
+  final OrmReadPagePlan? page;
 
   const ModelQueryState({
     this.where = const <String, Object?>{},
@@ -3120,6 +3138,8 @@ final class ModelQueryState {
     this.distinct = const <String>[],
     this.select = const <String>[],
     this.include = const <String, IncludeSpec>{},
+    this.cursor,
+    this.page,
   });
 }
 
@@ -3144,6 +3164,10 @@ final class ModelQuery {
 
   Map<String, IncludeSpec> get includeValues => _state.include;
 
+  JsonMap? get cursorValues => _state.cursor;
+
+  OrmReadPagePlan? get pageWindow => _state.page;
+
   ModelQuery where(JsonMap where, {bool merge = true}) {
     final nextWhere = merge
         ? <String, Object?>{..._state.where, ...where}
@@ -3157,6 +3181,8 @@ final class ModelQuery {
         distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
+        cursor: _state.cursor,
+        page: _state.page,
       ),
     );
   }
@@ -3183,6 +3209,8 @@ final class ModelQuery {
         distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
+        cursor: _state.cursor,
+        page: _state.page,
       ),
     );
   }
@@ -3204,6 +3232,8 @@ final class ModelQuery {
         distinct: nextDistinct,
         select: _state.select,
         include: _state.include,
+        cursor: _state.cursor,
+        page: _state.page,
       ),
     );
   }
@@ -3225,6 +3255,8 @@ final class ModelQuery {
         distinct: _state.distinct,
         select: nextSelect,
         include: _state.include,
+        cursor: _state.cursor,
+        page: _state.page,
       ),
     );
   }
@@ -3256,6 +3288,8 @@ final class ModelQuery {
         distinct: _state.distinct,
         select: _state.select,
         include: nextInclude,
+        cursor: _state.cursor,
+        page: _state.page,
       ),
     );
   }
@@ -3286,6 +3320,8 @@ final class ModelQuery {
         distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
+        cursor: _state.cursor,
+        page: null,
       ),
     );
   }
@@ -3300,17 +3336,33 @@ final class ModelQuery {
         distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
+        cursor: _state.cursor,
+        page: null,
       ),
     );
   }
 
   ModelQuery cursor(JsonMap cursor) {
-    _throwApiNotImplemented(
-      'orm.query.cursor',
-      details: <String, Object?>{
-        'model': _delegate.modelName,
-        'cursor': cursor,
-      },
+    if (cursor.isEmpty) {
+      throw PlanCursorWindowInvalidException(
+        reason: 'cursorEmpty',
+        details: <String, Object?>{'model': _delegate.modelName},
+      );
+    }
+    return _next(
+      ModelQueryState(
+        where: _state.where,
+        skip: _state.skip,
+        take: _state.take,
+        orderBy: _state.orderBy,
+        distinct: _state.distinct,
+        select: _state.select,
+        include: _state.include,
+        cursor: Map<String, Object?>.unmodifiable(
+          Map<String, Object?>.from(cursor),
+        ),
+        page: null,
+      ),
     );
   }
 
@@ -3319,14 +3371,49 @@ final class ModelQuery {
     JsonMap? after,
     JsonMap? before,
   }) {
-    _throwApiNotImplemented(
-      'orm.query.page',
-      details: <String, Object?>{
-        'model': _delegate.modelName,
-        'size': size,
-        if (after != null) 'after': after,
-        if (before != null) 'before': before,
-      },
+    if (size <= 0) {
+      throw PlanCursorWindowInvalidException(
+        reason: 'pageSizeInvalid',
+        details: <String, Object?>{
+          'model': _delegate.modelName,
+          'size': size,
+        },
+      );
+    }
+    if (after != null && before != null) {
+      throw PlanCursorWindowInvalidException(
+        reason: 'pageDirectionAmbiguous',
+        details: <String, Object?>{'model': _delegate.modelName},
+      );
+    }
+    if (after != null && after.isEmpty) {
+      throw PlanCursorWindowInvalidException(
+        reason: 'pageAfterEmpty',
+        details: <String, Object?>{'model': _delegate.modelName},
+      );
+    }
+    if (before != null && before.isEmpty) {
+      throw PlanCursorWindowInvalidException(
+        reason: 'pageBeforeEmpty',
+        details: <String, Object?>{'model': _delegate.modelName},
+      );
+    }
+    return _next(
+      ModelQueryState(
+        where: _state.where,
+        skip: null,
+        take: null,
+        orderBy: _state.orderBy,
+        distinct: _state.distinct,
+        select: _state.select,
+        include: _state.include,
+        cursor: null,
+        page: OrmReadPagePlan(
+          size: size,
+          after: after == null ? null : Map<String, Object?>.from(after),
+          before: before == null ? null : Map<String, Object?>.from(before),
+        ),
+      ),
     );
   }
 
@@ -3340,6 +3427,8 @@ final class ModelQuery {
         distinct: _state.distinct,
         select: _state.select,
         include: _state.include,
+        cursor: _state.cursor,
+        page: null,
       ),
     );
   }
@@ -3353,10 +3442,13 @@ final class ModelQuery {
       distinct: _state.distinct,
       select: _state.select,
       include: _state.include,
+      cursor: _state.cursor,
+      page: _state.page,
     );
   }
 
   Future<List<JsonMap>> all() {
+    _assertReadExecutionSupported('all');
     return _delegate.all(
       where: _state.where,
       skip: _state.skip,
@@ -3369,6 +3461,7 @@ final class ModelQuery {
   }
 
   Stream<JsonMap> stream() {
+    _assertReadExecutionSupported('stream');
     return _delegate.stream(
       where: _state.where,
       skip: _state.skip,
@@ -3380,35 +3473,40 @@ final class ModelQuery {
     );
   }
 
-  Future<JsonMap?> oneOrNull() => _delegate.oneOrNull(
-    where: _state.where,
-    select: _state.select,
-    include: _state.include,
-  );
+  Future<JsonMap?> oneOrNull() {
+    _assertReadExecutionSupported('oneOrNull');
+    return _delegate.oneOrNull(
+      where: _state.where,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
 
-  Future<JsonMap?> firstOrNull() => _delegate.firstOrNull(
-    where: _state.where,
-    skip: _state.skip,
-    orderBy: _state.orderBy,
-    distinct: _state.distinct,
-    select: _state.select,
-    include: _state.include,
-  );
+  Future<JsonMap?> firstOrNull() {
+    _assertReadExecutionSupported('firstOrNull');
+    return _delegate.firstOrNull(
+      where: _state.where,
+      skip: _state.skip,
+      orderBy: _state.orderBy,
+      distinct: _state.distinct,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
 
-  Future<int> count() => _delegate.count(where: _state.where);
+  Future<int> count() {
+    _assertReadExecutionSupported('count');
+    return _delegate.count(where: _state.where);
+  }
 
-  Future<bool> exists() => _delegate.exists(where: _state.where);
+  Future<bool> exists() {
+    _assertReadExecutionSupported('exists');
+    return _delegate.exists(where: _state.where);
+  }
 
   Future<JsonMap> explain() async {
-    _throwApiNotImplemented(
-      'orm.query.explain',
-      details: <String, Object?>{
-        'model': _delegate.modelName,
-        'where': _state.where,
-        if (_state.skip != null) 'skip': _state.skip,
-        if (_state.take != null) 'take': _state.take,
-      },
-    );
+    final plan = await toPlan();
+    return plan.toJson();
   }
 
   Future<JsonMap> aggregate({
@@ -3419,6 +3517,7 @@ final class ModelQuery {
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
   }) {
+    _assertReadExecutionSupported('aggregate');
     return _delegate.aggregate(
       where: _state.where,
       countAll: countAll,
@@ -3440,6 +3539,7 @@ final class ModelQuery {
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
   }) {
+    _assertReadExecutionSupported('groupBy');
     return _delegate.groupBy(
       by: by,
       where: _state.where,
@@ -3456,6 +3556,29 @@ final class ModelQuery {
     );
   }
 
+  void _assertReadExecutionSupported(String terminal) {
+    if (_state.cursor != null) {
+      _throwApiNotImplemented(
+        'orm.query.cursor.execute',
+        details: <String, Object?>{
+          'model': _delegate.modelName,
+          'terminal': terminal,
+          'cursor': _state.cursor,
+        },
+      );
+    }
+    if (_state.page != null) {
+      _throwApiNotImplemented(
+        'orm.query.page.execute',
+        details: <String, Object?>{
+          'model': _delegate.modelName,
+          'terminal': terminal,
+          'page': _state.page!.toJson(),
+        },
+      );
+    }
+  }
+
   void _assertMutationQueryState({
     required String action,
     bool allowWhere = true,
@@ -3466,6 +3589,8 @@ final class ModelQuery {
       if (_state.take != null) 'take',
       if (_state.orderBy.isNotEmpty) 'orderBy',
       if (_state.distinct.isNotEmpty) 'distinct',
+      if (_state.cursor != null) 'cursor',
+      if (_state.page != null) 'page',
     ];
     if (invalidKeys.isEmpty) {
       return;

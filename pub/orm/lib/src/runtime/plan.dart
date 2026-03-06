@@ -10,6 +10,37 @@ enum OrmReadResultMode { all, firstOrNull, oneOrNull }
 enum OrmMutationResultMode { row, rowOrNull }
 
 @immutable
+final class OrmReadCursorPlan {
+  final JsonMap values;
+
+  OrmReadCursorPlan({
+    JsonMap values = const <String, Object?>{},
+  }) : values = Map.unmodifiable(values);
+
+  JsonMap toJson() => <String, Object?>{'values': values};
+}
+
+@immutable
+final class OrmReadPagePlan {
+  final int size;
+  final JsonMap? after;
+  final JsonMap? before;
+
+  OrmReadPagePlan({
+    required this.size,
+    JsonMap? after,
+    JsonMap? before,
+  }) : after = after == null ? null : Map.unmodifiable(after),
+       before = before == null ? null : Map.unmodifiable(before);
+
+  JsonMap toJson() => <String, Object?>{
+    'size': size,
+    if (after != null) 'after': after,
+    if (before != null) 'before': before,
+  };
+}
+
+@immutable
 final class OrmRepositoryTrace {
   final String operationId;
   final String kind;
@@ -28,6 +59,16 @@ final class OrmRepositoryTrace {
     this.relation,
     this.itemIndex,
   });
+
+  JsonMap toJson() => <String, Object?>{
+    'operationId': operationId,
+    'kind': kind,
+    'step': step,
+    'phase': phase,
+    'strategy': strategy,
+    if (relation != null) 'relation': relation,
+    if (itemIndex != null) 'itemIndex': itemIndex,
+  };
 }
 
 @immutable
@@ -36,6 +77,8 @@ final class OrmOrderBy {
   final SortOrder order;
 
   const OrmOrderBy(this.field, {this.order = SortOrder.asc});
+
+  JsonMap toJson() => <String, Object?>{'field': field, 'order': order.name};
 }
 
 @immutable
@@ -58,6 +101,17 @@ final class OrmIncludePlan {
        orderBy = List.unmodifiable(orderBy),
        select = List.unmodifiable(select),
        include = Map.unmodifiable(include);
+
+  JsonMap toJson() => <String, Object?>{
+    'where': where,
+    if (skip != null) 'skip': skip,
+    if (take != null) 'take': take,
+    'orderBy': orderBy.map((entry) => entry.toJson()).toList(growable: false),
+    'select': select,
+    'include': <String, Object?>{
+      for (final entry in include.entries) entry.key: entry.value.toJson(),
+    },
+  };
 }
 
 @immutable
@@ -69,6 +123,8 @@ final class OrmReadPlan {
   final List<String> distinct;
   final List<String> select;
   final Map<String, OrmIncludePlan> include;
+  final OrmReadCursorPlan? cursor;
+  final OrmReadPagePlan? page;
   final OrmReadResultMode resultMode;
 
   OrmReadPlan({
@@ -79,12 +135,29 @@ final class OrmReadPlan {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, OrmIncludePlan> include = const <String, OrmIncludePlan>{},
+    this.cursor,
+    this.page,
     required this.resultMode,
   }) : where = Map.unmodifiable(where),
        orderBy = List.unmodifiable(orderBy),
        distinct = List.unmodifiable(distinct),
        select = List.unmodifiable(select),
        include = Map.unmodifiable(include);
+
+  JsonMap toJson() => <String, Object?>{
+    'where': where,
+    if (skip != null) 'skip': skip,
+    if (take != null) 'take': take,
+    'orderBy': orderBy.map((entry) => entry.toJson()).toList(growable: false),
+    'distinct': distinct,
+    'select': select,
+    'include': <String, Object?>{
+      for (final entry in include.entries) entry.key: entry.value.toJson(),
+    },
+    if (cursor != null) 'cursor': cursor!.toJson(),
+    if (page != null) 'page': page!.toJson(),
+    'resultMode': resultMode.name,
+  };
 }
 
 @immutable
@@ -102,6 +175,13 @@ final class OrmMutationPlan {
   }) : where = Map.unmodifiable(where),
        data = Map.unmodifiable(data),
        select = List.unmodifiable(select);
+
+  JsonMap toJson() => <String, Object?>{
+    'where': where,
+    'data': data,
+    'select': select,
+    'resultMode': resultMode.name,
+  };
 }
 
 @immutable
@@ -148,6 +228,8 @@ final class OrmPlan {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, OrmIncludePlan> include = const <String, OrmIncludePlan>{},
+    OrmReadCursorPlan? cursor,
+    OrmReadPagePlan? page,
     required OrmReadResultMode resultMode,
   }) {
     return OrmPlan(
@@ -168,6 +250,8 @@ final class OrmPlan {
         distinct: distinct,
         select: select,
         include: include,
+        cursor: cursor,
+        page: page,
         resultMode: resultMode,
       ),
     );
@@ -206,4 +290,18 @@ final class OrmPlan {
       ),
     );
   }
+
+  JsonMap toJson() => <String, Object?>{
+    'contractHash': contractHash,
+    if (target != null) 'target': target,
+    if (storageHash != null) 'storageHash': storageHash,
+    if (profileHash != null) 'profileHash': profileHash,
+    if (lane != null) 'lane': lane,
+    'annotations': annotations,
+    if (repositoryTrace != null) 'repositoryTrace': repositoryTrace!.toJson(),
+    'model': model,
+    'action': action.name,
+    if (read != null) 'read': read!.toJson(),
+    if (mutation != null) 'mutation': mutation!.toJson(),
+  };
 }

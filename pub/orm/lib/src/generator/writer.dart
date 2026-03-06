@@ -1633,6 +1633,18 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
+      '  ${model.queryClassName} cursor(${model.whereUniqueInputClassName} cursor) => query().cursor(cursor);',
+    );
+    buffer.writeln();
+
+    buffer.writeln('  ${model.queryClassName} page({');
+    buffer.writeln('    required int size,');
+    buffer.writeln('    ${model.whereUniqueInputClassName}? after,');
+    buffer.writeln('    ${model.whereUniqueInputClassName}? before,');
+    buffer.writeln('  }) => query().page(size: size, after: after, before: before);');
+    buffer.writeln();
+
+    buffer.writeln(
       '  ${model.queryClassName} select(${model.selectClassName}? select, {bool merge = false}) => query().select(select, merge: merge);',
     );
     buffer.writeln();
@@ -2449,6 +2461,10 @@ final class TypedClientWriter {
     buffer.writeln('  final List<${model.distinctClassName}> _distinct;');
     buffer.writeln('  final ${model.selectClassName}? _select;');
     buffer.writeln('  final ${model.includeClassName}? _include;');
+    buffer.writeln('  final ${model.whereUniqueInputClassName}? _cursor;');
+    buffer.writeln('  final int? _pageSize;');
+    buffer.writeln('  final ${model.whereUniqueInputClassName}? _pageAfter;');
+    buffer.writeln('  final ${model.whereUniqueInputClassName}? _pageBefore;');
     buffer.writeln();
     buffer.writeln('  ${model.queryClassName}._({');
     buffer.writeln('    required ${model.delegateClassName} delegate,');
@@ -2459,6 +2475,10 @@ final class TypedClientWriter {
     buffer.writeln('    required List<${model.distinctClassName}> distinct,');
     buffer.writeln('    required ${model.selectClassName}? select,');
     buffer.writeln('    required ${model.includeClassName}? include,');
+    buffer.writeln('    ${model.whereUniqueInputClassName}? cursor,');
+    buffer.writeln('    int? pageSize,');
+    buffer.writeln('    ${model.whereUniqueInputClassName}? pageAfter,');
+    buffer.writeln('    ${model.whereUniqueInputClassName}? pageBefore,');
     buffer.writeln('  }) : _delegate = delegate,');
     buffer.writeln('       _where = where,');
     buffer.writeln('       _skip = skip,');
@@ -2470,7 +2490,11 @@ final class TypedClientWriter {
       '       _distinct = List<${model.distinctClassName}>.unmodifiable(distinct),',
     );
     buffer.writeln('       _select = select,');
-    buffer.writeln('       _include = include;');
+    buffer.writeln('       _include = include,');
+    buffer.writeln('       _cursor = cursor,');
+    buffer.writeln('       _pageSize = pageSize,');
+    buffer.writeln('       _pageAfter = pageAfter,');
+    buffer.writeln('       _pageBefore = pageBefore;');
     buffer.writeln();
 
     buffer.writeln(
@@ -2485,6 +2509,10 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: _pageSize,');
+    buffer.writeln('      pageAfter: _pageAfter,');
+    buffer.writeln('      pageBefore: _pageBefore,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2507,6 +2535,10 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: _pageSize,');
+    buffer.writeln('      pageAfter: _pageAfter,');
+    buffer.writeln('      pageBefore: _pageBefore,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2521,6 +2553,10 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: null,');
+    buffer.writeln('      pageAfter: null,');
+    buffer.writeln('      pageBefore: null,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2535,6 +2571,10 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: null,');
+    buffer.writeln('      pageAfter: null,');
+    buffer.writeln('      pageBefore: null,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2542,12 +2582,19 @@ final class TypedClientWriter {
     buffer.writeln(
       '  ${model.queryClassName} cursor(${model.whereUniqueInputClassName} cursor) {',
     );
-    buffer.writeln('    throw ApiNotImplementedException(');
-    buffer.writeln("      surface: 'orm.query.cursor',");
-    buffer.writeln('      details: <String, Object?>{');
-    buffer.writeln("        'model': '$runtimeName',");
-    buffer.writeln("        'cursor': cursor.toJson(),");
-    buffer.writeln('      },');
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: cursor,');
+    buffer.writeln('      pageSize: null,');
+    buffer.writeln('      pageAfter: null,');
+    buffer.writeln('      pageBefore: null,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2557,14 +2604,33 @@ final class TypedClientWriter {
     buffer.writeln('    ${model.whereUniqueInputClassName}? after,');
     buffer.writeln('    ${model.whereUniqueInputClassName}? before,');
     buffer.writeln('  }) {');
-    buffer.writeln('    throw ApiNotImplementedException(');
-    buffer.writeln("      surface: 'orm.query.page',");
-    buffer.writeln('      details: <String, Object?>{');
-    buffer.writeln("        'model': '$runtimeName',");
-    buffer.writeln("        'size': size,");
-    buffer.writeln("        if (after != null) 'after': after.toJson(),");
-    buffer.writeln("        if (before != null) 'before': before.toJson(),");
-    buffer.writeln('      },');
+    buffer.writeln('    if (size <= 0) {');
+    buffer.writeln('      throw PlanCursorWindowInvalidException(');
+    buffer.writeln("        reason: 'pageSizeInvalid',");
+    buffer.writeln(
+      "        details: <String, Object?>{'model': '$runtimeName', 'size': size},",
+    );
+    buffer.writeln('      );');
+    buffer.writeln('    }');
+    buffer.writeln('    if (after != null && before != null) {');
+    buffer.writeln('      throw PlanCursorWindowInvalidException(');
+    buffer.writeln("        reason: 'pageDirectionAmbiguous',");
+    buffer.writeln("        details: <String, Object?>{'model': '$runtimeName'},");
+    buffer.writeln('      );');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.queryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      skip: null,');
+    buffer.writeln('      take: null,');
+    buffer.writeln('      orderBy: _orderBy,');
+    buffer.writeln('      distinct: _distinct,');
+    buffer.writeln('      select: _select,');
+    buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: null,');
+    buffer.writeln('      pageSize: size,');
+    buffer.writeln('      pageAfter: after,');
+    buffer.writeln('      pageBefore: before,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2581,6 +2647,10 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: _distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: _pageSize,');
+    buffer.writeln('      pageAfter: _pageAfter,');
+    buffer.writeln('      pageBefore: _pageBefore,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2601,6 +2671,10 @@ final class TypedClientWriter {
     buffer.writeln('          : distinct,');
     buffer.writeln('      select: _select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: _pageSize,');
+    buffer.writeln('      pageAfter: _pageAfter,');
+    buffer.writeln('      pageBefore: _pageBefore,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2621,6 +2695,10 @@ final class TypedClientWriter {
     );
     buffer.writeln('          : select,');
     buffer.writeln('      include: _include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: _pageSize,');
+    buffer.writeln('      pageAfter: _pageAfter,');
+    buffer.writeln('      pageBefore: _pageBefore,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2652,6 +2730,10 @@ final class TypedClientWriter {
       '          ? (include == null ? _include : (_include?.merge(include) ?? include))',
     );
     buffer.writeln('          : include,');
+    buffer.writeln('      cursor: _cursor,');
+    buffer.writeln('      pageSize: _pageSize,');
+    buffer.writeln('      pageAfter: _pageAfter,');
+    buffer.writeln('      pageBefore: _pageBefore,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2694,78 +2776,78 @@ final class TypedClientWriter {
       buffer.writeln();
     }
 
-    buffer.writeln('  Future<OrmPlan> toPlan() {');
-    buffer.writeln('    return _delegate.toPlan(');
-    buffer.writeln('      where: _where,');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _orderBy,');
-    buffer.writeln('      distinct: _distinct,');
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln('  Future<List<${model.dataClassName}>> all() {');
-    buffer.writeln('    return _delegate.all(');
-    buffer.writeln('      where: _where,');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _orderBy,');
-    buffer.writeln('      distinct: _distinct,');
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln('  Future<${model.dataClassName}?> oneOrNull() {');
-    buffer.writeln('    return _delegate.oneOrNull(');
+    buffer.writeln('  ModelQuery _runtimeQuery() {');
     buffer.writeln(
-      '      where: ${model.whereUniqueInputClassName}.fromJson(_where.toJson()),',
+      '    var query = _delegate._delegate.query(',
     );
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln('  Future<${model.dataClassName}?> firstOrNull() {');
-    buffer.writeln('    return _delegate.firstOrNull(');
-    buffer.writeln('      where: _where,');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      orderBy: _orderBy,');
-    buffer.writeln('      distinct: _distinct,');
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln('  Stream<${model.dataClassName}> stream() {');
-    buffer.writeln('    return _delegate.stream(');
-    buffer.writeln('      where: _where,');
+    buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _orderBy,');
-    buffer.writeln('      distinct: _distinct,');
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
+    buffer.writeln(
+      '      orderBy: _orderBy.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      distinct: _distinct.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('      select: _select?.toFields() ?? const <String>[],');
+    buffer.writeln(
+      '      include: _include?.toIncludeMap() ?? const <String, IncludeSpec>{},',
+    );
     buffer.writeln('    );');
+    buffer.writeln('    if (_cursor != null) {');
+    buffer.writeln('      query = query.cursor(_cursor!.toJson());');
+    buffer.writeln('    }');
+    buffer.writeln('    if (_pageSize != null) {');
+    buffer.writeln('      query = query.page(');
+    buffer.writeln('        size: _pageSize!,');
+    buffer.writeln("        after: _pageAfter?.toJson(),");
+    buffer.writeln("        before: _pageBefore?.toJson(),");
+    buffer.writeln('      );');
+    buffer.writeln('    }');
+    buffer.writeln('    return query;');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<OrmPlan> toPlan() {');
+    buffer.writeln('    return _runtimeQuery().toPlan();');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<List<${model.dataClassName}>> all() async {');
+    buffer.writeln('    final rows = await _runtimeQuery().all();');
+    buffer.writeln(
+      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> oneOrNull() async {');
+    buffer.writeln('    final row = await _runtimeQuery().oneOrNull();');
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> firstOrNull() async {');
+    buffer.writeln('    final row = await _runtimeQuery().firstOrNull();');
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Stream<${model.dataClassName}> stream() async* {');
+    buffer.writeln('    await for (final row in _runtimeQuery().stream()) {');
+    buffer.writeln('      yield ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('    }');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<JsonMap> explain() async {');
-    buffer.writeln('    throw ApiNotImplementedException(');
-    buffer.writeln("      surface: 'orm.query.explain',");
-    buffer.writeln('      details: <String, Object?>{');
-    buffer.writeln("        'model': '$runtimeName',");
-    buffer.writeln("        'where': _where.toJson(),");
-    buffer.writeln("        if (_skip != null) 'skip': _skip,");
-    buffer.writeln("        if (_take != null) 'take': _take,");
-    buffer.writeln('      },');
-    buffer.writeln('    );');
+    buffer.writeln('    return _runtimeQuery().explain();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2787,15 +2869,24 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    return _delegate.aggregate(');
-    buffer.writeln('      where: _where,');
+    buffer.writeln('    return _runtimeQuery().aggregate(');
     buffer.writeln('      countAll: countAll,');
-    buffer.writeln('      count: count,');
-    buffer.writeln('      min: min,');
-    buffer.writeln('      max: max,');
-    buffer.writeln('      sum: sum,');
-    buffer.writeln('      avg: avg,');
-    buffer.writeln('    );');
+    buffer.writeln(
+      '      count: count.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      min: min.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      max: max.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      sum: sum.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '      avg: avg.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('    ).then(${model.aggregateResultClassName}.fromJson);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2825,30 +2916,45 @@ final class TypedClientWriter {
     );
     buffer.writeln('  }) {');
     buffer.writeln('    return _delegate.groupBy(');
-    buffer.writeln('      by: by,');
+    buffer.writeln(
+      '      by: by.map((entry) => entry.value).toList(growable: false),',
+    );
     buffer.writeln('      where: _where,');
-    buffer.writeln('      typedHaving: typedHaving,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      take: _take,');
+    buffer.writeln('      typedHaving: typedHaving,');
     buffer.writeln('      groupByOrderBy: groupByOrderBy,');
     buffer.writeln('      countAll: countAll,');
-    buffer.writeln('      count: count,');
-    buffer.writeln('      min: min,');
-    buffer.writeln('      max: max,');
-    buffer.writeln('      sum: sum,');
-    buffer.writeln('      avg: avg,');
+    buffer.writeln(
+      '      count: count,',
+    );
+    buffer.writeln(
+      '      min: min,',
+    );
+    buffer.writeln(
+      '      max: max,',
+    );
+    buffer.writeln(
+      '      sum: sum,',
+    );
+    buffer.writeln(
+      '      avg: avg,',
+    );
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln(
-      '  Future<List<${model.dataClassName}>> createMany({required List<${model.createInputClassName}> data}) {',
+      '  Future<List<${model.dataClassName}>> createMany({required List<${model.createInputClassName}> data}) async {',
     );
-    buffer.writeln('    return _delegate.createMany(');
-    buffer.writeln('      data: data,');
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
+    buffer.writeln('    final rows = await _runtimeQuery().createMany(');
+    buffer.writeln(
+      '      data: data.map((entry) => entry.toJson()).toList(growable: false),',
+    );
     buffer.writeln('    );');
+    buffer.writeln(
+      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
+    );
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2859,41 +2965,37 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.nestedCreateInputClassName} create = const ${model.nestedCreateInputClassName}(),',
     );
-    buffer.writeln('  }) {');
-    buffer.writeln('    return _delegate.updateNested(');
-    buffer.writeln('      where: _where,');
-    buffer.writeln('      data: data,');
-    buffer.writeln('      create: create,');
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
+    buffer.writeln('  }) async {');
+    buffer.writeln('    final row = await _runtimeQuery().updateNested(');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      create: create.toJson(),');
     buffer.writeln('    );');
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln(
       '  Future<int> updateMany({required ${model.updateInputClassName} data}) {',
     );
-    buffer.writeln('    return _delegate.updateMany(');
-    buffer.writeln('      where: _where,');
-    buffer.writeln('      data: data,');
-    buffer.writeln('      select: _select,');
-    buffer.writeln('      include: _include,');
-    buffer.writeln('    );');
+    buffer.writeln('    return _runtimeQuery().updateMany(data: data.toJson());');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<int> deleteMany() {');
-    buffer.writeln('    return _delegate.deleteMany(where: _where);');
+    buffer.writeln('    return _runtimeQuery().deleteMany();');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<int> count() {');
-    buffer.writeln('    return _delegate.count(where: _where);');
+    buffer.writeln('    return _runtimeQuery().count();');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<bool> exists() {');
-    buffer.writeln('    return _delegate.exists(where: _where);');
+    buffer.writeln('    return _runtimeQuery().exists();');
     buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();

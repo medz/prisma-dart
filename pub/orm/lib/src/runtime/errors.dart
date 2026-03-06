@@ -245,6 +245,18 @@ final class PlanInvalidPaginationException extends OrmRuntimeError {
       );
 }
 
+final class PlanCursorWindowInvalidException extends OrmRuntimeError {
+  PlanCursorWindowInvalidException({
+    required String reason,
+    Map<String, Object?> details = const <String, Object?>{},
+  }) : super(
+         code: 'PLAN.CURSOR_WINDOW_INVALID',
+         category: RuntimeErrorCategory.plan,
+         message: 'Cursor or page window is invalid for this read plan.',
+         details: <String, Object?>{'reason': reason, ...details},
+       );
+}
+
 final class PlanResultModeActionInvalidException extends OrmRuntimeError {
   final OrmAction action;
   final OrmReadResultMode? readResultMode;
