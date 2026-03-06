@@ -180,6 +180,61 @@ void main() {
       },
     );
 
+    test(
+      'adapter explain stays non-executing while stream executes once',
+      () async {
+        final sqlContract = OrmContract(
+          version: '1',
+          hash: 'contract-sql-stream-v1',
+          target: 'sql-family',
+          models: <String, ModelContract>{
+            'User': ModelContract(
+              name: 'User',
+              table: 'users',
+              fields: <String>{'id', 'email'},
+            ),
+          },
+          aliases: <String, String>{'users': 'User'},
+        );
+        final driver = _CountingSqlDriver(
+          rows: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          ],
+        );
+        final client = OrmClient(
+          contract: sqlContract,
+          engine: AdapterDriverEngine<SqlStatement, SqlResult>(
+            adapter: SqlAdapter(contract: sqlContract),
+            driver: driver,
+          ),
+        );
+        await client.connect();
+        try {
+          final users = client.db.orm.model('User');
+
+          await users
+              .query()
+              .where(<String, Object?>{'id': 'u1'})
+              .orderByField('id')
+              .page(size: 1)
+              .explain();
+          expect(driver.executeCount, 0);
+
+          final rows = await users
+              .query()
+              .where(<String, Object?>{'id': 'u1'})
+              .stream()
+              .toList();
+          expect(driver.executeCount, 1);
+          expect(rows, <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          ]);
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
+
     test('cursor and page execution return deterministic windows', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -478,5 +533,25 @@ final class _ExplainOnlySqlDriver
   @override
   Future<SqlResult> execute(SqlStatement request) {
     throw StateError('explain() should not execute the SQL driver.');
+  }
+}
+
+final class _CountingSqlDriver
+    implements TargetDriver<SqlStatement, SqlResult> {
+  final List<JsonMap> rows;
+  int executeCount = 0;
+
+  _CountingSqlDriver({required this.rows});
+
+  @override
+  Future<void> open() async {}
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<SqlResult> execute(SqlStatement request) async {
+    executeCount += 1;
+    return SqlResult(rows: rows);
   }
 }
