@@ -7,5 +7,5 @@ final class Schema {
   final String schema;
 
   @literal
-  const Schema(@mustBeConst this.schema);
+  const Schema(this.schema);
 }

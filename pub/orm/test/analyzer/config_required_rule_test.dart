@@ -1,0 +1,117 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:orm/src/analyzer/rules/config_required_rule.dart';
+import 'package:orm/src/analyzer/utils/config_utils.dart';
+import 'package:test_reflective_loader/test_reflective_loader.dart';
+
+@reflectiveTest
+class ConfigRequiredRuleTest extends AnalysisRuleTest {
+  @override
+  void setUp() {
+    rule = ConfigRequiredRule();
+    super.setUp();
+    newPubspecYamlFile(testPackageRootPath, 'name: orm\n');
+    newSinglePackageConfigJsonFile(
+      packagePath: testPackageRootPath,
+      name: 'orm',
+    );
+    newFile(join(testPackageRootPath, 'lib', 'config.dart'), r'''
+enum DatabaseProvider { sqlite }
+
+class Config {
+  final DatabaseProvider provider;
+  final String output;
+
+  const Config({required this.provider, required this.output});
+}
+''');
+  }
+
+  Future<void> _assertMissingConfig(String content) async {
+    final path = join(testPackageRootPath, 'orm.config.dart');
+    newFile(path, content);
+    final resolved = await resolveFile(path);
+    final diagnosticNode = _diagnosticNode(resolved.unit);
+    await assertDiagnosticsInFile(path, [
+      lint(diagnosticNode.offset, diagnosticNode.length),
+    ]);
+  }
+
+  Future<void> _assertValidConfig(String content) async {
+    final path = join(testPackageRootPath, 'orm.config.dart');
+    newFile(path, content);
+    await assertNoDiagnosticsInFile(path);
+  }
+
+  Future<void> test_missingConfig() async {
+    await _assertMissingConfig(r'''
+// ignore_for_file: unused_import
+import 'package:orm/config.dart';
+''');
+  }
+
+  Future<void> test_validConfig() async {
+    await _assertValidConfig(r'''
+import 'package:orm/config.dart';
+
+const config = Config(
+  provider: DatabaseProvider.sqlite,
+  output: '',
+);
+''');
+  }
+
+  Future<void> test_prefixedImport() async {
+    await _assertValidConfig(r'''
+import 'package:orm/config.dart' as orm;
+
+const config = orm.Config(
+  provider: orm.DatabaseProvider.sqlite,
+  output: '',
+);
+''');
+  }
+
+  Future<void> test_localConfigClass() async {
+    await _assertMissingConfig(r'''
+class Config {
+  const Config();
+}
+
+const config = Config();
+''');
+  }
+
+  Future<void> test_notConst() async {
+    await _assertMissingConfig(r'''
+import 'package:orm/config.dart';
+
+final config = Config(
+  provider: DatabaseProvider.sqlite,
+  output: '',
+);
+''');
+  }
+}
+
+AstNode _diagnosticNode(CompilationUnit unit) {
+  final configInfo = findConfigVariable(unit);
+  if (configInfo != null) {
+    return configInfo.variable;
+  }
+  if (unit.declarations.isNotEmpty) {
+    return unit.declarations.first;
+  }
+  if (unit.directives.isNotEmpty) {
+    return unit.directives.last;
+  }
+  return unit;
+}
+
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(ConfigRequiredRuleTest);
+  });
+}

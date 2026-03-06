@@ -3,6 +3,9 @@ description: A starting point for Dart libraries or applications.
 version: 6.0.0-dev.1
 # repository: https://github.com/my_org/my_repo
 
+executables:
+  orm:
+
 resolution: workspace
 environment:
   sdk: ^3.10.1
@@ -11,7 +14,10 @@ dependencies:
   analyzer: ^9.0.0
   analysis_server_plugin: ^0.3.4
   meta: ^1.17.0
+  analyzer_plugin: ^0.13.11
 
 dev_dependencies:
+  analyzer_testing: ^0.1.7
   lints: ^6.0.0
   test: ^1.25.6
+  test_reflective_loader: ^0.4.0
