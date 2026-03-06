@@ -7,6 +7,8 @@ enum OrmAction { read, create, update, delete }
 
 enum OrmReadResultMode { all, firstOrNull, oneOrNull }
 
+enum OrmMutationResultMode { row, rowOrNull }
+
 @immutable
 final class OrmOrderBy {
   final String field;
@@ -45,6 +47,7 @@ final class OrmPlan {
   final String? profileHash;
   final String? lane;
   final OrmReadResultMode? resultMode;
+  final OrmMutationResultMode? mutationResultMode;
   final Map<String, OrmIncludePlan> include;
   final JsonMap annotations;
   final String model;
@@ -64,6 +67,7 @@ final class OrmPlan {
     this.profileHash,
     this.lane,
     this.resultMode,
+    this.mutationResultMode,
     Map<String, OrmIncludePlan> include = const <String, OrmIncludePlan>{},
     JsonMap annotations = const <String, Object?>{},
     required this.model,

@@ -644,6 +644,7 @@ final class OrmSqlInsertBuilder {
       client: _client,
       modelName: _modelName,
       action: OrmAction.create,
+      mutationResultMode: OrmMutationResultMode.rowOrNull,
       data: _data,
       select: _select,
     );
@@ -709,6 +710,7 @@ final class OrmSqlUpdateBuilder {
       client: _client,
       modelName: _modelName,
       action: OrmAction.update,
+      mutationResultMode: OrmMutationResultMode.rowOrNull,
       where: _where,
       data: _data,
       select: _select,
@@ -773,6 +775,7 @@ final class OrmSqlDeleteBuilder {
       client: _client,
       modelName: _modelName,
       action: OrmAction.delete,
+      mutationResultMode: OrmMutationResultMode.rowOrNull,
       where: _where,
       select: _select,
     );
@@ -812,6 +815,7 @@ OrmPlan _buildSqlPlan({
   required OrmModelContext client,
   required String modelName,
   required OrmAction action,
+  OrmMutationResultMode? mutationResultMode,
   JsonMap where = const <String, Object?>{},
   JsonMap data = const <String, Object?>{},
   int? skip,
@@ -827,6 +831,7 @@ OrmPlan _buildSqlPlan({
     storageHash: contract.markerStorageHash,
     profileHash: contract.profileHash,
     lane: 'sql',
+    mutationResultMode: mutationResultMode,
     model: modelName,
     action: action,
     where: where,
@@ -845,6 +850,14 @@ final class _PreparedReadPlan {
   final Map<String, IncludeSpec> include;
 
   const _PreparedReadPlan({required this.plan, required this.include});
+}
+
+@immutable
+final class _PreparedMutationPlan {
+  final OrmPlan plan;
+  final Map<String, IncludeSpec> include;
+
+  const _PreparedMutationPlan({required this.plan, required this.include});
 }
 
 class ModelDelegate {
@@ -1175,23 +1188,15 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
-    final normalizedInclude = _normalizeInclude(include);
-    final response = await _client.execute(
-      OrmPlan(
-        contractHash: _client.contract.hash,
-        target: _client.contract.target,
-        storageHash: _client.contract.markerStorageHash,
-        profileHash: _client.contract.profileHash,
-        model: modelName,
-        action: OrmAction.create,
-        data: data,
-        select: _expandSelectForInclude(
-          model: modelName,
-          select: select,
-          include: normalizedInclude,
-        ),
-      ),
+    final prepared = await _buildMutationPlan(
+      action: OrmAction.create,
+      mutationResultMode: OrmMutationResultMode.row,
+      data: data,
+      select: select,
+      include: include,
     );
+    final normalizedInclude = prepared.include;
+    final response = await _client.execute(prepared.plan);
 
     var row = _readRow(response.data, action: 'create');
     if (row == null) {
@@ -1331,6 +1336,7 @@ class ModelDelegate {
   }) {
     return _runNullableMutation(
       action: OrmAction.update,
+      mutationResultMode: OrmMutationResultMode.rowOrNull,
       where: where,
       data: data,
       select: select,
@@ -1346,6 +1352,7 @@ class ModelDelegate {
   }) {
     return _runNullableMutation(
       action: OrmAction.delete,
+      mutationResultMode: OrmMutationResultMode.rowOrNull,
       where: where,
       data: const <String, Object?>{},
       select: select,
@@ -1537,17 +1544,23 @@ class ModelDelegate {
 
   Future<JsonMap?> _runNullableMutation({
     required OrmAction action,
+    required OrmMutationResultMode mutationResultMode,
     required JsonMap where,
     required JsonMap data,
     required List<String> select,
     required Map<String, IncludeSpec> include,
     required String responseAction,
   }) async {
-    final normalizedInclude = _normalizeInclude(include);
-    final normalizedWhere = await _normalizeWhereForExecution(
-      model: modelName,
+    final prepared = await _buildMutationPlan(
+      action: action,
+      mutationResultMode: mutationResultMode,
       where: where,
+      data: data,
+      select: select,
+      include: include,
     );
+    final normalizedInclude = prepared.include;
+    final normalizedWhere = prepared.plan.where;
     JsonMap? preDeleteRow;
     if (action == OrmAction.delete &&
         !(_client.contract.capabilities.mutationReturning)) {
@@ -1564,23 +1577,7 @@ class ModelDelegate {
       );
     }
 
-    final response = await _client.execute(
-      OrmPlan(
-        contractHash: _client.contract.hash,
-        target: _client.contract.target,
-        storageHash: _client.contract.markerStorageHash,
-        profileHash: _client.contract.profileHash,
-        model: modelName,
-        action: action,
-        where: normalizedWhere,
-        data: data,
-        select: _expandSelectForInclude(
-          model: modelName,
-          select: select,
-          include: normalizedInclude,
-        ),
-      ),
-    );
+    final response = await _client.execute(prepared.plan);
 
     var row = _readRow(response.data, action: responseAction);
     if (row == null &&
@@ -1619,6 +1616,41 @@ class ModelDelegate {
       select: select,
       include: normalizedInclude,
     ).single;
+  }
+
+  Future<_PreparedMutationPlan> _buildMutationPlan({
+    required OrmAction action,
+    required OrmMutationResultMode mutationResultMode,
+    JsonMap where = const <String, Object?>{},
+    JsonMap data = const <String, Object?>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) async {
+    final normalizedInclude = _normalizeInclude(include);
+    final normalizedWhere = where.isEmpty
+        ? const <String, Object?>{}
+        : await _normalizeWhereForExecution(model: modelName, where: where);
+
+    return _PreparedMutationPlan(
+      include: normalizedInclude,
+      plan: OrmPlan(
+        contractHash: _client.contract.hash,
+        target: _client.contract.target,
+        storageHash: _client.contract.markerStorageHash,
+        profileHash: _client.contract.profileHash,
+        lane: 'orm',
+        mutationResultMode: mutationResultMode,
+        model: modelName,
+        action: action,
+        where: normalizedWhere,
+        data: data,
+        select: _expandSelectForInclude(
+          model: modelName,
+          select: select,
+          include: normalizedInclude,
+        ),
+      ),
+    );
   }
 
   Future<JsonMap> _createNestedInScope({

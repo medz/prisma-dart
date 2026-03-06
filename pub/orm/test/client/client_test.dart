@@ -790,6 +790,44 @@ void main() {
       },
     );
 
+    test('emits structured mutation plans for orm and sql writes', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      await client.model('User').create(
+        data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+      );
+      final createPlan = engine.executedPlans.single;
+      expect(createPlan.lane, 'orm');
+      expect(createPlan.action, OrmAction.create);
+      expect(createPlan.mutationResultMode, OrmMutationResultMode.row);
+
+      engine.reset();
+      await client.model('User').update(
+        where: <String, Object?>{'id': 'u1'},
+        data: <String, Object?>{'email': 'b@x.com'},
+      );
+      final updatePlan = engine.executedPlans.single;
+      expect(updatePlan.lane, 'orm');
+      expect(updatePlan.action, OrmAction.update);
+      expect(
+        updatePlan.mutationResultMode,
+        OrmMutationResultMode.rowOrNull,
+      );
+
+      final sqlPlan = client.sql
+          .update('User')
+          .where(<String, Object?>{'id': 'u1'})
+          .set(<String, Object?>{'email': 'c@x.com'})
+          .toPlan();
+      expect(sqlPlan.lane, 'sql');
+      expect(sqlPlan.action, OrmAction.update);
+      expect(sqlPlan.mutationResultMode, OrmMutationResultMode.rowOrNull);
+
+      await client.disconnect();
+    });
+
     test('supports select projection through chained query state', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -1074,6 +1112,105 @@ void main() {
         );
         expect(removed?['id'], 'u1');
         expect(removed?['email'], 'b@x.com');
+
+        final remaining = await users.oneOrNull(
+          where: <String, Object?>{'id': 'u1'},
+        );
+        expect(remaining, isNull);
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'throws when create result is missing while mutation returning is enabled',
+      () async {
+        final client = OrmClient(
+          contract: contract,
+          engine: _NoMutationReturnEngine(inner: MemoryEngine()),
+        );
+        await client.connect();
+
+        await expectLater(
+          client.model('User').create(
+                data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+              ),
+          throwsA(isA<RuntimeCreateResultMissingException>()),
+        );
+
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'reads back updated row after write when mutation returning is disabled',
+      () async {
+        final noReturningContract = OrmContract(
+          version: contract.version,
+          hash: contract.hash,
+          models: contract.models,
+          aliases: contract.aliases,
+          capabilities: const ContractCapabilities(mutationReturning: false),
+        );
+        final engine = _CountingEngine(
+          inner: _NoMutationReturnEngine(inner: MemoryEngine()),
+        );
+        final client = OrmClient(contract: noReturningContract, engine: engine);
+        await client.connect();
+        final users = client.model('User');
+
+        await users.create(
+          data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+        );
+        engine.reset();
+
+        final updated = await users.update(
+          where: <String, Object?>{'id': 'u1'},
+          data: <String, Object?>{'email': 'b@x.com'},
+          select: const <String>['id', 'email'],
+        );
+
+        expect(updated, <String, Object?>{'id': 'u1', 'email': 'b@x.com'});
+        expect(
+          engine.executedPlans.map((plan) => plan.action).toList(),
+          <OrmAction>[OrmAction.update, OrmAction.read],
+        );
+
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'prefetches row before delete when mutation returning is disabled',
+      () async {
+        final noReturningContract = OrmContract(
+          version: contract.version,
+          hash: contract.hash,
+          models: contract.models,
+          aliases: contract.aliases,
+          capabilities: const ContractCapabilities(mutationReturning: false),
+        );
+        final engine = _CountingEngine(
+          inner: _NoMutationReturnEngine(inner: MemoryEngine()),
+        );
+        final client = OrmClient(contract: noReturningContract, engine: engine);
+        await client.connect();
+        final users = client.model('User');
+
+        await users.create(
+          data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+        );
+        engine.reset();
+
+        final deleted = await users.delete(
+          where: <String, Object?>{'id': 'u1'},
+          select: const <String>['id', 'email'],
+        );
+
+        expect(deleted, <String, Object?>{'id': 'u1', 'email': 'a@x.com'});
+        expect(
+          engine.executedPlans.map((plan) => plan.action).toList(),
+          <OrmAction>[OrmAction.read, OrmAction.delete],
+        );
 
         final remaining = await users.oneOrNull(
           where: <String, Object?>{'id': 'u1'},
