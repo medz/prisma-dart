@@ -10,6 +10,7 @@ final class _RepositoryIncludePlanner {
     required List<JsonMap> rows,
     required Map<String, IncludeSpec> include,
     required int depth,
+    _RepositoryOperation? operation,
   }) {
     if (rows.isEmpty || include.isEmpty) {
       return Future<List<JsonMap>>.value(rows);
@@ -28,17 +29,22 @@ final class _RepositoryIncludePlanner {
       include: include,
       depth: depth,
     );
+    final trace =
+        operation ??
+        _RepositoryOperation.start(kind: '${_delegate.modelName}.include');
 
     return switch (strategy) {
       IncludeExecutionStrategy.singleQuery => _resolveSingleQuery(
         rows: rows,
         include: include,
         depth: depth,
+        operation: trace,
       ),
       IncludeExecutionStrategy.multiQuery => _resolveMultiQuery(
         rows: rows,
         include: include,
         depth: depth,
+        operation: trace,
       ),
     };
   }
@@ -47,6 +53,7 @@ final class _RepositoryIncludePlanner {
     required List<JsonMap> rows,
     required Map<String, IncludeSpec> include,
     required int depth,
+    required _RepositoryOperation operation,
   }) async {
     var hydrated = rows;
 
@@ -67,6 +74,7 @@ final class _RepositoryIncludePlanner {
         relation: relation,
         relationInclude: relationInclude,
         depth: depth,
+        operation: operation,
       );
       final rowsByRelationKey = _delegate._groupRowsByRelationFields(
         rows: relatedRows,
@@ -130,6 +138,7 @@ final class _RepositoryIncludePlanner {
     required List<JsonMap> rows,
     required Map<String, IncludeSpec> include,
     required int depth,
+    required _RepositoryOperation operation,
   }) async {
     var hydrated = rows;
 
@@ -171,6 +180,11 @@ final class _RepositoryIncludePlanner {
           orderBy: relationInclude.orderBy,
           select: relationInclude.select,
           include: relationInclude.include,
+          annotations: operation.nextAnnotations(
+            phase: 'include.load',
+            strategy: 'multiQuery',
+            relation: relationName,
+          ),
           includeDepth: depth + 1,
         );
 
@@ -196,6 +210,7 @@ final class _RepositoryIncludePlanner {
     required ModelRelationContract relation,
     required IncludeSpec relationInclude,
     required int depth,
+    required _RepositoryOperation operation,
   }) {
     final baseWhere = _delegate._buildSingleQueryRelationBaseWhere(
       includeWhere: relationInclude.where,
@@ -211,6 +226,11 @@ final class _RepositoryIncludePlanner {
         relation: relation,
       ),
       include: relationInclude.include,
+      annotations: operation.nextAnnotations(
+        phase: 'include.load',
+        strategy: 'singleQuery',
+        relation: relation.name,
+      ),
       includeDepth: depth + 1,
     );
   }

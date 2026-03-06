@@ -1103,7 +1103,8 @@ void main() {
     });
 
     test('supports createMany and deleteMany helpers', () async {
-      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(contract: contract, engine: engine);
       await client.connect();
       final users = client.db.orm.model('User');
 
@@ -1115,11 +1116,78 @@ void main() {
         ],
       );
       expect(createdRows, hasLength(3));
+      expect(
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
+        <OrmAction>[OrmAction.create, OrmAction.create, OrmAction.create],
+      );
+      final createTraces = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final createOperationId = createTraces.first['operationId'];
+      expect(createOperationId, isNotNull);
+      expect(
+        createTraces.map((trace) => trace['operationId']).toSet(),
+        <Object?>{createOperationId},
+      );
+      expect(
+        createTraces.map((trace) => trace['kind']).toList(growable: false),
+        <Object?>['User.createMany', 'User.createMany', 'User.createMany'],
+      );
+      expect(
+        createTraces.map((trace) => trace['phase']).toList(growable: false),
+        <Object?>['item.create', 'item.create', 'item.create'],
+      );
+      expect(
+        createTraces.map((trace) => trace['strategy']).toList(growable: false),
+        <Object?>['transaction', 'transaction', 'transaction'],
+      );
+      expect(
+        createTraces.map((trace) => trace['step']).toList(growable: false),
+        <Object?>[1, 2, 3],
+      );
+      expect(
+        createTraces.map((trace) => trace['itemIndex']).toList(growable: false),
+        <Object?>[0, 1, 2],
+      );
 
+      engine.reset();
       final deleted = await users.deleteMany(
         where: <String, Object?>{'email': 'a@x.com'},
       );
       expect(deleted, 2);
+      expect(
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
+        <OrmAction>[OrmAction.delete, OrmAction.delete, OrmAction.delete],
+      );
+      final deleteTraces = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final deleteOperationId = deleteTraces.first['operationId'];
+      expect(deleteOperationId, isNotNull);
+      expect(
+        deleteTraces.map((trace) => trace['operationId']).toSet(),
+        <Object?>{deleteOperationId},
+      );
+      expect(
+        deleteTraces.map((trace) => trace['kind']).toList(growable: false),
+        <Object?>['User.deleteMany', 'User.deleteMany', 'User.deleteMany'],
+      );
+      expect(
+        deleteTraces.map((trace) => trace['phase']).toList(growable: false),
+        <Object?>['item.delete', 'item.delete', 'item.delete'],
+      );
+      expect(
+        deleteTraces.map((trace) => trace['strategy']).toList(growable: false),
+        <Object?>['transaction', 'transaction', 'transaction'],
+      );
+      expect(
+        deleteTraces.map((trace) => trace['step']).toList(growable: false),
+        <Object?>[1, 2, 3],
+      );
+      expect(
+        deleteTraces.map((trace) => trace['itemIndex']).toList(growable: false),
+        <Object?>[0, 1, 2],
+      );
 
       final remaining = await users.count();
       expect(remaining, 1);
@@ -1255,6 +1323,17 @@ void main() {
           engine.executedPlans.map((plan) => plan.action).toList(),
           <OrmAction>[OrmAction.update, OrmAction.read],
         );
+        final updateTrace = _readRepositoryTrace(engine.executedPlans.first);
+        final reloadTrace = _readRepositoryTrace(engine.executedPlans.last);
+        expect(updateTrace['kind'], 'User.update');
+        expect(updateTrace['phase'], 'write');
+        expect(updateTrace['strategy'], 'singlePlan');
+        expect(updateTrace['step'], 1);
+        expect(reloadTrace['kind'], 'User.update');
+        expect(reloadTrace['phase'], 'fallback.reload');
+        expect(reloadTrace['strategy'], 'returningDisabledFallback');
+        expect(reloadTrace['step'], 2);
+        expect(reloadTrace['operationId'], updateTrace['operationId']);
 
         await client.disconnect();
       },
@@ -1292,6 +1371,17 @@ void main() {
           engine.executedPlans.map((plan) => plan.action).toList(),
           <OrmAction>[OrmAction.read, OrmAction.delete],
         );
+        final preloadTrace = _readRepositoryTrace(engine.executedPlans.first);
+        final deleteTrace = _readRepositoryTrace(engine.executedPlans.last);
+        expect(preloadTrace['kind'], 'User.delete');
+        expect(preloadTrace['phase'], 'fallback.preload');
+        expect(preloadTrace['strategy'], 'returningDisabledFallback');
+        expect(preloadTrace['step'], 1);
+        expect(deleteTrace['kind'], 'User.delete');
+        expect(deleteTrace['phase'], 'write');
+        expect(deleteTrace['strategy'], 'singlePlan');
+        expect(deleteTrace['step'], 2);
+        expect(deleteTrace['operationId'], preloadTrace['operationId']);
 
         final remaining = await users.oneOrNull(
           where: <String, Object?>{'id': 'u1'},
@@ -1471,6 +1561,86 @@ void main() {
         isNotNullRows.map((row) => row['id']).toList(growable: false),
         <Object?>['p1', 'p2', 'p3'],
       );
+      await client.disconnect();
+    });
+
+    test('annotates upsert branch plans with operation sequence metadata', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      final created = await users.upsert(
+        where: <String, Object?>{'id': 'u1'},
+        create: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
+        update: <String, Object?>{'email': 'b@example.com'},
+      );
+      expect(created['email'], 'a@example.com');
+      expect(
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
+        <OrmAction>[OrmAction.read, OrmAction.create],
+      );
+      final createBranch = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final createOperationId = createBranch.first['operationId'];
+      expect(
+        createBranch.map((trace) => trace['operationId']).toSet(),
+        <Object?>{createOperationId},
+      );
+      expect(
+        createBranch.map((trace) => trace['kind']).toList(growable: false),
+        <Object?>['User.upsert', 'User.upsert'],
+      );
+      expect(
+        createBranch.map((trace) => trace['phase']).toList(growable: false),
+        <Object?>['branch.lookup', 'branch.create'],
+      );
+      expect(
+        createBranch.map((trace) => trace['strategy']).toList(growable: false),
+        <Object?>['branch', 'branch'],
+      );
+      expect(
+        createBranch.map((trace) => trace['step']).toList(growable: false),
+        <Object?>[1, 2],
+      );
+
+      engine.reset();
+      final updated = await users.upsert(
+        where: <String, Object?>{'id': 'u1'},
+        create: <String, Object?>{'id': 'u1', 'email': 'x@example.com'},
+        update: <String, Object?>{'email': 'b@example.com'},
+      );
+      expect(updated['email'], 'b@example.com');
+      expect(
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
+        <OrmAction>[OrmAction.read, OrmAction.update],
+      );
+      final updateBranch = engine.executedPlans
+          .map(_readRepositoryTrace)
+          .toList(growable: false);
+      final updateOperationId = updateBranch.first['operationId'];
+      expect(
+        updateBranch.map((trace) => trace['operationId']).toSet(),
+        <Object?>{updateOperationId},
+      );
+      expect(
+        updateBranch.map((trace) => trace['kind']).toList(growable: false),
+        <Object?>['User.upsert', 'User.upsert'],
+      );
+      expect(
+        updateBranch.map((trace) => trace['phase']).toList(growable: false),
+        <Object?>['branch.lookup', 'branch.update'],
+      );
+      expect(
+        updateBranch.map((trace) => trace['strategy']).toList(growable: false),
+        <Object?>['branch', 'branch'],
+      );
+      expect(
+        updateBranch.map((trace) => trace['step']).toList(growable: false),
+        <Object?>[1, 2],
+      );
+
       await client.disconnect();
     });
 
@@ -1730,6 +1900,118 @@ void main() {
           reason:
               'singleQuery include should execute at most one parent read '
               'and one relation read for one-to-many includes.',
+        );
+      } finally {
+        await client.disconnect();
+      }
+    });
+
+    test('singleQuery include annotates repository relation load plans', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: engine,
+        includeStrategySelector:
+            ({
+              required OrmContract contract,
+              required String modelName,
+              required OrmAction action,
+              required Map<String, IncludeSpec> include,
+              required int depth,
+            }) => IncludeExecutionStrategy.singleQuery,
+      );
+      await client.connect();
+      try {
+        await _seedRelationalData(client);
+        engine.reset();
+
+        final rows = await client.db.orm.model('User')
+            .all(
+              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+              include: <String, IncludeSpec>{
+                'posts': IncludeSpec(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                ),
+              },
+            );
+
+        expect(rows, hasLength(2));
+        final includePlans = engine.executedPlans
+            .where((plan) => plan.annotations.containsKey('repository'))
+            .toList(growable: false);
+        expect(includePlans, hasLength(1));
+        final trace = _readRepositoryTrace(includePlans.single);
+        expect(trace['kind'], 'User.include');
+        expect(trace['phase'], 'include.load');
+        expect(trace['strategy'], 'singleQuery');
+        expect(trace['relation'], 'posts');
+        expect(trace['step'], 1);
+      } finally {
+        await client.disconnect();
+      }
+    });
+
+    test('multiQuery include annotates repository relation load sequence', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(
+        contract: relationalContract,
+        engine: engine,
+        includeStrategySelector:
+            ({
+              required OrmContract contract,
+              required String modelName,
+              required OrmAction action,
+              required Map<String, IncludeSpec> include,
+              required int depth,
+            }) => IncludeExecutionStrategy.multiQuery,
+      );
+      await client.connect();
+      try {
+        await _seedRelationalData(client);
+        engine.reset();
+
+        final rows = await client.db.orm.model('User')
+            .all(
+              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+              include: <String, IncludeSpec>{
+                'posts': IncludeSpec(
+                  orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                ),
+              },
+            );
+
+        expect(rows, hasLength(2));
+        final includePlans = engine.executedPlans
+            .where((plan) => plan.annotations.containsKey('repository'))
+            .toList(growable: false);
+        expect(includePlans, hasLength(2));
+        final traces = includePlans
+            .map(_readRepositoryTrace)
+            .toList(growable: false);
+        final operationId = traces.first['operationId'];
+        expect(
+          traces.map((trace) => trace['operationId']).toSet(),
+          <Object?>{operationId},
+        );
+        expect(
+          traces.map((trace) => trace['kind']).toList(growable: false),
+          <Object?>['User.include', 'User.include'],
+        );
+        expect(
+          traces.map((trace) => trace['phase']).toList(growable: false),
+          <Object?>['include.load', 'include.load'],
+        );
+        expect(
+          traces.map((trace) => trace['strategy']).toList(growable: false),
+          <Object?>['multiQuery', 'multiQuery'],
+        );
+        expect(
+          traces.map((trace) => trace['relation']).toList(growable: false),
+          <Object?>['posts', 'posts'],
+        );
+        expect(
+          traces.map((trace) => trace['step']).toList(growable: false),
+          <Object?>[1, 2],
         );
       } finally {
         await client.disconnect();
@@ -3019,6 +3301,19 @@ JsonMap? _readRowValue(Object? value) {
   fail('Expected row map but got ${value.runtimeType}.');
 }
 
+Map<String, Object?> _readRepositoryTrace(OrmPlan plan) {
+  final trace = plan.annotations['repository'];
+  if (trace is Map<String, Object?>) {
+    return Map<String, Object?>.unmodifiable(trace);
+  }
+  if (trace is Map<Object?, Object?>) {
+    return Map<String, Object?>.unmodifiable(
+      trace.map((key, value) => MapEntry(key.toString(), value)),
+    );
+  }
+  fail('Expected repository annotations on plan ${plan.action.name}.');
+}
+
 List<JsonMap> _readRowsValue(Object? value) {
   if (value == null) {
     return const <JsonMap>[];
@@ -3118,7 +3413,7 @@ final class _NoMutationReturnEngine implements OrmEngine {
   Future<void> open() => inner.open();
 }
 
-final class _CountingEngine implements OrmEngine {
+final class _CountingEngine implements OrmEngine, ConnectionCapableEngine {
   final OrmEngine inner;
   var executeCount = 0;
   final List<OrmPlan> executedPlans = <OrmPlan>[];
@@ -3130,18 +3425,72 @@ final class _CountingEngine implements OrmEngine {
 
   @override
   Future<EngineResponse> execute(OrmPlan plan) async {
-    executeCount += 1;
-    executedPlans.add(plan);
+    _record(plan);
     return inner.execute(plan);
   }
 
   @override
   Future<void> open() => inner.open();
 
+  @override
+  Future<EngineConnection> connection() async {
+    if (inner case final ConnectionCapableEngine connectionEngine) {
+      final connection = await connectionEngine.connection();
+      return _CountingEngineConnection(this, connection);
+    }
+    throw UnsupportedError('Inner engine does not support connections.');
+  }
+
   void reset() {
     executeCount = 0;
     executedPlans.clear();
   }
+
+  void _record(OrmPlan plan) {
+    executeCount += 1;
+    executedPlans.add(plan);
+  }
+}
+
+final class _CountingEngineConnection implements EngineConnection {
+  final _CountingEngine _engine;
+  final EngineConnection _inner;
+
+  _CountingEngineConnection(this._engine, this._inner);
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    _engine._record(plan);
+    return _inner.execute(plan);
+  }
+
+  @override
+  Future<void> release() => _inner.release();
+
+  @override
+  Future<EngineTransaction> transaction() async {
+    final transaction = await _inner.transaction();
+    return _CountingEngineTransaction(_engine, transaction);
+  }
+}
+
+final class _CountingEngineTransaction implements EngineTransaction {
+  final _CountingEngine _engine;
+  final EngineTransaction _inner;
+
+  _CountingEngineTransaction(this._engine, this._inner);
+
+  @override
+  Future<void> commit() => _inner.commit();
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    _engine._record(plan);
+    return _inner.execute(plan);
+  }
+
+  @override
+  Future<void> rollback() => _inner.rollback();
 }
 
 final class _BadRelatedFindManyShapeEngine implements OrmEngine {

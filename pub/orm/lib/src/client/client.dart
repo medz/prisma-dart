@@ -164,6 +164,63 @@ Map<String, IncludeSpec> _mergeIncludeSpecMap(
   return merged;
 }
 
+JsonMap _mergePlanAnnotations(
+  JsonMap current,
+  JsonMap next,
+) {
+  if (current.isEmpty) {
+    if (next.isEmpty) {
+      return const <String, Object?>{};
+    }
+    return Map<String, Object?>.unmodifiable(Map<String, Object?>.from(next));
+  }
+  if (next.isEmpty) {
+    return Map<String, Object?>.unmodifiable(Map<String, Object?>.from(current));
+  }
+  return Map<String, Object?>.unmodifiable(<String, Object?>{
+    ...current,
+    ...next,
+  });
+}
+
+int _repositoryOperationSeed = 0;
+
+final class _RepositoryOperation {
+  final String id;
+  final String kind;
+  var _step = 0;
+
+  _RepositoryOperation._({required this.id, required this.kind});
+
+  factory _RepositoryOperation.start({required String kind}) {
+    _repositoryOperationSeed += 1;
+    return _RepositoryOperation._(
+      id: 'repo_${kind}_$_repositoryOperationSeed',
+      kind: kind,
+    );
+  }
+
+  JsonMap nextAnnotations({
+    required String phase,
+    required String strategy,
+    String? relation,
+    int? itemIndex,
+  }) {
+    _step += 1;
+    return <String, Object?>{
+      'repository': <String, Object?>{
+        'operationId': id,
+        'kind': kind,
+        'step': _step,
+        'phase': phase,
+        'strategy': strategy,
+        if (relation != null) 'relation': relation,
+        if (itemIndex != null) 'itemIndex': itemIndex,
+      },
+    };
+  }
+}
+
 OrmIncludePlan _buildOrmIncludePlan(IncludeSpec spec) {
   return OrmIncludePlan(
     where: spec.where,
@@ -1306,6 +1363,7 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap annotations = const <String, Object?>{},
   }) async {
     if (skip case final offset? when offset < 0) {
       throw PlanInvalidPaginationException(key: 'skip', value: offset);
@@ -1344,11 +1402,14 @@ class ModelDelegate {
         storageHash: _client.contract.markerStorageHash,
         profileHash: _client.contract.profileHash,
         lane: 'orm',
-        annotations: distinct.isEmpty
-            ? const <String, Object?>{}
-            : <String, Object?>{
-                'distinct': List<String>.from(distinct, growable: false),
-              },
+        annotations: _mergePlanAnnotations(
+          annotations,
+          distinct.isEmpty
+              ? const <String, Object?>{}
+              : <String, Object?>{
+                  'distinct': List<String>.from(distinct, growable: false),
+                },
+        ),
         model: modelName,
         where: normalizedWhere,
         skip: isCollectionRead && distinct.isEmpty ? skip : null,
@@ -1371,6 +1432,7 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap annotations = const <String, Object?>{},
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
@@ -1382,6 +1444,7 @@ class ModelDelegate {
       distinct: distinct,
       select: select,
       include: include,
+      annotations: annotations,
     );
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
@@ -1409,6 +1472,7 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap annotations = const <String, Object?>{},
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
@@ -1419,6 +1483,7 @@ class ModelDelegate {
       distinct: distinct,
       select: select,
       include: include,
+      annotations: annotations,
     );
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
@@ -1447,6 +1512,7 @@ class ModelDelegate {
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap annotations = const <String, Object?>{},
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
@@ -1454,6 +1520,7 @@ class ModelDelegate {
       where: where,
       select: select,
       include: include,
+      annotations: annotations,
     );
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
@@ -1482,10 +1549,17 @@ class ModelDelegate {
     required List<JsonMap> rows,
     required Map<String, IncludeSpec> include,
     required int depth,
+    _RepositoryOperation? operation,
   }) {
     return _RepositoryIncludePlanner(
       this,
-    ).resolve(action: action, rows: rows, include: include, depth: depth);
+    ).resolve(
+      action: action,
+      rows: rows,
+      include: include,
+      depth: depth,
+      operation: operation,
+    );
   }
 
   ModelRelationContract _resolveRelation({

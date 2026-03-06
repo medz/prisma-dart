@@ -8,22 +8,55 @@ final class _PreparedMutationPlan {
   const _PreparedMutationPlan({required this.plan, required this.include});
 }
 
+@immutable
+final class _NormalizedMutationInput {
+  final JsonMap where;
+  final List<String> select;
+  final Map<String, IncludeSpec> include;
+
+  const _NormalizedMutationInput({
+    required this.where,
+    required this.select,
+    required this.include,
+  });
+}
+
 final class _RepositoryMutationExecutor {
   final ModelDelegate _delegate;
 
   const _RepositoryMutationExecutor(this._delegate);
 
+  _RepositoryOperation _startOperation(String kind) {
+    return _RepositoryOperation.start(kind: '${_delegate.modelName}.$kind');
+  }
+
   Future<JsonMap> create({
     required JsonMap data,
     required List<String> select,
     required Map<String, IncludeSpec> include,
+    _RepositoryOperation? operation,
+    String phase = 'write',
+    String strategy = 'singlePlan',
+    String? relation,
+    int? itemIndex,
   }) async {
-    final prepared = await _buildMutationPlan(
+    final trace = operation ?? _startOperation('create');
+    final normalized = await _normalizeMutationInput(
+      where: const <String, Object?>{},
+      select: select,
+      include: include,
+    );
+    final prepared = _composeMutationPlan(
       action: OrmAction.create,
       mutationResultMode: OrmMutationResultMode.row,
       data: data,
-      select: select,
-      include: include,
+      normalized: normalized,
+      annotations: trace.nextAnnotations(
+        phase: phase,
+        strategy: strategy,
+        relation: relation,
+        itemIndex: itemIndex,
+      ),
     );
     final normalizedInclude = prepared.include;
     final response = await _delegate._client.execute(prepared.plan);
@@ -54,7 +87,13 @@ final class _RepositoryMutationExecutor {
     required JsonMap data,
     required List<String> select,
     required Map<String, IncludeSpec> include,
+    _RepositoryOperation? operation,
+    String phase = 'write',
+    String strategy = 'singlePlan',
+    String? relation,
+    int? itemIndex,
   }) {
+    final trace = operation ?? _startOperation('update');
     return _runNullableMutation(
       action: OrmAction.update,
       mutationResultMode: OrmMutationResultMode.rowOrNull,
@@ -63,6 +102,11 @@ final class _RepositoryMutationExecutor {
       select: select,
       include: include,
       responseAction: 'update',
+      operation: trace,
+      phase: phase,
+      strategy: strategy,
+      relation: relation,
+      itemIndex: itemIndex,
     );
   }
 
@@ -70,7 +114,12 @@ final class _RepositoryMutationExecutor {
     required JsonMap where,
     required List<String> select,
     required Map<String, IncludeSpec> include,
+    _RepositoryOperation? operation,
+    String phase = 'write',
+    String strategy = 'singlePlan',
+    int? itemIndex,
   }) {
+    final trace = operation ?? _startOperation('delete');
     return _runNullableMutation(
       action: OrmAction.delete,
       mutationResultMode: OrmMutationResultMode.rowOrNull,
@@ -79,6 +128,10 @@ final class _RepositoryMutationExecutor {
       select: select,
       include: include,
       responseAction: 'delete',
+      operation: trace,
+      phase: phase,
+      strategy: strategy,
+      itemIndex: itemIndex,
     );
   }
 
@@ -88,6 +141,7 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
+    final trace = _startOperation('createNested');
     return _delegate._client.transaction((txDb) async {
       final scoped = txDb.orm.model(_delegate.modelName);
       return _RepositoryMutationExecutor(scoped)._createNestedInScope(
@@ -95,6 +149,7 @@ final class _RepositoryMutationExecutor {
         nestedCreate: nestedCreate,
         select: select,
         include: include,
+        operation: trace,
       );
     });
   }
@@ -106,6 +161,7 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
+    final trace = _startOperation('updateNested');
     return _delegate._client.transaction((txDb) async {
       final scoped = txDb.orm.model(_delegate.modelName);
       return _RepositoryMutationExecutor(scoped)._updateNestedInScope(
@@ -114,6 +170,7 @@ final class _RepositoryMutationExecutor {
         nestedCreate: nestedCreate,
         select: select,
         include: include,
+        operation: trace,
       );
     });
   }
@@ -123,13 +180,23 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
+    final trace = _startOperation('createMany');
     return _delegate._client.transaction((txDb) async {
       final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
       final rows = <JsonMap>[];
-      for (final item in data) {
+      for (var index = 0; index < data.length; index++) {
+        final item = data[index];
         rows.add(
-          await executor.create(data: item, select: select, include: include),
+          await executor.create(
+            data: item,
+            select: select,
+            include: include,
+            operation: trace,
+            phase: 'item.create',
+            strategy: 'transaction',
+            itemIndex: index,
+          ),
         );
       }
       return rows;
@@ -137,16 +204,23 @@ final class _RepositoryMutationExecutor {
   }
 
   Future<int> deleteMany({required JsonMap where}) {
+    final trace = _startOperation('deleteMany');
     return _delegate._client.transaction((txDb) async {
       final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
       var deleted = 0;
+      var attempt = 0;
       while (true) {
         final row = await executor.delete(
           where: where,
           select: const <String>[],
           include: const <String, IncludeSpec>{},
+          operation: trace,
+          phase: 'item.delete',
+          strategy: 'transaction',
+          itemIndex: attempt,
         );
+        attempt += 1;
         if (row == null) {
           break;
         }
@@ -163,12 +237,28 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
+    final trace = _startOperation('upsert');
     return _delegate._client.transaction((txDb) async {
       final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
-      final existing = await scoped.oneOrNull(where: where);
+      final existing = await scoped._readOneInternal(
+        action: OrmAction.read,
+        where: where,
+        annotations: trace.nextAnnotations(
+          phase: 'branch.lookup',
+          strategy: 'branch',
+        ),
+        includeDepth: 0,
+      );
       if (existing == null) {
-        return executor.create(data: create, select: select, include: include);
+        return executor.create(
+          data: create,
+          select: select,
+          include: include,
+          operation: trace,
+          phase: 'branch.create',
+          strategy: 'branch',
+        );
       }
 
       final updatedRow = await executor.update(
@@ -176,6 +266,9 @@ final class _RepositoryMutationExecutor {
         data: update,
         select: select,
         include: include,
+        operation: trace,
+        phase: 'branch.update',
+        strategy: 'branch',
       );
       if (updatedRow != null) {
         return updatedRow;
@@ -200,22 +293,37 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
     required String responseAction,
+    required _RepositoryOperation operation,
+    required String phase,
+    required String strategy,
+    String? relation,
+    int? itemIndex,
   }) async {
-    final prepared = await _buildMutationPlan(
-      action: action,
-      mutationResultMode: mutationResultMode,
+    final normalized = await _normalizeMutationInput(
       where: where,
-      data: data,
       select: select,
       include: include,
     );
-    final normalizedInclude = prepared.include;
-    final normalizedWhere = prepared.plan.mutation!.where;
+    final normalizedInclude = normalized.include;
+    final normalizedWhere = normalized.where;
     final preDeleteRow = await _preloadDeleteRow(
       action: action,
       where: normalizedWhere,
       select: select,
       include: normalizedInclude,
+      operation: operation,
+    );
+    final prepared = _composeMutationPlan(
+      action: action,
+      mutationResultMode: mutationResultMode,
+      data: data,
+      normalized: normalized,
+      annotations: operation.nextAnnotations(
+        phase: phase,
+        strategy: strategy,
+        relation: relation,
+        itemIndex: itemIndex,
+      ),
     );
 
     final response = await _delegate._client.execute(prepared.plan);
@@ -227,6 +335,7 @@ final class _RepositoryMutationExecutor {
       select: select,
       include: normalizedInclude,
       preDeleteRow: preDeleteRow,
+      operation: operation,
     );
     if (row == null) {
       return null;
@@ -240,11 +349,8 @@ final class _RepositoryMutationExecutor {
     );
   }
 
-  Future<_PreparedMutationPlan> _buildMutationPlan({
-    required OrmAction action,
-    required OrmMutationResultMode mutationResultMode,
+  Future<_NormalizedMutationInput> _normalizeMutationInput({
     JsonMap where = const <String, Object?>{},
-    JsonMap data = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
@@ -256,23 +362,38 @@ final class _RepositoryMutationExecutor {
             where: where,
           );
 
-    return _PreparedMutationPlan(
+    return _NormalizedMutationInput(
+      where: normalizedWhere,
+      select: _delegate._expandSelectForInclude(
+        model: _delegate.modelName,
+        select: select,
+        include: normalizedInclude,
+      ),
       include: normalizedInclude,
+    );
+  }
+
+  _PreparedMutationPlan _composeMutationPlan({
+    required OrmAction action,
+    required OrmMutationResultMode mutationResultMode,
+    required JsonMap data,
+    required _NormalizedMutationInput normalized,
+    required JsonMap annotations,
+  }) {
+    return _PreparedMutationPlan(
+      include: normalized.include,
       plan: OrmPlan.mutation(
         contractHash: _delegate._client.contract.hash,
         target: _delegate._client.contract.target,
         storageHash: _delegate._client.contract.markerStorageHash,
         profileHash: _delegate._client.contract.profileHash,
         lane: 'orm',
+        annotations: annotations,
         model: _delegate.modelName,
         action: action,
-        where: normalizedWhere,
+        where: normalized.where,
         data: data,
-        select: _delegate._expandSelectForInclude(
-          model: _delegate.modelName,
-          select: select,
-          include: normalizedInclude,
-        ),
+        select: normalized.select,
         resultMode: mutationResultMode,
       ),
     );
@@ -283,6 +404,7 @@ final class _RepositoryMutationExecutor {
     required JsonMap where,
     required List<String> select,
     required Map<String, IncludeSpec> include,
+    required _RepositoryOperation operation,
   }) {
     if (action != OrmAction.delete ||
         _delegate._client.contract.capabilities.mutationReturning) {
@@ -297,6 +419,10 @@ final class _RepositoryMutationExecutor {
         select: select,
         include: include,
       ),
+      annotations: operation.nextAnnotations(
+        phase: 'fallback.preload',
+        strategy: 'returningDisabledFallback',
+      ),
       include: const <String, IncludeSpec>{},
       includeDepth: 0,
     );
@@ -310,6 +436,7 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
     required JsonMap? preDeleteRow,
+    required _RepositoryOperation operation,
   }) async {
     var row = _readRow(response.data, action: responseAction);
     if (row == null &&
@@ -323,6 +450,10 @@ final class _RepositoryMutationExecutor {
             model: _delegate.modelName,
             select: select,
             include: include,
+          ),
+          annotations: operation.nextAnnotations(
+            phase: 'fallback.reload',
+            strategy: 'returningDisabledFallback',
           ),
           include: const <String, IncludeSpec>{},
           includeDepth: 0,
@@ -339,6 +470,7 @@ final class _RepositoryMutationExecutor {
     required Map<String, List<JsonMap>> nestedCreate,
     required List<String> select,
     required Map<String, IncludeSpec> include,
+    required _RepositoryOperation operation,
   }) async {
     final normalizedCreate = _delegate._normalizeNestedCreate(nestedCreate);
     final normalizedInclude = _delegate._normalizeInclude(include);
@@ -351,6 +483,9 @@ final class _RepositoryMutationExecutor {
         create: normalizedCreate,
       ),
       include: const <String, IncludeSpec>{},
+      operation: operation,
+      phase: 'root.create',
+      strategy: 'transaction',
     );
 
     for (final entry in normalizedCreate.entries) {
@@ -362,7 +497,8 @@ final class _RepositoryMutationExecutor {
         relation.relatedModel,
       );
       final relatedExecutor = _RepositoryMutationExecutor(related);
-      for (final child in entry.value) {
+      for (var index = 0; index < entry.value.length; index++) {
+        final child = entry.value[index];
         final linkedData = _delegate._linkNestedData(
           parent: created,
           relationName: entry.key,
@@ -373,6 +509,11 @@ final class _RepositoryMutationExecutor {
           data: linkedData,
           select: const <String>[],
           include: const <String, IncludeSpec>{},
+          operation: operation,
+          phase: 'child.create',
+          strategy: 'transaction',
+          relation: entry.key,
+          itemIndex: index,
         );
       }
     }
@@ -392,6 +533,7 @@ final class _RepositoryMutationExecutor {
     required Map<String, List<JsonMap>> nestedCreate,
     required List<String> select,
     required Map<String, IncludeSpec> include,
+    required _RepositoryOperation operation,
   }) async {
     final normalizedCreate = _delegate._normalizeNestedCreate(nestedCreate);
     final normalizedInclude = _delegate._normalizeInclude(include);
@@ -405,6 +547,9 @@ final class _RepositoryMutationExecutor {
         create: normalizedCreate,
       ),
       include: const <String, IncludeSpec>{},
+      operation: operation,
+      phase: 'root.update',
+      strategy: 'transaction',
     );
     if (updated == null) {
       return null;
@@ -419,7 +564,8 @@ final class _RepositoryMutationExecutor {
         relation.relatedModel,
       );
       final relatedExecutor = _RepositoryMutationExecutor(related);
-      for (final child in entry.value) {
+      for (var index = 0; index < entry.value.length; index++) {
+        final child = entry.value[index];
         final linkedData = _delegate._linkNestedData(
           parent: updated,
           relationName: entry.key,
@@ -430,6 +576,11 @@ final class _RepositoryMutationExecutor {
           data: linkedData,
           select: const <String>[],
           include: const <String, IncludeSpec>{},
+          operation: operation,
+          phase: 'child.create',
+          strategy: 'transaction',
+          relation: entry.key,
+          itemIndex: index,
         );
       }
     }
