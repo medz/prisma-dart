@@ -1261,6 +1261,16 @@ final class TypedClientWriter {
       buffer.writeln('    );');
       buffer.writeln('  }');
       buffer.writeln();
+      buffer.writeln(
+        '  $includeClassName includeWith(${relationModel.includeClassName} Function(${relationModel.includeClassName} include) build, {bool merge = true}) {',
+      );
+      buffer.writeln(
+        '    final current = _include ?? const ${relationModel.includeClassName}();',
+      );
+      buffer.writeln('    final next = build(current);');
+      buffer.writeln('    return include(next, merge: merge);');
+      buffer.writeln('  }');
+      buffer.writeln();
       buffer.writeln('  IncludeSpec toIncludeSpec() {');
       buffer.writeln('    return IncludeSpec(');
       buffer.writeln('      where: _where.toJson(),');
@@ -1327,6 +1337,13 @@ final class TypedClientWriter {
       }
       buffer.writeln('    );');
     }
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.includeClassName} includeWith(${model.includeClassName} Function(${model.includeClassName} include) build, {bool merge = true}) {',
+    );
+    buffer.writeln('    final next = build(this);');
+    buffer.writeln('    return merge ? this.merge(next) : next;');
     buffer.writeln('  }');
     buffer.writeln();
     for (final relation in relationFields) {
@@ -2327,6 +2344,16 @@ final class TypedClientWriter {
     );
     buffer.writeln('          : include,');
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  ${model.queryClassName} includeWith(${model.includeClassName} Function(${model.includeClassName} include) build, {bool merge = true}) {',
+    );
+    buffer.writeln(
+      '    final current = _include ?? const ${model.includeClassName}();',
+    );
+    buffer.writeln('    final next = build(current);');
+    buffer.writeln('    return include(next, merge: merge);');
     buffer.writeln('  }');
     buffer.writeln();
     for (final relation in relationFields) {

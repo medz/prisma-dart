@@ -571,6 +571,30 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+includeWith\(\s*UserInclude\s+Function\(\s*UserInclude\s+include\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.includeWith(...) to expose typed include callback with merge flag.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+includeWith\([\s\S]*?(?:return\s+include\(\s*build\([\s\S]*?\)\s*,\s*merge:\s*merge\s*\);|final\s+\w+\s*=\s*build\([\s\S]*?\);[\s\S]*?return\s+include\(\s*\w+\s*,\s*merge:\s*merge\s*\);)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.includeWith(...) to route through include(..., merge: merge).',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserInclude\s*\{[\s\S]*?UserInclude\s+includeWith\(\s*UserInclude\s+Function\(\s*UserInclude\s+include\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserInclude.includeWith(...) to expose typed include callback helper.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserInclude\s*\{[\s\S]*?Map<String,\s*IncludeSpec>\s+toIncludeMap\(\)',
           ).hasMatch(generatedSource),
           isTrue,
@@ -1238,6 +1262,22 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected relation include class to expose chainable include(...) helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+includeWith\(\s*PostInclude\s+Function\(\s*PostInclude\s+include\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include class to expose includeWith(...) callback helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+PostAuthorInclude\s*\{[\s\S]*?PostAuthorInclude\s+includeWith\(\s*UserInclude\s+Function\(\s*UserInclude\s+include\s*\)\s+build,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected to-one relation include class to expose includeWith(...) callback helper.',
         );
         expect(
           RegExp(
