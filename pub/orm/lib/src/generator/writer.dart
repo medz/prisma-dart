@@ -2820,6 +2820,20 @@ final class TypedClientWriter {
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
+    buffer.writeln('  Future<OrmPreparedReadQuery> _prepareRead() {');
+    buffer.writeln('    return _delegate._delegate.prepareRead(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      skip: _skip,');
+    buffer.writeln('      take: _take,');
+    buffer.writeln('      orderBy: _runtimeOrderBy,');
+    buffer.writeln('      distinct: _runtimeDistinct,');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('      cursor: _runtimeCursor,');
+    buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
 
     buffer.writeln('  void _assertReadExecutionSupported(String terminal) {');
     buffer.writeln(
@@ -2871,49 +2885,19 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<OrmPlan> toPlan() {');
-    buffer.writeln('    return _delegate._delegate.toPlan(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _runtimeOrderBy,');
-    buffer.writeln('      distinct: _runtimeDistinct,');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('      cursor: _runtimeCursor,');
-    buffer.writeln('      page: _runtimePage,');
-    buffer.writeln('    );');
+    buffer.writeln('  Future<OrmPlan> toPlan() async {');
+    buffer.writeln('    return (await _prepareRead()).plan;');
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<JsonMap> inspectPlan() {');
-    buffer.writeln('    return _delegate._delegate.inspectPlan(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _runtimeOrderBy,');
-    buffer.writeln('      distinct: _runtimeDistinct,');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('      cursor: _runtimeCursor,');
-    buffer.writeln('      page: _runtimePage,');
-    buffer.writeln('    );');
+    buffer.writeln('  Future<JsonMap> inspectPlan() async {');
+    buffer.writeln('    return (await _prepareRead()).inspectPlan();');
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln('  Future<List<${model.dataClassName}>> all() async {');
     buffer.writeln("    _assertReadExecutionSupported('all');");
-    buffer.writeln('    final rows = await _delegate._delegate.all(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _runtimeOrderBy,');
-    buffer.writeln('      distinct: _runtimeDistinct,');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('      cursor: _runtimeCursor,');
-    buffer.writeln('      page: _runtimePage,');
-    buffer.writeln('    );');
+    buffer.writeln('    final rows = await (await _prepareRead()).all();');
     buffer.writeln(
       '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
     );
@@ -2924,23 +2908,9 @@ final class TypedClientWriter {
       '  Future<OrmPageResult<${model.dataClassName}>> pageResult() async {',
     );
     buffer.writeln("    _assertReadExecutionSupported('pageResult');");
-    buffer.writeln('    final page = _runtimePage;');
-    buffer.writeln('    if (page == null) {');
-    buffer.writeln('      throw runtimeError(');
-    buffer.writeln("        'PLAN.PAGE_RESULT_REQUIRES_PAGE_WINDOW',");
-    buffer.writeln("        'pageResult() requires page() first.',");
     buffer.writeln(
-      "        details: <String, Object?>{'model': '$runtimeName'},",
+      '    final result = await (await _prepareRead()).pageResult();',
     );
-    buffer.writeln('      );');
-    buffer.writeln('    }');
-    buffer.writeln('    final result = await _delegate._delegate.pageResult(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      orderBy: _runtimeOrderBy,');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('      page: page,');
-    buffer.writeln('    );');
     buffer.writeln(
       '    return result.mapItems(${model.dataClassName}.fromJson);',
     );
@@ -2949,18 +2919,7 @@ final class TypedClientWriter {
 
     buffer.writeln('  Future<${model.dataClassName}?> oneOrNull() async {');
     buffer.writeln("    _assertReadExecutionSupported('oneOrNull');");
-    buffer.writeln('    if (_runtimeCursor != null || _runtimePage != null) {');
-    buffer.writeln('      final rows = await all();');
-    buffer.writeln('      if (rows.isEmpty) {');
-    buffer.writeln('        return null;');
-    buffer.writeln('      }');
-    buffer.writeln('      return rows.first;');
-    buffer.writeln('    }');
-    buffer.writeln('    final row = await _delegate._delegate.oneOrNull(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('    );');
+    buffer.writeln('    final row = await (await _prepareRead()).oneOrNull();');
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
     buffer.writeln('    }');
@@ -2970,21 +2929,9 @@ final class TypedClientWriter {
 
     buffer.writeln('  Future<${model.dataClassName}?> firstOrNull() async {');
     buffer.writeln("    _assertReadExecutionSupported('firstOrNull');");
-    buffer.writeln('    if (_runtimeCursor != null || _runtimePage != null) {');
-    buffer.writeln('      final rows = await all();');
-    buffer.writeln('      if (rows.isEmpty) {');
-    buffer.writeln('        return null;');
-    buffer.writeln('      }');
-    buffer.writeln('      return rows.first;');
-    buffer.writeln('    }');
-    buffer.writeln('    final row = await _delegate._delegate.firstOrNull(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      orderBy: _runtimeOrderBy,');
-    buffer.writeln('      distinct: _runtimeDistinct,');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('    );');
+    buffer.writeln(
+      '    final row = await (await _prepareRead()).firstOrNull();',
+    );
     buffer.writeln('    if (row == null) {');
     buffer.writeln('      return null;');
     buffer.writeln('    }');
@@ -2994,34 +2941,15 @@ final class TypedClientWriter {
 
     buffer.writeln('  Stream<${model.dataClassName}> stream() async* {');
     buffer.writeln("    _assertReadExecutionSupported('stream');");
-    buffer.writeln('    await for (final row in _delegate._delegate.stream(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _runtimeOrderBy,');
-    buffer.writeln('      distinct: _runtimeDistinct,');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('      cursor: _runtimeCursor,');
-    buffer.writeln('      page: _runtimePage,');
-    buffer.writeln('    )) {');
+    buffer.writeln('    final prepared = await _prepareRead();');
+    buffer.writeln('    await for (final row in prepared.stream()) {');
     buffer.writeln('      yield ${model.dataClassName}.fromJson(row);');
     buffer.writeln('    }');
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<JsonMap> explain() {');
-    buffer.writeln('    return _delegate._delegate.explain(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      orderBy: _runtimeOrderBy,');
-    buffer.writeln('      distinct: _runtimeDistinct,');
-    buffer.writeln('      select: _runtimeSelect,');
-    buffer.writeln('      include: _runtimeInclude,');
-    buffer.writeln('      cursor: _runtimeCursor,');
-    buffer.writeln('      page: _runtimePage,');
-    buffer.writeln('    );');
+    buffer.writeln('  Future<JsonMap> explain() async {');
+    buffer.writeln('    return (await _prepareRead()).explain();');
     buffer.writeln('  }');
     buffer.writeln();
 

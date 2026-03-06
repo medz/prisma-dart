@@ -12,6 +12,7 @@ import '../runtime/types.dart';
 part 'include_planner.dart';
 part 'mutation_repository.dart';
 part 'read_plan_compiler.dart';
+part 'read_repository.dart';
 
 typedef CollectionFactory =
     ModelDelegate Function({
@@ -1071,6 +1072,9 @@ class ModelDelegate {
   late final _OrmReadPlanCompiler _readPlanCompiler = _OrmReadPlanCompiler(
     this,
   );
+  late final _RepositoryReadExecutor _readRepository = _RepositoryReadExecutor(
+    this,
+  );
 
   ModelQuery query() => ModelQuery._(this, const ModelQueryState());
 
@@ -1122,6 +1126,78 @@ class ModelDelegate {
     IncludeSpec spec = const IncludeSpec(),
   }) => query().includeRelation(relation, spec: spec);
 
+  Future<OrmPreparedReadQuery> prepareRead({
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+  }) {
+    return _prepareReadQuery(
+      resultMode: OrmReadResultMode.all,
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    );
+  }
+
+  Future<OrmPreparedReadQuery> _prepareReadQuery({
+    required OrmReadResultMode resultMode,
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+    JsonMap annotations = const <String, Object?>{},
+    OrmRepositoryTrace? repositoryTrace,
+  }) async {
+    final prepared = await _buildReadPlan(
+      resultMode: resultMode,
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+      annotations: annotations,
+      repositoryTrace: repositoryTrace,
+    );
+    return OrmPreparedReadQuery._(
+      delegate: this,
+      plan: prepared.plan,
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      normalizedInclude: prepared.include,
+      cursor: cursor,
+      page: page,
+      annotations: annotations,
+      repositoryTrace: repositoryTrace,
+      resultMode: resultMode,
+    );
+  }
+
   Future<OrmPlan> toPlan({
     JsonMap where = const <String, Object?>{},
     int? skip,
@@ -1133,8 +1209,7 @@ class ModelDelegate {
     JsonMap? cursor,
     OrmReadPagePlan? page,
   }) async {
-    final prepared = await _buildReadPlan(
-      resultMode: OrmReadResultMode.all,
+    final prepared = await prepareRead(
       where: where,
       skip: skip,
       take: take,
@@ -1158,9 +1233,8 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) {
-    return _readAllInternal(
-      action: OrmAction.read,
+  }) async {
+    final prepared = await prepareRead(
       where: where,
       skip: skip,
       take: take,
@@ -1170,8 +1244,8 @@ class ModelDelegate {
       include: include,
       cursor: cursor,
       page: page,
-      includeDepth: 0,
     );
+    return prepared.all();
   }
 
   Future<OrmPageResult<JsonMap>> pageResult({
@@ -1180,16 +1254,15 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     required OrmReadPagePlan page,
-  }) {
-    return _readPageResultInternal(
-      action: OrmAction.read,
+  }) async {
+    final prepared = await prepareRead(
       where: where,
       orderBy: orderBy,
       select: select,
       include: include,
       page: page,
-      includeDepth: 0,
     );
+    return prepared.pageResult();
   }
 
   Stream<JsonMap> stream({
@@ -1203,8 +1276,7 @@ class ModelDelegate {
     JsonMap? cursor,
     OrmReadPagePlan? page,
   }) async* {
-    final prepared = await _buildReadPlan(
-      resultMode: OrmReadResultMode.all,
+    final prepared = await prepareRead(
       where: where,
       skip: skip,
       take: take,
@@ -1215,55 +1287,20 @@ class ModelDelegate {
       cursor: cursor,
       page: page,
     );
-    final normalizedInclude = prepared.include;
-    final response = await _client.execute(prepared.plan);
-
-    if (normalizedInclude.isEmpty && distinct.isEmpty) {
-      await for (final row in _streamRows(response, action: 'stream')) {
-        yield _shapeRow(row, select: select, include: normalizedInclude);
-      }
-      return;
-    }
-
-    final rows = await _collectCollectionRows(
-      response,
-      action: 'stream',
-      distinct: distinct,
-      skip: skip,
-      take: take,
-    );
-    if (rows.isEmpty) {
-      return;
-    }
-
-    final hydratedRows = await _resolveIncludeRows(
-      action: OrmAction.read,
-      rows: rows,
-      include: normalizedInclude,
-      depth: 0,
-    );
-
-    for (final row in _shapeRows(
-      hydratedRows,
-      select: select,
-      include: normalizedInclude,
-    )) {
-      yield row;
-    }
+    yield* prepared.stream();
   }
 
   Future<JsonMap?> oneOrNull({
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) {
-    return _readOneInternal(
-      action: OrmAction.read,
+  }) async {
+    final prepared = await prepareRead(
       where: where,
       select: select,
       include: include,
-      includeDepth: 0,
     );
+    return prepared.oneOrNull();
   }
 
   Future<JsonMap?> firstOrNull({
@@ -1274,16 +1311,15 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async {
-    return _readFirstInternal(
-      action: OrmAction.read,
+    final prepared = await prepareRead(
       where: where,
       skip: skip,
       orderBy: orderBy,
       distinct: distinct,
       select: select,
       include: include,
-      includeDepth: 0,
     );
+    return prepared.firstOrNull();
   }
 
   Future<int> count({
@@ -1329,8 +1365,7 @@ class ModelDelegate {
     JsonMap? cursor,
     OrmReadPagePlan? page,
   }) async {
-    final prepared = await _buildReadPlan(
-      resultMode: OrmReadResultMode.all,
+    final prepared = await prepareRead(
       where: where,
       skip: skip,
       take: take,
@@ -1341,18 +1376,7 @@ class ModelDelegate {
       cursor: cursor,
       page: page,
     );
-    return Map<String, Object?>.unmodifiable(<String, Object?>{
-      ...prepared.plan.toJson(),
-      'terminalExecution': _terminalExecutionSummary(
-        contract: _client.contract,
-        includeStrategySelector: _client.includeStrategySelector,
-        modelName: modelName,
-        distinct: distinct,
-        include: prepared.include,
-        cursor: cursor,
-        page: page,
-      ),
-    });
+    return prepared.inspectPlan();
   }
 
   Future<JsonMap> explain({
@@ -1366,8 +1390,7 @@ class ModelDelegate {
     JsonMap? cursor,
     OrmReadPagePlan? page,
   }) async {
-    final prepared = await _buildReadPlan(
-      resultMode: OrmReadResultMode.all,
+    final prepared = await prepareRead(
       where: where,
       skip: skip,
       take: take,
@@ -1378,19 +1401,7 @@ class ModelDelegate {
       cursor: cursor,
       page: page,
     );
-    final explained = await _runtime.explainPlan(prepared.plan);
-    return Map<String, Object?>.unmodifiable(<String, Object?>{
-      ...explained,
-      'terminalExecution': _terminalExecutionSummary(
-        contract: _client.contract,
-        includeStrategySelector: _client.includeStrategySelector,
-        modelName: modelName,
-        distinct: distinct,
-        include: prepared.include,
-        cursor: cursor,
-        page: page,
-      ),
-    });
+    return prepared.explain();
   }
 
   Future<JsonMap> aggregate({
@@ -1713,7 +1724,7 @@ class ModelDelegate {
     OrmRepositoryTrace? repositoryTrace,
     required int includeDepth,
   }) async {
-    final prepared = await _buildReadPlan(
+    final prepared = await _prepareReadQuery(
       resultMode: OrmReadResultMode.all,
       where: where,
       skip: skip,
@@ -1727,24 +1738,11 @@ class ModelDelegate {
       annotations: annotations,
       repositoryTrace: repositoryTrace,
     );
-    final normalizedInclude = prepared.include;
-    final response = await _client.execute(prepared.plan);
-
-    final rows = await _collectCollectionRows(
-      response,
-      action: 'all',
-      distinct: distinct,
-      skip: skip,
-      take: take,
-    );
-    final hydratedRows = await _resolveIncludeRows(
+    return _readRepository.all(
+      prepared: prepared,
       action: action,
-      rows: rows,
-      include: normalizedInclude,
-      depth: includeDepth,
+      includeDepth: includeDepth,
     );
-
-    return _shapeRows(hydratedRows, select: select, include: normalizedInclude);
   }
 
   Future<List<JsonMap>> _collectCollectionRows(
@@ -1762,123 +1760,6 @@ class ModelDelegate {
     return _sliceRows(rows: rows, skip: skip, take: take);
   }
 
-  Future<OrmPageResult<JsonMap>> _readPageResultInternal({
-    required OrmAction action,
-    JsonMap where = const <String, Object?>{},
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    required OrmReadPagePlan page,
-    required int includeDepth,
-  }) async {
-    final operation = _RepositoryOperation.start(kind: '$modelName.pageResult');
-    final pageSelect = _expandSelectForPageExecution(
-      select: select,
-      orderBy: orderBy,
-    );
-    final prepared = await _buildReadPlan(
-      resultMode: OrmReadResultMode.all,
-      where: where,
-      orderBy: orderBy,
-      select: pageSelect,
-      include: include,
-      page: OrmReadPagePlan(
-        size: page.size + 1,
-        after: page.after,
-        before: page.before,
-      ),
-      repositoryTrace: operation.nextTrace(
-        phase: 'page.items',
-        strategy: 'windowPlusOne',
-      ),
-    );
-    final response = await _client.execute(prepared.plan);
-    final rawRows = await _collectRows(response, action: 'pageResult');
-    final overflowed = rawRows.length > page.size;
-    final windowRows = _trimPageResultRows(rows: rawRows, page: page);
-    final hydratedRows = await _resolveIncludeRows(
-      action: action,
-      rows: windowRows,
-      include: prepared.include,
-      depth: includeDepth,
-      operation: operation,
-    );
-    final pageInfo = await _buildPageInfo(
-      where: where,
-      orderBy: orderBy,
-      page: page,
-      rows: windowRows,
-      overflowed: overflowed,
-      operation: operation,
-    );
-
-    return OrmPageResult<JsonMap>(
-      items: _shapeRows(
-        hydratedRows,
-        select: select,
-        include: prepared.include,
-      ),
-      pageInfo: pageInfo,
-    );
-  }
-
-  Future<JsonMap?> _readFirstInternal({
-    required OrmAction action,
-    JsonMap where = const <String, Object?>{},
-    int? skip,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> distinct = const <String>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    JsonMap annotations = const <String, Object?>{},
-    OrmRepositoryTrace? repositoryTrace,
-    required int includeDepth,
-  }) async {
-    final prepared = await _buildReadPlan(
-      resultMode: distinct.isEmpty
-          ? OrmReadResultMode.firstOrNull
-          : OrmReadResultMode.all,
-      where: where,
-      skip: skip,
-      orderBy: orderBy,
-      distinct: distinct,
-      select: select,
-      include: include,
-      annotations: annotations,
-      repositoryTrace: repositoryTrace,
-    );
-    final normalizedInclude = prepared.include;
-    final response = await _client.execute(prepared.plan);
-
-    final row = distinct.isEmpty
-        ? await _collectSingleRow(response, action: 'firstOrNull')
-        : _firstOrNull(
-            await _collectCollectionRows(
-              response,
-              action: 'firstOrNull',
-              distinct: distinct,
-              skip: skip,
-              take: 1,
-            ),
-          );
-    if (row == null) {
-      return null;
-    }
-
-    final hydratedRows = await _resolveIncludeRows(
-      action: action,
-      rows: <JsonMap>[row],
-      include: normalizedInclude,
-      depth: includeDepth,
-    );
-
-    return _shapeRows(
-      hydratedRows,
-      select: select,
-      include: normalizedInclude,
-    ).single;
-  }
-
   Future<JsonMap?> _readOneInternal({
     required OrmAction action,
     JsonMap where = const <String, Object?>{},
@@ -1888,34 +1769,19 @@ class ModelDelegate {
     OrmRepositoryTrace? repositoryTrace,
     required int includeDepth,
   }) async {
-    final prepared = await _buildReadPlan(
-      resultMode: OrmReadResultMode.oneOrNull,
+    final prepared = await _prepareReadQuery(
+      resultMode: OrmReadResultMode.all,
       where: where,
       select: select,
       include: include,
       annotations: annotations,
       repositoryTrace: repositoryTrace,
     );
-    final normalizedInclude = prepared.include;
-    final response = await _client.execute(prepared.plan);
-
-    final row = await _collectSingleRow(response, action: 'oneOrNull');
-    if (row == null) {
-      return null;
-    }
-
-    final hydratedRows = await _resolveIncludeRows(
+    return _readRepository.oneOrNull(
+      prepared: prepared,
       action: action,
-      rows: <JsonMap>[row],
-      include: normalizedInclude,
-      depth: includeDepth,
+      includeDepth: includeDepth,
     );
-
-    return _shapeRows(
-      hydratedRows,
-      select: select,
-      include: normalizedInclude,
-    ).single;
   }
 
   Future<List<JsonMap>> _resolveIncludeRows({

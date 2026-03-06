@@ -661,11 +661,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?List<OrmOrderBy>\s+get\s+_runtimeOrderBy[\s\S]*?Future<List<UserData>>\s+all\(\)\s+async\s*\{[\s\S]*?_delegate\._delegate\.all\(',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPreparedReadQuery>\s+_prepareRead\(\)[\s\S]*?Future<List<UserData>>\s+all\(\)\s+async\s*\{[\s\S]*?\(await\s+_prepareRead\(\)\)\.all\(\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery read execution to compile typed state straight to delegate execution.',
+              'Expected UserQuery read execution to compile typed state through prepared read objects.',
         );
         expect(
           generatedSource.contains('ModelQuery _runtimeQuery('),
@@ -724,19 +724,19 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\s*\)[\s\S]*?_delegate\._delegate\.toPlan\(',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\s*\)\s+async[\s\S]*?\(await\s+_prepareRead\(\)\)\.plan',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.toPlan() to compile typed state directly through delegate planning.',
+              'Expected UserQuery.toPlan() to compile typed state through prepared read planning.',
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(\s*\)[\s\S]*?_delegate\._delegate\.inspectPlan\(',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(\s*\)\s+async[\s\S]*?\(await\s+_prepareRead\(\)\)\.inspectPlan\(\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.inspectPlan() to compile typed state directly through delegate inspection.',
+              'Expected UserQuery.inspectPlan() to compile typed state through prepared read inspection.',
         );
         expect(
           RegExp(
@@ -747,11 +747,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+explain\(\s*\)[\s\S]*?_delegate\._delegate\.explain\(',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+explain\(\s*\)\s+async[\s\S]*?\(await\s+_prepareRead\(\)\)\.explain\(\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.explain() to compile typed state directly through delegate explain.',
+              'Expected UserQuery.explain() to compile typed state through prepared read explain.',
         );
         expect(
           RegExp(
@@ -762,11 +762,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPageResult<UserData>>\s+pageResult\(\s*\)\s+async[\s\S]*?_delegate\._delegate\.pageResult\(',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<OrmPageResult<UserData>>\s+pageResult\(\s*\)\s+async[\s\S]*?\(await\s+_prepareRead\(\)\)\.pageResult\(\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.pageResult() to expose structured page envelope mapping without runtime query bridge.',
+              'Expected UserQuery.pageResult() to expose structured page envelope mapping through prepared reads.',
         );
         expect(
           RegExp(
