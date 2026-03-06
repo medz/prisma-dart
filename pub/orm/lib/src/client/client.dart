@@ -383,7 +383,6 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
   final OrmEngine engine;
   final OrmRuntimeCore _runtime;
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
-  final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
   late final OrmDbNamespace _db = OrmDbNamespace(
     sqlContext: this,
@@ -414,7 +413,6 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
          mode: mode,
          log: log,
        ),
-       _modelAliases = _createModelAliases(contract),
        _collectionRegistry = _createCollectionRegistry(contract, collections);
 
   bool get isConnected => _runtime.isConnected;
@@ -434,7 +432,6 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
       contract: contract,
       executePlan: connection.execute,
       explainPlan: connection.explain,
-      modelAliases: _modelAliases,
       collectionRegistry: _collectionRegistry,
       includeStrategySelector: includeStrategySelector,
       maxIncludeDepth: maxIncludeDepth,
@@ -460,7 +457,6 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
         contract: contract,
         executePlan: openedTransaction.execute,
         explainPlan: openedTransaction.explain,
-        modelAliases: _modelAliases,
         collectionRegistry: _collectionRegistry,
         includeStrategySelector: includeStrategySelector,
         maxIncludeDepth: maxIncludeDepth,
@@ -531,18 +527,10 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
   }
 
   String? _resolveModel(String modelKey) {
-    final exact = _modelAliases[modelKey];
-    if (exact != null) {
-      return exact;
+    if (contract.models.containsKey(modelKey)) {
+      return modelKey;
     }
-    if (modelKey.endsWith('s') && modelKey.length > 1) {
-      final singular = modelKey.substring(0, modelKey.length - 1);
-      final singularMatch = _modelAliases[singular];
-      if (singularMatch != null) {
-        return singularMatch;
-      }
-    }
-    return contract.resolveModel(modelKey);
+    return null;
   }
 }
 
@@ -551,7 +539,6 @@ final class OrmScopedClient implements OrmDbContext, _OrmDelegateRuntime {
   final OrmContract contract;
   final Future<EngineResponse> Function(OrmPlan plan) _executePlan;
   final Future<JsonMap> Function(OrmPlan plan) _explainPlan;
-  final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
   late final OrmDbNamespace _db = OrmDbNamespace(
@@ -567,13 +554,11 @@ final class OrmScopedClient implements OrmDbContext, _OrmDelegateRuntime {
     required this.contract,
     required Future<EngineResponse> Function(OrmPlan plan) executePlan,
     required Future<JsonMap> Function(OrmPlan plan) explainPlan,
-    required Map<String, String> modelAliases,
     required Map<String, CollectionFactory> collectionRegistry,
     required this.includeStrategySelector,
     required this.maxIncludeDepth,
   }) : _executePlan = executePlan,
        _explainPlan = explainPlan,
-       _modelAliases = modelAliases,
        _collectionRegistry = collectionRegistry;
 
   @override
@@ -611,18 +596,10 @@ final class OrmScopedClient implements OrmDbContext, _OrmDelegateRuntime {
   }
 
   String? _resolveModel(String modelKey) {
-    final exact = _modelAliases[modelKey];
-    if (exact != null) {
-      return exact;
+    if (contract.models.containsKey(modelKey)) {
+      return modelKey;
     }
-    if (modelKey.endsWith('s') && modelKey.length > 1) {
-      final singular = modelKey.substring(0, modelKey.length - 1);
-      final singularMatch = _modelAliases[singular];
-      if (singularMatch != null) {
-        return singularMatch;
-      }
-    }
-    return contract.resolveModel(modelKey);
+    return null;
   }
 }
 
@@ -3549,30 +3526,6 @@ final class _RelationMergeKey {
   int get hashCode => Object.hashAll(parts);
 }
 
-Map<String, String> _createModelAliases(OrmContract contract) {
-  final aliases = <String, String>{};
-
-  for (final model in contract.models.values) {
-    final name = model.name;
-    final lower = _lowercaseFirst(name);
-    aliases[name] = name;
-    aliases[lower] = name;
-    aliases['${lower}s'] = name;
-    aliases[model.table] = name;
-    if (!model.table.endsWith('s')) {
-      aliases['${model.table}s'] = name;
-    }
-  }
-
-  for (final alias in contract.aliases.entries) {
-    if (contract.models.containsKey(alias.value)) {
-      aliases[alias.key] = alias.value;
-    }
-  }
-
-  return aliases;
-}
-
 Map<String, CollectionFactory> _createCollectionRegistry(
   OrmContract contract,
   Map<String, CollectionFactory> collections,
@@ -3581,15 +3534,13 @@ Map<String, CollectionFactory> _createCollectionRegistry(
     return const <String, CollectionFactory>{};
   }
 
-  final aliases = _createModelAliases(contract);
   final registry = <String, CollectionFactory>{};
 
   for (final entry in collections.entries) {
-    final model = aliases[entry.key] ?? aliases[_lowercaseFirst(entry.key)];
-    if (model == null) {
+    if (!contract.models.containsKey(entry.key)) {
       throw ModelNotFoundException(entry.key, contract.models.keys);
     }
-    registry[model] = entry.value;
+    registry[entry.key] = entry.value;
   }
 
   return registry;
@@ -3695,11 +3646,4 @@ bool _listEquals(List<Object?> left, List<Object?> right) {
     }
   }
   return true;
-}
-
-String _lowercaseFirst(String value) {
-  if (value.isEmpty) {
-    return value;
-  }
-  return value[0].toLowerCase() + value.substring(1);
 }

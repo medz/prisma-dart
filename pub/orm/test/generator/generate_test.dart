@@ -476,6 +476,14 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+GeneratedOrmCollections\s*\{[\s\S]*?UserDelegate\s+User\s*=',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected GeneratedOrmCollections to expose exact model-name delegate getters.',
+        );
+        expect(
+          RegExp(
             r'class\s+GeneratedOrmDb\s*\{[\s\S]*?late\s+final\s+GeneratedOrmCollections\s+orm\s*=\s*GeneratedOrmCollections\(_db\.orm\);[\s\S]*?late\s+final\s+GeneratedOrmSql\s+sql\s*=\s*GeneratedOrmSql\(_db\.sql\);',
           ).hasMatch(generatedSource),
           isTrue,
@@ -484,11 +492,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+GeneratedOrmSql\s*\{[\s\S]*?final\s+OrmSqlApi\s+_api;[\s\S]*?UserSql\s+user\s*=',
+            r'class\s+GeneratedOrmSql\s*\{[\s\S]*?final\s+OrmSqlApi\s+_api;[\s\S]*?UserSql\s+User\s*=',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected GeneratedOrmSql to expose typed model sql delegates.',
+              'Expected GeneratedOrmSql to expose exact model-name sql delegates.',
         );
         expect(
           RegExp(

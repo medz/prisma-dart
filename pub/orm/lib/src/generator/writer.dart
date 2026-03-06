@@ -111,7 +111,9 @@ final class TypedClientWriter {
     } else {
       buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.');
     }
-    buffer.writeln('// ignore_for_file: unused_element');
+    buffer.writeln(
+      '// ignore_for_file: unused_element, non_constant_identifier_names',
+    );
 
     buffer.writeln();
     buffer.writeln("import '${options.ormImport}';");
@@ -572,7 +574,7 @@ final class TypedClientWriter {
 
     for (final model in models) {
       buffer.writeln(
-        '  late final ${model.delegateClassName} ${model.getterName} =',
+        '  late final ${model.delegateClassName} ${model.propertyName} =',
       );
       buffer.writeln(
         "      ${model.delegateClassName}(_orm.model('${_escapeString(model.model.runtimeName)}'));",
@@ -592,7 +594,7 @@ final class TypedClientWriter {
     buffer.writeln();
     for (final model in models) {
       buffer.writeln(
-        '  late final ${model.sqlClassName} ${model.getterName} =',
+        '  late final ${model.sqlClassName} ${model.propertyName} =',
       );
       buffer.writeln('      ${model.sqlClassName}(_api);');
       buffer.writeln();
@@ -3662,15 +3664,15 @@ final class TypedClientWriter {
         base: _toUpperCamelIdentifier(model.name, fallback: 'Model'),
         used: usedClassNames,
       );
-      final getterName = _makeUnique(
-        base: _toLowerCamelIdentifier(model.name, fallback: 'model'),
+      final propertyName = _makeUnique(
+        base: _toUpperCamelIdentifier(model.name, fallback: 'Model'),
         used: usedGetterNames,
       );
       resolved.add(
         _ResolvedModel(
           model: model,
           classBaseName: classBaseName,
-          getterName: getterName,
+          propertyName: propertyName,
         ),
       );
     }
@@ -4098,12 +4100,12 @@ enum _TemplateClassKind { data, where, whereUnique, cursor, create, update }
 final class _ResolvedModel {
   final TypedModel model;
   final String classBaseName;
-  final String getterName;
+  final String propertyName;
 
   const _ResolvedModel({
     required this.model,
     required this.classBaseName,
-    required this.getterName,
+    required this.propertyName,
   });
 
   String get delegateClassName => '${classBaseName}Delegate';

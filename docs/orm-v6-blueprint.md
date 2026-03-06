@@ -39,7 +39,7 @@
 - 示例：
 
 ```dart
-final users = await db.user
+final users = await db.orm.User
     .where((w) => w.email.equals('a@x.com') & w.active.equals(true))
     .orderBy((o) => [o.createdAt.desc()])
     .take(20)

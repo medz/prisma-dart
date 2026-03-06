@@ -82,7 +82,7 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
 
-      final users = client.db.orm.model('users');
+      final users = client.db.orm.model('User');
       final created = await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
       );
@@ -126,7 +126,7 @@ void main() {
       await client.connect();
 
       final insertResult = await client.db.sql
-          .insertInto('users')
+          .insertInto('User')
           .values(<String, Object?>{'id': 'u1', 'email': 'a@example.com'})
           .returning(const <String>['id', 'email'])
           .execute();
@@ -175,7 +175,7 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
 
-      final users = client.db.orm.model('users');
+      final users = client.db.orm.model('User');
       await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
       );
@@ -189,6 +189,22 @@ void main() {
           .model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(ormRow?['id'], 'u1');
+      await client.disconnect();
+    });
+
+    test('requires exact model names on orm and sql roots', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+
+      expect(
+        () => client.db.orm.model('users'),
+        throwsA(isA<ModelNotFoundException>()),
+      );
+      expect(
+        () => client.db.sql.from('users'),
+        throwsA(isA<ModelNotFoundException>()),
+      );
+
       await client.disconnect();
     });
 
@@ -1575,14 +1591,16 @@ void main() {
       await _seedRelationalData(client);
       engine.reset();
 
-      final rows = await client.db.orm.model('User').all(
-        where: <String, Object?>{
-          'posts': <String, Object?>{
-            'some': <String, Object?>{'title': 'Post A'},
-          },
-        },
-        orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-      );
+      final rows = await client.db.orm
+          .model('User')
+          .all(
+            where: <String, Object?>{
+              'posts': <String, Object?>{
+                'some': <String, Object?>{'title': 'Post A'},
+              },
+            },
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+          );
 
       expect(rows.map((row) => row['id']).toList(growable: false), <Object?>[
         'u1',
@@ -1592,9 +1610,7 @@ void main() {
         <String>['Post', 'User'],
       );
       expect(
-        engine.executedPlans
-            .map((plan) => plan.action)
-            .toList(growable: false),
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
         <OrmAction>[OrmAction.read, OrmAction.read],
       );
 
@@ -1621,10 +1637,10 @@ void main() {
         traces.map((trace) => trace.relation).toList(growable: false),
         <String?>['posts', null],
       );
-      expect(
-        traces.map((trace) => trace.step).toList(growable: false),
-        <int>[1, 2],
-      );
+      expect(traces.map((trace) => trace.step).toList(growable: false), <int>[
+        1,
+        2,
+      ]);
       expect(client.telemetry()?.operationId, operationId);
       expect(client.telemetry()?.operationKind, 'User.read');
       expect(client.operationTelemetry(operationId)?.statementCount, 2);
@@ -1873,14 +1889,16 @@ void main() {
       await _seedRelationalData(client);
       engine.reset();
 
-      final updated = await client.db.orm.model('User').update(
-        where: <String, Object?>{
-          'posts': <String, Object?>{
-            'some': <String, Object?>{'title': 'Post C'},
-          },
-        },
-        data: <String, Object?>{'email': 'u2+updated@example.com'},
-      );
+      final updated = await client.db.orm
+          .model('User')
+          .update(
+            where: <String, Object?>{
+              'posts': <String, Object?>{
+                'some': <String, Object?>{'title': 'Post C'},
+              },
+            },
+            data: <String, Object?>{'email': 'u2+updated@example.com'},
+          );
 
       expect(updated?['id'], 'u2');
       expect(
@@ -1888,9 +1906,7 @@ void main() {
         <String>['Post', 'User'],
       );
       expect(
-        engine.executedPlans
-            .map((plan) => plan.action)
-            .toList(growable: false),
+        engine.executedPlans.map((plan) => plan.action).toList(growable: false),
         <OrmAction>[OrmAction.read, OrmAction.update],
       );
 
@@ -1917,10 +1933,10 @@ void main() {
         traces.map((trace) => trace.relation).toList(growable: false),
         <String?>['posts', null],
       );
-      expect(
-        traces.map((trace) => trace.step).toList(growable: false),
-        <int>[1, 2],
-      );
+      expect(traces.map((trace) => trace.step).toList(growable: false), <int>[
+        1,
+        2,
+      ]);
       expect(client.telemetry()?.operationId, operationId);
       expect(client.telemetry()?.operationKind, 'User.update');
       expect(client.operationTelemetry(operationId)?.statementCount, 2);
@@ -2986,7 +3002,7 @@ void main() {
         contract: contract,
         engine: MemoryEngine(),
         collections: <String, CollectionFactory>{
-          'users':
+          'User':
               ({
                 required OrmCollectionContext client,
                 required String modelName,
@@ -2997,12 +3013,31 @@ void main() {
       );
       await client.connect();
 
-      final first = client.db.orm.model('users');
+      final first = client.db.orm.model('User');
       final second = client.db.orm.model('User');
 
       expect(first, same(second));
       expect(first, isA<_UsersCollection>());
       await client.disconnect();
+    });
+
+    test('requires exact custom collection keys', () {
+      expect(
+        () => OrmClient(
+          contract: contract,
+          engine: MemoryEngine(),
+          collections: <String, CollectionFactory>{
+            'users':
+                ({
+                  required OrmCollectionContext client,
+                  required String modelName,
+                }) {
+                  return _UsersCollection(client: client, modelName: modelName);
+                },
+          },
+        ),
+        throwsA(isA<ModelNotFoundException>()),
+      );
     });
 
     test('supports runtime connection and transaction APIs', () async {
