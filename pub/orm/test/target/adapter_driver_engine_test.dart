@@ -244,6 +244,40 @@ void main() {
     await engine.close();
   });
 
+  test(
+    'connection prefers native read streaming when scoped driver supports it',
+    () async {
+      final adapter = _StreamingTrackingAdapter();
+      final driver = _ConnectionCapableStreamingDriver(
+        streamedRows: <String>['connection:u1', 'connection:u2'],
+      );
+      final engine = AdapterDriverEngine<String, String>(
+        adapter: adapter,
+        driver: driver,
+      );
+
+      await engine.open();
+      final connection = await engine.connection();
+      final response = await connection.execute(_plan());
+      final rows = await response.rows.toList();
+
+      final inner = driver.connections.single as _StreamingConnection;
+      expect(inner.requests, isEmpty);
+      expect(inner.streamRequests, <String>['User:read']);
+      expect(adapter.decodedRaw, isEmpty);
+      expect(adapter.streamDecodedPlans, hasLength(1));
+      expect(response.executionMode, EngineExecutionMode.stream);
+      expect(response.executionSource, EngineExecutionSource.directStream);
+      expect(rows, <JsonMap>[
+        <String, Object?>{'request': 'User:read', 'streamed': 'connection:u1'},
+        <String, Object?>{'request': 'User:read', 'streamed': 'connection:u2'},
+      ]);
+
+      await connection.release();
+      await engine.close();
+    },
+  );
+
   test('forwards transaction commit and marks transaction completed', () async {
     final adapter = _TrackingAdapter();
     final driver = _ConnectionCapableTrackingDriver();
@@ -270,6 +304,44 @@ void main() {
     await connection.release();
     await engine.close();
   });
+
+  test(
+    'transaction prefers native read streaming when scoped driver supports it',
+    () async {
+      final adapter = _StreamingTrackingAdapter();
+      final driver = _ConnectionCapableStreamingDriver(
+        streamedRows: <String>['transaction:u1', 'transaction:u2'],
+      );
+      final engine = AdapterDriverEngine<String, String>(
+        adapter: adapter,
+        driver: driver,
+      );
+
+      await engine.open();
+      final connection = await engine.connection();
+      final transaction = await connection.transaction();
+      final response = await transaction.execute(_plan());
+      final rows = await response.rows.toList();
+
+      final inner =
+          driver.connections.single.transactions.single
+              as _StreamingTransaction;
+      expect(inner.requests, isEmpty);
+      expect(inner.streamRequests, <String>['User:read']);
+      expect(adapter.decodedRaw, isEmpty);
+      expect(adapter.streamDecodedPlans, hasLength(1));
+      expect(response.executionMode, EngineExecutionMode.stream);
+      expect(response.executionSource, EngineExecutionSource.directStream);
+      expect(rows, <JsonMap>[
+        <String, Object?>{'request': 'User:read', 'streamed': 'transaction:u1'},
+        <String, Object?>{'request': 'User:read', 'streamed': 'transaction:u2'},
+      ]);
+
+      await transaction.rollback();
+      await connection.release();
+      await engine.close();
+    },
+  );
 
   test('transaction describePlan uses scoped driver explain surface', () async {
     final adapter = _ExplainTrackingAdapter();
@@ -484,6 +556,21 @@ final class _ConnectionCapableTrackingDriver
   }
 }
 
+final class _ConnectionCapableStreamingDriver
+    extends _ConnectionCapableTrackingDriver {
+  final List<String> streamedRows;
+
+  _ConnectionCapableStreamingDriver({required this.streamedRows});
+
+  @override
+  Future<TargetDriverConnection<String, String>> connection() async {
+    connectionCount += 1;
+    final connection = _StreamingConnection(streamedRows: streamedRows);
+    connections.add(connection);
+    return connection;
+  }
+}
+
 final class _TrackingConnection
     implements
         TargetDriverConnection<String, String>,
@@ -520,6 +607,30 @@ final class _TrackingConnection
   }
 }
 
+final class _StreamingConnection extends _TrackingConnection
+    implements ReadStreamCapableTargetDriverConnection<String, String> {
+  final List<String> streamedRows;
+  final List<String> streamRequests = <String>[];
+
+  _StreamingConnection({required this.streamedRows});
+
+  @override
+  Stream<String> stream(String request) async* {
+    streamRequests.add(request);
+    for (final row in streamedRows) {
+      yield row;
+    }
+  }
+
+  @override
+  Future<TargetDriverTransaction<String, String>> transaction() async {
+    transactionCount += 1;
+    final transaction = _StreamingTransaction(streamedRows: streamedRows);
+    transactions.add(transaction);
+    return transaction;
+  }
+}
+
 final class _TrackingTransaction
     implements
         TargetDriverTransaction<String, String>,
@@ -549,5 +660,21 @@ final class _TrackingTransaction
   Future<JsonMap> explain(String request) async {
     explainRequests.add(request);
     return <String, Object?>{'scope': 'transaction', 'value': request};
+  }
+}
+
+final class _StreamingTransaction extends _TrackingTransaction
+    implements ReadStreamCapableTargetDriverTransaction<String, String> {
+  final List<String> streamedRows;
+  final List<String> streamRequests = <String>[];
+
+  _StreamingTransaction({required this.streamedRows});
+
+  @override
+  Stream<String> stream(String request) async* {
+    streamRequests.add(request);
+    for (final row in streamedRows) {
+      yield row;
+    }
   }
 }
