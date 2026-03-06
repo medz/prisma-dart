@@ -1055,11 +1055,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserWhereUniqueInput\s*\{[\s\S]*?UserWhereInput\s+toWhereInput\(\)\s*\{[\s\S]*?return\s+UserWhereInput\.fromJson\(toJson\(\)\);',
+            r'class\s+UserWhereUniqueInput\s*\{[\s\S]*?UserWhereInput\s+toWhereInput\(\)\s*\{[\s\S]*?return\s+UserWhereInput\([\s\S]*?id:\s*id\s*==\s*null\s*\?\s*null\s*:\s*IntWhereFilter\(equals:\s*id\),',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected unique input to expose typed toWhereInput() conversion for read delegate reuse.',
+              'Expected unique input to expose direct typed toWhereInput() conversion without JSON round-tripping.',
         );
         expect(
           RegExp(

@@ -3339,9 +3339,14 @@ final class TypedClientWriter {
     if (classKind == _TemplateClassKind.whereUnique) {
       buffer.writeln();
       buffer.writeln('  ${model.whereInputClassName} toWhereInput() {');
-      buffer.writeln(
-        '    return ${model.whereInputClassName}.fromJson(toJson());',
-      );
+      buffer.writeln('    return ${model.whereInputClassName}(');
+      for (final field in fields) {
+        final filterClass = _whereFilterClassName(field.field.scalarType);
+        buffer.writeln(
+          '      ${field.memberName}: ${field.memberName} == null ? null : $filterClass(equals: ${field.memberName}),',
+        );
+      }
+      buffer.writeln('    );');
       buffer.writeln('  }');
     }
     if (includeLogicalWhere) {
