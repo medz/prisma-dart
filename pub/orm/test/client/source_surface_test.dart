@@ -158,6 +158,14 @@ void main() {
               'Expected ModelGroupedQuery to keep raw JsonMap having out of the public grouped surface.',
         );
         expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+configure\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to keep configure(...) out of the public grouped surface.',
+        );
+        expect(
           RegExp(r'\bclass\s+OrmGroupByHavingBuilder\b').hasMatch(source),
           isTrue,
           reason:

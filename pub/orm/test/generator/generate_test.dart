@@ -1668,9 +1668,25 @@ typedef Post = ({
           RegExp(
             r'class\s+UserGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+_runtimeGrouped\(UserGroupBySpec\s+groupBy\)\s*\{[\s\S]*?\.groupedBy\([\s\S]*?where:\s*_where\.toJson\(\),[\s\S]*?\.configure\(groupBy\.toRuntimeSpec\(\)\);',
           ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupedQuery to avoid the configure(...) grouped bridge.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+_runtimeGrouped\(UserGroupBySpec\s+groupBy\)\s*\{[\s\S]*?\.groupedBy\([\s\S]*?where:\s*_where\.toJson\(\),[\s\S]*?\.having\(groupBy\.having\.toRuntimeHaving\(\),\s*merge:\s*false\);',
+          ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserGroupedQuery to keep a single runtime grouped builder bridge.',
+              'Expected UserGroupedQuery to keep a single runtime grouped builder bridge through groupedBy(...).having(...).',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?UserGroupedQuery\s+configure\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupedQuery to keep configure(...) out of the typed grouped surface.',
         );
         expect(
           RegExp(

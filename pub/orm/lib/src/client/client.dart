@@ -3367,21 +3367,6 @@ final class ModelGroupedQuery {
 
   List<String> get byFields => _groupBy.by;
 
-  ModelGroupedQuery configure(OrmGroupBySpec groupBy) {
-    if (!_sameStringList(left: _groupBy.by, right: groupBy.by)) {
-      throw runtimeError(
-        'PLAN.GROUP_BY_FIELDS_MISMATCH',
-        'configure() cannot replace the grouped fields after groupedBy().',
-        details: <String, Object?>{
-          'model': _delegate.modelName,
-          'currentBy': _groupBy.by,
-          'nextBy': groupBy.by,
-        },
-      );
-    }
-    return _next(groupBy);
-  }
-
   ModelGroupedQuery having(OrmGroupByHaving having, {bool merge = true}) {
     final nextHaving = merge ? _groupBy.having.merge(having) : having;
     return _next(_groupBy.copyWith(having: nextHaving));
@@ -3473,24 +3458,6 @@ final class _RelationMergeKey {
 
   @override
   int get hashCode => Object.hashAll(parts);
-}
-
-bool _sameStringList({
-  required List<String> left,
-  required List<String> right,
-}) {
-  if (identical(left, right)) {
-    return true;
-  }
-  if (left.length != right.length) {
-    return false;
-  }
-  for (var index = 0; index < left.length; index++) {
-    if (left[index] != right[index]) {
-      return false;
-    }
-  }
-  return true;
 }
 
 Map<String, CollectionFactory> _createCollectionRegistry(

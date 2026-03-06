@@ -711,26 +711,18 @@ void main() {
         final plan = await users
             .query()
             .groupedBy(const <String>['email'])
-            .configure(
-              OrmGroupBySpec(
-                by: const <String>['email'],
-                countAll: true,
-                having: OrmGroupByHaving.parse(const <String, Object?>{
-                  '_count': <String, Object?>{
-                    'all': <String, Object?>{'gte': 2},
-                  },
-                }),
-                sum: const <String>['id'],
-              ),
+            .having(
+              OrmGroupByHaving.parse(const <String, Object?>{
+                'email': <String, Object?>{'equals': 'a@example.com'},
+              }),
+              merge: false,
             )
             .toPlan();
 
         expect(plan.read?.shape, OrmReadShape.groupedAggregate);
         expect(plan.read?.groupBy?.by, <String>['email']);
         expect(plan.read?.groupBy?.having.toJson(), <String, Object?>{
-          '_count': <String, Object?>{
-            'all': <String, Object?>{'gte': 2},
-          },
+          'email': <String, Object?>{'equals': 'a@example.com'},
         });
         expect(plan.read?.aggregate, isNotNull);
       },

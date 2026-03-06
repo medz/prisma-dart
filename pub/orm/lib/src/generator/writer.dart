@@ -3212,7 +3212,6 @@ final class TypedClientWriter {
     required StringBuffer buffer,
     required _ResolvedModel model,
   }) {
-    final runtimeName = _escapeString(model.model.runtimeName);
     final aggregateBuilderClassName = '${model.classBaseName}AggregateBuilder';
     buffer.writeln('class ${model.groupedQueryClassName} {');
     buffer.writeln('  final ${model.delegateClassName} _delegate;');
@@ -3226,35 +3225,6 @@ final class TypedClientWriter {
     buffer.writeln('  }) : _delegate = delegate,');
     buffer.writeln('       _where = where,');
     buffer.writeln('       _groupBy = groupBy;');
-    buffer.writeln();
-
-    buffer.writeln(
-      '  ${model.groupedQueryClassName} configure(${model.groupBySpecClassName} groupBy) {',
-    );
-    buffer.writeln(
-      '    final currentBy = _groupBy.by.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final nextBy = groupBy.by.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final sameBy = currentBy.length == nextBy.length && Iterable<int>.generate(currentBy.length).every((index) => currentBy[index] == nextBy[index]);',
-    );
-    buffer.writeln('    if (!sameBy) {');
-    buffer.writeln('      throw runtimeError(');
-    buffer.writeln("        'PLAN.GROUP_BY_FIELDS_MISMATCH',");
-    buffer.writeln(
-      "        'configure() cannot replace the grouped fields after groupedBy().',",
-    );
-    buffer.writeln('        details: <String, Object?>{');
-    buffer.writeln("          'model': '$runtimeName',");
-    buffer.writeln("          'currentBy': currentBy,");
-    buffer.writeln("          'nextBy': nextBy,");
-    buffer.writeln('        },');
-    buffer.writeln('      );');
-    buffer.writeln('    }');
-    buffer.writeln('    return _next(groupBy);');
-    buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln(
@@ -3360,7 +3330,9 @@ final class TypedClientWriter {
     );
     buffer.writeln('          where: _where.toJson(),');
     buffer.writeln('        )');
-    buffer.writeln('        .configure(groupBy.toRuntimeSpec());');
+    buffer.writeln(
+      '        .having(groupBy.having.toRuntimeHaving(), merge: false);',
+    );
     buffer.writeln('  }');
     buffer.writeln();
 
