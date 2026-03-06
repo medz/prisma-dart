@@ -11,6 +11,7 @@ import '../runtime/types.dart';
 
 part 'include_planner.dart';
 part 'mutation_repository.dart';
+part 'relation_where_rewriter.dart';
 part 'read_plan_compiler.dart';
 part 'read_repository.dart';
 
@@ -1069,6 +1070,8 @@ class ModelDelegate {
   OrmCollectionContext get client => _client;
 
   _OrmDelegateRuntime get _runtime => _client as _OrmDelegateRuntime;
+  late final _RepositoryRelationWhereRewriter _relationWhereRewriter =
+      _RepositoryRelationWhereRewriter(this);
   late final _OrmReadPlanCompiler _readPlanCompiler = _OrmReadPlanCompiler(
     this,
   );
@@ -1165,10 +1168,13 @@ class ModelDelegate {
     JsonMap annotations = const <String, Object?>{},
     OrmRepositoryTrace? repositoryTrace,
   }) async {
+    final normalizedWhere = where.isEmpty
+        ? const <String, Object?>{}
+        : await _normalizeWhereForExecution(model: modelName, where: where);
     return _readPlanCompiler.compile(
       state: _OrmPreparedReadState(
         resultMode: resultMode,
-        where: where,
+        where: normalizedWhere,
         skip: skip,
         take: take,
         orderBy: orderBy,
@@ -2967,10 +2973,7 @@ class ModelDelegate {
     required String model,
     required JsonMap where,
   }) {
-    return _readPlanCompiler.normalizeWhereForExecution(
-      model: model,
-      where: where,
-    );
+    return _relationWhereRewriter.rewrite(model: model, where: where);
   }
 
   Map<String, IncludeSpec> _normalizeInclude(Map<String, IncludeSpec> include) {
