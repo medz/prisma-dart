@@ -185,6 +185,13 @@ JsonMap _mergePlanAnnotations(
 
 int _repositoryOperationSeed = 0;
 
+Never _throwApiNotImplemented(
+  String surface, {
+  Map<String, Object?> details = const <String, Object?>{},
+}) {
+  throw ApiNotImplementedException(surface: surface, details: details);
+}
+
 final class _RepositoryOperation {
   final String id;
   final String kind;
@@ -968,6 +975,11 @@ class ModelDelegate {
 
   ModelQuery where(JsonMap where) => query().where(where);
 
+  ModelQuery whereWith(
+    JsonMap Function(JsonMap where) build, {
+    bool merge = true,
+  }) => query().whereWith(build, merge: merge);
+
   ModelQuery orderBy(List<OrmOrderBy> orderBy) => query().orderBy(orderBy);
 
   ModelQuery orderByField(String field, {SortOrder order = SortOrder.asc}) =>
@@ -978,6 +990,11 @@ class ModelDelegate {
   ModelQuery take(int value) => query().take(value);
 
   ModelQuery select(List<String> fields) => query().select(fields);
+
+  ModelQuery selectWith(
+    List<String> Function(List<String> fields) build, {
+    bool append = false,
+  }) => query().selectWith(build, append: append);
 
   ModelQuery selectField(String field) => query().selectField(field);
 
@@ -1322,6 +1339,24 @@ class ModelDelegate {
     select: select,
     include: include,
   );
+
+  Future<int> updateMany({
+    JsonMap where = const <String, Object?>{},
+    required JsonMap data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) async {
+    _throwApiNotImplemented(
+      'orm.updateMany',
+      details: <String, Object?>{
+        'model': modelName,
+        'where': where,
+        'data': data,
+        'select': select,
+        'include': include.keys.toList(growable: false),
+      },
+    );
+  }
 
   Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) =>
       _RepositoryMutationExecutor(this).deleteMany(where: where);
@@ -3126,6 +3161,15 @@ final class ModelQuery {
     );
   }
 
+  ModelQuery whereWith(
+    JsonMap Function(JsonMap where) build, {
+    bool merge = true,
+  }) {
+    final current = Map<String, Object?>.from(_state.where);
+    final next = build(Map<String, Object?>.unmodifiable(current));
+    return where(next, merge: merge);
+  }
+
   ModelQuery orderBy(List<OrmOrderBy> orderBy, {bool append = true}) {
     final nextOrderBy = append
         ? <OrmOrderBy>[..._state.orderBy, ...orderBy]
@@ -3183,6 +3227,15 @@ final class ModelQuery {
         include: _state.include,
       ),
     );
+  }
+
+  ModelQuery selectWith(
+    List<String> Function(List<String> fields) build, {
+    bool append = false,
+  }) {
+    final current = List<String>.from(_state.select, growable: false);
+    final next = build(List<String>.unmodifiable(current));
+    return select(next, append: append);
   }
 
   ModelQuery selectField(String field) {
@@ -3248,6 +3301,32 @@ final class ModelQuery {
         select: _state.select,
         include: _state.include,
       ),
+    );
+  }
+
+  ModelQuery cursor(JsonMap cursor) {
+    _throwApiNotImplemented(
+      'orm.query.cursor',
+      details: <String, Object?>{
+        'model': _delegate.modelName,
+        'cursor': cursor,
+      },
+    );
+  }
+
+  ModelQuery page({
+    required int size,
+    JsonMap? after,
+    JsonMap? before,
+  }) {
+    _throwApiNotImplemented(
+      'orm.query.page',
+      details: <String, Object?>{
+        'model': _delegate.modelName,
+        'size': size,
+        if (after != null) 'after': after,
+        if (before != null) 'before': before,
+      },
     );
   }
 
@@ -3319,6 +3398,18 @@ final class ModelQuery {
   Future<int> count() => _delegate.count(where: _state.where);
 
   Future<bool> exists() => _delegate.exists(where: _state.where);
+
+  Future<JsonMap> explain() async {
+    _throwApiNotImplemented(
+      'orm.query.explain',
+      details: <String, Object?>{
+        'model': _delegate.modelName,
+        'where': _state.where,
+        if (_state.skip != null) 'skip': _state.skip,
+        if (_state.take != null) 'take': _state.take,
+      },
+    );
+  }
 
   Future<JsonMap> aggregate({
     bool countAll = false,
@@ -3402,6 +3493,16 @@ final class ModelQuery {
   Future<List<JsonMap>> createMany({required List<JsonMap> data}) {
     _assertMutationQueryState(action: 'createMany', allowWhere: false);
     return _delegate.createMany(
+      data: data,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
+
+  Future<int> updateMany({required JsonMap data}) {
+    _assertMutationQueryState(action: 'updateMany');
+    return _delegate.updateMany(
+      where: _state.where,
       data: data,
       select: _state.select,
       include: _state.include,

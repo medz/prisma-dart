@@ -284,6 +284,18 @@ final class PlanRepositoryTraceInvalidException extends OrmRuntimeError {
        );
 }
 
+final class ApiNotImplementedException extends OrmRuntimeError {
+  ApiNotImplementedException({
+    required String surface,
+    Map<String, Object?> details = const <String, Object?>{},
+  }) : super(
+         code: 'RUNTIME.API_NOT_IMPLEMENTED',
+         category: RuntimeErrorCategory.runtime,
+         message: 'API surface is declared but not implemented yet.',
+         details: <String, Object?>{'surface': surface, ...details},
+       );
+}
+
 final class RuntimeCreateResultMissingException extends OrmRuntimeError {
   RuntimeCreateResultMissingException({required String model})
     : super(
