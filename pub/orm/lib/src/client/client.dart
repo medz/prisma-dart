@@ -249,6 +249,53 @@ Map<String, OrmIncludePlan> _buildOrmIncludePlanMap(
   };
 }
 
+List<String> _readBoundaryFields({
+  JsonMap? cursor,
+  OrmReadPagePlan? page,
+}) {
+  final boundary = cursor ?? page?.after ?? page?.before;
+  if (boundary == null || boundary.isEmpty) {
+    return const <String>[];
+  }
+  return boundary.keys.toList(growable: false);
+}
+
+List<OrmOrderBy> _resolveCursorWindowOrderBy({
+  required String modelName,
+  required List<OrmOrderBy> orderBy,
+  JsonMap? cursor,
+  OrmReadPagePlan? page,
+}) {
+  final boundaryFields = _readBoundaryFields(cursor: cursor, page: page);
+  if (boundaryFields.isEmpty) {
+    return orderBy;
+  }
+
+  if (orderBy.isEmpty) {
+    return boundaryFields
+        .map((field) => OrmOrderBy(field))
+        .toList(growable: false);
+  }
+
+  final orderByFields = orderBy
+      .map((entry) => entry.field)
+      .toList(growable: false);
+  if (orderByFields.length == boundaryFields.length &&
+      orderByFields.every(boundaryFields.contains)) {
+    return orderBy;
+  }
+
+  throw runtimeError(
+    'PLAN.CURSOR_ORDER_BY_FIELDS_INVALID',
+    'Cursor or page boundary fields must match orderBy fields.',
+    details: <String, Object?>{
+      'model': modelName,
+      'orderBy': orderByFields,
+      'boundaryFields': boundaryFields,
+    },
+  );
+}
+
 abstract interface class OrmDbContext {
   OrmDbNamespace get db;
 }
@@ -269,6 +316,8 @@ abstract interface class OrmCollectionContext implements OrmExecutionContext {
 
 abstract interface class _OrmDelegateRuntime implements OrmCollectionContext {
   ModelDelegate _resolveDelegate(String modelKey);
+
+  Future<JsonMap> explainPlan(OrmPlan plan);
 }
 
 final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
@@ -324,14 +373,15 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
     Future<T> Function(OrmScopedClient connection) run,
   ) async {
     final connection = await _runtime.connection();
-    final scoped = OrmScopedClient._(
-      contract: contract,
-      executePlan: connection.execute,
-      modelAliases: _modelAliases,
-      collectionRegistry: _collectionRegistry,
-      includeStrategySelector: includeStrategySelector,
-      maxIncludeDepth: maxIncludeDepth,
-    );
+      final scoped = OrmScopedClient._(
+        contract: contract,
+        executePlan: connection.execute,
+        explainPlan: _runtime.explain,
+        modelAliases: _modelAliases,
+        collectionRegistry: _collectionRegistry,
+        includeStrategySelector: includeStrategySelector,
+        maxIncludeDepth: maxIncludeDepth,
+      );
 
     try {
       return await run(scoped);
@@ -352,6 +402,7 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
       final scoped = OrmScopedClient._(
         contract: contract,
         executePlan: openedTransaction.execute,
+        explainPlan: _runtime.explain,
         modelAliases: _modelAliases,
         collectionRegistry: _collectionRegistry,
         includeStrategySelector: includeStrategySelector,
@@ -407,6 +458,9 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
   Future<EngineResponse> execute(OrmPlan plan) => _runtime.execute(plan);
 
   @override
+  Future<JsonMap> explainPlan(OrmPlan plan) => _runtime.explain(plan);
+
+  @override
   Future<T> transaction<T>(Future<T> Function(OrmDbNamespace txDb) run) {
     return withTransaction((scoped) => run(scoped.db));
   }
@@ -439,6 +493,7 @@ final class OrmScopedClient implements OrmDbContext, _OrmDelegateRuntime {
   @override
   final OrmContract contract;
   final Future<EngineResponse> Function(OrmPlan plan) _executePlan;
+  final Future<JsonMap> Function(OrmPlan plan) _explainPlan;
   final Map<String, String> _modelAliases;
   final Map<String, CollectionFactory> _collectionRegistry;
   final Map<String, ModelDelegate> _delegates = <String, ModelDelegate>{};
@@ -454,11 +509,13 @@ final class OrmScopedClient implements OrmDbContext, _OrmDelegateRuntime {
   OrmScopedClient._({
     required this.contract,
     required Future<EngineResponse> Function(OrmPlan plan) executePlan,
+    required Future<JsonMap> Function(OrmPlan plan) explainPlan,
     required Map<String, String> modelAliases,
     required Map<String, CollectionFactory> collectionRegistry,
     required this.includeStrategySelector,
     required this.maxIncludeDepth,
   }) : _executePlan = executePlan,
+       _explainPlan = explainPlan,
        _modelAliases = modelAliases,
        _collectionRegistry = collectionRegistry;
 
@@ -479,6 +536,9 @@ final class OrmScopedClient implements OrmDbContext, _OrmDelegateRuntime {
 
   @override
   Future<EngineResponse> execute(OrmPlan plan) => _executePlan(plan);
+
+  @override
+  Future<JsonMap> explainPlan(OrmPlan plan) => _explainPlan(plan);
 
   @override
   Future<T> transaction<T>(Future<T> Function(OrmDbNamespace txDb) run) {
@@ -1058,6 +1118,8 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
   }) {
     return _readAllInternal(
       action: OrmAction.read,
@@ -1068,6 +1130,8 @@ class ModelDelegate {
       distinct: distinct,
       select: select,
       include: include,
+      cursor: cursor,
+      page: page,
       includeDepth: 0,
     );
   }
@@ -1080,6 +1144,8 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
   }) async* {
     final rows = await all(
       where: where,
@@ -1089,6 +1155,8 @@ class ModelDelegate {
       distinct: distinct,
       select: select,
       include: include,
+      cursor: cursor,
+      page: page,
     );
 
     for (final row in rows) {
@@ -1130,22 +1198,93 @@ class ModelDelegate {
     );
   }
 
-  Future<int> count({JsonMap where = const <String, Object?>{}}) async {
+  Future<int> count({
+    JsonMap where = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+  }) async {
     final rows = await _readAllInternal(
       action: OrmAction.read,
       where: where,
+      orderBy: orderBy,
+      cursor: cursor,
+      page: page,
       includeDepth: 0,
     );
     return rows.length;
   }
 
-  Future<bool> exists({JsonMap where = const <String, Object?>{}}) async {
-    final row = await firstOrNull(where: where, select: const <String>[]);
-    return row != null;
+  Future<bool> exists({
+    JsonMap where = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+  }) async {
+    final rowCount = await count(
+      where: where,
+      orderBy: orderBy,
+      cursor: cursor,
+      page: page,
+    );
+    return rowCount > 0;
+  }
+
+  Future<JsonMap> inspectPlan({
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+  }) async {
+    final plan = await toPlan(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    );
+    return plan.toJson();
+  }
+
+  Future<JsonMap> explain({
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+  }) async {
+    final plan = await toPlan(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    );
+    return _runtime.explainPlan(plan);
   }
 
   Future<JsonMap> aggregate({
     JsonMap where = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
     bool countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
@@ -1162,6 +1301,9 @@ class ModelDelegate {
     final rows = await _readAllInternal(
       action: OrmAction.read,
       where: where,
+      orderBy: orderBy,
+      cursor: cursor,
+      page: page,
       select: _buildAggregateSelect(
         count: count,
         min: min,
@@ -1186,6 +1328,8 @@ class ModelDelegate {
   Future<List<JsonMap>> groupBy({
     required List<String> by,
     JsonMap where = const <String, Object?>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
     JsonMap having = const <String, Object?>{},
     int? skip,
     int? take,
@@ -1209,6 +1353,17 @@ class ModelDelegate {
     }
     if (take case final limit? when limit < 0) {
       throw PlanInvalidPaginationException(key: 'take', value: limit);
+    }
+    if (cursor != null || page != null) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
+        'GroupBy does not support cursor or page windows yet.',
+        details: <String, Object?>{
+          'model': modelName,
+          if (cursor != null) 'cursor': cursor,
+          if (page != null) 'page': page.toJson(),
+        },
+      );
     }
 
     _assertKnownAggregateFields(fields: by, source: 'groupBy.by');
@@ -1435,8 +1590,41 @@ class ModelDelegate {
       model: modelName,
       where: where,
     );
+    final resolvedOrderBy = _resolveCursorWindowOrderBy(
+      modelName: modelName,
+      orderBy: orderBy,
+      cursor: cursor,
+      page: page,
+    );
+    if ((cursor != null || page != null) && distinct.isNotEmpty) {
+      throw runtimeError(
+        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
+        'Cursor and page windows do not support distinct yet.',
+        details: <String, Object?>{
+          'model': modelName,
+          'distinct': distinct,
+          if (cursor != null) 'cursor': cursor,
+          if (page != null) 'page': page.toJson(),
+        },
+      );
+    }
+    if (page != null && resultMode != OrmReadResultMode.all) {
+      throw runtimeError(
+        'PLAN.PAGE_RESULT_MODE_INVALID',
+        'Page windows currently compile only to collection read plans.',
+        details: <String, Object?>{
+          'model': modelName,
+          'resultMode': resultMode.name,
+          'page': page.toJson(),
+        },
+      );
+    }
     final isCollectionRead = resultMode != OrmReadResultMode.oneOrNull;
-    final resolvedTake = resultMode == OrmReadResultMode.firstOrNull ? 1 : take;
+    final resolvedTake = page != null
+        ? null
+        : resultMode == OrmReadResultMode.firstOrNull
+        ? 1
+        : take;
     final readSelect = switch (resultMode) {
       OrmReadResultMode.oneOrNull => _expandSelectForInclude(
         model: modelName,
@@ -1473,7 +1661,7 @@ class ModelDelegate {
         where: normalizedWhere,
         skip: isCollectionRead && distinct.isEmpty ? skip : null,
         take: isCollectionRead && distinct.isEmpty ? resolvedTake : null,
-        orderBy: isCollectionRead ? orderBy : const <OrmOrderBy>[],
+        orderBy: isCollectionRead ? resolvedOrderBy : const <OrmOrderBy>[],
         distinct: isCollectionRead ? distinct : const <String>[],
         select: readSelect,
         include: _buildOrmIncludePlanMap(normalizedInclude),
@@ -1493,6 +1681,8 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
     JsonMap annotations = const <String, Object?>{},
     OrmRepositoryTrace? repositoryTrace,
     required int includeDepth,
@@ -1506,6 +1696,8 @@ class ModelDelegate {
       distinct: distinct,
       select: select,
       include: include,
+      cursor: cursor,
+      page: page,
       annotations: annotations,
       repositoryTrace: repositoryTrace,
     );
@@ -3447,6 +3639,20 @@ final class ModelQuery {
     );
   }
 
+  Future<JsonMap> inspectPlan() {
+    return _delegate.inspectPlan(
+      where: _state.where,
+      skip: _state.skip,
+      take: _state.take,
+      orderBy: _state.orderBy,
+      distinct: _state.distinct,
+      select: _state.select,
+      include: _state.include,
+      cursor: _state.cursor,
+      page: _state.page,
+    );
+  }
+
   Future<List<JsonMap>> all() {
     _assertReadExecutionSupported('all');
     return _delegate.all(
@@ -3457,6 +3663,8 @@ final class ModelQuery {
       distinct: _state.distinct,
       select: _state.select,
       include: _state.include,
+      cursor: _state.cursor,
+      page: _state.page,
     );
   }
 
@@ -3470,11 +3678,20 @@ final class ModelQuery {
       distinct: _state.distinct,
       select: _state.select,
       include: _state.include,
+      cursor: _state.cursor,
+      page: _state.page,
     );
   }
 
-  Future<JsonMap?> oneOrNull() {
+  Future<JsonMap?> oneOrNull() async {
     _assertReadExecutionSupported('oneOrNull');
+    if (_state.cursor != null || _state.page != null) {
+      final rows = await all();
+      if (rows.isEmpty) {
+        return null;
+      }
+      return rows.first;
+    }
     return _delegate.oneOrNull(
       where: _state.where,
       select: _state.select,
@@ -3482,8 +3699,15 @@ final class ModelQuery {
     );
   }
 
-  Future<JsonMap?> firstOrNull() {
+  Future<JsonMap?> firstOrNull() async {
     _assertReadExecutionSupported('firstOrNull');
+    if (_state.cursor != null || _state.page != null) {
+      final rows = await all();
+      if (rows.isEmpty) {
+        return null;
+      }
+      return rows.first;
+    }
     return _delegate.firstOrNull(
       where: _state.where,
       skip: _state.skip,
@@ -3496,17 +3720,36 @@ final class ModelQuery {
 
   Future<int> count() {
     _assertReadExecutionSupported('count');
-    return _delegate.count(where: _state.where);
+    return _delegate.count(
+      where: _state.where,
+      orderBy: _state.orderBy,
+      cursor: _state.cursor,
+      page: _state.page,
+    );
   }
 
   Future<bool> exists() {
     _assertReadExecutionSupported('exists');
-    return _delegate.exists(where: _state.where);
+    return _delegate.exists(
+      where: _state.where,
+      orderBy: _state.orderBy,
+      cursor: _state.cursor,
+      page: _state.page,
+    );
   }
 
-  Future<JsonMap> explain() async {
-    final plan = await toPlan();
-    return plan.toJson();
+  Future<JsonMap> explain() {
+    return _delegate.explain(
+      where: _state.where,
+      skip: _state.skip,
+      take: _state.take,
+      orderBy: _state.orderBy,
+      distinct: _state.distinct,
+      select: _state.select,
+      include: _state.include,
+      cursor: _state.cursor,
+      page: _state.page,
+    );
   }
 
   Future<JsonMap> aggregate({
@@ -3520,6 +3763,9 @@ final class ModelQuery {
     _assertReadExecutionSupported('aggregate');
     return _delegate.aggregate(
       where: _state.where,
+      orderBy: _state.orderBy,
+      cursor: _state.cursor,
+      page: _state.page,
       countAll: countAll,
       count: count,
       min: min,
@@ -3540,9 +3786,22 @@ final class ModelQuery {
     List<String> avg = const <String>[],
   }) {
     _assertReadExecutionSupported('groupBy');
+    if (_state.cursor != null || _state.page != null) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
+        'GroupBy does not support cursor or page windows yet.',
+        details: <String, Object?>{
+          'model': _delegate.modelName,
+          if (_state.cursor != null) 'cursor': _state.cursor,
+          if (_state.page != null) 'page': _state.page!.toJson(),
+        },
+      );
+    }
     return _delegate.groupBy(
       by: by,
       where: _state.where,
+      cursor: _state.cursor,
+      page: _state.page,
       having: having,
       skip: _state.skip,
       take: _state.take,
@@ -3557,23 +3816,15 @@ final class ModelQuery {
   }
 
   void _assertReadExecutionSupported(String terminal) {
-    if (_state.cursor != null) {
-      _throwApiNotImplemented(
-        'orm.query.cursor.execute',
+    if ((_state.cursor != null || _state.page != null) &&
+        _state.distinct.isNotEmpty) {
+      throw runtimeError(
+        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
+        'Cursor and page windows do not support distinct yet.',
         details: <String, Object?>{
           'model': _delegate.modelName,
           'terminal': terminal,
-          'cursor': _state.cursor,
-        },
-      );
-    }
-    if (_state.page != null) {
-      _throwApiNotImplemented(
-        'orm.query.page.execute',
-        details: <String, Object?>{
-          'model': _delegate.modelName,
-          'terminal': terminal,
-          'page': _state.page!.toJson(),
+          'distinct': _state.distinct,
         },
       );
     }

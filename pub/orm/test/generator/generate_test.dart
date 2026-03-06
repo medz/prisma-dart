@@ -720,6 +720,13 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(\s*\)[\s\S]*?_runtimeQuery\(\)\.inspectPlan\(\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.inspectPlan() in generated source.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData\?>\s+oneOrNull\(\s*\)',
           ).hasMatch(generatedSource),
           isTrue,

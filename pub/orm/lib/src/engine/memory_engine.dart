@@ -98,13 +98,7 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
       rows.sort((left, right) => _compareRows(left, right, read.orderBy));
     }
 
-    if (read.skip case final skip?) {
-      rows = skip >= rows.length ? <JsonMap>[] : rows.sublist(skip);
-    }
-
-    if (read.take case final take?) {
-      rows = take >= rows.length ? rows : rows.sublist(0, take);
-    }
+    rows = _applyReadWindow(rows, read);
 
     final projected = rows
         .map((row) => _projectRow(row, read.select))
@@ -115,6 +109,81 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
         EngineResponse(data: _firstOrNull(projected)),
       _ => EngineResponse(data: projected),
     };
+  }
+
+  List<JsonMap> _applyReadWindow(List<JsonMap> rows, OrmReadPlan read) {
+    var next = rows;
+
+    if (read.page case final page?) {
+      return _applyPageWindow(next, read.orderBy, page);
+    }
+
+    if (read.cursor case final cursor?) {
+      next = next
+          .where(
+            (row) =>
+                _compareRowToBoundary(
+                  row: row,
+                  boundary: cursor.values,
+                  orderBy: read.orderBy,
+                ) >=
+                0,
+          )
+          .toList(growable: false);
+    }
+
+    if (read.skip case final skip?) {
+      next = skip >= next.length ? <JsonMap>[] : next.sublist(skip);
+    }
+
+    if (read.take case final take?) {
+      next = take >= next.length ? next : next.sublist(0, take);
+    }
+
+    return next;
+  }
+
+  List<JsonMap> _applyPageWindow(
+    List<JsonMap> rows,
+    List<OrmOrderBy> orderBy,
+    OrmReadPagePlan page,
+  ) {
+    if (page.after case final after?) {
+      final filtered = rows
+          .where(
+            (row) =>
+                _compareRowToBoundary(
+                  row: row,
+                  boundary: after,
+                  orderBy: orderBy,
+                ) >
+                0,
+          )
+          .toList(growable: false);
+      return page.size >= filtered.length
+          ? filtered
+          : filtered.sublist(0, page.size);
+    }
+
+    if (page.before case final before?) {
+      final filtered = rows
+          .where(
+            (row) =>
+                _compareRowToBoundary(
+                  row: row,
+                  boundary: before,
+                  orderBy: orderBy,
+                ) <
+                0,
+          )
+          .toList(growable: false);
+      if (page.size >= filtered.length) {
+        return filtered;
+      }
+      return filtered.sublist(filtered.length - page.size);
+    }
+
+    return page.size >= rows.length ? rows : rows.sublist(0, page.size);
   }
 
   EngineResponse _create(List<JsonMap> bucket, OrmPlan plan) {
@@ -429,6 +498,21 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
       final leftValue = left[order.field];
       final rightValue = right[order.field];
       final comparison = _compareValues(leftValue, rightValue);
+      if (comparison == 0) {
+        continue;
+      }
+      return order.order == SortOrder.asc ? comparison : -comparison;
+    }
+    return 0;
+  }
+
+  int _compareRowToBoundary({
+    required JsonMap row,
+    required JsonMap boundary,
+    required List<OrmOrderBy> orderBy,
+  }) {
+    for (final order in orderBy) {
+      final comparison = _compareValues(row[order.field], boundary[order.field]);
       if (comparison == 0) {
         continue;
       }

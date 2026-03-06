@@ -54,6 +54,7 @@ void main() {
 
       expect(plan.read?.cursor?.values, <String, Object?>{'id': 'u1'});
       expect(plan.read?.page, isNull);
+      expect(plan.read?.orderBy.map((entry) => entry.field).toList(), <String>['id']);
     });
 
     test('page compiles into structured query plan state', () async {
@@ -68,89 +69,141 @@ void main() {
       expect(plan.read?.cursor, isNull);
       expect(plan.read?.page?.size, 20);
       expect(plan.read?.page?.after, <String, Object?>{'id': 'u1'});
+      expect(plan.read?.orderBy.map((entry) => entry.field).toList(), <String>['id']);
     });
 
-    test('explain returns structured plan json', () async {
+    test('inspectPlan returns structured plan json without connecting', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');
-      final explained = await users
+      final inspected = await users
           .where(<String, Object?>{'id': 'u1'})
           .take(1)
-          .explain();
+          .inspectPlan();
 
-      expect(explained['lane'], 'orm');
-      final read = explained['read'] as Map<String, Object?>;
+      expect(inspected['lane'], 'orm');
+      final read = inspected['read'] as Map<String, Object?>;
       expect(read['where'], <String, Object?>{'id': 'u1'});
       expect(read['take'], 1);
       expect(read['resultMode'], 'all');
     });
 
-    test('cursor and page execution remain explicit placeholders', () async {
+    test('explain requires an active runtime connection', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final users = client.db.orm.model('User');
+
+      await expectLater(
+        users.query().orderByField('id').page(size: 2).explain(),
+        throwsA(isA<ClientNotConnectedException>()),
+      );
+    });
+
+    test('explain returns structured runtime report when connected', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
       try {
         final users = client.db.orm.model('User');
+        final explained = await users
+            .query()
+            .orderByField('id')
+            .page(size: 2, after: <String, Object?>{'id': 'u1'})
+            .explain();
+
+        expect(explained['source'], 'heuristic');
+        final summary = explained['planSummary'] as Map<String, Object?>;
+        expect(summary['model'], 'User');
+        final pagination = summary['pagination'] as Map<String, Object?>;
+        expect(pagination['mode'], 'page');
+        expect(explained['plan'], isA<Map<String, Object?>>());
+      } finally {
+        await client.disconnect();
+      }
+    });
+
+    test('cursor and page execution return deterministic windows', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      try {
+        final users = client.db.orm.model('User');
+        await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+        await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
+        await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
+        await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
+
+        final cursorRows = await users
+            .query()
+            .orderByField('id')
+            .cursor(<String, Object?>{'id': 2})
+            .skip(1)
+            .take(2)
+            .all();
+        final afterRows = await users
+            .query()
+            .orderByField('id')
+            .page(size: 2, after: <String, Object?>{'id': 2})
+            .all();
+        final beforeRows = await users
+            .query()
+            .orderByField('id')
+            .page(size: 2, before: <String, Object?>{'id': 4})
+            .all();
+
         expect(
-          () => users.query().cursor(<String, Object?>{'id': 'u1'}).all(),
-          throwsA(
-            isA<ApiNotImplementedException>().having(
-              (error) => error.details['surface'],
-              'surface',
-              'orm.query.cursor.execute',
-            ),
-          ),
+          cursorRows.map((row) => row['id']).toList(growable: false),
+          <Object?>[3, 4],
         );
         expect(
-          () => users
-              .query()
-              .page(size: 10, after: <String, Object?>{'id': 'u1'})
-              .all(),
-          throwsA(
-            isA<ApiNotImplementedException>().having(
-              (error) => error.details['surface'],
-              'surface',
-              'orm.query.page.execute',
-            ),
-          ),
+          afterRows.map((row) => row['id']).toList(growable: false),
+          <Object?>[3, 4],
+        );
+        expect(
+          beforeRows.map((row) => row['id']).toList(growable: false),
+          <Object?>[2, 3],
         );
       } finally {
         await client.disconnect();
       }
     });
 
-    test('direct plan execution rejects cursor and page plans', () async {
+    test('direct plan execution supports cursor and page plans', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
       try {
         final users = client.db.orm.model('User');
-        final cursorPlan = await users
-            .query()
-            .cursor(<String, Object?>{'id': 'u1'})
-            .toPlan();
+        await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+        await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
+        await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
+        await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
+
         final pagePlan = await users
             .query()
-            .page(size: 10, after: <String, Object?>{'id': 'u1'})
+            .orderByField('id')
+            .page(size: 2, after: <String, Object?>{'id': 2})
             .toPlan();
 
-        await expectLater(
-          client.execute(cursorPlan),
-          throwsA(
-            isA<ApiNotImplementedException>().having(
-              (error) => error.details['surface'],
-              'surface',
-              'orm.plan.cursor.execute',
-            ),
+        final cursorResponse = await client.execute(
+          OrmPlan.read(
+            contractHash: contract.hash,
+            model: 'User',
+            lane: 'orm',
+            where: const <String, Object?>{},
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            cursor: OrmReadCursorPlan(values: const <String, Object?>{'id': 2}),
+            resultMode: OrmReadResultMode.all,
           ),
         );
-        await expectLater(
-          client.execute(pagePlan),
-          throwsA(
-            isA<ApiNotImplementedException>().having(
-              (error) => error.details['surface'],
-              'surface',
-              'orm.plan.page.execute',
-            ),
-          ),
+        final pageResponse = await client.execute(pagePlan);
+
+        expect(
+          (cursorResponse.data as List<JsonMap>)
+              .map((row) => row['id'])
+              .toList(growable: false),
+          <Object?>[2, 3, 4],
+        );
+        expect(
+          (pageResponse.data as List<JsonMap>)
+              .map((row) => row['id'])
+              .toList(growable: false),
+          <Object?>[3, 4],
         );
       } finally {
         await client.disconnect();

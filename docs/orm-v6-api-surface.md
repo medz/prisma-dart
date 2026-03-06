@@ -9,9 +9,6 @@ completeness. The rule for this phase is simple:
 
 Placeholder methods must throw `RUNTIME.API_NOT_IMPLEMENTED`.
 
-`plan-only` means the API can build or inspect structured plans, but execution
-still throws the stable placeholder error.
-
 ## Runtime Root
 
 Single entrypoint:
@@ -72,14 +69,15 @@ Read authoring:
 | `skip(...)` | implemented |
 | `take(...)` | implemented |
 | `unbounded()` | implemented |
-| `cursor(...)` | plan-only |
-| `page(...)` | plan-only |
+| `cursor(...)` | implemented |
+| `page(...)` | implemented |
 
 Read terminals:
 
 | Method | Status |
 | --- | --- |
 | `toPlan()` | implemented |
+| `inspectPlan()` | implemented |
 | `all()` | implemented |
 | `stream()` | implemented |
 | `firstOrNull()` | implemented |
@@ -88,7 +86,15 @@ Read terminals:
 | `exists()` | implemented |
 | `aggregate(...)` | implemented |
 | `groupBy(...)` | implemented |
-| `explain()` | plan-only |
+| `explain()` | implemented |
+
+Rules:
+
+1. `toPlan()` and `inspectPlan()` are pure authoring inspection.
+2. `explain()` is runtime-facing and requires an active runtime connection.
+3. `cursor(...)` and `page(...)` require deterministic ordering.
+4. When no `orderBy(...)` is present, the boundary fields are promoted to
+   ascending `orderBy(...)` fields during plan compilation.
 
 ## ORM Mutation Surface
 

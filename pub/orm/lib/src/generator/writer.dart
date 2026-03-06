@@ -2813,6 +2813,11 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<JsonMap> inspectPlan() {');
+    buffer.writeln('    return _runtimeQuery().inspectPlan();');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.dataClassName}>> all() async {');
     buffer.writeln('    final rows = await _runtimeQuery().all();');
     buffer.writeln(

@@ -1,3 +1,4 @@
+import '../core/sort_order.dart';
 import '../contract/contract.dart';
 import '../engine/engine.dart';
 import '../runtime/errors.dart';
@@ -94,19 +95,46 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     required String model,
   }) {
     final read = plan.read!;
-    final params = <Object?>[];
+    final whereParams = <Object?>[];
     final whereClause = _buildWhereClause(
       model: model,
       where: read.where,
-      params: params,
+      params: whereParams,
     );
+    final windowParams = <Object?>[];
+    final windowPredicate = _buildCursorWindowPredicate(
+      read: read,
+      params: windowParams,
+    );
+    final mergedWhereClause = _mergeWhereClauses(whereClause, windowPredicate);
     final orderByClause = _buildOrderByClause(read.orderBy);
 
+    if (read.page?.before != null) {
+      final limitParams = <Object?>[];
+      final selectColumns = _buildSelectColumns(read.select);
+      final innerOrderByClause = _buildOrderByClause(_reverseOrderBy(read.orderBy));
+      final innerLimitClause = _buildReadLimitOffsetClause(read, limitParams);
+      return SqlStatement(
+        action: plan.action,
+        text:
+            'SELECT $selectColumns FROM ('
+            'SELECT * FROM ${_id(table)}'
+            '$mergedWhereClause$innerOrderByClause$innerLimitClause'
+            ') AS ${_id('_page')}$orderByClause',
+        parameters: <Object?>[
+          ...whereParams,
+          ...windowParams,
+          ...limitParams,
+        ],
+      );
+    }
+
+    final params = <Object?>[...whereParams, ...windowParams];
     return SqlStatement(
       action: plan.action,
       text:
           'SELECT ${_buildSelectColumns(read.select)} FROM ${_id(table)}'
-          '$whereClause$orderByClause${_buildReadLimitOffsetClause(read, params)}',
+          '$mergedWhereClause$orderByClause${_buildReadLimitOffsetClause(read, params)}',
       parameters: params,
     );
   }
@@ -916,11 +944,120 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     return ' ORDER BY ${clauses.join(', ')}';
   }
 
+  String _mergeWhereClauses(String whereClause, String predicate) {
+    if (predicate.isEmpty) {
+      return whereClause;
+    }
+    if (whereClause.isEmpty) {
+      return ' WHERE $predicate';
+    }
+    return '$whereClause AND $predicate';
+  }
+
+  String _buildCursorWindowPredicate({
+    required OrmReadPlan read,
+    required List<Object?> params,
+  }) {
+    if (read.page?.after case final after?) {
+      return _buildBoundaryPredicate(
+        orderBy: read.orderBy,
+        boundary: after,
+        params: params,
+        inclusive: false,
+        before: false,
+      );
+    }
+    if (read.page?.before case final before?) {
+      return _buildBoundaryPredicate(
+        orderBy: read.orderBy,
+        boundary: before,
+        params: params,
+        inclusive: false,
+        before: true,
+      );
+    }
+    if (read.cursor case final cursor?) {
+      return _buildBoundaryPredicate(
+        orderBy: read.orderBy,
+        boundary: cursor.values,
+        params: params,
+        inclusive: true,
+        before: false,
+      );
+    }
+    return '';
+  }
+
+  String _buildBoundaryPredicate({
+    required List<OrmOrderBy> orderBy,
+    required JsonMap boundary,
+    required List<Object?> params,
+    required bool inclusive,
+    required bool before,
+  }) {
+    if (orderBy.isEmpty) {
+      return '';
+    }
+
+    final equalityClauses = <String>[];
+    final strictClauses = <String>[];
+    for (var index = 0; index < orderBy.length; index++) {
+      final prefixClauses = <String>[...equalityClauses];
+      final order = orderBy[index];
+      final operator = _boundaryOperator(order: order, before: before);
+      prefixClauses.add('${_id(order.field)} $operator ?');
+      strictClauses.add('(${prefixClauses.join(' AND ')})');
+
+      for (var valueIndex = 0; valueIndex < index; valueIndex++) {
+        params.add(boundary[orderBy[valueIndex].field]);
+      }
+      params.add(boundary[order.field]);
+
+      equalityClauses.add('${_id(order.field)} = ?');
+    }
+
+    final strictPredicate = strictClauses.join(' OR ');
+    if (!inclusive) {
+      return '($strictPredicate)';
+    }
+
+    final equalityPredicate = equalityClauses.join(' AND ');
+    for (final order in orderBy) {
+      params.add(boundary[order.field]);
+    }
+    return '(($strictPredicate) OR ($equalityPredicate))';
+  }
+
+  String _boundaryOperator({
+    required OrmOrderBy order,
+    required bool before,
+  }) {
+    return switch ((order.order, before)) {
+      (SortOrder.asc, false) => '>',
+      (SortOrder.asc, true) => '<',
+      (SortOrder.desc, false) => '<',
+      (SortOrder.desc, true) => '>',
+    };
+  }
+
+  List<OrmOrderBy> _reverseOrderBy(List<OrmOrderBy> orderBy) {
+    return orderBy
+        .map(
+          (entry) => OrmOrderBy(
+            entry.field,
+            order: entry.order == SortOrder.asc
+                ? SortOrder.desc
+                : SortOrder.asc,
+          ),
+        )
+        .toList(growable: false);
+  }
+
   String _buildReadLimitOffsetClause(OrmReadPlan plan, List<Object?> params) {
     final clauses = <String>[];
     final effectiveTake = switch (plan.resultMode) {
       OrmReadResultMode.oneOrNull => 1,
-      _ => plan.take,
+      _ => plan.page?.size ?? plan.take,
     };
 
     if (effectiveTake case final take?) {

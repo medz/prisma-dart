@@ -33,6 +33,70 @@ final class CallbackMarkerReader implements ContractMarkerReader {
 
 enum RuntimeVerifyMode { startup, onFirstUse, always }
 
+String _readPaginationMode(OrmReadPlan? read) {
+  if (read == null) {
+    return 'none';
+  }
+  if (read.page != null) {
+    return 'page';
+  }
+  if (read.cursor != null) {
+    return 'cursor';
+  }
+  if (read.skip != null || read.take != null) {
+    return 'offset';
+  }
+  return 'none';
+}
+
+int? _estimatedRowsForExplain(OrmPlan plan) {
+  final read = plan.read;
+  if (read == null) {
+    return null;
+  }
+  if (read.page case final page?) {
+    return page.size;
+  }
+  if (read.resultMode != OrmReadResultMode.all) {
+    return 1;
+  }
+  return read.take;
+}
+
+JsonMap _buildExplainResult(OrmPlan plan) {
+  final read = plan.read;
+  final mutation = plan.mutation;
+
+  return Map<String, Object?>.unmodifiable(<String, Object?>{
+    'source': 'heuristic',
+    'estimatedRows': _estimatedRowsForExplain(plan),
+    'usedIndexes': const <String>[],
+    'planSummary': Map<String, Object?>.unmodifiable(<String, Object?>{
+      'model': plan.model,
+      'action': plan.action.name,
+      if (plan.lane != null) 'lane': plan.lane,
+      'executionMode': 'buffered',
+      if (read != null) 'readResultMode': read.resultMode.name,
+      if (mutation != null) 'mutationResultMode': mutation.resultMode.name,
+      if (read != null) 'selectedFieldCount': read.select.length,
+      if (mutation != null) 'selectedFieldCount': mutation.select.length,
+      if (read != null) 'includeCount': read.include.length,
+      'pagination': <String, Object?>{
+        'mode': _readPaginationMode(read),
+        if (read?.skip != null) 'skip': read!.skip,
+        if (read?.take != null) 'take': read!.take,
+        if (read?.cursor != null) 'cursor': read!.cursor!.toJson(),
+        if (read?.page != null) 'page': read!.page!.toJson(),
+        if (read != null)
+          'orderBy': read.orderBy
+              .map((entry) => entry.toJson())
+              .toList(growable: false),
+      },
+    }),
+    'plan': plan.toJson(),
+  });
+}
+
 @immutable
 final class RuntimeVerifyOptions {
   final RuntimeVerifyMode mode;
@@ -156,6 +220,8 @@ abstract interface class RuntimeCore implements OrmRuntimeQueryable {
 
   RuntimeTelemetryEvent? telemetry();
 
+  Future<JsonMap> explain(OrmPlan plan);
+
   RuntimeOperationTelemetryEvent? operationTelemetry([String? operationId]);
 
   List<RuntimeOperationTelemetryEvent> recentOperationTelemetry({int limit = 50});
@@ -261,6 +327,14 @@ final class OrmRuntimeCore implements RuntimeCore {
 
   @override
   RuntimeTelemetryEvent? telemetry() => _telemetry;
+
+  @override
+  Future<JsonMap> explain(OrmPlan plan) async {
+    _ensureConnected();
+    _assertPlan(plan);
+    await _verifyForRequest();
+    return _buildExplainResult(plan);
+  }
 
   @override
   RuntimeOperationTelemetryEvent? operationTelemetry([String? operationId]) {
@@ -680,6 +754,42 @@ final class OrmRuntimeCore implements RuntimeCore {
     }
 
     final page = plan.page;
+    if ((cursor != null || page != null) && plan.distinct.isNotEmpty) {
+      throw runtimeError(
+        'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
+        'Cursor and page windows do not support distinct yet.',
+        details: <String, Object?>{
+          'model': model.name,
+          'distinct': plan.distinct,
+        },
+      );
+    }
+    if ((cursor != null || page != null) && plan.orderBy.isEmpty) {
+      throw runtimeError(
+        'PLAN.CURSOR_ORDER_BY_REQUIRED',
+        'Cursor and page windows require explicit orderBy fields in the plan.',
+        details: <String, Object?>{
+          'model': model.name,
+          if (cursor != null) 'cursor': cursor.toJson(),
+          if (page != null) 'page': page.toJson(),
+        },
+      );
+    }
+    if (cursor != null &&
+        !_matchesBoundaryFields(
+          orderBy: plan.orderBy,
+          boundaryFields: cursor.values.keys,
+        )) {
+      throw runtimeError(
+        'PLAN.CURSOR_ORDER_BY_FIELDS_INVALID',
+        'Cursor boundary fields must match orderBy fields.',
+        details: <String, Object?>{
+          'model': model.name,
+          'orderBy': plan.orderBy.map((entry) => entry.field).toList(),
+          'boundaryFields': cursor.values.keys.toList(growable: false),
+        },
+      );
+    }
     if (page != null) {
       if (page.size <= 0) {
         throw PlanCursorWindowInvalidException(
@@ -735,26 +845,43 @@ final class OrmRuntimeCore implements RuntimeCore {
           source: 'page.before',
         );
       }
+      if (plan.resultMode != OrmReadResultMode.all) {
+        throw runtimeError(
+          'PLAN.PAGE_RESULT_MODE_INVALID',
+          'Page windows currently require read result mode "all".',
+          details: <String, Object?>{
+            'model': model.name,
+            'resultMode': plan.resultMode.name,
+          },
+        );
+      }
+      final boundaryFields = page.after?.keys ?? page.before?.keys;
+      if (boundaryFields != null &&
+          !_matchesBoundaryFields(
+            orderBy: plan.orderBy,
+            boundaryFields: boundaryFields,
+          )) {
+        throw runtimeError(
+          'PLAN.CURSOR_ORDER_BY_FIELDS_INVALID',
+          'Page boundary fields must match orderBy fields.',
+          details: <String, Object?>{
+            'model': model.name,
+            'orderBy': plan.orderBy.map((entry) => entry.field).toList(),
+            'boundaryFields': boundaryFields.toList(growable: false),
+          },
+        );
+      }
     }
+  }
 
-    if (cursor != null) {
-      throw ApiNotImplementedException(
-        surface: 'orm.plan.cursor.execute',
-        details: <String, Object?>{
-          'model': model.name,
-          'cursor': cursor.toJson(),
-        },
-      );
-    }
-    if (page != null) {
-      throw ApiNotImplementedException(
-        surface: 'orm.plan.page.execute',
-        details: <String, Object?>{
-          'model': model.name,
-          'page': page.toJson(),
-        },
-      );
-    }
+  bool _matchesBoundaryFields({
+    required List<OrmOrderBy> orderBy,
+    required Iterable<String> boundaryFields,
+  }) {
+    final orderByFields = orderBy.map((entry) => entry.field).toList(growable: false);
+    final boundary = boundaryFields.toList(growable: false);
+    return orderByFields.length == boundary.length &&
+        orderByFields.every(boundary.contains);
   }
 
   void _assertMutationPlan({

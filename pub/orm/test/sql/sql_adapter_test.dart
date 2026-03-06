@@ -66,6 +66,8 @@ void main() {
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
+    OrmReadCursorPlan? cursor,
+    OrmReadPagePlan? page,
     OrmReadResultMode resultMode = OrmReadResultMode.all,
   }) {
     return OrmPlan(
@@ -79,6 +81,8 @@ void main() {
         orderBy: orderBy,
         distinct: distinct,
         select: select,
+        cursor: cursor,
+        page: page,
         resultMode: resultMode,
       ),
     );
@@ -125,6 +129,66 @@ void main() {
       'ORDER BY "id" ASC LIMIT ? OFFSET ?',
     );
     expect(statement.parameters, <Object?>['a@example.com', 10, 5]);
+  });
+
+  test('lowers cursor reads with inclusive boundary predicate', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = readPlan(
+      contract: contract,
+      model: 'User',
+      orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      cursor: OrmReadCursorPlan(values: const <String, Object?>{'id': 2}),
+      take: 2,
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT * FROM "users" WHERE ((("id" > ?)) OR ("id" = ?)) '
+      'ORDER BY "id" ASC LIMIT ?',
+    );
+    expect(statement.parameters, <Object?>[2, 2, 2]);
+  });
+
+  test('lowers page after with strict boundary predicate and limit', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = readPlan(
+      contract: contract,
+      model: 'User',
+      orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      page: OrmReadPagePlan(
+        size: 2,
+        after: const <String, Object?>{'id': 2},
+      ),
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT * FROM "users" WHERE (("id" > ?)) ORDER BY "id" ASC LIMIT ?',
+    );
+    expect(statement.parameters, <Object?>[2, 2]);
+  });
+
+  test('lowers page before with reverse inner query and outer reorder', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = readPlan(
+      contract: contract,
+      model: 'User',
+      orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      page: OrmReadPagePlan(
+        size: 2,
+        before: const <String, Object?>{'id': 4},
+      ),
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT * FROM (SELECT * FROM "users" WHERE (("id" < ?)) '
+      'ORDER BY "id" DESC LIMIT ?) AS "_page" ORDER BY "id" ASC',
+    );
+    expect(statement.parameters, <Object?>[4, 2]);
   });
 
   test('lowers where operators with deterministic SQL and parameters', () {
