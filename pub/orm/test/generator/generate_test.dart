@@ -1634,19 +1634,19 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\)\s*\{[\s\S]*?_runtimeGrouped\(_groupBy\)\.toPlan\(\);',
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected UserGroupedQuery.toPlan() to reuse the runtime grouped builder plan path.',
+              'Expected UserGroupedQuery to keep toPlan() out of the typed grouped surface.',
         );
         expect(
           RegExp(
-            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(\)\s*\{[\s\S]*?_runtimeGrouped\(_groupBy\)\.inspectPlan\(\);',
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(',
           ).hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected UserGroupedQuery.inspectPlan() to reuse the runtime grouped builder inspection path.',
+              'Expected UserGroupedQuery to keep inspectPlan() out of the typed grouped surface.',
         );
         expect(
           RegExp(

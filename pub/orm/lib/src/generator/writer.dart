@@ -3250,16 +3250,6 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<OrmPlan> toPlan() {');
-    buffer.writeln('    return _runtimeGrouped(_groupBy).toPlan();');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln('  Future<JsonMap> inspectPlan() {');
-    buffer.writeln('    return _runtimeGrouped(_groupBy).inspectPlan();');
-    buffer.writeln('  }');
-    buffer.writeln();
-
     buffer.writeln(
       '  Future<List<${model.groupByResultClassName}>> aggregate($aggregateBuilderClassName Function($aggregateBuilderClassName aggregate) build) {',
     );

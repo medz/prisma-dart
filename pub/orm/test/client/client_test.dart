@@ -702,32 +702,6 @@ void main() {
       await client.disconnect();
     });
 
-    test(
-      'grouped builder compiles to structured grouped aggregate plan',
-      () async {
-        final client = OrmClient(contract: contract, engine: MemoryEngine());
-        final users = client.db.orm.model('User');
-
-        final plan = await users
-            .query()
-            .groupedBy(const <String>['email'])
-            .having(
-              OrmGroupByHaving.parse(const <String, Object?>{
-                'email': <String, Object?>{'equals': 'a@example.com'},
-              }),
-              merge: false,
-            )
-            .toPlan();
-
-        expect(plan.read?.shape, OrmReadShape.groupedAggregate);
-        expect(plan.read?.groupBy?.by, <String>['email']);
-        expect(plan.read?.groupBy?.having.toJson(), <String, Object?>{
-          'email': <String, Object?>{'equals': 'a@example.com'},
-        });
-        expect(plan.read?.aggregate, isNotNull);
-      },
-    );
-
     test('aggregate rejects unsupported row-query state keys', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');

@@ -127,11 +127,19 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\)\s+async\s*\{[\s\S]*?_prepareGrouped\(groupBy:\s*_groupBy\)\)\.plan;',
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(',
           ).hasMatch(source),
-          isTrue,
+          isFalse,
           reason:
-              'Expected ModelGroupedQuery.toPlan() to expose the grouped aggregate plan surface.',
+              'Expected ModelGroupedQuery to keep toPlan() out of the public grouped surface.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to keep inspectPlan() out of the public grouped surface.',
         );
         expect(
           RegExp(

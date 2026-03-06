@@ -3416,14 +3416,6 @@ final class ModelGroupedQuery {
     }
   }
 
-  Future<OrmPlan> toPlan() async {
-    return (await _prepareGrouped(groupBy: _groupBy)).plan;
-  }
-
-  Future<JsonMap> inspectPlan() async {
-    return (await _prepareGrouped(groupBy: _groupBy)).inspectPlan();
-  }
-
   Future<OrmPreparedGroupedQuery> _prepareGrouped({
     required OrmGroupBySpec groupBy,
   }) {
