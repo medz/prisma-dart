@@ -79,11 +79,11 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<JsonMap>\s+aggregateWith\(OrmAggregateSpec\s+aggregate\)\s*\{[\s\S]*?return\s+_delegate\._aggregate\(spec:\s*_state,\s*aggregate:\s*aggregate\);',
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<JsonMap>\s+aggregateWith\(OrmAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_assertAggregateQueryState\(\);[\s\S]*?_prepareAggregateQuery\(spec:\s*_state,\s*aggregate:\s*aggregate\)[\s\S]*?prepared\.execute\(\)',
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelQuery.aggregateWith(...) to terminate through the private aggregate helper.',
+              'Expected ModelQuery.aggregateWith(...) to prepare an aggregate plan before execution.',
         );
         expect(
           RegExp(
@@ -111,11 +111,19 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+aggregateWith\(OrmAggregateSpec\s+aggregate\)\s*\{[\s\S]*?return\s+_delegate\._groupBy\(\s*spec:\s*_baseState,\s*groupBy:\s*_groupBy\.copyWith\(',
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+aggregateWith\(OrmAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_prepareGrouped\([\s\S]*?groupBy:\s*_groupBy\.copyWith\([\s\S]*?prepared\.execute\(\)',
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelGroupedQuery.aggregateWith(...) to terminate through the private groupBy helper.',
+              'Expected ModelGroupedQuery.aggregateWith(...) to prepare a grouped aggregate plan before execution.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\)\s+async\s*\{[\s\S]*?_prepareGrouped\(groupBy:\s*_groupBy\)\)\.plan;',
+          ).hasMatch(source),
+          isTrue,
+          reason:
+              'Expected ModelGroupedQuery.toPlan() to expose the grouped aggregate plan surface.',
         );
         expect(
           RegExp(

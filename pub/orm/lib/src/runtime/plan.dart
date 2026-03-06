@@ -9,13 +9,14 @@ enum OrmReadResultMode { all, firstOrNull, oneOrNull }
 
 enum OrmMutationResultMode { row, rowOrNull }
 
+enum OrmReadShape { rows, aggregate, groupedAggregate }
+
 @immutable
 final class OrmReadCursorPlan {
   final JsonMap values;
 
-  OrmReadCursorPlan({
-    JsonMap values = const <String, Object?>{},
-  }) : values = Map.unmodifiable(values);
+  OrmReadCursorPlan({JsonMap values = const <String, Object?>{}})
+    : values = Map.unmodifiable(values);
 
   JsonMap toJson() => <String, Object?>{'values': values};
 }
@@ -26,12 +27,9 @@ final class OrmReadPagePlan {
   final JsonMap? after;
   final JsonMap? before;
 
-  OrmReadPagePlan({
-    required this.size,
-    JsonMap? after,
-    JsonMap? before,
-  }) : after = after == null ? null : Map.unmodifiable(after),
-       before = before == null ? null : Map.unmodifiable(before);
+  OrmReadPagePlan({required this.size, JsonMap? after, JsonMap? before})
+    : after = after == null ? null : Map.unmodifiable(after),
+      before = before == null ? null : Map.unmodifiable(before);
 
   JsonMap toJson() => <String, Object?>{
     'size': size,
@@ -126,6 +124,9 @@ final class OrmReadPlan {
   final OrmReadCursorPlan? cursor;
   final OrmReadPagePlan? page;
   final OrmReadResultMode resultMode;
+  final OrmReadShape shape;
+  final OrmReadAggregatePlan? aggregate;
+  final OrmReadGroupByPlan? groupBy;
 
   OrmReadPlan({
     JsonMap where = const <String, Object?>{},
@@ -138,6 +139,9 @@ final class OrmReadPlan {
     this.cursor,
     this.page,
     required this.resultMode,
+    this.shape = OrmReadShape.rows,
+    this.aggregate,
+    this.groupBy,
   }) : where = Map.unmodifiable(where),
        orderBy = List.unmodifiable(orderBy),
        distinct = List.unmodifiable(distinct),
@@ -157,6 +161,68 @@ final class OrmReadPlan {
     if (cursor != null) 'cursor': cursor!.toJson(),
     if (page != null) 'page': page!.toJson(),
     'resultMode': resultMode.name,
+    'shape': shape.name,
+    if (aggregate != null) 'aggregate': aggregate!.toJson(),
+    if (groupBy != null) 'groupBy': groupBy!.toJson(),
+  };
+}
+
+@immutable
+final class OrmReadAggregatePlan {
+  final bool countAll;
+  final List<String> count;
+  final List<String> min;
+  final List<String> max;
+  final List<String> sum;
+  final List<String> avg;
+
+  OrmReadAggregatePlan({
+    this.countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) : count = List.unmodifiable(count),
+       min = List.unmodifiable(min),
+       max = List.unmodifiable(max),
+       sum = List.unmodifiable(sum),
+       avg = List.unmodifiable(avg);
+
+  JsonMap toJson() => <String, Object?>{
+    'countAll': countAll,
+    'count': count,
+    'min': min,
+    'max': max,
+    'sum': sum,
+    'avg': avg,
+  };
+}
+
+@immutable
+final class OrmReadGroupByPlan {
+  final List<String> by;
+  final JsonMap having;
+  final List<OrmOrderBy> orderBy;
+  final int? skip;
+  final int? take;
+
+  OrmReadGroupByPlan({
+    required List<String> by,
+    JsonMap having = const <String, Object?>{},
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    this.skip,
+    this.take,
+  }) : by = List.unmodifiable(by),
+       having = Map.unmodifiable(having),
+       orderBy = List.unmodifiable(orderBy);
+
+  JsonMap toJson() => <String, Object?>{
+    'by': by,
+    'having': having,
+    'orderBy': orderBy.map((entry) => entry.toJson()).toList(growable: false),
+    if (skip != null) 'skip': skip,
+    if (take != null) 'take': take,
   };
 }
 
@@ -231,6 +297,9 @@ final class OrmPlan {
     OrmReadCursorPlan? cursor,
     OrmReadPagePlan? page,
     required OrmReadResultMode resultMode,
+    OrmReadShape shape = OrmReadShape.rows,
+    OrmReadAggregatePlan? aggregate,
+    OrmReadGroupByPlan? groupBy,
   }) {
     return OrmPlan(
       contractHash: contractHash,
@@ -253,6 +322,9 @@ final class OrmPlan {
         cursor: cursor,
         page: page,
         resultMode: resultMode,
+        shape: shape,
+        aggregate: aggregate,
+        groupBy: groupBy,
       ),
     );
   }

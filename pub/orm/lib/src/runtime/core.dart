@@ -54,6 +54,9 @@ int? _estimatedRowsForExplain(OrmPlan plan) {
   if (read == null) {
     return null;
   }
+  if (read.shape == OrmReadShape.aggregate) {
+    return 1;
+  }
   if (read.page case final page?) {
     return page.size;
   }
@@ -78,6 +81,7 @@ JsonMap _buildExplainResult(OrmPlan plan) {
       'executionMode': 'deferred',
       'executionSource': 'notExecuted',
       if (read != null) 'readResultMode': read.resultMode.name,
+      if (read != null) 'readShape': read.shape.name,
       if (mutation != null) 'mutationResultMode': mutation.resultMode.name,
       if (read != null) 'selectedFieldCount': read.select.length,
       if (mutation != null) 'selectedFieldCount': mutation.select.length,
@@ -937,6 +941,7 @@ final class OrmRuntimeCore implements RuntimeCore {
     required ModelContract model,
     required OrmReadPlan plan,
   }) {
+    _assertReadShape(model: model, plan: plan);
     _assertWhereFields(model: model, where: plan.where, source: 'where');
     _assertKnownFields(
       model: model,
@@ -1087,6 +1092,119 @@ final class OrmRuntimeCore implements RuntimeCore {
           },
         );
       }
+    }
+  }
+
+  void _assertReadShape({
+    required ModelContract model,
+    required OrmReadPlan plan,
+  }) {
+    switch (plan.shape) {
+      case OrmReadShape.rows:
+        if (plan.aggregate != null || plan.groupBy != null) {
+          throw runtimeError(
+            'PLAN.READ_SHAPE_INVALID',
+            'Row read plans cannot include aggregate or grouped metadata.',
+            details: <String, Object?>{
+              'model': model.name,
+              'shape': plan.shape.name,
+            },
+          );
+        }
+      case OrmReadShape.aggregate:
+        final aggregate = plan.aggregate;
+        if (aggregate == null || plan.groupBy != null) {
+          throw runtimeError(
+            'PLAN.READ_SHAPE_INVALID',
+            'Aggregate read plans require aggregate metadata and forbid groupBy metadata.',
+            details: <String, Object?>{
+              'model': model.name,
+              'shape': plan.shape.name,
+            },
+          );
+        }
+        _assertKnownFields(
+          model: model,
+          fields: <String>[
+            ...aggregate.count,
+            ...aggregate.min,
+            ...aggregate.max,
+            ...aggregate.sum,
+            ...aggregate.avg,
+          ],
+          source: 'aggregate',
+        );
+        throw runtimeError(
+          'PLAN.READ_SHAPE_UNSUPPORTED',
+          'Aggregate read plans are not executable through runtime yet.',
+          details: <String, Object?>{
+            'model': model.name,
+            'shape': plan.shape.name,
+          },
+        );
+      case OrmReadShape.groupedAggregate:
+        final aggregate = plan.aggregate;
+        final groupBy = plan.groupBy;
+        if (aggregate == null || groupBy == null) {
+          throw runtimeError(
+            'PLAN.READ_SHAPE_INVALID',
+            'Grouped aggregate plans require both aggregate and groupBy metadata.',
+            details: <String, Object?>{
+              'model': model.name,
+              'shape': plan.shape.name,
+            },
+          );
+        }
+        _assertKnownFields(
+          model: model,
+          fields: groupBy.by,
+          source: 'groupBy.by',
+        );
+        _assertKnownFields(
+          model: model,
+          fields: <String>[
+            ...aggregate.count,
+            ...aggregate.min,
+            ...aggregate.max,
+            ...aggregate.sum,
+            ...aggregate.avg,
+          ],
+          source: 'groupBy.aggregate',
+        );
+        if (groupBy.skip case final skip? when skip < 0) {
+          throw PlanInvalidPaginationException(
+            key: 'groupBy.skip',
+            value: skip,
+          );
+        }
+        if (groupBy.take case final take? when take < 0) {
+          throw PlanInvalidPaginationException(
+            key: 'groupBy.take',
+            value: take,
+          );
+        }
+        if (groupBy.by.isEmpty) {
+          throw runtimeError(
+            'PLAN.GROUP_BY_FIELDS_EMPTY',
+            'GroupBy requires at least one field in by.',
+            details: <String, Object?>{'model': model.name},
+          );
+        }
+        if (plan.cursor != null || plan.page != null) {
+          throw runtimeError(
+            'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
+            'Grouped aggregate plans do not support cursor or page windows.',
+            details: <String, Object?>{'model': model.name},
+          );
+        }
+        throw runtimeError(
+          'PLAN.READ_SHAPE_UNSUPPORTED',
+          'Grouped aggregate plans are not executable through runtime yet.',
+          details: <String, Object?>{
+            'model': model.name,
+            'shape': plan.shape.name,
+          },
+        );
     }
   }
 

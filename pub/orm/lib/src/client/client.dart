@@ -1123,6 +1123,135 @@ class ModelDelegate {
     );
   }
 
+  Future<OrmPreparedAggregateQuery> _prepareAggregateQuery({
+    required OrmReadQuerySpec spec,
+    required OrmAggregateSpec aggregate,
+  }) async {
+    _validateAggregateSpec(aggregate: aggregate, source: 'aggregate');
+    final prepared = await _prepareReadQuery(
+      state: _OrmPreparedReadState(
+        resultMode: OrmReadResultMode.all,
+        spec: spec.copyWith(
+          select: _buildAggregateSelect(
+            count: aggregate.count,
+            min: aggregate.min,
+            max: aggregate.max,
+            sum: aggregate.sum,
+            avg: aggregate.avg,
+          ),
+          include: const <String, IncludeSpec>{},
+        ),
+      ),
+    );
+    final basePlan = prepared.plan;
+    final read = basePlan.read!;
+    return OrmPreparedAggregateQuery._(
+      delegate: this,
+      plan: OrmPlan.read(
+        contractHash: basePlan.contractHash,
+        target: basePlan.target,
+        storageHash: basePlan.storageHash,
+        profileHash: basePlan.profileHash,
+        lane: basePlan.lane,
+        annotations: basePlan.annotations,
+        repositoryTrace: basePlan.repositoryTrace,
+        model: modelName,
+        where: read.where,
+        skip: read.skip,
+        take: read.take,
+        orderBy: read.orderBy,
+        distinct: read.distinct,
+        select: read.select,
+        include: read.include,
+        cursor: read.cursor,
+        page: read.page,
+        resultMode: read.resultMode,
+        shape: OrmReadShape.aggregate,
+        aggregate: OrmReadAggregatePlan(
+          countAll: aggregate.countAll,
+          count: aggregate.count,
+          min: aggregate.min,
+          max: aggregate.max,
+          sum: aggregate.sum,
+          avg: aggregate.avg,
+        ),
+      ),
+      spec: prepared._state._spec,
+      aggregate: aggregate,
+    );
+  }
+
+  Future<OrmPreparedGroupedQuery> _prepareGroupedQuery({
+    required OrmReadQuerySpec baseSpec,
+    required OrmGroupBySpec groupBy,
+  }) async {
+    _validateGroupBySpec(spec: baseSpec, groupBy: groupBy);
+    final prepared = await _prepareReadQuery(
+      state: _OrmPreparedReadState(
+        resultMode: OrmReadResultMode.all,
+        spec: baseSpec.copyWith(
+          skip: null,
+          take: null,
+          orderBy: const <OrmOrderBy>[],
+          distinct: const <String>[],
+          select: _buildAggregateSelect(
+            count: groupBy.by.followedBy(groupBy.count).toList(growable: false),
+            min: groupBy.min,
+            max: groupBy.max,
+            sum: groupBy.sum,
+            avg: groupBy.avg,
+          ),
+          include: const <String, IncludeSpec>{},
+          cursor: null,
+          page: null,
+        ),
+      ),
+    );
+    final basePlan = prepared.plan;
+    final read = basePlan.read!;
+    return OrmPreparedGroupedQuery._(
+      delegate: this,
+      plan: OrmPlan.read(
+        contractHash: basePlan.contractHash,
+        target: basePlan.target,
+        storageHash: basePlan.storageHash,
+        profileHash: basePlan.profileHash,
+        lane: basePlan.lane,
+        annotations: basePlan.annotations,
+        repositoryTrace: basePlan.repositoryTrace,
+        model: modelName,
+        where: read.where,
+        skip: read.skip,
+        take: read.take,
+        orderBy: read.orderBy,
+        distinct: read.distinct,
+        select: read.select,
+        include: read.include,
+        cursor: read.cursor,
+        page: read.page,
+        resultMode: read.resultMode,
+        shape: OrmReadShape.groupedAggregate,
+        aggregate: OrmReadAggregatePlan(
+          countAll: groupBy.countAll,
+          count: groupBy.count,
+          min: groupBy.min,
+          max: groupBy.max,
+          sum: groupBy.sum,
+          avg: groupBy.avg,
+        ),
+        groupBy: OrmReadGroupByPlan(
+          by: groupBy.by,
+          having: groupBy.having,
+          orderBy: groupBy.orderBy,
+          skip: groupBy.skip,
+          take: groupBy.take,
+        ),
+      ),
+      baseSpec: prepared._state._spec,
+      groupBy: groupBy,
+    );
+  }
+
   Future<OrmPreparedReadQuery> _prepareReadQuery({
     required _OrmPreparedReadState state,
   }) async {
@@ -1523,14 +1652,7 @@ class ModelDelegate {
     required OrmReadQuerySpec spec,
     required OrmAggregateSpec aggregate,
   }) async {
-    _assertKnownAggregateFields(
-      fields: aggregate.count,
-      source: 'aggregate.count',
-    );
-    _assertKnownAggregateFields(fields: aggregate.min, source: 'aggregate.min');
-    _assertKnownAggregateFields(fields: aggregate.max, source: 'aggregate.max');
-    _assertKnownAggregateFields(fields: aggregate.sum, source: 'aggregate.sum');
-    _assertKnownAggregateFields(fields: aggregate.avg, source: 'aggregate.avg');
+    _validateAggregateSpec(aggregate: aggregate, source: 'aggregate');
 
     final rows = await _readAllInternal(
       action: OrmAction.read,
@@ -1563,57 +1685,7 @@ class ModelDelegate {
     required OrmReadQuerySpec spec,
     required OrmGroupBySpec groupBy,
   }) async {
-    if (groupBy.by.isEmpty) {
-      throw runtimeError(
-        'PLAN.GROUP_BY_FIELDS_EMPTY',
-        'GroupBy requires at least one field in by.',
-        details: <String, Object?>{'model': modelName},
-      );
-    }
-    if (groupBy.skip case final offset? when offset < 0) {
-      throw PlanInvalidPaginationException(key: 'skip', value: offset);
-    }
-    if (groupBy.take case final limit? when limit < 0) {
-      throw PlanInvalidPaginationException(key: 'take', value: limit);
-    }
-    if (spec.cursor != null || spec.page != null) {
-      throw runtimeError(
-        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
-        'GroupBy does not support cursor or page windows yet.',
-        details: <String, Object?>{
-          'model': modelName,
-          if (spec.cursor != null) 'cursor': spec.cursor,
-          if (spec.page != null) 'page': spec.page!.toJson(),
-        },
-      );
-    }
-
-    _assertKnownAggregateFields(fields: groupBy.by, source: 'groupBy.by');
-    _assertKnownAggregateFields(fields: groupBy.count, source: 'groupBy.count');
-    _assertKnownAggregateFields(fields: groupBy.min, source: 'groupBy.min');
-    _assertKnownAggregateFields(fields: groupBy.max, source: 'groupBy.max');
-    _assertKnownAggregateFields(fields: groupBy.sum, source: 'groupBy.sum');
-    _assertKnownAggregateFields(fields: groupBy.avg, source: 'groupBy.avg');
-    _assertGroupByOrderByFields(
-      orderBy: groupBy.orderBy,
-      by: groupBy.by,
-      countAll: groupBy.countAll,
-      count: groupBy.count,
-      min: groupBy.min,
-      max: groupBy.max,
-      sum: groupBy.sum,
-      avg: groupBy.avg,
-    );
-    _assertGroupByHavingFields(
-      having: groupBy.having,
-      by: groupBy.by,
-      countAll: groupBy.countAll,
-      count: groupBy.count,
-      min: groupBy.min,
-      max: groupBy.max,
-      sum: groupBy.sum,
-      avg: groupBy.avg,
-    );
+    _validateGroupBySpec(spec: spec, groupBy: groupBy);
 
     final rows = await _readAllInternal(
       action: OrmAction.read,
@@ -2239,6 +2311,77 @@ class ModelDelegate {
         source: source,
       );
     }
+  }
+
+  void _validateAggregateSpec({
+    required OrmAggregateSpec aggregate,
+    required String source,
+  }) {
+    _assertKnownAggregateFields(
+      fields: aggregate.count,
+      source: '$source.count',
+    );
+    _assertKnownAggregateFields(fields: aggregate.min, source: '$source.min');
+    _assertKnownAggregateFields(fields: aggregate.max, source: '$source.max');
+    _assertKnownAggregateFields(fields: aggregate.sum, source: '$source.sum');
+    _assertKnownAggregateFields(fields: aggregate.avg, source: '$source.avg');
+  }
+
+  void _validateGroupBySpec({
+    required OrmReadQuerySpec spec,
+    required OrmGroupBySpec groupBy,
+  }) {
+    if (groupBy.by.isEmpty) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_FIELDS_EMPTY',
+        'GroupBy requires at least one field in by.',
+        details: <String, Object?>{'model': modelName},
+      );
+    }
+    if (groupBy.skip case final offset? when offset < 0) {
+      throw PlanInvalidPaginationException(key: 'skip', value: offset);
+    }
+    if (groupBy.take case final limit? when limit < 0) {
+      throw PlanInvalidPaginationException(key: 'take', value: limit);
+    }
+    if (spec.cursor != null || spec.page != null) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
+        'GroupBy does not support cursor or page windows yet.',
+        details: <String, Object?>{
+          'model': modelName,
+          if (spec.cursor != null) 'cursor': spec.cursor,
+          if (spec.page != null) 'page': spec.page!.toJson(),
+        },
+      );
+    }
+
+    _assertKnownAggregateFields(fields: groupBy.by, source: 'groupBy.by');
+    _assertKnownAggregateFields(fields: groupBy.count, source: 'groupBy.count');
+    _assertKnownAggregateFields(fields: groupBy.min, source: 'groupBy.min');
+    _assertKnownAggregateFields(fields: groupBy.max, source: 'groupBy.max');
+    _assertKnownAggregateFields(fields: groupBy.sum, source: 'groupBy.sum');
+    _assertKnownAggregateFields(fields: groupBy.avg, source: 'groupBy.avg');
+    _assertGroupByOrderByFields(
+      orderBy: groupBy.orderBy,
+      by: groupBy.by,
+      countAll: groupBy.countAll,
+      count: groupBy.count,
+      min: groupBy.min,
+      max: groupBy.max,
+      sum: groupBy.sum,
+      avg: groupBy.avg,
+    );
+    _assertGroupByHavingFields(
+      having: groupBy.having,
+      by: groupBy.by,
+      countAll: groupBy.countAll,
+      count: groupBy.count,
+      min: groupBy.min,
+      max: groupBy.max,
+      sum: groupBy.sum,
+      avg: groupBy.avg,
+    );
   }
 
   void _assertGroupByOrderByFields({
@@ -3538,8 +3681,10 @@ final class ModelQuery {
   );
 
   Future<JsonMap> aggregateWith(OrmAggregateSpec aggregate) {
-    _assertReadExecutionSupported('aggregate');
-    return _delegate._aggregate(spec: _state, aggregate: aggregate);
+    _assertAggregateQueryState();
+    return _delegate
+        ._prepareAggregateQuery(spec: _state, aggregate: aggregate)
+        .then((prepared) => prepared.execute());
   }
 
   ModelGroupedQuery groupedBy(List<String> by) {
@@ -3620,6 +3765,28 @@ final class ModelQuery {
     throw runtimeError(
       'PLAN.GROUP_BY_QUERY_STATE_INVALID',
       'groupedBy() does not allow query state keys: ${invalidKeys.join(', ')}.',
+      details: <String, Object?>{
+        'model': _delegate.modelName,
+        'invalidKeys': invalidKeys,
+      },
+    );
+  }
+
+  void _assertAggregateQueryState() {
+    final invalidKeys = <String>[
+      if (_state.skip != null) 'skip',
+      if (_state.take != null) 'take',
+      if (_state.distinct.isNotEmpty) 'distinct',
+      if (_state.select.isNotEmpty) 'select',
+      if (_state.include.isNotEmpty) 'include',
+    ];
+    if (invalidKeys.isEmpty) {
+      return;
+    }
+
+    throw runtimeError(
+      'PLAN.AGGREGATE_QUERY_STATE_INVALID',
+      'aggregate() does not allow query state keys: ${invalidKeys.join(', ')}.',
       details: <String, Object?>{
         'model': _delegate.modelName,
         'invalidKeys': invalidKeys,
@@ -3797,8 +3964,7 @@ final class ModelGroupedQuery {
 
   Future<List<JsonMap>> aggregateWith(OrmAggregateSpec aggregate) {
     _assertExecutionSupported('aggregate');
-    return _delegate._groupBy(
-      spec: _baseState,
+    return _prepareGrouped(
       groupBy: _groupBy.copyWith(
         countAll: aggregate.countAll,
         count: aggregate.count,
@@ -3807,7 +3973,7 @@ final class ModelGroupedQuery {
         sum: aggregate.sum,
         avg: aggregate.avg,
       ),
-    );
+    ).then((prepared) => prepared.execute());
   }
 
   void _assertExecutionSupported(String terminal) {
@@ -3825,6 +3991,14 @@ final class ModelGroupedQuery {
     }
   }
 
+  Future<OrmPlan> toPlan() async {
+    return (await _prepareGrouped(groupBy: _groupBy)).plan;
+  }
+
+  Future<JsonMap> inspectPlan() async {
+    return (await _prepareGrouped(groupBy: _groupBy)).inspectPlan();
+  }
+
   Future<List<JsonMap>> _execute() => aggregateWith(
     OrmAggregateSpec(
       countAll: _groupBy.countAll,
@@ -3835,6 +4009,16 @@ final class ModelGroupedQuery {
       avg: _groupBy.avg,
     ),
   );
+
+  Future<OrmPreparedGroupedQuery> _prepareGrouped({
+    required OrmGroupBySpec groupBy,
+  }) {
+    _assertExecutionSupported('aggregate');
+    return _delegate._prepareGroupedQuery(
+      baseSpec: _baseState,
+      groupBy: groupBy,
+    );
+  }
 
   ModelGroupedQuery _next(OrmGroupBySpec nextGroupBy) =>
       ModelGroupedQuery._(_delegate, _baseState, nextGroupBy);

@@ -1600,11 +1600,35 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+aggregateWith\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?groupBy:\s*groupBy\.toRuntimeSpec\(\),[\s\S]*?UserGroupByResult\.fromJson',
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<OrmPlan>\s+toPlan\(\)\s*\{[\s\S]*?_runtimeGrouped\(_groupBy\)\.toPlan\(\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserGroupedQuery.aggregateWith(...) to terminate through runtime structured groupBy specs.',
+              'Expected UserGroupedQuery.toPlan() to reuse the runtime grouped builder plan path.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<JsonMap>\s+inspectPlan\(\)\s*\{[\s\S]*?_runtimeGrouped\(_groupBy\)\.inspectPlan\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupedQuery.inspectPlan() to reuse the runtime grouped builder inspection path.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+aggregateWith\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_runtimeGrouped\(groupBy\)[\s\S]*?OrmAggregateSpec\([\s\S]*?countAll:\s*groupBy\.countAll,[\s\S]*?UserGroupByResult\.fromJson',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupedQuery.aggregateWith(...) to reuse the runtime grouped builder execution path.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+_runtimeGrouped\(UserGroupBySpec\s+groupBy\)\s*\{[\s\S]*?\.groupedBy\([\s\S]*?where:\s*_where\.toJson\(\),[\s\S]*?\.configure\(groupBy\.toRuntimeSpec\(\)\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserGroupedQuery to keep a single runtime grouped builder bridge.',
         );
         expect(
           RegExp(

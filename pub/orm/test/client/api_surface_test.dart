@@ -144,6 +144,32 @@ void main() {
       },
     );
 
+    test(
+      'runtime rejects direct execution of grouped aggregate plans',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        try {
+          final plan = await client.db.orm.model('User').query().groupedBy(
+            const <String>['email'],
+          ).toPlan();
+
+          await expectLater(
+            client.execute(plan),
+            throwsA(
+              isA<OrmRuntimeError>().having(
+                (error) => error.code,
+                'code',
+                'PLAN.READ_SHAPE_UNSUPPORTED',
+              ),
+            ),
+          );
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
+
     test('explain requires an active runtime connection', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');

@@ -3342,6 +3342,16 @@ final class TypedClientWriter {
     );
     buffer.writeln();
 
+    buffer.writeln('  Future<OrmPlan> toPlan() {');
+    buffer.writeln('    return _runtimeGrouped(_groupBy).toPlan();');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<JsonMap> inspectPlan() {');
+    buffer.writeln('    return _runtimeGrouped(_groupBy).inspectPlan();');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln(
       '  Future<List<${model.groupByResultClassName}>> aggregate({',
     );
@@ -3399,12 +3409,44 @@ final class TypedClientWriter {
     buffer.writeln(
       '  Future<List<${model.groupByResultClassName}>> _executeSpec(${model.groupBySpecClassName} groupBy) {',
     );
-    buffer.writeln('    return _delegate._delegate.groupByWith(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      groupBy: groupBy.toRuntimeSpec(),');
+    buffer.writeln('    return _runtimeGrouped(groupBy)');
+    buffer.writeln('        .aggregateWith(');
+    buffer.writeln('          OrmAggregateSpec(');
+    buffer.writeln('            countAll: groupBy.countAll,');
     buffer.writeln(
-      '    ).then((rows) => rows.map(${model.groupByResultClassName}.fromJson).toList(growable: false));',
+      '            count: groupBy.count.map((entry) => entry.value).toList(growable: false),',
     );
+    buffer.writeln(
+      '            min: groupBy.min.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '            max: groupBy.max.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '            sum: groupBy.sum.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln(
+      '            avg: groupBy.avg.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('          ),');
+    buffer.writeln('        )');
+    buffer.writeln(
+      '        .then((rows) => rows.map(${model.groupByResultClassName}.fromJson).toList(growable: false));',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ModelGroupedQuery _runtimeGrouped(${model.groupBySpecClassName} groupBy) {',
+    );
+    buffer.writeln('    return _delegate._delegate');
+    buffer.writeln('        .groupedBy(');
+    buffer.writeln(
+      '          by: groupBy.by.map((entry) => entry.value).toList(growable: false),',
+    );
+    buffer.writeln('          where: _where.toJson(),');
+    buffer.writeln('        )');
+    buffer.writeln('        .configure(groupBy.toRuntimeSpec());');
     buffer.writeln('  }');
     buffer.writeln();
 

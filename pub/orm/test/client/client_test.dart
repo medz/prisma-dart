@@ -699,6 +699,68 @@ void main() {
       await client.disconnect();
     });
 
+    test(
+      'grouped builder compiles to structured grouped aggregate plan',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        final users = client.db.orm.model('User');
+
+        final plan = await users
+            .query()
+            .groupedBy(const <String>['email'])
+            .configure(
+              OrmGroupBySpec(
+                by: const <String>['email'],
+                countAll: true,
+                having: const <String, Object?>{
+                  '_count': <String, Object?>{
+                    'all': <String, Object?>{'gte': 2},
+                  },
+                },
+                orderBy: const <OrmOrderBy>[
+                  OrmOrderBy('_sum.id', order: SortOrder.desc),
+                ],
+                take: 5,
+                sum: const <String>['id'],
+              ),
+            )
+            .toPlan();
+
+        expect(plan.read?.shape, OrmReadShape.groupedAggregate);
+        expect(plan.read?.groupBy?.by, <String>['email']);
+        expect(plan.read?.groupBy?.take, 5);
+        expect(
+          plan.read?.groupBy?.orderBy.map((entry) => entry.field).toList(),
+          <String>['_sum.id'],
+        );
+        expect(plan.read?.groupBy?.having, <String, Object?>{
+          '_count': <String, Object?>{
+            'all': <String, Object?>{'gte': 2},
+          },
+        });
+        expect(plan.read?.aggregate, isNotNull);
+      },
+    );
+
+    test('aggregate rejects unsupported row-query state keys', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final users = client.db.orm.model('User');
+
+      expect(
+        () => users
+            .query()
+            .select(const <String>['id'])
+            .aggregate(countAll: true),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.AGGREGATE_QUERY_STATE_INVALID',
+          ),
+        ),
+      );
+    });
+
     test('rejects invalid groupBy having aggregate fields', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();

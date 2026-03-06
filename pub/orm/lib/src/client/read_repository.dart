@@ -167,6 +167,52 @@ final class OrmPreparedReadQuery {
   }
 }
 
+@immutable
+final class OrmPreparedAggregateQuery {
+  final ModelDelegate _delegate;
+  final OrmPlan plan;
+  final OrmReadQuerySpec _spec;
+  final OrmAggregateSpec _aggregate;
+
+  const OrmPreparedAggregateQuery._({
+    required ModelDelegate delegate,
+    required this.plan,
+    required OrmReadQuerySpec spec,
+    required OrmAggregateSpec aggregate,
+  }) : _delegate = delegate,
+       _spec = spec,
+       _aggregate = aggregate;
+
+  Future<JsonMap> inspectPlan() async =>
+      Map<String, Object?>.unmodifiable(plan.toJson());
+
+  Future<JsonMap> execute() =>
+      _delegate._aggregate(spec: _spec, aggregate: _aggregate);
+}
+
+@immutable
+final class OrmPreparedGroupedQuery {
+  final ModelDelegate _delegate;
+  final OrmPlan plan;
+  final OrmReadQuerySpec _baseSpec;
+  final OrmGroupBySpec _groupBy;
+
+  const OrmPreparedGroupedQuery._({
+    required ModelDelegate delegate,
+    required this.plan,
+    required OrmReadQuerySpec baseSpec,
+    required OrmGroupBySpec groupBy,
+  }) : _delegate = delegate,
+       _baseSpec = baseSpec,
+       _groupBy = groupBy;
+
+  Future<JsonMap> inspectPlan() async =>
+      Map<String, Object?>.unmodifiable(plan.toJson());
+
+  Future<List<JsonMap>> execute() =>
+      _delegate._groupBy(spec: _baseSpec, groupBy: _groupBy);
+}
+
 final class _RepositoryReadExecutor {
   final ModelDelegate _delegate;
 
