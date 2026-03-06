@@ -50,11 +50,19 @@ void main() {
       );
       expect(
         RegExp(
-          r'class\s+ModelDelegate\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(\{[\s\S]*?required\s+OrmGroupBySpec\s+groupBy,[\s\S]*?\)\s*=>\s*_queryFromSpec\([\s\S]*?\)\.groupByWith\(groupBy\);',
+          r'class\s+ModelDelegate\s*\{[\s\S]*?ModelGroupedQuery\s+groupedBy\(\s*List<String>\s+by,\s*\{[\s\S]*?JsonMap\s+where\s*=\s*const\s+<String,\s*Object\?>\{\},[\s\S]*?\)\s*=>\s*_queryFromSpec\(OrmReadQuerySpec\(where:\s*where\)\)\.groupedBy\(by\);',
         ).hasMatch(source),
         isTrue,
         reason:
-            'Expected ModelDelegate.groupByWith(...) to route structured groupBy execution through query terminals.',
+            'Expected ModelDelegate.groupedBy(...) to create grouped queries from where-only query specs.',
+      );
+      expect(
+        RegExp(
+          r'class\s+ModelDelegate\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(\{[\s\S]*?required\s+OrmGroupBySpec\s+groupBy,[\s\S]*?\)\s*=>\s*groupedBy\(groupBy\.by,\s*where:\s*where\)\.configure\(groupBy\)\._execute\(\);',
+        ).hasMatch(source),
+        isTrue,
+        reason:
+            'Expected ModelDelegate.groupByWith(...) to route structured groupBy execution through the grouped builder.',
       );
     });
 
@@ -79,19 +87,43 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupBy\(\{[\s\S]*?\)\s*=>\s*groupByWith\(\s*OrmGroupBySpec\(',
+            r'class\s+ModelQuery\s*\{[\s\S]*?ModelGroupedQuery\s+groupedBy\(List<String>\s+by\)\s*\{[\s\S]*?_assertGroupedQueryBaseState\(\);[\s\S]*?return\s+ModelGroupedQuery\._\([\s\S]*?OrmGroupBySpec\(by:\s*by\),',
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelQuery.groupBy(...) to compile convenience arguments into OrmGroupBySpec.',
+              'Expected ModelQuery.groupedBy(...) to construct a distinct grouped builder.',
         );
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(OrmGroupBySpec\s+groupBy\)\s*\{[\s\S]*?final\s+effectiveGroupBy\s*=[\s\S]*?groupBy\.copyWith\(orderBy:\s*_state\.orderBy\)[\s\S]*?return\s+_delegate\._groupBy\(spec:\s*_state,\s*groupBy:\s*effectiveGroupBy\);',
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupBy\(\{[\s\S]*?var\s+grouped\s*=\s*groupedBy\(by\)\.having\(having,\s*merge:\s*false\);[\s\S]*?return\s+grouped\.aggregate\(',
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelQuery.groupByWith(...) to terminate through the private groupBy helper.',
+              'Expected ModelQuery.groupBy(...) to route convenience arguments through the grouped builder.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupByWith\(OrmGroupBySpec\s+groupBy\)\s*=>\s*groupedBy\(groupBy\.by\)\.configure\(groupBy\)\._execute\(\);',
+          ).hasMatch(source),
+          isTrue,
+          reason:
+              'Expected ModelQuery.groupByWith(...) to execute via the grouped builder.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+aggregateWith\(OrmAggregateSpec\s+aggregate\)\s*\{[\s\S]*?return\s+_delegate\._groupBy\(\s*spec:\s*_baseState,\s*groupBy:\s*_groupBy\.copyWith\(',
+          ).hasMatch(source),
+          isTrue,
+          reason:
+              'Expected ModelGroupedQuery.aggregateWith(...) to terminate through the private groupBy helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+all\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to avoid row-query all() terminals.',
         );
         expect(
           RegExp(

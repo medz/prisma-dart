@@ -588,9 +588,9 @@ void main() {
 
       final grouped = await users
           .query()
+          .groupedBy(const <String>['email'])
           .orderByField('email')
-          .groupBy(
-            by: const <String>['email'],
+          .aggregate(
             countAll: true,
             sum: const <String>['id'],
             avg: const <String>['id'],
@@ -633,17 +633,14 @@ void main() {
 
         final grouped = await users
             .query()
-            .orderByField('_sum.id', order: SortOrder.desc)
-            .groupBy(
-              by: const <String>['email'],
-              having: <String, Object?>{
-                '_count': <String, Object?>{
-                  'all': <String, Object?>{'gte': 2},
-                },
+            .groupedBy(const <String>['email'])
+            .having(<String, Object?>{
+              '_count': <String, Object?>{
+                'all': <String, Object?>{'gte': 2},
               },
-              countAll: true,
-              sum: const <String>['id'],
-            );
+            }, merge: false)
+            .orderByField('_sum.id', order: SortOrder.desc)
+            .aggregate(countAll: true, sum: const <String>['id']);
 
         expect(grouped, hasLength(2));
         expect(
@@ -668,17 +665,34 @@ void main() {
       await expectLater(
         users
             .query()
+            .groupedBy(const <String>['email'])
             .orderByField('sum.email')
-            .groupBy(
-              by: const <String>['email'],
-              countAll: true,
-              sum: const <String>['id'],
-            ),
+            .aggregate(countAll: true, sum: const <String>['id']),
         throwsA(
           isA<OrmRuntimeError>().having(
             (error) => error.code,
             'code',
             'PLAN.GROUP_BY_ORDER_BY_INVALID',
+          ),
+        ),
+      );
+      await client.disconnect();
+    });
+
+    test('rejects groupedBy when row-query state is already present', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      expect(
+        () => users.query().orderByField('email').groupedBy(const <String>[
+          'email',
+        ]),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.GROUP_BY_QUERY_STATE_INVALID',
           ),
         ),
       );

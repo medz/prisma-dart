@@ -1391,11 +1391,14 @@ class ModelDelegate {
     ),
   ).aggregateWith(aggregate);
 
+  ModelGroupedQuery groupedBy(
+    List<String> by, {
+    JsonMap where = const <String, Object?>{},
+  }) => _queryFromSpec(OrmReadQuerySpec(where: where)).groupedBy(by);
+
   Future<List<JsonMap>> groupBy({
     required List<String> by,
     JsonMap where = const <String, Object?>{},
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
     JsonMap having = const <String, Object?>{},
     int? skip,
     int? take,
@@ -1406,19 +1409,12 @@ class ModelDelegate {
     List<String> max = const <String>[],
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
-  }) =>
-      _queryFromSpec(
-        OrmReadQuerySpec(
-          where: where,
-          skip: skip,
-          take: take,
-          cursor: cursor,
-          page: page,
-        ),
-      ).groupBy(
-        by: by,
-        having: having,
-        orderBy: orderBy,
+  }) => groupedBy(by, where: where)
+      .having(having, merge: false)
+      .orderBy(orderBy, append: false)
+      .skip(skip)
+      .take(take)
+      .aggregate(
         countAll: countAll,
         count: count,
         min: min,
@@ -1429,20 +1425,8 @@ class ModelDelegate {
 
   Future<List<JsonMap>> groupByWith({
     JsonMap where = const <String, Object?>{},
-    int? skip,
-    int? take,
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
     required OrmGroupBySpec groupBy,
-  }) => _queryFromSpec(
-    OrmReadQuerySpec(
-      where: where,
-      skip: skip,
-      take: take,
-      cursor: cursor,
-      page: page,
-    ),
-  ).groupByWith(groupBy);
+  }) => groupedBy(groupBy.by, where: where).configure(groupBy)._execute();
 
   Future<JsonMap> create({
     required JsonMap data,
@@ -1586,10 +1570,10 @@ class ModelDelegate {
         details: <String, Object?>{'model': modelName},
       );
     }
-    if (spec.skip case final offset? when offset < 0) {
+    if (groupBy.skip case final offset? when offset < 0) {
       throw PlanInvalidPaginationException(key: 'skip', value: offset);
     }
-    if (spec.take case final limit? when limit < 0) {
+    if (groupBy.take case final limit? when limit < 0) {
       throw PlanInvalidPaginationException(key: 'take', value: limit);
     }
     if (spec.cursor != null || spec.page != null) {
@@ -1698,7 +1682,7 @@ class ModelDelegate {
       );
     }
 
-    return _sliceRows(rows: results, skip: spec.skip, take: spec.take);
+    return _sliceRows(rows: results, skip: groupBy.skip, take: groupBy.take);
   }
 
   Future<JsonMap> _create({
@@ -3242,6 +3226,8 @@ final class OrmGroupBySpec {
   final List<String> by;
   final JsonMap having;
   final List<OrmOrderBy> orderBy;
+  final int? skip;
+  final int? take;
   final bool countAll;
   final List<String> count;
   final List<String> min;
@@ -3253,6 +3239,8 @@ final class OrmGroupBySpec {
     required List<String> by,
     JsonMap having = const <String, Object?>{},
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    this.skip,
+    this.take,
     this.countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
@@ -3274,6 +3262,8 @@ final class OrmGroupBySpec {
     List<String>? by,
     JsonMap? having,
     List<OrmOrderBy>? orderBy,
+    Object? skip = _stateKeepToken,
+    Object? take = _stateKeepToken,
     bool? countAll,
     List<String>? count,
     List<String>? min,
@@ -3285,6 +3275,8 @@ final class OrmGroupBySpec {
       by: by ?? this.by,
       having: having ?? this.having,
       orderBy: orderBy ?? this.orderBy,
+      skip: identical(skip, _stateKeepToken) ? this.skip : skip as int?,
+      take: identical(take, _stateKeepToken) ? this.take : take as int?,
       countAll: countAll ?? this.countAll,
       count: count ?? this.count,
       min: min ?? this.min,
@@ -3550,9 +3542,20 @@ final class ModelQuery {
     return _delegate._aggregate(spec: _state, aggregate: aggregate);
   }
 
+  ModelGroupedQuery groupedBy(List<String> by) {
+    _assertGroupedQueryBaseState();
+    return ModelGroupedQuery._(
+      _delegate,
+      _state.copyWith(),
+      OrmGroupBySpec(by: by),
+    );
+  }
+
   Future<List<JsonMap>> groupBy({
     required List<String> by,
     JsonMap having = const <String, Object?>{},
+    int? skip,
+    int? take,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     bool countAll = false,
     List<String> count = const <String>[],
@@ -3560,39 +3563,29 @@ final class ModelQuery {
     List<String> max = const <String>[],
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
-  }) => groupByWith(
-    OrmGroupBySpec(
-      by: by,
-      having: having,
-      orderBy: orderBy,
+  }) {
+    var grouped = groupedBy(by).having(having, merge: false);
+    if (orderBy.isNotEmpty) {
+      grouped = grouped.orderBy(orderBy, append: false);
+    }
+    if (skip != null) {
+      grouped = grouped.skip(skip);
+    }
+    if (take != null) {
+      grouped = grouped.take(take);
+    }
+    return grouped.aggregate(
       countAll: countAll,
       count: count,
       min: min,
       max: max,
       sum: sum,
       avg: avg,
-    ),
-  );
-
-  Future<List<JsonMap>> groupByWith(OrmGroupBySpec groupBy) {
-    _assertReadExecutionSupported('groupBy');
-    if (_state.cursor != null || _state.page != null) {
-      throw runtimeError(
-        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
-        'GroupBy does not support cursor or page windows yet.',
-        details: <String, Object?>{
-          'model': _delegate.modelName,
-          if (_state.cursor != null) 'cursor': _state.cursor,
-          if (_state.page != null) 'page': _state.page!.toJson(),
-        },
-      );
-    }
-    final effectiveGroupBy =
-        groupBy.orderBy.isEmpty && _state.orderBy.isNotEmpty
-        ? groupBy.copyWith(orderBy: _state.orderBy)
-        : groupBy;
-    return _delegate._groupBy(spec: _state, groupBy: effectiveGroupBy);
+    );
   }
+
+  Future<List<JsonMap>> groupByWith(OrmGroupBySpec groupBy) =>
+      groupedBy(groupBy.by).configure(groupBy)._execute();
 
   void _assertReadExecutionSupported(String terminal) {
     if ((_state.cursor != null || _state.page != null) &&
@@ -3607,6 +3600,31 @@ final class ModelQuery {
         },
       );
     }
+  }
+
+  void _assertGroupedQueryBaseState() {
+    final invalidKeys = <String>[
+      if (_state.skip != null) 'skip',
+      if (_state.take != null) 'take',
+      if (_state.orderBy.isNotEmpty) 'orderBy',
+      if (_state.distinct.isNotEmpty) 'distinct',
+      if (_state.select.isNotEmpty) 'select',
+      if (_state.include.isNotEmpty) 'include',
+      if (_state.cursor != null) 'cursor',
+      if (_state.page != null) 'page',
+    ];
+    if (invalidKeys.isEmpty) {
+      return;
+    }
+
+    throw runtimeError(
+      'PLAN.GROUP_BY_QUERY_STATE_INVALID',
+      'groupedBy() does not allow query state keys: ${invalidKeys.join(', ')}.',
+      details: <String, Object?>{
+        'model': _delegate.modelName,
+        'invalidKeys': invalidKeys,
+      },
+    );
   }
 
   void _assertMutationQueryState({
@@ -3689,6 +3707,140 @@ final class ModelQuery {
 }
 
 @immutable
+final class ModelGroupedQuery {
+  final ModelDelegate _delegate;
+  final OrmReadQuerySpec _baseState;
+  final OrmGroupBySpec _groupBy;
+
+  const ModelGroupedQuery._(this._delegate, this._baseState, this._groupBy);
+
+  List<String> get byFields => _groupBy.by;
+
+  JsonMap get havingClause => _groupBy.having;
+
+  List<OrmOrderBy> get orderByValues => _groupBy.orderBy;
+
+  int? get skipValue => _groupBy.skip;
+
+  int? get takeValue => _groupBy.take;
+
+  ModelGroupedQuery configure(OrmGroupBySpec groupBy) {
+    if (!_sameStringList(left: _groupBy.by, right: groupBy.by)) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_FIELDS_MISMATCH',
+        'groupByWith() cannot replace the grouped fields after groupedBy().',
+        details: <String, Object?>{
+          'model': _delegate.modelName,
+          'currentBy': _groupBy.by,
+          'nextBy': groupBy.by,
+        },
+      );
+    }
+    return _next(groupBy);
+  }
+
+  ModelGroupedQuery having(JsonMap having, {bool merge = true}) {
+    final nextHaving = merge
+        ? <String, Object?>{..._groupBy.having, ...having}
+        : <String, Object?>{...having};
+    return _next(_groupBy.copyWith(having: nextHaving));
+  }
+
+  ModelGroupedQuery havingWith(
+    JsonMap Function(JsonMap having) build, {
+    bool merge = true,
+  }) {
+    final current = Map<String, Object?>.from(_groupBy.having);
+    final next = build(Map<String, Object?>.unmodifiable(current));
+    return having(next, merge: merge);
+  }
+
+  ModelGroupedQuery orderBy(List<OrmOrderBy> orderBy, {bool append = true}) {
+    final nextOrderBy = append
+        ? <OrmOrderBy>[..._groupBy.orderBy, ...orderBy]
+        : <OrmOrderBy>[...orderBy];
+    return _next(_groupBy.copyWith(orderBy: nextOrderBy));
+  }
+
+  ModelGroupedQuery orderByField(
+    String field, {
+    SortOrder order = SortOrder.asc,
+  }) {
+    return orderBy(<OrmOrderBy>[OrmOrderBy(field, order: order)]);
+  }
+
+  ModelGroupedQuery skip(int? value) {
+    return _next(_groupBy.copyWith(skip: value));
+  }
+
+  ModelGroupedQuery take(int? value) {
+    return _next(_groupBy.copyWith(take: value));
+  }
+
+  Future<List<JsonMap>> aggregate({
+    bool countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) => aggregateWith(
+    OrmAggregateSpec(
+      countAll: countAll,
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      avg: avg,
+    ),
+  );
+
+  Future<List<JsonMap>> aggregateWith(OrmAggregateSpec aggregate) {
+    _assertExecutionSupported('aggregate');
+    return _delegate._groupBy(
+      spec: _baseState,
+      groupBy: _groupBy.copyWith(
+        countAll: aggregate.countAll,
+        count: aggregate.count,
+        min: aggregate.min,
+        max: aggregate.max,
+        sum: aggregate.sum,
+        avg: aggregate.avg,
+      ),
+    );
+  }
+
+  void _assertExecutionSupported(String terminal) {
+    if (_baseState.cursor != null || _baseState.page != null) {
+      throw runtimeError(
+        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
+        'Grouped queries do not support cursor or page windows yet.',
+        details: <String, Object?>{
+          'model': _delegate.modelName,
+          'terminal': terminal,
+          if (_baseState.cursor != null) 'cursor': _baseState.cursor,
+          if (_baseState.page != null) 'page': _baseState.page!.toJson(),
+        },
+      );
+    }
+  }
+
+  Future<List<JsonMap>> _execute() => aggregateWith(
+    OrmAggregateSpec(
+      countAll: _groupBy.countAll,
+      count: _groupBy.count,
+      min: _groupBy.min,
+      max: _groupBy.max,
+      sum: _groupBy.sum,
+      avg: _groupBy.avg,
+    ),
+  );
+
+  ModelGroupedQuery _next(OrmGroupBySpec nextGroupBy) =>
+      ModelGroupedQuery._(_delegate, _baseState, nextGroupBy);
+}
+
+@immutable
 final class _RelationMergeKey {
   final List<Object?> parts;
 
@@ -3708,6 +3860,24 @@ final class _RelationMergeKey {
 
   @override
   int get hashCode => Object.hashAll(parts);
+}
+
+bool _sameStringList({
+  required List<String> left,
+  required List<String> right,
+}) {
+  if (identical(left, right)) {
+    return true;
+  }
+  if (left.length != right.length) {
+    return false;
+  }
+  for (var index = 0; index < left.length; index++) {
+    if (left[index] != right[index]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 Map<String, CollectionFactory> _createCollectionRegistry(

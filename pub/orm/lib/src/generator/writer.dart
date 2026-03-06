@@ -118,6 +118,8 @@ final class TypedClientWriter {
     buffer.writeln();
     buffer.writeln("import '${options.ormImport}';");
     buffer.writeln();
+    buffer.writeln('const Object _typedStateKeepToken = Object();');
+    buffer.writeln();
   }
 
   void _writeWhereFilterClasses(StringBuffer buffer) {
@@ -1022,6 +1024,8 @@ final class TypedClientWriter {
     buffer.writeln('  final List<${model.distinctClassName}> by;');
     buffer.writeln('  final ${model.groupByHavingClassName} having;');
     buffer.writeln('  final List<${model.groupByOrderByClassName}> orderBy;');
+    buffer.writeln('  final int? skip;');
+    buffer.writeln('  final int? take;');
     buffer.writeln('  final bool countAll;');
     buffer.writeln('  final List<${model.distinctClassName}> count;');
     buffer.writeln('  final List<${model.distinctClassName}> min;');
@@ -1037,6 +1041,8 @@ final class TypedClientWriter {
     buffer.writeln(
       '    this.orderBy = const <${model.groupByOrderByClassName}>[],',
     );
+    buffer.writeln('    this.skip,');
+    buffer.writeln('    this.take,');
     buffer.writeln('    this.countAll = false,');
     buffer.writeln('    this.count = const <${model.distinctClassName}>[],');
     buffer.writeln('    this.min = const <${model.distinctClassName}>[],');
@@ -1044,6 +1050,38 @@ final class TypedClientWriter {
     buffer.writeln('    this.sum = const <${model.distinctClassName}>[],');
     buffer.writeln('    this.avg = const <${model.distinctClassName}>[],');
     buffer.writeln('  });');
+    buffer.writeln();
+    buffer.writeln('  ${model.groupBySpecClassName} copyWith({');
+    buffer.writeln('    List<${model.distinctClassName}>? by,');
+    buffer.writeln('    ${model.groupByHavingClassName}? having,');
+    buffer.writeln('    List<${model.groupByOrderByClassName}>? orderBy,');
+    buffer.writeln('    Object? skip = _typedStateKeepToken,');
+    buffer.writeln('    Object? take = _typedStateKeepToken,');
+    buffer.writeln('    bool? countAll,');
+    buffer.writeln('    List<${model.distinctClassName}>? count,');
+    buffer.writeln('    List<${model.distinctClassName}>? min,');
+    buffer.writeln('    List<${model.distinctClassName}>? max,');
+    buffer.writeln('    List<${model.distinctClassName}>? sum,');
+    buffer.writeln('    List<${model.distinctClassName}>? avg,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return ${model.groupBySpecClassName}(');
+    buffer.writeln('      by: by ?? this.by,');
+    buffer.writeln('      having: having ?? this.having,');
+    buffer.writeln('      orderBy: orderBy ?? this.orderBy,');
+    buffer.writeln(
+      '      skip: identical(skip, _typedStateKeepToken) ? this.skip : skip as int?,',
+    );
+    buffer.writeln(
+      '      take: identical(take, _typedStateKeepToken) ? this.take : take as int?,',
+    );
+    buffer.writeln('      countAll: countAll ?? this.countAll,');
+    buffer.writeln('      count: count ?? this.count,');
+    buffer.writeln('      min: min ?? this.min,');
+    buffer.writeln('      max: max ?? this.max,');
+    buffer.writeln('      sum: sum ?? this.sum,');
+    buffer.writeln('      avg: avg ?? this.avg,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
     buffer.writeln();
     buffer.writeln('  OrmGroupBySpec toRuntimeSpec() {');
     buffer.writeln('    return OrmGroupBySpec(');
@@ -1054,6 +1092,8 @@ final class TypedClientWriter {
     buffer.writeln(
       '      orderBy: orderBy.map((entry) => entry.value).toList(growable: false),',
     );
+    buffer.writeln('      skip: skip,');
+    buffer.writeln('      take: take,');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln(
       '      count: count.map((entry) => entry.value).toList(growable: false),',
@@ -2054,6 +2094,16 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  ${model.groupedQueryClassName} groupedBy(');
+    buffer.writeln('    List<${model.distinctClassName}> by, {');
+    buffer.writeln(
+      '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(where: where).groupedBy(by);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.groupByResultClassName}>> groupBy({');
     buffer.writeln('    required List<${model.distinctClassName}> by,');
     buffer.writeln(
@@ -2084,21 +2134,19 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    return query(');
-    buffer.writeln('      where: where,');
-    buffer.writeln('      skip: skip,');
-    buffer.writeln('      take: take,');
-    buffer.writeln('    ).groupBy(');
-    buffer.writeln('      by: by,');
-    buffer.writeln('      groupByOrderBy: groupByOrderBy,');
-    buffer.writeln('      typedHaving: typedHaving,');
-    buffer.writeln('      countAll: countAll,');
-    buffer.writeln('      count: count,');
-    buffer.writeln('      min: min,');
-    buffer.writeln('      max: max,');
-    buffer.writeln('      sum: sum,');
-    buffer.writeln('      avg: avg,');
-    buffer.writeln('    );');
+    buffer.writeln('    return groupedBy(by, where: where)');
+    buffer.writeln('        .having(typedHaving, merge: false)');
+    buffer.writeln('        .orderBy(groupByOrderBy, append: false)');
+    buffer.writeln('        .skip(skip)');
+    buffer.writeln('        .take(take)');
+    buffer.writeln('        .aggregate(');
+    buffer.writeln('          countAll: countAll,');
+    buffer.writeln('          count: count,');
+    buffer.writeln('          min: min,');
+    buffer.writeln('          max: max,');
+    buffer.writeln('          sum: sum,');
+    buffer.writeln('          avg: avg,');
+    buffer.writeln('        );');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2108,15 +2156,11 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
-    buffer.writeln('    int? skip,');
-    buffer.writeln('    int? take,');
     buffer.writeln('    required ${model.groupBySpecClassName} groupBy,');
     buffer.writeln('  }) {');
-    buffer.writeln('    return query(');
-    buffer.writeln('      where: where,');
-    buffer.writeln('      skip: skip,');
-    buffer.writeln('      take: take,');
-    buffer.writeln('    ).groupByWith(groupBy);');
+    buffer.writeln('    return groupedBy(groupBy.by, where: where)');
+    buffer.writeln('        .configure(groupBy)');
+    buffer.writeln('        ._execute();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2149,6 +2193,7 @@ final class TypedClientWriter {
     buffer.writeln('}');
     buffer.writeln();
     _writeTypedQueryClass(buffer: buffer, model: model);
+    _writeTypedGroupedQueryClass(buffer: buffer, model: model);
   }
 
   void _writeTypedSqlClass({
@@ -2796,6 +2841,34 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  void _assertGroupedQueryBaseState() {');
+    buffer.writeln('    final invalidKeys = <String>[');
+    buffer.writeln("      if (_skip != null) 'skip',");
+    buffer.writeln("      if (_take != null) 'take',");
+    buffer.writeln("      if (_orderBy.isNotEmpty) 'orderBy',");
+    buffer.writeln("      if (_distinct.isNotEmpty) 'distinct',");
+    buffer.writeln("      if (_select != null) 'select',");
+    buffer.writeln("      if (_include != null) 'include',");
+    buffer.writeln("      if (_cursor != null) 'cursor',");
+    buffer.writeln("      if (_pageSize != null) 'page',");
+    buffer.writeln('    ];');
+    buffer.writeln('    if (invalidKeys.isEmpty) {');
+    buffer.writeln('      return;');
+    buffer.writeln('    }');
+    buffer.writeln();
+    buffer.writeln('    throw runtimeError(');
+    buffer.writeln("      'PLAN.GROUP_BY_QUERY_STATE_INVALID',");
+    buffer.writeln(
+      "      'groupedBy() does not allow query state keys: \${invalidKeys.join(', ')}.',",
+    );
+    buffer.writeln('      details: <String, Object?>{');
+    buffer.writeln("        'model': '$runtimeName',");
+    buffer.writeln("        'invalidKeys': invalidKeys,");
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  void _assertMutationQueryState({');
     buffer.writeln('    required String action,');
     buffer.writeln('    bool allowWhere = true,');
@@ -2941,6 +3014,18 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} groupedBy(List<${model.distinctClassName}> by) {',
+    );
+    buffer.writeln('    _assertGroupedQueryBaseState();');
+    buffer.writeln('    return ${model.groupedQueryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      groupBy: ${model.groupBySpecClassName}(by: by),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  Future<List<${model.groupByResultClassName}>> groupBy({');
     buffer.writeln('    required List<${model.distinctClassName}> by,');
     buffer.writeln(
@@ -2949,6 +3034,8 @@ final class TypedClientWriter {
     buffer.writeln(
       '    List<${model.groupByOrderByClassName}> groupByOrderBy = const <${model.groupByOrderByClassName}>[],',
     );
+    buffer.writeln('    int? skip,');
+    buffer.writeln('    int? take,');
     buffer.writeln('    bool countAll = false,');
     buffer.writeln(
       '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
@@ -2966,36 +3053,22 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
-    buffer.writeln("    _assertReadExecutionSupported('groupBy');");
-    buffer.writeln('    if (_cursor != null || _pageSize != null) {');
-    buffer.writeln('      throw runtimeError(');
-    buffer.writeln("        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',");
+    buffer.writeln('    var grouped = groupedBy(by)');
+    buffer.writeln('        .having(typedHaving, merge: false)');
+    buffer.writeln('        .skip(skip)');
+    buffer.writeln('        .take(take);');
+    buffer.writeln('    if (groupByOrderBy.isNotEmpty) {');
     buffer.writeln(
-      "        'GroupBy does not support cursor or page windows yet.',",
+      '      grouped = grouped.orderBy(groupByOrderBy, append: false);',
     );
-    buffer.writeln('        details: <String, Object?>{');
-    buffer.writeln("          'model': '$runtimeName',");
-    buffer.writeln(
-      "          if (_runtimeCursor != null) 'cursor': _runtimeCursor,",
-    );
-    buffer.writeln(
-      "          if (_runtimePage != null) 'page': _runtimePage!.toJson(),",
-    );
-    buffer.writeln('        },');
-    buffer.writeln('      );');
     buffer.writeln('    }');
-    buffer.writeln('    return groupByWith(');
-    buffer.writeln('      ${model.groupBySpecClassName}(');
-    buffer.writeln('        by: by,');
-    buffer.writeln('        having: typedHaving,');
-    buffer.writeln('        orderBy: groupByOrderBy,');
-    buffer.writeln('        countAll: countAll,');
-    buffer.writeln('        count: count,');
-    buffer.writeln('        min: min,');
-    buffer.writeln('        max: max,');
-    buffer.writeln('        sum: sum,');
-    buffer.writeln('        avg: avg,');
-    buffer.writeln('      ),');
+    buffer.writeln('    return grouped.aggregate(');
+    buffer.writeln('      countAll: countAll,');
+    buffer.writeln('      count: count,');
+    buffer.writeln('      min: min,');
+    buffer.writeln('      max: max,');
+    buffer.writeln('      sum: sum,');
+    buffer.writeln('      avg: avg,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -3003,31 +3076,8 @@ final class TypedClientWriter {
     buffer.writeln(
       '  Future<List<${model.groupByResultClassName}>> groupByWith(${model.groupBySpecClassName} groupBy) {',
     );
-    buffer.writeln("    _assertReadExecutionSupported('groupBy');");
-    buffer.writeln('    if (_cursor != null || _pageSize != null) {');
-    buffer.writeln('      throw runtimeError(');
-    buffer.writeln("        'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',");
     buffer.writeln(
-      "        'GroupBy does not support cursor or page windows yet.',",
-    );
-    buffer.writeln('        details: <String, Object?>{');
-    buffer.writeln("          'model': '$runtimeName',");
-    buffer.writeln(
-      "          if (_runtimeCursor != null) 'cursor': _runtimeCursor,",
-    );
-    buffer.writeln(
-      "          if (_runtimePage != null) 'page': _runtimePage!.toJson(),",
-    );
-    buffer.writeln('        },');
-    buffer.writeln('      );');
-    buffer.writeln('    }');
-    buffer.writeln('    return _delegate._delegate.groupByWith(');
-    buffer.writeln('      where: _where.toJson(),');
-    buffer.writeln('      skip: _skip,');
-    buffer.writeln('      take: _take,');
-    buffer.writeln('      groupBy: groupBy.toRuntimeSpec(),');
-    buffer.writeln(
-      '    ).then((rows) => rows.map(${model.groupByResultClassName}.fromJson).toList(growable: false));',
+      '    return groupedBy(groupBy.by).configure(groupBy)._execute();',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -3192,6 +3242,179 @@ final class TypedClientWriter {
     buffer.writeln('      orderBy: _runtimeOrderBy,');
     buffer.writeln('      cursor: _runtimeCursor,');
     buffer.writeln('      page: _runtimePage,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+  }
+
+  void _writeTypedGroupedQueryClass({
+    required StringBuffer buffer,
+    required _ResolvedModel model,
+  }) {
+    final runtimeName = _escapeString(model.model.runtimeName);
+    buffer.writeln('class ${model.groupedQueryClassName} {');
+    buffer.writeln('  final ${model.delegateClassName} _delegate;');
+    buffer.writeln('  final ${model.whereInputClassName} _where;');
+    buffer.writeln('  final ${model.groupBySpecClassName} _groupBy;');
+    buffer.writeln();
+    buffer.writeln('  const ${model.groupedQueryClassName}._({');
+    buffer.writeln('    required ${model.delegateClassName} delegate,');
+    buffer.writeln('    required ${model.whereInputClassName} where,');
+    buffer.writeln('    required ${model.groupBySpecClassName} groupBy,');
+    buffer.writeln('  }) : _delegate = delegate,');
+    buffer.writeln('       _where = where,');
+    buffer.writeln('       _groupBy = groupBy;');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} configure(${model.groupBySpecClassName} groupBy) {',
+    );
+    buffer.writeln(
+      '    final currentBy = _groupBy.by.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final nextBy = groupBy.by.map((entry) => entry.value).toList(growable: false);',
+    );
+    buffer.writeln(
+      '    final sameBy = currentBy.length == nextBy.length && Iterable<int>.generate(currentBy.length).every((index) => currentBy[index] == nextBy[index]);',
+    );
+    buffer.writeln('    if (!sameBy) {');
+    buffer.writeln('      throw runtimeError(');
+    buffer.writeln("        'PLAN.GROUP_BY_FIELDS_MISMATCH',");
+    buffer.writeln(
+      "        'groupByWith() cannot replace the grouped fields after groupedBy().',",
+    );
+    buffer.writeln('        details: <String, Object?>{');
+    buffer.writeln("          'model': '$runtimeName',");
+    buffer.writeln("          'currentBy': currentBy,");
+    buffer.writeln("          'nextBy': nextBy,");
+    buffer.writeln('        },');
+    buffer.writeln('      );');
+    buffer.writeln('    }');
+    buffer.writeln('    return _next(groupBy);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} having(${model.groupByHavingClassName} having, {bool merge = true}) {',
+    );
+    buffer.writeln('    return _next(');
+    buffer.writeln('      _groupBy.copyWith(');
+    buffer.writeln(
+      '        having: merge ? _groupBy.having.merge(having) : having,',
+    );
+    buffer.writeln('      ),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} havingWith(${model.groupByHavingClassName} Function(${model.groupByHavingClassName} having) build, {bool merge = true}) {',
+    );
+    buffer.writeln('    final next = build(_groupBy.having);');
+    buffer.writeln('    return having(next, merge: merge);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} orderBy(List<${model.groupByOrderByClassName}> orderBy, {bool append = true}) {',
+    );
+    buffer.writeln('    return _next(');
+    buffer.writeln('      _groupBy.copyWith(');
+    buffer.writeln('        orderBy: append');
+    buffer.writeln(
+      '            ? <${model.groupByOrderByClassName}>[..._groupBy.orderBy, ...orderBy]',
+    );
+    buffer.writeln('            : orderBy,');
+    buffer.writeln('      ),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} skip(int? skip) => _next(_groupBy.copyWith(skip: skip));',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} take(int? take) => _next(_groupBy.copyWith(take: take));',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<List<${model.groupByResultClassName}>> aggregate({',
+    );
+    buffer.writeln('    bool countAll = false,');
+    buffer.writeln(
+      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln(
+      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
+    );
+    buffer.writeln('  }) {');
+    buffer.writeln('    return aggregateWith(');
+    buffer.writeln('      ${model.aggregateSpecClassName}(');
+    buffer.writeln('        countAll: countAll,');
+    buffer.writeln('        count: count,');
+    buffer.writeln('        min: min,');
+    buffer.writeln('        max: max,');
+    buffer.writeln('        sum: sum,');
+    buffer.writeln('        avg: avg,');
+    buffer.writeln('      ),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<List<${model.groupByResultClassName}>> aggregateWith(${model.aggregateSpecClassName} aggregate) {',
+    );
+    buffer.writeln('    return _executeSpec(');
+    buffer.writeln('      _groupBy.copyWith(');
+    buffer.writeln('        countAll: aggregate.countAll,');
+    buffer.writeln('        count: aggregate.count,');
+    buffer.writeln('        min: aggregate.min,');
+    buffer.writeln('        max: aggregate.max,');
+    buffer.writeln('        sum: aggregate.sum,');
+    buffer.writeln('        avg: aggregate.avg,');
+    buffer.writeln('      ),');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<List<${model.groupByResultClassName}>> _execute() => _executeSpec(_groupBy);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  Future<List<${model.groupByResultClassName}>> _executeSpec(${model.groupBySpecClassName} groupBy) {',
+    );
+    buffer.writeln('    return _delegate._delegate.groupByWith(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      groupBy: groupBy.toRuntimeSpec(),');
+    buffer.writeln(
+      '    ).then((rows) => rows.map(${model.groupByResultClassName}.fromJson).toList(growable: false));',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.groupedQueryClassName} _next(${model.groupBySpecClassName} groupBy) {',
+    );
+    buffer.writeln('    return ${model.groupedQueryClassName}._(');
+    buffer.writeln('      delegate: _delegate,');
+    buffer.writeln('      where: _where,');
+    buffer.writeln('      groupBy: groupBy,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln('}');
@@ -4218,6 +4441,8 @@ final class _ResolvedModel {
   String get groupBySpecClassName => '${classBaseName}GroupBySpec';
 
   String get groupByResultClassName => '${classBaseName}GroupByResult';
+
+  String get groupedQueryClassName => '${classBaseName}GroupedQuery';
 
   String get selectClassName => '${classBaseName}Select';
 
