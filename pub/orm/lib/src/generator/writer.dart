@@ -920,57 +920,6 @@ final class TypedClientWriter {
     buffer.writeln('}');
     buffer.writeln();
 
-    buffer.writeln('class ${model.groupByOrderByClassName} {');
-    buffer.writeln('  final OrmOrderBy value;');
-    buffer.writeln();
-    buffer.writeln('  const ${model.groupByOrderByClassName}._(this.value);');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByOrderByClassName} by('
-      '${model.distinctClassName} field, '
-      '{SortOrder order = SortOrder.asc}'
-      ') {',
-    );
-    buffer.writeln(
-      '    return ${model.groupByOrderByClassName}._(OrmOrderBy(field.value, order: order));',
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByOrderByClassName} count('
-      '${model.distinctClassName} field, '
-      '{SortOrder order = SortOrder.asc}'
-      ') {',
-    );
-    buffer.writeln(
-      "    return ${model.groupByOrderByClassName}._(OrmOrderBy('_count.\${field.value}', order: order));",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByOrderByClassName} countAll({SortOrder order = SortOrder.asc}) {',
-    );
-    buffer.writeln(
-      "    return ${model.groupByOrderByClassName}._(OrmOrderBy('_count.all', order: order));",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    for (final bucket in const <String>['min', 'max', 'sum', 'avg']) {
-      buffer.writeln(
-        '  static ${model.groupByOrderByClassName} $bucket('
-        '${model.distinctClassName} field, '
-        '{SortOrder order = SortOrder.asc}'
-        ') {',
-      );
-      buffer.writeln(
-        "    return ${model.groupByOrderByClassName}._(OrmOrderBy('_$bucket.\${field.value}', order: order));",
-      );
-      buffer.writeln('  }');
-      buffer.writeln();
-    }
-    buffer.writeln('}');
-    buffer.writeln();
-
     for (final entry in aggregateBucketClassNames.entries) {
       _writeAggregateBucketClass(
         buffer: buffer,
@@ -1023,9 +972,6 @@ final class TypedClientWriter {
     buffer.writeln('class ${model.groupBySpecClassName} {');
     buffer.writeln('  final List<${model.distinctClassName}> by;');
     buffer.writeln('  final ${model.groupByHavingClassName} having;');
-    buffer.writeln('  final List<${model.groupByOrderByClassName}> orderBy;');
-    buffer.writeln('  final int? skip;');
-    buffer.writeln('  final int? take;');
     buffer.writeln('  final bool countAll;');
     buffer.writeln('  final List<${model.distinctClassName}> count;');
     buffer.writeln('  final List<${model.distinctClassName}> min;');
@@ -1038,11 +984,6 @@ final class TypedClientWriter {
     buffer.writeln(
       '    this.having = const ${model.groupByHavingClassName}(),',
     );
-    buffer.writeln(
-      '    this.orderBy = const <${model.groupByOrderByClassName}>[],',
-    );
-    buffer.writeln('    this.skip,');
-    buffer.writeln('    this.take,');
     buffer.writeln('    this.countAll = false,');
     buffer.writeln('    this.count = const <${model.distinctClassName}>[],');
     buffer.writeln('    this.min = const <${model.distinctClassName}>[],');
@@ -1054,9 +995,6 @@ final class TypedClientWriter {
     buffer.writeln('  ${model.groupBySpecClassName} copyWith({');
     buffer.writeln('    List<${model.distinctClassName}>? by,');
     buffer.writeln('    ${model.groupByHavingClassName}? having,');
-    buffer.writeln('    List<${model.groupByOrderByClassName}>? orderBy,');
-    buffer.writeln('    Object? skip = _typedStateKeepToken,');
-    buffer.writeln('    Object? take = _typedStateKeepToken,');
     buffer.writeln('    bool? countAll,');
     buffer.writeln('    List<${model.distinctClassName}>? count,');
     buffer.writeln('    List<${model.distinctClassName}>? min,');
@@ -1067,13 +1005,6 @@ final class TypedClientWriter {
     buffer.writeln('    return ${model.groupBySpecClassName}(');
     buffer.writeln('      by: by ?? this.by,');
     buffer.writeln('      having: having ?? this.having,');
-    buffer.writeln('      orderBy: orderBy ?? this.orderBy,');
-    buffer.writeln(
-      '      skip: identical(skip, _typedStateKeepToken) ? this.skip : skip as int?,',
-    );
-    buffer.writeln(
-      '      take: identical(take, _typedStateKeepToken) ? this.take : take as int?,',
-    );
     buffer.writeln('      countAll: countAll ?? this.countAll,');
     buffer.writeln('      count: count ?? this.count,');
     buffer.writeln('      min: min ?? this.min,');
@@ -1089,11 +1020,6 @@ final class TypedClientWriter {
       '      by: by.map((entry) => entry.value).toList(growable: false),',
     );
     buffer.writeln('      having: having.toJson(),');
-    buffer.writeln(
-      '      orderBy: orderBy.map((entry) => entry.value).toList(growable: false),',
-    );
-    buffer.writeln('      skip: skip,');
-    buffer.writeln('      take: take,');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln(
       '      count: count.map((entry) => entry.value).toList(growable: false),',
@@ -2109,11 +2035,6 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
-    buffer.writeln('    int? skip,');
-    buffer.writeln('    int? take,');
-    buffer.writeln(
-      '    List<${model.groupByOrderByClassName}> groupByOrderBy = const <${model.groupByOrderByClassName}>[],',
-    );
     buffer.writeln(
       '    ${model.groupByHavingClassName} typedHaving = const ${model.groupByHavingClassName}(),',
     );
@@ -2136,9 +2057,6 @@ final class TypedClientWriter {
     buffer.writeln('  }) {');
     buffer.writeln('    return groupedBy(by, where: where)');
     buffer.writeln('        .having(typedHaving, merge: false)');
-    buffer.writeln('        .orderBy(groupByOrderBy, append: false)');
-    buffer.writeln('        .skip(skip)');
-    buffer.writeln('        .take(take)');
     buffer.writeln('        .aggregate(');
     buffer.writeln('          countAll: countAll,');
     buffer.writeln('          count: count,');
@@ -3031,11 +2949,6 @@ final class TypedClientWriter {
     buffer.writeln(
       '    ${model.groupByHavingClassName} typedHaving = const ${model.groupByHavingClassName}(),',
     );
-    buffer.writeln(
-      '    List<${model.groupByOrderByClassName}> groupByOrderBy = const <${model.groupByOrderByClassName}>[],',
-    );
-    buffer.writeln('    int? skip,');
-    buffer.writeln('    int? take,');
     buffer.writeln('    bool countAll = false,');
     buffer.writeln(
       '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
@@ -3053,16 +2966,9 @@ final class TypedClientWriter {
       '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    var grouped = groupedBy(by)');
-    buffer.writeln('        .having(typedHaving, merge: false)');
-    buffer.writeln('        .skip(skip)');
-    buffer.writeln('        .take(take);');
-    buffer.writeln('    if (groupByOrderBy.isNotEmpty) {');
     buffer.writeln(
-      '      grouped = grouped.orderBy(groupByOrderBy, append: false);',
+      '    return groupedBy(by).having(typedHaving, merge: false).aggregate(',
     );
-    buffer.writeln('    }');
-    buffer.writeln('    return grouped.aggregate(');
     buffer.writeln('      countAll: countAll,');
     buffer.writeln('      count: count,');
     buffer.writeln('      min: min,');
@@ -3315,31 +3221,6 @@ final class TypedClientWriter {
     buffer.writeln('    final next = build(_groupBy.having);');
     buffer.writeln('    return having(next, merge: merge);');
     buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln(
-      '  ${model.groupedQueryClassName} orderBy(List<${model.groupByOrderByClassName}> orderBy, {bool append = true}) {',
-    );
-    buffer.writeln('    return _next(');
-    buffer.writeln('      _groupBy.copyWith(');
-    buffer.writeln('        orderBy: append');
-    buffer.writeln(
-      '            ? <${model.groupByOrderByClassName}>[..._groupBy.orderBy, ...orderBy]',
-    );
-    buffer.writeln('            : orderBy,');
-    buffer.writeln('      ),');
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-
-    buffer.writeln(
-      '  ${model.groupedQueryClassName} skip(int? skip) => _next(_groupBy.copyWith(skip: skip));',
-    );
-    buffer.writeln();
-
-    buffer.writeln(
-      '  ${model.groupedQueryClassName} take(int? take) => _next(_groupBy.copyWith(take: take));',
-    );
     buffer.writeln();
 
     buffer.writeln('  Future<OrmPlan> toPlan() {');

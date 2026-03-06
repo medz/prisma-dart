@@ -35,19 +35,6 @@ typedef IncludeExecutionStrategySelector =
 const int _defaultMaxIncludeDepth = 4;
 const Object _stateKeepToken = Object();
 const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
-const List<String> _filterOperatorOrder = <String>[
-  'equals',
-  'not',
-  'in',
-  'notIn',
-  'contains',
-  'startsWith',
-  'endsWith',
-  'gt',
-  'gte',
-  'lt',
-  'lte',
-];
 const Set<String> _filterOperators = <String>{
   'equals',
   'not',
@@ -1239,13 +1226,7 @@ class ModelDelegate {
           sum: groupBy.sum,
           avg: groupBy.avg,
         ),
-        groupBy: OrmReadGroupByPlan(
-          by: groupBy.by,
-          having: groupBy.having,
-          orderBy: groupBy.orderBy,
-          skip: groupBy.skip,
-          take: groupBy.take,
-        ),
+        groupBy: OrmReadGroupByPlan(by: groupBy.by, having: groupBy.having),
       ),
       baseSpec: prepared._state._spec,
       groupBy: groupBy,
@@ -1529,9 +1510,6 @@ class ModelDelegate {
     required List<String> by,
     JsonMap where = const <String, Object?>{},
     JsonMap having = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     bool countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
@@ -1540,9 +1518,6 @@ class ModelDelegate {
     List<String> avg = const <String>[],
   }) => groupedBy(by, where: where)
       .having(having, merge: false)
-      .orderBy(orderBy, append: false)
-      .skip(skip)
-      .take(take)
       .aggregate(
         countAll: countAll,
         count: count,
@@ -1646,115 +1621,6 @@ class ModelDelegate {
   Future<bool> _exists({required OrmReadQuerySpec spec}) async {
     final rowCount = await _count(spec: spec);
     return rowCount > 0;
-  }
-
-  Future<JsonMap> _aggregate({
-    required OrmReadQuerySpec spec,
-    required OrmAggregateSpec aggregate,
-  }) async {
-    _validateAggregateSpec(aggregate: aggregate, source: 'aggregate');
-
-    final rows = await _readAllInternal(
-      action: OrmAction.read,
-      where: spec.where,
-      orderBy: spec.orderBy,
-      cursor: spec.cursor,
-      page: spec.page,
-      select: _buildAggregateSelect(
-        count: aggregate.count,
-        min: aggregate.min,
-        max: aggregate.max,
-        sum: aggregate.sum,
-        avg: aggregate.avg,
-      ),
-      includeDepth: 0,
-    );
-
-    return _buildAggregateResult(
-      rows: rows,
-      countAll: aggregate.countAll,
-      count: aggregate.count,
-      min: aggregate.min,
-      max: aggregate.max,
-      sum: aggregate.sum,
-      avg: aggregate.avg,
-    );
-  }
-
-  Future<List<JsonMap>> _groupBy({
-    required OrmReadQuerySpec spec,
-    required OrmGroupBySpec groupBy,
-  }) async {
-    _validateGroupBySpec(spec: spec, groupBy: groupBy);
-
-    final rows = await _readAllInternal(
-      action: OrmAction.read,
-      where: spec.where,
-      select: _buildAggregateSelect(
-        count: groupBy.by.followedBy(groupBy.count).toList(growable: false),
-        min: groupBy.min,
-        max: groupBy.max,
-        sum: groupBy.sum,
-        avg: groupBy.avg,
-      ),
-      includeDepth: 0,
-    );
-
-    final groupedRows = <_RelationMergeKey, List<JsonMap>>{};
-    for (final row in rows) {
-      final key = _RelationMergeKey(
-        groupBy.by
-            .map((field) => row.containsKey(field) ? row[field] : null)
-            .toList(growable: false),
-      );
-      groupedRows.putIfAbsent(key, () => <JsonMap>[]).add(row);
-    }
-
-    var results = <JsonMap>[];
-    for (final entry in groupedRows.entries) {
-      final groupRows = entry.value;
-      if (groupRows.isEmpty) {
-        continue;
-      }
-
-      final groupResult = <String, Object?>{};
-      final first = groupRows.first;
-      for (final field in groupBy.by) {
-        groupResult[field] = first[field];
-      }
-      groupResult.addAll(
-        _buildAggregateResult(
-          rows: groupRows,
-          countAll: groupBy.countAll,
-          count: groupBy.count,
-          min: groupBy.min,
-          max: groupBy.max,
-          sum: groupBy.sum,
-          avg: groupBy.avg,
-        ),
-      );
-      results.add(groupResult);
-    }
-
-    if (groupBy.having.isNotEmpty) {
-      results = results
-          .where(
-            (row) => _matchesGroupByHaving(row: row, having: groupBy.having),
-          )
-          .toList(growable: false);
-    }
-
-    if (groupBy.orderBy.isNotEmpty) {
-      results.sort(
-        (left, right) => _compareRowsForGroupByOrderBy(
-          left: left,
-          right: right,
-          orderBy: groupBy.orderBy,
-        ),
-      );
-    }
-
-    return _sliceRows(rows: results, skip: groupBy.skip, take: groupBy.take);
   }
 
   Future<JsonMap> _create({
@@ -2338,12 +2204,6 @@ class ModelDelegate {
         details: <String, Object?>{'model': modelName},
       );
     }
-    if (groupBy.skip case final offset? when offset < 0) {
-      throw PlanInvalidPaginationException(key: 'skip', value: offset);
-    }
-    if (groupBy.take case final limit? when limit < 0) {
-      throw PlanInvalidPaginationException(key: 'take', value: limit);
-    }
     if (spec.cursor != null || spec.page != null) {
       throw runtimeError(
         'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
@@ -2362,16 +2222,6 @@ class ModelDelegate {
     _assertKnownAggregateFields(fields: groupBy.max, source: 'groupBy.max');
     _assertKnownAggregateFields(fields: groupBy.sum, source: 'groupBy.sum');
     _assertKnownAggregateFields(fields: groupBy.avg, source: 'groupBy.avg');
-    _assertGroupByOrderByFields(
-      orderBy: groupBy.orderBy,
-      by: groupBy.by,
-      countAll: groupBy.countAll,
-      count: groupBy.count,
-      min: groupBy.min,
-      max: groupBy.max,
-      sum: groupBy.sum,
-      avg: groupBy.avg,
-    );
     _assertGroupByHavingFields(
       having: groupBy.having,
       by: groupBy.by,
@@ -2382,45 +2232,6 @@ class ModelDelegate {
       sum: groupBy.sum,
       avg: groupBy.avg,
     );
-  }
-
-  void _assertGroupByOrderByFields({
-    required List<OrmOrderBy> orderBy,
-    required List<String> by,
-    required bool countAll,
-    required List<String> count,
-    required List<String> min,
-    required List<String> max,
-    required List<String> sum,
-    required List<String> avg,
-  }) {
-    if (orderBy.isEmpty) {
-      return;
-    }
-
-    final allowedFields = _groupByOrderableFields(
-      by: by,
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
-    );
-    for (final clause in orderBy) {
-      if (allowedFields.contains(clause.field)) {
-        continue;
-      }
-      throw runtimeError(
-        'PLAN.GROUP_BY_ORDER_BY_INVALID',
-        'GroupBy orderBy field is not available in grouped results.',
-        details: <String, Object?>{
-          'model': modelName,
-          'field': clause.field,
-          'allowedFields': allowedFields.toList(growable: false),
-        },
-      );
-    }
   }
 
   void _assertGroupByHavingFields({
@@ -2624,34 +2435,6 @@ class ModelDelegate {
     }
   }
 
-  Set<String> _groupByOrderableFields({
-    required List<String> by,
-    required bool countAll,
-    required List<String> count,
-    required List<String> min,
-    required List<String> max,
-    required List<String> sum,
-    required List<String> avg,
-  }) {
-    final fields = <String>{...by};
-    for (final bucket in _groupByAggregateBuckets) {
-      final bucketFields = _groupByAggregateBucketFields(
-        bucket: bucket,
-        countAll: countAll,
-        count: count,
-        min: min,
-        max: max,
-        sum: sum,
-        avg: avg,
-      );
-      for (final field in bucketFields) {
-        fields.add('$bucket.$field');
-        fields.addAll(_groupByAggregateBucketAliasFieldPaths(bucket, field));
-      }
-    }
-    return fields;
-  }
-
   Set<String> _groupByAggregateBucketFields({
     required String bucket,
     required bool countAll,
@@ -2678,276 +2461,6 @@ class ModelDelegate {
     return _groupByAggregateBucketAliases[bucket];
   }
 
-  Set<String> _groupByAggregateBucketAliasFieldPaths(
-    String bucket,
-    String field,
-  ) {
-    final paths = <String>{};
-    for (final alias in _groupByAggregateBucketAliases.entries) {
-      if (alias.value != bucket) {
-        continue;
-      }
-      paths.add('${alias.key}.$field');
-    }
-    return paths;
-  }
-
-  bool _matchesGroupByHaving({required JsonMap row, required JsonMap having}) {
-    for (final entry in having.entries) {
-      final key = entry.key;
-      final value = entry.value;
-
-      if (_whereLogicalKeys.contains(key)) {
-        final logicalMatches = _matchesGroupByHavingLogical(
-          row: row,
-          operator: key,
-          operand: value,
-        );
-        if (!logicalMatches) {
-          return false;
-        }
-        continue;
-      }
-
-      final aggregateBucket = _normalizeGroupByAggregateBucket(key);
-      if (aggregateBucket != null) {
-        final aggregateFilters = _coerceWhereMap(value);
-        if (aggregateFilters == null) {
-          return false;
-        }
-        for (final aggregateEntry in aggregateFilters.entries) {
-          final aggregateValue = _readGroupByAggregateValue(
-            row: row,
-            bucket: aggregateBucket,
-            field: aggregateEntry.key,
-          );
-          if (!_matchesGroupByHavingCondition(
-            actual: aggregateValue,
-            condition: aggregateEntry.value,
-          )) {
-            return false;
-          }
-        }
-        continue;
-      }
-
-      if (!_matchesGroupByHavingCondition(actual: row[key], condition: value)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  bool _matchesGroupByHavingLogical({
-    required JsonMap row,
-    required String operator,
-    required Object? operand,
-  }) {
-    final nestedMap = _coerceWhereMap(operand);
-    if (nestedMap != null) {
-      final matched = _matchesGroupByHaving(row: row, having: nestedMap);
-      return operator == 'NOT' ? !matched : matched;
-    }
-
-    final nestedList = _coerceWhereList(operand);
-    if (nestedList == null) {
-      return false;
-    }
-
-    return switch (operator) {
-      'AND' => nestedList.every(
-        (clause) => _matchesGroupByHaving(row: row, having: clause),
-      ),
-      'OR' => nestedList.any(
-        (clause) => _matchesGroupByHaving(row: row, having: clause),
-      ),
-      'NOT' => nestedList.every(
-        (clause) => !_matchesGroupByHaving(row: row, having: clause),
-      ),
-      _ => false,
-    };
-  }
-
-  bool _matchesGroupByHavingCondition({
-    required Object? actual,
-    required Object? condition,
-  }) {
-    final conditionMap = _coerceWhereMap(condition);
-    if (conditionMap == null || conditionMap.isEmpty) {
-      return actual == condition;
-    }
-
-    if (conditionMap.keys.any(
-      (operator) => !_filterOperators.contains(operator),
-    )) {
-      return false;
-    }
-
-    for (final operator in _filterOperatorOrder) {
-      if (!conditionMap.containsKey(operator)) {
-        continue;
-      }
-      final operand = conditionMap[operator];
-      if (!_matchesGroupByHavingOperator(
-        actual: actual,
-        operator: operator,
-        operand: operand,
-      )) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool _matchesGroupByHavingOperator({
-    required Object? actual,
-    required String operator,
-    required Object? operand,
-  }) {
-    return switch (operator) {
-      'equals' => actual == operand,
-      'not' =>
-        operand is Map
-            ? !_matchesGroupByHavingCondition(
-                actual: actual,
-                condition: operand,
-              )
-            : actual != operand,
-      'in' => _matchInList(actual: actual, operand: operand),
-      'notIn' => _matchNotInList(actual: actual, operand: operand),
-      'contains' =>
-        actual is String && operand is String && actual.contains(operand),
-      'startsWith' =>
-        actual is String && operand is String && actual.startsWith(operand),
-      'endsWith' =>
-        actual is String && operand is String && actual.endsWith(operand),
-      'gt' => _matchesGroupByHavingComparison(
-        actual: actual,
-        operand: operand,
-        predicate: (comparison) => comparison > 0,
-      ),
-      'gte' => _matchesGroupByHavingComparison(
-        actual: actual,
-        operand: operand,
-        predicate: (comparison) => comparison >= 0,
-      ),
-      'lt' => _matchesGroupByHavingComparison(
-        actual: actual,
-        operand: operand,
-        predicate: (comparison) => comparison < 0,
-      ),
-      'lte' => _matchesGroupByHavingComparison(
-        actual: actual,
-        operand: operand,
-        predicate: (comparison) => comparison <= 0,
-      ),
-      _ => false,
-    };
-  }
-
-  bool _matchInList({required Object? actual, required Object? operand}) {
-    if (operand is! List) {
-      return false;
-    }
-    return List<Object?>.from(operand).contains(actual);
-  }
-
-  bool _matchNotInList({required Object? actual, required Object? operand}) {
-    if (operand is! List) {
-      return false;
-    }
-    return !List<Object?>.from(operand).contains(actual);
-  }
-
-  bool _matchesGroupByHavingComparison({
-    required Object? actual,
-    required Object? operand,
-    required bool Function(int comparison) predicate,
-  }) {
-    final comparison = _compareGroupByHavingValues(actual, operand);
-    if (comparison == null) {
-      return false;
-    }
-    return predicate(comparison);
-  }
-
-  int? _compareGroupByHavingValues(Object? left, Object? right) {
-    if (left == null || right == null) {
-      return null;
-    }
-    if (left is num && right is num) {
-      return left.compareTo(right);
-    }
-    if (left is String && right is String) {
-      return left.compareTo(right);
-    }
-    if (left is DateTime && right is DateTime) {
-      return left.compareTo(right);
-    }
-    if (left is bool && right is bool) {
-      final leftValue = left ? 1 : 0;
-      final rightValue = right ? 1 : 0;
-      return leftValue.compareTo(rightValue);
-    }
-    if (left is Comparable<Object?> && left.runtimeType == right.runtimeType) {
-      return left.compareTo(right);
-    }
-    return null;
-  }
-
-  Object? _readGroupByAggregateValue({
-    required JsonMap row,
-    required String bucket,
-    required String field,
-  }) {
-    final bucketValue = row[bucket];
-    if (bucketValue is! Map<Object?, Object?>) {
-      return null;
-    }
-    return bucketValue[field];
-  }
-
-  Object? _readGroupByOrderByValue({
-    required JsonMap row,
-    required String field,
-  }) {
-    if (row.containsKey(field)) {
-      return row[field];
-    }
-    final fieldPath = field.split('.');
-    if (fieldPath.length != 2) {
-      return row[field];
-    }
-    final normalizedBucket = _normalizeGroupByAggregateBucket(fieldPath[0]);
-    if (normalizedBucket == null) {
-      return row[field];
-    }
-    return _readGroupByAggregateValue(
-      row: row,
-      bucket: normalizedBucket,
-      field: fieldPath[1],
-    );
-  }
-
-  int _compareRowsForGroupByOrderBy({
-    required JsonMap left,
-    required JsonMap right,
-    required List<OrmOrderBy> orderBy,
-  }) {
-    for (final clause in orderBy) {
-      final compared = _compareOrderByValues(
-        _readGroupByOrderByValue(row: left, field: clause.field),
-        _readGroupByOrderByValue(row: right, field: clause.field),
-      );
-      if (compared == 0) {
-        continue;
-      }
-      return clause.order == SortOrder.desc ? -compared : compared;
-    }
-    return 0;
-  }
-
   List<String> _buildAggregateSelect({
     required List<String> count,
     required List<String> min,
@@ -2960,135 +2473,6 @@ class ModelDelegate {
       return const <String>[];
     }
     return fields.toList(growable: false);
-  }
-
-  JsonMap _buildAggregateResult({
-    required List<JsonMap> rows,
-    required bool countAll,
-    required List<String> count,
-    required List<String> min,
-    required List<String> max,
-    required List<String> sum,
-    required List<String> avg,
-  }) {
-    final result = <String, Object?>{};
-
-    if (countAll || count.isNotEmpty) {
-      final countResult = <String, Object?>{};
-      if (countAll) {
-        countResult['all'] = rows.length;
-      }
-      for (final field in count) {
-        countResult[field] = rows.where((row) => row[field] != null).length;
-      }
-      result['count'] = countResult;
-    }
-
-    if (min.isNotEmpty) {
-      final minResult = <String, Object?>{};
-      for (final field in min) {
-        minResult[field] = _aggregateMin(rows: rows, field: field);
-      }
-      result['min'] = minResult;
-    }
-
-    if (max.isNotEmpty) {
-      final maxResult = <String, Object?>{};
-      for (final field in max) {
-        maxResult[field] = _aggregateMax(rows: rows, field: field);
-      }
-      result['max'] = maxResult;
-    }
-
-    if (sum.isNotEmpty) {
-      final sumResult = <String, Object?>{};
-      for (final field in sum) {
-        sumResult[field] = _aggregateSum(rows: rows, field: field);
-      }
-      result['sum'] = sumResult;
-    }
-
-    if (avg.isNotEmpty) {
-      final avgResult = <String, Object?>{};
-      for (final field in avg) {
-        avgResult[field] = _aggregateAvg(rows: rows, field: field);
-      }
-      result['avg'] = avgResult;
-    }
-
-    return result;
-  }
-
-  Object? _aggregateMin({required List<JsonMap> rows, required String field}) {
-    Object? current;
-    for (final row in rows) {
-      final value = row[field];
-      if (value == null) {
-        continue;
-      }
-      if (current == null ||
-          _compareAggregateValues(left: value, right: current) < 0) {
-        current = value;
-      }
-    }
-    return current;
-  }
-
-  Object? _aggregateMax({required List<JsonMap> rows, required String field}) {
-    Object? current;
-    for (final row in rows) {
-      final value = row[field];
-      if (value == null) {
-        continue;
-      }
-      if (current == null ||
-          _compareAggregateValues(left: value, right: current) > 0) {
-        current = value;
-      }
-    }
-    return current;
-  }
-
-  num? _aggregateSum({required List<JsonMap> rows, required String field}) {
-    num? sum;
-    for (final row in rows) {
-      final value = row[field];
-      if (value is! num) {
-        continue;
-      }
-      sum = (sum ?? 0) + value;
-    }
-    return sum;
-  }
-
-  double? _aggregateAvg({required List<JsonMap> rows, required String field}) {
-    var count = 0;
-    var sum = 0.0;
-    for (final row in rows) {
-      final value = row[field];
-      if (value is! num) {
-        continue;
-      }
-      sum += value.toDouble();
-      count += 1;
-    }
-    if (count == 0) {
-      return null;
-    }
-    return sum / count;
-  }
-
-  int _compareAggregateValues({required Object left, required Object right}) {
-    if (left is num && right is num) {
-      return left.compareTo(right);
-    }
-    if (left is DateTime && right is DateTime) {
-      return left.compareTo(right);
-    }
-    if (left is Comparable<Object?> && left.runtimeType == right.runtimeType) {
-      return left.compareTo(right);
-    }
-    return left.toString().compareTo(right.toString());
   }
 
   List<String> _expandSelectForNestedCreate({
@@ -3368,9 +2752,6 @@ final class OrmAggregateSpec {
 final class OrmGroupBySpec {
   final List<String> by;
   final JsonMap having;
-  final List<OrmOrderBy> orderBy;
-  final int? skip;
-  final int? take;
   final bool countAll;
   final List<String> count;
   final List<String> min;
@@ -3381,9 +2762,6 @@ final class OrmGroupBySpec {
   OrmGroupBySpec({
     required List<String> by,
     JsonMap having = const <String, Object?>{},
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    this.skip,
-    this.take,
     this.countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
@@ -3394,7 +2772,6 @@ final class OrmGroupBySpec {
        having = Map<String, Object?>.unmodifiable(
          Map<String, Object?>.from(having),
        ),
-       orderBy = List<OrmOrderBy>.unmodifiable(orderBy),
        count = List<String>.unmodifiable(count),
        min = List<String>.unmodifiable(min),
        max = List<String>.unmodifiable(max),
@@ -3404,9 +2781,6 @@ final class OrmGroupBySpec {
   OrmGroupBySpec copyWith({
     List<String>? by,
     JsonMap? having,
-    List<OrmOrderBy>? orderBy,
-    Object? skip = _stateKeepToken,
-    Object? take = _stateKeepToken,
     bool? countAll,
     List<String>? count,
     List<String>? min,
@@ -3417,9 +2791,6 @@ final class OrmGroupBySpec {
     return OrmGroupBySpec(
       by: by ?? this.by,
       having: having ?? this.having,
-      orderBy: orderBy ?? this.orderBy,
-      skip: identical(skip, _stateKeepToken) ? this.skip : skip as int?,
-      take: identical(take, _stateKeepToken) ? this.take : take as int?,
       countAll: countAll ?? this.countAll,
       count: count ?? this.count,
       min: min ?? this.min,
@@ -3699,9 +3070,6 @@ final class ModelQuery {
   Future<List<JsonMap>> groupBy({
     required List<String> by,
     JsonMap having = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     bool countAll = false,
     List<String> count = const <String>[],
     List<String> min = const <String>[],
@@ -3709,24 +3077,16 @@ final class ModelQuery {
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
   }) {
-    var grouped = groupedBy(by).having(having, merge: false);
-    if (orderBy.isNotEmpty) {
-      grouped = grouped.orderBy(orderBy, append: false);
-    }
-    if (skip != null) {
-      grouped = grouped.skip(skip);
-    }
-    if (take != null) {
-      grouped = grouped.take(take);
-    }
-    return grouped.aggregate(
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
-    );
+    return groupedBy(by)
+        .having(having, merge: false)
+        .aggregate(
+          countAll: countAll,
+          count: count,
+          min: min,
+          max: max,
+          sum: sum,
+          avg: avg,
+        );
   }
 
   Future<List<JsonMap>> groupByWith(OrmGroupBySpec groupBy) =>
@@ -3885,12 +3245,6 @@ final class ModelGroupedQuery {
 
   JsonMap get havingClause => _groupBy.having;
 
-  List<OrmOrderBy> get orderByValues => _groupBy.orderBy;
-
-  int? get skipValue => _groupBy.skip;
-
-  int? get takeValue => _groupBy.take;
-
   ModelGroupedQuery configure(OrmGroupBySpec groupBy) {
     if (!_sameStringList(left: _groupBy.by, right: groupBy.by)) {
       throw runtimeError(
@@ -3920,28 +3274,6 @@ final class ModelGroupedQuery {
     final current = Map<String, Object?>.from(_groupBy.having);
     final next = build(Map<String, Object?>.unmodifiable(current));
     return having(next, merge: merge);
-  }
-
-  ModelGroupedQuery orderBy(List<OrmOrderBy> orderBy, {bool append = true}) {
-    final nextOrderBy = append
-        ? <OrmOrderBy>[..._groupBy.orderBy, ...orderBy]
-        : <OrmOrderBy>[...orderBy];
-    return _next(_groupBy.copyWith(orderBy: nextOrderBy));
-  }
-
-  ModelGroupedQuery orderByField(
-    String field, {
-    SortOrder order = SortOrder.asc,
-  }) {
-    return orderBy(<OrmOrderBy>[OrmOrderBy(field, order: order)]);
-  }
-
-  ModelGroupedQuery skip(int? value) {
-    return _next(_groupBy.copyWith(skip: value));
-  }
-
-  ModelGroupedQuery take(int? value) {
-    return _next(_groupBy.copyWith(take: value));
   }
 
   Future<List<JsonMap>> aggregate({

@@ -95,7 +95,7 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupBy\(\{[\s\S]*?var\s+grouped\s*=\s*groupedBy\(by\)\.having\(having,\s*merge:\s*false\);[\s\S]*?return\s+grouped\.aggregate\(',
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+groupBy\(\{[\s\S]*?return\s+groupedBy\(by\)\s*\.having\(having,\s*merge:\s*false\)\s*\.aggregate\(',
           ).hasMatch(source),
           isTrue,
           reason:
@@ -124,6 +124,30 @@ void main() {
           isTrue,
           reason:
               'Expected ModelGroupedQuery.toPlan() to expose the grouped aggregate plan surface.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+orderBy\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to not expose grouped orderBy state.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+skip\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to not expose grouped skip state.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+take\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to not expose grouped take state.',
         );
         expect(
           RegExp(

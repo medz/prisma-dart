@@ -589,7 +589,6 @@ void main() {
       final grouped = await users
           .query()
           .groupedBy(const <String>['email'])
-          .orderByField('email')
           .aggregate(
             countAll: true,
             sum: const <String>['id'],
@@ -597,85 +596,47 @@ void main() {
           );
 
       expect(grouped, hasLength(2));
-      expect(grouped.first['email'], 'a@x.com');
-      expect(grouped.first['count'], <String, Object?>{'all': 2});
-      expect(grouped.first['sum'], <String, Object?>{'id': 3});
-      expect(grouped.first['avg'], <String, Object?>{'id': 1.5});
-      expect(grouped.last['email'], 'b@x.com');
-      expect(grouped.last['count'], <String, Object?>{'all': 1});
-      expect(grouped.last['sum'], <String, Object?>{'id': 4});
-      expect(grouped.last['avg'], <String, Object?>{'id': 4.0});
+      final groupedByEmail = <String, JsonMap>{
+        for (final row in grouped) row['email']! as String: row,
+      };
+      expect(groupedByEmail['a@x.com']?['count'], <String, Object?>{'all': 2});
+      expect(groupedByEmail['a@x.com']?['sum'], <String, Object?>{'id': 3});
+      expect(groupedByEmail['a@x.com']?['avg'], <String, Object?>{'id': 1.5});
+      expect(groupedByEmail['b@x.com']?['count'], <String, Object?>{'all': 1});
+      expect(groupedByEmail['b@x.com']?['sum'], <String, Object?>{'id': 4});
+      expect(groupedByEmail['b@x.com']?['avg'], <String, Object?>{'id': 4.0});
       await client.disconnect();
     });
 
-    test(
-      'supports groupBy having filters and aggregate orderBy in memory engine',
-      () async {
-        final client = OrmClient(contract: contract, engine: MemoryEngine());
-        await client.connect();
-        final users = client.db.orm.model('User');
-
-        await users.create(
-          data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
-        );
-        await users.create(
-          data: <String, Object?>{'id': 2, 'email': 'a@x.com'},
-        );
-        await users.create(
-          data: <String, Object?>{'id': 10, 'email': 'b@x.com'},
-        );
-        await users.create(
-          data: <String, Object?>{'id': 20, 'email': 'b@x.com'},
-        );
-        await users.create(
-          data: <String, Object?>{'id': 5, 'email': 'c@x.com'},
-        );
-
-        final grouped = await users
-            .query()
-            .groupedBy(const <String>['email'])
-            .having(<String, Object?>{
-              '_count': <String, Object?>{
-                'all': <String, Object?>{'gte': 2},
-              },
-            }, merge: false)
-            .orderByField('_sum.id', order: SortOrder.desc)
-            .aggregate(countAll: true, sum: const <String>['id']);
-
-        expect(grouped, hasLength(2));
-        expect(
-          grouped.map((row) => row['email']).toList(growable: false),
-          <Object?>['b@x.com', 'a@x.com'],
-        );
-        expect(grouped.first['count'], <String, Object?>{'all': 2});
-        expect(grouped.first['sum'], <String, Object?>{'id': 30});
-        expect(grouped.last['count'], <String, Object?>{'all': 2});
-        expect(grouped.last['sum'], <String, Object?>{'id': 3});
-        await client.disconnect();
-      },
-    );
-
-    test('rejects invalid groupBy aggregate orderBy fields', () async {
+    test('supports groupBy having filters in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
       final users = client.db.orm.model('User');
 
       await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 2, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 10, 'email': 'b@x.com'});
+      await users.create(data: <String, Object?>{'id': 20, 'email': 'b@x.com'});
+      await users.create(data: <String, Object?>{'id': 5, 'email': 'c@x.com'});
 
-      await expectLater(
-        users
-            .query()
-            .groupedBy(const <String>['email'])
-            .orderByField('sum.email')
-            .aggregate(countAll: true, sum: const <String>['id']),
-        throwsA(
-          isA<OrmRuntimeError>().having(
-            (error) => error.code,
-            'code',
-            'PLAN.GROUP_BY_ORDER_BY_INVALID',
-          ),
-        ),
-      );
+      final grouped = await users
+          .query()
+          .groupedBy(const <String>['email'])
+          .having(<String, Object?>{
+            '_count': <String, Object?>{
+              'all': <String, Object?>{'gte': 2},
+            },
+          }, merge: false)
+          .aggregate(countAll: true, sum: const <String>['id']);
+
+      expect(grouped, hasLength(2));
+      final groupedByEmail = <String, JsonMap>{
+        for (final row in grouped) row['email']! as String: row,
+      };
+      expect(groupedByEmail['a@x.com']?['count'], <String, Object?>{'all': 2});
+      expect(groupedByEmail['a@x.com']?['sum'], <String, Object?>{'id': 3});
+      expect(groupedByEmail['b@x.com']?['count'], <String, Object?>{'all': 2});
+      expect(groupedByEmail['b@x.com']?['sum'], <String, Object?>{'id': 30});
       await client.disconnect();
     });
 
@@ -717,10 +678,6 @@ void main() {
                     'all': <String, Object?>{'gte': 2},
                   },
                 },
-                orderBy: const <OrmOrderBy>[
-                  OrmOrderBy('_sum.id', order: SortOrder.desc),
-                ],
-                take: 5,
                 sum: const <String>['id'],
               ),
             )
@@ -728,11 +685,6 @@ void main() {
 
         expect(plan.read?.shape, OrmReadShape.groupedAggregate);
         expect(plan.read?.groupBy?.by, <String>['email']);
-        expect(plan.read?.groupBy?.take, 5);
-        expect(
-          plan.read?.groupBy?.orderBy.map((entry) => entry.field).toList(),
-          <String>['_sum.id'],
-        );
         expect(plan.read?.groupBy?.having, <String, Object?>{
           '_count': <String, Object?>{
             'all': <String, Object?>{'gte': 2},

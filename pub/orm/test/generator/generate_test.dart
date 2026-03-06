@@ -948,11 +948,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserGroupBySpec\s*\{[\s\S]*?final\s+int\?\s+skip;[\s\S]*?final\s+int\?\s+take;[\s\S]*?UserGroupBySpec\s+copyWith\(',
+            r'class\s+UserGroupBySpec\s*\{[\s\S]*?final\s+UserGroupByHaving\s+having;[\s\S]*?UserGroupBySpec\s+copyWith\(',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserGroupBySpec to carry grouped pagination state and copyWith helpers.',
+              'Expected UserGroupBySpec to keep grouped fields, having state, and copyWith helpers.',
         );
         expect(
           RegExp(r'\bclass UserWhereUniqueInput\b').hasMatch(generatedSource),
@@ -1578,7 +1578,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?List<UserGroupByOrderBy>\s+groupByOrderBy\s*=\s*const\s+<UserGroupByOrderBy>\[\],[\s\S]*?var\s+grouped\s*=\s*groupedBy\(by\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+groupBy\(\{[\s\S]*?UserGroupByHaving\s+typedHaving\s*=\s*const\s+UserGroupByHaving\(\),[\s\S]*?return\s+groupedBy\(by\)\s*\.having\(typedHaving,\s*merge:\s*false\)\s*\.aggregate\(',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -1654,9 +1654,31 @@ typedef Post = ({
         );
         expect(
           RegExp(r'\bclass UserGroupByOrderBy\b').hasMatch(generatedSource),
-          isTrue,
+          isFalse,
           reason:
-              'Expected generated source to include typed groupBy orderBy helper.',
+              'Expected generated source to keep grouped orderBy out of the typed public surface.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?UserGroupedQuery\s+orderBy\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupedQuery to not expose grouped orderBy state.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?UserGroupedQuery\s+skip\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason: 'Expected UserGroupedQuery to not expose grouped skip state.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?UserGroupedQuery\s+take\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason: 'Expected UserGroupedQuery to not expose grouped take state.',
         );
         expect(
           RegExp(
