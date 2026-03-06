@@ -5,12 +5,23 @@ import 'package:meta/meta.dart';
 import '../runtime/plan.dart';
 import '../runtime/types.dart';
 
+enum EngineExecutionMode { buffered, stream }
+
+enum EngineExecutionSource { buffered, directStream }
+
 @immutable
 final class EngineResponse {
   final Stream<Object?> rows;
   final int affectedRows;
+  final EngineExecutionMode executionMode;
+  final EngineExecutionSource executionSource;
 
-  EngineResponse({required this.rows, this.affectedRows = 0});
+  EngineResponse({
+    required this.rows,
+    this.affectedRows = 0,
+    this.executionMode = EngineExecutionMode.buffered,
+    this.executionSource = EngineExecutionSource.buffered,
+  });
 
   factory EngineResponse.buffered(Object? data, {int affectedRows = 0}) {
     if (data == null) {
@@ -20,11 +31,15 @@ final class EngineResponse {
       return EngineResponse(
         rows: Stream<Object?>.fromIterable(data),
         affectedRows: affectedRows,
+        executionMode: EngineExecutionMode.buffered,
+        executionSource: EngineExecutionSource.buffered,
       );
     }
     return EngineResponse(
       rows: Stream<Object?>.value(data),
       affectedRows: affectedRows,
+      executionMode: EngineExecutionMode.buffered,
+      executionSource: EngineExecutionSource.buffered,
     );
   }
 
@@ -32,6 +47,8 @@ final class EngineResponse {
     return EngineResponse(
       rows: const Stream<Object?>.empty(),
       affectedRows: affectedRows,
+      executionMode: EngineExecutionMode.buffered,
+      executionSource: EngineExecutionSource.buffered,
     );
   }
 }

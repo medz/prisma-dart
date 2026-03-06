@@ -75,7 +75,8 @@ JsonMap _buildExplainResult(OrmPlan plan) {
       'model': plan.model,
       'action': plan.action.name,
       if (plan.lane != null) 'lane': plan.lane,
-      'executionMode': 'buffered',
+      'executionMode': 'deferred',
+      'executionSource': 'notExecuted',
       if (read != null) 'readResultMode': read.resultMode.name,
       if (mutation != null) 'mutationResultMode': mutation.resultMode.name,
       if (read != null) 'selectedFieldCount': read.select.length,
@@ -140,6 +141,9 @@ final class RuntimeOperationStepTelemetry {
   final String model;
   final OrmAction action;
   final RuntimeTelemetryOutcome outcome;
+  final bool completed;
+  final EngineExecutionMode? executionMode;
+  final EngineExecutionSource? executionSource;
   final int rowCount;
   final int affectedRows;
   final int durationMs;
@@ -150,6 +154,9 @@ final class RuntimeOperationStepTelemetry {
     required this.model,
     required this.action,
     required this.outcome,
+    required this.completed,
+    this.executionMode,
+    this.executionSource,
     required this.rowCount,
     required this.affectedRows,
     required this.durationMs,
@@ -163,6 +170,7 @@ final class RuntimeOperationTelemetryEvent {
   final String operationId;
   final String kind;
   final RuntimeTelemetryOutcome outcome;
+  final bool completed;
   final int statementCount;
   final int rowCount;
   final int affectedRows;
@@ -175,6 +183,7 @@ final class RuntimeOperationTelemetryEvent {
     required this.operationId,
     required this.kind,
     required this.outcome,
+    required this.completed,
     required this.statementCount,
     required this.rowCount,
     required this.affectedRows,
@@ -192,6 +201,9 @@ final class RuntimeTelemetryEvent {
   final String model;
   final OrmAction action;
   final RuntimeTelemetryOutcome outcome;
+  final bool completed;
+  final EngineExecutionMode? executionMode;
+  final EngineExecutionSource? executionSource;
   final int durationMs;
   final DateTime recordedAt;
   final OrmRepositoryTrace? repositoryTrace;
@@ -200,6 +212,9 @@ final class RuntimeTelemetryEvent {
     required this.model,
     required this.action,
     required this.outcome,
+    required this.completed,
+    this.executionMode,
+    this.executionSource,
     required this.durationMs,
     required this.recordedAt,
     this.repositoryTrace,
@@ -413,9 +428,13 @@ final class OrmRuntimeCore implements RuntimeCore {
           plan: plan,
           rows: response.rows,
           affectedRows: response.affectedRows,
+          executionMode: response.executionMode,
+          executionSource: response.executionSource,
           startedAt: startedAt,
         ),
         affectedRows: response.affectedRows,
+        executionMode: response.executionMode,
+        executionSource: response.executionSource,
       );
     } catch (error, stackTrace) {
       final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
@@ -435,6 +454,8 @@ final class OrmRuntimeCore implements RuntimeCore {
     required OrmPlan plan,
     required Stream<Object?> rows,
     required int affectedRows,
+    required EngineExecutionMode executionMode,
+    required EngineExecutionSource executionSource,
     required DateTime startedAt,
   }) async* {
     var rowCount = 0;
@@ -456,6 +477,8 @@ final class OrmRuntimeCore implements RuntimeCore {
         plan: plan,
         rowCount: rowCount,
         affectedRows: affectedRows,
+        executionMode: executionMode,
+        executionSource: executionSource,
         startedAt: startedAt,
       );
     } catch (error, stackTrace) {
@@ -467,6 +490,8 @@ final class OrmRuntimeCore implements RuntimeCore {
         stackTrace: stackTrace,
         rowCount: rowCount,
         latencyMs: latencyMs,
+        executionMode: executionMode,
+        executionSource: executionSource,
         startedAt: startedAt,
       );
       rethrow;
@@ -476,6 +501,8 @@ final class OrmRuntimeCore implements RuntimeCore {
           plan: plan,
           rowCount: rowCount,
           affectedRows: affectedRows,
+          executionMode: executionMode,
+          executionSource: executionSource,
           startedAt: startedAt,
         );
       }
@@ -486,6 +513,8 @@ final class OrmRuntimeCore implements RuntimeCore {
     required OrmPlan plan,
     required int rowCount,
     required int affectedRows,
+    required EngineExecutionMode executionMode,
+    required EngineExecutionSource executionSource,
     required DateTime startedAt,
   }) async {
     final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
@@ -504,6 +533,9 @@ final class OrmRuntimeCore implements RuntimeCore {
       model: plan.model,
       action: plan.action,
       outcome: RuntimeTelemetryOutcome.success,
+      completed: true,
+      executionMode: executionMode,
+      executionSource: executionSource,
       durationMs: latencyMs,
       recordedAt: DateTime.now(),
       repositoryTrace: plan.repositoryTrace,
@@ -511,6 +543,9 @@ final class OrmRuntimeCore implements RuntimeCore {
     _recordOperationTelemetry(
       plan: plan,
       outcome: RuntimeTelemetryOutcome.success,
+      completed: true,
+      executionMode: executionMode,
+      executionSource: executionSource,
       rowCount: rowCount,
       affectedRows: affectedRows,
       durationMs: latencyMs,
@@ -525,12 +560,17 @@ final class OrmRuntimeCore implements RuntimeCore {
     required StackTrace stackTrace,
     required int rowCount,
     required int latencyMs,
+    EngineExecutionMode? executionMode,
+    EngineExecutionSource? executionSource,
     required DateTime startedAt,
   }) async {
     _telemetry = RuntimeTelemetryEvent(
       model: plan.model,
       action: plan.action,
       outcome: RuntimeTelemetryOutcome.runtimeError,
+      completed: false,
+      executionMode: executionMode,
+      executionSource: executionSource,
       durationMs: latencyMs,
       recordedAt: DateTime.now(),
       repositoryTrace: plan.repositoryTrace,
@@ -539,6 +579,9 @@ final class OrmRuntimeCore implements RuntimeCore {
       _recordOperationTelemetry(
         plan: plan,
         outcome: RuntimeTelemetryOutcome.runtimeError,
+        completed: false,
+        executionMode: executionMode,
+        executionSource: executionSource,
         rowCount: rowCount,
         affectedRows: 0,
         durationMs: latencyMs,
@@ -574,9 +617,34 @@ final class OrmRuntimeCore implements RuntimeCore {
     required OrmPlan plan,
     required int rowCount,
     required int affectedRows,
+    required EngineExecutionMode executionMode,
+    required EngineExecutionSource executionSource,
     required DateTime startedAt,
   }) async {
     final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
+    _telemetry = RuntimeTelemetryEvent(
+      model: plan.model,
+      action: plan.action,
+      outcome: RuntimeTelemetryOutcome.success,
+      completed: false,
+      executionMode: executionMode,
+      executionSource: executionSource,
+      durationMs: latencyMs,
+      recordedAt: DateTime.now(),
+      repositoryTrace: plan.repositoryTrace,
+    );
+    _recordOperationTelemetry(
+      plan: plan,
+      outcome: RuntimeTelemetryOutcome.success,
+      completed: false,
+      executionMode: executionMode,
+      executionSource: executionSource,
+      rowCount: rowCount,
+      affectedRows: affectedRows,
+      durationMs: latencyMs,
+      startedAt: startedAt,
+      recordedAt: _telemetry!.recordedAt,
+    );
     final result = AfterExecuteResult(
       rowCount: rowCount,
       affectedRows: affectedRows,
@@ -775,6 +843,9 @@ final class OrmRuntimeCore implements RuntimeCore {
   void _recordOperationTelemetry({
     required OrmPlan plan,
     required RuntimeTelemetryOutcome outcome,
+    required bool completed,
+    EngineExecutionMode? executionMode,
+    EngineExecutionSource? executionSource,
     required int rowCount,
     required int affectedRows,
     required int durationMs,
@@ -814,6 +885,9 @@ final class OrmRuntimeCore implements RuntimeCore {
       model: plan.model,
       action: plan.action,
       outcome: outcome,
+      completed: completed,
+      executionMode: executionMode,
+      executionSource: executionSource,
       rowCount: rowCount,
       affectedRows: affectedRows,
       durationMs: durationMs,
@@ -826,6 +900,7 @@ final class OrmRuntimeCore implements RuntimeCore {
       outcome: current?.outcome == RuntimeTelemetryOutcome.runtimeError
           ? RuntimeTelemetryOutcome.runtimeError
           : outcome,
+      completed: (current?.completed ?? true) && completed,
       statementCount: (current?.statementCount ?? 0) + 1,
       rowCount: (current?.rowCount ?? 0) + rowCount,
       affectedRows: (current?.affectedRows ?? 0) + affectedRows,

@@ -1949,64 +1949,61 @@ void main() {
       },
     );
 
-    test(
-      'include stream matches all for singleQuery and multiQuery',
-      () async {
-        Future<(List<JsonMap>, List<JsonMap>)> readWithStrategy(
-          IncludeExecutionStrategy strategy,
-        ) async {
-          final client = OrmClient(
-            contract: relationalContract,
-            engine: MemoryEngine(),
-            includeStrategySelector:
-                ({
-                  required OrmContract contract,
-                  required String modelName,
-                  required OrmAction action,
-                  required Map<String, IncludeSpec> include,
-                  required int depth,
-                }) => strategy,
+    test('include stream matches all for singleQuery and multiQuery', () async {
+      Future<(List<JsonMap>, List<JsonMap>)> readWithStrategy(
+        IncludeExecutionStrategy strategy,
+      ) async {
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: MemoryEngine(),
+          includeStrategySelector:
+              ({
+                required OrmContract contract,
+                required String modelName,
+                required OrmAction action,
+                required Map<String, IncludeSpec> include,
+                required int depth,
+              }) => strategy,
+        );
+        await client.connect();
+        try {
+          await _seedRelationalData(client);
+          final delegate = client.db.orm.model('User');
+          final allRows = await delegate.all(
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            include: <String, IncludeSpec>{
+              'posts': IncludeSpec(
+                orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+                select: const <String>['id', 'title'],
+              ),
+            },
           );
-          await client.connect();
-          try {
-            await _seedRelationalData(client);
-            final delegate = client.db.orm.model('User');
-            final allRows = await delegate.all(
-              orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-              include: <String, IncludeSpec>{
+          final streamRows = await delegate
+              .query()
+              .orderByField('id')
+              .include(<String, IncludeSpec>{
                 'posts': IncludeSpec(
                   orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
                   select: const <String>['id', 'title'],
                 ),
-              },
-            );
-            final streamRows = await delegate
-                .query()
-                .orderByField('id')
-                .include(<String, IncludeSpec>{
-                  'posts': IncludeSpec(
-                    orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
-                    select: const <String>['id', 'title'],
-                  ),
-                })
-                .stream()
-                .toList();
-            return (allRows, streamRows);
-          } finally {
-            await client.disconnect();
-          }
+              })
+              .stream()
+              .toList();
+          return (allRows, streamRows);
+        } finally {
+          await client.disconnect();
         }
+      }
 
-        final single = await readWithStrategy(
-          IncludeExecutionStrategy.singleQuery,
-        );
-        final multi = await readWithStrategy(IncludeExecutionStrategy.multiQuery);
+      final single = await readWithStrategy(
+        IncludeExecutionStrategy.singleQuery,
+      );
+      final multi = await readWithStrategy(IncludeExecutionStrategy.multiQuery);
 
-        expect(single.$2, equals(single.$1));
-        expect(multi.$2, equals(multi.$1));
-        expect(single.$2, equals(multi.$2));
-      },
-    );
+      expect(single.$2, equals(single.$1));
+      expect(multi.$2, equals(multi.$1));
+      expect(single.$2, equals(multi.$2));
+    });
 
     test(
       'include stream respects distinct skip and take for both strategies',
@@ -2042,13 +2039,25 @@ void main() {
             );
 
             await posts.create(
-              data: <String, Object?>{'id': 'p1', 'userId': 'u1', 'title': 'P1'},
+              data: <String, Object?>{
+                'id': 'p1',
+                'userId': 'u1',
+                'title': 'P1',
+              },
             );
             await posts.create(
-              data: <String, Object?>{'id': 'p2', 'userId': 'u2', 'title': 'P2'},
+              data: <String, Object?>{
+                'id': 'p2',
+                'userId': 'u2',
+                'title': 'P2',
+              },
             );
             await posts.create(
-              data: <String, Object?>{'id': 'p3', 'userId': 'u3', 'title': 'P3'},
+              data: <String, Object?>{
+                'id': 'p3',
+                'userId': 'u3',
+                'title': 'P3',
+              },
             );
 
             final include = <String, IncludeSpec>{
@@ -2083,7 +2092,9 @@ void main() {
         final single = await readWithStrategy(
           IncludeExecutionStrategy.singleQuery,
         );
-        final multi = await readWithStrategy(IncludeExecutionStrategy.multiQuery);
+        final multi = await readWithStrategy(
+          IncludeExecutionStrategy.multiQuery,
+        );
 
         expect(single.$2, equals(single.$1));
         expect(multi.$2, equals(multi.$1));
@@ -3196,6 +3207,9 @@ void main() {
       expect(telemetry?.model, 'User');
       expect(telemetry?.action, OrmAction.read);
       expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+      expect(telemetry?.completed, isTrue);
+      expect(telemetry?.executionMode, EngineExecutionMode.buffered);
+      expect(telemetry?.executionSource, EngineExecutionSource.buffered);
       expect(telemetry?.repositoryTrace, isNull);
       await client.disconnect();
     });
@@ -3221,7 +3235,135 @@ void main() {
       expect(telemetry?.operationPhase, 'item.create');
       expect(telemetry?.operationStrategy, 'transaction');
       expect(telemetry?.operationStep, 2);
+      expect(telemetry?.completed, isTrue);
       expect(telemetry?.repositoryTrace?.itemIndex, 1);
+      await client.disconnect();
+    });
+
+    test(
+      'marks telemetry incomplete when consumer stops stream early',
+      () async {
+        final plugin = _InspectingPlugin();
+        final client = OrmClient(
+          contract: contract,
+          engine: MemoryEngine(),
+          plugins: <OrmPlugin>[plugin],
+        );
+        await client.connect();
+        final users = client.db.orm.model('User');
+
+        await users.create(
+          data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u2', 'email': 'b@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 'u3', 'email': 'c@x.com'},
+        );
+        plugin.reset();
+
+        final rows = await users
+            .stream(orderBy: const <OrmOrderBy>[OrmOrderBy('id')])
+            .take(1)
+            .toList();
+
+        expect(rows, hasLength(1));
+        expect(plugin.events, <String>[
+          'before:read',
+          'row:read',
+          'after:read',
+        ]);
+        expect(plugin.afterResults, hasLength(1));
+        expect(plugin.afterResults.single.completed, isFalse);
+        expect(plugin.afterResults.single.rowCount, 1);
+        expect(plugin.afterResults.single.affectedRows, 0);
+        expect(client.telemetry()?.outcome, RuntimeTelemetryOutcome.success);
+        expect(client.telemetry()?.completed, isFalse);
+        expect(client.telemetry()?.executionMode, EngineExecutionMode.buffered);
+        expect(
+          client.telemetry()?.executionSource,
+          EngineExecutionSource.buffered,
+        );
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'records runtime error telemetry when stream fails after rows',
+      () async {
+        final plugin = _InspectingPlugin();
+        final client = OrmClient(
+          contract: contract,
+          engine: _FailingStreamEngine(),
+          plugins: <OrmPlugin>[plugin],
+        );
+        await client.connect();
+
+        await expectLater(
+          client.db.orm.model('User').stream().toList(),
+          throwsA(isA<StateError>()),
+        );
+
+        expect(plugin.events, <String>[
+          'before:read',
+          'row:read',
+          'error:read',
+          'after:read',
+        ]);
+        expect(plugin.afterResults, hasLength(1));
+        expect(plugin.afterResults.single.completed, isFalse);
+        expect(plugin.afterResults.single.rowCount, 1);
+        expect(
+          client.telemetry()?.outcome,
+          RuntimeTelemetryOutcome.runtimeError,
+        );
+        expect(client.telemetry()?.completed, isFalse);
+        expect(client.telemetry()?.executionMode, EngineExecutionMode.stream);
+        expect(
+          client.telemetry()?.executionSource,
+          EngineExecutionSource.directStream,
+        );
+        await client.disconnect();
+      },
+    );
+
+    test('records runtime error telemetry when plugin onRow fails', () async {
+      final engine = MemoryEngine();
+      final seeder = OrmClient(contract: contract, engine: engine);
+      await seeder.connect();
+      await seeder.db.orm
+          .model('User')
+          .create(data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'});
+      await seeder.disconnect();
+
+      final plugin = _OnRowThrowingPlugin();
+      final client = OrmClient(
+        contract: contract,
+        engine: engine,
+        plugins: <OrmPlugin>[plugin],
+      );
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      await expectLater(users.stream().toList(), throwsA(isA<StateError>()));
+
+      expect(plugin.events, <String>[
+        'before:read',
+        'row:read',
+        'error:read',
+        'after:read',
+      ]);
+      expect(plugin.afterResults, hasLength(1));
+      expect(plugin.afterResults.single.completed, isFalse);
+      expect(plugin.afterResults.single.rowCount, 1);
+      expect(client.telemetry()?.outcome, RuntimeTelemetryOutcome.runtimeError);
+      expect(client.telemetry()?.completed, isFalse);
+      expect(client.telemetry()?.executionMode, EngineExecutionMode.buffered);
+      expect(
+        client.telemetry()?.executionSource,
+        EngineExecutionSource.buffered,
+      );
       await client.disconnect();
     });
 
@@ -3650,6 +3792,60 @@ final class _TrackingPlugin extends OrmPlugin {
   }
 }
 
+final class _InspectingPlugin extends OrmPlugin {
+  final List<String> events = <String>[];
+  final List<AfterExecuteResult> afterResults = <AfterExecuteResult>[];
+
+  @override
+  String get name => 'inspecting';
+
+  @override
+  void beforeExecute(OrmPlan plan, PluginContext ctx) {
+    events.add('before:${plan.action.name}');
+  }
+
+  @override
+  void onRow(JsonMap row, OrmPlan plan, PluginContext ctx) {
+    events.add('row:${plan.action.name}');
+  }
+
+  @override
+  void afterExecute(
+    OrmPlan plan,
+    AfterExecuteResult result,
+    PluginContext ctx,
+  ) {
+    afterResults.add(result);
+    events.add('after:${plan.action.name}');
+  }
+
+  @override
+  void onError(
+    OrmPlan plan,
+    Object error,
+    StackTrace stackTrace,
+    PluginContext ctx,
+  ) {
+    events.add('error:${plan.action.name}');
+  }
+
+  void reset() {
+    events.clear();
+    afterResults.clear();
+  }
+}
+
+final class _OnRowThrowingPlugin extends _InspectingPlugin {
+  @override
+  String get name => 'row-throwing';
+
+  @override
+  void onRow(JsonMap row, OrmPlan plan, PluginContext ctx) {
+    super.onRow(row, plan, ctx);
+    throw StateError('plugin-row-boom');
+  }
+}
+
 final class _ThrowingEngine implements OrmEngine {
   @override
   Future<void> close() async {}
@@ -3657,6 +3853,26 @@ final class _ThrowingEngine implements OrmEngine {
   @override
   Future<EngineResponse> execute(OrmPlan plan) {
     throw StateError('boom');
+  }
+
+  @override
+  Future<void> open() async {}
+}
+
+final class _FailingStreamEngine implements OrmEngine {
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    return EngineResponse(
+      rows: () async* {
+        yield <String, Object?>{'id': 'u1', 'email': 'a@x.com'};
+        throw StateError('stream-boom');
+      }(),
+      executionMode: EngineExecutionMode.stream,
+      executionSource: EngineExecutionSource.directStream,
+    );
   }
 
   @override

@@ -33,6 +33,7 @@ void main() {
       expect(telemetry, isNotNull);
       expect(telemetry?.kind, 'User.createMany');
       expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+      expect(telemetry?.completed, isTrue);
       expect(telemetry?.statementCount, 2);
       expect(telemetry?.affectedRows, 2);
       expect(
@@ -81,6 +82,7 @@ void main() {
         expect(telemetry, isNotNull);
         expect(telemetry?.kind, 'User.update');
         expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+        expect(telemetry?.completed, isTrue);
         expect(telemetry?.statementCount, 2);
         expect(telemetry?.rowCount, 1);
         expect(telemetry?.affectedRows, 1);
@@ -129,6 +131,7 @@ void main() {
         expect(telemetry, isNotNull);
         expect(telemetry?.kind, 'User.delete');
         expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+        expect(telemetry?.completed, isTrue);
         expect(telemetry?.statementCount, 2);
         expect(telemetry?.rowCount, 1);
         expect(telemetry?.affectedRows, 1);
@@ -210,6 +213,7 @@ void main() {
       expect(telemetry, isNotNull);
       expect(telemetry?.kind, 'User.pageResult');
       expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+      expect(telemetry?.completed, isTrue);
       expect(telemetry?.statementCount, 2);
       expect(
         telemetry?.steps.map((step) => step.trace.phase).toList(),
@@ -227,6 +231,179 @@ void main() {
       expect(telemetry?.steps.last.rowCount, 1);
       await client.disconnect();
     });
+
+    test(
+      'records interrupted operation telemetry when consumer stops pulling',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        final users = client.db.orm.model('User');
+
+        await users.createMany(
+          data: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u2', 'email': 'b@x.com'},
+            <String, Object?>{'id': 'u3', 'email': 'c@x.com'},
+          ],
+        );
+
+        final response = await client.execute(
+          OrmPlan.read(
+            contractHash: contract.hash,
+            model: 'User',
+            repositoryTrace: const OrmRepositoryTrace(
+              operationId: 'op-stream-stop',
+              kind: 'User.streamProbe',
+              step: 1,
+              phase: 'stream.read',
+              strategy: 'manual',
+            ),
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            resultMode: OrmReadResultMode.all,
+          ),
+        );
+
+        final rows = await response.rows.take(1).toList();
+        expect(rows, hasLength(1));
+
+        final telemetry = client.operationTelemetry();
+        expect(telemetry, isNotNull);
+        expect(telemetry?.kind, 'User.streamProbe');
+        expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+        expect(telemetry?.completed, isFalse);
+        expect(telemetry?.statementCount, 1);
+        expect(telemetry?.rowCount, 1);
+        expect(telemetry?.steps.single.completed, isFalse);
+        expect(telemetry?.steps.single.trace.phase, 'stream.read');
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'records runtime error operation telemetry when stream fails after rows',
+      () async {
+        final client = OrmClient(
+          contract: contract,
+          engine: _FailingStreamEngine(),
+        );
+        await client.connect();
+
+        final response = await client.execute(
+          OrmPlan.read(
+            contractHash: contract.hash,
+            model: 'User',
+            repositoryTrace: const OrmRepositoryTrace(
+              operationId: 'op-stream-fail',
+              kind: 'User.streamProbe',
+              step: 1,
+              phase: 'stream.read',
+              strategy: 'manual',
+            ),
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            resultMode: OrmReadResultMode.all,
+          ),
+        );
+
+        await expectLater(response.rows.toList(), throwsA(isA<StateError>()));
+
+        final telemetry = client.operationTelemetry();
+        expect(telemetry, isNotNull);
+        expect(telemetry?.kind, 'User.streamProbe');
+        expect(telemetry?.outcome, RuntimeTelemetryOutcome.runtimeError);
+        expect(telemetry?.completed, isFalse);
+        expect(telemetry?.statementCount, 1);
+        expect(telemetry?.rowCount, 1);
+        expect(
+          telemetry?.steps.single.executionMode,
+          EngineExecutionMode.stream,
+        );
+        expect(
+          telemetry?.steps.single.executionSource,
+          EngineExecutionSource.directStream,
+        );
+        expect(
+          telemetry?.steps.single.outcome,
+          RuntimeTelemetryOutcome.runtimeError,
+        );
+        expect(telemetry?.steps.single.completed, isFalse);
+        expect(telemetry?.steps.single.trace.phase, 'stream.read');
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'keeps operation completed false after interrupted step then successful step',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        final users = client.db.orm.model('User');
+
+        await users.createMany(
+          data: <JsonMap>[
+            <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+            <String, Object?>{'id': 'u2', 'email': 'b@x.com'},
+            <String, Object?>{'id': 'u3', 'email': 'c@x.com'},
+          ],
+        );
+
+        final first = await client.execute(
+          OrmPlan.read(
+            contractHash: contract.hash,
+            model: 'User',
+            repositoryTrace: const OrmRepositoryTrace(
+              operationId: 'op-stream-sticky',
+              kind: 'User.streamProbe',
+              step: 1,
+              phase: 'stream.read',
+              strategy: 'manual',
+            ),
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            resultMode: OrmReadResultMode.all,
+          ),
+        );
+        await first.rows.take(1).toList();
+
+        final second = await client.execute(
+          OrmPlan.read(
+            contractHash: contract.hash,
+            model: 'User',
+            repositoryTrace: const OrmRepositoryTrace(
+              operationId: 'op-stream-sticky',
+              kind: 'User.streamProbe',
+              step: 2,
+              phase: 'stream.read',
+              strategy: 'manual',
+            ),
+            orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+            where: const <String, Object?>{'id': 'u2'},
+            resultMode: OrmReadResultMode.all,
+          ),
+        );
+        final rows = await second.rows.toList();
+
+        expect(rows, hasLength(1));
+
+        final telemetry = client.operationTelemetry();
+        expect(telemetry, isNotNull);
+        expect(telemetry?.kind, 'User.streamProbe');
+        expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+        expect(telemetry?.completed, isFalse);
+        expect(telemetry?.statementCount, 2);
+        expect(telemetry?.rowCount, 2);
+        expect(telemetry?.steps.map((step) => step.completed).toList(), <bool>[
+          false,
+          true,
+        ]);
+        expect(
+          telemetry?.steps.map((step) => step.executionMode).toList(),
+          <EngineExecutionMode>[
+            EngineExecutionMode.buffered,
+            EngineExecutionMode.buffered,
+          ],
+        );
+        await client.disconnect();
+      },
+    );
   });
 }
 
@@ -251,4 +428,24 @@ final class _NoMutationReturnEngine implements OrmEngine {
 
   @override
   Future<void> open() => inner.open();
+}
+
+final class _FailingStreamEngine implements OrmEngine {
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    return EngineResponse(
+      rows: () async* {
+        yield <String, Object?>{'id': 'u1', 'email': 'a@x.com'};
+        throw StateError('stream-boom');
+      }(),
+      executionMode: EngineExecutionMode.stream,
+      executionSource: EngineExecutionSource.directStream,
+    );
+  }
+
+  @override
+  Future<void> open() async {}
 }

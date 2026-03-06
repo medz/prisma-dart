@@ -121,6 +121,8 @@ void main() {
         expect(explained['source'], 'heuristic');
         final summary = explained['planSummary'] as Map<String, Object?>;
         expect(summary['model'], 'User');
+        expect(summary['executionMode'], 'deferred');
+        expect(summary['executionSource'], 'notExecuted');
         final pagination = summary['pagination'] as Map<String, Object?>;
         expect(pagination['mode'], 'page');
         expect(explained['plan'], isA<Map<String, Object?>>());
@@ -128,6 +130,36 @@ void main() {
         await client.disconnect();
       }
     });
+
+    test(
+      'heuristic explain does not execute engines without explain support',
+      () async {
+        final engine = _ExecuteForbiddenEngine();
+        final plugin = _TrackingPlugin();
+        final client = OrmClient(
+          contract: contract,
+          engine: engine,
+          plugins: <OrmPlugin>[plugin],
+        );
+        await client.connect();
+        try {
+          final users = client.db.orm.model('User');
+          final explained = await users
+              .query()
+              .orderByField('id')
+              .page(size: 2)
+              .explain();
+
+          expect(explained['source'], 'heuristic');
+          expect(engine.executeCount, 0);
+          expect(plugin.events, isEmpty);
+          expect(client.telemetry(), isNull);
+          expect(client.operationTelemetry(), isNull);
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
 
     test(
       'explain includes target-aware adapter details when available',
@@ -288,13 +320,63 @@ void main() {
           expect(rows, <JsonMap>[
             <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
           ]);
-          expect(client.telemetry(), isNull);
+          expect(client.telemetry()?.outcome, RuntimeTelemetryOutcome.success);
+          expect(client.telemetry()?.completed, isFalse);
+          expect(client.telemetry()?.executionMode, EngineExecutionMode.stream);
+          expect(
+            client.telemetry()?.executionSource,
+            EngineExecutionSource.directStream,
+          );
           expect(client.operationTelemetry(), isNull);
         } finally {
           await client.disconnect();
         }
       },
     );
+
+    test('explain preserves existing telemetry snapshots', () async {
+      final plugin = _TrackingPlugin();
+      final client = OrmClient(
+        contract: contract,
+        engine: MemoryEngine(),
+        plugins: <OrmPlugin>[plugin],
+      );
+      await client.connect();
+      try {
+        final users = client.db.orm.model('User');
+        await users.create(
+          data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 2, 'email': 'b@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 3, 'email': 'c@x.com'},
+        );
+
+        await users.query().orderByField('id').page(size: 2).pageResult();
+        final telemetryBefore = client.telemetry();
+        final operationBefore = client.operationTelemetry();
+        final pluginEventsBefore = List<String>.from(plugin.events);
+
+        await users.query().orderByField('id').page(size: 2).explain();
+
+        final telemetryAfter = client.telemetry();
+        final operationAfter = client.operationTelemetry();
+        expect(telemetryAfter, isNotNull);
+        expect(operationAfter, isNotNull);
+        expect(telemetryAfter?.model, telemetryBefore?.model);
+        expect(telemetryAfter?.action, telemetryBefore?.action);
+        expect(telemetryAfter?.outcome, telemetryBefore?.outcome);
+        expect(telemetryAfter?.completed, telemetryBefore?.completed);
+        expect(operationAfter?.operationId, operationBefore?.operationId);
+        expect(operationAfter?.statementCount, operationBefore?.statementCount);
+        expect(operationAfter?.completed, operationBefore?.completed);
+        expect(plugin.events, pluginEventsBefore);
+      } finally {
+        await client.disconnect();
+      }
+    });
 
     test('cursor and page execution return deterministic windows', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -592,6 +674,58 @@ final class _ExplainOnlySqlDriver
   @override
   Future<SqlResult> execute(SqlStatement request) {
     throw StateError('explain() should not execute the SQL driver.');
+  }
+}
+
+final class _ExecuteForbiddenEngine implements OrmEngine {
+  int executeCount = 0;
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<EngineResponse> execute(OrmPlan plan) async {
+    executeCount += 1;
+    throw StateError('heuristic explain should not execute the engine.');
+  }
+
+  @override
+  Future<void> open() async {}
+}
+
+final class _TrackingPlugin extends OrmPlugin {
+  final List<String> events = <String>[];
+
+  @override
+  String get name => 'tracking';
+
+  @override
+  void beforeExecute(OrmPlan plan, PluginContext ctx) {
+    events.add('before:${plan.action.name}');
+  }
+
+  @override
+  void onRow(JsonMap row, OrmPlan plan, PluginContext ctx) {
+    events.add('row:${plan.action.name}');
+  }
+
+  @override
+  void afterExecute(
+    OrmPlan plan,
+    AfterExecuteResult result,
+    PluginContext ctx,
+  ) {
+    events.add('after:${plan.action.name}');
+  }
+
+  @override
+  void onError(
+    OrmPlan plan,
+    Object error,
+    StackTrace stackTrace,
+    PluginContext ctx,
+  ) {
+    events.add('error:${plan.action.name}');
   }
 }
 

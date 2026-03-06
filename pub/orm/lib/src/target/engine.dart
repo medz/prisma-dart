@@ -197,6 +197,8 @@ EngineResponse? _tryExecuteReadStream<TRequest>({
           streamAdapter) {
     return EngineResponse(
       rows: streamAdapter.decodeReadRows(streamRows(request), plan),
+      executionMode: EngineExecutionMode.stream,
+      executionSource: EngineExecutionSource.directStream,
     );
   }
   return null;
