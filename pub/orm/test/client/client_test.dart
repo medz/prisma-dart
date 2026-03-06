@@ -3001,6 +3001,81 @@ void main() {
       await client.disconnect();
     });
 
+    test(
+      'withConnection explain failure keeps telemetry clean and releases connection',
+      () async {
+        final engine = _TrackingConnectionEngine(failOnConnectionExplain: true);
+        final plugin = _TrackingPlugin();
+        final client = OrmClient(
+          contract: contract,
+          engine: engine,
+          plugins: <OrmPlugin>[plugin],
+        );
+        await client.connect();
+
+        await expectLater(
+          client.withConnection((connection) async {
+            await connection.db.orm
+                .model('User')
+                .query()
+                .orderByField('id')
+                .page(size: 1)
+                .explain();
+          }),
+          throwsA(isA<StateError>()),
+        );
+
+        expect(engine.connectionExplainPlans, hasLength(1));
+        expect(engine.connectionExecutePlans, isEmpty);
+        expect(plugin.events, isEmpty);
+        expect(client.telemetry(), isNull);
+        expect(client.operationTelemetry(), isNull);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'withConnection explain verify always marker mismatch releases and never describes',
+      () async {
+        final engine = _TrackingConnectionEngine();
+        var readCount = 0;
+        final client = OrmClient(
+          contract: contract,
+          engine: engine,
+          verify: RuntimeVerifyOptions(
+            mode: RuntimeVerifyMode.always,
+            requireMarker: true,
+            markerReader: CallbackMarkerReader(() async {
+              readCount += 1;
+              return readCount == 1 ? contract.hash : 'other-hash';
+            }),
+          ),
+        );
+        await client.connect();
+
+        await expectLater(
+          client.withConnection((connection) async {
+            await connection.db.orm
+                .model('User')
+                .query()
+                .orderByField('id')
+                .page(size: 1)
+                .explain();
+          }),
+          throwsA(isA<ContractMarkerMismatchException>()),
+        );
+
+        expect(readCount, 2);
+        expect(engine.connectionExplainPlans, isEmpty);
+        expect(engine.connectionExecutePlans, isEmpty);
+        expect(client.telemetry(), isNull);
+        expect(client.operationTelemetry(), isNull);
+        expect(engine.releaseCount, 1);
+        await client.disconnect();
+      },
+    );
+
     test('withTransaction commits on success', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -3085,6 +3160,87 @@ void main() {
       expect(engine.releaseCount, 1);
       await client.disconnect();
     });
+
+    test(
+      'withTransaction explain failure rolls back without telemetry or plugin side effects',
+      () async {
+        final engine = _TrackingConnectionEngine(
+          failOnTransactionExplain: true,
+        );
+        final plugin = _TrackingPlugin();
+        final client = OrmClient(
+          contract: contract,
+          engine: engine,
+          plugins: <OrmPlugin>[plugin],
+        );
+        await client.connect();
+
+        await expectLater(
+          client.withTransaction((transaction) async {
+            await transaction.db.orm
+                .model('User')
+                .query()
+                .orderByField('id')
+                .page(size: 1)
+                .explain();
+          }),
+          throwsA(isA<StateError>()),
+        );
+
+        expect(engine.transactionExplainPlans, hasLength(1));
+        expect(engine.transactionExecutePlans, isEmpty);
+        expect(engine.commitCount, 0);
+        expect(engine.rollbackCount, 1);
+        expect(engine.releaseCount, 1);
+        expect(plugin.events, isEmpty);
+        expect(client.telemetry(), isNull);
+        expect(client.operationTelemetry(), isNull);
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'withTransaction explain verify always marker missing rolls back and never describes',
+      () async {
+        final engine = _TrackingConnectionEngine();
+        var readCount = 0;
+        final client = OrmClient(
+          contract: contract,
+          engine: engine,
+          verify: RuntimeVerifyOptions(
+            mode: RuntimeVerifyMode.always,
+            requireMarker: true,
+            markerReader: CallbackMarkerReader(() async {
+              readCount += 1;
+              return readCount == 1 ? contract.hash : null;
+            }),
+          ),
+        );
+        await client.connect();
+
+        await expectLater(
+          client.withTransaction((transaction) async {
+            await transaction.db.orm
+                .model('User')
+                .query()
+                .orderByField('id')
+                .page(size: 1)
+                .explain();
+          }),
+          throwsA(isA<ContractMarkerMissingException>()),
+        );
+
+        expect(readCount, 2);
+        expect(engine.transactionExplainPlans, isEmpty);
+        expect(engine.transactionExecutePlans, isEmpty);
+        expect(engine.commitCount, 0);
+        expect(engine.rollbackCount, 1);
+        expect(engine.releaseCount, 1);
+        expect(client.telemetry(), isNull);
+        expect(client.operationTelemetry(), isNull);
+        await client.disconnect();
+      },
+    );
 
     test(
       'withTransaction releases connection when opening transaction fails',
@@ -3278,6 +3434,10 @@ void main() {
         ),
         throwsA(isA<RuntimeConnectionReleasedException>()),
       );
+      expect(
+        () => connection.explain(_scopedReadPlan(contract)),
+        throwsA(isA<RuntimeConnectionReleasedException>()),
+      );
 
       final connection2 = await client.connection();
       final transaction = await connection2.transaction();
@@ -3293,7 +3453,53 @@ void main() {
         ),
         throwsA(isA<RuntimeTransactionCompletedException>()),
       );
+      expect(
+        () => transaction.explain(_scopedReadPlan(contract)),
+        throwsA(isA<RuntimeTransactionCompletedException>()),
+      );
       await connection2.release();
+      await client.disconnect();
+    });
+
+    test('scoped explain after scope end hits lifecycle guards', () async {
+      final engine = _TrackingConnectionEngine();
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      late OrmScopedClient scopedConnection;
+      await client.withConnection((connection) async {
+        scopedConnection = connection;
+      });
+
+      await expectLater(
+        scopedConnection.db.orm
+            .model('User')
+            .query()
+            .orderByField('id')
+            .page(size: 1)
+            .explain(),
+        throwsA(isA<RuntimeConnectionReleasedException>()),
+      );
+
+      late OrmScopedClient scopedTransaction;
+      await client.withTransaction((transaction) async {
+        scopedTransaction = transaction;
+      });
+
+      await expectLater(
+        scopedTransaction.db.orm
+            .model('User')
+            .query()
+            .orderByField('id')
+            .page(size: 1)
+            .explain(),
+        throwsA(isA<RuntimeTransactionCompletedException>()),
+      );
+
+      expect(engine.connectionExplainPlans, isEmpty);
+      expect(engine.transactionExplainPlans, isEmpty);
+      expect(client.telemetry(), isNull);
+      expect(client.operationTelemetry(), isNull);
       await client.disconnect();
     });
 
@@ -3542,6 +3748,34 @@ void main() {
       await client.disconnect();
     });
 
+    test(
+      'scoped connection explain verifies marker on every request in always mode',
+      () async {
+        var readCount = 0;
+        final client = OrmClient(
+          contract: contract,
+          engine: _TrackingConnectionEngine(),
+          verify: RuntimeVerifyOptions(
+            mode: RuntimeVerifyMode.always,
+            requireMarker: true,
+            markerReader: CallbackMarkerReader(() async {
+              readCount += 1;
+              return contract.hash;
+            }),
+          ),
+        );
+
+        await client.connect();
+        final connection = await client.connection();
+        await connection.explain(_scopedReadPlan(contract));
+        await connection.explain(_scopedReadPlan(contract));
+
+        expect(readCount, 3);
+        await connection.release();
+        await client.disconnect();
+      },
+    );
+
     test('fails when marker is required but missing', () async {
       final client = OrmClient(
         contract: contract,
@@ -3561,6 +3795,40 @@ void main() {
       await client.disconnect();
     });
 
+    test(
+      'scoped connection explain fails verification before reaching engine describe',
+      () async {
+        final engine = _TrackingConnectionEngine();
+        var readCount = 0;
+        final client = OrmClient(
+          contract: contract,
+          engine: engine,
+          verify: RuntimeVerifyOptions(
+            mode: RuntimeVerifyMode.always,
+            requireMarker: true,
+            markerReader: CallbackMarkerReader(() async {
+              readCount += 1;
+              return readCount == 1 ? contract.hash : null;
+            }),
+          ),
+        );
+        await client.connect();
+
+        final connection = await client.connection();
+        await expectLater(
+          connection.explain(_scopedReadPlan(contract)),
+          throwsA(isA<ContractMarkerMissingException>()),
+        );
+
+        expect(engine.connectionExplainPlans, isEmpty);
+        expect(readCount, 2);
+        expect(client.telemetry(), isNull);
+        expect(client.operationTelemetry(), isNull);
+        await connection.release();
+        await client.disconnect();
+      },
+    );
+
     test('fails when marker hash does not match contract hash', () async {
       final client = OrmClient(
         contract: contract,
@@ -3579,6 +3847,66 @@ void main() {
       );
       await client.disconnect();
     });
+
+    test(
+      'scoped connection explain rejects mismatched target before engine describe',
+      () async {
+        final engine = _TrackingConnectionEngine();
+        final client = OrmClient(contract: contract, engine: engine);
+        await client.connect();
+
+        final connection = await client.connection();
+        await expectLater(
+          connection.explain(_scopedReadPlan(contract, target: 'other-target')),
+          throwsA(isA<PlanTargetMismatchException>()),
+        );
+
+        expect(engine.connectionExplainPlans, isEmpty);
+        expect(client.telemetry(), isNull);
+        expect(client.operationTelemetry(), isNull);
+        await connection.release();
+        await client.disconnect();
+      },
+    );
+
+    test(
+      'scoped transaction explain rejects mismatched profile before engine describe',
+      () async {
+        final profileContract = OrmContract(
+          version: '1',
+          hash: 'contract-profile-v1',
+          target: 'sql-family',
+          markerStorageHash: 'storage-v1',
+          profileHash: 'profile-v1',
+          models: <String, ModelContract>{
+            'User': ModelContract(
+              name: 'User',
+              table: 'users',
+              fields: <String>{'id', 'email'},
+            ),
+          },
+        );
+        final engine = _TrackingConnectionEngine();
+        final client = OrmClient(contract: profileContract, engine: engine);
+        await client.connect();
+
+        final connection = await client.connection();
+        final transaction = await connection.transaction();
+        await expectLater(
+          transaction.explain(
+            _scopedReadPlan(profileContract, profileHash: 'other-profile'),
+          ),
+          throwsA(isA<PlanProfileHashMismatchException>()),
+        );
+
+        expect(engine.transactionExplainPlans, isEmpty);
+        expect(client.telemetry(), isNull);
+        expect(client.operationTelemetry(), isNull);
+        await transaction.rollback();
+        await connection.release();
+        await client.disconnect();
+      },
+    );
 
     test('rejects unknown plan fields by contract', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -3832,6 +4160,22 @@ JsonMap? _readRowValue(Object? value) {
     );
   }
   fail('Expected row map but got ${value.runtimeType}.');
+}
+
+OrmPlan _scopedReadPlan(
+  OrmContract contract, {
+  String? target,
+  String? storageHash,
+  String? profileHash,
+}) {
+  return OrmPlan.read(
+    contractHash: contract.hash,
+    target: target ?? contract.target,
+    storageHash: storageHash ?? contract.markerStorageHash,
+    profileHash: profileHash ?? contract.profileHash,
+    model: 'User',
+    resultMode: OrmReadResultMode.all,
+  );
 }
 
 OrmRepositoryTrace _readRepositoryTrace(OrmPlan plan) {
@@ -4120,6 +4464,8 @@ final class _TrackingConnectionEngine
   final bool failOnTransactionStart;
   final bool failOnCommit;
   final bool failOnRollback;
+  final bool failOnConnectionExplain;
+  final bool failOnTransactionExplain;
   var connectionCount = 0;
   var transactionCount = 0;
   var releaseCount = 0;
@@ -4134,6 +4480,8 @@ final class _TrackingConnectionEngine
     this.failOnTransactionStart = false,
     this.failOnCommit = false,
     this.failOnRollback = false,
+    this.failOnConnectionExplain = false,
+    this.failOnTransactionExplain = false,
   });
 
   @override
@@ -4183,6 +4531,9 @@ final class _TrackingEngineConnection
   @override
   Future<JsonMap> describePlan(OrmPlan plan) async {
     _engine.connectionExplainPlans.add(plan);
+    if (_engine.failOnConnectionExplain) {
+      throw StateError('connection explain failed');
+    }
     return <String, Object?>{'source': 'connection'};
   }
 }
@@ -4218,6 +4569,9 @@ final class _TrackingEngineTransaction
   @override
   Future<JsonMap> describePlan(OrmPlan plan) async {
     _engine.transactionExplainPlans.add(plan);
+    if (_engine.failOnTransactionExplain) {
+      throw StateError('transaction explain failed');
+    }
     return <String, Object?>{'source': 'transaction'};
   }
 }

@@ -214,6 +214,10 @@ void main() {
     await connection.release();
     expect(driver.connections.single.releaseCount, 1);
     await expectLater(connection.execute(_plan()), throwsA(isA<StateError>()));
+    await expectLater(
+      (connection as ExplainCapableEngineConnection).describePlan(_plan()),
+      throwsA(isA<StateError>()),
+    );
     await expectLater(connection.transaction(), throwsA(isA<StateError>()));
     await engine.close();
   });
@@ -299,6 +303,10 @@ void main() {
     expect(inner.rollbackCount, 0);
 
     await expectLater(transaction.execute(_plan()), throwsA(isA<StateError>()));
+    await expectLater(
+      (transaction as ExplainCapableEngineTransaction).describePlan(_plan()),
+      throwsA(isA<StateError>()),
+    );
     await expectLater(transaction.commit(), throwsA(isA<StateError>()));
     await expectLater(transaction.rollback(), throwsA(isA<StateError>()));
     await connection.release();
@@ -392,6 +400,10 @@ void main() {
 
       await expectLater(
         transaction.execute(_plan()),
+        throwsA(isA<StateError>()),
+      );
+      await expectLater(
+        (transaction as ExplainCapableEngineTransaction).describePlan(_plan()),
         throwsA(isA<StateError>()),
       );
       await expectLater(transaction.commit(), throwsA(isA<StateError>()));
