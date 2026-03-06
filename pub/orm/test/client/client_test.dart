@@ -658,6 +658,30 @@ void main() {
       await client.disconnect();
     });
 
+    test('merges repeated groupBy having clauses with AND semantics', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 2, 'email': 'a@x.com'});
+      await users.create(data: <String, Object?>{'id': 10, 'email': 'b@x.com'});
+      await users.create(data: <String, Object?>{'id': 20, 'email': 'b@x.com'});
+      await users.create(data: <String, Object?>{'id': 30, 'email': 'b@x.com'});
+
+      final grouped = await users
+          .query()
+          .groupedBy(const <String>['email'])
+          .havingExpr((having) => having.countAll().gte(2), merge: false)
+          .havingExpr((having) => having.countAll().lte(2))
+          .aggregate((aggregate) => aggregate.countAll().sum('id'));
+
+      expect(grouped, hasLength(1));
+      expect(grouped.single['email'], 'a@x.com');
+      expect(grouped.single['count'], <String, Object?>{'all': 2});
+      await client.disconnect();
+    });
+
     test('rejects groupedBy when row-query state is already present', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -748,6 +772,34 @@ void main() {
             (error) => error.code,
             'code',
             'PLAN.GROUP_BY_HAVING_FIELD_INVALID',
+          ),
+        ),
+      );
+      await client.disconnect();
+    });
+
+    test('rejects unsupported grouped having operators', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      await expectLater(
+        users
+            .groupedBy(const <String>['email'])
+            .having(
+              OrmGroupByHaving.parse(const <String, Object?>{
+                '_count': <String, Object?>{
+                  'all': <String, Object?>{'in': <int>[1, 2]},
+                },
+              }),
+              merge: false,
+            )
+            .aggregate((aggregate) => aggregate.countAll()),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.GROUP_BY_HAVING_OPERATOR_INVALID',
           ),
         ),
       );

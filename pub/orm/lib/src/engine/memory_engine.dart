@@ -859,25 +859,6 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
         return false;
       }
     }
-    if (condition.inValues != null && !_matchIn(actual, condition.inValues)) {
-      return false;
-    }
-    if (condition.notInValues != null &&
-        !_matchNotIn(actual, condition.notInValues)) {
-      return false;
-    }
-    if (condition.contains != null &&
-        !_matchStringOperation(actual, condition.contains, 'contains')) {
-      return false;
-    }
-    if (condition.startsWith != null &&
-        !_matchStringOperation(actual, condition.startsWith, 'startsWith')) {
-      return false;
-    }
-    if (condition.endsWith != null &&
-        !_matchStringOperation(actual, condition.endsWith, 'endsWith')) {
-      return false;
-    }
     if (condition.gt != null && !_matchComparison(actual, condition.gt, 'gt')) {
       return false;
     }

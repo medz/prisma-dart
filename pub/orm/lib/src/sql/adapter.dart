@@ -1411,11 +1411,6 @@ final class SqlAdapter
       final operand = switch (operator) {
         'equals' => condition.equals,
         'not' => condition.not,
-        'in' => condition.inValues,
-        'notIn' => condition.notInValues,
-        'contains' => condition.contains,
-        'startsWith' => condition.startsWith,
-        'endsWith' => condition.endsWith,
         'gt' => condition.gt,
         'gte' => condition.gte,
         'lt' => condition.lt,
@@ -1464,35 +1459,6 @@ final class SqlAdapter
         }
         params.add(operand);
         return '$leftOperand <> ?';
-      case 'in':
-        final values = _coerceListOperand(operand);
-        if (values.isEmpty) {
-          return '0 = 1';
-        }
-        params.addAll(values);
-        return '$leftOperand IN (${List<String>.filled(values.length, '?').join(', ')})';
-      case 'notIn':
-        final values = _coerceListOperand(operand);
-        if (values.isEmpty) {
-          return '1 = 1';
-        }
-        params.addAll(values);
-        return '$leftOperand NOT IN (${List<String>.filled(values.length, '?').join(', ')})';
-      case 'contains':
-      case 'startsWith':
-      case 'endsWith':
-        if (operand is! String) {
-          return '0 = 1';
-        }
-        final escaped = _escapeLikePattern(operand);
-        final pattern = switch (operator) {
-          'contains' => '%$escaped%',
-          'startsWith' => '$escaped%',
-          'endsWith' => '%$escaped',
-          _ => escaped,
-        };
-        params.add(pattern);
-        return "$leftOperand LIKE ? ESCAPE '\\'";
       case 'gt':
         params.add(operand);
         return '$leftOperand > ?';

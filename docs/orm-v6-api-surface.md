@@ -115,6 +115,9 @@ Rules:
    - `having(...)` accepts structured grouped predicates.
    - `havingExpr(...)` is the primary builder-style entrypoint before
      `aggregate(...)`.
+   - grouped `having` supports comparison operators only:
+     `equals`, `notEquals`, `gt`, `gte`, `lt`, `lte`.
+   - repeated `having(...)` / `havingExpr(...)` calls compose with `AND`.
 9. `include(...)` is unsupported on `aggregate(...)` and
    `groupedBy(...).aggregate(...)`, including direct plan execution.
 

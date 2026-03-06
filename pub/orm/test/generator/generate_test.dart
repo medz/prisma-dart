@@ -1610,7 +1610,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?aggregate:\s*aggregate\.toRuntimeSpec\(\),[\s\S]*?then\(UserAggregateResult\.fromJson\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_assertAggregateQueryState\(\);[\s\S]*?aggregate:\s*aggregate\.toRuntimeSpec\(\),[\s\S]*?then\(UserAggregateResult\.fromJson\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -1709,6 +1709,14 @@ typedef Post = ({
               'Expected generated source to include typed groupBy having helper.',
         );
         expect(
+          RegExp(
+            r'class\s+UserGroupByHaving\s*\{[\s\S]*?raw\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected typed grouped having to avoid raw map escape hatches.',
+        );
+        expect(
           RegExp(r'\bclass UserAggregateBuilder\b').hasMatch(generatedSource),
           isTrue,
           reason:
@@ -1735,6 +1743,24 @@ typedef Post = ({
           isFalse,
           reason:
               'Expected generated source to keep grouped orderBy out of the typed public surface.',
+        );
+        expect(
+          generatedSource.contains(
+            'UserGroupByHaving inList(List<Object?> values)',
+          ),
+          isFalse,
+          reason:
+              'Expected typed grouped having predicate builders to avoid list-based operators.',
+        );
+        expect(
+          generatedSource.contains('UserGroupByHaving contains(String value)') ||
+              generatedSource.contains(
+                'UserGroupByHaving startsWith(String value)',
+              ) ||
+              generatedSource.contains('UserGroupByHaving endsWith(String value)'),
+          isFalse,
+          reason:
+              'Expected typed grouped having predicate builders to avoid string pattern operators.',
         );
         expect(
           RegExp(

@@ -165,6 +165,22 @@ void main() {
         );
         expect(
           RegExp(
+            r'class\s+OrmGroupByHavingPredicateBuilder\s*\{[\s\S]*?inList\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected grouped having predicate builders to avoid list-based operators.',
+        );
+        expect(
+          RegExp(
+            r'class\s+OrmGroupByHavingPredicateBuilder\s*\{[\s\S]*?(contains|startsWith|endsWith)\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected grouped having predicate builders to avoid string pattern operators.',
+        );
+        expect(
+          RegExp(
             r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+orderBy\(',
           ).hasMatch(source),
           isFalse,

@@ -208,29 +208,21 @@ final class OrmGroupByHavingCondition {
   final Object? shorthand;
   final Object? equals;
   final Object? not;
-  final List<Object?>? inValues;
-  final List<Object?>? notInValues;
-  final String? contains;
-  final String? startsWith;
-  final String? endsWith;
   final Object? gt;
   final Object? gte;
   final Object? lt;
   final Object? lte;
+  final Map<String, Object?> extra;
 
   const OrmGroupByHavingCondition({
     this.shorthand,
     this.equals,
     this.not,
-    this.inValues,
-    this.notInValues,
-    this.contains,
-    this.startsWith,
-    this.endsWith,
     this.gt,
     this.gte,
     this.lt,
     this.lte,
+    this.extra = const <String, Object?>{},
   });
 
   factory OrmGroupByHavingCondition.parse(Object? value) {
@@ -238,18 +230,29 @@ final class OrmGroupByHavingCondition {
       return OrmGroupByHavingCondition(shorthand: value);
     }
 
+    final raw = Map<String, Object?>.from(value);
+
     return OrmGroupByHavingCondition(
-      equals: value['equals'],
-      not: value['not'],
-      inValues: _coerceObjectList(value['in']),
-      notInValues: _coerceObjectList(value['notIn']),
-      contains: value['contains'] as String?,
-      startsWith: value['startsWith'] as String?,
-      endsWith: value['endsWith'] as String?,
-      gt: value['gt'],
-      gte: value['gte'],
-      lt: value['lt'],
-      lte: value['lte'],
+      equals: raw['equals'],
+      not: raw['not'],
+      gt: raw['gt'],
+      gte: raw['gte'],
+      lt: raw['lt'],
+      lte: raw['lte'],
+      extra: Map<String, Object?>.unmodifiable(
+        Map<String, Object?>.fromEntries(
+          raw.entries.where(
+            (entry) => !const <String>{
+              'equals',
+              'not',
+              'gt',
+              'gte',
+              'lt',
+              'lte',
+            }.contains(entry.key),
+          ),
+        ),
+      ),
     );
   }
 
@@ -257,15 +260,11 @@ final class OrmGroupByHavingCondition {
       shorthand == null &&
       equals == null &&
       not == null &&
-      inValues == null &&
-      notInValues == null &&
-      contains == null &&
-      startsWith == null &&
-      endsWith == null &&
       gt == null &&
       gte == null &&
       lt == null &&
-      lte == null;
+      lte == null &&
+      extra.isEmpty;
 
   Object? toJsonValue() {
     if (shorthand != null) {
@@ -279,21 +278,6 @@ final class OrmGroupByHavingCondition {
     if (not != null) {
       map['not'] = not;
     }
-    if (inValues != null) {
-      map['in'] = inValues;
-    }
-    if (notInValues != null) {
-      map['notIn'] = notInValues;
-    }
-    if (contains != null) {
-      map['contains'] = contains;
-    }
-    if (startsWith != null) {
-      map['startsWith'] = startsWith;
-    }
-    if (endsWith != null) {
-      map['endsWith'] = endsWith;
-    }
     if (gt != null) {
       map['gt'] = gt;
     }
@@ -305,6 +289,9 @@ final class OrmGroupByHavingCondition {
     }
     if (lte != null) {
       map['lte'] = lte;
+    }
+    if (extra.isNotEmpty) {
+      map.addAll(extra);
     }
     return map;
   }
@@ -416,14 +403,20 @@ final class OrmGroupByHaving {
   bool get isNotEmpty => nodes.isNotEmpty;
 
   OrmGroupByHaving merge(OrmGroupByHaving other) =>
-      OrmGroupByHaving.parse(<String, Object?>{...toJson(), ...other.toJson()});
+      OrmGroupByHaving(<OrmGroupByHavingNode>[...nodes, ...other.nodes]);
 
   JsonMap toJson() {
-    final map = <String, Object?>{};
-    for (final node in nodes) {
-      map.addAll(node.toJson());
+    if (nodes.isEmpty) {
+      return const <String, Object?>{};
     }
-    return map;
+    if (nodes.length == 1) {
+      return nodes.single.toJson();
+    }
+    return <String, Object?>{
+      'AND': nodes
+          .map((node) => OrmGroupByHaving(<OrmGroupByHavingNode>[node]).toJson())
+          .toList(growable: false),
+    };
   }
 }
 
@@ -451,13 +444,6 @@ final class OrmReadGroupByPlan {
     if (skip != null) 'skip': skip,
     if (take != null) 'take': take,
   };
-}
-
-List<Object?>? _coerceObjectList(Object? value) {
-  if (value is! List) {
-    return null;
-  }
-  return List<Object?>.unmodifiable(value.cast<Object?>());
 }
 
 OrmGroupByHavingLogicalOperator? _parseLogicalOperator(String key) {

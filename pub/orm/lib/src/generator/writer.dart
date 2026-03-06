@@ -686,17 +686,17 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('class ${model.groupByHavingConditionClassName} {');
-    buffer.writeln('  final Object? value;');
+    buffer.writeln('  final OrmGroupByHavingCondition _value;');
     buffer.writeln();
     buffer.writeln(
-      '  const ${model.groupByHavingConditionClassName}._(this.value);',
+      '  const ${model.groupByHavingConditionClassName}._(this._value);',
     );
     buffer.writeln();
     buffer.writeln(
       '  static ${model.groupByHavingConditionClassName} equals(Object? value) {',
     );
     buffer.writeln(
-      '    return ${model.groupByHavingConditionClassName}._(value);',
+      '    return ${model.groupByHavingConditionClassName}._(OrmGroupByHavingCondition(equals: value));',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -704,7 +704,7 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingConditionClassName} notEquals(Object? value) {',
     );
     buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'not': value});",
+      '    return ${model.groupByHavingConditionClassName}._(OrmGroupByHavingCondition(not: value));',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -712,47 +712,7 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingConditionClassName} not(${model.groupByHavingConditionClassName} condition) {',
     );
     buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'not': condition.toJsonValue()});",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByHavingConditionClassName} inList(List<Object?> values) {',
-    );
-    buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'in': values});",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByHavingConditionClassName} notInList(List<Object?> values) {',
-    );
-    buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'notIn': values});",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByHavingConditionClassName} contains(String value) {',
-    );
-    buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'contains': value});",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByHavingConditionClassName} startsWith(String value) {',
-    );
-    buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'startsWith': value});",
-    );
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByHavingConditionClassName} endsWith(String value) {',
-    );
-    buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'endsWith': value});",
+      '    return ${model.groupByHavingConditionClassName}._(OrmGroupByHavingCondition(not: condition.toJsonValue()));',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -760,7 +720,7 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingConditionClassName} gt(Object? value) {',
     );
     buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'gt': value});",
+      '    return ${model.groupByHavingConditionClassName}._(OrmGroupByHavingCondition(gt: value));',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -768,7 +728,7 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingConditionClassName} gte(Object? value) {',
     );
     buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'gte': value});",
+      '    return ${model.groupByHavingConditionClassName}._(OrmGroupByHavingCondition(gte: value));',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -776,7 +736,7 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingConditionClassName} lt(Object? value) {',
     );
     buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'lt': value});",
+      '    return ${model.groupByHavingConditionClassName}._(OrmGroupByHavingCondition(lt: value));',
     );
     buffer.writeln('  }');
     buffer.writeln();
@@ -784,40 +744,41 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingConditionClassName} lte(Object? value) {',
     );
     buffer.writeln(
-      "    return ${model.groupByHavingConditionClassName}._(<String, Object?>{'lte': value});",
+      '    return ${model.groupByHavingConditionClassName}._(OrmGroupByHavingCondition(lte: value));',
     );
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  Object? toJsonValue() => value;');
+    buffer.writeln('  Object? toJsonValue() => _value.toJsonValue();');
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class ${model.groupByHavingClassName} {');
-    buffer.writeln('  final Map<String, Object?> value;');
+    buffer.writeln('  final OrmGroupByHaving _value;');
     buffer.writeln();
     buffer.writeln(
-      '  const ${model.groupByHavingClassName}() : value = const <String, Object?>{};',
+      '  const ${model.groupByHavingClassName}() : _value = const OrmGroupByHaving.empty();',
     );
     buffer.writeln();
-    buffer.writeln('  const ${model.groupByHavingClassName}._(this.value);');
-    buffer.writeln();
-    buffer.writeln(
-      '  static ${model.groupByHavingClassName} raw(Map<String, Object?> value) {',
-    );
-    buffer.writeln(
-      '    return ${model.groupByHavingClassName}._(Map<String, Object?>.from(value));',
-    );
-    buffer.writeln('  }');
+    buffer.writeln('  const ${model.groupByHavingClassName}._(this._value);');
     buffer.writeln();
     buffer.writeln(
       '  static ${model.groupByHavingClassName} and(List<${model.groupByHavingClassName}> clauses) {',
     );
     buffer.writeln('    return ${model.groupByHavingClassName}._(');
-    buffer.writeln('      <String, Object?>{');
     buffer.writeln(
-      "        'AND': clauses.map((clause) => clause.toJson()).toList(growable: false),",
+      '      OrmGroupByHaving(<OrmGroupByHavingNode>[',
     );
-    buffer.writeln('      },');
+    buffer.writeln(
+      '        OrmGroupByHavingLogicalNode(',
+    );
+    buffer.writeln(
+      '          operator: OrmGroupByHavingLogicalOperator.and,',
+    );
+    buffer.writeln(
+      '          clauses: clauses.map((clause) => clause._value).toList(growable: false),',
+    );
+    buffer.writeln('        ),');
+    buffer.writeln('      ]),');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -825,11 +786,20 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingClassName} or(List<${model.groupByHavingClassName}> clauses) {',
     );
     buffer.writeln('    return ${model.groupByHavingClassName}._(');
-    buffer.writeln('      <String, Object?>{');
     buffer.writeln(
-      "        'OR': clauses.map((clause) => clause.toJson()).toList(growable: false),",
+      '      OrmGroupByHaving(<OrmGroupByHavingNode>[',
     );
-    buffer.writeln('      },');
+    buffer.writeln(
+      '        OrmGroupByHavingLogicalNode(',
+    );
+    buffer.writeln(
+      '          operator: OrmGroupByHavingLogicalOperator.or,',
+    );
+    buffer.writeln(
+      '          clauses: clauses.map((clause) => clause._value).toList(growable: false),',
+    );
+    buffer.writeln('        ),');
+    buffer.writeln('      ]),');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -837,11 +807,20 @@ final class TypedClientWriter {
       '  static ${model.groupByHavingClassName} not(List<${model.groupByHavingClassName}> clauses) {',
     );
     buffer.writeln('    return ${model.groupByHavingClassName}._(');
-    buffer.writeln('      <String, Object?>{');
     buffer.writeln(
-      "        'NOT': clauses.map((clause) => clause.toJson()).toList(growable: false),",
+      '      OrmGroupByHaving(<OrmGroupByHavingNode>[',
     );
-    buffer.writeln('      },');
+    buffer.writeln(
+      '        OrmGroupByHavingLogicalNode(',
+    );
+    buffer.writeln(
+      '          operator: OrmGroupByHavingLogicalOperator.not,',
+    );
+    buffer.writeln(
+      '          clauses: clauses.map((clause) => clause._value).toList(growable: false),',
+    );
+    buffer.writeln('        ),');
+    buffer.writeln('      ]),');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -853,8 +832,12 @@ final class TypedClientWriter {
     );
     buffer.writeln('    return ${model.groupByHavingClassName}._(');
     buffer.writeln(
-      '      <String, Object?>{field.value: condition.toJsonValue()},',
+      '      OrmGroupByHaving(<OrmGroupByHavingNode>[',
     );
+    buffer.writeln(
+      '        OrmGroupByHavingPredicateNode(field: field.value, condition: condition._value),',
+    );
+    buffer.writeln('      ]),');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -865,11 +848,13 @@ final class TypedClientWriter {
       ') {',
     );
     buffer.writeln('    return ${model.groupByHavingClassName}._(');
-    buffer.writeln('      <String, Object?>{');
     buffer.writeln(
-      "        '_count': <String, Object?>{field.value: condition.toJsonValue()},",
+      '      OrmGroupByHaving(<OrmGroupByHavingNode>[',
     );
-    buffer.writeln('      },');
+    buffer.writeln(
+      '        OrmGroupByHavingPredicateNode(field: field.value, condition: condition._value, bucket: OrmGroupByHavingMetricBucket.count),',
+    );
+    buffer.writeln('      ]),');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -879,11 +864,13 @@ final class TypedClientWriter {
       ') {',
     );
     buffer.writeln('    return ${model.groupByHavingClassName}._(');
-    buffer.writeln('      <String, Object?>{');
     buffer.writeln(
-      "        '_count': <String, Object?>{'all': condition.toJsonValue()},",
+      '      OrmGroupByHaving(<OrmGroupByHavingNode>[',
     );
-    buffer.writeln('      },');
+    buffer.writeln(
+      "        OrmGroupByHavingPredicateNode(field: 'all', condition: condition._value, bucket: OrmGroupByHavingMetricBucket.count),",
+    );
+    buffer.writeln('      ]),');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
@@ -895,11 +882,13 @@ final class TypedClientWriter {
         ') {',
       );
       buffer.writeln('    return ${model.groupByHavingClassName}._(');
-      buffer.writeln('      <String, Object?>{');
       buffer.writeln(
-        "        '_$bucket': <String, Object?>{field.value: condition.toJsonValue()},",
+        '      OrmGroupByHaving(<OrmGroupByHavingNode>[',
       );
-      buffer.writeln('      },');
+      buffer.writeln(
+        '        OrmGroupByHavingPredicateNode(field: field.value, condition: condition._value, bucket: OrmGroupByHavingMetricBucket.$bucket),',
+      );
+      buffer.writeln('      ]),');
       buffer.writeln('    );');
       buffer.writeln('  }');
       buffer.writeln();
@@ -908,19 +897,19 @@ final class TypedClientWriter {
       '  ${model.groupByHavingClassName} merge(${model.groupByHavingClassName} other) {',
     );
     buffer.writeln(
-      '    return ${model.groupByHavingClassName}._(<String, Object?>{...value, ...other.value});',
+      '    return ${model.groupByHavingClassName}._(_value.merge(other._value));',
     );
     buffer.writeln('  }');
     buffer.writeln();
     buffer.writeln('  OrmGroupByHaving toRuntimeHaving() {');
-    buffer.writeln('    return OrmGroupByHaving.parse(toJson());');
+    buffer.writeln('    return _value;');
     buffer.writeln('  }');
     buffer.writeln();
     buffer.writeln('  Map<String, Object?> toJson() {');
-    buffer.writeln('    return Map<String, Object?>.from(value);');
+    buffer.writeln('    return _value.toJson();');
     buffer.writeln('  }');
     buffer.writeln();
-    buffer.writeln('  bool get isEmpty => value.isEmpty;');
+    buffer.writeln('  bool get isEmpty => _value.isEmpty;');
     buffer.writeln('}');
     buffer.writeln();
 
@@ -989,26 +978,6 @@ final class TypedClientWriter {
     buffer.writeln();
     buffer.writeln(
       '  ${model.groupByHavingClassName} notEquals(Object? value) => _build(${model.groupByHavingConditionClassName}.notEquals(value));',
-    );
-    buffer.writeln();
-    buffer.writeln(
-      '  ${model.groupByHavingClassName} inList(List<Object?> values) => _build(${model.groupByHavingConditionClassName}.inList(values));',
-    );
-    buffer.writeln();
-    buffer.writeln(
-      '  ${model.groupByHavingClassName} notInList(List<Object?> values) => _build(${model.groupByHavingConditionClassName}.notInList(values));',
-    );
-    buffer.writeln();
-    buffer.writeln(
-      '  ${model.groupByHavingClassName} contains(String value) => _build(${model.groupByHavingConditionClassName}.contains(value));',
-    );
-    buffer.writeln();
-    buffer.writeln(
-      '  ${model.groupByHavingClassName} startsWith(String value) => _build(${model.groupByHavingConditionClassName}.startsWith(value));',
-    );
-    buffer.writeln();
-    buffer.writeln(
-      '  ${model.groupByHavingClassName} endsWith(String value) => _build(${model.groupByHavingConditionClassName}.endsWith(value));',
     );
     buffer.writeln();
     buffer.writeln(
@@ -2889,6 +2858,31 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  void _assertAggregateQueryState() {');
+    buffer.writeln('    final invalidKeys = <String>[');
+    buffer.writeln("      if (_skip != null) 'skip',");
+    buffer.writeln("      if (_take != null) 'take',");
+    buffer.writeln("      if (_distinct.isNotEmpty) 'distinct',");
+    buffer.writeln("      if (_select != null) 'select',");
+    buffer.writeln("      if (_include != null) 'include',");
+    buffer.writeln('    ];');
+    buffer.writeln('    if (invalidKeys.isEmpty) {');
+    buffer.writeln('      return;');
+    buffer.writeln('    }');
+    buffer.writeln();
+    buffer.writeln('    throw runtimeError(');
+    buffer.writeln("      'PLAN.AGGREGATE_QUERY_STATE_INVALID',");
+    buffer.writeln(
+      "      'aggregate() does not allow query state keys: \${invalidKeys.join(', ')}.',",
+    );
+    buffer.writeln('      details: <String, Object?>{');
+    buffer.writeln("        'model': '$runtimeName',");
+    buffer.writeln("        'invalidKeys': invalidKeys,");
+    buffer.writeln('      },');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  void _assertGroupedQueryBaseState() {');
     buffer.writeln('    final invalidKeys = <String>[');
     buffer.writeln("      if (_skip != null) 'skip',");
@@ -3045,6 +3039,7 @@ final class TypedClientWriter {
       '  Future<${model.aggregateResultClassName}> aggregateWith(${model.aggregateSpecClassName} aggregate) {',
     );
     buffer.writeln("    _assertReadExecutionSupported('aggregate');");
+    buffer.writeln('    _assertAggregateQueryState();');
     buffer.writeln('    return _delegate._delegate.aggregateWith(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      orderBy: _runtimeOrderBy,');

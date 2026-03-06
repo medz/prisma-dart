@@ -35,14 +35,9 @@ typedef IncludeExecutionStrategySelector =
 const int _defaultMaxIncludeDepth = 4;
 const Object _stateKeepToken = Object();
 const Set<String> _whereLogicalKeys = <String>{'AND', 'OR', 'NOT'};
-const Set<String> _filterOperators = <String>{
+const Set<String> _groupByHavingOperators = <String>{
   'equals',
   'not',
-  'in',
-  'notIn',
-  'contains',
-  'startsWith',
-  'endsWith',
   'gt',
   'gte',
   'lt',
@@ -2386,7 +2381,7 @@ class ModelDelegate {
     }
 
     final unknownOperators = conditionMap.keys
-        .where((operator) => !_filterOperators.contains(operator))
+        .where((operator) => !_groupByHavingOperators.contains(operator))
         .toList(growable: false);
     if (unknownOperators.isNotEmpty) {
       throw runtimeError(
@@ -2396,7 +2391,7 @@ class ModelDelegate {
           'model': modelName,
           'source': source,
           'unknownOperators': unknownOperators,
-          'supportedOperators': _filterOperators.toList(growable: false),
+          'supportedOperators': _groupByHavingOperators.toList(growable: false),
         },
       );
     }
@@ -2404,17 +2399,6 @@ class ModelDelegate {
     for (final entry in conditionMap.entries) {
       final operator = entry.key;
       final operand = entry.value;
-      if ((operator == 'in' || operator == 'notIn') && operand is! List) {
-        throw runtimeError(
-          'PLAN.GROUP_BY_HAVING_OPERATOR_INVALID',
-          'GroupBy having in/notIn expects a list operand.',
-          details: <String, Object?>{
-            'model': modelName,
-            'source': '$source.$operator',
-            'operator': operator,
-          },
-        );
-      }
       if (operator == 'not') {
         _assertGroupByHavingCondition(
           condition: operand,
@@ -2932,21 +2916,6 @@ final class OrmGroupByHavingPredicateBuilder {
 
   OrmGroupByHaving notEquals(Object? value) =>
       _condition(OrmGroupByHavingCondition(not: value));
-
-  OrmGroupByHaving inList(List<Object?> values) =>
-      _condition(OrmGroupByHavingCondition(inValues: values));
-
-  OrmGroupByHaving notInList(List<Object?> values) =>
-      _condition(OrmGroupByHavingCondition(notInValues: values));
-
-  OrmGroupByHaving contains(String value) =>
-      _condition(OrmGroupByHavingCondition(contains: value));
-
-  OrmGroupByHaving startsWith(String value) =>
-      _condition(OrmGroupByHavingCondition(startsWith: value));
-
-  OrmGroupByHaving endsWith(String value) =>
-      _condition(OrmGroupByHavingCondition(endsWith: value));
 
   OrmGroupByHaving gt(Object? value) =>
       _condition(OrmGroupByHavingCondition(gt: value));
