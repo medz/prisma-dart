@@ -367,7 +367,7 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
     final scoped = OrmScopedClient._(
       contract: contract,
       executePlan: connection.execute,
-      explainPlan: _runtime.explain,
+      explainPlan: connection.explain,
       modelAliases: _modelAliases,
       collectionRegistry: _collectionRegistry,
       includeStrategySelector: includeStrategySelector,
@@ -393,7 +393,7 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
       final scoped = OrmScopedClient._(
         contract: contract,
         executePlan: openedTransaction.execute,
-        explainPlan: _runtime.explain,
+        explainPlan: openedTransaction.explain,
         modelAliases: _modelAliases,
         collectionRegistry: _collectionRegistry,
         includeStrategySelector: includeStrategySelector,

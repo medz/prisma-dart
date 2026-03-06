@@ -63,10 +63,18 @@ abstract interface class EngineConnection implements RuntimeQueryable {
   Future<void> release();
 }
 
+abstract interface class ExplainCapableEngineConnection {
+  Future<JsonMap> describePlan(OrmPlan plan);
+}
+
 abstract interface class EngineTransaction implements RuntimeQueryable {
   Future<void> commit();
 
   Future<void> rollback();
+}
+
+abstract interface class ExplainCapableEngineTransaction {
+  Future<JsonMap> describePlan(OrmPlan plan);
 }
 
 abstract interface class ConnectionCapableEngine {

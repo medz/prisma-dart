@@ -100,84 +100,97 @@ void main() {
     await engine.close();
   });
 
-  test('describes lowered plan without executing the driver', () async {
-    final adapter = _ExplainTrackingAdapter();
-    final driver = _TrackingDriver();
-    final engine = AdapterDriverEngine<String, String>(
-      adapter: adapter,
-      driver: driver,
-    );
+  test(
+    'describes lowered plan through driver explain without executing',
+    () async {
+      final adapter = _ExplainTrackingAdapter();
+      final driver = _ExplainTrackingDriver();
+      final engine = AdapterDriverEngine<String, String>(
+        adapter: adapter,
+        driver: driver,
+      );
 
-    await engine.open();
-    final description = await engine.describePlan(
-      _plan(where: <String, Object?>{'id': 'u1'}),
-    );
+      await engine.open();
+      final description = await engine.describePlan(
+        _plan(where: <String, Object?>{'id': 'u1'}),
+      );
 
-    expect(adapter.loweredPlans, hasLength(1));
-    expect(driver.requests, isEmpty);
-    expect(description['source'], 'adapter');
-    expect(description['request'], <String, Object?>{
-      'kind': 'tracking',
-      'value': 'User:read',
-    });
+      expect(adapter.loweredPlans, hasLength(1));
+      expect(driver.requests, isEmpty);
+      expect(driver.explainRequests, <String>['User:read']);
+      expect(description['source'], 'driver');
+      expect(description['request'], <String, Object?>{
+        'kind': 'tracking',
+        'value': 'User:read',
+      });
+      expect(description['driver'], <String, Object?>{
+        'scope': 'driver',
+        'value': 'User:read',
+      });
 
-    await engine.close();
-  });
+      await engine.close();
+    },
+  );
 
-  test('prefers native read streaming when adapter and driver support it', () async {
-    final adapter = _StreamingTrackingAdapter();
-    final driver = _StreamingTrackingDriver(
-      streamedRows: <String>['stream:u1', 'stream:u2'],
-    );
-    final engine = AdapterDriverEngine<String, String>(
-      adapter: adapter,
-      driver: driver,
-    );
+  test(
+    'prefers native read streaming when adapter and driver support it',
+    () async {
+      final adapter = _StreamingTrackingAdapter();
+      final driver = _StreamingTrackingDriver(
+        streamedRows: <String>['stream:u1', 'stream:u2'],
+      );
+      final engine = AdapterDriverEngine<String, String>(
+        adapter: adapter,
+        driver: driver,
+      );
 
-    await engine.open();
-    final response = await engine.execute(_plan());
-    final rows = await response.rows.toList();
+      await engine.open();
+      final response = await engine.execute(_plan());
+      final rows = await response.rows.toList();
 
-    expect(driver.requests, isEmpty);
-    expect(driver.streamRequests, <String>['User:read']);
-    expect(adapter.decodedRaw, isEmpty);
-    expect(adapter.streamDecodedPlans, hasLength(1));
-    expect(rows, <JsonMap>[
-      <String, Object?>{'request': 'User:read', 'streamed': 'stream:u1'},
-      <String, Object?>{'request': 'User:read', 'streamed': 'stream:u2'},
-    ]);
+      expect(driver.requests, isEmpty);
+      expect(driver.streamRequests, <String>['User:read']);
+      expect(adapter.decodedRaw, isEmpty);
+      expect(adapter.streamDecodedPlans, hasLength(1));
+      expect(rows, <JsonMap>[
+        <String, Object?>{'request': 'User:read', 'streamed': 'stream:u1'},
+        <String, Object?>{'request': 'User:read', 'streamed': 'stream:u2'},
+      ]);
 
-    await engine.close();
-  });
+      await engine.close();
+    },
+  );
 
-  test('keeps mutations on buffered execute when streaming is available', () async {
-    final adapter = _StreamingTrackingAdapter();
-    final driver = _StreamingTrackingDriver(streamedRows: <String>['ignored']);
-    final engine = AdapterDriverEngine<String, String>(
-      adapter: adapter,
-      driver: driver,
-    );
+  test(
+    'keeps mutations on buffered execute when streaming is available',
+    () async {
+      final adapter = _StreamingTrackingAdapter();
+      final driver = _StreamingTrackingDriver(
+        streamedRows: <String>['ignored'],
+      );
+      final engine = AdapterDriverEngine<String, String>(
+        adapter: adapter,
+        driver: driver,
+      );
 
-    await engine.open();
-    final response = await engine.execute(_createPlan());
+      await engine.open();
+      final response = await engine.execute(_createPlan());
 
-    expect(driver.streamRequests, isEmpty);
-    expect(driver.requests, <String>['User:create']);
-    expect(adapter.streamDecodedPlans, isEmpty);
-    expect(adapter.decodedRaw, <String>['driver:User:create']);
-    expect(
-      await response.rows.toList(),
-      <JsonMap>[
+      expect(driver.streamRequests, isEmpty);
+      expect(driver.requests, <String>['User:create']);
+      expect(adapter.streamDecodedPlans, isEmpty);
+      expect(adapter.decodedRaw, <String>['driver:User:create']);
+      expect(await response.rows.toList(), <JsonMap>[
         <String, Object?>{
           'request': 'User:create',
           'action': 'create',
           'whereId': null,
         },
-      ],
-    );
+      ]);
 
-    await engine.close();
-  });
+      await engine.close();
+    },
+  );
 
   test('supports connection lifecycle when driver is capable', () async {
     final adapter = _TrackingAdapter();
@@ -205,6 +218,32 @@ void main() {
     await engine.close();
   });
 
+  test('connection describePlan uses scoped driver explain surface', () async {
+    final adapter = _ExplainTrackingAdapter();
+    final driver = _ConnectionCapableTrackingDriver();
+    final engine = AdapterDriverEngine<String, String>(
+      adapter: adapter,
+      driver: driver,
+    );
+
+    await engine.open();
+    final connection = await engine.connection();
+    final description = await (connection as ExplainCapableEngineConnection)
+        .describePlan(_plan(where: <String, Object?>{'id': 'u1'}));
+
+    expect(driver.connectionCount, 1);
+    expect(driver.connections.single.explainRequests, <String>['User:read']);
+    expect(driver.connections.single.requests, isEmpty);
+    expect(description['source'], 'driver');
+    expect(description['driver'], <String, Object?>{
+      'scope': 'connection',
+      'value': 'User:read',
+    });
+
+    await connection.release();
+    await engine.close();
+  });
+
   test('forwards transaction commit and marks transaction completed', () async {
     final adapter = _TrackingAdapter();
     final driver = _ConnectionCapableTrackingDriver();
@@ -228,6 +267,34 @@ void main() {
     await expectLater(transaction.execute(_plan()), throwsA(isA<StateError>()));
     await expectLater(transaction.commit(), throwsA(isA<StateError>()));
     await expectLater(transaction.rollback(), throwsA(isA<StateError>()));
+    await connection.release();
+    await engine.close();
+  });
+
+  test('transaction describePlan uses scoped driver explain surface', () async {
+    final adapter = _ExplainTrackingAdapter();
+    final driver = _ConnectionCapableTrackingDriver();
+    final engine = AdapterDriverEngine<String, String>(
+      adapter: adapter,
+      driver: driver,
+    );
+
+    await engine.open();
+    final connection = await engine.connection();
+    final transaction = await connection.transaction();
+    final description = await (transaction as ExplainCapableEngineTransaction)
+        .describePlan(_plan(where: <String, Object?>{'id': 'u2'}));
+
+    final inner = driver.connections.single.transactions.single;
+    expect(inner.explainRequests, <String>['User:read']);
+    expect(inner.requests, isEmpty);
+    expect(description['source'], 'driver');
+    expect(description['driver'], <String, Object?>{
+      'scope': 'transaction',
+      'value': 'User:read',
+    });
+
+    await transaction.rollback();
     await connection.release();
     await engine.close();
   });
@@ -308,10 +375,11 @@ final class _TrackingAdapter implements TargetAdapter<String, String> {
 final class _ExplainTrackingAdapter extends _TrackingAdapter
     implements ExplainCapableTargetAdapter<String, String> {
   @override
-  JsonMap describe(OrmPlan plan, String request) {
+  JsonMap describe(OrmPlan plan, String request, {JsonMap? driverExplain}) {
     return <String, Object?>{
-      'source': 'adapter',
+      'source': driverExplain == null ? 'adapter' : 'driver',
       'request': <String, Object?>{'kind': 'tracking', 'value': request},
+      if (driverExplain != null) 'driver': driverExplain,
     };
   }
 }
@@ -351,6 +419,17 @@ final class _TrackingDriver implements TargetDriver<String, String> {
   Future<String> execute(String request) async {
     requests.add(request);
     return 'driver:$request';
+  }
+}
+
+final class _ExplainTrackingDriver extends _TrackingDriver
+    implements ExplainCapableTargetDriver<String> {
+  final List<String> explainRequests = <String>[];
+
+  @override
+  Future<JsonMap> explain(String request) async {
+    explainRequests.add(request);
+    return <String, Object?>{'scope': 'driver', 'value': request};
   }
 }
 
@@ -406,10 +485,13 @@ final class _ConnectionCapableTrackingDriver
 }
 
 final class _TrackingConnection
-    implements TargetDriverConnection<String, String> {
+    implements
+        TargetDriverConnection<String, String>,
+        ExplainCapableTargetDriverConnection<String> {
   int releaseCount = 0;
   int transactionCount = 0;
   final List<String> requests = <String>[];
+  final List<String> explainRequests = <String>[];
   final List<_TrackingTransaction> transactions = <_TrackingTransaction>[];
 
   @override
@@ -430,13 +512,22 @@ final class _TrackingConnection
     transactions.add(transaction);
     return transaction;
   }
+
+  @override
+  Future<JsonMap> explain(String request) async {
+    explainRequests.add(request);
+    return <String, Object?>{'scope': 'connection', 'value': request};
+  }
 }
 
 final class _TrackingTransaction
-    implements TargetDriverTransaction<String, String> {
+    implements
+        TargetDriverTransaction<String, String>,
+        ExplainCapableTargetDriverTransaction<String> {
   int commitCount = 0;
   int rollbackCount = 0;
   final List<String> requests = <String>[];
+  final List<String> explainRequests = <String>[];
 
   @override
   Future<void> commit() async {
@@ -452,5 +543,11 @@ final class _TrackingTransaction
   Future<String> execute(String request) async {
     requests.add(request);
     return 'transaction:$request';
+  }
+
+  @override
+  Future<JsonMap> explain(String request) async {
+    explainRequests.add(request);
+    return <String, Object?>{'scope': 'transaction', 'value': request};
   }
 }

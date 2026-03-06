@@ -52,14 +52,12 @@ final class AdapterDriverEngine<TRequest, TRawResponse>
   @override
   Future<JsonMap> describePlan(OrmPlan plan) async {
     _ensureOpen();
-
-    final request = adapter.lower(plan);
-    if (adapter
-        case final ExplainCapableTargetAdapter<TRequest, TRawResponse>
-            explainAdapter) {
-      return explainAdapter.describe(plan, request);
-    }
-    return const <String, Object?>{};
+    return _describeTargetPlan(
+      plan: plan,
+      adapter: adapter,
+      request: adapter.lower(plan),
+      describeRequest: _driverExplain(driver),
+    );
   }
 
   @override
@@ -90,7 +88,7 @@ final class AdapterDriverEngine<TRequest, TRawResponse>
 }
 
 final class _AdapterDriverConnection<TRequest, TRawResponse>
-    implements EngineConnection {
+    implements EngineConnection, ExplainCapableEngineConnection {
   final TargetAdapter<TRequest, TRawResponse> adapter;
   final TargetDriverConnection<TRequest, TRawResponse> connection;
   bool _released = false;
@@ -130,6 +128,17 @@ final class _AdapterDriverConnection<TRequest, TRawResponse>
     await connection.release();
   }
 
+  @override
+  Future<JsonMap> describePlan(OrmPlan plan) async {
+    _ensureActive();
+    return _describeTargetPlan(
+      plan: plan,
+      adapter: adapter,
+      request: adapter.lower(plan),
+      describeRequest: _connectionExplain(connection),
+    );
+  }
+
   void _ensureActive() {
     if (_released) {
       throw StateError('Adapter driver connection has been released.');
@@ -138,7 +147,7 @@ final class _AdapterDriverConnection<TRequest, TRawResponse>
 }
 
 final class _AdapterDriverTransaction<TRequest, TRawResponse>
-    implements EngineTransaction {
+    implements EngineTransaction, ExplainCapableEngineTransaction {
   final TargetAdapter<TRequest, TRawResponse> adapter;
   final TargetDriverTransaction<TRequest, TRawResponse> transaction;
   bool _completed = false;
@@ -176,6 +185,17 @@ final class _AdapterDriverTransaction<TRequest, TRawResponse>
     await transaction.rollback();
   }
 
+  @override
+  Future<JsonMap> describePlan(OrmPlan plan) async {
+    _ensureActive();
+    return _describeTargetPlan(
+      plan: plan,
+      adapter: adapter,
+      request: adapter.lower(plan),
+      describeRequest: _transactionExplain(transaction),
+    );
+  }
+
   void _ensureActive() {
     if (_completed) {
       throw StateError('Adapter driver transaction is already completed.');
@@ -204,6 +224,23 @@ EngineResponse? _tryExecuteReadStream<TRequest>({
   return null;
 }
 
+Future<JsonMap> _describeTargetPlan<TRequest, TRawResponse>({
+  required OrmPlan plan,
+  required TargetAdapter<TRequest, TRawResponse> adapter,
+  required TRequest request,
+  required Future<JsonMap> Function(TRequest request)? describeRequest,
+}) async {
+  final driverExplain = describeRequest == null
+      ? null
+      : await describeRequest(request);
+  if (adapter
+      case final ExplainCapableTargetAdapter<TRequest, TRawResponse>
+          explainAdapter) {
+    return explainAdapter.describe(plan, request, driverExplain: driverExplain);
+  }
+  return driverExplain ?? const <String, Object?>{};
+}
+
 Stream<dynamic> Function(TRequest request)? _driverReadStream<
   TRequest,
   TRawResponse
@@ -212,6 +249,16 @@ Stream<dynamic> Function(TRequest request)? _driverReadStream<
       case final ReadStreamCapableTargetDriver<TRequest, dynamic>
           streamDriver) {
     return streamDriver.stream;
+  }
+  return null;
+}
+
+Future<JsonMap> Function(TRequest request)? _driverExplain<
+  TRequest,
+  TRawResponse
+>(TargetDriver<TRequest, TRawResponse> driver) {
+  if (driver case final ExplainCapableTargetDriver<TRequest> explainDriver) {
+    return explainDriver.explain;
   }
   return null;
 }
@@ -228,6 +275,18 @@ Stream<dynamic> Function(TRequest request)? _connectionReadStream<
   return null;
 }
 
+Future<JsonMap> Function(TRequest request)? _connectionExplain<
+  TRequest,
+  TRawResponse
+>(TargetDriverConnection<TRequest, TRawResponse> connection) {
+  if (connection
+      case final ExplainCapableTargetDriverConnection<TRequest>
+          explainConnection) {
+    return explainConnection.explain;
+  }
+  return null;
+}
+
 Stream<dynamic> Function(TRequest request)? _transactionReadStream<
   TRequest,
   TRawResponse
@@ -236,6 +295,18 @@ Stream<dynamic> Function(TRequest request)? _transactionReadStream<
       case final ReadStreamCapableTargetDriverTransaction<TRequest, dynamic>
           streamTransaction) {
     return streamTransaction.stream;
+  }
+  return null;
+}
+
+Future<JsonMap> Function(TRequest request)? _transactionExplain<
+  TRequest,
+  TRawResponse
+>(TargetDriverTransaction<TRequest, TRawResponse> transaction) {
+  if (transaction
+      case final ExplainCapableTargetDriverTransaction<TRequest>
+          explainTransaction) {
+    return explainTransaction.explain;
   }
   return null;
 }

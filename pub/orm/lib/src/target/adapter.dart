@@ -11,7 +11,7 @@ abstract interface class TargetAdapter<TRequest, TRawResponse> {
 }
 
 abstract interface class ExplainCapableTargetAdapter<TRequest, TRawResponse> {
-  JsonMap describe(OrmPlan plan, TRequest request);
+  JsonMap describe(OrmPlan plan, TRequest request, {JsonMap? driverExplain});
 }
 
 abstract interface class ReadStreamCapableTargetAdapter<TRequest, TRawRow> {

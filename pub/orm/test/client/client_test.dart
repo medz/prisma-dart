@@ -2926,6 +2926,30 @@ void main() {
       },
     );
 
+    test('withConnection explain uses scoped connection surface', () async {
+      final engine = _TrackingConnectionEngine();
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      await client.withConnection((connection) async {
+        final explained = await connection.db.orm
+            .model('User')
+            .query()
+            .orderByField('id')
+            .page(size: 1)
+            .explain();
+        expect(explained['source'], 'connection');
+      });
+
+      expect(engine.connectionExplainPlans, hasLength(1));
+      expect(engine.connectionExecutePlans, isEmpty);
+      expect(engine.connectionExplainPlans.single.action, OrmAction.read);
+      expect(client.telemetry(), isNull);
+      expect(client.operationTelemetry(), isNull);
+      expect(engine.releaseCount, 1);
+      await client.disconnect();
+    });
+
     test('withTransaction commits on success', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -2985,6 +3009,31 @@ void main() {
         await client.disconnect();
       },
     );
+
+    test('withTransaction explain uses scoped transaction surface', () async {
+      final engine = _TrackingConnectionEngine();
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+
+      await client.withTransaction((transaction) async {
+        final explained = await transaction.db.orm
+            .model('User')
+            .query()
+            .orderByField('id')
+            .page(size: 1)
+            .explain();
+        expect(explained['source'], 'transaction');
+      });
+
+      expect(engine.transactionExplainPlans, hasLength(1));
+      expect(engine.transactionExecutePlans, isEmpty);
+      expect(engine.transactionExplainPlans.single.action, OrmAction.read);
+      expect(client.telemetry(), isNull);
+      expect(client.operationTelemetry(), isNull);
+      expect(engine.commitCount, 1);
+      expect(engine.releaseCount, 1);
+      await client.disconnect();
+    });
 
     test(
       'withTransaction releases connection when opening transaction fails',
@@ -4026,7 +4075,9 @@ final class _TrackingConnectionEngine
   var commitCount = 0;
   var rollbackCount = 0;
   final List<OrmPlan> connectionExecutePlans = <OrmPlan>[];
+  final List<OrmPlan> connectionExplainPlans = <OrmPlan>[];
   final List<OrmPlan> transactionExecutePlans = <OrmPlan>[];
+  final List<OrmPlan> transactionExplainPlans = <OrmPlan>[];
 
   _TrackingConnectionEngine({
     this.failOnTransactionStart = false,
@@ -4052,7 +4103,8 @@ final class _TrackingConnectionEngine
   Future<void> open() async {}
 }
 
-final class _TrackingEngineConnection implements EngineConnection {
+final class _TrackingEngineConnection
+    implements EngineConnection, ExplainCapableEngineConnection {
   final _TrackingConnectionEngine _engine;
 
   _TrackingEngineConnection(this._engine);
@@ -4076,9 +4128,16 @@ final class _TrackingEngineConnection implements EngineConnection {
     }
     return _TrackingEngineTransaction(_engine);
   }
+
+  @override
+  Future<JsonMap> describePlan(OrmPlan plan) async {
+    _engine.connectionExplainPlans.add(plan);
+    return <String, Object?>{'source': 'connection'};
+  }
 }
 
-final class _TrackingEngineTransaction implements EngineTransaction {
+final class _TrackingEngineTransaction
+    implements EngineTransaction, ExplainCapableEngineTransaction {
   final _TrackingConnectionEngine _engine;
 
   _TrackingEngineTransaction(this._engine);
@@ -4103,6 +4162,12 @@ final class _TrackingEngineTransaction implements EngineTransaction {
     if (_engine.failOnRollback) {
       throw StateError('rollback failed');
     }
+  }
+
+  @override
+  Future<JsonMap> describePlan(OrmPlan plan) async {
+    _engine.transactionExplainPlans.add(plan);
+    return <String, Object?>{'source': 'transaction'};
   }
 }
 

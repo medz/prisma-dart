@@ -100,9 +100,13 @@ final class SqlAdapter
   }
 
   @override
-  JsonMap describe(OrmPlan plan, SqlStatement request) {
+  JsonMap describe(
+    OrmPlan plan,
+    SqlStatement request, {
+    JsonMap? driverExplain,
+  }) {
     return Map<String, Object?>.unmodifiable(<String, Object?>{
-      'source': 'adapter',
+      'source': driverExplain == null ? 'adapter' : 'driver',
       'target': contract.target,
       'request': Map<String, Object?>.unmodifiable(<String, Object?>{
         'kind': 'sql',
@@ -110,6 +114,7 @@ final class SqlAdapter
         'text': request.text,
         'parameterCount': request.parameters.length,
       }),
+      if (driverExplain != null) 'driver': driverExplain,
     });
   }
 

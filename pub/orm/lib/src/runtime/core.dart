@@ -236,12 +236,16 @@ abstract interface class OrmRuntimeQueryable {
 }
 
 abstract interface class OrmRuntimeConnection implements OrmRuntimeQueryable {
+  Future<JsonMap> explain(OrmPlan plan);
+
   Future<OrmRuntimeTransaction> transaction();
 
   Future<void> release();
 }
 
 abstract interface class OrmRuntimeTransaction implements OrmRuntimeQueryable {
+  Future<JsonMap> explain(OrmPlan plan);
+
   Future<void> commit();
 
   Future<void> rollback();
@@ -370,16 +374,7 @@ final class OrmRuntimeCore implements RuntimeCore {
 
   @override
   Future<JsonMap> explain(OrmPlan plan) async {
-    _ensureConnected();
-    _assertPlan(plan);
-    await _verifyForRequest();
-
-    final base = _buildExplainResult(plan);
-    if (engine case final ExplainCapableEngine explainEngine) {
-      final details = await explainEngine.describePlan(plan);
-      return _mergeExplainResult(base, details);
-    }
-    return base;
+    return _explainOnSource(plan, engine);
   }
 
   @override
@@ -507,6 +502,24 @@ final class OrmRuntimeCore implements RuntimeCore {
         );
       }
     }
+  }
+
+  Future<JsonMap> _explainOnSource(OrmPlan plan, Object source) async {
+    _ensureConnected();
+    _assertPlan(plan);
+    await _verifyForRequest();
+
+    final base = _buildExplainResult(plan);
+    final details = switch (source) {
+      final ExplainCapableEngine explainEngine =>
+        await explainEngine.describePlan(plan),
+      final ExplainCapableEngineConnection explainConnection =>
+        await explainConnection.describePlan(plan),
+      final ExplainCapableEngineTransaction explainTransaction =>
+        await explainTransaction.describePlan(plan),
+      _ => const <String, Object?>{},
+    };
+    return _mergeExplainResult(base, details);
   }
 
   Future<void> _recordExecutionSuccess({
@@ -1303,6 +1316,12 @@ final class _RuntimeConnection implements OrmRuntimeConnection {
   }
 
   @override
+  Future<JsonMap> explain(OrmPlan plan) {
+    _ensureNotReleased();
+    return _core._explainOnSource(plan, _inner);
+  }
+
+  @override
   Future<OrmRuntimeTransaction> transaction() async {
     _ensureNotReleased();
     final transaction = await _inner.transaction();
@@ -1350,6 +1369,12 @@ final class _RuntimeTransaction implements OrmRuntimeTransaction {
   Future<EngineResponse> execute(OrmPlan plan) {
     _ensureActive();
     return _core._executeOnQueryable(plan, _inner);
+  }
+
+  @override
+  Future<JsonMap> explain(OrmPlan plan) {
+    _ensureActive();
+    return _core._explainOnSource(plan, _inner);
   }
 
   void _ensureActive() {
