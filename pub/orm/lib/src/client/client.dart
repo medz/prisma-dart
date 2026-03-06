@@ -1062,7 +1062,9 @@ class ModelDelegate {
     this,
   );
 
-  ModelQuery query() => ModelQuery._(this, OrmReadQuerySpec());
+  ModelQuery query() => _queryFromSpec(OrmReadQuerySpec());
+
+  ModelQuery _queryFromSpec(OrmReadQuerySpec spec) => ModelQuery._(this, spec);
 
   ModelQuery where(JsonMap where) => query().where(where);
 
@@ -1166,22 +1168,19 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) async {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(
-        where: where,
-        skip: skip,
-        take: take,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: select,
-        include: include,
-        cursor: cursor,
-        page: page,
-      ),
-    );
-    return prepared.plan;
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    ),
+  ).toPlan();
 
   Future<List<JsonMap>> all({
     JsonMap where = const <String, Object?>{},
@@ -1193,22 +1192,19 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) async {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(
-        where: where,
-        skip: skip,
-        take: take,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: select,
-        include: include,
-        cursor: cursor,
-        page: page,
-      ),
-    );
-    return prepared.all();
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    ),
+  ).all();
 
   Future<OrmPageResult<JsonMap>> pageResult({
     JsonMap where = const <String, Object?>{},
@@ -1216,18 +1212,15 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     required OrmReadPagePlan page,
-  }) async {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(
-        where: where,
-        orderBy: orderBy,
-        select: select,
-        include: include,
-        page: page,
-      ),
-    );
-    return prepared.pageResult();
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      orderBy: orderBy,
+      select: select,
+      include: include,
+      page: page,
+    ),
+  ).pageResult();
 
   Stream<JsonMap> stream({
     JsonMap where = const <String, Object?>{},
@@ -1239,33 +1232,27 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) async* {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(
-        where: where,
-        skip: skip,
-        take: take,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: select,
-        include: include,
-        cursor: cursor,
-        page: page,
-      ),
-    );
-    yield* prepared.stream();
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    ),
+  ).stream();
 
   Future<JsonMap?> oneOrNull({
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) async {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(where: where, select: select, include: include),
-    );
-    return prepared.oneOrNull();
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).oneOrNull();
 
   Future<JsonMap?> firstOrNull({
     JsonMap where = const <String, Object?>{},
@@ -1274,51 +1261,44 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) async {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(
-        where: where,
-        skip: skip,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: select,
-        include: include,
-      ),
-    );
-    return prepared.firstOrNull();
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      skip: skip,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+    ),
+  ).firstOrNull();
 
   Future<int> count({
     JsonMap where = const <String, Object?>{},
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) async {
-    final rows = await _readAllInternal(
-      action: OrmAction.read,
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
       where: where,
       orderBy: orderBy,
       cursor: cursor,
       page: page,
-      includeDepth: 0,
-    );
-    return rows.length;
-  }
+    ),
+  ).count();
 
   Future<bool> exists({
     JsonMap where = const <String, Object?>{},
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) async {
-    final rowCount = await count(
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
       where: where,
       orderBy: orderBy,
       cursor: cursor,
       page: page,
-    );
-    return rowCount > 0;
-  }
+    ),
+  ).exists();
 
   Future<JsonMap> inspectPlan({
     JsonMap where = const <String, Object?>{},
@@ -1330,22 +1310,19 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) async {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(
-        where: where,
-        skip: skip,
-        take: take,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: select,
-        include: include,
-        cursor: cursor,
-        page: page,
-      ),
-    );
-    return prepared.inspectPlan();
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    ),
+  ).inspectPlan();
 
   Future<JsonMap> explain({
     JsonMap where = const <String, Object?>{},
@@ -1357,22 +1334,19 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap? cursor,
     OrmReadPagePlan? page,
-  }) async {
-    final prepared = await prepareRead(
-      spec: OrmReadQuerySpec(
-        where: where,
-        skip: skip,
-        take: take,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: select,
-        include: include,
-        cursor: cursor,
-        page: page,
-      ),
-    );
-    return prepared.explain();
-  }
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+      cursor: cursor,
+      page: page,
+    ),
+  ).explain();
 
   Future<JsonMap> aggregate({
     JsonMap where = const <String, Object?>{},
@@ -1385,6 +1359,158 @@ class ModelDelegate {
     List<String> max = const <String>[],
     List<String> sum = const <String>[],
     List<String> avg = const <String>[],
+  }) =>
+      _queryFromSpec(
+        OrmReadQuerySpec(
+          where: where,
+          orderBy: orderBy,
+          cursor: cursor,
+          page: page,
+        ),
+      ).aggregate(
+        countAll: countAll,
+        count: count,
+        min: min,
+        max: max,
+        sum: sum,
+        avg: avg,
+      );
+
+  Future<List<JsonMap>> groupBy({
+    required List<String> by,
+    JsonMap where = const <String, Object?>{},
+    JsonMap? cursor,
+    OrmReadPagePlan? page,
+    JsonMap having = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    bool countAll = false,
+    List<String> count = const <String>[],
+    List<String> min = const <String>[],
+    List<String> max = const <String>[],
+    List<String> sum = const <String>[],
+    List<String> avg = const <String>[],
+  }) =>
+      _queryFromSpec(
+        OrmReadQuerySpec(
+          where: where,
+          skip: skip,
+          take: take,
+          orderBy: orderBy,
+          cursor: cursor,
+          page: page,
+        ),
+      ).groupBy(
+        by: by,
+        having: having,
+        countAll: countAll,
+        count: count,
+        min: min,
+        max: max,
+        sum: sum,
+        avg: avg,
+      );
+
+  Future<JsonMap> create({
+    required JsonMap data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(select: select, include: include),
+  ).create(data: data);
+
+  Future<JsonMap> createNested({
+    required JsonMap data,
+    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(select: select, include: include),
+  ).createNested(data: data, create: create);
+
+  Future<JsonMap?> updateNested({
+    JsonMap where = const <String, Object?>{},
+    required JsonMap data,
+    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).updateNested(data: data, create: create);
+
+  Future<List<JsonMap>> createMany({
+    required List<JsonMap> data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(select: select, include: include),
+  ).createMany(data: data);
+
+  Future<int> updateMany({
+    JsonMap where = const <String, Object?>{},
+    required JsonMap data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).updateMany(data: data);
+
+  Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) =>
+      _queryFromSpec(OrmReadQuerySpec(where: where)).deleteMany();
+
+  Future<JsonMap> upsert({
+    required JsonMap where,
+    required JsonMap create,
+    required JsonMap update,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).upsert(create: create, update: update);
+
+  Future<JsonMap?> update({
+    JsonMap where = const <String, Object?>{},
+    required JsonMap data,
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).update(data: data);
+
+  Future<JsonMap?> delete({
+    JsonMap where = const <String, Object?>{},
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(where: where, select: select, include: include),
+  ).delete();
+
+  Future<int> _count({required OrmReadQuerySpec spec}) async {
+    final rows = await _readAllInternal(
+      action: OrmAction.read,
+      where: spec.where,
+      orderBy: spec.orderBy,
+      cursor: spec.cursor,
+      page: spec.page,
+      includeDepth: 0,
+    );
+    return rows.length;
+  }
+
+  Future<bool> _exists({required OrmReadQuerySpec spec}) async {
+    final rowCount = await _count(spec: spec);
+    return rowCount > 0;
+  }
+
+  Future<JsonMap> _aggregate({
+    required OrmReadQuerySpec spec,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
   }) async {
     _assertKnownAggregateFields(fields: count, source: 'aggregate.count');
     _assertKnownAggregateFields(fields: min, source: 'aggregate.min');
@@ -1394,10 +1520,10 @@ class ModelDelegate {
 
     final rows = await _readAllInternal(
       action: OrmAction.read,
-      where: where,
-      orderBy: orderBy,
-      cursor: cursor,
-      page: page,
+      where: spec.where,
+      orderBy: spec.orderBy,
+      cursor: spec.cursor,
+      page: spec.page,
       select: _buildAggregateSelect(
         count: count,
         min: min,
@@ -1419,21 +1545,16 @@ class ModelDelegate {
     );
   }
 
-  Future<List<JsonMap>> groupBy({
+  Future<List<JsonMap>> _groupBy({
+    required OrmReadQuerySpec spec,
     required List<String> by,
-    JsonMap where = const <String, Object?>{},
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
-    JsonMap having = const <String, Object?>{},
-    int? skip,
-    int? take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    bool countAll = false,
-    List<String> count = const <String>[],
-    List<String> min = const <String>[],
-    List<String> max = const <String>[],
-    List<String> sum = const <String>[],
-    List<String> avg = const <String>[],
+    required JsonMap having,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
   }) async {
     if (by.isEmpty) {
       throw runtimeError(
@@ -1442,20 +1563,20 @@ class ModelDelegate {
         details: <String, Object?>{'model': modelName},
       );
     }
-    if (skip case final offset? when offset < 0) {
+    if (spec.skip case final offset? when offset < 0) {
       throw PlanInvalidPaginationException(key: 'skip', value: offset);
     }
-    if (take case final limit? when limit < 0) {
+    if (spec.take case final limit? when limit < 0) {
       throw PlanInvalidPaginationException(key: 'take', value: limit);
     }
-    if (cursor != null || page != null) {
+    if (spec.cursor != null || spec.page != null) {
       throw runtimeError(
         'PLAN.GROUP_BY_CURSOR_WINDOW_UNSUPPORTED',
         'GroupBy does not support cursor or page windows yet.',
         details: <String, Object?>{
           'model': modelName,
-          if (cursor != null) 'cursor': cursor,
-          if (page != null) 'page': page.toJson(),
+          if (spec.cursor != null) 'cursor': spec.cursor,
+          if (spec.page != null) 'page': spec.page!.toJson(),
         },
       );
     }
@@ -1467,7 +1588,7 @@ class ModelDelegate {
     _assertKnownAggregateFields(fields: sum, source: 'groupBy.sum');
     _assertKnownAggregateFields(fields: avg, source: 'groupBy.avg');
     _assertGroupByOrderByFields(
-      orderBy: orderBy,
+      orderBy: spec.orderBy,
       by: by,
       countAll: countAll,
       count: count,
@@ -1489,7 +1610,7 @@ class ModelDelegate {
 
     final rows = await _readAllInternal(
       action: OrmAction.read,
-      where: where,
+      where: spec.where,
       select: _buildAggregateSelect(
         count: by.followedBy(count).toList(growable: false),
         min: min,
@@ -1542,112 +1663,101 @@ class ModelDelegate {
           .toList(growable: false);
     }
 
-    if (orderBy.isNotEmpty) {
+    if (spec.orderBy.isNotEmpty) {
       results.sort(
         (left, right) => _compareRowsForGroupByOrderBy(
           left: left,
           right: right,
-          orderBy: orderBy,
+          orderBy: spec.orderBy,
         ),
       );
     }
 
-    return _sliceRows(rows: results, skip: skip, take: take);
+    return _sliceRows(rows: results, skip: spec.skip, take: spec.take);
   }
 
-  Future<JsonMap> create({
+  Future<JsonMap> _create({
     required JsonMap data,
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required OrmReadQuerySpec spec,
   }) => _RepositoryMutationExecutor(
     this,
-  ).create(data: data, select: select, include: include);
+  ).create(data: data, select: spec.select, include: spec.include);
 
-  Future<JsonMap> createNested({
+  Future<JsonMap> _createNested({
     required JsonMap data,
-    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required Map<String, List<JsonMap>> create,
+    required OrmReadQuerySpec spec,
   }) => _RepositoryMutationExecutor(this).createNested(
     data: data,
     nestedCreate: create,
-    select: select,
-    include: include,
+    select: spec.select,
+    include: spec.include,
   );
 
-  Future<JsonMap?> updateNested({
-    JsonMap where = const <String, Object?>{},
-    required JsonMap data,
-    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) => _RepositoryMutationExecutor(this).updateNested(
-    where: where,
-    data: data,
-    nestedCreate: create,
-    select: select,
-    include: include,
-  );
-
-  Future<List<JsonMap>> createMany({
+  Future<List<JsonMap>> _createMany({
     required List<JsonMap> data,
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required OrmReadQuerySpec spec,
   }) => _RepositoryMutationExecutor(
     this,
-  ).createMany(data: data, select: select, include: include);
+  ).createMany(data: data, select: spec.select, include: spec.include);
 
-  Future<int> updateMany({
-    JsonMap where = const <String, Object?>{},
+  Future<int> _updateMany({
     required JsonMap data,
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required OrmReadQuerySpec spec,
   }) async {
     _throwApiNotImplemented(
       'orm.updateMany',
       details: <String, Object?>{
         'model': modelName,
-        'where': where,
+        'where': spec.where,
         'data': data,
-        'select': select,
-        'include': include.keys.toList(growable: false),
+        'select': spec.select,
+        'include': spec.include.keys.toList(growable: false),
       },
     );
   }
 
-  Future<int> deleteMany({JsonMap where = const <String, Object?>{}}) =>
-      _RepositoryMutationExecutor(this).deleteMany(where: where);
+  Future<int> _deleteMany({required OrmReadQuerySpec spec}) =>
+      _RepositoryMutationExecutor(this).deleteMany(where: spec.where);
 
-  Future<JsonMap> upsert({
-    required JsonMap where,
+  Future<JsonMap> _upsert({
     required JsonMap create,
     required JsonMap update,
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required OrmReadQuerySpec spec,
   }) => _RepositoryMutationExecutor(this).upsert(
-    where: where,
+    where: spec.where,
     create: create,
     update: update,
-    select: select,
-    include: include,
+    select: spec.select,
+    include: spec.include,
   );
 
-  Future<JsonMap?> update({
-    JsonMap where = const <String, Object?>{},
+  Future<JsonMap?> _update({
     required JsonMap data,
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) => _RepositoryMutationExecutor(
-    this,
-  ).update(where: where, data: data, select: select, include: include);
+    required OrmReadQuerySpec spec,
+  }) => _RepositoryMutationExecutor(this).update(
+    where: spec.where,
+    data: data,
+    select: spec.select,
+    include: spec.include,
+  );
 
-  Future<JsonMap?> delete({
-    JsonMap where = const <String, Object?>{},
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) => _RepositoryMutationExecutor(
-    this,
-  ).delete(where: where, select: select, include: include);
+  Future<JsonMap?> _updateNested({
+    required JsonMap data,
+    required Map<String, List<JsonMap>> create,
+    required OrmReadQuerySpec spec,
+  }) => _RepositoryMutationExecutor(this).updateNested(
+    where: spec.where,
+    data: data,
+    nestedCreate: create,
+    select: spec.select,
+    include: spec.include,
+  );
+
+  Future<JsonMap?> _delete({required OrmReadQuerySpec spec}) =>
+      _RepositoryMutationExecutor(
+        this,
+      ).delete(where: spec.where, select: spec.select, include: spec.include);
 
   Future<List<JsonMap>> _readAllInternal({
     required OrmAction action,
@@ -3299,22 +3409,12 @@ final class ModelQuery {
 
   Future<int> count() {
     _assertReadExecutionSupported('count');
-    return _delegate.count(
-      where: _state.where,
-      orderBy: _state.orderBy,
-      cursor: _state.cursor,
-      page: _state.page,
-    );
+    return _delegate._count(spec: _state);
   }
 
   Future<bool> exists() {
     _assertReadExecutionSupported('exists');
-    return _delegate.exists(
-      where: _state.where,
-      orderBy: _state.orderBy,
-      cursor: _state.cursor,
-      page: _state.page,
-    );
+    return _delegate._exists(spec: _state);
   }
 
   Future<JsonMap> explain() async {
@@ -3330,11 +3430,8 @@ final class ModelQuery {
     List<String> avg = const <String>[],
   }) {
     _assertReadExecutionSupported('aggregate');
-    return _delegate.aggregate(
-      where: _state.where,
-      orderBy: _state.orderBy,
-      cursor: _state.cursor,
-      page: _state.page,
+    return _delegate._aggregate(
+      spec: _state,
       countAll: countAll,
       count: count,
       min: min,
@@ -3366,15 +3463,10 @@ final class ModelQuery {
         },
       );
     }
-    return _delegate.groupBy(
+    return _delegate._groupBy(
+      spec: _state,
       by: by,
-      where: _state.where,
-      cursor: _state.cursor,
-      page: _state.page,
       having: having,
-      skip: _state.skip,
-      take: _state.take,
-      orderBy: _state.orderBy,
       countAll: countAll,
       count: count,
       min: min,
@@ -3425,56 +3517,40 @@ final class ModelQuery {
 
   Future<JsonMap> create({required JsonMap data}) {
     _assertMutationQueryState(action: 'create', allowWhere: false);
-    return _delegate.create(
-      data: data,
-      select: _state.select,
-      include: _state.include,
-    );
+    return _delegate._create(data: data, spec: _state);
+  }
+
+  Future<JsonMap> createNested({
+    required JsonMap data,
+    Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
+  }) {
+    _assertMutationQueryState(action: 'createNested', allowWhere: false);
+    return _delegate._createNested(data: data, create: create, spec: _state);
   }
 
   Future<List<JsonMap>> createMany({required List<JsonMap> data}) {
     _assertMutationQueryState(action: 'createMany', allowWhere: false);
-    return _delegate.createMany(
-      data: data,
-      select: _state.select,
-      include: _state.include,
-    );
+    return _delegate._createMany(data: data, spec: _state);
   }
 
   Future<int> updateMany({required JsonMap data}) {
     _assertMutationQueryState(action: 'updateMany');
-    return _delegate.updateMany(
-      where: _state.where,
-      data: data,
-      select: _state.select,
-      include: _state.include,
-    );
+    return _delegate._updateMany(data: data, spec: _state);
   }
 
   Future<int> deleteMany() {
     _assertMutationQueryState(action: 'deleteMany');
-    return _delegate.deleteMany(where: _state.where);
+    return _delegate._deleteMany(spec: _state);
   }
 
   Future<JsonMap> upsert({required JsonMap create, required JsonMap update}) {
     _assertMutationQueryState(action: 'upsert');
-    return _delegate.upsert(
-      where: _state.where,
-      create: create,
-      update: update,
-      select: _state.select,
-      include: _state.include,
-    );
+    return _delegate._upsert(create: create, update: update, spec: _state);
   }
 
   Future<JsonMap?> update({required JsonMap data}) {
     _assertMutationQueryState(action: 'update');
-    return _delegate.update(
-      where: _state.where,
-      data: data,
-      select: _state.select,
-      include: _state.include,
-    );
+    return _delegate._update(data: data, spec: _state);
   }
 
   Future<JsonMap?> updateNested({
@@ -3482,22 +3558,12 @@ final class ModelQuery {
     Map<String, List<JsonMap>> create = const <String, List<JsonMap>>{},
   }) {
     _assertMutationQueryState(action: 'updateNested');
-    return _delegate.updateNested(
-      where: _state.where,
-      data: data,
-      create: create,
-      select: _state.select,
-      include: _state.include,
-    );
+    return _delegate._updateNested(data: data, create: create, spec: _state);
   }
 
   Future<JsonMap?> delete() {
     _assertMutationQueryState(action: 'delete');
-    return _delegate.delete(
-      where: _state.where,
-      select: _state.select,
-      include: _state.include,
-    );
+    return _delegate._delete(spec: _state);
   }
 
   ModelQuery _next(OrmReadQuerySpec nextState) =>
