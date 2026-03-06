@@ -10,6 +10,27 @@ enum OrmReadResultMode { all, firstOrNull, oneOrNull }
 enum OrmMutationResultMode { row, rowOrNull }
 
 @immutable
+final class OrmRepositoryTrace {
+  final String operationId;
+  final String kind;
+  final int step;
+  final String phase;
+  final String strategy;
+  final String? relation;
+  final int? itemIndex;
+
+  const OrmRepositoryTrace({
+    required this.operationId,
+    required this.kind,
+    required this.step,
+    required this.phase,
+    required this.strategy,
+    this.relation,
+    this.itemIndex,
+  });
+}
+
+@immutable
 final class OrmOrderBy {
   final String field;
   final SortOrder order;
@@ -91,6 +112,7 @@ final class OrmPlan {
   final String? profileHash;
   final String? lane;
   final JsonMap annotations;
+  final OrmRepositoryTrace? repositoryTrace;
   final String model;
   final OrmAction action;
   final OrmReadPlan? read;
@@ -103,6 +125,7 @@ final class OrmPlan {
     this.profileHash,
     this.lane,
     JsonMap annotations = const <String, Object?>{},
+    this.repositoryTrace,
     required this.model,
     required this.action,
     this.read,
@@ -116,6 +139,7 @@ final class OrmPlan {
     String? profileHash,
     String? lane,
     JsonMap annotations = const <String, Object?>{},
+    OrmRepositoryTrace? repositoryTrace,
     required String model,
     JsonMap where = const <String, Object?>{},
     int? skip,
@@ -133,6 +157,7 @@ final class OrmPlan {
       profileHash: profileHash,
       lane: lane,
       annotations: annotations,
+      repositoryTrace: repositoryTrace,
       model: model,
       action: OrmAction.read,
       read: OrmReadPlan(
@@ -155,6 +180,7 @@ final class OrmPlan {
     String? profileHash,
     String? lane,
     JsonMap annotations = const <String, Object?>{},
+    OrmRepositoryTrace? repositoryTrace,
     required String model,
     required OrmAction action,
     JsonMap where = const <String, Object?>{},
@@ -169,6 +195,7 @@ final class OrmPlan {
       profileHash: profileHash,
       lane: lane,
       annotations: annotations,
+      repositoryTrace: repositoryTrace,
       model: model,
       action: action,
       mutation: OrmMutationPlan(

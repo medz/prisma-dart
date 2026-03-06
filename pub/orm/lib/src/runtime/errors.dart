@@ -272,6 +272,18 @@ final class PlanResultModeActionInvalidException extends OrmRuntimeError {
        );
 }
 
+final class PlanRepositoryTraceInvalidException extends OrmRuntimeError {
+  PlanRepositoryTraceInvalidException({
+    required String reason,
+    Map<String, Object?> details = const <String, Object?>{},
+  }) : super(
+         code: 'PLAN.REPOSITORY_TRACE_INVALID',
+         category: RuntimeErrorCategory.plan,
+         message: 'Repository trace metadata is invalid for this plan.',
+         details: <String, Object?>{'reason': reason, ...details},
+       );
+}
+
 final class RuntimeCreateResultMissingException extends OrmRuntimeError {
   RuntimeCreateResultMissingException({required String model})
     : super(

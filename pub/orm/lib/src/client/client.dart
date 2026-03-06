@@ -200,24 +200,22 @@ final class _RepositoryOperation {
     );
   }
 
-  JsonMap nextAnnotations({
+  OrmRepositoryTrace nextTrace({
     required String phase,
     required String strategy,
     String? relation,
     int? itemIndex,
   }) {
     _step += 1;
-    return <String, Object?>{
-      'repository': <String, Object?>{
-        'operationId': id,
-        'kind': kind,
-        'step': _step,
-        'phase': phase,
-        'strategy': strategy,
-        if (relation != null) 'relation': relation,
-        if (itemIndex != null) 'itemIndex': itemIndex,
-      },
-    };
+    return OrmRepositoryTrace(
+      operationId: id,
+      kind: kind,
+      step: _step,
+      phase: phase,
+      strategy: strategy,
+      relation: relation,
+      itemIndex: itemIndex,
+    );
   }
 }
 
@@ -1364,6 +1362,7 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap annotations = const <String, Object?>{},
+    OrmRepositoryTrace? repositoryTrace,
   }) async {
     if (skip case final offset? when offset < 0) {
       throw PlanInvalidPaginationException(key: 'skip', value: offset);
@@ -1410,6 +1409,7 @@ class ModelDelegate {
                   'distinct': List<String>.from(distinct, growable: false),
                 },
         ),
+        repositoryTrace: repositoryTrace,
         model: modelName,
         where: normalizedWhere,
         skip: isCollectionRead && distinct.isEmpty ? skip : null,
@@ -1433,6 +1433,7 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap annotations = const <String, Object?>{},
+    OrmRepositoryTrace? repositoryTrace,
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
@@ -1445,6 +1446,7 @@ class ModelDelegate {
       select: select,
       include: include,
       annotations: annotations,
+      repositoryTrace: repositoryTrace,
     );
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
@@ -1473,6 +1475,7 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap annotations = const <String, Object?>{},
+    OrmRepositoryTrace? repositoryTrace,
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
@@ -1484,6 +1487,7 @@ class ModelDelegate {
       select: select,
       include: include,
       annotations: annotations,
+      repositoryTrace: repositoryTrace,
     );
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);
@@ -1513,6 +1517,7 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     JsonMap annotations = const <String, Object?>{},
+    OrmRepositoryTrace? repositoryTrace,
     required int includeDepth,
   }) async {
     final prepared = await _buildReadPlan(
@@ -1521,6 +1526,7 @@ class ModelDelegate {
       select: select,
       include: include,
       annotations: annotations,
+      repositoryTrace: repositoryTrace,
     );
     final normalizedInclude = prepared.include;
     final response = await _client.execute(prepared.plan);

@@ -180,7 +180,7 @@ final class _RepositoryIncludePlanner {
           orderBy: relationInclude.orderBy,
           select: relationInclude.select,
           include: relationInclude.include,
-          annotations: operation.nextAnnotations(
+          repositoryTrace: operation.nextTrace(
             phase: 'include.load',
             strategy: 'multiQuery',
             relation: relationName,
@@ -226,7 +226,7 @@ final class _RepositoryIncludePlanner {
         relation: relation,
       ),
       include: relationInclude.include,
-      annotations: operation.nextAnnotations(
+      repositoryTrace: operation.nextTrace(
         phase: 'include.load',
         strategy: 'singleQuery',
         relation: relation.name,

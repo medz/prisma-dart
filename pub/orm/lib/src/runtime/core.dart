@@ -53,6 +53,7 @@ final class RuntimeTelemetryEvent {
   final RuntimeTelemetryOutcome outcome;
   final int durationMs;
   final DateTime recordedAt;
+  final OrmRepositoryTrace? repositoryTrace;
 
   const RuntimeTelemetryEvent({
     required this.model,
@@ -60,7 +61,18 @@ final class RuntimeTelemetryEvent {
     required this.outcome,
     required this.durationMs,
     required this.recordedAt,
+    this.repositoryTrace,
   });
+
+  String? get operationId => repositoryTrace?.operationId;
+
+  String? get operationKind => repositoryTrace?.kind;
+
+  int? get operationStep => repositoryTrace?.step;
+
+  String? get operationPhase => repositoryTrace?.phase;
+
+  String? get operationStrategy => repositoryTrace?.strategy;
 }
 
 abstract interface class OrmRuntimeQueryable {
@@ -226,6 +238,7 @@ final class OrmRuntimeCore implements RuntimeCore {
         outcome: RuntimeTelemetryOutcome.success,
         durationMs: result.latencyMs,
         recordedAt: DateTime.now(),
+        repositoryTrace: plan.repositoryTrace,
       );
 
       return response;
@@ -237,6 +250,7 @@ final class OrmRuntimeCore implements RuntimeCore {
         outcome: RuntimeTelemetryOutcome.runtimeError,
         durationMs: latencyMs,
         recordedAt: DateTime.now(),
+        repositoryTrace: plan.repositoryTrace,
       );
 
       for (final plugin in _plugins) {
@@ -346,6 +360,7 @@ final class OrmRuntimeCore implements RuntimeCore {
 
     final model = contract.models[plan.model]!;
     _assertPlanModes(plan);
+    _assertRepositoryTrace(plan);
     switch (plan.action) {
       case OrmAction.read:
         _assertReadPlan(model: model, plan: plan.read!);
@@ -376,6 +391,74 @@ final class OrmRuntimeCore implements RuntimeCore {
             hasMutation: plan.mutation != null,
           );
         }
+    }
+  }
+
+  void _assertRepositoryTrace(OrmPlan plan) {
+    if (plan.annotations.containsKey('repository')) {
+      throw PlanRepositoryTraceInvalidException(
+        reason: 'legacyAnnotation',
+        details: <String, Object?>{'model': plan.model},
+      );
+    }
+
+    final trace = plan.repositoryTrace;
+    if (trace == null) {
+      return;
+    }
+
+    if (trace.operationId.trim().isEmpty) {
+      throw PlanRepositoryTraceInvalidException(
+        reason: 'operationIdEmpty',
+        details: <String, Object?>{'model': plan.model},
+      );
+    }
+    if (trace.kind.trim().isEmpty) {
+      throw PlanRepositoryTraceInvalidException(
+        reason: 'kindEmpty',
+        details: <String, Object?>{
+          'model': plan.model,
+          'operationId': trace.operationId,
+        },
+      );
+    }
+    if (trace.phase.trim().isEmpty) {
+      throw PlanRepositoryTraceInvalidException(
+        reason: 'phaseEmpty',
+        details: <String, Object?>{
+          'model': plan.model,
+          'operationId': trace.operationId,
+        },
+      );
+    }
+    if (trace.strategy.trim().isEmpty) {
+      throw PlanRepositoryTraceInvalidException(
+        reason: 'strategyEmpty',
+        details: <String, Object?>{
+          'model': plan.model,
+          'operationId': trace.operationId,
+        },
+      );
+    }
+    if (trace.step <= 0) {
+      throw PlanRepositoryTraceInvalidException(
+        reason: 'stepInvalid',
+        details: <String, Object?>{
+          'model': plan.model,
+          'operationId': trace.operationId,
+          'step': trace.step,
+        },
+      );
+    }
+    if (trace.itemIndex case final itemIndex? when itemIndex < 0) {
+      throw PlanRepositoryTraceInvalidException(
+        reason: 'itemIndexInvalid',
+        details: <String, Object?>{
+          'model': plan.model,
+          'operationId': trace.operationId,
+          'itemIndex': itemIndex,
+        },
+      );
     }
   }
 

@@ -357,6 +357,57 @@ void main() {
       await client.disconnect();
     });
 
+    test('rejects legacy and invalid typed repository trace metadata', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      await client.connect();
+
+      await expectLater(
+        client.execute(
+          OrmPlan.read(
+            contractHash: contract.hash,
+            model: 'User',
+            resultMode: OrmReadResultMode.all,
+            annotations: const <String, Object?>{
+              'repository': <String, Object?>{'operationId': 'legacy'},
+            },
+          ),
+        ),
+        throwsA(
+          isA<PlanRepositoryTraceInvalidException>().having(
+            (error) => error.details['reason'],
+            'reason',
+            'legacyAnnotation',
+          ),
+        ),
+      );
+
+      await expectLater(
+        client.execute(
+          OrmPlan.read(
+            contractHash: contract.hash,
+            model: 'User',
+            resultMode: OrmReadResultMode.all,
+            repositoryTrace: const OrmRepositoryTrace(
+              operationId: '',
+              kind: 'User.include',
+              step: 1,
+              phase: 'include.load',
+              strategy: 'multiQuery',
+            ),
+          ),
+        ),
+        throwsA(
+          isA<PlanRepositoryTraceInvalidException>().having(
+            (error) => error.details['reason'],
+            'reason',
+            'operationIdEmpty',
+          ),
+        ),
+      );
+
+      await client.disconnect();
+    });
+
     test('supports ordering and pagination in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
@@ -1123,31 +1174,31 @@ void main() {
       final createTraces = engine.executedPlans
           .map(_readRepositoryTrace)
           .toList(growable: false);
-      final createOperationId = createTraces.first['operationId'];
+      final createOperationId = createTraces.first.operationId;
       expect(createOperationId, isNotNull);
       expect(
-        createTraces.map((trace) => trace['operationId']).toSet(),
-        <Object?>{createOperationId},
+        createTraces.map((trace) => trace.operationId).toSet(),
+        <String>{createOperationId},
       );
       expect(
-        createTraces.map((trace) => trace['kind']).toList(growable: false),
-        <Object?>['User.createMany', 'User.createMany', 'User.createMany'],
+        createTraces.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.createMany', 'User.createMany', 'User.createMany'],
       );
       expect(
-        createTraces.map((trace) => trace['phase']).toList(growable: false),
-        <Object?>['item.create', 'item.create', 'item.create'],
+        createTraces.map((trace) => trace.phase).toList(growable: false),
+        <String>['item.create', 'item.create', 'item.create'],
       );
       expect(
-        createTraces.map((trace) => trace['strategy']).toList(growable: false),
-        <Object?>['transaction', 'transaction', 'transaction'],
+        createTraces.map((trace) => trace.strategy).toList(growable: false),
+        <String>['transaction', 'transaction', 'transaction'],
       );
       expect(
-        createTraces.map((trace) => trace['step']).toList(growable: false),
-        <Object?>[1, 2, 3],
+        createTraces.map((trace) => trace.step).toList(growable: false),
+        <int>[1, 2, 3],
       );
       expect(
-        createTraces.map((trace) => trace['itemIndex']).toList(growable: false),
-        <Object?>[0, 1, 2],
+        createTraces.map((trace) => trace.itemIndex).toList(growable: false),
+        <int?>[0, 1, 2],
       );
 
       engine.reset();
@@ -1162,31 +1213,31 @@ void main() {
       final deleteTraces = engine.executedPlans
           .map(_readRepositoryTrace)
           .toList(growable: false);
-      final deleteOperationId = deleteTraces.first['operationId'];
+      final deleteOperationId = deleteTraces.first.operationId;
       expect(deleteOperationId, isNotNull);
       expect(
-        deleteTraces.map((trace) => trace['operationId']).toSet(),
-        <Object?>{deleteOperationId},
+        deleteTraces.map((trace) => trace.operationId).toSet(),
+        <String>{deleteOperationId},
       );
       expect(
-        deleteTraces.map((trace) => trace['kind']).toList(growable: false),
-        <Object?>['User.deleteMany', 'User.deleteMany', 'User.deleteMany'],
+        deleteTraces.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.deleteMany', 'User.deleteMany', 'User.deleteMany'],
       );
       expect(
-        deleteTraces.map((trace) => trace['phase']).toList(growable: false),
-        <Object?>['item.delete', 'item.delete', 'item.delete'],
+        deleteTraces.map((trace) => trace.phase).toList(growable: false),
+        <String>['item.delete', 'item.delete', 'item.delete'],
       );
       expect(
-        deleteTraces.map((trace) => trace['strategy']).toList(growable: false),
-        <Object?>['transaction', 'transaction', 'transaction'],
+        deleteTraces.map((trace) => trace.strategy).toList(growable: false),
+        <String>['transaction', 'transaction', 'transaction'],
       );
       expect(
-        deleteTraces.map((trace) => trace['step']).toList(growable: false),
-        <Object?>[1, 2, 3],
+        deleteTraces.map((trace) => trace.step).toList(growable: false),
+        <int>[1, 2, 3],
       );
       expect(
-        deleteTraces.map((trace) => trace['itemIndex']).toList(growable: false),
-        <Object?>[0, 1, 2],
+        deleteTraces.map((trace) => trace.itemIndex).toList(growable: false),
+        <int?>[0, 1, 2],
       );
 
       final remaining = await users.count();
@@ -1325,15 +1376,15 @@ void main() {
         );
         final updateTrace = _readRepositoryTrace(engine.executedPlans.first);
         final reloadTrace = _readRepositoryTrace(engine.executedPlans.last);
-        expect(updateTrace['kind'], 'User.update');
-        expect(updateTrace['phase'], 'write');
-        expect(updateTrace['strategy'], 'singlePlan');
-        expect(updateTrace['step'], 1);
-        expect(reloadTrace['kind'], 'User.update');
-        expect(reloadTrace['phase'], 'fallback.reload');
-        expect(reloadTrace['strategy'], 'returningDisabledFallback');
-        expect(reloadTrace['step'], 2);
-        expect(reloadTrace['operationId'], updateTrace['operationId']);
+        expect(updateTrace.kind, 'User.update');
+        expect(updateTrace.phase, 'write');
+        expect(updateTrace.strategy, 'singlePlan');
+        expect(updateTrace.step, 1);
+        expect(reloadTrace.kind, 'User.update');
+        expect(reloadTrace.phase, 'fallback.reload');
+        expect(reloadTrace.strategy, 'returningDisabledFallback');
+        expect(reloadTrace.step, 2);
+        expect(reloadTrace.operationId, updateTrace.operationId);
 
         await client.disconnect();
       },
@@ -1373,15 +1424,15 @@ void main() {
         );
         final preloadTrace = _readRepositoryTrace(engine.executedPlans.first);
         final deleteTrace = _readRepositoryTrace(engine.executedPlans.last);
-        expect(preloadTrace['kind'], 'User.delete');
-        expect(preloadTrace['phase'], 'fallback.preload');
-        expect(preloadTrace['strategy'], 'returningDisabledFallback');
-        expect(preloadTrace['step'], 1);
-        expect(deleteTrace['kind'], 'User.delete');
-        expect(deleteTrace['phase'], 'write');
-        expect(deleteTrace['strategy'], 'singlePlan');
-        expect(deleteTrace['step'], 2);
-        expect(deleteTrace['operationId'], preloadTrace['operationId']);
+        expect(preloadTrace.kind, 'User.delete');
+        expect(preloadTrace.phase, 'fallback.preload');
+        expect(preloadTrace.strategy, 'returningDisabledFallback');
+        expect(preloadTrace.step, 1);
+        expect(deleteTrace.kind, 'User.delete');
+        expect(deleteTrace.phase, 'write');
+        expect(deleteTrace.strategy, 'singlePlan');
+        expect(deleteTrace.step, 2);
+        expect(deleteTrace.operationId, preloadTrace.operationId);
 
         final remaining = await users.oneOrNull(
           where: <String, Object?>{'id': 'u1'},
@@ -1583,26 +1634,26 @@ void main() {
       final createBranch = engine.executedPlans
           .map(_readRepositoryTrace)
           .toList(growable: false);
-      final createOperationId = createBranch.first['operationId'];
+      final createOperationId = createBranch.first.operationId;
       expect(
-        createBranch.map((trace) => trace['operationId']).toSet(),
-        <Object?>{createOperationId},
+        createBranch.map((trace) => trace.operationId).toSet(),
+        <String>{createOperationId},
       );
       expect(
-        createBranch.map((trace) => trace['kind']).toList(growable: false),
-        <Object?>['User.upsert', 'User.upsert'],
+        createBranch.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.upsert', 'User.upsert'],
       );
       expect(
-        createBranch.map((trace) => trace['phase']).toList(growable: false),
-        <Object?>['branch.lookup', 'branch.create'],
+        createBranch.map((trace) => trace.phase).toList(growable: false),
+        <String>['branch.lookup', 'branch.create'],
       );
       expect(
-        createBranch.map((trace) => trace['strategy']).toList(growable: false),
-        <Object?>['branch', 'branch'],
+        createBranch.map((trace) => trace.strategy).toList(growable: false),
+        <String>['branch', 'branch'],
       );
       expect(
-        createBranch.map((trace) => trace['step']).toList(growable: false),
-        <Object?>[1, 2],
+        createBranch.map((trace) => trace.step).toList(growable: false),
+        <int>[1, 2],
       );
 
       engine.reset();
@@ -1619,26 +1670,26 @@ void main() {
       final updateBranch = engine.executedPlans
           .map(_readRepositoryTrace)
           .toList(growable: false);
-      final updateOperationId = updateBranch.first['operationId'];
+      final updateOperationId = updateBranch.first.operationId;
       expect(
-        updateBranch.map((trace) => trace['operationId']).toSet(),
-        <Object?>{updateOperationId},
+        updateBranch.map((trace) => trace.operationId).toSet(),
+        <String>{updateOperationId},
       );
       expect(
-        updateBranch.map((trace) => trace['kind']).toList(growable: false),
-        <Object?>['User.upsert', 'User.upsert'],
+        updateBranch.map((trace) => trace.kind).toList(growable: false),
+        <String>['User.upsert', 'User.upsert'],
       );
       expect(
-        updateBranch.map((trace) => trace['phase']).toList(growable: false),
-        <Object?>['branch.lookup', 'branch.update'],
+        updateBranch.map((trace) => trace.phase).toList(growable: false),
+        <String>['branch.lookup', 'branch.update'],
       );
       expect(
-        updateBranch.map((trace) => trace['strategy']).toList(growable: false),
-        <Object?>['branch', 'branch'],
+        updateBranch.map((trace) => trace.strategy).toList(growable: false),
+        <String>['branch', 'branch'],
       );
       expect(
-        updateBranch.map((trace) => trace['step']).toList(growable: false),
-        <Object?>[1, 2],
+        updateBranch.map((trace) => trace.step).toList(growable: false),
+        <int>[1, 2],
       );
 
       await client.disconnect();
@@ -1937,15 +1988,15 @@ void main() {
 
         expect(rows, hasLength(2));
         final includePlans = engine.executedPlans
-            .where((plan) => plan.annotations.containsKey('repository'))
+            .where((plan) => plan.repositoryTrace != null)
             .toList(growable: false);
         expect(includePlans, hasLength(1));
         final trace = _readRepositoryTrace(includePlans.single);
-        expect(trace['kind'], 'User.include');
-        expect(trace['phase'], 'include.load');
-        expect(trace['strategy'], 'singleQuery');
-        expect(trace['relation'], 'posts');
-        expect(trace['step'], 1);
+        expect(trace.kind, 'User.include');
+        expect(trace.phase, 'include.load');
+        expect(trace.strategy, 'singleQuery');
+        expect(trace.relation, 'posts');
+        expect(trace.step, 1);
       } finally {
         await client.disconnect();
       }
@@ -1982,36 +2033,36 @@ void main() {
 
         expect(rows, hasLength(2));
         final includePlans = engine.executedPlans
-            .where((plan) => plan.annotations.containsKey('repository'))
+            .where((plan) => plan.repositoryTrace != null)
             .toList(growable: false);
         expect(includePlans, hasLength(2));
         final traces = includePlans
             .map(_readRepositoryTrace)
             .toList(growable: false);
-        final operationId = traces.first['operationId'];
+        final operationId = traces.first.operationId;
         expect(
-          traces.map((trace) => trace['operationId']).toSet(),
-          <Object?>{operationId},
+          traces.map((trace) => trace.operationId).toSet(),
+          <String>{operationId},
         );
         expect(
-          traces.map((trace) => trace['kind']).toList(growable: false),
-          <Object?>['User.include', 'User.include'],
+          traces.map((trace) => trace.kind).toList(growable: false),
+          <String>['User.include', 'User.include'],
         );
         expect(
-          traces.map((trace) => trace['phase']).toList(growable: false),
-          <Object?>['include.load', 'include.load'],
+          traces.map((trace) => trace.phase).toList(growable: false),
+          <String>['include.load', 'include.load'],
         );
         expect(
-          traces.map((trace) => trace['strategy']).toList(growable: false),
-          <Object?>['multiQuery', 'multiQuery'],
+          traces.map((trace) => trace.strategy).toList(growable: false),
+          <String>['multiQuery', 'multiQuery'],
         );
         expect(
-          traces.map((trace) => trace['relation']).toList(growable: false),
-          <Object?>['posts', 'posts'],
+          traces.map((trace) => trace.relation).toList(growable: false),
+          <String?>['posts', 'posts'],
         );
         expect(
-          traces.map((trace) => trace['step']).toList(growable: false),
-          <Object?>[1, 2],
+          traces.map((trace) => trace.step).toList(growable: false),
+          <int>[1, 2],
         );
       } finally {
         await client.disconnect();
@@ -2933,6 +2984,32 @@ void main() {
       expect(telemetry?.model, 'User');
       expect(telemetry?.action, OrmAction.read);
       expect(telemetry?.outcome, RuntimeTelemetryOutcome.success);
+      expect(telemetry?.repositoryTrace, isNull);
+      await client.disconnect();
+    });
+
+    test('records repository operation trace in telemetry', () async {
+      final engine = _CountingEngine(inner: MemoryEngine());
+      final client = OrmClient(contract: contract, engine: engine);
+      await client.connect();
+      final users = client.db.orm.model('User');
+
+      await users.createMany(
+        data: <JsonMap>[
+          <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
+          <String, Object?>{'id': 'u2', 'email': 'b@x.com'},
+        ],
+      );
+
+      final lastPlanTrace = _readRepositoryTrace(engine.executedPlans.last);
+      final telemetry = client.telemetry();
+      expect(telemetry, isNotNull);
+      expect(telemetry?.operationId, lastPlanTrace.operationId);
+      expect(telemetry?.operationKind, 'User.createMany');
+      expect(telemetry?.operationPhase, 'item.create');
+      expect(telemetry?.operationStrategy, 'transaction');
+      expect(telemetry?.operationStep, 2);
+      expect(telemetry?.repositoryTrace?.itemIndex, 1);
       await client.disconnect();
     });
 
@@ -3301,17 +3378,12 @@ JsonMap? _readRowValue(Object? value) {
   fail('Expected row map but got ${value.runtimeType}.');
 }
 
-Map<String, Object?> _readRepositoryTrace(OrmPlan plan) {
-  final trace = plan.annotations['repository'];
-  if (trace is Map<String, Object?>) {
-    return Map<String, Object?>.unmodifiable(trace);
+OrmRepositoryTrace _readRepositoryTrace(OrmPlan plan) {
+  final trace = plan.repositoryTrace;
+  if (trace == null) {
+    fail('Expected repository trace on plan ${plan.action.name}.');
   }
-  if (trace is Map<Object?, Object?>) {
-    return Map<String, Object?>.unmodifiable(
-      trace.map((key, value) => MapEntry(key.toString(), value)),
-    );
-  }
-  fail('Expected repository annotations on plan ${plan.action.name}.');
+  return trace;
 }
 
 List<JsonMap> _readRowsValue(Object? value) {

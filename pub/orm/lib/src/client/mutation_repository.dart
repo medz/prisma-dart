@@ -51,7 +51,7 @@ final class _RepositoryMutationExecutor {
       mutationResultMode: OrmMutationResultMode.row,
       data: data,
       normalized: normalized,
-      annotations: trace.nextAnnotations(
+      repositoryTrace: trace.nextTrace(
         phase: phase,
         strategy: strategy,
         relation: relation,
@@ -244,7 +244,7 @@ final class _RepositoryMutationExecutor {
       final existing = await scoped._readOneInternal(
         action: OrmAction.read,
         where: where,
-        annotations: trace.nextAnnotations(
+        repositoryTrace: trace.nextTrace(
           phase: 'branch.lookup',
           strategy: 'branch',
         ),
@@ -318,7 +318,7 @@ final class _RepositoryMutationExecutor {
       mutationResultMode: mutationResultMode,
       data: data,
       normalized: normalized,
-      annotations: operation.nextAnnotations(
+      repositoryTrace: operation.nextTrace(
         phase: phase,
         strategy: strategy,
         relation: relation,
@@ -378,7 +378,7 @@ final class _RepositoryMutationExecutor {
     required OrmMutationResultMode mutationResultMode,
     required JsonMap data,
     required _NormalizedMutationInput normalized,
-    required JsonMap annotations,
+    OrmRepositoryTrace? repositoryTrace,
   }) {
     return _PreparedMutationPlan(
       include: normalized.include,
@@ -388,7 +388,7 @@ final class _RepositoryMutationExecutor {
         storageHash: _delegate._client.contract.markerStorageHash,
         profileHash: _delegate._client.contract.profileHash,
         lane: 'orm',
-        annotations: annotations,
+        repositoryTrace: repositoryTrace,
         model: _delegate.modelName,
         action: action,
         where: normalized.where,
@@ -419,7 +419,7 @@ final class _RepositoryMutationExecutor {
         select: select,
         include: include,
       ),
-      annotations: operation.nextAnnotations(
+      repositoryTrace: operation.nextTrace(
         phase: 'fallback.preload',
         strategy: 'returningDisabledFallback',
       ),
@@ -451,7 +451,7 @@ final class _RepositoryMutationExecutor {
             select: select,
             include: include,
           ),
-          annotations: operation.nextAnnotations(
+          repositoryTrace: operation.nextTrace(
             phase: 'fallback.reload',
             strategy: 'returningDisabledFallback',
           ),
