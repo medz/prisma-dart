@@ -988,6 +988,14 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<List<UserData>>\s+all\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?distinct:\s*distinct,[\s\S]*?\)\.all\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate all(...) to route through typed query instead of rebuilding runtime read arguments.',
+        );
+        expect(
+          RegExp(
             r'Future<List<UserData>>\s+all\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
           ).hasMatch(generatedSource),
           isTrue,
@@ -1001,6 +1009,30 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected firstOrNull to expose typed distinct parameter in generated delegate.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+firstOrNull\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?distinct:\s*distinct,[\s\S]*?\)\.firstOrNull\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate firstOrNull(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserWhereUniqueInput\s*\{[\s\S]*?UserWhereInput\s+toWhereInput\(\)\s*\{[\s\S]*?return\s+UserWhereInput\.fromJson\(toJson\(\)\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected unique input to expose typed toWhereInput() conversion for read delegate reuse.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+oneOrNull\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where\.toWhereInput\(\),[\s\S]*?\)\.oneOrNull\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate oneOrNull(...) to route through typed query using unique-to-where conversion.',
         );
         expect(
           generatedSource.contains('Future<List<UserData>> findMany('),

@@ -1719,31 +1719,16 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final rows = await _delegate.all(');
-    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
-    buffer.writeln('      orderBy: runtimeOrderBy,');
-    buffer.writeln('      distinct: runtimeDistinct,');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln(
-      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
-    );
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).all();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1751,22 +1736,12 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.oneOrNull(');
-    buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where.toWhereInput(),');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).oneOrNull();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1783,31 +1758,15 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeOrderBy = orderBy.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
-    );
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.firstOrNull(');
-    buffer.writeln('      where: where.toJson(),');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
-    buffer.writeln('      orderBy: runtimeOrderBy,');
-    buffer.writeln('      distinct: runtimeDistinct,');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('      orderBy: orderBy,');
+    buffer.writeln('      distinct: distinct,');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).firstOrNull();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -3420,6 +3379,14 @@ final class TypedClientWriter {
     }
     buffer.writeln('    };');
     buffer.writeln('  }');
+    if (classKind == _TemplateClassKind.whereUnique) {
+      buffer.writeln();
+      buffer.writeln('  ${model.whereInputClassName} toWhereInput() {');
+      buffer.writeln(
+        '    return ${model.whereInputClassName}.fromJson(toJson());',
+      );
+      buffer.writeln('  }');
+    }
     if (includeLogicalWhere) {
       buffer.writeln();
       buffer.writeln('  bool get isEmpty =>');
