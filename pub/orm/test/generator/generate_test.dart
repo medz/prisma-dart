@@ -1650,11 +1650,19 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+aggregateWith\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_runtimeGrouped\(groupBy\)[\s\S]*?OrmAggregateSpec\([\s\S]*?countAll:\s*groupBy\.countAll,[\s\S]*?UserGroupByResult\.fromJson',
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+aggregate\([\s\S]*?_executeAggregate\(build\(UserAggregateBuilder\(\)\)\.toSpec\(\)\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserGroupedQuery.aggregateWith(...) to reuse the runtime grouped builder execution path.',
+              'Expected UserGroupedQuery.aggregate(...) to be the only public typed grouped aggregate terminal.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+aggregateWith\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserGroupedQuery to keep aggregateWith(...) out of the typed grouped surface.',
         );
         expect(
           RegExp(

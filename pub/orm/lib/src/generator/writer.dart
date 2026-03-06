@@ -3264,13 +3264,13 @@ final class TypedClientWriter {
       '  Future<List<${model.groupByResultClassName}>> aggregate($aggregateBuilderClassName Function($aggregateBuilderClassName aggregate) build) {',
     );
     buffer.writeln(
-      '    return aggregateWith(build($aggregateBuilderClassName()).toSpec());',
+      '    return _executeAggregate(build($aggregateBuilderClassName()).toSpec());',
     );
     buffer.writeln('  }');
     buffer.writeln();
 
     buffer.writeln(
-      '  Future<List<${model.groupByResultClassName}>> aggregateWith(${model.aggregateSpecClassName} aggregate) {',
+      '  Future<List<${model.groupByResultClassName}>> _executeAggregate(${model.aggregateSpecClassName} aggregate) {',
     );
     buffer.writeln('    return _executeSpec(');
     buffer.writeln('      _groupBy.copyWith(');

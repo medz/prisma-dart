@@ -3384,9 +3384,9 @@ final class ModelGroupedQuery {
 
   Future<List<JsonMap>> aggregate(
     OrmAggregateBuilder Function(OrmAggregateBuilder aggregate) build,
-  ) => aggregateWith(build(OrmAggregateBuilder()).toSpec());
+  ) => _executeAggregate(build(OrmAggregateBuilder()).toSpec());
 
-  Future<List<JsonMap>> aggregateWith(OrmAggregateSpec aggregate) {
+  Future<List<JsonMap>> _executeAggregate(OrmAggregateSpec aggregate) {
     _assertExecutionSupported('aggregate');
     _delegate._assertAggregateSpecRequested(aggregate, terminal: 'aggregate');
     return _prepareGrouped(

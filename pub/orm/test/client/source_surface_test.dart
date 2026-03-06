@@ -111,11 +111,19 @@ void main() {
         );
         expect(
           RegExp(
-            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+aggregateWith\(OrmAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_prepareGrouped\([\s\S]*?groupBy:\s*_groupBy\.copyWith\([\s\S]*?prepared\.execute\(\)',
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+aggregate\([\s\S]*?\)\s*=>\s*_executeAggregate\(build\(OrmAggregateBuilder\(\)\)\.toSpec\(\)\);',
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelGroupedQuery.aggregateWith(...) to prepare a grouped aggregate plan before execution.',
+              'Expected ModelGroupedQuery.aggregate(...) to be the only public grouped aggregate terminal.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?Future<List<JsonMap>>\s+aggregateWith\(',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to keep aggregateWith(...) out of the public grouped surface.',
         );
         expect(
           RegExp(
