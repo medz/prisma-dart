@@ -92,6 +92,14 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
 
   EngineResponse _read(List<JsonMap> bucket, OrmPlan plan) {
     final read = plan.read!;
+    return switch (read.shape) {
+      OrmReadShape.rows => _readRows(bucket, read),
+      OrmReadShape.aggregate => _readAggregate(bucket, read),
+      OrmReadShape.groupedAggregate => _readGroupedAggregate(bucket, read),
+    };
+  }
+
+  EngineResponse _readRows(List<JsonMap> bucket, OrmReadPlan read) {
     var rows = bucket.where((row) => _matches(row, read.where)).toList();
 
     if (read.orderBy.isNotEmpty) {
@@ -109,6 +117,102 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
         EngineResponse.buffered(_firstOrNull(projected)),
       _ => EngineResponse.buffered(projected),
     };
+  }
+
+  EngineResponse _readAggregate(List<JsonMap> bucket, OrmReadPlan read) {
+    final aggregate = read.aggregate!;
+    var rows = bucket.where((row) => _matches(row, read.where)).toList();
+
+    if (read.orderBy.isNotEmpty) {
+      rows.sort((left, right) => _compareRows(left, right, read.orderBy));
+    }
+
+    rows = _applyReadWindow(rows, read);
+    final projected = rows
+        .map((row) => _projectRow(row, read.select))
+        .toList(growable: false);
+
+    return EngineResponse.buffered(
+      _buildAggregateResult(
+        rows: projected,
+        countAll: aggregate.countAll,
+        count: aggregate.count,
+        min: aggregate.min,
+        max: aggregate.max,
+        sum: aggregate.sum,
+        avg: aggregate.avg,
+      ),
+    );
+  }
+
+  EngineResponse _readGroupedAggregate(List<JsonMap> bucket, OrmReadPlan read) {
+    final aggregate = read.aggregate!;
+    final groupBy = read.groupBy!;
+    final projected = bucket
+        .where((row) => _matches(row, read.where))
+        .map((row) => _projectRow(row, read.select))
+        .toList(growable: false);
+
+    final groupedRows = <_MemoryGroupKey, List<JsonMap>>{};
+    for (final row in projected) {
+      final key = _MemoryGroupKey(
+        groupBy.by.map((field) => row[field]).toList(growable: false),
+      );
+      groupedRows.putIfAbsent(key, () => <JsonMap>[]).add(row);
+    }
+
+    var results = <JsonMap>[];
+    for (final entry in groupedRows.entries) {
+      final rows = entry.value;
+      if (rows.isEmpty) {
+        continue;
+      }
+
+      final result = <String, Object?>{};
+      final first = rows.first;
+      for (final field in groupBy.by) {
+        result[field] = first[field];
+      }
+      result.addAll(
+        _buildAggregateResult(
+          rows: rows,
+          countAll: aggregate.countAll,
+          count: aggregate.count,
+          min: aggregate.min,
+          max: aggregate.max,
+          sum: aggregate.sum,
+          avg: aggregate.avg,
+        ),
+      );
+      results.add(Map<String, Object?>.unmodifiable(result));
+    }
+
+    if (groupBy.having.isNotEmpty) {
+      results = results
+          .where(
+            (row) => _matchesGroupByHaving(row: row, having: groupBy.having),
+          )
+          .toList(growable: false);
+    }
+
+    if (groupBy.orderBy.isNotEmpty) {
+      results.sort(
+        (left, right) => _compareRowsForGroupByOrderBy(
+          left: left,
+          right: right,
+          orderBy: groupBy.orderBy,
+        ),
+      );
+    }
+
+    if (groupBy.skip case final skip?) {
+      results = skip >= results.length ? <JsonMap>[] : results.sublist(skip);
+    }
+    if (groupBy.take case final take?) {
+      results = take >= results.length ? results : results.sublist(0, take);
+    }
+
+    return EngineResponse.buffered(results);
   }
 
   List<JsonMap> _applyReadWindow(List<JsonMap> rows, OrmReadPlan read) {
@@ -539,6 +643,318 @@ final class MemoryEngine implements OrmEngine, ConnectionCapableEngine {
     }
     return left.toString().compareTo(right.toString());
   }
+
+  JsonMap _buildAggregateResult({
+    required List<JsonMap> rows,
+    required bool countAll,
+    required List<String> count,
+    required List<String> min,
+    required List<String> max,
+    required List<String> sum,
+    required List<String> avg,
+  }) {
+    final result = <String, Object?>{};
+
+    if (countAll || count.isNotEmpty) {
+      final countResult = <String, Object?>{};
+      if (countAll) {
+        countResult['all'] = rows.length;
+      }
+      for (final field in count) {
+        countResult[field] = rows.where((row) => row[field] != null).length;
+      }
+      result['count'] = countResult;
+    }
+
+    if (min.isNotEmpty) {
+      result['min'] = <String, Object?>{
+        for (final field in min) field: _aggregateMin(rows: rows, field: field),
+      };
+    }
+    if (max.isNotEmpty) {
+      result['max'] = <String, Object?>{
+        for (final field in max) field: _aggregateMax(rows: rows, field: field),
+      };
+    }
+    if (sum.isNotEmpty) {
+      result['sum'] = <String, Object?>{
+        for (final field in sum) field: _aggregateSum(rows: rows, field: field),
+      };
+    }
+    if (avg.isNotEmpty) {
+      result['avg'] = <String, Object?>{
+        for (final field in avg) field: _aggregateAvg(rows: rows, field: field),
+      };
+    }
+
+    return Map<String, Object?>.unmodifiable(result);
+  }
+
+  Object? _aggregateMin({required List<JsonMap> rows, required String field}) {
+    Object? current;
+    for (final row in rows) {
+      final value = row[field];
+      if (value == null) {
+        continue;
+      }
+      if (current == null ||
+          _compareAggregateValues(left: value, right: current) < 0) {
+        current = value;
+      }
+    }
+    return current;
+  }
+
+  Object? _aggregateMax({required List<JsonMap> rows, required String field}) {
+    Object? current;
+    for (final row in rows) {
+      final value = row[field];
+      if (value == null) {
+        continue;
+      }
+      if (current == null ||
+          _compareAggregateValues(left: value, right: current) > 0) {
+        current = value;
+      }
+    }
+    return current;
+  }
+
+  num? _aggregateSum({required List<JsonMap> rows, required String field}) {
+    num? sum;
+    for (final row in rows) {
+      final value = row[field];
+      if (value is! num) {
+        continue;
+      }
+      sum = (sum ?? 0) + value;
+    }
+    return sum;
+  }
+
+  double? _aggregateAvg({required List<JsonMap> rows, required String field}) {
+    var count = 0;
+    var sum = 0.0;
+    for (final row in rows) {
+      final value = row[field];
+      if (value is! num) {
+        continue;
+      }
+      sum += value.toDouble();
+      count += 1;
+    }
+    return count == 0 ? null : sum / count;
+  }
+
+  int _compareAggregateValues({required Object left, required Object right}) {
+    if (left is num && right is num) {
+      return left.compareTo(right);
+    }
+    if (left is DateTime && right is DateTime) {
+      return left.compareTo(right);
+    }
+    if (left is Comparable<Object?> && left.runtimeType == right.runtimeType) {
+      return left.compareTo(right);
+    }
+    return left.toString().compareTo(right.toString());
+  }
+
+  bool _matchesGroupByHaving({required JsonMap row, required JsonMap having}) {
+    for (final entry in having.entries) {
+      final key = entry.key;
+      final value = entry.value;
+      if (key == 'AND' || key == 'OR' || key == 'NOT') {
+        if (!_matchesGroupByHavingLogical(
+          row: row,
+          operator: key,
+          operand: value,
+        )) {
+          return false;
+        }
+        continue;
+      }
+
+      final bucket = _normalizeAggregateBucket(key);
+      if (bucket != null) {
+        final aggregateFilters = _coerceWhereMap(value);
+        if (aggregateFilters == null) {
+          return false;
+        }
+        for (final aggregateEntry in aggregateFilters.entries) {
+          final aggregateValue = _readGroupByAggregateValue(
+            row: row,
+            bucket: bucket,
+            field: aggregateEntry.key,
+          );
+          if (!_matchesGroupByHavingCondition(
+            actual: aggregateValue,
+            condition: aggregateEntry.value,
+          )) {
+            return false;
+          }
+        }
+        continue;
+      }
+
+      if (!_matchesGroupByHavingCondition(actual: row[key], condition: value)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _matchesGroupByHavingLogical({
+    required JsonMap row,
+    required String operator,
+    required Object? operand,
+  }) {
+    final nestedMap = _coerceWhereMap(operand);
+    if (nestedMap != null) {
+      final matched = _matchesGroupByHaving(row: row, having: nestedMap);
+      return operator == 'NOT' ? !matched : matched;
+    }
+    final nestedList = _coerceWhereList(operand);
+    if (nestedList == null) {
+      return false;
+    }
+    return switch (operator) {
+      'AND' => nestedList.every(
+        (clause) => _matchesGroupByHaving(row: row, having: clause),
+      ),
+      'OR' => nestedList.any(
+        (clause) => _matchesGroupByHaving(row: row, having: clause),
+      ),
+      'NOT' => nestedList.every(
+        (clause) => !_matchesGroupByHaving(row: row, having: clause),
+      ),
+      _ => false,
+    };
+  }
+
+  bool _matchesGroupByHavingCondition({
+    required Object? actual,
+    required Object? condition,
+  }) {
+    final conditionMap = _coerceOperatorMap(condition);
+    if (conditionMap == null || conditionMap.isEmpty) {
+      return actual == condition;
+    }
+    for (final operator in _whereOperatorOrder) {
+      if (!conditionMap.containsKey(operator)) {
+        continue;
+      }
+      final operand = conditionMap[operator];
+      final matched = switch (operator) {
+        'equals' => actual == operand,
+        'not' =>
+          operand is Map
+              ? !_matchesGroupByHavingCondition(
+                  actual: actual,
+                  condition: operand,
+                )
+              : actual != operand,
+        'in' => _matchIn(actual, operand),
+        'notIn' => _matchNotIn(actual, operand),
+        'contains' => _matchStringOperation(actual, operand, operator),
+        'startsWith' => _matchStringOperation(actual, operand, operator),
+        'endsWith' => _matchStringOperation(actual, operand, operator),
+        'gt' => _matchComparison(actual, operand, operator),
+        'gte' => _matchComparison(actual, operand, operator),
+        'lt' => _matchComparison(actual, operand, operator),
+        'lte' => _matchComparison(actual, operand, operator),
+        _ => false,
+      };
+      if (!matched) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  String? _normalizeAggregateBucket(String bucket) {
+    return switch (bucket) {
+      'count' || '_count' => 'count',
+      'min' || '_min' => 'min',
+      'max' || '_max' => 'max',
+      'sum' || '_sum' => 'sum',
+      'avg' || '_avg' => 'avg',
+      _ => null,
+    };
+  }
+
+  Object? _readGroupByAggregateValue({
+    required JsonMap row,
+    required String bucket,
+    required String field,
+  }) {
+    final bucketValue = row[bucket];
+    if (bucketValue is! Map) {
+      return null;
+    }
+    return bucketValue[field];
+  }
+
+  Object? _readGroupByOrderByValue({
+    required JsonMap row,
+    required String field,
+  }) {
+    final fieldPath = field.split('.');
+    if (fieldPath.length != 2) {
+      return row[field];
+    }
+    final bucket = _normalizeAggregateBucket(fieldPath[0]);
+    if (bucket == null) {
+      return row[field];
+    }
+    return _readGroupByAggregateValue(
+      row: row,
+      bucket: bucket,
+      field: fieldPath[1],
+    );
+  }
+
+  int _compareRowsForGroupByOrderBy({
+    required JsonMap left,
+    required JsonMap right,
+    required List<OrmOrderBy> orderBy,
+  }) {
+    for (final clause in orderBy) {
+      final compared = _compareValues(
+        _readGroupByOrderByValue(row: left, field: clause.field),
+        _readGroupByOrderByValue(row: right, field: clause.field),
+      );
+      if (compared == 0) {
+        continue;
+      }
+      return clause.order == SortOrder.desc ? -compared : compared;
+    }
+    return 0;
+  }
+}
+
+final class _MemoryGroupKey {
+  final List<Object?> values;
+
+  const _MemoryGroupKey(this.values);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! _MemoryGroupKey || values.length != other.values.length) {
+      return false;
+    }
+    for (var index = 0; index < values.length; index++) {
+      if (values[index] != other.values[index]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll(values);
 }
 
 JsonMap _cloneRow(JsonMap source) => Map<String, Object?>.unmodifiable(source);

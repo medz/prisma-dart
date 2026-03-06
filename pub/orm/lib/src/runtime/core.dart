@@ -1134,14 +1134,6 @@ final class OrmRuntimeCore implements RuntimeCore {
           ],
           source: 'aggregate',
         );
-        throw runtimeError(
-          'PLAN.READ_SHAPE_UNSUPPORTED',
-          'Aggregate read plans are not executable through runtime yet.',
-          details: <String, Object?>{
-            'model': model.name,
-            'shape': plan.shape.name,
-          },
-        );
       case OrmReadShape.groupedAggregate:
         final aggregate = plan.aggregate;
         final groupBy = plan.groupBy;
@@ -1197,14 +1189,6 @@ final class OrmRuntimeCore implements RuntimeCore {
             details: <String, Object?>{'model': model.name},
           );
         }
-        throw runtimeError(
-          'PLAN.READ_SHAPE_UNSUPPORTED',
-          'Grouped aggregate plans are not executable through runtime yet.',
-          details: <String, Object?>{
-            'model': model.name,
-            'shape': plan.shape.name,
-          },
-        );
     }
   }
 

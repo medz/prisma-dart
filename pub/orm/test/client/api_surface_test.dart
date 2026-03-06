@@ -145,25 +145,79 @@ void main() {
     );
 
     test(
-      'runtime rejects direct execution of grouped aggregate plans',
+      'runtime executes direct aggregate and grouped aggregate plans',
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
         try {
-          final plan = await client.db.orm.model('User').query().groupedBy(
-            const <String>['email'],
-          ).toPlan();
+          final users = client.db.orm.model('User');
+          await users.create(
+            data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
+          );
+          await users.create(
+            data: <String, Object?>{'id': 4, 'email': 'a@x.com'},
+          );
+          await users.create(
+            data: <String, Object?>{'id': 3, 'email': 'b@x.com'},
+          );
 
-          await expectLater(
-            client.execute(plan),
-            throwsA(
-              isA<OrmRuntimeError>().having(
-                (error) => error.code,
-                'code',
-                'PLAN.READ_SHAPE_UNSUPPORTED',
+          final aggregateResponse = await client.execute(
+            OrmPlan.read(
+              contractHash: contract.hash,
+              model: 'User',
+              resultMode: OrmReadResultMode.all,
+              shape: OrmReadShape.aggregate,
+              select: const <String>['id'],
+              aggregate: OrmReadAggregatePlan(
+                countAll: true,
+                sum: <String>['id'],
               ),
             ),
           );
+          final aggregateRows = await aggregateResponse.rows
+              .map((row) => row as Map<String, Object?>)
+              .toList();
+          expect(aggregateRows, <Map<String, Object?>>[
+            <String, Object?>{
+              'count': <String, Object?>{'all': 3},
+              'sum': <String, Object?>{'id': 8},
+            },
+          ]);
+
+          final groupedResponse = await client.execute(
+            OrmPlan.read(
+              contractHash: contract.hash,
+              model: 'User',
+              resultMode: OrmReadResultMode.all,
+              shape: OrmReadShape.groupedAggregate,
+              select: const <String>['email', 'id'],
+              aggregate: OrmReadAggregatePlan(
+                countAll: true,
+                sum: <String>['id'],
+              ),
+              groupBy: OrmReadGroupByPlan(
+                by: <String>['email'],
+                orderBy: <OrmOrderBy>[
+                  OrmOrderBy('_sum.id', order: SortOrder.desc),
+                ],
+              ),
+            ),
+          );
+          final groupedRows = await groupedResponse.rows
+              .map((row) => row as Map<String, Object?>)
+              .toList();
+          expect(groupedRows, <Map<String, Object?>>[
+            <String, Object?>{
+              'email': 'a@x.com',
+              'count': <String, Object?>{'all': 2},
+              'sum': <String, Object?>{'id': 5},
+            },
+            <String, Object?>{
+              'email': 'b@x.com',
+              'count': <String, Object?>{'all': 1},
+              'sum': <String, Object?>{'id': 3},
+            },
+          ]);
         } finally {
           await client.disconnect();
         }

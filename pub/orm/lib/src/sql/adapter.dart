@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
+
 import '../core/sort_order.dart';
 import '../contract/contract.dart';
 import '../engine/engine.dart';
@@ -52,6 +54,8 @@ const Set<String> _toManyRelationWhereOperators = <String>{
 };
 const Set<String> _toOneRelationWhereOperators = <String>{'is', 'isNot'};
 const String _relationWhereAlias = '_rel';
+const String _aggregateEmptyAlias = '__empty';
+const String _aggregateRowAlias = '__row';
 
 final class SqlAdapter
     implements
@@ -123,6 +127,30 @@ final class SqlAdapter
     required String table,
     required String model,
   }) {
+    return switch (plan.read!.shape) {
+      OrmReadShape.rows => _lowerRowRead(
+        plan: plan,
+        table: table,
+        model: model,
+      ),
+      OrmReadShape.aggregate => _lowerAggregateRead(
+        plan: plan,
+        table: table,
+        model: model,
+      ),
+      OrmReadShape.groupedAggregate => _lowerGroupedAggregateRead(
+        plan: plan,
+        table: table,
+        model: model,
+      ),
+    };
+  }
+
+  SqlStatement _lowerRowRead({
+    required OrmPlan plan,
+    required String table,
+    required String model,
+  }) {
     final read = plan.read!;
     final whereParams = <Object?>[];
     final whereClause = _buildWhereClause(
@@ -162,6 +190,80 @@ final class SqlAdapter
       text:
           'SELECT ${_buildSelectColumns(read.select)} FROM ${_id(table)}'
           '$mergedWhereClause$orderByClause${_buildReadLimitOffsetClause(read, params)}',
+      parameters: params,
+    );
+  }
+
+  SqlStatement _lowerAggregateRead({
+    required OrmPlan plan,
+    required String table,
+    required String model,
+  }) {
+    final read = plan.read!;
+    final aggregate = read.aggregate!;
+    final selectors = _buildAggregateSelectExpressions(
+      aggregate: aggregate,
+      rowRef: _id('_agg'),
+    );
+    if (selectors.isEmpty) {
+      return SqlStatement(
+        action: plan.action,
+        text: 'SELECT 1 AS ${_id(_aggregateEmptyAlias)}',
+        parameters: const <Object?>[],
+      );
+    }
+
+    final baseFields = _aggregateBaseFields(aggregate);
+    final inner = _buildReadSourceQuery(
+      table: table,
+      model: model,
+      read: read,
+      selectColumns: baseFields.isEmpty
+          ? '1 AS ${_id(_aggregateRowAlias)}'
+          : baseFields.map(_id).join(', '),
+    );
+    return SqlStatement(
+      action: plan.action,
+      text:
+          'SELECT ${selectors.join(', ')} FROM (${inner.text}) AS ${_id('_agg')}',
+      parameters: inner.parameters,
+    );
+  }
+
+  SqlStatement _lowerGroupedAggregateRead({
+    required OrmPlan plan,
+    required String table,
+    required String model,
+  }) {
+    final read = plan.read!;
+    final aggregate = read.aggregate!;
+    final groupBy = read.groupBy!;
+    final params = <Object?>[];
+    final whereClause = _buildWhereClause(
+      model: model,
+      where: read.where,
+      params: params,
+    );
+    final selectClauses = <String>[
+      ...groupBy.by.map((field) => _id(field)),
+      ..._buildAggregateSelectExpressions(aggregate: aggregate, rowRef: null),
+    ];
+    final groupByClause = groupBy.by.map(_id).join(', ');
+    final havingClause = _buildGroupedHavingClause(
+      having: groupBy.having,
+      params: params,
+    );
+    final orderByClause = _buildGroupedOrderByClause(groupBy.orderBy);
+    final paginationClause = _buildGroupedLimitOffsetClause(
+      skip: groupBy.skip,
+      take: groupBy.take,
+      params: params,
+    );
+    return SqlStatement(
+      action: plan.action,
+      text:
+          'SELECT ${selectClauses.join(', ')} FROM ${_id(table)}'
+          '$whereClause GROUP BY $groupByClause$havingClause$orderByClause$paginationClause',
       parameters: params,
     );
   }
@@ -278,10 +380,26 @@ final class SqlAdapter
     required int affectedRows,
     required OrmPlan plan,
   }) {
-    return switch (plan.read!.resultMode) {
-      OrmReadResultMode.firstOrNull || OrmReadResultMode.oneOrNull =>
-        EngineResponse.buffered(_firstOrNull(rows), affectedRows: affectedRows),
-      _ => EngineResponse.buffered(rows, affectedRows: affectedRows),
+    final read = plan.read!;
+    return switch (read.shape) {
+      OrmReadShape.rows => switch (read.resultMode) {
+        OrmReadResultMode.firstOrNull ||
+        OrmReadResultMode.oneOrNull => EngineResponse.buffered(
+          _firstOrNull(rows),
+          affectedRows: affectedRows,
+        ),
+        _ => EngineResponse.buffered(rows, affectedRows: affectedRows),
+      },
+      OrmReadShape.aggregate => EngineResponse.buffered(
+        _decodeAggregateResult(read: read, row: _firstOrNull(rows)),
+        affectedRows: affectedRows,
+      ),
+      OrmReadShape.groupedAggregate => EngineResponse.buffered(
+        rows
+            .map((row) => _decodeGroupedAggregateRow(read: read, row: row))
+            .toList(growable: false),
+        affectedRows: affectedRows,
+      ),
     };
   }
 
@@ -314,12 +432,126 @@ final class SqlAdapter
     return select.map(_id).join(', ');
   }
 
+  List<String> _aggregateBaseFields(OrmReadAggregatePlan aggregate) {
+    final fields = <String>{
+      ...aggregate.count,
+      ...aggregate.min,
+      ...aggregate.max,
+      ...aggregate.sum,
+      ...aggregate.avg,
+    };
+    return fields.toList(growable: false);
+  }
+
+  List<String> _buildAggregateSelectExpressions({
+    required OrmReadAggregatePlan aggregate,
+    required String? rowRef,
+  }) {
+    final expressions = <String>[];
+    if (aggregate.countAll) {
+      expressions.add(
+        'COUNT(*) AS ${_id(_aggregateAlias(bucket: 'count', field: 'all'))}',
+      );
+    }
+    for (final field in aggregate.count) {
+      expressions.add(
+        'COUNT(${_aggregateFieldReference(field: field, rowRef: rowRef)}) '
+        'AS ${_id(_aggregateAlias(bucket: 'count', field: field))}',
+      );
+    }
+    for (final field in aggregate.min) {
+      expressions.add(
+        'MIN(${_aggregateFieldReference(field: field, rowRef: rowRef)}) '
+        'AS ${_id(_aggregateAlias(bucket: 'min', field: field))}',
+      );
+    }
+    for (final field in aggregate.max) {
+      expressions.add(
+        'MAX(${_aggregateFieldReference(field: field, rowRef: rowRef)}) '
+        'AS ${_id(_aggregateAlias(bucket: 'max', field: field))}',
+      );
+    }
+    for (final field in aggregate.sum) {
+      expressions.add(
+        'SUM(${_aggregateFieldReference(field: field, rowRef: rowRef)}) '
+        'AS ${_id(_aggregateAlias(bucket: 'sum', field: field))}',
+      );
+    }
+    for (final field in aggregate.avg) {
+      expressions.add(
+        'AVG(${_aggregateFieldReference(field: field, rowRef: rowRef)}) '
+        'AS ${_id(_aggregateAlias(bucket: 'avg', field: field))}',
+      );
+    }
+    return expressions;
+  }
+
+  String _aggregateFieldReference({
+    required String field,
+    required String? rowRef,
+  }) {
+    if (rowRef == null) {
+      return _id(field);
+    }
+    return '$rowRef.${_id(field)}';
+  }
+
+  String _aggregateAlias({required String bucket, required String field}) {
+    return '__${bucket}_$field';
+  }
+
   String _buildMutationReturningClause(List<String> select) {
     if (!contract.capabilities.mutationReturning) {
       return '';
     }
 
     return ' RETURNING ${_buildSelectColumns(select)}';
+  }
+
+  SqlStatement _buildReadSourceQuery({
+    required String table,
+    required String model,
+    required OrmReadPlan read,
+    required String selectColumns,
+  }) {
+    final whereParams = <Object?>[];
+    final whereClause = _buildWhereClause(
+      model: model,
+      where: read.where,
+      params: whereParams,
+    );
+    final windowParams = <Object?>[];
+    final windowPredicate = _buildCursorWindowPredicate(
+      read: read,
+      params: windowParams,
+    );
+    final mergedWhereClause = _mergeWhereClauses(whereClause, windowPredicate);
+    final orderByClause = _buildOrderByClause(read.orderBy);
+    if (read.page?.before != null) {
+      final limitParams = <Object?>[];
+      final innerOrderByClause = _buildOrderByClause(
+        _reverseOrderBy(read.orderBy),
+      );
+      final innerLimitClause = _buildReadLimitOffsetClause(read, limitParams);
+      return SqlStatement(
+        action: OrmAction.read,
+        text:
+            'SELECT $selectColumns FROM ('
+            'SELECT * FROM ${_id(table)}'
+            '$mergedWhereClause$innerOrderByClause$innerLimitClause'
+            ') AS ${_id('_page')}$orderByClause',
+        parameters: <Object?>[...whereParams, ...windowParams, ...limitParams],
+      );
+    }
+
+    final params = <Object?>[...whereParams, ...windowParams];
+    return SqlStatement(
+      action: OrmAction.read,
+      text:
+          'SELECT $selectColumns FROM ${_id(table)}'
+          '$mergedWhereClause$orderByClause${_buildReadLimitOffsetClause(read, params)}',
+      parameters: params,
+    );
   }
 
   String _buildWhereClause({
@@ -982,6 +1214,284 @@ final class SqlAdapter
     return ' ORDER BY ${clauses.join(', ')}';
   }
 
+  String _buildGroupedOrderByClause(List<OrmOrderBy> orderBy) {
+    if (orderBy.isEmpty) {
+      return '';
+    }
+    final clauses = orderBy.map((entry) {
+      final direction = entry.order.name.toUpperCase();
+      return '${_groupedOrderByExpression(entry.field)} $direction';
+    });
+    return ' ORDER BY ${clauses.join(', ')}';
+  }
+
+  String _groupedOrderByExpression(String field) {
+    final metric = _parseGroupedMetricField(field);
+    if (metric == null) {
+      return _id(field);
+    }
+    return _id(_aggregateAlias(bucket: metric.bucket, field: metric.field));
+  }
+
+  String _buildGroupedHavingClause({
+    required JsonMap having,
+    required List<Object?> params,
+  }) {
+    if (having.isEmpty) {
+      return '';
+    }
+    return ' HAVING ${_buildGroupedHavingExpression(having: having, params: params)}';
+  }
+
+  String _buildGroupedHavingExpression({
+    required JsonMap having,
+    required List<Object?> params,
+  }) {
+    final predicates = <String>[];
+    for (final entry in having.entries) {
+      final key = entry.key;
+      if (_whereLogicalKeys.contains(key)) {
+        predicates.add(
+          _buildGroupedHavingLogicalPredicate(
+            key: key,
+            operand: entry.value,
+            params: params,
+          ),
+        );
+        continue;
+      }
+
+      final metricBucket = _normalizeGroupedMetricBucket(key);
+      if (metricBucket != null) {
+        final metricFilters = _coerceWhereMap(entry.value);
+        if (metricFilters == null || metricFilters.isEmpty) {
+          continue;
+        }
+        for (final metricEntry in metricFilters.entries) {
+          predicates.add(
+            _buildGroupedHavingConditionPredicate(
+              leftOperand: _aggregateFunctionExpression(
+                bucket: metricBucket,
+                field: metricEntry.key,
+                rowRef: null,
+              ),
+              field: metricEntry.key,
+              condition: metricEntry.value,
+              params: params,
+            ),
+          );
+        }
+        continue;
+      }
+
+      predicates.add(
+        _buildGroupedHavingConditionPredicate(
+          leftOperand: _id(key),
+          field: key,
+          condition: entry.value,
+          params: params,
+        ),
+      );
+    }
+    if (predicates.isEmpty) {
+      return '1 = 1';
+    }
+    return predicates.join(' AND ');
+  }
+
+  String _buildGroupedHavingLogicalPredicate({
+    required String key,
+    required Object? operand,
+    required List<Object?> params,
+  }) {
+    final nestedMap = _coerceWhereMap(operand);
+    if (nestedMap != null) {
+      final predicate = _buildGroupedHavingExpression(
+        having: nestedMap,
+        params: params,
+      );
+      return key == 'NOT' ? 'NOT ($predicate)' : '($predicate)';
+    }
+    final nestedList = _coerceWhereList(operand);
+    if (nestedList == null || nestedList.isEmpty) {
+      return key == 'OR' ? '0 = 1' : '1 = 1';
+    }
+    final joiner = key == 'OR' ? ' OR ' : ' AND ';
+    final clauses = nestedList
+        .map(
+          (clause) =>
+              _buildGroupedHavingExpression(having: clause, params: params),
+        )
+        .map((clause) => '($clause)')
+        .join(joiner);
+    return key == 'NOT' ? 'NOT ($clauses)' : clauses;
+  }
+
+  String _buildGroupedHavingConditionPredicate({
+    required String leftOperand,
+    required String field,
+    required Object? condition,
+    required List<Object?> params,
+  }) {
+    final operatorMap = _coerceOperatorMap(condition);
+    if (operatorMap == null) {
+      params.add(condition);
+      return '$leftOperand = ?';
+    }
+
+    final predicates = <String>[];
+    for (final operator in _whereOperatorOrder) {
+      if (!operatorMap.containsKey(operator)) {
+        continue;
+      }
+      final operand = operatorMap[operator];
+      predicates.add(
+        _buildGroupedHavingOperatorPredicate(
+          leftOperand: leftOperand,
+          field: field,
+          operator: operator,
+          operand: operand,
+          params: params,
+        ),
+      );
+    }
+    if (predicates.isEmpty) {
+      return '1 = 1';
+    }
+    return predicates.join(' AND ');
+  }
+
+  String _buildGroupedHavingOperatorPredicate({
+    required String leftOperand,
+    required String field,
+    required String operator,
+    required Object? operand,
+    required List<Object?> params,
+  }) {
+    switch (operator) {
+      case 'equals':
+        params.add(operand);
+        return '$leftOperand = ?';
+      case 'not':
+        final nested = _coerceOperatorMap(operand);
+        if (nested != null) {
+          final predicate = _buildGroupedHavingConditionPredicate(
+            leftOperand: leftOperand,
+            field: field,
+            condition: operand,
+            params: params,
+          );
+          return 'NOT ($predicate)';
+        }
+        params.add(operand);
+        return '$leftOperand <> ?';
+      case 'in':
+        final values = _coerceListOperand(operand);
+        if (values.isEmpty) {
+          return '0 = 1';
+        }
+        params.addAll(values);
+        return '$leftOperand IN (${List<String>.filled(values.length, '?').join(', ')})';
+      case 'notIn':
+        final values = _coerceListOperand(operand);
+        if (values.isEmpty) {
+          return '1 = 1';
+        }
+        params.addAll(values);
+        return '$leftOperand NOT IN (${List<String>.filled(values.length, '?').join(', ')})';
+      case 'contains':
+      case 'startsWith':
+      case 'endsWith':
+        if (operand is! String) {
+          return '0 = 1';
+        }
+        final escaped = _escapeLikePattern(operand);
+        final pattern = switch (operator) {
+          'contains' => '%$escaped%',
+          'startsWith' => '$escaped%',
+          'endsWith' => '%$escaped',
+          _ => escaped,
+        };
+        params.add(pattern);
+        return "$leftOperand LIKE ? ESCAPE '\\'";
+      case 'gt':
+        params.add(operand);
+        return '$leftOperand > ?';
+      case 'gte':
+        params.add(operand);
+        return '$leftOperand >= ?';
+      case 'lt':
+        params.add(operand);
+        return '$leftOperand < ?';
+      case 'lte':
+        params.add(operand);
+        return '$leftOperand <= ?';
+      default:
+        return '1 = 1';
+    }
+  }
+
+  String _buildGroupedLimitOffsetClause({
+    required int? skip,
+    required int? take,
+    required List<Object?> params,
+  }) {
+    final clauses = <String>[];
+    if (take case final limit?) {
+      clauses.add(' LIMIT ?');
+      params.add(limit);
+    }
+    if (skip case final offset?) {
+      if (take == null) {
+        clauses.add(' LIMIT -1');
+      }
+      clauses.add(' OFFSET ?');
+      params.add(offset);
+    }
+    return clauses.join();
+  }
+
+  _GroupedMetricField? _parseGroupedMetricField(String field) {
+    final parts = field.split('.');
+    if (parts.length != 2) {
+      return null;
+    }
+    final bucket = _normalizeGroupedMetricBucket(parts[0]);
+    if (bucket == null) {
+      return null;
+    }
+    return _GroupedMetricField(bucket: bucket, field: parts[1]);
+  }
+
+  String? _normalizeGroupedMetricBucket(String bucket) {
+    return switch (bucket) {
+      'count' || '_count' => 'count',
+      'min' || '_min' => 'min',
+      'max' || '_max' => 'max',
+      'sum' || '_sum' => 'sum',
+      'avg' || '_avg' => 'avg',
+      _ => null,
+    };
+  }
+
+  String _aggregateFunctionExpression({
+    required String bucket,
+    required String field,
+    required String? rowRef,
+  }) {
+    final fieldRef = field == 'all' && bucket == 'count'
+        ? '*'
+        : _aggregateFieldReference(field: field, rowRef: rowRef);
+    return switch (bucket) {
+      'count' => field == 'all' ? 'COUNT(*)' : 'COUNT($fieldRef)',
+      'min' => 'MIN($fieldRef)',
+      'max' => 'MAX($fieldRef)',
+      'sum' => 'SUM($fieldRef)',
+      'avg' => 'AVG($fieldRef)',
+      _ => throw StateError('Unsupported aggregate bucket: $bucket'),
+    };
+  }
+
   String _mergeWhereClauses(String whereClause, String predicate) {
     if (predicate.isEmpty) {
       return whereClause;
@@ -1140,6 +1650,69 @@ final class SqlAdapter
     return decoded;
   }
 
+  JsonMap _decodeAggregateResult({
+    required OrmReadPlan read,
+    required JsonMap? row,
+  }) {
+    final aggregate = read.aggregate!;
+    if (!aggregate.countAll &&
+        aggregate.count.isEmpty &&
+        aggregate.min.isEmpty &&
+        aggregate.max.isEmpty &&
+        aggregate.sum.isEmpty &&
+        aggregate.avg.isEmpty) {
+      return const <String, Object?>{};
+    }
+
+    final source = row ?? const <String, Object?>{};
+    final result = <String, Object?>{};
+    if (aggregate.countAll || aggregate.count.isNotEmpty) {
+      result['count'] = <String, Object?>{
+        if (aggregate.countAll)
+          'all': source[_aggregateAlias(bucket: 'count', field: 'all')] ?? 0,
+        for (final field in aggregate.count)
+          field: source[_aggregateAlias(bucket: 'count', field: field)] ?? 0,
+      };
+    }
+    if (aggregate.min.isNotEmpty) {
+      result['min'] = <String, Object?>{
+        for (final field in aggregate.min)
+          field: source[_aggregateAlias(bucket: 'min', field: field)],
+      };
+    }
+    if (aggregate.max.isNotEmpty) {
+      result['max'] = <String, Object?>{
+        for (final field in aggregate.max)
+          field: source[_aggregateAlias(bucket: 'max', field: field)],
+      };
+    }
+    if (aggregate.sum.isNotEmpty) {
+      result['sum'] = <String, Object?>{
+        for (final field in aggregate.sum)
+          field: source[_aggregateAlias(bucket: 'sum', field: field)],
+      };
+    }
+    if (aggregate.avg.isNotEmpty) {
+      result['avg'] = <String, Object?>{
+        for (final field in aggregate.avg)
+          field: source[_aggregateAlias(bucket: 'avg', field: field)],
+      };
+    }
+    return Map<String, Object?>.unmodifiable(result);
+  }
+
+  JsonMap _decodeGroupedAggregateRow({
+    required OrmReadPlan read,
+    required JsonMap row,
+  }) {
+    final groupBy = read.groupBy!;
+    final result = <String, Object?>{
+      for (final field in groupBy.by) field: row[field],
+    };
+    result.addAll(_decodeAggregateResult(read: read, row: row));
+    return Map<String, Object?>.unmodifiable(result);
+  }
+
   Object? _encodeValue({
     required String model,
     required String field,
@@ -1163,6 +1736,14 @@ final class SqlAdapter
     }
     return codec.decode(value);
   }
+}
+
+@immutable
+final class _GroupedMetricField {
+  final String bucket;
+  final String field;
+
+  const _GroupedMetricField({required this.bucket, required this.field});
 }
 
 T? _firstOrNull<T>(List<T> values) {

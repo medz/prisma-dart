@@ -171,52 +171,59 @@ final class OrmPreparedReadQuery {
 final class OrmPreparedAggregateQuery {
   final ModelDelegate _delegate;
   final OrmPlan plan;
-  final OrmReadQuerySpec _spec;
-  final OrmAggregateSpec _aggregate;
 
   const OrmPreparedAggregateQuery._({
     required ModelDelegate delegate,
     required this.plan,
     required OrmReadQuerySpec spec,
     required OrmAggregateSpec aggregate,
-  }) : _delegate = delegate,
-       _spec = spec,
-       _aggregate = aggregate;
+  }) : _delegate = delegate;
 
   Future<JsonMap> inspectPlan() async =>
       Map<String, Object?>.unmodifiable(plan.toJson());
 
   Future<JsonMap> execute() =>
-      _delegate._aggregate(spec: _spec, aggregate: _aggregate);
+      _delegate._readRepository.aggregate(prepared: this);
 }
 
 @immutable
 final class OrmPreparedGroupedQuery {
   final ModelDelegate _delegate;
   final OrmPlan plan;
-  final OrmReadQuerySpec _baseSpec;
-  final OrmGroupBySpec _groupBy;
 
   const OrmPreparedGroupedQuery._({
     required ModelDelegate delegate,
     required this.plan,
     required OrmReadQuerySpec baseSpec,
     required OrmGroupBySpec groupBy,
-  }) : _delegate = delegate,
-       _baseSpec = baseSpec,
-       _groupBy = groupBy;
+  }) : _delegate = delegate;
 
   Future<JsonMap> inspectPlan() async =>
       Map<String, Object?>.unmodifiable(plan.toJson());
 
   Future<List<JsonMap>> execute() =>
-      _delegate._groupBy(spec: _baseSpec, groupBy: _groupBy);
+      _delegate._readRepository.grouped(prepared: this);
 }
 
 final class _RepositoryReadExecutor {
   final ModelDelegate _delegate;
 
   _RepositoryReadExecutor(this._delegate);
+
+  Future<JsonMap> aggregate({
+    required OrmPreparedAggregateQuery prepared,
+  }) async {
+    final response = await _delegate._client.execute(prepared.plan);
+    return (await _collectSingleRow(response, action: 'aggregate')) ??
+        const <String, Object?>{};
+  }
+
+  Future<List<JsonMap>> grouped({
+    required OrmPreparedGroupedQuery prepared,
+  }) async {
+    final response = await _delegate._client.execute(prepared.plan);
+    return _collectRows(response, action: 'groupBy');
+  }
 
   Future<List<JsonMap>> all({
     required OrmPreparedReadQuery prepared,

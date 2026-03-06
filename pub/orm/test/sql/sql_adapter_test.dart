@@ -69,6 +69,9 @@ void main() {
     OrmReadCursorPlan? cursor,
     OrmReadPagePlan? page,
     OrmReadResultMode resultMode = OrmReadResultMode.all,
+    OrmReadShape shape = OrmReadShape.rows,
+    OrmReadAggregatePlan? aggregate,
+    OrmReadGroupByPlan? groupBy,
   }) {
     return OrmPlan(
       contractHash: contract.hash,
@@ -84,6 +87,9 @@ void main() {
         cursor: cursor,
         page: page,
         resultMode: resultMode,
+        shape: shape,
+        aggregate: aggregate,
+        groupBy: groupBy,
       ),
     );
   }
@@ -184,6 +190,127 @@ void main() {
     );
     expect(statement.parameters, <Object?>[4, 2]);
   });
+
+  test('lowers aggregate read shapes through a windowed subquery', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = readPlan(
+      contract: contract,
+      model: 'User',
+      where: const <String, Object?>{'email': 'a@example.com'},
+      orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
+      take: 2,
+      shape: OrmReadShape.aggregate,
+      select: const <String>['id'],
+      aggregate: OrmReadAggregatePlan(countAll: true, sum: <String>['id']),
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT COUNT(*) AS "__count_all", SUM("_agg"."id") AS "__sum_id" '
+      'FROM (SELECT "id" FROM "users" WHERE "email" = ? ORDER BY "id" ASC LIMIT ?) AS "_agg"',
+    );
+    expect(statement.parameters, <Object?>['a@example.com', 2]);
+  });
+
+  test('lowers grouped aggregate read shapes with having and orderBy', () {
+    final adapter = SqlAdapter(contract: contract);
+    final plan = readPlan(
+      contract: contract,
+      model: 'User',
+      shape: OrmReadShape.groupedAggregate,
+      aggregate: OrmReadAggregatePlan(countAll: true, sum: <String>['id']),
+      groupBy: OrmReadGroupByPlan(
+        by: <String>['email'],
+        having: <String, Object?>{
+          '_count': <String, Object?>{
+            'all': <String, Object?>{'gte': 2},
+          },
+        },
+        orderBy: <OrmOrderBy>[OrmOrderBy('_sum.id', order: SortOrder.desc)],
+        take: 3,
+        skip: 1,
+      ),
+    );
+
+    final statement = adapter.lower(plan);
+    expect(
+      statement.text,
+      'SELECT "email", COUNT(*) AS "__count_all", SUM("id") AS "__sum_id" '
+      'FROM "users" GROUP BY "email" HAVING COUNT(*) >= ? '
+      'ORDER BY "__sum_id" DESC LIMIT ? OFFSET ?',
+    );
+    expect(statement.parameters, <Object?>[2, 3, 1]);
+  });
+
+  test(
+    'decodes aggregate and grouped aggregate rows into structured payloads',
+    () {
+      final adapter = SqlAdapter(contract: contract);
+
+      final aggregatePlan = readPlan(
+        contract: contract,
+        model: 'User',
+        shape: OrmReadShape.aggregate,
+        aggregate: OrmReadAggregatePlan(
+          countAll: true,
+          min: <String>['id'],
+          sum: <String>['id'],
+        ),
+      );
+      final aggregateResponse = adapter.decode(
+        SqlResult(
+          rows: const <JsonMap>[
+            <String, Object?>{'__count_all': 3, '__min_id': 1, '__sum_id': 8},
+          ],
+        ),
+        aggregatePlan,
+      );
+
+      final groupedPlan = readPlan(
+        contract: contract,
+        model: 'User',
+        shape: OrmReadShape.groupedAggregate,
+        aggregate: OrmReadAggregatePlan(countAll: true, sum: <String>['id']),
+        groupBy: OrmReadGroupByPlan(by: <String>['email']),
+      );
+      final groupedResponse = adapter.decode(
+        SqlResult(
+          rows: const <JsonMap>[
+            <String, Object?>{
+              'email': 'a@example.com',
+              '__count_all': 2,
+              '__sum_id': 5,
+            },
+          ],
+        ),
+        groupedPlan,
+      );
+
+      expect(
+        aggregateResponse.rows,
+        emitsInOrder(<Object?>[
+          <String, Object?>{
+            'count': <String, Object?>{'all': 3},
+            'min': <String, Object?>{'id': 1},
+            'sum': <String, Object?>{'id': 8},
+          },
+          emitsDone,
+        ]),
+      );
+      expect(
+        groupedResponse.rows,
+        emitsInOrder(<Object?>[
+          <String, Object?>{
+            'email': 'a@example.com',
+            'count': <String, Object?>{'all': 2},
+            'sum': <String, Object?>{'id': 5},
+          },
+          emitsDone,
+        ]),
+      );
+    },
+  );
 
   test('lowers where operators with deterministic SQL and parameters', () {
     final adapter = SqlAdapter(contract: contract);
