@@ -845,6 +845,78 @@ typedef Post = ({
           reason: 'Expected UserSql to expose deleteResult helper.',
         );
         expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?List<String>\s+_fields\(\s*UserSelect\?\s+select\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql to centralize typed field-list conversion in a private helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?UserData\s+_decodeRow\(\s*JsonMap\s+row\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql to centralize typed row decoding in a private helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?UserData\?\s+_decodeOptionalRow\(\s*JsonMap\?\s+row\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql to expose private optional row decoding helper for mutation terminals.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?List<UserData>\s+_decodeRows\(\s*List<JsonMap>\s+rows\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql to centralize typed list decoding for read terminals.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<List<UserData>>\s+all\([\s\S]*?return\s+_decodeRows\(rows\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql.all(...) to decode rows through a shared helper instead of repeating fromJson mapping.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<UserData\?>\s+insert\([\s\S]*?return\s+_decodeOptionalRow\(await\s+insertPlan\([\s\S]*?\.one\(\)\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql.insert(...) to decode rows directly from insertPlan(...).one().',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<UserData\?>\s+update\([\s\S]*?return\s+_decodeOptionalRow\(await\s+updatePlan\([\s\S]*?\.one\(\)\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql.update(...) to decode rows directly from updatePlan(...).one().',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<UserData\?>\s+delete\([\s\S]*?return\s+_decodeOptionalRow\(await\s+deletePlan\([\s\S]*?\.one\(\)\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserSql.delete(...) to decode rows directly from deletePlan(...).one().',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserSql\s*\{[\s\S]*?Future<UserData\?>\s+firstOrNull\([\s\S]*?_selectBuilder\([\s\S]*?take:\s*1',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected UserSql.firstOrNull(...) to rely on builder.firstOrNull() without duplicating take: 1.',
+        );
+        expect(
           RegExp(r'\bclass UserWhereUniqueInput\b').hasMatch(generatedSource),
           isTrue,
           reason: 'Missing typed where unique input class in generated source.',

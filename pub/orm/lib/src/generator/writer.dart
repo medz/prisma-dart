@@ -2035,6 +2035,35 @@ final class TypedClientWriter {
     buffer.writeln('  const ${model.sqlClassName}(this._sql);');
     buffer.writeln();
 
+    buffer.writeln(
+      '  List<String> _fields(${model.selectClassName}? select) {',
+    );
+    buffer.writeln('    return select?.toFields() ?? const <String>[];');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.dataClassName} _decodeRow(JsonMap row) => ${model.dataClassName}.fromJson(row);',
+    );
+    buffer.writeln();
+
+    buffer.writeln(
+      '  ${model.dataClassName}? _decodeOptionalRow(JsonMap? row) {',
+    );
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return _decodeRow(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln(
+      '  List<${model.dataClassName}> _decodeRows(List<JsonMap> rows) {',
+    );
+    buffer.writeln('    return rows.map(_decodeRow).toList(growable: false);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln('  OrmSqlSelectBuilder _selectBuilder({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
@@ -2055,9 +2084,7 @@ final class TypedClientWriter {
     buffer.writeln(
       '    final runtimeDistinct = distinct.map((entry) => entry.value).toList(growable: false);',
     );
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
+    buffer.writeln('    final runtimeSelect = _fields(select);');
     buffer.writeln("    return _sql.from('$runtimeName')");
     buffer.writeln('        .where(where.toJson())');
     buffer.writeln('        .skip(skip)');
@@ -2115,9 +2142,7 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: select,');
     buffer.writeln('    ).all();');
-    buffer.writeln(
-      '    return rows.map(${model.dataClassName}.fromJson).toList(growable: false);',
-    );
+    buffer.writeln('    return _decodeRows(rows);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2143,7 +2168,7 @@ final class TypedClientWriter {
     buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: select,');
     buffer.writeln('    ).stream()) {');
-    buffer.writeln('      yield ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('      yield _decodeRow(row);');
     buffer.writeln('    }');
     buffer.writeln('  }');
     buffer.writeln();
@@ -2164,15 +2189,11 @@ final class TypedClientWriter {
     buffer.writeln('    final row = await _selectBuilder(');
     buffer.writeln('      where: where,');
     buffer.writeln('      skip: skip,');
-    buffer.writeln('      take: 1,');
     buffer.writeln('      orderBy: orderBy,');
     buffer.writeln('      distinct: distinct,');
     buffer.writeln('      select: select,');
     buffer.writeln('    ).firstOrNull();');
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('    return _decodeOptionalRow(row);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2180,9 +2201,7 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.createInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) {');
-    buffer.writeln(
-      '    final runtimeReturning = returning?.toFields() ?? const <String>[];',
-    );
+    buffer.writeln('    final runtimeReturning = _fields(returning);');
     buffer.writeln(
       "    return _sql.insertInto('$runtimeName').values(data.toJson()).returning(runtimeReturning);",
     );
@@ -2204,12 +2223,8 @@ final class TypedClientWriter {
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) async {');
     buffer.writeln(
-      '    final row = (await insertResult(data: data, returning: returning)).row;',
+      '    return _decodeOptionalRow(await insertPlan(data: data, returning: returning).one());',
     );
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2218,9 +2233,7 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.updateInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) {');
-    buffer.writeln(
-      '    final runtimeReturning = returning?.toFields() ?? const <String>[];',
-    );
+    buffer.writeln('    final runtimeReturning = _fields(returning);');
     buffer.writeln(
       "    return _sql.update('$runtimeName').where(where.toJson()).set(data.toJson()).returning(runtimeReturning);",
     );
@@ -2244,12 +2257,8 @@ final class TypedClientWriter {
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) async {');
     buffer.writeln(
-      '    final row = (await updateResult(where: where, data: data, returning: returning)).row;',
+      '    return _decodeOptionalRow(await updatePlan(where: where, data: data, returning: returning).one());',
     );
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2257,9 +2266,7 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) {');
-    buffer.writeln(
-      '    final runtimeReturning = returning?.toFields() ?? const <String>[];',
-    );
+    buffer.writeln('    final runtimeReturning = _fields(returning);');
     buffer.writeln(
       "    return _sql.deleteFrom('$runtimeName').where(where.toJson()).returning(runtimeReturning);",
     );
@@ -2281,12 +2288,8 @@ final class TypedClientWriter {
     buffer.writeln('    ${model.selectClassName}? returning,');
     buffer.writeln('  }) async {');
     buffer.writeln(
-      '    final row = (await deleteResult(where: where, returning: returning)).row;',
+      '    return _decodeOptionalRow(await deletePlan(where: where, returning: returning).one());',
     );
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
     buffer.writeln('  }');
 
     buffer.writeln('}');
