@@ -571,6 +571,22 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserInclude\s*\{[\s\S]*?Map<String,\s*IncludeSpec>\s+toIncludeMap\(\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected model include class to expose include map conversion for convenience chaining pipeline.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<List<UserData>>\s+all\(\)\s*\{[\s\S]*?include:\s*_include,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery execution path to keep include state forwarding from query chain.',
+        );
+        expect(
+          RegExp(
             r'\bFuture<List<UserData>>\s+all\s*\(\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
@@ -1174,6 +1190,102 @@ typedef Post = ({
           ).hasMatch(generatedSource),
           isTrue,
           reason: 'Expected relation include class to generate merge helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+where\(\s*PostWhereInput\s+where,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include class to expose chainable where(...) helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+skip\(\s*int\?\s+skip\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include class to expose chainable skip(...) helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+take\(\s*int\?\s+take\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include class to expose chainable take(...) helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+orderBy\(\s*List<PostOrderBy>\s+orderBy,\s*\{\s*bool\s+append\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include class to expose chainable orderBy(...) helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+select\(\s*PostSelect\?\s+select,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include class to expose chainable select(...) helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+include\(\s*PostInclude\?\s+include,\s*\{\s*bool\s+merge\s*=\s*true,?\s*\}\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include class to expose chainable include(...) helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+where\([\s\S]*?return\s+UserPostsInclude\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include where(...) chaining to stay immutable by returning a new relation include object.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserPostsInclude\s*\{[\s\S]*?UserPostsInclude\s+include\([\s\S]*?return\s+UserPostsInclude\(',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected relation include include(...) chaining to stay immutable by returning a new relation include object.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserInclude\s*\{[\s\S]*?UserInclude\s+includePosts\(\[\s*UserPostsInclude\s+Function\(\s*UserPostsInclude\s+\w+\s*\)\?\s+\w+\s*\]\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected model include class to expose includePosts([configure]) convenience helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+PostInclude\s*\{[\s\S]*?PostInclude\s+includeAuthor\(\[\s*PostAuthorInclude\s+Function\(\s*PostAuthorInclude\s+\w+\s*\)\?\s+\w+\s*\]\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected model include class to expose includeAuthor([configure]) convenience helper.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?UserQuery\s+includePosts\(\[\s*UserPostsInclude\s+Function\(\s*UserPostsInclude\s+\w+\s*\)\?\s+\w+\s*\]\s*\)\s*\{[\s\S]*?return\s+include\(\s*UserInclude\(\s*posts:',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected UserQuery.includePosts([configure]) to route through include(...) with UserInclude(posts: ...).',
+        );
+        expect(
+          RegExp(
+            r'class\s+PostQuery\s*\{[\s\S]*?PostQuery\s+includeAuthor\(\[\s*PostAuthorInclude\s+Function\(\s*PostAuthorInclude\s+\w+\s*\)\?\s+\w+\s*\]\s*\)\s*\{[\s\S]*?return\s+include\(\s*PostInclude\(\s*author:',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected PostQuery.includeAuthor([configure]) to route through include(...) with PostInclude(author: ...).',
         );
         expect(
           RegExp(

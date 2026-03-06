@@ -1127,60 +1127,151 @@ final class TypedClientWriter {
         relationFieldName: relation.name,
       );
       buffer.writeln('class $includeClassName {');
-      buffer.writeln('  final ${relationModel.whereInputClassName} where;');
-      buffer.writeln('  final int? skip;');
-      buffer.writeln('  final int? take;');
+      buffer.writeln('  final ${relationModel.whereInputClassName} _where;');
+      buffer.writeln('  final int? _skip;');
+      buffer.writeln('  final int? _take;');
       buffer.writeln(
-        '  final List<${relationModel.orderByClassName}> orderBy;',
+        '  final List<${relationModel.orderByClassName}> _orderBy;',
       );
-      buffer.writeln('  final ${relationModel.selectClassName}? select;');
-      buffer.writeln('  final ${relationModel.includeClassName}? include;');
+      buffer.writeln('  final ${relationModel.selectClassName}? _select;');
+      buffer.writeln('  final ${relationModel.includeClassName}? _include;');
       buffer.writeln();
       buffer.writeln('  const $includeClassName({');
       buffer.writeln(
-        '    this.where = const ${relationModel.whereInputClassName}(),',
+        '    ${relationModel.whereInputClassName} where = const ${relationModel.whereInputClassName}(),',
       );
-      buffer.writeln('    this.skip,');
-      buffer.writeln('    this.take,');
+      buffer.writeln('    int? skip,');
+      buffer.writeln('    int? take,');
       buffer.writeln(
-        '    this.orderBy = const <${relationModel.orderByClassName}>[],',
+        '    List<${relationModel.orderByClassName}> orderBy = const <${relationModel.orderByClassName}>[],',
       );
-      buffer.writeln('    this.select,');
-      buffer.writeln('    this.include,');
-      buffer.writeln('  });');
+      buffer.writeln('    ${relationModel.selectClassName}? select,');
+      buffer.writeln('    ${relationModel.includeClassName}? include,');
+      buffer.writeln('  }) : _where = where,');
+      buffer.writeln('       _skip = skip,');
+      buffer.writeln('       _take = take,');
+      buffer.writeln('       _orderBy = orderBy,');
+      buffer.writeln('       _select = select,');
+      buffer.writeln('       _include = include;');
       buffer.writeln();
       buffer.writeln('  $includeClassName merge($includeClassName other) {');
       buffer.writeln('    return $includeClassName(');
-      buffer.writeln('      where: where.andWith(other.where),');
-      buffer.writeln('      skip: other.skip ?? skip,');
-      buffer.writeln('      take: other.take ?? take,');
+      buffer.writeln('      where: _where.andWith(other._where),');
+      buffer.writeln('      skip: other._skip ?? _skip,');
+      buffer.writeln('      take: other._take ?? _take,');
       buffer.writeln(
-        '      orderBy: <${relationModel.orderByClassName}>[...orderBy, ...other.orderBy],',
+        '      orderBy: <${relationModel.orderByClassName}>[..._orderBy, ...other._orderBy],',
       );
-      buffer.writeln('      select: select == null');
-      buffer.writeln('          ? other.select');
+      buffer.writeln('      select: _select == null');
+      buffer.writeln('          ? other._select');
       buffer.writeln(
-        '          : (other.select == null ? select : select!.merge(other.select!)),',
+        '          : (other._select == null ? _select : _select!.merge(other._select!)),',
       );
-      buffer.writeln('      include: include == null');
-      buffer.writeln('          ? other.include');
+      buffer.writeln('      include: _include == null');
+      buffer.writeln('          ? other._include');
       buffer.writeln(
-        '          : (other.include == null ? include : include!.merge(other.include!)),',
+        '          : (other._include == null ? _include : _include!.merge(other._include!)),',
       );
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln(
+        '  $includeClassName where(${relationModel.whereInputClassName} where, {bool merge = true}) {',
+      );
+      buffer.writeln('    return $includeClassName(');
+      buffer.writeln('      where: merge ? _where.andWith(where) : where,');
+      buffer.writeln('      skip: _skip,');
+      buffer.writeln('      take: _take,');
+      buffer.writeln('      orderBy: _orderBy,');
+      buffer.writeln('      select: _select,');
+      buffer.writeln('      include: _include,');
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln('  $includeClassName skip(int? skip) {');
+      buffer.writeln('    return $includeClassName(');
+      buffer.writeln('      where: _where,');
+      buffer.writeln('      skip: skip,');
+      buffer.writeln('      take: _take,');
+      buffer.writeln('      orderBy: _orderBy,');
+      buffer.writeln('      select: _select,');
+      buffer.writeln('      include: _include,');
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln('  $includeClassName take(int? take) {');
+      buffer.writeln('    return $includeClassName(');
+      buffer.writeln('      where: _where,');
+      buffer.writeln('      skip: _skip,');
+      buffer.writeln('      take: take,');
+      buffer.writeln('      orderBy: _orderBy,');
+      buffer.writeln('      select: _select,');
+      buffer.writeln('      include: _include,');
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln(
+        '  $includeClassName orderBy(List<${relationModel.orderByClassName}> orderBy, {bool append = true}) {',
+      );
+      buffer.writeln('    return $includeClassName(');
+      buffer.writeln('      where: _where,');
+      buffer.writeln('      skip: _skip,');
+      buffer.writeln('      take: _take,');
+      buffer.writeln('      orderBy: append');
+      buffer.writeln(
+        '          ? <${relationModel.orderByClassName}>[..._orderBy, ...orderBy]',
+      );
+      buffer.writeln('          : orderBy,');
+      buffer.writeln('      select: _select,');
+      buffer.writeln('      include: _include,');
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln(
+        '  $includeClassName select(${relationModel.selectClassName}? select, {bool merge = true}) {',
+      );
+      buffer.writeln('    return $includeClassName(');
+      buffer.writeln('      where: _where,');
+      buffer.writeln('      skip: _skip,');
+      buffer.writeln('      take: _take,');
+      buffer.writeln('      orderBy: _orderBy,');
+      buffer.writeln('      select: merge');
+      buffer.writeln(
+        '          ? (select == null ? _select : (_select?.merge(select) ?? select))',
+      );
+      buffer.writeln('          : select,');
+      buffer.writeln('      include: _include,');
+      buffer.writeln('    );');
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln(
+        '  $includeClassName include(${relationModel.includeClassName}? include, {bool merge = true}) {',
+      );
+      buffer.writeln('    return $includeClassName(');
+      buffer.writeln('      where: _where,');
+      buffer.writeln('      skip: _skip,');
+      buffer.writeln('      take: _take,');
+      buffer.writeln('      orderBy: _orderBy,');
+      buffer.writeln('      select: _select,');
+      buffer.writeln('      include: merge');
+      buffer.writeln(
+        '          ? (include == null ? _include : (_include?.merge(include) ?? include))',
+      );
+      buffer.writeln('          : include,');
       buffer.writeln('    );');
       buffer.writeln('  }');
       buffer.writeln();
       buffer.writeln('  IncludeSpec toIncludeSpec() {');
       buffer.writeln('    return IncludeSpec(');
-      buffer.writeln('      where: where.toJson(),');
-      buffer.writeln('      skip: skip,');
-      buffer.writeln('      take: take,');
+      buffer.writeln('      where: _where.toJson(),');
+      buffer.writeln('      skip: _skip,');
+      buffer.writeln('      take: _take,');
       buffer.writeln(
-        '      orderBy: orderBy.map((entry) => entry.value).toList(growable: false),',
+        '      orderBy: _orderBy.map((entry) => entry.value).toList(growable: false),',
       );
-      buffer.writeln('      select: select?.toFields() ?? const <String>[],');
+      buffer.writeln('      select: _select?.toFields() ?? const <String>[],');
       buffer.writeln(
-        '      include: include?.toIncludeMap() ?? const <String, IncludeSpec>{},',
+        '      include: _include?.toIncludeMap() ?? const <String, IncludeSpec>{},',
       );
       buffer.writeln('    );');
       buffer.writeln('  }');
@@ -1238,6 +1329,34 @@ final class TypedClientWriter {
     }
     buffer.writeln('  }');
     buffer.writeln();
+    for (final relation in relationFields) {
+      final includeClassName = _relationIncludeClassName(
+        owner: model,
+        relationFieldName: relation.name,
+      );
+      final memberName = _toLowerCamelIdentifier(
+        relation.name,
+        fallback: 'relation',
+      );
+      final methodSuffix = _toUpperCamelIdentifier(
+        relation.name,
+        fallback: 'Relation',
+      );
+      buffer.writeln(
+        '  ${model.includeClassName} include$methodSuffix([$includeClassName Function($includeClassName current)? configure]) {',
+      );
+      buffer.writeln(
+        '    final current = $memberName ?? const $includeClassName();',
+      );
+      buffer.writeln(
+        '    final next = configure == null ? current : configure(current);',
+      );
+      buffer.writeln(
+        '    return merge(${model.includeClassName}($memberName: next));',
+      );
+      buffer.writeln('  }');
+      buffer.writeln();
+    }
     buffer.writeln('  Map<String, IncludeSpec> toIncludeMap() {');
     if (relationFields.isEmpty) {
       buffer.writeln('    return const <String, IncludeSpec>{};');
@@ -2063,6 +2182,9 @@ final class TypedClientWriter {
     required StringBuffer buffer,
     required _ResolvedModel model,
   }) {
+    final relationFields = model.model.fields
+        .where((field) => field.isRelation)
+        .toList(growable: false);
     buffer.writeln('class ${model.queryClassName} {');
     buffer.writeln('  final ${model.delegateClassName} _delegate;');
     buffer.writeln('  final ${model.whereInputClassName} _where;');
@@ -2207,6 +2329,34 @@ final class TypedClientWriter {
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
+    for (final relation in relationFields) {
+      final includeClassName = _relationIncludeClassName(
+        owner: model,
+        relationFieldName: relation.name,
+      );
+      final memberName = _toLowerCamelIdentifier(
+        relation.name,
+        fallback: 'relation',
+      );
+      final methodSuffix = _toUpperCamelIdentifier(
+        relation.name,
+        fallback: 'Relation',
+      );
+      buffer.writeln(
+        '  ${model.queryClassName} include$methodSuffix([$includeClassName Function($includeClassName current)? configure]) {',
+      );
+      buffer.writeln(
+        '    final current = _include?.$memberName ?? const $includeClassName();',
+      );
+      buffer.writeln(
+        '    final next = configure == null ? current : configure(current);',
+      );
+      buffer.writeln(
+        '    return include(${model.includeClassName}($memberName: next));',
+      );
+      buffer.writeln('  }');
+      buffer.writeln();
+    }
 
     buffer.writeln('  Future<List<${model.dataClassName}>> all() {');
     buffer.writeln('    return _delegate.all(');
