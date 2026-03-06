@@ -3391,8 +3391,8 @@ final class ModelQuery {
     );
   }
 
-  Future<OrmPlan> toPlan() {
-    return _delegate.toPlan(
+  Future<OrmPreparedReadQuery> _prepareRead() {
+    return _delegate.prepareRead(
       where: _state.where,
       skip: _state.skip,
       take: _state.take,
@@ -3405,102 +3405,38 @@ final class ModelQuery {
     );
   }
 
-  Future<JsonMap> inspectPlan() {
-    return _delegate.inspectPlan(
-      where: _state.where,
-      skip: _state.skip,
-      take: _state.take,
-      orderBy: _state.orderBy,
-      distinct: _state.distinct,
-      select: _state.select,
-      include: _state.include,
-      cursor: _state.cursor,
-      page: _state.page,
-    );
+  Future<OrmPlan> toPlan() async {
+    return (await _prepareRead()).plan;
   }
 
-  Future<List<JsonMap>> all() {
+  Future<JsonMap> inspectPlan() async {
+    return (await _prepareRead()).inspectPlan();
+  }
+
+  Future<List<JsonMap>> all() async {
     _assertReadExecutionSupported('all');
-    return _delegate.all(
-      where: _state.where,
-      skip: _state.skip,
-      take: _state.take,
-      orderBy: _state.orderBy,
-      distinct: _state.distinct,
-      select: _state.select,
-      include: _state.include,
-      cursor: _state.cursor,
-      page: _state.page,
-    );
+    return (await _prepareRead()).all();
   }
 
-  Future<OrmPageResult<JsonMap>> pageResult() {
+  Future<OrmPageResult<JsonMap>> pageResult() async {
     _assertReadExecutionSupported('pageResult');
-    final page = _state.page;
-    if (page == null) {
-      throw runtimeError(
-        'PLAN.PAGE_RESULT_REQUIRES_PAGE_WINDOW',
-        'pageResult() requires page() first.',
-        details: <String, Object?>{'model': _delegate.modelName},
-      );
-    }
-    return _delegate.pageResult(
-      where: _state.where,
-      orderBy: _state.orderBy,
-      select: _state.select,
-      include: _state.include,
-      page: page,
-    );
+    return (await _prepareRead()).pageResult();
   }
 
-  Stream<JsonMap> stream() {
+  Stream<JsonMap> stream() async* {
     _assertReadExecutionSupported('stream');
-    return _delegate.stream(
-      where: _state.where,
-      skip: _state.skip,
-      take: _state.take,
-      orderBy: _state.orderBy,
-      distinct: _state.distinct,
-      select: _state.select,
-      include: _state.include,
-      cursor: _state.cursor,
-      page: _state.page,
-    );
+    final prepared = await _prepareRead();
+    yield* prepared.stream();
   }
 
   Future<JsonMap?> oneOrNull() async {
     _assertReadExecutionSupported('oneOrNull');
-    if (_state.cursor != null || _state.page != null) {
-      final rows = await all();
-      if (rows.isEmpty) {
-        return null;
-      }
-      return rows.first;
-    }
-    return _delegate.oneOrNull(
-      where: _state.where,
-      select: _state.select,
-      include: _state.include,
-    );
+    return (await _prepareRead()).oneOrNull();
   }
 
   Future<JsonMap?> firstOrNull() async {
     _assertReadExecutionSupported('firstOrNull');
-    if (_state.cursor != null || _state.page != null) {
-      final rows = await all();
-      if (rows.isEmpty) {
-        return null;
-      }
-      return rows.first;
-    }
-    return _delegate.firstOrNull(
-      where: _state.where,
-      skip: _state.skip,
-      orderBy: _state.orderBy,
-      distinct: _state.distinct,
-      select: _state.select,
-      include: _state.include,
-    );
+    return (await _prepareRead()).firstOrNull();
   }
 
   Future<int> count() {
@@ -3523,18 +3459,8 @@ final class ModelQuery {
     );
   }
 
-  Future<JsonMap> explain() {
-    return _delegate.explain(
-      where: _state.where,
-      skip: _state.skip,
-      take: _state.take,
-      orderBy: _state.orderBy,
-      distinct: _state.distinct,
-      select: _state.select,
-      include: _state.include,
-      cursor: _state.cursor,
-      page: _state.page,
-    );
+  Future<JsonMap> explain() async {
+    return (await _prepareRead()).explain();
   }
 
   Future<JsonMap> aggregate({
