@@ -371,6 +371,16 @@ final class OrmClient implements OrmDbContext, _OrmDelegateRuntime {
 
   RuntimeTelemetryEvent? telemetry() => _runtime.telemetry();
 
+  RuntimeOperationTelemetryEvent? operationTelemetry([String? operationId]) {
+    return _runtime.operationTelemetry(operationId);
+  }
+
+  List<RuntimeOperationTelemetryEvent> recentOperationTelemetry({
+    int limit = 50,
+  }) {
+    return _runtime.recentOperationTelemetry(limit: limit);
+  }
+
   @override
   OrmDbNamespace get db => _db;
 

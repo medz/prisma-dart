@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:meta/meta.dart';
 
 import '../contract/contract.dart';
@@ -45,6 +47,58 @@ final class RuntimeVerifyOptions {
 }
 
 enum RuntimeTelemetryOutcome { success, runtimeError }
+
+@immutable
+final class RuntimeOperationStepTelemetry {
+  final String model;
+  final OrmAction action;
+  final RuntimeTelemetryOutcome outcome;
+  final int rowCount;
+  final int affectedRows;
+  final int durationMs;
+  final DateTime recordedAt;
+  final OrmRepositoryTrace trace;
+
+  const RuntimeOperationStepTelemetry({
+    required this.model,
+    required this.action,
+    required this.outcome,
+    required this.rowCount,
+    required this.affectedRows,
+    required this.durationMs,
+    required this.recordedAt,
+    required this.trace,
+  });
+}
+
+@immutable
+final class RuntimeOperationTelemetryEvent {
+  final String operationId;
+  final String kind;
+  final RuntimeTelemetryOutcome outcome;
+  final int statementCount;
+  final int rowCount;
+  final int affectedRows;
+  final int durationMs;
+  final DateTime startedAt;
+  final DateTime recordedAt;
+  final List<RuntimeOperationStepTelemetry> steps;
+
+  RuntimeOperationTelemetryEvent({
+    required this.operationId,
+    required this.kind,
+    required this.outcome,
+    required this.statementCount,
+    required this.rowCount,
+    required this.affectedRows,
+    required this.durationMs,
+    required this.startedAt,
+    required this.recordedAt,
+    required List<RuntimeOperationStepTelemetry> steps,
+  }) : steps = List.unmodifiable(steps);
+
+  int get lastStep => steps.isEmpty ? 0 : steps.last.trace.step;
+}
 
 @immutable
 final class RuntimeTelemetryEvent {
@@ -101,9 +155,15 @@ abstract interface class RuntimeCore implements OrmRuntimeQueryable {
   Future<OrmRuntimeConnection> connection();
 
   RuntimeTelemetryEvent? telemetry();
+
+  RuntimeOperationTelemetryEvent? operationTelemetry([String? operationId]);
+
+  List<RuntimeOperationTelemetryEvent> recentOperationTelemetry({int limit = 50});
 }
 
 final class OrmRuntimeCore implements RuntimeCore {
+  static const int _maxOperationTelemetryEntries = 128;
+
   final OrmContract contract;
   final OrmEngine engine;
   final RuntimeVerifyOptions verify;
@@ -116,6 +176,10 @@ final class OrmRuntimeCore implements RuntimeCore {
   bool _startupVerified = false;
   bool _firstUseVerified = false;
   RuntimeTelemetryEvent? _telemetry;
+  RuntimeOperationTelemetryEvent? _operationTelemetry;
+  final LinkedHashMap<String, RuntimeOperationTelemetryEvent>
+  _operationTelemetryById =
+      LinkedHashMap<String, RuntimeOperationTelemetryEvent>();
 
   OrmRuntimeCore({
     required this.contract,
@@ -173,6 +237,8 @@ final class OrmRuntimeCore implements RuntimeCore {
     _startupVerified = false;
     _firstUseVerified = false;
     _telemetry = null;
+    _operationTelemetry = null;
+    _operationTelemetryById.clear();
   }
 
   @override
@@ -195,6 +261,28 @@ final class OrmRuntimeCore implements RuntimeCore {
 
   @override
   RuntimeTelemetryEvent? telemetry() => _telemetry;
+
+  @override
+  RuntimeOperationTelemetryEvent? operationTelemetry([String? operationId]) {
+    if (operationId == null) {
+      return _operationTelemetry;
+    }
+    return _operationTelemetryById[operationId];
+  }
+
+  @override
+  List<RuntimeOperationTelemetryEvent> recentOperationTelemetry({
+    int limit = 50,
+  }) {
+    if (limit <= 0 || _operationTelemetryById.isEmpty) {
+      return const <RuntimeOperationTelemetryEvent>[];
+    }
+    final values = _operationTelemetryById.values.toList(growable: false);
+    if (limit >= values.length) {
+      return values.reversed.toList(growable: false);
+    }
+    return values.sublist(values.length - limit).reversed.toList(growable: false);
+  }
 
   Future<EngineResponse> _executeOnQueryable(
     OrmPlan plan,
@@ -240,6 +328,15 @@ final class OrmRuntimeCore implements RuntimeCore {
         recordedAt: DateTime.now(),
         repositoryTrace: plan.repositoryTrace,
       );
+      _recordOperationTelemetry(
+        plan: plan,
+        outcome: RuntimeTelemetryOutcome.success,
+        rowCount: rowCount,
+        affectedRows: response.affectedRows,
+        durationMs: result.latencyMs,
+        startedAt: startedAt,
+        recordedAt: _telemetry!.recordedAt,
+      );
 
       return response;
     } catch (error, stackTrace) {
@@ -252,6 +349,17 @@ final class OrmRuntimeCore implements RuntimeCore {
         recordedAt: DateTime.now(),
         repositoryTrace: plan.repositoryTrace,
       );
+      if (error is! PlanRepositoryTraceInvalidException) {
+        _recordOperationTelemetry(
+          plan: plan,
+          outcome: RuntimeTelemetryOutcome.runtimeError,
+          rowCount: rowCount,
+          affectedRows: 0,
+          durationMs: latencyMs,
+          startedAt: startedAt,
+          recordedAt: _telemetry!.recordedAt,
+        );
+      }
 
       for (final plugin in _plugins) {
         try {
@@ -460,6 +568,82 @@ final class OrmRuntimeCore implements RuntimeCore {
         },
       );
     }
+  }
+
+  void _recordOperationTelemetry({
+    required OrmPlan plan,
+    required RuntimeTelemetryOutcome outcome,
+    required int rowCount,
+    required int affectedRows,
+    required int durationMs,
+    required DateTime startedAt,
+    required DateTime recordedAt,
+  }) {
+    final trace = plan.repositoryTrace;
+    if (trace == null) {
+      return;
+    }
+
+    final current = _operationTelemetryById[trace.operationId];
+    if (current != null) {
+      if (current.kind != trace.kind) {
+        throw PlanRepositoryTraceInvalidException(
+          reason: 'kindMismatch',
+          details: <String, Object?>{
+            'operationId': trace.operationId,
+            'expectedKind': current.kind,
+            'actualKind': trace.kind,
+          },
+        );
+      }
+      if (trace.step <= current.lastStep) {
+        throw PlanRepositoryTraceInvalidException(
+          reason: 'stepOutOfOrder',
+          details: <String, Object?>{
+            'operationId': trace.operationId,
+            'lastStep': current.lastStep,
+            'actualStep': trace.step,
+          },
+        );
+      }
+    }
+
+    final nextStep = RuntimeOperationStepTelemetry(
+      model: plan.model,
+      action: plan.action,
+      outcome: outcome,
+      rowCount: rowCount,
+      affectedRows: affectedRows,
+      durationMs: durationMs,
+      recordedAt: recordedAt,
+      trace: trace,
+    );
+    final next = RuntimeOperationTelemetryEvent(
+      operationId: trace.operationId,
+      kind: trace.kind,
+      outcome: current?.outcome == RuntimeTelemetryOutcome.runtimeError
+          ? RuntimeTelemetryOutcome.runtimeError
+          : outcome,
+      statementCount: (current?.statementCount ?? 0) + 1,
+      rowCount: (current?.rowCount ?? 0) + rowCount,
+      affectedRows: (current?.affectedRows ?? 0) + affectedRows,
+      durationMs: (current?.durationMs ?? 0) + durationMs,
+      startedAt: current?.startedAt ?? startedAt,
+      recordedAt: recordedAt,
+      steps: <RuntimeOperationStepTelemetry>[
+        ...?current?.steps,
+        nextStep,
+      ],
+    );
+
+    if (current != null) {
+      _operationTelemetryById.remove(trace.operationId);
+    }
+    _operationTelemetryById[trace.operationId] = next;
+    while (_operationTelemetryById.length > _maxOperationTelemetryEntries) {
+      _operationTelemetryById.remove(_operationTelemetryById.keys.first);
+    }
+    _operationTelemetry = next;
   }
 
   void _assertReadPlan({required ModelContract model, required OrmReadPlan plan}) {
