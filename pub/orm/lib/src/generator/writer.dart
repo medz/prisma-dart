@@ -1055,6 +1055,24 @@ final class TypedClientWriter {
     buffer.writeln('    this.avg = const <${model.distinctClassName}>[],');
     buffer.writeln('  });');
     buffer.writeln();
+    buffer.writeln('  ${model.aggregateSpecClassName} copyWith({');
+    buffer.writeln('    bool? countAll,');
+    buffer.writeln('    List<${model.distinctClassName}>? count,');
+    buffer.writeln('    List<${model.distinctClassName}>? min,');
+    buffer.writeln('    List<${model.distinctClassName}>? max,');
+    buffer.writeln('    List<${model.distinctClassName}>? sum,');
+    buffer.writeln('    List<${model.distinctClassName}>? avg,');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return ${model.aggregateSpecClassName}(');
+    buffer.writeln('      countAll: countAll ?? this.countAll,');
+    buffer.writeln('      count: count ?? this.count,');
+    buffer.writeln('      min: min ?? this.min,');
+    buffer.writeln('      max: max ?? this.max,');
+    buffer.writeln('      sum: sum ?? this.sum,');
+    buffer.writeln('      avg: avg ?? this.avg,');
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
     buffer.writeln('  OrmAggregateSpec toRuntimeSpec() {');
     buffer.writeln('    return OrmAggregateSpec(');
     buffer.writeln('      countAll: countAll,');
@@ -1074,6 +1092,77 @@ final class TypedClientWriter {
       '      avg: avg.map((entry) => entry.value).toList(growable: false),',
     );
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+
+    final aggregateBuilderClassName = '${model.classBaseName}AggregateBuilder';
+    buffer.writeln('class $aggregateBuilderClassName {');
+    buffer.writeln('  final ${model.aggregateSpecClassName} _spec;');
+    buffer.writeln();
+    buffer.writeln('  const $aggregateBuilderClassName._(this._spec);');
+    buffer.writeln();
+    buffer.writeln(
+      '  const $aggregateBuilderClassName() : _spec = const ${model.aggregateSpecClassName}();',
+    );
+    buffer.writeln();
+    buffer.writeln(
+      '  $aggregateBuilderClassName countAll() => $aggregateBuilderClassName._(_spec.copyWith(countAll: true));',
+    );
+    buffer.writeln();
+    for (final bucket in const <String>['count', 'min', 'max', 'sum', 'avg']) {
+      buffer.writeln(
+        '  $aggregateBuilderClassName $bucket(${model.distinctClassName} field) =>',
+      );
+      buffer.writeln('      $aggregateBuilderClassName._(');
+      buffer.writeln('        _spec.copyWith(');
+      buffer.writeln('          $bucket: _appendUnique(_spec.$bucket, field),');
+      buffer.writeln('        ),');
+      buffer.writeln('      );');
+      buffer.writeln();
+    }
+    buffer.writeln(
+      '  $aggregateBuilderClassName merge(${model.aggregateSpecClassName} spec) =>',
+    );
+    buffer.writeln('      $aggregateBuilderClassName._(');
+    buffer.writeln('        _spec.copyWith(');
+    buffer.writeln('          countAll: _spec.countAll || spec.countAll,');
+    for (final bucket in const <String>['count', 'min', 'max', 'sum', 'avg']) {
+      buffer.writeln(
+        '          $bucket: _appendUniqueMany(_spec.$bucket, spec.$bucket),',
+      );
+    }
+    buffer.writeln('        ),');
+    buffer.writeln('      );');
+    buffer.writeln();
+    buffer.writeln('  ${model.aggregateSpecClassName} toSpec() => _spec;');
+    buffer.writeln();
+    buffer.writeln(
+      '  List<${model.distinctClassName}> _appendUnique(List<${model.distinctClassName}> current, ${model.distinctClassName} field) {',
+    );
+    buffer.writeln('    if (current.contains(field)) {');
+    buffer.writeln('      return current;');
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    return <${model.distinctClassName}>[...current, field];',
+    );
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln(
+      '  List<${model.distinctClassName}> _appendUniqueMany(List<${model.distinctClassName}> current, List<${model.distinctClassName}> next) {',
+    );
+    buffer.writeln('    if (next.isEmpty) {');
+    buffer.writeln('      return current;');
+    buffer.writeln('    }');
+    buffer.writeln(
+      '    final merged = <${model.distinctClassName}>[...current];',
+    );
+    buffer.writeln('    for (final field in next) {');
+    buffer.writeln('      if (!merged.contains(field)) {');
+    buffer.writeln('        merged.add(field);');
+    buffer.writeln('      }');
+    buffer.writeln('    }');
+    buffer.writeln('    return merged;');
     buffer.writeln('  }');
     buffer.writeln('}');
     buffer.writeln();
@@ -2085,35 +2174,16 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    final aggregateBuilderClassName = '${model.classBaseName}AggregateBuilder';
     buffer.writeln('  Future<${model.aggregateResultClassName}> aggregate({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
-    buffer.writeln('    bool countAll = false,');
     buffer.writeln(
-      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
+      '    required $aggregateBuilderClassName Function($aggregateBuilderClassName aggregate) build,',
     );
     buffer.writeln('  }) {');
-    buffer.writeln('    return query(where: where).aggregate(');
-    buffer.writeln('      countAll: countAll,');
-    buffer.writeln('      count: count,');
-    buffer.writeln('      min: min,');
-    buffer.writeln('      max: max,');
-    buffer.writeln('      sum: sum,');
-    buffer.writeln('      avg: avg,');
-    buffer.writeln('    );');
+    buffer.writeln('    return query(where: where).aggregate(build);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2417,6 +2487,7 @@ final class TypedClientWriter {
     required _ResolvedModel model,
   }) {
     final runtimeName = _escapeString(model.model.runtimeName);
+    final aggregateBuilderClassName = '${model.classBaseName}AggregateBuilder';
     final relationFields = model.model.fields
         .where((field) => field.isRelation)
         .toList(growable: false);
@@ -2943,35 +3014,13 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<${model.aggregateResultClassName}> aggregate({');
-    buffer.writeln('    bool countAll = false,');
     buffer.writeln(
-      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
+      '  Future<${model.aggregateResultClassName}> aggregate($aggregateBuilderClassName Function($aggregateBuilderClassName aggregate) build) {',
     );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln('  }) {');
     buffer.writeln("    _assertReadExecutionSupported('aggregate');");
-    buffer.writeln('    return aggregateWith(');
-    buffer.writeln('      ${model.aggregateSpecClassName}(');
-    buffer.writeln('        countAll: countAll,');
-    buffer.writeln('        count: count,');
-    buffer.writeln('        min: min,');
-    buffer.writeln('        max: max,');
-    buffer.writeln('        sum: sum,');
-    buffer.writeln('        avg: avg,');
-    buffer.writeln('      ),');
-    buffer.writeln('    );');
+    buffer.writeln(
+      '    return aggregateWith(build($aggregateBuilderClassName()).toSpec());',
+    );
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -3172,6 +3221,7 @@ final class TypedClientWriter {
     required _ResolvedModel model,
   }) {
     final runtimeName = _escapeString(model.model.runtimeName);
+    final aggregateBuilderClassName = '${model.classBaseName}AggregateBuilder';
     buffer.writeln('class ${model.groupedQueryClassName} {');
     buffer.writeln('  final ${model.delegateClassName} _delegate;');
     buffer.writeln('  final ${model.whereInputClassName} _where;');
@@ -3257,35 +3307,11 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln(
-      '  Future<List<${model.groupByResultClassName}>> aggregate({',
-    );
-    buffer.writeln('    bool countAll = false,');
-    buffer.writeln(
-      '    List<${model.distinctClassName}> count = const <${model.distinctClassName}>[],',
+      '  Future<List<${model.groupByResultClassName}>> aggregate($aggregateBuilderClassName Function($aggregateBuilderClassName aggregate) build) {',
     );
     buffer.writeln(
-      '    List<${model.distinctClassName}> min = const <${model.distinctClassName}>[],',
+      '    return aggregateWith(build($aggregateBuilderClassName()).toSpec());',
     );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> max = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> sum = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln(
-      '    List<${model.distinctClassName}> avg = const <${model.distinctClassName}>[],',
-    );
-    buffer.writeln('  }) {');
-    buffer.writeln('    return aggregateWith(');
-    buffer.writeln('      ${model.aggregateSpecClassName}(');
-    buffer.writeln('        countAll: countAll,');
-    buffer.writeln('        count: count,');
-    buffer.writeln('        min: min,');
-    buffer.writeln('        max: max,');
-    buffer.writeln('        sum: sum,');
-    buffer.writeln('        avg: avg,');
-    buffer.writeln('      ),');
-    buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
 

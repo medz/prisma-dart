@@ -276,6 +276,56 @@ void main() {
       },
     );
 
+    test(
+      'runtime rejects empty aggregate and grouped aggregate plans',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        try {
+          await expectLater(
+            () => client.execute(
+              OrmPlan.read(
+                contractHash: contract.hash,
+                model: 'User',
+                resultMode: OrmReadResultMode.all,
+                shape: OrmReadShape.aggregate,
+                aggregate: OrmReadAggregatePlan(),
+              ),
+            ),
+            throwsA(
+              isA<OrmRuntimeError>().having(
+                (error) => error.code,
+                'code',
+                'PLAN.AGGREGATE_FIELDS_EMPTY',
+              ),
+            ),
+          );
+
+          await expectLater(
+            () => client.execute(
+              OrmPlan.read(
+                contractHash: contract.hash,
+                model: 'User',
+                resultMode: OrmReadResultMode.all,
+                shape: OrmReadShape.groupedAggregate,
+                aggregate: OrmReadAggregatePlan(),
+                groupBy: OrmReadGroupByPlan(by: const <String>['email']),
+              ),
+            ),
+            throwsA(
+              isA<OrmRuntimeError>().having(
+                (error) => error.code,
+                'code',
+                'PLAN.AGGREGATE_FIELDS_EMPTY',
+              ),
+            ),
+          );
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
+
     test('explain requires an active runtime connection', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');

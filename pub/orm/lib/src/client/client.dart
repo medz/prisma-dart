@@ -1463,28 +1463,15 @@ class ModelDelegate {
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     JsonMap? cursor,
     OrmReadPagePlan? page,
-    bool countAll = false,
-    List<String> count = const <String>[],
-    List<String> min = const <String>[],
-    List<String> max = const <String>[],
-    List<String> sum = const <String>[],
-    List<String> avg = const <String>[],
-  }) =>
-      _queryFromSpec(
-        OrmReadQuerySpec(
-          where: where,
-          orderBy: orderBy,
-          cursor: cursor,
-          page: page,
-        ),
-      ).aggregate(
-        countAll: countAll,
-        count: count,
-        min: min,
-        max: max,
-        sum: sum,
-        avg: avg,
-      );
+    required OrmAggregateBuilder Function(OrmAggregateBuilder aggregate) build,
+  }) => _queryFromSpec(
+    OrmReadQuerySpec(
+      where: where,
+      orderBy: orderBy,
+      cursor: cursor,
+      page: page,
+    ),
+  ).aggregate(build);
 
   Future<JsonMap> aggregateWith({
     JsonMap where = const <String, Object?>{},
@@ -2153,10 +2140,25 @@ class ModelDelegate {
     }
   }
 
+  void _assertAggregateSpecRequested(
+    OrmAggregateSpec aggregate, {
+    required String terminal,
+  }) {
+    if (!aggregate.isEmpty) {
+      return;
+    }
+    throw runtimeError(
+      'PLAN.AGGREGATE_FIELDS_EMPTY',
+      '$terminal requires at least one aggregation selector.',
+      details: <String, Object?>{'model': modelName, 'terminal': terminal},
+    );
+  }
+
   void _validateAggregateSpec({
     required OrmAggregateSpec aggregate,
     required String source,
   }) {
+    _assertAggregateSpecRequested(aggregate, terminal: source);
     _assertKnownAggregateFields(
       fields: aggregate.count,
       source: '$source.count',
@@ -2720,6 +2722,97 @@ final class OrmAggregateSpec {
        max = List<String>.unmodifiable(max),
        sum = List<String>.unmodifiable(sum),
        avg = List<String>.unmodifiable(avg);
+
+  OrmAggregateSpec copyWith({
+    bool? countAll,
+    List<String>? count,
+    List<String>? min,
+    List<String>? max,
+    List<String>? sum,
+    List<String>? avg,
+  }) {
+    return OrmAggregateSpec(
+      countAll: countAll ?? this.countAll,
+      count: count ?? this.count,
+      min: min ?? this.min,
+      max: max ?? this.max,
+      sum: sum ?? this.sum,
+      avg: avg ?? this.avg,
+    );
+  }
+
+  bool get isEmpty =>
+      !countAll &&
+      count.isEmpty &&
+      min.isEmpty &&
+      max.isEmpty &&
+      sum.isEmpty &&
+      avg.isEmpty;
+}
+
+@immutable
+final class OrmAggregateBuilder {
+  final OrmAggregateSpec _spec;
+
+  OrmAggregateBuilder._(this._spec);
+
+  OrmAggregateBuilder() : _spec = OrmAggregateSpec();
+
+  OrmAggregateBuilder countAll() =>
+      OrmAggregateBuilder._(_spec.copyWith(countAll: true));
+
+  OrmAggregateBuilder count(String field) => OrmAggregateBuilder._(
+    _spec.copyWith(count: _appendUnique(_spec.count, field)),
+  );
+
+  OrmAggregateBuilder min(String field) => OrmAggregateBuilder._(
+    _spec.copyWith(min: _appendUnique(_spec.min, field)),
+  );
+
+  OrmAggregateBuilder max(String field) => OrmAggregateBuilder._(
+    _spec.copyWith(max: _appendUnique(_spec.max, field)),
+  );
+
+  OrmAggregateBuilder sum(String field) => OrmAggregateBuilder._(
+    _spec.copyWith(sum: _appendUnique(_spec.sum, field)),
+  );
+
+  OrmAggregateBuilder avg(String field) => OrmAggregateBuilder._(
+    _spec.copyWith(avg: _appendUnique(_spec.avg, field)),
+  );
+
+  OrmAggregateBuilder merge(OrmAggregateSpec spec) => OrmAggregateBuilder._(
+    _spec.copyWith(
+      countAll: _spec.countAll || spec.countAll,
+      count: _appendUniqueMany(_spec.count, spec.count),
+      min: _appendUniqueMany(_spec.min, spec.min),
+      max: _appendUniqueMany(_spec.max, spec.max),
+      sum: _appendUniqueMany(_spec.sum, spec.sum),
+      avg: _appendUniqueMany(_spec.avg, spec.avg),
+    ),
+  );
+
+  OrmAggregateSpec toSpec() => _spec;
+}
+
+List<String> _appendUnique(List<String> current, String field) {
+  if (current.contains(field)) {
+    return current;
+  }
+  return List<String>.unmodifiable(<String>[...current, field]);
+}
+
+List<String> _appendUniqueMany(List<String> current, List<String> next) {
+  if (next.isEmpty) {
+    return current;
+  }
+  final merged = <String>[...current];
+  for (final field in next) {
+    if (!merged.contains(field)) {
+      merged.add(field);
+    }
+  }
+  return List<String>.unmodifiable(merged);
 }
 
 @immutable
@@ -3119,26 +3212,16 @@ final class ModelQuery {
     return (await _prepareRead()).explain();
   }
 
-  Future<JsonMap> aggregate({
-    bool countAll = false,
-    List<String> count = const <String>[],
-    List<String> min = const <String>[],
-    List<String> max = const <String>[],
-    List<String> sum = const <String>[],
-    List<String> avg = const <String>[],
-  }) => aggregateWith(
-    OrmAggregateSpec(
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
-    ),
-  );
+  Future<JsonMap> aggregate(
+    OrmAggregateBuilder Function(OrmAggregateBuilder aggregate) build,
+  ) {
+    _assertReadExecutionSupported('aggregate');
+    return aggregateWith(build(OrmAggregateBuilder()).toSpec());
+  }
 
   Future<JsonMap> aggregateWith(OrmAggregateSpec aggregate) {
     _assertAggregateQueryState();
+    _delegate._assertAggregateSpecRequested(aggregate, terminal: 'aggregate');
     return _delegate
         ._prepareAggregateQuery(spec: _state, aggregate: aggregate)
         .then((prepared) => prepared.execute());
@@ -3346,26 +3429,13 @@ final class ModelGroupedQuery {
     );
   }
 
-  Future<List<JsonMap>> aggregate({
-    bool countAll = false,
-    List<String> count = const <String>[],
-    List<String> min = const <String>[],
-    List<String> max = const <String>[],
-    List<String> sum = const <String>[],
-    List<String> avg = const <String>[],
-  }) => aggregateWith(
-    OrmAggregateSpec(
-      countAll: countAll,
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
-      avg: avg,
-    ),
-  );
+  Future<List<JsonMap>> aggregate(
+    OrmAggregateBuilder Function(OrmAggregateBuilder aggregate) build,
+  ) => aggregateWith(build(OrmAggregateBuilder()).toSpec());
 
   Future<List<JsonMap>> aggregateWith(OrmAggregateSpec aggregate) {
     _assertExecutionSupported('aggregate');
+    _delegate._assertAggregateSpecRequested(aggregate, terminal: 'aggregate');
     return _prepareGrouped(
       groupBy: _groupBy.copyWith(
         countAll: aggregate.countAll,

@@ -71,11 +71,11 @@ void main() {
       () {
         expect(
           RegExp(
-            r'class\s+ModelQuery\s*\{[\s\S]*?Future<JsonMap>\s+aggregate\(\{[\s\S]*?\)\s*=>\s*aggregateWith\(\s*OrmAggregateSpec\(',
+            r'class\s+ModelQuery\s*\{[\s\S]*?Future<JsonMap>\s+aggregate\(\s*OrmAggregateBuilder\s+Function\(OrmAggregateBuilder\s+aggregate\)\s+build,\s*\)\s*\{[\s\S]*?return\s+aggregateWith\(build\(OrmAggregateBuilder\(\)\)\.toSpec\(\)\);',
           ).hasMatch(source),
           isTrue,
           reason:
-              'Expected ModelQuery.aggregate(...) to compile convenience arguments into OrmAggregateSpec.',
+              'Expected ModelQuery.aggregate(...) to route through the aggregate builder callback.',
         );
         expect(
           RegExp(

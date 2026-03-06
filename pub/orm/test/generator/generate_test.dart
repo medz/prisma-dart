@@ -1277,7 +1277,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(\{[\s\S]*?return\s+query\(where:\s*where\)\.aggregate\([\s\S]*?count:\s*count,[\s\S]*?avg:\s*avg,[\s\S]*?\);',
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),[\s\S]*?required\s+UserAggregateBuilder\s+Function\(UserAggregateBuilder\s+aggregate\)\s+build,[\s\S]*?return\s+query\(where:\s*where\)\.aggregate\(build\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -1554,11 +1554,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(\{[\s\S]*?return\s+aggregateWith\(\s*UserAggregateSpec\(',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregate\(UserAggregateBuilder\s+Function\(UserAggregateBuilder\s+aggregate\)\s+build\)\s*\{[\s\S]*?return\s+aggregateWith\(build\(UserAggregateBuilder\(\)\)\.toSpec\(\)\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected UserQuery.aggregate(...) to compile convenience arguments into a structured typed aggregate spec.',
+              'Expected UserQuery.aggregate(...) to route through the typed aggregate builder callback.',
         );
         expect(
           RegExp(
@@ -1651,6 +1651,12 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected generated source to include typed groupBy having helper.',
+        );
+        expect(
+          RegExp(r'\bclass UserAggregateBuilder\b').hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated source to include typed aggregate builder helper.',
         );
         expect(
           RegExp(

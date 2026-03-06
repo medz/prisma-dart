@@ -1123,6 +1123,21 @@ final class OrmRuntimeCore implements RuntimeCore {
             },
           );
         }
+        if (!aggregate.countAll &&
+            aggregate.count.isEmpty &&
+            aggregate.min.isEmpty &&
+            aggregate.max.isEmpty &&
+            aggregate.sum.isEmpty &&
+            aggregate.avg.isEmpty) {
+          throw runtimeError(
+            'PLAN.AGGREGATE_FIELDS_EMPTY',
+            'aggregate requires at least one aggregation selector.',
+            details: <String, Object?>{
+              'model': model.name,
+              'shape': plan.shape.name,
+            },
+          );
+        }
         if (plan.include.isNotEmpty) {
           throw runtimeError(
             'PLAN.READ_INCLUDE_UNSUPPORTED',
@@ -1152,6 +1167,21 @@ final class OrmRuntimeCore implements RuntimeCore {
           throw runtimeError(
             'PLAN.READ_SHAPE_INVALID',
             'Grouped aggregate plans require both aggregate and groupBy metadata.',
+            details: <String, Object?>{
+              'model': model.name,
+              'shape': plan.shape.name,
+            },
+          );
+        }
+        if (!aggregate.countAll &&
+            aggregate.count.isEmpty &&
+            aggregate.min.isEmpty &&
+            aggregate.max.isEmpty &&
+            aggregate.sum.isEmpty &&
+            aggregate.avg.isEmpty) {
+          throw runtimeError(
+            'PLAN.AGGREGATE_FIELDS_EMPTY',
+            'grouped aggregate requires at least one aggregation selector.',
             details: <String, Object?>{
               'model': model.name,
               'shape': plan.shape.name,

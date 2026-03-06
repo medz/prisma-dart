@@ -561,12 +561,13 @@ void main() {
       await users.create(data: <String, Object?>{'id': 3, 'email': 'b@x.com'});
 
       final aggregate = await users.aggregate(
-        countAll: true,
-        count: const <String>['email'],
-        min: const <String>['id'],
-        max: const <String>['id'],
-        sum: const <String>['id'],
-        avg: const <String>['id'],
+        build: (aggregate) => aggregate
+            .countAll()
+            .count('email')
+            .min('id')
+            .max('id')
+            .sum('id')
+            .avg('id'),
       );
 
       expect(aggregate['count'], <String, Object?>{'all': 3, 'email': 2});
@@ -589,11 +590,7 @@ void main() {
       final grouped = await users
           .query()
           .groupedBy(const <String>['email'])
-          .aggregate(
-            countAll: true,
-            sum: const <String>['id'],
-            avg: const <String>['id'],
-          );
+          .aggregate((aggregate) => aggregate.countAll().sum('id').avg('id'));
 
       expect(grouped, hasLength(2));
       final groupedByEmail = <String, JsonMap>{
@@ -623,7 +620,7 @@ void main() {
           .query()
           .groupedBy(const <String>['email'])
           .havingExpr((having) => having.countAll().gte(2), merge: false)
-          .aggregate(countAll: true, sum: const <String>['id']);
+          .aggregate((aggregate) => aggregate.countAll().sum('id'));
 
       expect(grouped, hasLength(2));
       final groupedByEmail = <String, JsonMap>{
@@ -655,7 +652,7 @@ void main() {
             ]),
             merge: false,
           )
-          .aggregate(countAll: true, sum: const <String>['id']);
+          .aggregate((aggregate) => aggregate.countAll().sum('id'));
 
       expect(grouped, hasLength(2));
       await client.disconnect();
@@ -723,7 +720,7 @@ void main() {
         () => users
             .query()
             .select(const <String>['id'])
-            .aggregate(countAll: true),
+            .aggregate((aggregate) => aggregate.countAll()),
         throwsA(
           isA<OrmRuntimeError>().having(
             (error) => error.code,
@@ -749,7 +746,7 @@ void main() {
                 'email': <String, Object?>{'gte': 1},
               },
             }, merge: false)
-            .aggregate(sum: const <String>['id']),
+            .aggregate((aggregate) => aggregate.sum('id')),
         throwsA(
           isA<OrmRuntimeError>().having(
             (error) => error.code,
@@ -759,6 +756,22 @@ void main() {
         ),
       );
       await client.disconnect();
+    });
+
+    test('aggregate rejects empty aggregate builder', () async {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final users = client.db.orm.model('User');
+
+      expect(
+        () => users.query().aggregate((aggregate) => aggregate),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.AGGREGATE_FIELDS_EMPTY',
+          ),
+        ),
+      );
     });
 
     test('supports where operators gt/in/notIn in memory engine', () async {
