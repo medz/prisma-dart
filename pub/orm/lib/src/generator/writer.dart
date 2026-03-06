@@ -532,36 +532,36 @@ final class TypedClientWriter {
     required List<_ResolvedModel> models,
   }) {
     buffer.writeln('class GeneratedOrmClient {');
-    buffer.writeln('  final OrmModelContext _context;');
+    buffer.writeln('  final OrmDbContext _context;');
     buffer.writeln();
     buffer.writeln('  GeneratedOrmClient(this._context);');
     buffer.writeln();
     buffer.writeln(
-      '  late final GeneratedOrmDb db = GeneratedOrmDb(_context);',
+      '  late final GeneratedOrmDb db = GeneratedOrmDb(_context.db);',
     );
 
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class GeneratedOrmDb {');
-    buffer.writeln('  final OrmModelContext _context;');
+    buffer.writeln('  final OrmDbNamespace _db;');
     buffer.writeln();
-    buffer.writeln('  GeneratedOrmDb(this._context);');
+    buffer.writeln('  GeneratedOrmDb(this._db);');
     buffer.writeln();
     buffer.writeln(
-      '  late final GeneratedOrmCollections orm = GeneratedOrmCollections(_context);',
+      '  late final GeneratedOrmCollections orm = GeneratedOrmCollections(_db.orm);',
     );
     buffer.writeln();
     buffer.writeln(
-      '  late final GeneratedOrmSql sql = GeneratedOrmSql(_context);',
+      '  late final GeneratedOrmSql sql = GeneratedOrmSql(_db.sql);',
     );
     buffer.writeln('}');
     buffer.writeln();
 
     buffer.writeln('class GeneratedOrmCollections {');
-    buffer.writeln('  final OrmModelContext _context;');
+    buffer.writeln('  final OrmModelNamespace _orm;');
     buffer.writeln();
-    buffer.writeln('  GeneratedOrmCollections(this._context);');
+    buffer.writeln('  GeneratedOrmCollections(this._orm);');
     buffer.writeln();
 
     for (final model in models) {
@@ -569,7 +569,7 @@ final class TypedClientWriter {
         '  late final ${model.delegateClassName} ${model.getterName} =',
       );
       buffer.writeln(
-        "      ${model.delegateClassName}(_context.model('${_escapeString(model.model.runtimeName)}'));",
+        "      ${model.delegateClassName}(_orm.model('${_escapeString(model.model.runtimeName)}'));",
       );
       buffer.writeln();
     }
@@ -578,10 +578,9 @@ final class TypedClientWriter {
     buffer.writeln();
 
     buffer.writeln('class GeneratedOrmSql {');
-    buffer.writeln('  final OrmModelContext _context;');
-    buffer.writeln('  late final OrmSqlApi _api = _context.sql;');
+    buffer.writeln('  final OrmSqlApi _api;');
     buffer.writeln();
-    buffer.writeln('  GeneratedOrmSql(this._context);');
+    buffer.writeln('  GeneratedOrmSql(this._api);');
     buffer.writeln();
     buffer.writeln('  OrmSqlApi get raw => _api;');
     buffer.writeln();

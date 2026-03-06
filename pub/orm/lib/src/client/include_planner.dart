@@ -57,7 +57,9 @@ final class _RepositoryIncludePlanner {
         model: _delegate.modelName,
         relationName: relationName,
       );
-      final relatedDelegate = _delegate._client.model(relation.relatedModel);
+      final relatedDelegate = _delegate._client.db.orm.model(
+        relation.relatedModel,
+      );
       _delegate._validateIncludePagination(include: relationInclude);
 
       final relatedRows = await _loadRelationRowsSingleQuery(
@@ -138,7 +140,9 @@ final class _RepositoryIncludePlanner {
         model: _delegate.modelName,
         relationName: relationName,
       );
-      final relatedDelegate = _delegate._client.model(relation.relatedModel);
+      final relatedDelegate = _delegate._client.db.orm.model(
+        relation.relatedModel,
+      );
 
       final nextRows = <JsonMap>[];
       for (final row in hydrated) {

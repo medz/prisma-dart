@@ -88,8 +88,8 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
-    return _delegate._client.transaction((tx) async {
-      final scoped = tx.model(_delegate.modelName);
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
       return _RepositoryMutationExecutor(scoped)._createNestedInScope(
         data: data,
         nestedCreate: nestedCreate,
@@ -106,8 +106,8 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
-    return _delegate._client.transaction((tx) async {
-      final scoped = tx.model(_delegate.modelName);
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
       return _RepositoryMutationExecutor(scoped)._updateNestedInScope(
         where: where,
         data: data,
@@ -123,8 +123,8 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
-    return _delegate._client.transaction((tx) async {
-      final scoped = tx.model(_delegate.modelName);
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
       final rows = <JsonMap>[];
       for (final item in data) {
@@ -137,8 +137,8 @@ final class _RepositoryMutationExecutor {
   }
 
   Future<int> deleteMany({required JsonMap where}) {
-    return _delegate._client.transaction((tx) async {
-      final scoped = tx.model(_delegate.modelName);
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
       var deleted = 0;
       while (true) {
@@ -163,8 +163,8 @@ final class _RepositoryMutationExecutor {
     required List<String> select,
     required Map<String, IncludeSpec> include,
   }) {
-    return _delegate._client.transaction((tx) async {
-      final scoped = tx.model(_delegate.modelName);
+    return _delegate._client.transaction((txDb) async {
+      final scoped = txDb.orm.model(_delegate.modelName);
       final executor = _RepositoryMutationExecutor(scoped);
       final existing = await scoped.oneOrNull(where: where);
       if (existing == null) {
@@ -358,7 +358,7 @@ final class _RepositoryMutationExecutor {
         model: _delegate.modelName,
         relationName: entry.key,
       );
-      final related = _delegate._client.model(relation.relatedModel);
+      final related = _delegate._client.db.orm.model(relation.relatedModel);
       final relatedExecutor = _RepositoryMutationExecutor(related);
       for (final child in entry.value) {
         final linkedData = _delegate._linkNestedData(
@@ -413,7 +413,7 @@ final class _RepositoryMutationExecutor {
         model: _delegate.modelName,
         relationName: entry.key,
       );
-      final related = _delegate._client.model(relation.relatedModel);
+      final related = _delegate._client.db.orm.model(relation.relatedModel);
       final relatedExecutor = _RepositoryMutationExecutor(related);
       for (final child in entry.value) {
         final linkedData = _delegate._linkNestedData(

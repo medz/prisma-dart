@@ -250,7 +250,7 @@ void main() {
       );
 
       await client.connect();
-      await expectLater(client.model('User').all(), completes);
+      await expectLater(client.db.orm.model('User').all(), completes);
       await client.disconnect();
     });
 
@@ -268,7 +268,7 @@ void main() {
 
       await client.connect();
       await expectLater(
-        client.model('User').all(),
+        client.db.orm.model('User').all(),
         throwsA(isA<ContractMarkerMissingException>()),
       );
       await client.disconnect();

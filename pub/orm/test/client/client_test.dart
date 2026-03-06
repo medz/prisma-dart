@@ -82,7 +82,7 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
 
-      final users = client.model('users');
+      final users = client.db.orm.model('users');
       final created = await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
       );
@@ -113,7 +113,7 @@ void main() {
 
     test('requires explicit connect', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await expectLater(
         users.all(),
@@ -125,7 +125,7 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
 
-      final insertResult = await client.sql
+      final insertResult = await client.db.sql
           .insertInto('users')
           .values(<String, Object?>{'id': 'u1', 'email': 'a@example.com'})
           .returning(const <String>['id', 'email'])
@@ -133,7 +133,7 @@ void main() {
       expect(insertResult.affectedRows, 1);
       expect(insertResult.row?['id'], 'u1');
 
-      final selectedRows = await client.sql
+      final selectedRows = await client.db.sql
           .from('User')
           .where(<String, Object?>{'id': 'u1'})
           .select(const <String>['email'])
@@ -141,7 +141,7 @@ void main() {
       expect(selectedRows, hasLength(1));
       expect(selectedRows.single['email'], 'a@example.com');
 
-      final updated = await client.sql
+      final updated = await client.db.sql
           .update('User')
           .where(<String, Object?>{'id': 'u1'})
           .set(<String, Object?>{'email': 'b@example.com'})
@@ -150,7 +150,7 @@ void main() {
       expect(updated.affectedRows, 1);
       expect(updated.row?['email'], 'b@example.com');
 
-      final deleted = await client.sql
+      final deleted = await client.db.sql
           .deleteFrom('User')
           .where(<String, Object?>{'id': 'u1'})
           .returning(const <String>['id'])
@@ -158,7 +158,7 @@ void main() {
       expect(deleted.affectedRows, 1);
       expect(deleted.row?['id'], 'u1');
 
-      final remaining = await client.sql.from('User').all();
+      final remaining = await client.db.sql.from('User').all();
       expect(remaining, isEmpty);
       await client.disconnect();
     });
@@ -166,7 +166,7 @@ void main() {
     test('db.sql requires explicit connect', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await expectLater(
-        client.sql.from('User').all(),
+        client.db.sql.from('User').all(),
         throwsA(isA<ClientNotConnectedException>()),
       );
     });
@@ -279,7 +279,7 @@ void main() {
     test('supports ordering and pagination in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': '1', 'email': 'c@x.com'},
@@ -306,7 +306,7 @@ void main() {
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         await users.create(
           data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
@@ -354,7 +354,7 @@ void main() {
     test('supports aggregate helpers in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
       await users.create(data: <String, Object?>{'id': 2, 'email': null});
@@ -380,7 +380,7 @@ void main() {
     test('supports groupBy helpers in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
       await users.create(data: <String, Object?>{'id': 2, 'email': 'a@x.com'});
@@ -413,7 +413,7 @@ void main() {
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         await users.create(
           data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
@@ -461,7 +461,7 @@ void main() {
     test('rejects invalid groupBy aggregate orderBy fields', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
 
@@ -488,7 +488,7 @@ void main() {
     test('rejects invalid groupBy having aggregate fields', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
 
@@ -516,7 +516,7 @@ void main() {
     test('supports where operators gt/in/notIn in memory engine', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
       await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
@@ -567,7 +567,7 @@ void main() {
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         await users.create(
           data: <String, Object?>{'id': 'u1', 'email': 'alpha@example.com'},
@@ -623,7 +623,7 @@ void main() {
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         await users.create(
           data: <String, Object?>{'id': 1, 'email': 'a@example.com'},
@@ -693,7 +693,7 @@ void main() {
       () async {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         final created = await users.create(
           data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
@@ -730,7 +730,7 @@ void main() {
     test('supports immutable chained query state for reads', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': '1', 'email': 'c@x.com'},
@@ -761,7 +761,7 @@ void main() {
           contract: relationalContract,
           engine: MemoryEngine(),
         );
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         final plan = await users
             .query()
@@ -795,7 +795,7 @@ void main() {
       final client = OrmClient(contract: contract, engine: engine);
       await client.connect();
 
-      await client.model('User').create(
+      await client.db.orm.model('User').create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
       );
       final createPlan = engine.executedPlans.single;
@@ -804,7 +804,7 @@ void main() {
       expect(createPlan.mutationResultMode, OrmMutationResultMode.row);
 
       engine.reset();
-      await client.model('User').update(
+      await client.db.orm.model('User').update(
         where: <String, Object?>{'id': 'u1'},
         data: <String, Object?>{'email': 'b@x.com'},
       );
@@ -816,7 +816,7 @@ void main() {
         OrmMutationResultMode.rowOrNull,
       );
 
-      final sqlPlan = client.sql
+      final sqlPlan = client.db.sql
           .update('User')
           .where(<String, Object?>{'id': 'u1'})
           .set(<String, Object?>{'email': 'c@x.com'})
@@ -831,7 +831,7 @@ void main() {
     test('supports select projection through chained query state', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': '1', 'email': 'a@x.com'},
@@ -858,7 +858,7 @@ void main() {
     test('supports chained query state for unique/update/delete', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
@@ -887,7 +887,7 @@ void main() {
     test('supports firstOrNull, count and exists helpers', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'b@x.com'},
@@ -917,7 +917,7 @@ void main() {
     test('supports stream-first reads on delegate and query', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'c@x.com'},
@@ -948,7 +948,7 @@ void main() {
     test('rejects unsupported query state on mutation terminals', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       expect(
         () => users
@@ -1003,7 +1003,7 @@ void main() {
     test('supports upsert create and update branches', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       final created = await users.upsert(
         where: <String, Object?>{'id': 'u1'},
@@ -1024,7 +1024,7 @@ void main() {
     test('supports createMany and deleteMany helpers', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       final createdRows = await users.createMany(
         data: <JsonMap>[
@@ -1048,7 +1048,7 @@ void main() {
     test('createMany_rolls_back_on_partial_failure', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': 'seed', 'email': 'seed@x.com'},
@@ -1089,7 +1089,7 @@ void main() {
           engine: _NoMutationReturnEngine(inner: MemoryEngine()),
         );
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         final created = await users.create(
           data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
@@ -1131,7 +1131,7 @@ void main() {
         await client.connect();
 
         await expectLater(
-          client.model('User').create(
+          client.db.orm.model('User').create(
                 data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
               ),
           throwsA(isA<RuntimeCreateResultMissingException>()),
@@ -1156,7 +1156,7 @@ void main() {
         );
         final client = OrmClient(contract: noReturningContract, engine: engine);
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         await users.create(
           data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
@@ -1194,7 +1194,7 @@ void main() {
         );
         final client = OrmClient(contract: noReturningContract, engine: engine);
         await client.connect();
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         await users.create(
           data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
@@ -1226,7 +1226,7 @@ void main() {
         final client = OrmClient(contract: contract, engine: MemoryEngine());
         await client.connect();
 
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
         await users.create(
           data: <String, Object?>{'id': 'u1', 'email': 'a@x.com'},
         );
@@ -1264,7 +1264,7 @@ void main() {
         );
         await client.connect();
         await _seedRelationalData(client);
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
         await users.create(
           data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
         );
@@ -1324,7 +1324,7 @@ void main() {
       );
       await client.connect();
       await _seedRelationalData(client);
-      final posts = client.model('Post');
+      final posts = client.db.orm.model('Post');
 
       await posts.create(
         data: <String, Object?>{'id': 'p4', 'userId': 'ux', 'title': 'Post D'},
@@ -1400,7 +1400,7 @@ void main() {
       );
       await client.connect();
       await _seedRelationalData(client);
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
       await users.create(
         data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
       );
@@ -1447,7 +1447,7 @@ void main() {
       );
       await client.connect();
       await _seedRelationalData(client);
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       final updated = await users.update(
         where: <String, Object?>{
@@ -1474,7 +1474,7 @@ void main() {
       );
       await client.connect();
       await _seedRelationalData(client);
-      final posts = client.model('Post');
+      final posts = client.db.orm.model('Post');
 
       final updated = await posts.update(
         where: <String, Object?>{
@@ -1509,8 +1509,7 @@ void main() {
       );
       await client.connect();
 
-      await client
-          .model('User')
+      await client.db.orm.model('User')
           .all(
             where: <String, Object?>{
               'posts': <String, Object?>{
@@ -1537,8 +1536,7 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final rows = await client
-          .model('User')
+      final rows = await client.db.orm.model('User')
           .all(
             orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
             include: <String, IncludeSpec>{
@@ -1582,8 +1580,7 @@ void main() {
           await client.connect();
           try {
             await _seedRelationalData(client);
-            final rows = await client
-                .model('User')
+            final rows = await client.db.orm.model('User')
                 .all(
                   orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
                   include: <String, IncludeSpec>{
@@ -1632,8 +1629,7 @@ void main() {
         await _seedRelationalData(client);
         engine.reset();
 
-        final rows = await client
-            .model('User')
+        final rows = await client.db.orm.model('User')
             .all(
               orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
               include: <String, IncludeSpec>{
@@ -1678,8 +1674,7 @@ void main() {
         try {
           await _seedRelationalData(client);
           await expectLater(
-            client
-                .model('User')
+            client.db.orm.model('User')
                 .all(
                   include: <String, IncludeSpec>{'posts': const IncludeSpec()},
                 ),
@@ -1698,7 +1693,7 @@ void main() {
       );
       await client.connect();
       await _seedRelationalData(client);
-      final posts = client.model('Post');
+      final posts = client.db.orm.model('Post');
 
       final created = await posts.create(
         data: <String, Object?>{'id': 'p4', 'userId': 'u1', 'title': 'Post D'},
@@ -1739,8 +1734,7 @@ void main() {
         );
         await client.connect();
 
-        final created = await client
-            .model('User')
+        final created = await client.db.orm.model('User')
             .createNested(
               data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
               create: <String, List<JsonMap>>{
@@ -1756,8 +1750,7 @@ void main() {
         expect(createdPosts, hasLength(2));
         expect(createdPosts.first['userId'], 'u3');
 
-        final persistedPosts = await client
-            .model('Post')
+        final persistedPosts = await client.db.orm.model('Post')
             .all(where: <String, Object?>{'userId': 'u3'});
         expect(persistedPosts, hasLength(2));
         await client.disconnect();
@@ -1772,8 +1765,7 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client
-            .model('User')
+        client.db.orm.model('User')
             .createNested(
               data: <String, Object?>{'id': 'u4', 'email': 'u4@example.com'},
               create: <String, List<JsonMap>>{
@@ -1785,8 +1777,7 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
 
-      final rolledBackUser = await client
-          .model('User')
+      final rolledBackUser = await client.db.orm.model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u4'});
       expect(rolledBackUser, isNull);
       await client.disconnect();
@@ -1802,8 +1793,7 @@ void main() {
         await client.connect();
         await _seedRelationalData(client);
 
-        final updated = await client
-            .model('User')
+        final updated = await client.db.orm.model('User')
             .updateNested(
               where: <String, Object?>{'id': 'u1'},
               data: <String, Object?>{'email': 'u1+updated@example.com'},
@@ -1826,13 +1816,11 @@ void main() {
         expect(includedPosts.last['id'], 'p4');
         expect(includedPosts.last['userId'], 'u1');
 
-        final persistedUser = await client
-            .model('User')
+        final persistedUser = await client.db.orm.model('User')
             .oneOrNull(where: <String, Object?>{'id': 'u1'});
         expect(persistedUser?['email'], 'u1+updated@example.com');
 
-        final persistedChild = await client
-            .model('Post')
+        final persistedChild = await client.db.orm.model('Post')
             .oneOrNull(where: <String, Object?>{'id': 'p4'});
         expect(persistedChild?['userId'], 'u1');
         await client.disconnect();
@@ -1847,8 +1835,7 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final updated = await client
-          .model('User')
+      final updated = await client.db.orm.model('User')
           .updateNested(
             where: <String, Object?>{'id': 'ux'},
             data: <String, Object?>{'email': 'missing@example.com'},
@@ -1860,8 +1847,7 @@ void main() {
           );
 
       expect(updated, isNull);
-      final createdChild = await client
-          .model('Post')
+      final createdChild = await client.db.orm.model('Post')
           .oneOrNull(where: <String, Object?>{'id': 'p9'});
       expect(createdChild, isNull);
       await client.disconnect();
@@ -1876,8 +1862,7 @@ void main() {
       await _seedRelationalData(client);
 
       await expectLater(
-        client
-            .model('User')
+        client.db.orm.model('User')
             .updateNested(
               where: <String, Object?>{'id': 'u1'},
               data: <String, Object?>{'email': 'u1+rollback@example.com'},
@@ -1894,13 +1879,11 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
 
-      final rolledBackUser = await client
-          .model('User')
+      final rolledBackUser = await client.db.orm.model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(rolledBackUser?['email'], 'u1@example.com');
 
-      final rolledBackChild = await client
-          .model('Post')
+      final rolledBackChild = await client.db.orm.model('Post')
           .oneOrNull(where: <String, Object?>{'id': 'p10'});
       expect(rolledBackChild, isNull);
       await client.disconnect();
@@ -1915,7 +1898,7 @@ void main() {
         );
         await client.connect();
         await _seedRelationalData(client);
-        final users = client.model('User');
+        final users = client.db.orm.model('User');
 
         final delegatedRows = await users.include(<String, IncludeSpec>{
           'posts': IncludeSpec(
@@ -2061,8 +2044,7 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final row = await client
-          .model('Post')
+      final row = await client.db.orm.model('Post')
           .oneOrNull(
             where: <String, Object?>{'id': 'p1'},
             include: <String, IncludeSpec>{
@@ -2098,8 +2080,7 @@ void main() {
       await _seedRelationalData(client);
 
       await expectLater(
-        client
-            .model('User')
+        client.db.orm.model('User')
             .all(
               include: <String, IncludeSpec>{'unknown': const IncludeSpec()},
             ),
@@ -2118,8 +2099,7 @@ void main() {
       await _seedRelationalData(client);
 
       await expectLater(
-        client
-            .model('User')
+        client.db.orm.model('User')
             .all(
               include: <String, IncludeSpec>{
                 'posts': IncludeSpec(
@@ -2140,8 +2120,7 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      final row = await client
-          .model('User')
+      final row = await client.db.orm.model('User')
           .oneOrNull(
             where: <String, Object?>{'id': 'u1'},
             select: const <String>['email'],
@@ -2186,8 +2165,7 @@ void main() {
       await client.connect();
       await _seedRelationalData(client);
 
-      await client
-          .model('User')
+      await client.db.orm.model('User')
           .all(include: <String, IncludeSpec>{'posts': const IncludeSpec()});
 
       expect(callCount, greaterThan(0));
@@ -2202,15 +2180,15 @@ void main() {
         engine: MemoryEngine(),
         collections: <String, CollectionFactory>{
           'users':
-              ({required OrmModelContext client, required String modelName}) {
+              ({required OrmDelegateContext client, required String modelName}) {
                 return _UsersCollection(client: client, modelName: modelName);
               },
         },
       );
       await client.connect();
 
-      final first = client.model('users');
-      final second = client.model('User');
+      final first = client.db.orm.model('users');
+      final second = client.db.orm.model('User');
 
       expect(first, same(second));
       expect(first, isA<_UsersCollection>());
@@ -2244,8 +2222,7 @@ void main() {
       await transaction.commit();
       await connection.release();
 
-      final row = await client
-          .model('User')
+      final row = await client.db.orm.model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'b@example.com');
       await client.disconnect();
@@ -2256,15 +2233,13 @@ void main() {
       await client.connect();
 
       await client.withConnection((connection) async {
-        await connection
-            .model('User')
+        await connection.db.orm.model('User')
             .create(
               data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
             );
       });
 
-      final row = await client
-          .model('User')
+      final row = await client.db.orm.model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
@@ -2276,7 +2251,7 @@ void main() {
       await client.connect();
 
       await client.withConnection((connection) async {
-        final rows = await connection.sql.from('User').take(1).all();
+        final rows = await connection.db.sql.from('User').take(1).all();
         expect(rows, isEmpty);
       });
 
@@ -2295,7 +2270,7 @@ void main() {
         await client.connect();
 
         await client.withConnection((connection) async {
-          final rows = await connection.model('User').all();
+          final rows = await connection.db.orm.model('User').all();
           expect(rows, isEmpty);
         });
 
@@ -2312,15 +2287,13 @@ void main() {
       await client.connect();
 
       await client.withTransaction((transaction) async {
-        await transaction
-            .model('User')
+        await transaction.db.orm.model('User')
             .create(
               data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
             );
       });
 
-      final row = await client
-          .model('User')
+      final row = await client.db.orm.model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
@@ -2331,14 +2304,13 @@ void main() {
       await client.connect();
 
       await client.withTransaction((transaction) async {
-        await transaction.sql.insertInto('User').values(<String, Object?>{
+        await transaction.db.sql.insertInto('User').values(<String, Object?>{
           'id': 'u1',
           'email': 'a@example.com',
         }).execute();
       });
 
-      final row = await client
-          .model('User')
+      final row = await client.db.orm.model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
@@ -2352,7 +2324,7 @@ void main() {
         await client.connect();
 
         await client.withTransaction((transaction) async {
-          final rows = await transaction.model('User').all();
+          final rows = await transaction.db.orm.model('User').all();
           expect(rows, isEmpty);
         });
 
@@ -2397,8 +2369,7 @@ void main() {
 
       await expectLater(
         () => client.withTransaction((transaction) async {
-          await transaction
-              .model('User')
+          await transaction.db.orm.model('User')
               .create(
                 data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
               );
@@ -2407,8 +2378,7 @@ void main() {
         throwsA(isA<StateError>()),
       );
 
-      final row = await client
-          .model('User')
+      final row = await client.db.orm.model('User')
           .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row, isNull);
       await client.disconnect();
@@ -2423,7 +2393,7 @@ void main() {
 
         await expectLater(
           () => client.withTransaction((transaction) async {
-            await transaction.model('User').all();
+            await transaction.db.orm.model('User').all();
             throw StateError('stop');
           }),
           throwsA(isA<StateError>()),
@@ -2452,7 +2422,7 @@ void main() {
 
         await expectLater(
           () => client.withTransaction((transaction) async {
-            final rows = await transaction.model('User').all();
+            final rows = await transaction.db.orm.model('User').all();
             expect(rows, isEmpty);
           }),
           throwsA(isA<StateError>()),
@@ -2478,7 +2448,7 @@ void main() {
 
         await expectLater(
           () => client.withTransaction((transaction) async {
-            await transaction.model('User').all();
+            await transaction.db.orm.model('User').all();
             throw StateError('stop');
           }),
           throwsA(
@@ -2520,7 +2490,7 @@ void main() {
     test('rollback keeps original data in transaction API', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      final users = client.model('User');
+      final users = client.db.orm.model('User');
 
       await users.create(
         data: <String, Object?>{'id': 'u1', 'email': 'a@example.com'},
@@ -2582,7 +2552,7 @@ void main() {
     test('records telemetry for successful execution', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      await client.model('User').all();
+      await client.db.orm.model('User').all();
 
       final telemetry = client.telemetry();
       expect(telemetry, isNotNull);
@@ -2610,8 +2580,8 @@ void main() {
       await client.connect();
       expect(readCount, 1);
 
-      await client.model('User').all();
-      await client.model('User').all();
+      await client.db.orm.model('User').all();
+      await client.db.orm.model('User').all();
       expect(readCount, 1);
       await client.disconnect();
     });
@@ -2636,9 +2606,9 @@ void main() {
         await client.connect();
         expect(readCount, 0);
 
-        await client.model('User').all();
+        await client.db.orm.model('User').all();
         expect(readCount, 1);
-        await client.model('User').all();
+        await client.db.orm.model('User').all();
         expect(readCount, 1);
         await client.disconnect();
       },
@@ -2660,8 +2630,8 @@ void main() {
       );
 
       await client.connect();
-      await client.model('User').all();
-      await client.model('User').all();
+      await client.db.orm.model('User').all();
+      await client.db.orm.model('User').all();
 
       expect(readCount, 2);
       await client.disconnect();
@@ -2680,7 +2650,7 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.model('User').all(),
+        client.db.orm.model('User').all(),
         throwsA(isA<ContractMarkerMissingException>()),
       );
       await client.disconnect();
@@ -2699,7 +2669,7 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.model('User').all(),
+        client.db.orm.model('User').all(),
         throwsA(isA<ContractMarkerMismatchException>()),
       );
       await client.disconnect();
@@ -2710,8 +2680,7 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client
-            .model('User')
+        client.db.orm.model('User')
             .all(
               where: <String, Object?>{
                 'OR': <Object?>[
@@ -2723,12 +2692,11 @@ void main() {
         completes,
       );
       await expectLater(
-        client.model('User').all(where: <String, Object?>{'age': 1}),
+        client.db.orm.model('User').all(where: <String, Object?>{'age': 1}),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client
-            .model('User')
+        client.db.orm.model('User')
             .all(
               where: <String, Object?>{
                 'AND': <Object?>[
@@ -2740,21 +2708,20 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client.model('User').create(data: <String, Object?>{'age': 1}),
+        client.db.orm.model('User').create(data: <String, Object?>{'age': 1}),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client
-            .model('User')
+        client.db.orm.model('User')
             .all(orderBy: const <OrmOrderBy>[OrmOrderBy('age')]),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client.model('User').all(select: const <String>['age']),
+        client.db.orm.model('User').all(select: const <String>['age']),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client.model('User').all(distinct: const <String>['age']),
+        client.db.orm.model('User').all(distinct: const <String>['age']),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await client.disconnect();
@@ -2765,11 +2732,11 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.model('User').all(skip: -1),
+        client.db.orm.model('User').all(skip: -1),
         throwsA(isA<PlanInvalidPaginationException>()),
       );
       await expectLater(
-        client.model('User').all(take: -1),
+        client.db.orm.model('User').all(take: -1),
         throwsA(isA<PlanInvalidPaginationException>()),
       );
       await client.disconnect();
@@ -2784,7 +2751,7 @@ void main() {
       plugins: <OrmPlugin>[plugin],
     );
     await client.connect();
-    await client.model('User').all();
+    await client.db.orm.model('User').all();
 
     expect(plugin.events, <String>['before:read', 'after:read']);
     await client.disconnect();
@@ -2798,7 +2765,7 @@ void main() {
       plugins: <OrmPlugin>[plugin],
     );
     await client.connect();
-    await client.sql.from('User').all();
+    await client.db.sql.from('User').all();
 
     expect(plugin.events, <String>['before:read', 'after:read']);
     await client.disconnect();
@@ -2813,7 +2780,7 @@ void main() {
     );
     await client.connect();
 
-    await expectLater(client.model('User').all(), throwsA(isA<StateError>()));
+    await expectLater(client.db.orm.model('User').all(), throwsA(isA<StateError>()));
     expect(plugin.events, <String>[
       'before:read',
       'error:read',
@@ -2833,7 +2800,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.model('User').all(),
+      client.db.orm.model('User').all(),
       throwsA(isA<OrmRuntimeError>()),
     );
     await client.disconnect();
@@ -2858,7 +2825,7 @@ void main() {
     );
     await client.connect();
 
-    await client.model('User').all();
+    await client.db.orm.model('User').all();
     expect(logs.warnEvents, isNotEmpty);
     await client.disconnect();
   });
@@ -2872,7 +2839,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.model('User').all(take: 2),
+      client.db.orm.model('User').all(take: 2),
       throwsA(isA<OrmRuntimeError>()),
     );
     await client.disconnect();
@@ -2905,7 +2872,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.model('User').all(),
+      client.db.orm.model('User').all(),
       throwsA(isA<RuntimeResponseShapeException>()),
     );
     await client.disconnect();
@@ -2916,7 +2883,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.sql.from('User').all(),
+      client.db.sql.from('User').all(),
       throwsA(isA<RuntimeResponseShapeException>()),
     );
     await client.disconnect();
@@ -2924,8 +2891,8 @@ void main() {
 }
 
 Future<void> _seedRelationalData(OrmClient client) async {
-  final users = client.model('User');
-  final posts = client.model('Post');
+  final users = client.db.orm.model('User');
+  final posts = client.db.orm.model('Post');
 
   await users.create(
     data: <String, Object?>{'id': 'u1', 'email': 'u1@example.com'},

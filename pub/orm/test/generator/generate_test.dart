@@ -100,12 +100,12 @@ void main() {
 
         final generatedSource = cliOutput.readAsStringSync();
         expect(
-          generatedSource.contains("_context.model('CliOnlyUser')"),
+          generatedSource.contains("_orm.model('CliOnlyUser')"),
           isTrue,
           reason: 'Expected CLI schema model in generated output.',
         );
         expect(
-          generatedSource.contains("_context.model('ConfigOnlyUser')"),
+          generatedSource.contains("_orm.model('ConfigOnlyUser')"),
           isFalse,
           reason: 'Did not expect config schema model after --schema override.',
         );
@@ -461,7 +461,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+GeneratedOrmClient\s*\{[\s\S]*?late\s+final\s+GeneratedOrmDb\s+db\s*=\s*GeneratedOrmDb\(_context\);',
+            r'class\s+GeneratedOrmClient\s*\{[\s\S]*?late\s+final\s+GeneratedOrmDb\s+db\s*=\s*GeneratedOrmDb\(_context\.db\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason: 'Expected GeneratedOrmClient to expose db entrypoint.',
@@ -474,7 +474,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+GeneratedOrmDb\s*\{[\s\S]*?late\s+final\s+GeneratedOrmCollections\s+orm\s*=\s*GeneratedOrmCollections\(_context\);[\s\S]*?late\s+final\s+GeneratedOrmSql\s+sql\s*=\s*GeneratedOrmSql\(_context\);',
+            r'class\s+GeneratedOrmDb\s*\{[\s\S]*?late\s+final\s+GeneratedOrmCollections\s+orm\s*=\s*GeneratedOrmCollections\(_db\.orm\);[\s\S]*?late\s+final\s+GeneratedOrmSql\s+sql\s*=\s*GeneratedOrmSql\(_db\.sql\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -482,7 +482,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+GeneratedOrmSql\s*\{[\s\S]*?late\s+final\s+OrmSqlApi\s+_api\s*=\s*_context\.sql;[\s\S]*?UserSql\s+user\s*=',
+            r'class\s+GeneratedOrmSql\s*\{[\s\S]*?final\s+OrmSqlApi\s+_api;[\s\S]*?UserSql\s+user\s*=',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -490,7 +490,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+GeneratedOrmCollections\s*\{[\s\S]*?_context\.model\(',
+            r'class\s+GeneratedOrmCollections\s*\{[\s\S]*?_orm\.model\(',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
