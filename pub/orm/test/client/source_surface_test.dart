@@ -40,14 +40,14 @@ void main() {
         reason:
             'Expected ModelDelegate.create(...) to route through _queryFromSpec(...).create(...).',
       );
-        expect(
-          RegExp(
-            r'class\s+ModelDelegate\s*\{[\s\S]*?Future<JsonMap>\s+aggregateWith\(\{[\s\S]*?required\s+OrmAggregateSpec\s+aggregate,[\s\S]*?\)\s*=>\s*_queryFromSpec\([\s\S]*?\)\._executeAggregate\(aggregate\);',
-          ).hasMatch(source),
-          isTrue,
-          reason:
-            'Expected ModelDelegate.aggregateWith(...) to route structured aggregate execution through the private query aggregate bridge.',
-        );
+      expect(
+        RegExp(
+          r'class\s+ModelDelegate\s*\{[\s\S]*?Future<JsonMap>\s+aggregateWith\(',
+        ).hasMatch(source),
+        isFalse,
+        reason:
+            'Expected ModelDelegate to keep aggregateWith(...) out of the public delegate surface.',
+      );
       expect(
         RegExp(
           r'class\s+ModelDelegate\s*\{[\s\S]*?ModelGroupedQuery\s+groupedBy\(\s*List<String>\s+by,\s*\{[\s\S]*?JsonMap\s+where\s*=\s*const\s+<String,\s*Object\?>\{\},[\s\S]*?\)\s*=>\s*_queryFromSpec\(OrmReadQuerySpec\(where:\s*where\)\)\.groupedBy\(by\);',

@@ -1462,21 +1462,6 @@ class ModelDelegate {
     ),
   ).aggregate(build);
 
-  Future<JsonMap> aggregateWith({
-    JsonMap where = const <String, Object?>{},
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    JsonMap? cursor,
-    OrmReadPagePlan? page,
-    required OrmAggregateSpec aggregate,
-  }) => _queryFromSpec(
-    OrmReadQuerySpec(
-      where: where,
-      orderBy: orderBy,
-      cursor: cursor,
-      page: page,
-    ),
-  )._executeAggregate(aggregate);
-
   ModelGroupedQuery groupedBy(
     List<String> by, {
     JsonMap where = const <String, Object?>{},

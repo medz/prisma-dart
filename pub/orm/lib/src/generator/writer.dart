@@ -2973,12 +2973,14 @@ final class TypedClientWriter {
     );
     buffer.writeln("    _assertReadExecutionSupported('aggregate');");
     buffer.writeln('    _assertAggregateQueryState();');
-    buffer.writeln('    return _delegate._delegate.aggregateWith(');
+    buffer.writeln('    return _delegate._delegate.aggregate(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('      orderBy: _runtimeOrderBy,');
     buffer.writeln('      cursor: _runtimeCursor,');
     buffer.writeln('      page: _runtimePage,');
-    buffer.writeln('      aggregate: aggregate.toRuntimeSpec(),');
+    buffer.writeln(
+      '      build: (current) => current.merge(aggregate.toRuntimeSpec()),',
+    );
     buffer.writeln('    ).then(${model.aggregateResultClassName}.fromJson);');
     buffer.writeln('  }');
     buffer.writeln();
@@ -3272,7 +3274,7 @@ final class TypedClientWriter {
       '  Future<List<${model.groupByResultClassName}>> _executeSpec(${model.groupBySpecClassName} groupBy) {',
     );
     buffer.writeln('    return _runtimeGrouped(groupBy)');
-    buffer.writeln('        .aggregateWith(');
+    buffer.writeln('        .aggregate((aggregate) => aggregate.merge(');
     buffer.writeln('          OrmAggregateSpec(');
     buffer.writeln('            countAll: groupBy.countAll,');
     buffer.writeln(
@@ -3291,7 +3293,7 @@ final class TypedClientWriter {
       '            avg: groupBy.avg.map((entry) => entry.value).toList(growable: false),',
     );
     buffer.writeln('          ),');
-    buffer.writeln('        )');
+    buffer.writeln('        ))');
     buffer.writeln(
       '        .then((rows) => rows.map(${model.groupByResultClassName}.fromJson).toList(growable: false));',
     );

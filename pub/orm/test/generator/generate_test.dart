@@ -1596,7 +1596,7 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+_executeAggregate\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_assertAggregateQueryState\(\);[\s\S]*?aggregate:\s*aggregate\.toRuntimeSpec\(\),[\s\S]*?then\(UserAggregateResult\.fromJson\)',
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserAggregateResult>\s+_executeAggregate\(UserAggregateSpec\s+aggregate\)\s*\{[\s\S]*?_assertAggregateQueryState\(\);[\s\S]*?build:\s*\(current\)\s*=>\s*current\.merge\(aggregate\.toRuntimeSpec\(\)\),[\s\S]*?then\(UserAggregateResult\.fromJson\)',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
@@ -1658,6 +1658,14 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserAggregateResult>\s+aggregateWith\(',
+          ).hasMatch(generatedSource),
+          isFalse,
+          reason:
+              'Expected generated delegate to avoid aggregateWith(...) after aggregate bridge removal.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+aggregate\([\s\S]*?_executeAggregate\(build\(UserAggregateBuilder\(\)\)\.toSpec\(\)\);',
           ).hasMatch(generatedSource),
           isTrue,
@@ -1666,11 +1674,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'class\s+UserGroupedQuery\s*\{[\s\S]*?Future<List<UserGroupByResult>>\s+aggregateWith\(',
+            r'class\s+UserGroupedQuery\s*\{[\s\S]*?\.aggregateWith\(',
           ).hasMatch(generatedSource),
           isFalse,
           reason:
-              'Expected UserGroupedQuery to keep aggregateWith(...) out of the typed grouped surface.',
+              'Expected typed grouped execution to avoid aggregateWith(...) bridges.',
         );
         expect(
           RegExp(
