@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 
 import '../runtime/plan.dart';
+import '../runtime/types.dart';
 
 @immutable
 final class EngineResponse {
@@ -34,4 +35,8 @@ abstract interface class OrmEngine implements RuntimeQueryable {
   Future<void> open();
 
   Future<void> close();
+}
+
+abstract interface class ExplainCapableEngine {
+  Future<JsonMap> describePlan(OrmPlan plan);
 }

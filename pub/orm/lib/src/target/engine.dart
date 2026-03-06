@@ -1,11 +1,12 @@
 import '../engine/engine.dart';
 import '../runtime/errors.dart';
 import '../runtime/plan.dart';
+import '../runtime/types.dart';
 import 'adapter.dart';
 import 'driver.dart';
 
 final class AdapterDriverEngine<TRequest, TRawResponse>
-    implements OrmEngine, ConnectionCapableEngine {
+    implements OrmEngine, ConnectionCapableEngine, ExplainCapableEngine {
   final TargetAdapter<TRequest, TRawResponse> adapter;
   final TargetDriver<TRequest, TRawResponse> driver;
   bool _opened = false;
@@ -37,6 +38,19 @@ final class AdapterDriverEngine<TRequest, TRawResponse>
     final request = adapter.lower(plan);
     final raw = await driver.execute(request);
     return adapter.decode(raw, plan);
+  }
+
+  @override
+  Future<JsonMap> describePlan(OrmPlan plan) async {
+    _ensureOpen();
+
+    final request = adapter.lower(plan);
+    if (adapter
+        case final ExplainCapableTargetAdapter<TRequest, TRawResponse>
+            explainAdapter) {
+      return explainAdapter.describe(plan, request);
+    }
+    return const <String, Object?>{};
   }
 
   @override

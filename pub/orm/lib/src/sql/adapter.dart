@@ -51,7 +51,10 @@ const Set<String> _toManyRelationWhereOperators = <String>{
 const Set<String> _toOneRelationWhereOperators = <String>{'is', 'isNot'};
 const String _relationWhereAlias = '_rel';
 
-final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
+final class SqlAdapter
+    implements
+        TargetAdapter<SqlStatement, SqlResult>,
+        ExplainCapableTargetAdapter<SqlStatement, SqlResult> {
   final OrmContract contract;
   final String identifierQuote;
   final SqlFieldCodecResolver? codecResolver;
@@ -70,7 +73,11 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     }
 
     return switch (plan.action) {
-      OrmAction.read => _lowerRead(plan: plan, table: model.table, model: plan.model),
+      OrmAction.read => _lowerRead(
+        plan: plan,
+        table: model.table,
+        model: plan.model,
+      ),
       OrmAction.create => _lowerCreate(
         plan: plan,
         table: model.table,
@@ -87,6 +94,20 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
         model: plan.model,
       ),
     };
+  }
+
+  @override
+  JsonMap describe(OrmPlan plan, SqlStatement request) {
+    return Map<String, Object?>.unmodifiable(<String, Object?>{
+      'source': 'adapter',
+      'target': contract.target,
+      'request': Map<String, Object?>.unmodifiable(<String, Object?>{
+        'kind': 'sql',
+        'action': request.action.name,
+        'text': request.text,
+        'parameterCount': request.parameters.length,
+      }),
+    });
   }
 
   SqlStatement _lowerRead({
@@ -112,7 +133,9 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     if (read.page?.before != null) {
       final limitParams = <Object?>[];
       final selectColumns = _buildSelectColumns(read.select);
-      final innerOrderByClause = _buildOrderByClause(_reverseOrderBy(read.orderBy));
+      final innerOrderByClause = _buildOrderByClause(
+        _reverseOrderBy(read.orderBy),
+      );
       final innerLimitClause = _buildReadLimitOffsetClause(read, limitParams);
       return SqlStatement(
         action: plan.action,
@@ -121,11 +144,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
             'SELECT * FROM ${_id(table)}'
             '$mergedWhereClause$innerOrderByClause$innerLimitClause'
             ') AS ${_id('_page')}$orderByClause',
-        parameters: <Object?>[
-          ...whereParams,
-          ...windowParams,
-          ...limitParams,
-        ],
+        parameters: <Object?>[...whereParams, ...windowParams, ...limitParams],
       );
     }
 
@@ -1028,10 +1047,7 @@ final class SqlAdapter implements TargetAdapter<SqlStatement, SqlResult> {
     return '(($strictPredicate) OR ($equalityPredicate))';
   }
 
-  String _boundaryOperator({
-    required OrmOrderBy order,
-    required bool before,
-  }) {
+  String _boundaryOperator({required OrmOrderBy order, required bool before}) {
     return switch ((order.order, before)) {
       (SortOrder.asc, false) => '>',
       (SortOrder.asc, true) => '<',

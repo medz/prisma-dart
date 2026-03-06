@@ -93,6 +93,8 @@ Rules:
 
 1. `toPlan()` and `inspectPlan()` are pure authoring inspection.
 2. `explain()` is runtime-facing and requires an active runtime connection.
+   It returns the common runtime summary and may include target-lowered request
+   details when the active engine exposes them.
 3. `cursor(...)` and `page(...)` require `orderBy(...)` first.
 4. Boundary fields must match the declared `orderBy(...)` fields.
 5. When a model declares `idFields`, `cursor(...)` and `page(...)` require

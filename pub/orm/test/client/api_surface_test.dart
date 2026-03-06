@@ -50,15 +50,15 @@ void main() {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');
 
-      final plan = await users
-          .query()
-          .orderByField('id')
-          .cursor(<String, Object?>{'id': 'u1'})
-          .toPlan();
+      final plan = await users.query().orderByField('id').cursor(
+        <String, Object?>{'id': 'u1'},
+      ).toPlan();
 
       expect(plan.read?.cursor?.values, <String, Object?>{'id': 'u1'});
       expect(plan.read?.page, isNull);
-      expect(plan.read?.orderBy.map((entry) => entry.field).toList(), <String>['id']);
+      expect(plan.read?.orderBy.map((entry) => entry.field).toList(), <String>[
+        'id',
+      ]);
     });
 
     test('page compiles into structured query plan state', () async {
@@ -74,23 +74,28 @@ void main() {
       expect(plan.read?.cursor, isNull);
       expect(plan.read?.page?.size, 20);
       expect(plan.read?.page?.after, <String, Object?>{'id': 'u1'});
-      expect(plan.read?.orderBy.map((entry) => entry.field).toList(), <String>['id']);
+      expect(plan.read?.orderBy.map((entry) => entry.field).toList(), <String>[
+        'id',
+      ]);
     });
 
-    test('inspectPlan returns structured plan json without connecting', () async {
-      final client = OrmClient(contract: contract, engine: MemoryEngine());
-      final users = client.db.orm.model('User');
-      final inspected = await users
-          .where(<String, Object?>{'id': 'u1'})
-          .take(1)
-          .inspectPlan();
+    test(
+      'inspectPlan returns structured plan json without connecting',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        final users = client.db.orm.model('User');
+        final inspected = await users
+            .where(<String, Object?>{'id': 'u1'})
+            .take(1)
+            .inspectPlan();
 
-      expect(inspected['lane'], 'orm');
-      final read = inspected['read'] as Map<String, Object?>;
-      expect(read['where'], <String, Object?>{'id': 'u1'});
-      expect(read['take'], 1);
-      expect(read['resultMode'], 'all');
-    });
+        expect(inspected['lane'], 'orm');
+        final read = inspected['read'] as Map<String, Object?>;
+        expect(read['where'], <String, Object?>{'id': 'u1'});
+        expect(read['take'], 1);
+        expect(read['resultMode'], 'all');
+      },
+    );
 
     test('explain requires an active runtime connection', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -124,15 +129,72 @@ void main() {
       }
     });
 
+    test(
+      'explain includes target-aware adapter details when available',
+      () async {
+        final sqlContract = OrmContract(
+          version: '1',
+          hash: 'contract-sql-v1',
+          target: 'sql-family',
+          models: <String, ModelContract>{
+            'User': ModelContract(
+              name: 'User',
+              table: 'users',
+              fields: <String>{'id', 'email'},
+            ),
+          },
+          aliases: <String, String>{'users': 'User'},
+        );
+        final client = OrmClient(
+          contract: sqlContract,
+          engine: AdapterDriverEngine<SqlStatement, SqlResult>(
+            adapter: SqlAdapter(contract: sqlContract),
+            driver: _ExplainOnlySqlDriver(),
+          ),
+        );
+        await client.connect();
+        try {
+          final users = client.db.orm.model('User');
+          final explained = await users
+              .query()
+              .where(<String, Object?>{'id': 'u1'})
+              .orderByField('id')
+              .page(size: 2)
+              .explain();
+
+          expect(explained['source'], 'adapter');
+          expect(explained['target'], 'sql-family');
+          final request = explained['request'] as Map<String, Object?>;
+          expect(request['kind'], 'sql');
+          expect(request['action'], 'read');
+          expect(request['text'], contains('SELECT'));
+          expect(request['parameterCount'], greaterThan(0));
+
+          final summary = explained['planSummary'] as Map<String, Object?>;
+          expect(summary['model'], 'User');
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
+
     test('cursor and page execution return deterministic windows', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
       try {
         final users = client.db.orm.model('User');
-        await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
-        await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
-        await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
-        await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
+        await users.create(
+          data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 2, 'email': 'b@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 3, 'email': 'c@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 4, 'email': 'd@x.com'},
+        );
 
         final cursorRows = await users
             .query()
@@ -174,10 +236,18 @@ void main() {
       await client.connect();
       try {
         final users = client.db.orm.model('User');
-        await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
-        await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
-        await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
-        await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
+        await users.create(
+          data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 2, 'email': 'b@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 3, 'email': 'c@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 4, 'email': 'd@x.com'},
+        );
 
         final firstPage = await users
             .query()
@@ -220,10 +290,18 @@ void main() {
       await client.connect();
       try {
         final users = client.db.orm.model('User');
-        await users.create(data: <String, Object?>{'id': 1, 'email': 'a@x.com'});
-        await users.create(data: <String, Object?>{'id': 2, 'email': 'b@x.com'});
-        await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
-        await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
+        await users.create(
+          data: <String, Object?>{'id': 1, 'email': 'a@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 2, 'email': 'b@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 3, 'email': 'c@x.com'},
+        );
+        await users.create(
+          data: <String, Object?>{'id': 4, 'email': 'd@x.com'},
+        );
 
         final pagePlan = await users
             .query()
@@ -266,7 +344,8 @@ void main() {
       final users = client.db.orm.model('User');
 
       expect(
-        () => users.query().orderByField('id').cursor(const <String, Object?>{}),
+        () =>
+            users.query().orderByField('id').cursor(const <String, Object?>{}),
         throwsA(isA<PlanCursorWindowInvalidException>()),
       );
       expect(
@@ -274,11 +353,14 @@ void main() {
         throwsA(isA<PlanCursorWindowInvalidException>()),
       );
       expect(
-        () => users.query().orderByField('id').page(
-          size: 10,
-          after: <String, Object?>{'id': 'u1'},
-          before: <String, Object?>{'id': 'u2'},
-        ),
+        () => users
+            .query()
+            .orderByField('id')
+            .page(
+              size: 10,
+              after: <String, Object?>{'id': 'u1'},
+              before: <String, Object?>{'id': 'u2'},
+            ),
         throwsA(isA<PlanCursorWindowInvalidException>()),
       );
     });
@@ -314,9 +396,9 @@ void main() {
       final users = client.db.orm.model('User');
 
       expect(
-        () => users.query().orderByField('email').cursor(
-          <String, Object?>{'email': 'a@x.com'},
-        ),
+        () => users.query().orderByField('email').cursor(<String, Object?>{
+          'email': 'a@x.com',
+        }),
         throwsA(
           isA<OrmRuntimeError>().having(
             (error) => error.code,
@@ -326,10 +408,10 @@ void main() {
         ),
       );
       expect(
-        () => users.query().orderByField('email').page(
-          size: 2,
-          after: <String, Object?>{'email': 'a@x.com'},
-        ),
+        () => users
+            .query()
+            .orderByField('email')
+            .page(size: 2, after: <String, Object?>{'email': 'a@x.com'}),
         throwsA(
           isA<OrmRuntimeError>().having(
             (error) => error.code,
@@ -356,26 +438,43 @@ void main() {
       );
     });
 
-    test('updateMany placeholder throws stable not implemented error', () async {
-      final client = OrmClient(contract: contract, engine: MemoryEngine());
-      await client.connect();
-      try {
-        final users = client.db.orm.model('User');
-        await expectLater(
-          users
-              .where(<String, Object?>{'id': 'u1'})
-              .updateMany(data: <String, Object?>{'email': 'b@x.com'}),
-          throwsA(
-            isA<ApiNotImplementedException>().having(
-              (error) => error.details['surface'],
-              'surface',
-              'orm.updateMany',
+    test(
+      'updateMany placeholder throws stable not implemented error',
+      () async {
+        final client = OrmClient(contract: contract, engine: MemoryEngine());
+        await client.connect();
+        try {
+          final users = client.db.orm.model('User');
+          await expectLater(
+            users
+                .where(<String, Object?>{'id': 'u1'})
+                .updateMany(data: <String, Object?>{'email': 'b@x.com'}),
+            throwsA(
+              isA<ApiNotImplementedException>().having(
+                (error) => error.details['surface'],
+                'surface',
+                'orm.updateMany',
+              ),
             ),
-          ),
-        );
-      } finally {
-        await client.disconnect();
-      }
-    });
+          );
+        } finally {
+          await client.disconnect();
+        }
+      },
+    );
   });
+}
+
+final class _ExplainOnlySqlDriver
+    implements TargetDriver<SqlStatement, SqlResult> {
+  @override
+  Future<void> open() async {}
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<SqlResult> execute(SqlStatement request) {
+    throw StateError('explain() should not execute the SQL driver.');
+  }
 }

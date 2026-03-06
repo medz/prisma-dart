@@ -99,6 +99,30 @@ void main() {
     await engine.close();
   });
 
+  test('describes lowered plan without executing the driver', () async {
+    final adapter = _ExplainTrackingAdapter();
+    final driver = _TrackingDriver();
+    final engine = AdapterDriverEngine<String, String>(
+      adapter: adapter,
+      driver: driver,
+    );
+
+    await engine.open();
+    final description = await engine.describePlan(
+      _plan(where: <String, Object?>{'id': 'u1'}),
+    );
+
+    expect(adapter.loweredPlans, hasLength(1));
+    expect(driver.requests, isEmpty);
+    expect(description['source'], 'adapter');
+    expect(description['request'], <String, Object?>{
+      'kind': 'tracking',
+      'value': 'User:read',
+    });
+
+    await engine.close();
+  });
+
   test('supports connection lifecycle when driver is capable', () async {
     final adapter = _TrackingAdapter();
     final driver = _ConnectionCapableTrackingDriver();
@@ -213,6 +237,17 @@ final class _TrackingAdapter implements TargetAdapter<String, String> {
       },
       affectedRows: 1,
     );
+  }
+}
+
+final class _ExplainTrackingAdapter extends _TrackingAdapter
+    implements ExplainCapableTargetAdapter<String, String> {
+  @override
+  JsonMap describe(OrmPlan plan, String request) {
+    return <String, Object?>{
+      'source': 'adapter',
+      'request': <String, Object?>{'kind': 'tracking', 'value': request},
+    };
   }
 }
 

@@ -97,6 +97,29 @@ JsonMap _buildExplainResult(OrmPlan plan) {
   });
 }
 
+JsonMap _mergeExplainResult(JsonMap base, JsonMap details) {
+  if (details.isEmpty) {
+    return base;
+  }
+
+  final merged = <String, Object?>{...base};
+  for (final entry in details.entries) {
+    if (entry.key == 'planSummary' &&
+        merged['planSummary'] is JsonMap &&
+        entry.value is JsonMap) {
+      final current = merged['planSummary']! as JsonMap;
+      final next = entry.value as JsonMap;
+      merged['planSummary'] = Map<String, Object?>.unmodifiable(
+        <String, Object?>{...current, ...next},
+      );
+      continue;
+    }
+    merged[entry.key] = entry.value;
+  }
+
+  return Map<String, Object?>.unmodifiable(merged);
+}
+
 @immutable
 final class RuntimeVerifyOptions {
   final RuntimeVerifyMode mode;
@@ -224,7 +247,9 @@ abstract interface class RuntimeCore implements OrmRuntimeQueryable {
 
   RuntimeOperationTelemetryEvent? operationTelemetry([String? operationId]);
 
-  List<RuntimeOperationTelemetryEvent> recentOperationTelemetry({int limit = 50});
+  List<RuntimeOperationTelemetryEvent> recentOperationTelemetry({
+    int limit = 50,
+  });
 }
 
 final class OrmRuntimeCore implements RuntimeCore {
@@ -333,7 +358,13 @@ final class OrmRuntimeCore implements RuntimeCore {
     _ensureConnected();
     _assertPlan(plan);
     await _verifyForRequest();
-    return _buildExplainResult(plan);
+
+    final base = _buildExplainResult(plan);
+    if (engine case final ExplainCapableEngine explainEngine) {
+      final details = await explainEngine.describePlan(plan);
+      return _mergeExplainResult(base, details);
+    }
+    return base;
   }
 
   @override
@@ -355,7 +386,10 @@ final class OrmRuntimeCore implements RuntimeCore {
     if (limit >= values.length) {
       return values.reversed.toList(growable: false);
     }
-    return values.sublist(values.length - limit).reversed.toList(growable: false);
+    return values
+        .sublist(values.length - limit)
+        .reversed
+        .toList(growable: false);
   }
 
   Future<EngineResponse> _executeOnQueryable(
@@ -704,10 +738,7 @@ final class OrmRuntimeCore implements RuntimeCore {
       durationMs: (current?.durationMs ?? 0) + durationMs,
       startedAt: current?.startedAt ?? startedAt,
       recordedAt: recordedAt,
-      steps: <RuntimeOperationStepTelemetry>[
-        ...?current?.steps,
-        nextStep,
-      ],
+      steps: <RuntimeOperationStepTelemetry>[...?current?.steps, nextStep],
     );
 
     if (current != null) {
@@ -720,7 +751,10 @@ final class OrmRuntimeCore implements RuntimeCore {
     _operationTelemetry = next;
   }
 
-  void _assertReadPlan({required ModelContract model, required OrmReadPlan plan}) {
+  void _assertReadPlan({
+    required ModelContract model,
+    required OrmReadPlan plan,
+  }) {
     _assertWhereFields(model: model, where: plan.where, source: 'where');
     _assertKnownFields(
       model: model,
@@ -878,7 +912,9 @@ final class OrmRuntimeCore implements RuntimeCore {
     required List<OrmOrderBy> orderBy,
     required Iterable<String> boundaryFields,
   }) {
-    final orderByFields = orderBy.map((entry) => entry.field).toList(growable: false);
+    final orderByFields = orderBy
+        .map((entry) => entry.field)
+        .toList(growable: false);
     final boundary = boundaryFields.toList(growable: false);
     return orderByFields.length == boundary.length &&
         orderByFields.every(boundary.contains);
