@@ -95,7 +95,9 @@ Rules:
 2. `explain()` is runtime-facing and requires an active runtime connection.
 3. `cursor(...)` and `page(...)` require `orderBy(...)` first.
 4. Boundary fields must match the declared `orderBy(...)` fields.
-5. `pageResult()` is the structured pagination terminal and returns
+5. When a model declares `idFields`, `cursor(...)` and `page(...)` require
+   `orderBy(...)` to end with those fields.
+6. `pageResult()` is the structured pagination terminal and returns
    `items + pageInfo`.
 
 ## ORM Mutation Surface

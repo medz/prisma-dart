@@ -1613,6 +1613,9 @@ class ModelDelegate {
         },
       );
     }
+    if (cursor != null || page != null) {
+      _validateStableCursorOrderBy(orderBy: orderBy);
+    }
     if ((cursor != null || page != null) && distinct.isNotEmpty) {
       throw runtimeError(
         'PLAN.CURSOR_DISTINCT_UNSUPPORTED',
@@ -2231,6 +2234,46 @@ class ModelDelegate {
       return order.order == SortOrder.asc ? comparison : -comparison;
     }
     return 0;
+  }
+
+  void _validateStableCursorOrderBy({required List<OrmOrderBy> orderBy}) {
+    final model = _client.contract.models[modelName];
+    if (model == null) {
+      throw ModelNotFoundException(modelName, _client.contract.models.keys);
+    }
+
+    final idFields = model.idFields;
+    if (idFields.isEmpty) {
+      return;
+    }
+    if (orderBy.length < idFields.length) {
+      _throwStableCursorOrderError(orderBy: orderBy, idFields: idFields);
+    }
+
+    final suffix = orderBy
+        .sublist(orderBy.length - idFields.length)
+        .map((entry) => entry.field)
+        .toList(growable: false);
+    if (_listEquals(suffix, idFields)) {
+      return;
+    }
+
+    _throwStableCursorOrderError(orderBy: orderBy, idFields: idFields);
+  }
+
+  Never _throwStableCursorOrderError({
+    required List<OrmOrderBy> orderBy,
+    required List<String> idFields,
+  }) {
+    throw runtimeError(
+      'PLAN.CURSOR_STABLE_ORDER_REQUIRED',
+      'Cursor and page windows require orderBy() to end with the model id fields.',
+      details: <String, Object?>{
+        'model': modelName,
+        'idFields': idFields,
+        'orderBy': orderBy.map((entry) => entry.toJson()).toList(growable: false),
+      },
+    );
   }
 
   List<String> _expandSelectForExecution({
@@ -3792,6 +3835,7 @@ final class ModelQuery {
         details: <String, Object?>{'model': _delegate.modelName},
       );
     }
+    _delegate._validateStableCursorOrderBy(orderBy: _state.orderBy);
     if (cursor.isEmpty) {
       throw PlanCursorWindowInvalidException(
         reason: 'cursorEmpty',
@@ -3827,6 +3871,7 @@ final class ModelQuery {
         details: <String, Object?>{'model': _delegate.modelName},
       );
     }
+    _delegate._validateStableCursorOrderBy(orderBy: _state.orderBy);
     if (size <= 0) {
       throw PlanCursorWindowInvalidException(
         reason: 'pageSizeInvalid',

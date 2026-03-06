@@ -16,6 +16,7 @@ String emitContractArtifact({
       'name': modelInfo.model.name,
       'table': _defaultTableName(modelInfo.model.name),
       'fields': modelInfo.scalarFieldNames,
+      'idFields': modelInfo.idFields,
       'relations': _buildRelations(owner: modelInfo, modelInfos: modelInfos),
     };
   }

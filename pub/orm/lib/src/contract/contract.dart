@@ -46,15 +46,20 @@ final class ModelContract {
   final String name;
   final String table;
   final Set<String> fields;
+  final List<String> idFields;
   final Map<String, ModelRelationContract> relations;
 
   ModelContract({
     required this.name,
     required this.table,
     required Set<String> fields,
+    List<String>? idFields,
     Map<String, ModelRelationContract> relations =
         const <String, ModelRelationContract>{},
   }) : fields = Set.unmodifiable(fields),
+       idFields = List<String>.unmodifiable(
+         idFields ?? (fields.contains('id') ? const <String>['id'] : const <String>[]),
+       ),
        relations = Map<String, ModelRelationContract>.unmodifiable(relations);
 }
 
@@ -92,6 +97,7 @@ final class OrmContract {
   }) : markerStorageHash = markerStorageHash ?? hash,
        models = Map.unmodifiable(models),
        aliases = Map.unmodifiable(aliases) {
+    _validateModelIdFields(this.models);
     _validateRelations(this.models);
   }
 
@@ -210,6 +216,42 @@ void _validateRelations(Map<String, ModelContract> models) {
           },
         );
       }
+    }
+  }
+}
+
+void _validateModelIdFields(Map<String, ModelContract> models) {
+  for (final model in models.values) {
+    if (model.idFields.isEmpty) {
+      continue;
+    }
+
+    final uniqueIdFields = model.idFields.toSet();
+    if (uniqueIdFields.length != model.idFields.length) {
+      throw ContractDefinitionException(
+        code: 'CONTRACT.ID_FIELDS_DUPLICATE',
+        message: 'Model idFields cannot contain duplicates.',
+        details: <String, Object?>{
+          'model': model.name,
+          'idFields': model.idFields,
+        },
+      );
+    }
+
+    for (final field in model.idFields) {
+      if (model.fields.contains(field)) {
+        continue;
+      }
+      throw ContractDefinitionException(
+        code: 'CONTRACT.ID_FIELD_MISSING',
+        message:
+            'Model id field "$field" does not exist on model "${model.name}".',
+        details: <String, Object?>{
+          'model': model.name,
+          'field': field,
+          'idFields': model.idFields,
+        },
+      );
     }
   }
 }

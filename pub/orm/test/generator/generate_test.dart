@@ -155,7 +155,9 @@ void main() {
         expect(models.containsKey('User'), isTrue);
         final user = models['User'];
         expect(user is Map<Object?, Object?>, isTrue);
-        final relations = (user as Map<Object?, Object?>)['relations'];
+        final userMap = user as Map<Object?, Object?>;
+        expect(userMap['idFields'], <Object?>['id']);
+        final relations = userMap['relations'];
         expect(relations is Map<Object?, Object?>, isTrue);
         expect((relations as Map<Object?, Object?>).isEmpty, isTrue);
       });

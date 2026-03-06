@@ -309,6 +309,37 @@ void main() {
       );
     });
 
+    test('cursor and page require stable id-suffixed ordering', () {
+      final client = OrmClient(contract: contract, engine: MemoryEngine());
+      final users = client.db.orm.model('User');
+
+      expect(
+        () => users.query().orderByField('email').cursor(
+          <String, Object?>{'email': 'a@x.com'},
+        ),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.CURSOR_STABLE_ORDER_REQUIRED',
+          ),
+        ),
+      );
+      expect(
+        () => users.query().orderByField('email').page(
+          size: 2,
+          after: <String, Object?>{'email': 'a@x.com'},
+        ),
+        throwsA(
+          isA<OrmRuntimeError>().having(
+            (error) => error.code,
+            'code',
+            'PLAN.CURSOR_STABLE_ORDER_REQUIRED',
+          ),
+        ),
+      );
+    });
+
     test('pageResult requires page() first', () {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       final users = client.db.orm.model('User');
