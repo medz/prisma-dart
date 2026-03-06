@@ -741,11 +741,7 @@ void main() {
       await expectLater(
         users
             .groupedBy(const <String>['email'])
-            .having(<String, Object?>{
-              '_sum': <String, Object?>{
-                'email': <String, Object?>{'gte': 1},
-              },
-            }, merge: false)
+            .havingExpr((having) => having.sum('email').gte(1), merge: false)
             .aggregate((aggregate) => aggregate.sum('id')),
         throwsA(
           isA<OrmRuntimeError>().having(

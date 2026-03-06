@@ -111,8 +111,9 @@ Rules:
      `terminalExecution.stream`.
 8. Grouped aggregation is a dedicated surface:
    - `groupedBy(...)` only accepts a where-only base query.
-   - `having(...)`, `havingWith(...)`, and `havingExpr(...)` refine the grouped
-     builder before `aggregate(...)`.
+   - `having(...)` and `havingWith(...)` accept structured grouped predicates.
+   - `havingExpr(...)` is the primary builder-style entrypoint before
+     `aggregate(...)`.
 9. `include(...)` is unsupported on `aggregate(...)` and
    `groupedBy(...).aggregate(...)`, including direct plan execution.
 

@@ -3404,18 +3404,16 @@ final class ModelGroupedQuery {
     return _next(groupBy);
   }
 
-  ModelGroupedQuery having(JsonMap having, {bool merge = true}) {
-    final parsed = OrmGroupByHaving.parse(<String, Object?>{...having});
-    final nextHaving = merge ? _groupBy.having.merge(parsed) : parsed;
+  ModelGroupedQuery having(OrmGroupByHaving having, {bool merge = true}) {
+    final nextHaving = merge ? _groupBy.having.merge(having) : having;
     return _next(_groupBy.copyWith(having: nextHaving));
   }
 
   ModelGroupedQuery havingWith(
-    JsonMap Function(JsonMap having) build, {
+    OrmGroupByHaving Function(OrmGroupByHaving having) build, {
     bool merge = true,
   }) {
-    final current = Map<String, Object?>.from(_groupBy.having.toJson());
-    final next = build(Map<String, Object?>.unmodifiable(current));
+    final next = build(_groupBy.having);
     return having(next, merge: merge);
   }
 

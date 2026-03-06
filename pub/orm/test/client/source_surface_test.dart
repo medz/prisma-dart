@@ -134,6 +134,22 @@ void main() {
               'Expected ModelGroupedQuery to expose a builder-style havingExpr(...) surface.',
         );
         expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+having\(OrmGroupByHaving\s+having,\s*\{\s*bool\s+merge\s*=\s*true\s*\}\)',
+          ).hasMatch(source),
+          isTrue,
+          reason:
+              'Expected ModelGroupedQuery.having(...) to accept structured grouped having clauses instead of raw maps.',
+        );
+        expect(
+          RegExp(
+            r'class\s+ModelGroupedQuery\s*\{[\s\S]*?ModelGroupedQuery\s+having\(JsonMap\s+having,',
+          ).hasMatch(source),
+          isFalse,
+          reason:
+              'Expected ModelGroupedQuery to keep raw JsonMap having out of the public grouped surface.',
+        );
+        expect(
           RegExp(r'\bclass\s+OrmGroupByHavingBuilder\b').hasMatch(source),
           isTrue,
           reason:
