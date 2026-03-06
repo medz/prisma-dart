@@ -88,11 +88,11 @@ void main() {
       );
       expect(created['id'], 'u1');
 
-      final allRows = await users.findMany();
+      final allRows = await users.all();
       expect(allRows, hasLength(1));
       expect(allRows.first['email'], 'a@example.com');
 
-      final unique = await users.findUnique(
+      final unique = await users.oneOrNull(
         where: <String, Object?>{'id': 'u1'},
       );
       expect(unique?['id'], 'u1');
@@ -106,7 +106,7 @@ void main() {
       final removed = await users.delete(where: <String, Object?>{'id': 'u1'});
       expect(removed?['id'], 'u1');
 
-      final remaining = await users.findMany();
+      final remaining = await users.all();
       expect(remaining, isEmpty);
       await client.disconnect();
     });
@@ -116,7 +116,7 @@ void main() {
       final users = client.model('User');
 
       await expectLater(
-        users.findMany(),
+        users.all(),
         throwsA(isA<ClientNotConnectedException>()),
       );
     });
@@ -185,7 +185,7 @@ void main() {
       }).first();
       expect(sqlRow?['email'], 'a@example.com');
 
-      final ormRow = await client.db.orm['User'].findUnique(
+      final ormRow = await client.db.orm['User'].oneOrNull(
         where: <String, Object?>{'id': 'u1'},
       );
       expect(ormRow?['id'], 'u1');
@@ -291,7 +291,7 @@ void main() {
         data: <String, Object?>{'id': '3', 'email': 'b@x.com'},
       );
 
-      final rows = await users.findMany(
+      final rows = await users.all(
         orderBy: const <OrmOrderBy>[OrmOrderBy('email')],
         skip: 1,
         take: 1,
@@ -318,7 +318,7 @@ void main() {
           data: <String, Object?>{'id': 'u3', 'email': 'b@x.com'},
         );
 
-        final distinctRows = await users.findMany(
+        final distinctRows = await users.all(
           orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
           distinct: const <String>['email'],
         );
@@ -327,7 +327,7 @@ void main() {
           <Object?>['u1', 'u3'],
         );
 
-        final pagedDistinctRows = await users.findMany(
+        final pagedDistinctRows = await users.all(
           orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
           distinct: const <String>['email'],
           skip: 1,
@@ -342,7 +342,7 @@ void main() {
             .query()
             .orderByField('id')
             .distinctField('email')
-            .findMany();
+            .all();
         expect(
           distinctFromQuery.map((row) => row['id']).toList(growable: false),
           <Object?>['u1', 'u3'],
@@ -523,7 +523,7 @@ void main() {
       await users.create(data: <String, Object?>{'id': 3, 'email': 'c@x.com'});
       await users.create(data: <String, Object?>{'id': 4, 'email': 'd@x.com'});
 
-      final gtRows = await users.findMany(
+      final gtRows = await users.all(
         where: <String, Object?>{
           'id': <String, Object?>{'gt': 2},
         },
@@ -534,7 +534,7 @@ void main() {
         4,
       ]);
 
-      final inRows = await users.findMany(
+      final inRows = await users.all(
         where: <String, Object?>{
           'email': <String, Object?>{
             'in': <Object?>['a@x.com', 'c@x.com'],
@@ -547,7 +547,7 @@ void main() {
         3,
       ]);
 
-      final notInRows = await users.findMany(
+      final notInRows = await users.all(
         where: <String, Object?>{
           'id': <String, Object?>{
             'notIn': <Object?>[2, 3],
@@ -582,7 +582,7 @@ void main() {
           data: <String, Object?>{'id': 'u4', 'email': 'gamma@sample.com'},
         );
 
-        final containsRows = await users.findMany(
+        final containsRows = await users.all(
           where: <String, Object?>{
             'email': <String, Object?>{'contains': 'example.com'},
           },
@@ -593,7 +593,7 @@ void main() {
           <Object?>['u1', 'u2', 'u3'],
         );
 
-        final startsWithRows = await users.findMany(
+        final startsWithRows = await users.all(
           where: <String, Object?>{
             'email': <String, Object?>{'startsWith': 'alph'},
           },
@@ -604,7 +604,7 @@ void main() {
           <Object?>['u1', 'u3'],
         );
 
-        final endsWithRows = await users.findMany(
+        final endsWithRows = await users.all(
           where: <String, Object?>{
             'email': <String, Object?>{'endsWith': 'sample.com'},
           },
@@ -638,7 +638,7 @@ void main() {
           data: <String, Object?>{'id': 4, 'email': 'z@sample.com'},
         );
 
-        final andRows = await users.findMany(
+        final andRows = await users.all(
           where: <String, Object?>{
             'AND': <Object?>[
               <String, Object?>{
@@ -656,7 +656,7 @@ void main() {
           <Object?>[2],
         );
 
-        final orRows = await users.findMany(
+        final orRows = await users.all(
           where: <String, Object?>{
             'OR': <Object?>[
               <String, Object?>{'id': 1},
@@ -670,7 +670,7 @@ void main() {
           <Object?>[1, 4],
         );
 
-        final notRows = await users.findMany(
+        final notRows = await users.all(
           where: <String, Object?>{
             'NOT': <Object?>[
               <String, Object?>{
@@ -702,7 +702,7 @@ void main() {
         expect(created.keys, <String>['id']);
         expect(created['id'], 'u1');
 
-        final unique = await users.findUnique(
+        final unique = await users.oneOrNull(
           where: <String, Object?>{'id': 'u1'},
           select: const <String>['email'],
         );
@@ -745,14 +745,54 @@ void main() {
       final base = users.orderByField('email');
       final narrowed = base.skip(1).take(1);
 
-      final all = await base.findMany();
-      final page = await narrowed.findMany();
+      final all = await base.all();
+      final page = await narrowed.all();
 
       expect(all, hasLength(3));
       expect(page, hasLength(1));
       expect(page.single['email'], 'b@x.com');
       await client.disconnect();
     });
+
+    test(
+      'query toPlan emits orm lane metadata and include annotations',
+      () async {
+        final client = OrmClient(
+          contract: relationalContract,
+          engine: MemoryEngine(),
+        );
+        final users = client.model('User');
+
+        final plan = await users
+            .query()
+            .where(<String, Object?>{'id': 'u1'})
+            .include(<String, IncludeSpec>{
+              'posts': const IncludeSpec(
+                take: 3,
+                include: <String, IncludeSpec>{
+                  'author': IncludeSpec(select: <String>['email']),
+                },
+              ),
+            })
+            .take(5)
+            .toPlan();
+
+        expect(plan.lane, 'orm');
+        expect(plan.action, OrmAction.findMany);
+        expect(plan.take, 5);
+        expect(plan.annotations['resultMode'], 'all');
+        expect(plan.annotations['include'], <String, Object?>{
+          'posts': <String, Object?>{
+            'take': 3,
+            'include': <String, Object?>{
+              'author': <String, Object?>{
+                'select': <String>['email'],
+              },
+            },
+          },
+        });
+      },
+    );
 
     test('supports select projection through chained query state', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
@@ -766,7 +806,7 @@ void main() {
       final readQuery = users.where(<String, Object?>{'id': '1'}).select(
         const <String>['email'],
       );
-      final selected = await readQuery.findUnique();
+      final selected = await readQuery.oneOrNull();
       expect(selected?.keys, <String>['email']);
       expect(selected?['email'], 'a@x.com');
 
@@ -797,7 +837,7 @@ void main() {
 
       final unique = await users.where(<String, Object?>{
         'id': 'u1',
-      }).findUnique();
+      }).oneOrNull();
       expect(unique?['email'], 'b@example.com');
 
       final removed = await users.where(<String, Object?>{'id': 'u1'}).delete();
@@ -805,12 +845,12 @@ void main() {
 
       final remaining = await users.where(<String, Object?>{
         'id': 'u1',
-      }).findUnique();
+      }).oneOrNull();
       expect(remaining, isNull);
       await client.disconnect();
     });
 
-    test('supports findFirst, count and exists helpers', () async {
+    test('supports firstOrNull, count and exists helpers', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
       final users = client.model('User');
@@ -825,7 +865,7 @@ void main() {
         data: <String, Object?>{'id': 'u3', 'email': 'c@x.com'},
       );
 
-      final first = await users.findFirst(
+      final first = await users.firstOrNull(
         orderBy: const <OrmOrderBy>[OrmOrderBy('email')],
       );
       expect(first?['id'], 'u2');
@@ -856,7 +896,7 @@ void main() {
       );
 
       final delegateRows = await users
-          .streamMany(orderBy: const <OrmOrderBy>[OrmOrderBy('email')])
+          .stream(orderBy: const <OrmOrderBy>[OrmOrderBy('email')])
           .toList();
       expect(delegateRows, hasLength(3));
       expect(delegateRows.first['id'], 'u2');
@@ -936,7 +976,7 @@ void main() {
         throwsA(isA<PlanFieldNotFoundException>()),
       );
 
-      final rows = await users.findMany(
+      final rows = await users.all(
         orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
       );
       expect(rows.map((row) => row['id']).toList(growable: false), <Object?>[
@@ -984,7 +1024,7 @@ void main() {
         expect(removed?['id'], 'u1');
         expect(removed?['email'], 'b@x.com');
 
-        final remaining = await users.findUnique(
+        final remaining = await users.oneOrNull(
           where: <String, Object?>{'id': 'u1'},
         );
         expect(remaining, isNull);
@@ -1007,7 +1047,7 @@ void main() {
         );
 
         final query = users.where(<String, Object?>{'email': 'a@x.com'});
-        final first = await query.orderByField('id').findFirst();
+        final first = await query.orderByField('id').firstOrNull();
         expect(first?['id'], 'u1');
         expect(await query.count(), 2);
         expect(await query.exists(), isTrue);
@@ -1041,7 +1081,7 @@ void main() {
           data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
         );
 
-        final someRows = await users.findMany(
+        final someRows = await users.all(
           where: <String, Object?>{
             'posts': <String, Object?>{
               'some': <String, Object?>{
@@ -1056,7 +1096,7 @@ void main() {
           <Object?>['u1'],
         );
 
-        final noneRows = await users.findMany(
+        final noneRows = await users.all(
           where: <String, Object?>{
             'posts': <String, Object?>{
               'none': <String, Object?>{
@@ -1071,7 +1111,7 @@ void main() {
           <Object?>['u2', 'u3'],
         );
 
-        final everyRows = await users.findMany(
+        final everyRows = await users.all(
           where: <String, Object?>{
             'posts': <String, Object?>{
               'every': <String, Object?>{
@@ -1102,7 +1142,7 @@ void main() {
         data: <String, Object?>{'id': 'p4', 'userId': 'ux', 'title': 'Post D'},
       );
 
-      final isRows = await posts.findMany(
+      final isRows = await posts.all(
         where: <String, Object?>{
           'author': <String, Object?>{
             'is': <String, Object?>{
@@ -1117,7 +1157,7 @@ void main() {
         'p2',
       ]);
 
-      final isNotRows = await posts.findMany(
+      final isNotRows = await posts.all(
         where: <String, Object?>{
           'author': <String, Object?>{
             'isNot': <String, Object?>{'id': 'u1'},
@@ -1130,7 +1170,7 @@ void main() {
         <Object?>['p3', 'p4'],
       );
 
-      final relationMissingRows = await posts.findMany(
+      final relationMissingRows = await posts.all(
         where: <String, Object?>{
           'author': <String, Object?>{'isNot': const <String, Object?>{}},
         },
@@ -1141,7 +1181,7 @@ void main() {
         <Object?>['p4'],
       );
 
-      final isNullRows = await posts.findMany(
+      final isNullRows = await posts.all(
         where: <String, Object?>{
           'author': <String, Object?>{'is': null},
         },
@@ -1152,7 +1192,7 @@ void main() {
         <Object?>['p4'],
       );
 
-      final isNotNullRows = await posts.findMany(
+      final isNotNullRows = await posts.all(
         where: <String, Object?>{
           'author': <String, Object?>{'isNot': null},
         },
@@ -1177,7 +1217,7 @@ void main() {
         data: <String, Object?>{'id': 'u3', 'email': 'u3@example.com'},
       );
 
-      final rows = await users.findMany(
+      final rows = await users.all(
         where: <String, Object?>{
           'AND': <Object?>[
             <String, Object?>{
@@ -1232,7 +1272,7 @@ void main() {
       expect(updated?['id'], 'u2');
       expect(updated?['email'], 'u2+updated@example.com');
 
-      final persisted = await users.findUnique(
+      final persisted = await users.oneOrNull(
         where: <String, Object?>{'id': 'u2'},
       );
       expect(persisted?['email'], 'u2+updated@example.com');
@@ -1258,7 +1298,7 @@ void main() {
       );
       expect(updated?['id'], 'p3');
 
-      final persisted = await posts.findUnique(
+      final persisted = await posts.oneOrNull(
         where: <String, Object?>{'id': 'p3'},
       );
       expect(persisted?['title'], 'Post C updated');
@@ -1283,7 +1323,7 @@ void main() {
 
       await client
           .model('User')
-          .findMany(
+          .all(
             where: <String, Object?>{
               'posts': <String, Object?>{
                 'some': <String, Object?>{'title': 'Post A'},
@@ -1311,7 +1351,7 @@ void main() {
 
       final rows = await client
           .model('User')
-          .findMany(
+          .all(
             orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
             include: <String, IncludeSpec>{
               'posts': IncludeSpec(
@@ -1356,7 +1396,7 @@ void main() {
             await _seedRelationalData(client);
             final rows = await client
                 .model('User')
-                .findMany(
+                .all(
                   orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
                   include: <String, IncludeSpec>{
                     'posts': IncludeSpec(
@@ -1406,7 +1446,7 @@ void main() {
 
         final rows = await client
             .model('User')
-            .findMany(
+            .all(
               orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
               include: <String, IncludeSpec>{
                 'posts': IncludeSpec(
@@ -1452,7 +1492,7 @@ void main() {
           await expectLater(
             client
                 .model('User')
-                .findMany(
+                .all(
                   include: <String, IncludeSpec>{'posts': const IncludeSpec()},
                 ),
             throwsA(isA<RuntimeResponseShapeException>()),
@@ -1530,7 +1570,7 @@ void main() {
 
         final persistedPosts = await client
             .model('Post')
-            .findMany(where: <String, Object?>{'userId': 'u3'});
+            .all(where: <String, Object?>{'userId': 'u3'});
         expect(persistedPosts, hasLength(2));
         await client.disconnect();
       },
@@ -1559,7 +1599,7 @@ void main() {
 
       final rolledBackUser = await client
           .model('User')
-          .findUnique(where: <String, Object?>{'id': 'u4'});
+          .oneOrNull(where: <String, Object?>{'id': 'u4'});
       expect(rolledBackUser, isNull);
       await client.disconnect();
     });
@@ -1600,12 +1640,12 @@ void main() {
 
         final persistedUser = await client
             .model('User')
-            .findUnique(where: <String, Object?>{'id': 'u1'});
+            .oneOrNull(where: <String, Object?>{'id': 'u1'});
         expect(persistedUser?['email'], 'u1+updated@example.com');
 
         final persistedChild = await client
             .model('Post')
-            .findUnique(where: <String, Object?>{'id': 'p4'});
+            .oneOrNull(where: <String, Object?>{'id': 'p4'});
         expect(persistedChild?['userId'], 'u1');
         await client.disconnect();
       },
@@ -1634,7 +1674,7 @@ void main() {
       expect(updated, isNull);
       final createdChild = await client
           .model('Post')
-          .findUnique(where: <String, Object?>{'id': 'p9'});
+          .oneOrNull(where: <String, Object?>{'id': 'p9'});
       expect(createdChild, isNull);
       await client.disconnect();
     });
@@ -1668,12 +1708,12 @@ void main() {
 
       final rolledBackUser = await client
           .model('User')
-          .findUnique(where: <String, Object?>{'id': 'u1'});
+          .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(rolledBackUser?['email'], 'u1@example.com');
 
       final rolledBackChild = await client
           .model('Post')
-          .findUnique(where: <String, Object?>{'id': 'p10'});
+          .oneOrNull(where: <String, Object?>{'id': 'p10'});
       expect(rolledBackChild, isNull);
       await client.disconnect();
     });
@@ -1694,7 +1734,7 @@ void main() {
             orderBy: const <OrmOrderBy>[OrmOrderBy('id')],
             take: 1,
           ),
-        }).findMany();
+        }).all();
         expect(delegatedRows, hasLength(2));
         expect(_readRowsValue(delegatedRows.first['posts']), hasLength(1));
 
@@ -1735,21 +1775,22 @@ void main() {
         expect(deepMergedPostsSpec?.orderBy, hasLength(1));
         expect(deepMergedPostsSpec?.orderBy.single.field, 'id');
         expect(deepMergedPostsSpec?.include.keys, <String>['author']);
-        expect(
-          deepMergedPostsSpec?.include['author']?.select,
-          <String>['email'],
-        );
+        expect(deepMergedPostsSpec?.include['author']?.select, <String>[
+          'email',
+        ]);
         expect(base.includeValues, isEmpty);
 
-        final includeRow = await withInclude.findUnique();
+        final includeRow = await withInclude.oneOrNull();
         final includePosts = _readRowsValue(includeRow?['posts']);
         expect(includePosts, hasLength(1));
         expect(includePosts.single['id'], 'p1');
 
-        final deepMergedRow = await deepMergedInclude.findUnique();
+        final deepMergedRow = await deepMergedInclude.oneOrNull();
         final deepMergedPosts = _readRowsValue(deepMergedRow?['posts']);
         expect(deepMergedPosts, hasLength(1));
-        final deepMergedAuthor = _readRowValue(deepMergedPosts.single['author']);
+        final deepMergedAuthor = _readRowValue(
+          deepMergedPosts.single['author'],
+        );
         expect(deepMergedAuthor?['email'], 'u1@example.com');
 
         final includeRelationRow = await users
@@ -1763,7 +1804,7 @@ void main() {
                 },
               ),
             )
-            .findUnique();
+            .oneOrNull();
 
         final relationPosts = _readRowsValue(includeRelationRow?['posts']);
         expect(relationPosts, hasLength(2));
@@ -1800,10 +1841,10 @@ void main() {
         expect(base.include['author']?.include.keys, <String>['posts']);
         final mergedAuthor = merged.include['author'];
         expect(mergedAuthor, isNotNull);
-        expect(
-          mergedAuthor?.include.keys.toSet(),
-          <String>{'posts', 'profile'},
-        );
+        expect(mergedAuthor?.include.keys.toSet(), <String>{
+          'posts',
+          'profile',
+        });
         expect(mergedAuthor?.include['profile']?.select, <String>['email']);
 
         final replaced = base.includeWith(
@@ -1834,7 +1875,7 @@ void main() {
 
       final row = await client
           .model('Post')
-          .findUnique(
+          .oneOrNull(
             where: <String, Object?>{'id': 'p1'},
             include: <String, IncludeSpec>{
               'author': IncludeSpec(
@@ -1871,7 +1912,7 @@ void main() {
       await expectLater(
         client
             .model('User')
-            .findMany(
+            .all(
               include: <String, IncludeSpec>{'unknown': const IncludeSpec()},
             ),
         throwsA(isA<IncludeRelationNotFoundException>()),
@@ -1891,7 +1932,7 @@ void main() {
       await expectLater(
         client
             .model('User')
-            .findMany(
+            .all(
               include: <String, IncludeSpec>{
                 'posts': IncludeSpec(
                   include: <String, IncludeSpec>{'author': const IncludeSpec()},
@@ -1913,7 +1954,7 @@ void main() {
 
       final row = await client
           .model('User')
-          .findUnique(
+          .oneOrNull(
             where: <String, Object?>{'id': 'u1'},
             select: const <String>['email'],
             include: <String, IncludeSpec>{
@@ -1959,9 +2000,7 @@ void main() {
 
       await client
           .model('User')
-          .findMany(
-            include: <String, IncludeSpec>{'posts': const IncludeSpec()},
-          );
+          .all(include: <String, IncludeSpec>{'posts': const IncludeSpec()});
 
       expect(callCount, greaterThan(0));
       expect(callModels.first, 'User');
@@ -2019,7 +2058,7 @@ void main() {
 
       final row = await client
           .model('User')
-          .findUnique(where: <String, Object?>{'id': 'u1'});
+          .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'b@example.com');
       await client.disconnect();
     });
@@ -2038,7 +2077,7 @@ void main() {
 
       final row = await client
           .model('User')
-          .findUnique(where: <String, Object?>{'id': 'u1'});
+          .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
     });
@@ -2068,7 +2107,7 @@ void main() {
         await client.connect();
 
         await client.withConnection((connection) async {
-          final rows = await connection.model('User').findMany();
+          final rows = await connection.model('User').all();
           expect(rows, isEmpty);
         });
 
@@ -2094,7 +2133,7 @@ void main() {
 
       final row = await client
           .model('User')
-          .findUnique(where: <String, Object?>{'id': 'u1'});
+          .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
     });
@@ -2112,7 +2151,7 @@ void main() {
 
       final row = await client
           .model('User')
-          .findUnique(where: <String, Object?>{'id': 'u1'});
+          .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
     });
@@ -2125,7 +2164,7 @@ void main() {
         await client.connect();
 
         await client.withTransaction((transaction) async {
-          final rows = await transaction.model('User').findMany();
+          final rows = await transaction.model('User').all();
           expect(rows, isEmpty);
         });
 
@@ -2161,7 +2200,7 @@ void main() {
 
       final row = await client
           .model('User')
-          .findUnique(where: <String, Object?>{'id': 'u1'});
+          .oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row, isNull);
       await client.disconnect();
     });
@@ -2175,7 +2214,7 @@ void main() {
 
         await expectLater(
           () => client.withTransaction((transaction) async {
-            await transaction.model('User').findMany();
+            await transaction.model('User').all();
             throw StateError('stop');
           }),
           throwsA(isA<StateError>()),
@@ -2236,7 +2275,7 @@ void main() {
       await transaction.rollback();
       await connection.release();
 
-      final row = await users.findUnique(where: <String, Object?>{'id': 'u1'});
+      final row = await users.oneOrNull(where: <String, Object?>{'id': 'u1'});
       expect(row?['email'], 'a@example.com');
       await client.disconnect();
     });
@@ -2278,7 +2317,7 @@ void main() {
     test('records telemetry for successful execution', () async {
       final client = OrmClient(contract: contract, engine: MemoryEngine());
       await client.connect();
-      await client.model('User').findMany();
+      await client.model('User').all();
 
       final telemetry = client.telemetry();
       expect(telemetry, isNotNull);
@@ -2306,8 +2345,8 @@ void main() {
       await client.connect();
       expect(readCount, 1);
 
-      await client.model('User').findMany();
-      await client.model('User').findMany();
+      await client.model('User').all();
+      await client.model('User').all();
       expect(readCount, 1);
       await client.disconnect();
     });
@@ -2332,9 +2371,9 @@ void main() {
         await client.connect();
         expect(readCount, 0);
 
-        await client.model('User').findMany();
+        await client.model('User').all();
         expect(readCount, 1);
-        await client.model('User').findMany();
+        await client.model('User').all();
         expect(readCount, 1);
         await client.disconnect();
       },
@@ -2356,8 +2395,8 @@ void main() {
       );
 
       await client.connect();
-      await client.model('User').findMany();
-      await client.model('User').findMany();
+      await client.model('User').all();
+      await client.model('User').all();
 
       expect(readCount, 2);
       await client.disconnect();
@@ -2376,7 +2415,7 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.model('User').findMany(),
+        client.model('User').all(),
         throwsA(isA<ContractMarkerMissingException>()),
       );
       await client.disconnect();
@@ -2395,7 +2434,7 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.model('User').findMany(),
+        client.model('User').all(),
         throwsA(isA<ContractMarkerMismatchException>()),
       );
       await client.disconnect();
@@ -2408,7 +2447,7 @@ void main() {
       await expectLater(
         client
             .model('User')
-            .findMany(
+            .all(
               where: <String, Object?>{
                 'OR': <Object?>[
                   <String, Object?>{'id': 'u1'},
@@ -2419,13 +2458,13 @@ void main() {
         completes,
       );
       await expectLater(
-        client.model('User').findMany(where: <String, Object?>{'age': 1}),
+        client.model('User').all(where: <String, Object?>{'age': 1}),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
         client
             .model('User')
-            .findMany(
+            .all(
               where: <String, Object?>{
                 'AND': <Object?>[
                   <String, Object?>{'id': 'u1'},
@@ -2442,15 +2481,15 @@ void main() {
       await expectLater(
         client
             .model('User')
-            .findMany(orderBy: const <OrmOrderBy>[OrmOrderBy('age')]),
+            .all(orderBy: const <OrmOrderBy>[OrmOrderBy('age')]),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client.model('User').findMany(select: const <String>['age']),
+        client.model('User').all(select: const <String>['age']),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await expectLater(
-        client.model('User').findMany(distinct: const <String>['age']),
+        client.model('User').all(distinct: const <String>['age']),
         throwsA(isA<PlanFieldNotFoundException>()),
       );
       await client.disconnect();
@@ -2461,11 +2500,11 @@ void main() {
       await client.connect();
 
       await expectLater(
-        client.model('User').findMany(skip: -1),
+        client.model('User').all(skip: -1),
         throwsA(isA<PlanInvalidPaginationException>()),
       );
       await expectLater(
-        client.model('User').findMany(take: -1),
+        client.model('User').all(take: -1),
         throwsA(isA<PlanInvalidPaginationException>()),
       );
       await client.disconnect();
@@ -2480,7 +2519,7 @@ void main() {
       plugins: <OrmPlugin>[plugin],
     );
     await client.connect();
-    await client.model('User').findMany();
+    await client.model('User').all();
 
     expect(plugin.events, <String>['before:findMany', 'after:findMany']);
     await client.disconnect();
@@ -2509,10 +2548,7 @@ void main() {
     );
     await client.connect();
 
-    await expectLater(
-      client.model('User').findMany(),
-      throwsA(isA<StateError>()),
-    );
+    await expectLater(client.model('User').all(), throwsA(isA<StateError>()));
     expect(plugin.events, <String>[
       'before:findMany',
       'error:findMany',
@@ -2532,7 +2568,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.model('User').findMany(),
+      client.model('User').all(),
       throwsA(isA<OrmRuntimeError>()),
     );
     await client.disconnect();
@@ -2557,7 +2593,7 @@ void main() {
     );
     await client.connect();
 
-    await client.model('User').findMany();
+    await client.model('User').all();
     expect(logs.warnEvents, isNotEmpty);
     await client.disconnect();
   });
@@ -2571,7 +2607,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.model('User').findMany(take: 2),
+      client.model('User').all(take: 2),
       throwsA(isA<OrmRuntimeError>()),
     );
     await client.disconnect();
@@ -2604,7 +2640,7 @@ void main() {
     await client.connect();
 
     await expectLater(
-      client.model('User').findMany(),
+      client.model('User').all(),
       throwsA(isA<RuntimeResponseShapeException>()),
     );
     await client.disconnect();

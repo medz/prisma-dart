@@ -19,6 +19,8 @@ final class OrmPlan {
   final String? target;
   final String? storageHash;
   final String? profileHash;
+  final String? lane;
+  final JsonMap annotations;
   final String model;
   final OrmAction action;
   final JsonMap where;
@@ -34,6 +36,8 @@ final class OrmPlan {
     this.target,
     this.storageHash,
     this.profileHash,
+    this.lane,
+    JsonMap annotations = const <String, Object?>{},
     required this.model,
     required this.action,
     JsonMap where = const <String, Object?>{},
@@ -43,7 +47,8 @@ final class OrmPlan {
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
-  }) : where = Map.unmodifiable(where),
+  }) : annotations = Map.unmodifiable(annotations),
+       where = Map.unmodifiable(where),
        data = Map.unmodifiable(data),
        orderBy = List.unmodifiable(orderBy),
        distinct = List.unmodifiable(distinct),

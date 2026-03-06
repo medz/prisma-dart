@@ -250,7 +250,7 @@ void main() {
       );
 
       await client.connect();
-      await expectLater(client.model('User').findMany(), completes);
+      await expectLater(client.model('User').all(), completes);
       await client.disconnect();
     });
 
@@ -268,7 +268,7 @@ void main() {
 
       await client.connect();
       await expectLater(
-        client.model('User').findMany(),
+        client.model('User').all(),
         throwsA(isA<ContractMarkerMissingException>()),
       );
       await client.disconnect();

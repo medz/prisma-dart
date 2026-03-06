@@ -618,10 +618,10 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'\bFuture<UserData\?>\s+first\s*\(\s*\)',
+            r'\bFuture<UserData\?>\s+firstOrNull\s*\(\s*\)',
           ).hasMatch(generatedSource),
           isTrue,
-          reason: 'Expected UserQuery.first() in generated source.',
+          reason: 'Expected UserQuery.firstOrNull() in generated source.',
         );
         expect(
           RegExp(r'\bclass UserSql\b').hasMatch(generatedSource),
@@ -715,11 +715,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'Future<UserData\?>\s+findUnique\(\{\s*required\s+UserWhereUniqueInput\s+where,',
+            r'Future<UserData\?>\s+oneOrNull\(\{\s*required\s+UserWhereUniqueInput\s+where,',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected findUnique where parameter to use UserWhereUniqueInput.',
+              'Expected oneOrNull where parameter to use UserWhereUniqueInput.',
         );
         expect(
           RegExp(
@@ -762,11 +762,11 @@ typedef Post = ({
         );
         expect(
           RegExp(
-            r'Future<UserData\?>\s+first\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
+            r'Future<UserData\?>\s+firstOrNull\(\{[\s\S]*?List<UserDistinct>\s+distinct\s*=\s*const\s+<UserDistinct>\[\],',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
-              'Expected first to expose typed distinct parameter in generated delegate.',
+              'Expected firstOrNull to expose typed distinct parameter in generated delegate.',
         );
         expect(
           generatedSource.contains('Future<List<UserData>> findMany('),
@@ -779,6 +779,18 @@ typedef Post = ({
           isFalse,
           reason:
               'Expected generated typed delegate source to not expose findFirst signature.',
+        );
+        expect(
+          generatedSource.contains('Future<UserData?> findUnique('),
+          isFalse,
+          reason:
+              'Expected generated typed delegate source to not expose findUnique signature.',
+        );
+        expect(
+          generatedSource.contains('Future<UserData?> first()'),
+          isFalse,
+          reason:
+              'Expected generated typed query source to not expose first() signature.',
         );
         expect(
           RegExp(

@@ -24,7 +24,7 @@ import 'package:orm/orm.dart';
 final client = PrismaClient();
 
 main() {
-  final users = await client.user.findMany();
+  final users = await client.user.all();
 }
 ```
 

@@ -8,7 +8,7 @@
 ## 2. 范围与非范围
 范围：
 - 契约工件完整化：relations、capabilities、target、hash 校验链。
-- fluent 查询主路径：`where / select / include / orderBy / take / skip / list / stream / firstOrNull / oneOrNull / toPlan`。
+- fluent 查询主路径：`where / select / include / orderBy / take / skip / all / stream / firstOrNull / oneOrNull / toPlan`。
 - 运行时校验与插件管线稳定化：`beforeExecute -> onRow -> afterExecute -> onError`。
 - repository 显式编排：nested mutation、能力差异回退、include 执行策略。
 
@@ -44,7 +44,7 @@ final users = await db.user
     .orderBy((o) => [o.createdAt.desc()])
     .take(20)
     .select((s) => s.pick((f) => [f.id, f.email]))
-    .list();
+    .all();
 ```
 
 ```dart
@@ -81,4 +81,3 @@ P1：
 | 测试 | 分层测试与回归门禁 | 测试计划、Gate 报告、缺陷分级 |
 | 开发1 | shared/core + runtime-core | 核心校验链、生命周期、插件执行保障 |
 | 开发2 | repository + targets | 策略编排、目标实现、能力映射 |
-

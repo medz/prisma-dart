@@ -98,16 +98,13 @@ final class IncludeSpec {
   final Map<String, IncludeSpec> include;
 
   const IncludeSpec({
-    JsonMap where = const <String, Object?>{},
+    this.where = const <String, Object?>{},
     this.skip,
     this.take,
-    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
-    List<String> select = const <String>[],
-    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-  }) : where = where,
-       orderBy = orderBy,
-       select = select,
-       include = include;
+    this.orderBy = const <OrmOrderBy>[],
+    this.select = const <String>[],
+    this.include = const <String, IncludeSpec>{},
+  });
 
   IncludeSpec merge(IncludeSpec other) {
     return IncludeSpec(
@@ -162,6 +159,61 @@ Map<String, IncludeSpec> _mergeIncludeSpecMap(
     merged[entry.key] = existing.merge(entry.value);
   }
   return merged;
+}
+
+JsonMap _serializeIncludeSpec(IncludeSpec spec) {
+  final encoded = <String, Object?>{};
+  if (spec.where.isNotEmpty) {
+    encoded['where'] = Map<String, Object?>.from(spec.where);
+  }
+  if (spec.skip case final skip?) {
+    encoded['skip'] = skip;
+  }
+  if (spec.take case final take?) {
+    encoded['take'] = take;
+  }
+  if (spec.orderBy.isNotEmpty) {
+    encoded['orderBy'] = spec.orderBy
+        .map(
+          (entry) => <String, Object?>{
+            'field': entry.field,
+            'order': entry.order.name,
+          },
+        )
+        .toList(growable: false);
+  }
+  if (spec.select.isNotEmpty) {
+    encoded['select'] = List<String>.from(spec.select, growable: false);
+  }
+  if (spec.include.isNotEmpty) {
+    encoded['include'] = _serializeIncludeSpecMap(spec.include);
+  }
+  return encoded;
+}
+
+JsonMap _serializeIncludeSpecMap(Map<String, IncludeSpec> include) {
+  if (include.isEmpty) {
+    return const <String, Object?>{};
+  }
+  return <String, Object?>{
+    for (final entry in include.entries)
+      entry.key: _serializeIncludeSpec(entry.value),
+  };
+}
+
+JsonMap _buildOrmReadAnnotations({
+  required String resultMode,
+  required Map<String, IncludeSpec> include,
+  List<String> distinct = const <String>[],
+}) {
+  final annotations = <String, Object?>{'resultMode': resultMode};
+  if (include.isNotEmpty) {
+    annotations['include'] = _serializeIncludeSpecMap(include);
+  }
+  if (distinct.isNotEmpty) {
+    annotations['distinct'] = List<String>.from(distinct, growable: false);
+  }
+  return annotations;
 }
 
 abstract interface class OrmModelContext {
@@ -804,6 +856,7 @@ OrmPlan _buildSqlPlan({
     target: contract.target,
     storageHash: contract.markerStorageHash,
     profileHash: contract.profileHash,
+    lane: 'sql',
     model: modelName,
     action: action,
     where: where,
@@ -814,6 +867,14 @@ OrmPlan _buildSqlPlan({
     distinct: distinct,
     select: select,
   );
+}
+
+@immutable
+final class _PreparedReadPlan {
+  final OrmPlan plan;
+  final Map<String, IncludeSpec> include;
+
+  const _PreparedReadPlan({required this.plan, required this.include});
 }
 
 class ModelDelegate {
@@ -861,7 +922,29 @@ class ModelDelegate {
     IncludeSpec spec = const IncludeSpec(),
   }) => query().includeRelation(relation, spec: spec);
 
-  Future<List<JsonMap>> findMany({
+  Future<OrmPlan> toPlan({
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+  }) async {
+    final prepared = await _buildReadPlan(
+      action: OrmAction.findMany,
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+    );
+    return prepared.plan;
+  }
+
+  Future<List<JsonMap>> all({
     JsonMap where = const <String, Object?>{},
     int? skip,
     int? take,
@@ -883,7 +966,7 @@ class ModelDelegate {
     );
   }
 
-  Stream<JsonMap> streamMany({
+  Stream<JsonMap> stream({
     JsonMap where = const <String, Object?>{},
     int? skip,
     int? take,
@@ -892,7 +975,7 @@ class ModelDelegate {
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
   }) async* {
-    final rows = await findMany(
+    final rows = await all(
       where: where,
       skip: skip,
       take: take,
@@ -907,7 +990,7 @@ class ModelDelegate {
     }
   }
 
-  Future<JsonMap?> findUnique({
+  Future<JsonMap?> oneOrNull({
     JsonMap where = const <String, Object?>{},
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
@@ -921,7 +1004,7 @@ class ModelDelegate {
     );
   }
 
-  Future<JsonMap?> findFirst({
+  Future<JsonMap?> firstOrNull({
     JsonMap where = const <String, Object?>{},
     int? skip,
     List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
@@ -953,7 +1036,7 @@ class ModelDelegate {
   }
 
   Future<bool> exists({JsonMap where = const <String, Object?>{}}) async {
-    final row = await findFirst(where: where, select: const <String>[]);
+    final row = await firstOrNull(where: where, select: const <String>[]);
     return row != null;
   }
 
@@ -1249,7 +1332,7 @@ class ModelDelegate {
   }) {
     return _client.transaction((tx) async {
       final scoped = tx.model(modelName);
-      final existing = await scoped.findUnique(where: where);
+      final existing = await scoped.oneOrNull(where: where);
       if (existing == null) {
         return scoped.create(data: create, select: select, include: include);
       }
@@ -1303,7 +1386,7 @@ class ModelDelegate {
     );
   }
 
-  Future<List<JsonMap>> _findManyInternal({
+  Future<_PreparedReadPlan> _buildReadPlan({
     required OrmAction action,
     JsonMap where = const <String, Object?>{},
     int? skip,
@@ -1312,7 +1395,6 @@ class ModelDelegate {
     List<String> distinct = const <String>[],
     List<String> select = const <String>[],
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
-    required int includeDepth,
   }) async {
     if (skip case final offset? when offset < 0) {
       throw PlanInvalidPaginationException(key: 'skip', value: offset);
@@ -1326,27 +1408,73 @@ class ModelDelegate {
       model: modelName,
       where: where,
     );
-    final response = await _client.execute(
-      OrmPlan(
+    final resultMode = switch (action) {
+      OrmAction.findMany => take == 1 ? 'firstOrNull' : 'all',
+      OrmAction.findUnique => 'oneOrNull',
+      _ => action.name,
+    };
+
+    return _PreparedReadPlan(
+      include: normalizedInclude,
+      plan: OrmPlan(
         contractHash: _client.contract.hash,
         target: _client.contract.target,
         storageHash: _client.contract.markerStorageHash,
         profileHash: _client.contract.profileHash,
-        model: modelName,
-        action: OrmAction.findMany,
-        where: normalizedWhere,
-        skip: distinct.isEmpty ? skip : null,
-        take: distinct.isEmpty ? take : null,
-        orderBy: orderBy,
-        distinct: distinct,
-        select: _expandSelectForExecution(
-          model: modelName,
-          select: select,
+        lane: 'orm',
+        annotations: _buildOrmReadAnnotations(
+          resultMode: resultMode,
           include: normalizedInclude,
           distinct: distinct,
         ),
+        model: modelName,
+        action: action,
+        where: normalizedWhere,
+        skip: action == OrmAction.findMany && distinct.isEmpty ? skip : null,
+        take: action == OrmAction.findMany && distinct.isEmpty ? take : null,
+        orderBy: action == OrmAction.findMany ? orderBy : const <OrmOrderBy>[],
+        distinct: action == OrmAction.findMany ? distinct : const <String>[],
+        select: switch (action) {
+          OrmAction.findMany => _expandSelectForExecution(
+            model: modelName,
+            select: select,
+            include: normalizedInclude,
+            distinct: distinct,
+          ),
+          OrmAction.findUnique => _expandSelectForInclude(
+            model: modelName,
+            select: select,
+            include: normalizedInclude,
+          ),
+          _ => select,
+        },
       ),
     );
+  }
+
+  Future<List<JsonMap>> _findManyInternal({
+    required OrmAction action,
+    JsonMap where = const <String, Object?>{},
+    int? skip,
+    int? take,
+    List<OrmOrderBy> orderBy = const <OrmOrderBy>[],
+    List<String> distinct = const <String>[],
+    List<String> select = const <String>[],
+    Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
+    required int includeDepth,
+  }) async {
+    final prepared = await _buildReadPlan(
+      action: OrmAction.findMany,
+      where: where,
+      skip: skip,
+      take: take,
+      orderBy: orderBy,
+      distinct: distinct,
+      select: select,
+      include: include,
+    );
+    final normalizedInclude = prepared.include;
+    final response = await _client.execute(prepared.plan);
 
     var rows = _readRows(response.data);
     if (distinct.isNotEmpty) {
@@ -1370,27 +1498,14 @@ class ModelDelegate {
     Map<String, IncludeSpec> include = const <String, IncludeSpec>{},
     required int includeDepth,
   }) async {
-    final normalizedInclude = _normalizeInclude(include);
-    final normalizedWhere = await _normalizeWhereForExecution(
-      model: modelName,
+    final prepared = await _buildReadPlan(
+      action: OrmAction.findUnique,
       where: where,
+      select: select,
+      include: include,
     );
-    final response = await _client.execute(
-      OrmPlan(
-        contractHash: _client.contract.hash,
-        target: _client.contract.target,
-        storageHash: _client.contract.markerStorageHash,
-        profileHash: _client.contract.profileHash,
-        model: modelName,
-        action: OrmAction.findUnique,
-        where: normalizedWhere,
-        select: _expandSelectForInclude(
-          model: modelName,
-          select: select,
-          include: normalizedInclude,
-        ),
-      ),
-    );
+    final normalizedInclude = prepared.include;
+    final response = await _client.execute(prepared.plan);
 
     final row = _readRow(response.data, action: 'findUnique');
     if (row == null) {
@@ -3501,8 +3616,20 @@ final class ModelQuery {
     );
   }
 
-  Future<List<JsonMap>> findMany() {
-    return _delegate.findMany(
+  Future<OrmPlan> toPlan() {
+    return _delegate.toPlan(
+      where: _state.where,
+      skip: _state.skip,
+      take: _state.take,
+      orderBy: _state.orderBy,
+      distinct: _state.distinct,
+      select: _state.select,
+      include: _state.include,
+    );
+  }
+
+  Future<List<JsonMap>> all() {
+    return _delegate.all(
       where: _state.where,
       skip: _state.skip,
       take: _state.take,
@@ -3514,7 +3641,7 @@ final class ModelQuery {
   }
 
   Stream<JsonMap> stream() {
-    return _delegate.streamMany(
+    return _delegate.stream(
       where: _state.where,
       skip: _state.skip,
       take: _state.take,
@@ -3525,13 +3652,13 @@ final class ModelQuery {
     );
   }
 
-  Future<JsonMap?> findUnique() => _delegate.findUnique(
+  Future<JsonMap?> oneOrNull() => _delegate.oneOrNull(
     where: _state.where,
     select: _state.select,
     include: _state.include,
   );
 
-  Future<JsonMap?> findFirst() => _delegate.findFirst(
+  Future<JsonMap?> firstOrNull() => _delegate.firstOrNull(
     where: _state.where,
     skip: _state.skip,
     orderBy: _state.orderBy,

@@ -1572,7 +1572,7 @@ final class TypedClientWriter {
     buffer.writeln(
       '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
     );
-    buffer.writeln('    final rows = await _delegate.findMany(');
+    buffer.writeln('    final rows = await _delegate.all(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
@@ -1587,7 +1587,7 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<${model.dataClassName}?> findUnique({');
+    buffer.writeln('  Future<${model.dataClassName}?> oneOrNull({');
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
@@ -1598,7 +1598,7 @@ final class TypedClientWriter {
     buffer.writeln(
       '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
     );
-    buffer.writeln('    final row = await _delegate.findUnique(');
+    buffer.writeln('    final row = await _delegate.oneOrNull(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      select: runtimeSelect,');
     buffer.writeln('      include: runtimeInclude,');
@@ -1610,7 +1610,7 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<${model.dataClassName}?> first({');
+    buffer.writeln('  Future<${model.dataClassName}?> firstOrNull({');
     buffer.writeln(
       '    ${model.whereInputClassName} where = const ${model.whereInputClassName}(),',
     );
@@ -1636,7 +1636,7 @@ final class TypedClientWriter {
     buffer.writeln(
       '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
     );
-    buffer.writeln('    final row = await _delegate.findFirst(');
+    buffer.writeln('    final row = await _delegate.firstOrNull(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      orderBy: runtimeOrderBy,');
@@ -1933,7 +1933,7 @@ final class TypedClientWriter {
     buffer.writeln(
       '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
     );
-    buffer.writeln('    await for (final row in _delegate.streamMany(');
+    buffer.writeln('    await for (final row in _delegate.stream(');
     buffer.writeln('      where: where.toJson(),');
     buffer.writeln('      skip: skip,');
     buffer.writeln('      take: take,');
@@ -2398,8 +2398,8 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
-    buffer.writeln('  Future<${model.dataClassName}?> first() {');
-    buffer.writeln('    return _delegate.first(');
+    buffer.writeln('  Future<${model.dataClassName}?> firstOrNull() {');
+    buffer.writeln('    return _delegate.firstOrNull(');
     buffer.writeln('      where: _where,');
     buffer.writeln('      skip: _skip,');
     buffer.writeln('      orderBy: _orderBy,');
