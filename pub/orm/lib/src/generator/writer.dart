@@ -1774,19 +1774,11 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.createInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.create(');
-    buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).create(data: data);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1797,20 +1789,11 @@ final class TypedClientWriter {
     );
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.createNested(');
-    buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      create: create.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).createNested(data: data, create: create);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1831,23 +1814,12 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.updateInputClassName} data,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.update(');
-    buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      data: data.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where.toWhereInput(),');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).update(data: data);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1874,22 +1846,12 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.whereUniqueInputClassName} where,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.delete(');
-    buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    if (row == null) {');
-    buffer.writeln('      return null;');
-    buffer.writeln('    }');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where.toWhereInput(),');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).delete();');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -1899,21 +1861,12 @@ final class TypedClientWriter {
     buffer.writeln('    required ${model.updateInputClassName} update,');
     buffer.writeln('    ${model.selectClassName}? select,');
     buffer.writeln('    ${model.includeClassName}? include,');
-    buffer.writeln('  }) async {');
-    buffer.writeln(
-      '    final runtimeSelect = select?.toFields() ?? const <String>[];',
-    );
-    buffer.writeln(
-      '    final runtimeInclude = include?.toIncludeMap() ?? const <String, IncludeSpec>{};',
-    );
-    buffer.writeln('    final row = await _delegate.upsert(');
-    buffer.writeln('      where: where.toJson(),');
-    buffer.writeln('      create: create.toJson(),');
-    buffer.writeln('      update: update.toJson(),');
-    buffer.writeln('      select: runtimeSelect,');
-    buffer.writeln('      include: runtimeInclude,');
-    buffer.writeln('    );');
-    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }) {');
+    buffer.writeln('    return query(');
+    buffer.writeln('      where: where.toWhereInput(),');
+    buffer.writeln('      select: select,');
+    buffer.writeln('      include: include,');
+    buffer.writeln('    ).upsert(create: create, update: update);');
     buffer.writeln('  }');
     buffer.writeln();
 
@@ -2949,6 +2902,40 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<${model.dataClassName}> create({');
+    buffer.writeln('    required ${model.createInputClassName} data,');
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      "    _assertMutationQueryState(action: 'create', allowWhere: false);",
+    );
+    buffer.writeln('    final row = await _delegate._delegate.create(');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}> createNested({');
+    buffer.writeln('    required ${model.createInputClassName} data,');
+    buffer.writeln(
+      '    ${model.nestedCreateInputClassName} create = const ${model.nestedCreateInputClassName}(),',
+    );
+    buffer.writeln('  }) async {');
+    buffer.writeln(
+      "    _assertMutationQueryState(action: 'createNested', allowWhere: false);",
+    );
+    buffer.writeln('    final row = await _delegate._delegate.createNested(');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      create: create.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln(
       '  Future<List<${model.dataClassName}>> createMany({required List<${model.createInputClassName}> data}) async {',
     );
@@ -2989,6 +2976,23 @@ final class TypedClientWriter {
     buffer.writeln('  }');
     buffer.writeln();
 
+    buffer.writeln('  Future<${model.dataClassName}?> update({');
+    buffer.writeln('    required ${model.updateInputClassName} data,');
+    buffer.writeln('  }) async {');
+    buffer.writeln("    _assertMutationQueryState(action: 'update');");
+    buffer.writeln('    final row = await _delegate._delegate.update(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      data: data.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     buffer.writeln(
       '  Future<int> updateMany({required ${model.updateInputClassName} data}) {',
     );
@@ -3007,6 +3011,36 @@ final class TypedClientWriter {
     buffer.writeln('    return _delegate._delegate.deleteMany(');
     buffer.writeln('      where: _where.toJson(),');
     buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}?> delete() async {');
+    buffer.writeln("    _assertMutationQueryState(action: 'delete');");
+    buffer.writeln('    final row = await _delegate._delegate.delete(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln('    if (row == null) {');
+    buffer.writeln('      return null;');
+    buffer.writeln('    }');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
+    buffer.writeln('  }');
+    buffer.writeln();
+
+    buffer.writeln('  Future<${model.dataClassName}> upsert({');
+    buffer.writeln('    required ${model.createInputClassName} create,');
+    buffer.writeln('    required ${model.updateInputClassName} update,');
+    buffer.writeln('  }) async {');
+    buffer.writeln("    _assertMutationQueryState(action: 'upsert');");
+    buffer.writeln('    final row = await _delegate._delegate.upsert(');
+    buffer.writeln('      where: _where.toJson(),');
+    buffer.writeln('      create: create.toJson(),');
+    buffer.writeln('      update: update.toJson(),');
+    buffer.writeln('      select: _runtimeSelect,');
+    buffer.writeln('      include: _runtimeInclude,');
+    buffer.writeln('    );');
+    buffer.writeln('    return ${model.dataClassName}.fromJson(row);');
     buffer.writeln('  }');
     buffer.writeln();
 

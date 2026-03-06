@@ -949,6 +949,20 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData>\s+create\(\{\s*required\s+UserCreateInput\s+data',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.create(...) to exist.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData>\s+createNested\(\{\s*required\s+UserCreateInput\s+data,\s*UserNestedCreateInput\s+create\s*=\s*const\s+UserNestedCreateInput\(\),',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.createNested(...) to exist.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+updateNested\(\{\s*UserWhereInput\s+where\s*=\s*const\s+UserWhereInput\(\),\s*required\s+UserUpdateInput\s+data,\s*UserNestedCreateInput\s+create\s*=\s*const\s+UserNestedCreateInput\(\),',
           ).hasMatch(generatedSource),
           isTrue,
@@ -965,6 +979,13 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData\?>\s+update\(\{\s*required\s+UserUpdateInput\s+data',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.update(...) to exist.',
+        );
+        expect(
+          RegExp(
             r'Future<UserData\?>\s+delete\(\{\s*required\s+UserWhereUniqueInput\s+where,',
           ).hasMatch(generatedSource),
           isTrue,
@@ -978,6 +999,20 @@ typedef Post = ({
           isTrue,
           reason:
               'Expected upsert where parameter to use UserWhereUniqueInput.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData\?>\s+delete\(\s*\)',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.delete() to exist.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserQuery\s*\{[\s\S]*?Future<UserData>\s+upsert\(\{\s*required\s+UserCreateInput\s+create,\s*required\s+UserUpdateInput\s+update,',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason: 'Expected UserQuery.upsert(...) to exist.',
         );
         expect(
           RegExp(
@@ -1052,6 +1087,22 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData>\s+create\(\{[\s\S]*?return\s+query\([\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.create\(data:\s*data\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate create(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData>\s+createNested\(\{[\s\S]*?return\s+query\([\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.createNested\(data:\s*data,\s*create:\s*create\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate createNested(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+updateNested\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where,[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.updateNested\(data:\s*data,\s*create:\s*create\);',
           ).hasMatch(generatedSource),
           isTrue,
@@ -1068,11 +1119,35 @@ typedef Post = ({
         );
         expect(
           RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+update\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where\.toWhereInput\(\),[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.update\(data:\s*data\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate update(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
             r'class\s+UserDelegate\s*\{[\s\S]*?Future<int>\s+deleteMany\(\{[\s\S]*?return\s+query\(where:\s*where\)\.deleteMany\(\);',
           ).hasMatch(generatedSource),
           isTrue,
           reason:
               'Expected generated delegate deleteMany(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData\?>\s+delete\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where\.toWhereInput\(\),[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.delete\(\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate delete(...) to route through typed query.',
+        );
+        expect(
+          RegExp(
+            r'class\s+UserDelegate\s*\{[\s\S]*?Future<UserData>\s+upsert\(\{[\s\S]*?return\s+query\([\s\S]*?where:\s*where\.toWhereInput\(\),[\s\S]*?select:\s*select,[\s\S]*?include:\s*include,[\s\S]*?\)\.upsert\(create:\s*create,\s*update:\s*update\);',
+          ).hasMatch(generatedSource),
+          isTrue,
+          reason:
+              'Expected generated delegate upsert(...) to route through typed query.',
         );
         expect(
           RegExp(
