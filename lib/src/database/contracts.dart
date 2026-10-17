@@ -80,6 +80,11 @@ abstract interface class Session {
   /// Generated table queries validate fields and bind application values.
   /// The parameter list and byte contents are captured at invocation, before
   /// acquisition or queuing. Later caller mutations do not change this work.
+  /// Within a transaction, the first SQL failure prevents pending and subsequent
+  /// statements from executing. Those calls fail with its original error and
+  /// stack, even if the callback caught the failure. Rejected statements emit no
+  /// database event because no SQL was executed. Validation before queuing does
+  /// not poison the transaction.
   Future<QueryResult> run(String sql, {List<Object?> parameters = const []});
 }
 

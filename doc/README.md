@@ -214,8 +214,12 @@ The callback pins one physical connection. Success commits; exceptions roll
 back. Use only the supplied `tx` in the callback. Root queries, nested
 transactions and manually issued boundaries are rejected. Transaction sessions
 expire after the callback. A database SQL failure poisons the transaction even
-if the application catches it. Await issued work and propagate business
-failures. There are no automatic retries; choose retry policy in the application.
+if the application catches it. Pending and subsequent statements then fail with
+the original error and stack without executing SQL or emitting statement events.
+This also prevents writes from escaping a transaction that SQLite has already
+rolled back automatically. Validation rejected before queuing does not poison
+the transaction. Await issued work and propagate business failures. There are
+no automatic retries; choose retry policy in the application.
 PostgreSQL reuses the connection after a business failure when all issued SQL
 was inside transactions that only rolled back successfully. SQL or cleanup
 failures, commits and work outside a transaction discard the failed callback's

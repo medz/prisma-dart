@@ -12,6 +12,9 @@ import 'contracts.dart';
 /// rejected. SQLite supports only serializable transactions, including read-only
 /// transactions enforced by a scoped `query_only` setting.
 /// PostgreSQL supports every [Isolation] and read-only transactions.
+/// After a SQL failure, pending and subsequent transaction statements fail with
+/// the original error and stack without executing, even if the callback catches
+/// that failure. The whole transaction fails and attempts rollback.
 /// The driver's schema is captured once; typed queries use that fixed schema
 /// regardless of temporary objects or later PostgreSQL search_path changes.
 /// Invalid driver schemas throw before acquisition; the caller retains ownership
@@ -263,9 +266,14 @@ final class _TransactionSession implements Session {
       return Future.error(error, stack);
     }
     final values = _snapshotParameters(parameters);
-    final result = _tail.then(
-      (_) => database._run(connection, sql, values, transactionId: id),
-    );
+    final result = _tail.then((_) {
+      // SQLite can roll back automatically on a statement failure. Further
+      // statements could otherwise commit independently outside the transaction.
+      if (_failure case final failure?) {
+        Error.throwWithStackTrace(failure.$1, failure.$2);
+      }
+      return database._run(connection, sql, values, transactionId: id);
+    });
     // Observe every error before exposing the future, including unawaited work.
     _tail = result.then<void>(
       (_) {},
